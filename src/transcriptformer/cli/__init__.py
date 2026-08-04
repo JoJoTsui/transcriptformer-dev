@@ -291,6 +291,13 @@ def setup_finetune_parser(subparsers):
     return finetune_parser(subparsers)
 
 
+def setup_evaluate_parser(subparsers):
+    """Setup the parser for the evaluate command."""
+    from transcriptformer.cli.evaluate import setup_evaluate_parser as evaluate_parser
+
+    return evaluate_parser(subparsers)
+
+
 def run_inference_cli(args):
     """Run inference using command line arguments."""
     # Only print logo if not in distributed mode (avoids duplicates)
@@ -473,6 +480,7 @@ def main():
     setup_download_parser(subparsers)
     setup_download_data_parser(subparsers)
     setup_finetune_parser(subparsers)
+    setup_evaluate_parser(subparsers)
 
     # Parse arguments
     args = parser.parse_args()
@@ -492,6 +500,10 @@ def main():
         from transcriptformer.cli.finetune import run_finetune_cli
 
         run_finetune_cli(args)
+    elif args.command == "evaluate":
+        from transcriptformer.cli.evaluate import run_evaluate_cli
+
+        run_evaluate_cli(args)
 
 
 if __name__ == "__main__":
