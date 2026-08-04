@@ -4,7 +4,7 @@
 
 **Blocked by:** 02 — Model-ready dataset preparation
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] Smoke mode runs a configurable small number of steps on one GPU.
 - [ ] Training batches mix single-cell and spatial observations.
@@ -12,3 +12,7 @@
 - [ ] A checkpoint and run manifest are produced.
 - [ ] The command works from prepared data on the local RTX 3090.
 - [ ] CLI-level tests verify the smoke run produces expected outputs.
+
+## Implementation
+
+Implemented in commit `6c516d5`.

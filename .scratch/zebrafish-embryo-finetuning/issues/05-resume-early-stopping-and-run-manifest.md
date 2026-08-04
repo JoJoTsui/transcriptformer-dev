@@ -4,9 +4,13 @@
 
 **Blocked by:** 04 — Shared-GPU preflight and distributed training
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] A killed or interrupted run can resume from the latest checkpoint.
 - [ ] Early stopping triggers on a validation-metric plateau.
 - [ ] The final run manifest contains all required reproducibility fields.
 - [ ] Tests simulate interruption/resume and early stopping through the CLI.
+
+## Implementation
+
+Implemented in commit `92827d4`.

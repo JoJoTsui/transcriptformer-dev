@@ -4,10 +4,14 @@
 
 **Blocked by:** 03 — Single-GPU generative finetune smoke path
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] The evaluate command accepts a checkpoint and run manifest.
 - [ ] Embeddings are produced for both the original Metazoa checkpoint and the finetuned checkpoint on the same final holdout.
 - [ ] The report contains cell type macro-F1, pseudotime–stage Spearman correlation, spatial neighborhood coherence, and Moran's I.
 - [ ] Evaluation runs separately for single-cell and spatial observations.
 - [ ] CLI-level tests verify the report on synthetic data.
+
+## Implementation
+
+Implemented in commit `2b5fea1`.

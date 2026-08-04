@@ -4,7 +4,7 @@
 
 **Blocked by:** 01 — Finetune CLI skeleton + run manifest + synthetic fixture harness
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] Output files are model-ready H5ADs with `ENSDARG...` IDs and raw counts in `.X` or `.raw.X`.
 - [ ] Gene symbols are mapped to `ENSDARG...` IDs or reported as unmapped and filtered.
@@ -14,3 +14,7 @@
 - [ ] Train, validation, and final holdout splits are assigned by `embryo_id` and `section_id` and saved.
 - [ ] QC filters are applied conservatively and recorded in the run manifest.
 - [ ] CLI-level tests verify prepare-only behavior on synthetic data.
+
+## Implementation
+
+Implemented in commit `f51d0d4`.
