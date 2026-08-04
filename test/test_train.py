@@ -118,6 +118,10 @@ def test_finetune_cli_wires_training_call(tmp_path: Path) -> None:
         epochs=1,
         device="cpu",
         precision="32",
+        max_gpus=1,
+        min_free_vram_gb=20.0,
+        max_gpu_utilization=50,
+        global_batch_size=0,
     )
 
     with mock.patch("transcriptformer.cli.finetune.train_finetune") as mock_train:

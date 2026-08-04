@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import random
 from pathlib import Path
 from typing import Any
@@ -14,6 +15,7 @@ import pandas as pd
 import torch
 from omegaconf import OmegaConf
 from torch.utils.data import DataLoader, Dataset, Subset
+from torch.utils.data.distributed import DistributedSampler
 
 from transcriptformer.data.dataloader import AnnDataset
 from transcriptformer.data.dataclasses import BatchData
@@ -42,18 +44,19 @@ def _move_batch_to_device(batch: BatchData, device: torch.device) -> BatchData:
 
 
 def _compute_loss(model: Transcriptformer, outputs: dict) -> torch.Tensor:
-    loss = model.criterion(
+    module = model.module if hasattr(model, "module") else model
+    loss = module.criterion(
         mu=outputs["mu"],
         input_counts=outputs["input_counts"],
         mask=outputs["mask"],
     )
-    if model.loss_config.gene_id_loss_weight > 0:
-        gene_loss = model.gene_id_criterion(
+    if module.loss_config.gene_id_loss_weight > 0:
+        gene_loss = module.gene_id_criterion(
             logits=outputs["gene_logit"],
             input_ids=outputs["input_gene_token_indices"],
             mask=outputs["mask"],
         )
-        loss = loss + model.loss_config.gene_id_loss_weight * gene_loss
+        loss = loss + module.loss_config.gene_id_loss_weight * gene_loss
     return loss
 
 
@@ -139,20 +142,26 @@ class BalancedDataset(Dataset):
         self.single_cell_dataset = single_cell_dataset
         self.spatial_dataset = spatial_dataset
         self.spatial_fraction = spatial_fraction
-        self.rng = random.Random(seed)
+        self.seed = seed
         self._length = max(len(single_cell_dataset), len(spatial_dataset or [])) * 2
 
     def __len__(self) -> int:
         return self._length
 
     def __getitem__(self, index: int):
-        if (
-            self.spatial_dataset is not None
-            and len(self.spatial_dataset) > 0
-            and self.rng.random() < self.spatial_fraction
-        ):
-            return self.spatial_dataset[self.rng.randrange(len(self.spatial_dataset))]
-        return self.single_cell_dataset[self.rng.randrange(len(self.single_cell_dataset))]
+        seed_int = (self.seed * 1000003 + index) & 0xFFFFFFFF
+        use_spatial = random.Random(seed_int).random() < self.spatial_fraction
+        if use_spatial and self.spatial_dataset is not None and len(self.spatial_dataset) > 0:
+            source_seed = (self.seed * 1000003 + index * 100003 + 1) & 0xFFFFFFFF
+            source_index = random.Random(source_seed).randrange(
+                len(self.spatial_dataset)
+            )
+            return self.spatial_dataset[source_index]
+        source_seed = (self.seed * 1000003 + index * 100003 + 2) & 0xFFFFFFFF
+        source_index = random.Random(source_seed).randrange(
+            len(self.single_cell_dataset)
+        )
+        return self.single_cell_dataset[source_index]
 
 
 def _build_datasets(
@@ -232,6 +241,151 @@ def _build_datasets(
     )
 
 
+def _run_training_loop(
+    model,
+    dataloader: DataLoader,
+    optimizer: torch.optim.Optimizer,
+    scaler: Any,
+    target_device: torch.device,
+    *,
+    use_amp: bool,
+    amp_dtype: torch.dtype,
+    max_steps: int,
+    epochs: int,
+    grad_accumulation: int,
+) -> dict[str, Any]:
+    model.train()
+    step = 0
+    micro_steps = 0
+    losses: list[float] = []
+    last_epoch = 0
+
+    for epoch in range(1, epochs + 1):
+        last_epoch = epoch
+        for batch in dataloader:
+            batch = _move_batch_to_device(batch, target_device)
+
+            with torch.autocast(
+                device_type=target_device.type,
+                dtype=amp_dtype,
+                enabled=use_amp,
+            ):
+                outputs = model(batch)
+                loss = _compute_loss(model, outputs) / grad_accumulation
+
+            if use_amp:
+                scaler.scale(loss).backward()
+            else:
+                loss.backward()
+
+            micro_steps += 1
+            if micro_steps % grad_accumulation == 0:
+                if use_amp:
+                    scaler.step(optimizer)
+                    scaler.update()
+                else:
+                    optimizer.step()
+                optimizer.zero_grad(set_to_none=True)
+                step += 1
+                loss_value = float(loss.detach().cpu() * grad_accumulation)
+                losses.append(loss_value)
+                logger.info(
+                    "Epoch %d, step %d, loss %.6f",
+                    epoch,
+                    step,
+                    loss_value,
+                )
+
+            if max_steps > 0 and step >= max_steps:
+                break
+
+        if max_steps > 0 and step >= max_steps:
+            break
+
+    return {
+        "steps": step,
+        "epochs_run": last_epoch,
+        "last_loss": losses[-1] if losses else None,
+    }
+
+
+def _write_training_summary(output_dir: Path, summary: dict[str, Any]) -> None:
+    (output_dir / "training_summary.json").write_text(
+        json.dumps(summary, indent=2) + "\n"
+    )
+
+
+def _ddp_worker(
+    rank: int,
+    world_size: int,
+    manifest: dict[str, Any],
+    output_dir: Path,
+    prepared_report: dict[str, Any],
+    checkpoint_path: str,
+    max_steps: int,
+    batch_size: int,
+    lr: float,
+    epochs: int,
+    precision: str,
+    grad_accumulation: int,
+) -> None:
+    import torch.distributed as dist
+
+    os.environ["MASTER_ADDR"] = "127.0.0.1"
+    os.environ["MASTER_PORT"] = os.environ.get("MASTER_PORT", "29500")
+    dist.init_process_group("nccl", rank=rank, world_size=world_size)
+    torch.cuda.set_device(rank)
+    target_device = torch.device(f"cuda:{rank}")
+    use_amp = precision == "16-mixed"
+    amp_dtype = torch.float16 if use_amp else torch.float32
+
+    model, cfg, gene_vocab, aux_vocab = _load_model(Path(checkpoint_path))
+    model.to(target_device)
+    from torch.nn.parallel import DistributedDataParallel
+
+    model = DistributedDataParallel(model, device_ids=[rank])
+
+    dataset = _build_datasets(manifest, prepared_report, cfg, gene_vocab, aux_vocab)
+    sampler = DistributedSampler(
+        dataset,
+        num_replicas=world_size,
+        rank=rank,
+        shuffle=False,
+        seed=int(manifest.get("seed", 0)),
+    )
+    dataloader = DataLoader(
+        dataset,
+        batch_size=batch_size,
+        sampler=sampler,
+        num_workers=0,
+        collate_fn=dataset.collate_fn,
+    )
+
+    trainable_params = [p for p in model.parameters() if p.requires_grad]
+    optimizer = torch.optim.AdamW(trainable_params, lr=lr)
+    scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
+
+    summary = _run_training_loop(
+        model,
+        dataloader,
+        optimizer,
+        scaler,
+        target_device,
+        use_amp=use_amp,
+        amp_dtype=amp_dtype,
+        max_steps=max_steps,
+        epochs=epochs,
+        grad_accumulation=grad_accumulation,
+    )
+
+    if rank == 0:
+        torch.save(model.module.state_dict(), output_dir / "model_weights.pt")
+        summary.update({"device": str(target_device), "precision": precision})
+        _write_training_summary(output_dir, summary)
+
+    dist.destroy_process_group()
+
+
 def train_finetune(
     manifest: dict[str, Any],
     output_dir: Path,
@@ -244,9 +398,40 @@ def train_finetune(
     epochs: int,
     device: str,
     precision: str,
+    num_gpus: int = 1,
+    grad_accumulation: int = 1,
 ) -> dict[str, Any]:
     """Run a finetuning training loop and save a checkpoint and summary."""
     torch.manual_seed(int(manifest.get("seed", 0)))
+
+    if num_gpus > 1:
+        os.environ["MASTER_ADDR"] = "127.0.0.1"
+        os.environ["MASTER_PORT"] = os.environ.get("MASTER_PORT", "29500")
+        os.environ["WORLD_SIZE"] = str(num_gpus)
+        import torch.multiprocessing as mp
+
+        mp.spawn(
+            _ddp_worker,
+            args=(
+                manifest,
+                output_dir,
+                prepared_report,
+                str(checkpoint_path),
+                max_steps,
+                batch_size,
+                lr,
+                epochs,
+                precision,
+                grad_accumulation,
+            ),
+            nprocs=num_gpus,
+            join=True,
+        )
+        summary_path = output_dir / "training_summary.json"
+        if summary_path.is_file():
+            return json.loads(summary_path.read_text())
+        return {"steps": 0, "last_loss": None, "error": "DDP training did not write a summary"}
+
     target_device = _resolve_device(device)
     use_amp = target_device.type == "cuda" and precision == "16-mixed"
     amp_dtype = torch.float16 if use_amp else torch.float32
@@ -268,51 +453,19 @@ def train_finetune(
     optimizer = torch.optim.AdamW(trainable_params, lr=lr)
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
     model.to(target_device)
-    model.train()
-
-    step = 0
-    losses: list[float] = []
-    for epoch in range(1, epochs + 1):
-        for batch in dataloader:
-            batch = _move_batch_to_device(batch, target_device)
-            optimizer.zero_grad(set_to_none=True)
-
-            with torch.autocast(
-                device_type=target_device.type,
-                dtype=amp_dtype,
-                enabled=use_amp,
-            ):
-                outputs = model(batch)
-                loss = _compute_loss(model, outputs)
-
-            if use_amp:
-                scaler.scale(loss).backward()
-                scaler.step(optimizer)
-                scaler.update()
-            else:
-                loss.backward()
-                optimizer.step()
-
-            step += 1
-            loss_value = float(loss.detach().cpu())
-            losses.append(loss_value)
-            logger.info("Epoch %d, step %d, loss %.6f", epoch, step, loss_value)
-
-            if max_steps > 0 and step >= max_steps:
-                break
-
-        if max_steps > 0 and step >= max_steps:
-            break
-
-    torch.save(model.state_dict(), output_dir / "model_weights.pt")
-    summary = {
-        "steps": step,
-        "epochs_run": epochs,
-        "last_loss": losses[-1] if losses else None,
-        "device": str(target_device),
-        "precision": precision,
-    }
-    (output_dir / "training_summary.json").write_text(
-        json.dumps(summary, indent=2) + "\n"
+    summary = _run_training_loop(
+        model,
+        dataloader,
+        optimizer,
+        scaler,
+        target_device,
+        use_amp=use_amp,
+        amp_dtype=amp_dtype,
+        max_steps=max_steps,
+        epochs=epochs,
+        grad_accumulation=grad_accumulation,
     )
+    torch.save(model.state_dict(), output_dir / "model_weights.pt")
+    summary.update({"device": str(target_device), "precision": precision})
+    _write_training_summary(output_dir, summary)
     return summary
