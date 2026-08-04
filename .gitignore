@@ -172,6 +172,10 @@ cython_debug/
 lightning_logs/
 outputs/
 
+# Local model artifacts and inference outputs
+checkpoints/
+inference_results/
+
 mlruns/
 multirun/
 figures/
