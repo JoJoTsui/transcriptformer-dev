@@ -62,6 +62,10 @@ src = [ "src" ]
 extend-include = [ "*.ipynb" ]
 exclude = [ "notebooks/" ]
 
+[tool.pytest.ini_options]
+pythonpath = [ "src" ]
+testpaths = [ "test" ]
+
 format.docstring-code-format = true
 
 lint.select = [
