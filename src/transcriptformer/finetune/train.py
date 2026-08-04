@@ -19,6 +19,7 @@ from torch.utils.data.distributed import DistributedSampler
 
 from transcriptformer.data.dataloader import AnnDataset
 from transcriptformer.data.dataclasses import BatchData
+from transcriptformer.finetune.early_stopping import EarlyStopping
 from transcriptformer.model.model import Transcriptformer
 from transcriptformer.tokenizer.vocab import load_vocabs_and_embeddings
 
@@ -241,6 +242,99 @@ def _build_datasets(
     )
 
 
+def _build_validation_loader(
+    prepared_report: dict[str, Any],
+    cfg: Any,
+    gene_vocab: dict,
+    aux_vocab: dict,
+    batch_size: int,
+) -> DataLoader | None:
+    validation_files = [
+        entry["path"]
+        for entry in prepared_report["datasets"]
+        if entry["split"] == "validation"
+    ]
+    if not validation_files:
+        return None
+
+    dataset = AnnDataset(
+        files_list=validation_files,
+        gene_vocab=gene_vocab,
+        aux_vocab=aux_vocab,
+        max_len=cfg.model.model_config.seq_len,
+        pad_zeros=cfg.model.data_config.pad_zeros,
+        pad_token=cfg.model.data_config.gene_pad_token,
+        sort_genes=False,
+        filter_to_vocab=True,
+        filter_outliers=0.0,
+        gene_col_name="ensembl_id",
+        normalize_to_scale=0,
+        randomize_order=False,
+        min_expressed_genes=0,
+        clip_counts=30,
+        use_raw=None,
+        remove_duplicate_genes=False,
+    )
+    return DataLoader(
+        dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=0,
+        collate_fn=dataset.collate_fn,
+    )
+
+
+def _validation_loss(
+    model,
+    validation_loader: DataLoader | None,
+    target_device: torch.device,
+    use_amp: bool,
+    amp_dtype: torch.dtype,
+) -> float:
+    if validation_loader is None:
+        return float("inf")
+
+    model.eval()
+    total = 0.0
+    n_obs = 0
+    with torch.no_grad():
+        for batch in validation_loader:
+            batch = _move_batch_to_device(batch, target_device)
+            with torch.autocast(
+                device_type=target_device.type,
+                dtype=amp_dtype,
+                enabled=use_amp,
+            ):
+                outputs = model(batch)
+                loss = _compute_loss(model, outputs)
+            total += float(loss.detach().cpu()) * len(batch.gene_counts)
+            n_obs += len(batch.gene_counts)
+    model.train()
+    return total / n_obs if n_obs else float("inf")
+
+
+def _resume_state(output_dir: Path) -> dict[str, Any]:
+    summary_path = output_dir / "training_summary.json"
+    if summary_path.is_file():
+        return json.loads(summary_path.read_text())
+    return {"steps": 0, "epochs_run": 0}
+
+
+def _maybe_resume_model(
+    model: Transcriptformer,
+    output_dir: Path,
+    resume: bool,
+) -> int:
+    if not resume:
+        return 0
+    checkpoint_path = output_dir / "model_weights.pt"
+    if not checkpoint_path.is_file():
+        return 0
+    state_dict = torch.load(checkpoint_path, weights_only=True, map_location="cpu")
+    model.load_state_dict(state_dict)
+    return int(_resume_state(output_dir).get("steps", 0))
+
+
 def _run_training_loop(
     model,
     dataloader: DataLoader,
@@ -253,9 +347,13 @@ def _run_training_loop(
     max_steps: int,
     epochs: int,
     grad_accumulation: int,
+    initial_step: int = 0,
+    validation_loader: DataLoader | None = None,
+    early_stopping: EarlyStopping | None = None,
+    validation_interval: int = 10,
 ) -> dict[str, Any]:
     model.train()
-    step = 0
+    step = initial_step
     micro_steps = 0
     losses: list[float] = []
     last_epoch = 0
@@ -295,6 +393,21 @@ def _run_training_loop(
                     step,
                     loss_value,
                 )
+                if (
+                    validation_loader is not None
+                    and early_stopping is not None
+                    and step % validation_interval == 0
+                ):
+                    validation_loss = _validation_loss(
+                        model,
+                        validation_loader,
+                        target_device,
+                        use_amp,
+                        amp_dtype,
+                    )
+                    logger.info("Validation loss %.6f", validation_loss)
+                    if early_stopping.should_stop(validation_loss):
+                        break
 
             if max_steps > 0 and step >= max_steps:
                 break
@@ -306,6 +419,7 @@ def _run_training_loop(
         "steps": step,
         "epochs_run": last_epoch,
         "last_loss": losses[-1] if losses else None,
+        "resumed_from_step": initial_step,
     }
 
 
@@ -328,6 +442,9 @@ def _ddp_worker(
     epochs: int,
     precision: str,
     grad_accumulation: int,
+    resume: bool,
+    validation_interval: int,
+    early_stopping_patience: int,
 ) -> None:
     import torch.distributed as dist
 
@@ -340,12 +457,21 @@ def _ddp_worker(
     amp_dtype = torch.float16 if use_amp else torch.float32
 
     model, cfg, gene_vocab, aux_vocab = _load_model(Path(checkpoint_path))
+    initial_step = _maybe_resume_model(model, output_dir, resume)
     model.to(target_device)
     from torch.nn.parallel import DistributedDataParallel
 
     model = DistributedDataParallel(model, device_ids=[rank])
 
     dataset = _build_datasets(manifest, prepared_report, cfg, gene_vocab, aux_vocab)
+    validation_loader = _build_validation_loader(
+        prepared_report,
+        cfg,
+        gene_vocab,
+        aux_vocab,
+        batch_size,
+    )
+    early_stopping = EarlyStopping(patience=early_stopping_patience)
     sampler = DistributedSampler(
         dataset,
         num_replicas=world_size,
@@ -376,6 +502,10 @@ def _ddp_worker(
         max_steps=max_steps,
         epochs=epochs,
         grad_accumulation=grad_accumulation,
+        initial_step=initial_step,
+        validation_loader=validation_loader,
+        early_stopping=early_stopping,
+        validation_interval=validation_interval,
     )
 
     if rank == 0:
@@ -400,6 +530,9 @@ def train_finetune(
     precision: str,
     num_gpus: int = 1,
     grad_accumulation: int = 1,
+    resume: bool = True,
+    validation_interval: int = 10,
+    early_stopping_patience: int = 3,
 ) -> dict[str, Any]:
     """Run a finetuning training loop and save a checkpoint and summary."""
     torch.manual_seed(int(manifest.get("seed", 0)))
@@ -423,6 +556,9 @@ def train_finetune(
                 epochs,
                 precision,
                 grad_accumulation,
+                resume,
+                validation_interval,
+                early_stopping_patience,
             ),
             nprocs=num_gpus,
             join=True,
@@ -452,7 +588,16 @@ def train_finetune(
     trainable_params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.AdamW(trainable_params, lr=lr)
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
+    initial_step = _maybe_resume_model(model, output_dir, resume)
     model.to(target_device)
+    validation_loader = _build_validation_loader(
+        prepared_report,
+        cfg,
+        gene_vocab,
+        aux_vocab,
+        batch_size,
+    )
+    early_stopping = EarlyStopping(patience=early_stopping_patience)
     summary = _run_training_loop(
         model,
         dataloader,
@@ -464,6 +609,10 @@ def train_finetune(
         max_steps=max_steps,
         epochs=epochs,
         grad_accumulation=grad_accumulation,
+        initial_step=initial_step,
+        validation_loader=validation_loader,
+        early_stopping=early_stopping,
+        validation_interval=validation_interval,
     )
     torch.save(model.state_dict(), output_dir / "model_weights.pt")
     summary.update({"device": str(target_device), "precision": precision})

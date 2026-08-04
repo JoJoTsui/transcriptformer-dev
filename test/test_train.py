@@ -122,6 +122,9 @@ def test_finetune_cli_wires_training_call(tmp_path: Path) -> None:
         min_free_vram_gb=20.0,
         max_gpu_utilization=50,
         global_batch_size=0,
+        no_resume=False,
+        validation_interval=10,
+        early_stopping_patience=3,
     )
 
     with mock.patch("transcriptformer.cli.finetune.train_finetune") as mock_train:
@@ -132,3 +135,8 @@ def test_finetune_cli_wires_training_call(tmp_path: Path) -> None:
     call_kwargs = mock_train.call_args
     assert call_kwargs.kwargs["max_steps"] == 1
     assert call_kwargs.kwargs["device"] == "cpu"
+
+    complete_manifest = json.loads((output_dir / "run_manifest.json").read_text())
+    assert "preparation" in complete_manifest
+    assert "training" in complete_manifest
+    assert "gpu_plan" in complete_manifest

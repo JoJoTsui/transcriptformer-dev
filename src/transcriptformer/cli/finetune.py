@@ -52,6 +52,9 @@ def setup_finetune_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--min-free-vram-gb", type=float, default=20.0)
     parser.add_argument("--max-gpu-utilization", type=int, default=50)
     parser.add_argument("--global-batch-size", type=int, default=0)
+    parser.add_argument("--no-resume", action="store_true")
+    parser.add_argument("--validation-interval", type=int, default=10)
+    parser.add_argument("--early-stopping-patience", type=int, default=3)
     return parser
 
 
@@ -79,6 +82,11 @@ def run_finetune_cli(args: argparse.Namespace) -> None:
         num_gpus = 1
         batch_size = args.batch_size
         grad_accumulation = 1
+        gpu_plan = {
+            "num_gpus": num_gpus,
+            "batch_size": batch_size,
+            "grad_accumulation": grad_accumulation,
+        }
     else:
         selection = select_gpus(
             max_gpus=args.max_gpus,
@@ -92,6 +100,11 @@ def run_finetune_cli(args: argparse.Namespace) -> None:
             num_gpus = 1
             batch_size = args.batch_size
             grad_accumulation = 1
+            gpu_plan = {
+                "num_gpus": num_gpus,
+                "batch_size": batch_size,
+                "grad_accumulation": grad_accumulation,
+            }
         else:
             os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(
                 str(index) for index in selection.physical_indices
@@ -105,6 +118,7 @@ def run_finetune_cli(args: argparse.Namespace) -> None:
             num_gpus = plan["num_gpus"]
             batch_size = plan["batch_size"]
             grad_accumulation = plan["grad_accumulation"]
+            gpu_plan = plan
 
     training_summary = train_finetune(
         manifest,
@@ -119,5 +133,15 @@ def run_finetune_cli(args: argparse.Namespace) -> None:
         precision=args.precision,
         num_gpus=num_gpus,
         grad_accumulation=grad_accumulation,
+        resume=not args.no_resume,
+        validation_interval=args.validation_interval,
+        early_stopping_patience=args.early_stopping_patience,
+    )
+    complete_manifest = dict(manifest)
+    complete_manifest["preparation"] = prepared_report
+    complete_manifest["training"] = training_summary
+    complete_manifest["gpu_plan"] = gpu_plan
+    (output_dir / "run_manifest.json").write_text(
+        json.dumps(complete_manifest, indent=2) + "\n"
     )
     print(f"Finetune complete -> {output_dir}")
