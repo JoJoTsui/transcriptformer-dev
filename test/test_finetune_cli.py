@@ -60,7 +60,7 @@ def test_valid_manifest_creates_run_directory(tmp_path: Path) -> None:
     output_dir = tmp_path / "run"
     manifest_path = _write_manifest(tmp_path, output_dir)
 
-    args = argparse.Namespace(manifest=manifest_path, output_dir=None, prepare_only=False)
+    args = argparse.Namespace(manifest=manifest_path, output_dir=None, prepare_only=True)
     run_finetune_cli(args)
 
     assert output_dir.is_dir()
