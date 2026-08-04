@@ -8,6 +8,7 @@ from pathlib import Path
 
 from transcriptformer.finetune.manifest import load_run_manifest
 from transcriptformer.finetune.prepare import prepare_run
+from transcriptformer.finetune.train import train_finetune
 
 
 def setup_finetune_parser(subparsers: argparse._SubParsersAction) -> None:
@@ -33,6 +34,18 @@ def setup_finetune_parser(subparsers: argparse._SubParsersAction) -> None:
         action="store_true",
         help="Prepare model-ready datasets and split assignments without training",
     )
+    parser.add_argument(
+        "--checkpoint-path",
+        type=Path,
+        default=None,
+        help="Path to the pretrained checkpoint directory",
+    )
+    parser.add_argument("--max-steps", type=int, default=2)
+    parser.add_argument("--batch-size", type=int, default=1)
+    parser.add_argument("--lr", type=float, default=1e-5)
+    parser.add_argument("--epochs", type=int, default=1)
+    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
+    parser.add_argument("--precision", choices=["32", "16-mixed"], default="16-mixed")
     return parser
 
 
@@ -45,11 +58,27 @@ def run_finetune_cli(args: argparse.Namespace) -> None:
     manifest_copy = output_dir / "run_manifest.json"
     manifest_copy.write_text(json.dumps(manifest, indent=2) + "\n")
 
-    prepare_run(manifest, output_dir)
+    prepared_report = prepare_run(manifest, output_dir)
     print(f"Prepared model-ready datasets -> {output_dir / 'prepared'}")
 
     if args.prepare_only:
         print("Prepare-only mode complete; training skipped.")
         return
 
-    print("Training is not implemented yet; run again with --prepare-only for now.")
+    checkpoint_path = args.checkpoint_path or manifest.get("checkpoint_path")
+    if checkpoint_path is None:
+        raise ValueError("--checkpoint-path is required unless set in the run manifest")
+
+    training_summary = train_finetune(
+        manifest,
+        output_dir,
+        prepared_report,
+        checkpoint_path=checkpoint_path,
+        max_steps=args.max_steps,
+        batch_size=args.batch_size,
+        lr=args.lr,
+        epochs=args.epochs,
+        device=args.device,
+        precision=args.precision,
+    )
+    print(f"Finetune complete -> {output_dir}")
