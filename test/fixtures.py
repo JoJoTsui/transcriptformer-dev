@@ -18,6 +18,8 @@ def make_synthetic_h5ad(
     section_id: str | None = None,
     stage: str = "24hpf",
     cell_type: str = "neural",
+    gene_mode: str = "ensembl",
+    raw_counts: bool = True,
     seed: int = 0,
 ) -> Path:
     """Create a small synthetic H5AD file with the expected metadata columns."""
@@ -25,7 +27,10 @@ def make_synthetic_h5ad(
     out_path.parent.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(seed)
 
-    gene_ids = [f"ENSDARG{i:011d}" for i in range(1, n_genes + 1)]
+    if gene_mode == "ensembl":
+        gene_ids = [f"ENSDARG{i:011d}" for i in range(1, n_genes + 1)]
+    else:
+        gene_ids = [f"gene_{i}" for i in range(1, n_genes + 1)]
     var = pd.DataFrame({"ensembl_id": gene_ids}, index=gene_ids)
 
     obs = pd.DataFrame(
@@ -43,7 +48,10 @@ def make_synthetic_h5ad(
         }
     )
 
-    counts = rng.poisson(lam=1.0, size=(n_obs, n_genes)).astype(np.float32)
+    if raw_counts:
+        counts = rng.poisson(lam=1.0, size=(n_obs, n_genes)).astype(np.float32)
+    else:
+        counts = rng.uniform(0.0, 10.0, size=(n_obs, n_genes)).astype(np.float32)
     adata = ad.AnnData(X=counts, obs=obs, var=var)
     adata.write_h5ad(out_path)
     return out_path

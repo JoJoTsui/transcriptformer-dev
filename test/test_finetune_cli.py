@@ -19,7 +19,7 @@ def _write_manifest(path: Path, output_dir: Path) -> Path:
         "output_dir": str(output_dir),
         "datasets": [
             {
-                "path": str(make_synthetic_h5ad(output_dir / "single_cell.h5ad")),
+                "path": str(make_synthetic_h5ad(output_dir / "sc_1.h5ad", embryo_id="embryo_1")),
                 "dataset_type": "single_cell",
                 "embryo_id": "embryo_1",
                 "stage": "24hpf",
@@ -29,17 +29,25 @@ def _write_manifest(path: Path, output_dir: Path) -> Path:
             {
                 "path": str(
                     make_synthetic_h5ad(
-                        output_dir / "spatial.h5ad",
-                        dataset_type="spatial",
-                        section_id="section_1",
+                        output_dir / "sc_2.h5ad",
+                        embryo_id="embryo_2",
+                        stage="36hpf",
+                        cell_type="muscle",
                     )
                 ),
-                "dataset_type": "spatial",
-                "embryo_id": "embryo_1",
-                "section_id": "section_1",
+                "dataset_type": "single_cell",
+                "embryo_id": "embryo_2",
+                "stage": "36hpf",
+                "cell_type": "muscle",
+                "assay": "10x 3' v3",
+            },
+            {
+                "path": str(make_synthetic_h5ad(output_dir / "sc_3.h5ad", embryo_id="embryo_3")),
+                "dataset_type": "single_cell",
+                "embryo_id": "embryo_3",
                 "stage": "24hpf",
                 "cell_type": "neural",
-                "assay": "Visium Spatial Gene Expression",
+                "assay": "10x 3' v3",
             },
         ],
     }
@@ -52,7 +60,7 @@ def test_valid_manifest_creates_run_directory(tmp_path: Path) -> None:
     output_dir = tmp_path / "run"
     manifest_path = _write_manifest(tmp_path, output_dir)
 
-    args = argparse.Namespace(manifest=manifest_path, output_dir=None)
+    args = argparse.Namespace(manifest=manifest_path, output_dir=None, prepare_only=False)
     run_finetune_cli(args)
 
     assert output_dir.is_dir()
