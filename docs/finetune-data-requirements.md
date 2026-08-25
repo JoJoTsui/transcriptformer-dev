@@ -120,6 +120,18 @@ Removed-observation counts per criterion are recorded in
 - The manifest-level fields describe each file's labels; the H5AD itself must
   still carry the `obs` columns from section 4.
 
+Optional top-level sections:
+
+- `"sampling"` — `max_single_cells` (stratified cap on the single-cell side,
+  default 1,000,000) and `spatial_fraction` (fraction of training samples drawn
+  from spatial datasets, default 0.5)
+- `"dataloader"` — DataLoader concurrency: `num_workers` (default 0),
+  `pin_memory` (default true on CUDA), `prefetch_factor` (default 2),
+  `persistent_workers` (default true). Training reads prepared H5ADs through
+  memory-mapped backed access, so raising `num_workers` increases throughput
+  without growing RAM; backed HDF5 handles are reopened per worker process
+  automatically
+
 ## 9. Preparation outputs
 
 `transcriptformer finetune --manifest run.json --prepare-only` writes to

@@ -559,13 +559,12 @@ class AnnDatasetOOM(Dataset):
         self._X_per_file: list = []
         self._n_rows: list[int] = []
         for file in self.files_list:
-            file_path = file if self.data_dir is None else os.path.join(self.data_dir, file)
-            adata = anndata.read_h5ad(file_path, backed="r")
+            adata = self._open_backed(file)
             gene_names, success, adata = load_gene_features(
                 adata, self.gene_col_name, self.remove_duplicate_genes, use_raw=self.use_raw
             )
             if not success:
-                raise ValueError(f"Failed to load gene features from {file_path}")
+                raise ValueError(f"Failed to load gene features from {file}")
             # Optional vocab filtering at token level
             filter_idx = None
             if self.filter_to_vocab:
@@ -573,10 +572,10 @@ class AnnDatasetOOM(Dataset):
                 filter_idx = [i for i, name in enumerate(gene_names) if name in self.gene_vocab]
                 gene_names = gene_names[filter_idx]
                 logging.info(
-                    f"Filtered {original_gene_count} genes to {len(gene_names)} genes in vocab for file {file_path}"
+                    f"Filtered {original_gene_count} genes to {len(gene_names)} genes in vocab for file {file}"
                 )
                 if len(gene_names) == 0:
-                    raise ValueError(f"No genes remaining after filtering for file {file_path}")
+                    raise ValueError(f"No genes remaining after filtering for file {file}")
 
             self._handles.append(adata)
             self._gene_names_per_file.append(gene_names)
@@ -586,6 +585,31 @@ class AnnDatasetOOM(Dataset):
             self._n_rows.append(int(adata.n_obs))
 
         self._offsets = np.cumsum([0] + self._n_rows)
+        self._open_pid = os.getpid()
+
+    def _reopen_if_needed(self) -> None:
+        """Reopen backed handles when running in a different process.
+
+        Forked DataLoader workers inherit the parent's HDF5 handles, which are
+        not safe to share across processes. Reopen them lazily on first access
+        in the new process so each worker reads through its own handles.
+        """
+        pid = os.getpid()
+        if self._open_pid == pid:
+            return
+        handles: list[anndata.AnnData] = []
+        x_layers: list = []
+        for file in self.files_list:
+            adata = self._open_backed(file)
+            handles.append(adata)
+            x_layers.append(get_counts_layer(adata, self.use_raw))
+        self._handles = handles
+        self._X_per_file = x_layers
+        self._open_pid = pid
+
+    def _open_backed(self, file: str) -> anndata.AnnData:
+        file_path = file if self.data_dir is None else os.path.join(self.data_dir, file)
+        return anndata.read_h5ad(file_path, backed="r")
 
     def __len__(self) -> int:
         return int(self._offsets[-1])
@@ -596,6 +620,7 @@ class AnnDatasetOOM(Dataset):
         return file_id, row
 
     def __getitem__(self, idx: int) -> BatchData:
+        self._reopen_if_needed()
         file_id, row = self._loc(idx)
         adata = self._handles[file_id]
         gene_names = self._gene_names_per_file[file_id]

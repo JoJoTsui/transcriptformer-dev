@@ -9,7 +9,6 @@ from unittest import mock
 
 import numpy as np
 import pandas as pd
-import pytest
 from torch.utils.data import Dataset
 
 from test.fixtures import make_synthetic_h5ad
@@ -140,3 +139,184 @@ def test_finetune_cli_wires_training_call(tmp_path: Path) -> None:
     assert "preparation" in complete_manifest
     assert "training" in complete_manifest
     assert "gpu_plan" in complete_manifest
+
+
+def _make_gene_vocab(n_genes: int = 50) -> dict:
+    vocab = {f"ENSDARG{i:011d}": i for i in range(1, n_genes + 1)}
+    vocab["[PAD]"] = 0
+    vocab["unknown"] = n_genes + 1
+    return vocab
+
+
+def _make_cfg():
+    from omegaconf import OmegaConf
+
+    return OmegaConf.create(
+        {
+            "model": {
+                "model_config": {"seq_len": 64},
+                "data_config": {"pad_zeros": True, "gene_pad_token": "[PAD]"},
+            }
+        }
+    )
+
+
+def _write_training_files(tmp_path: Path) -> tuple[dict, dict]:
+    """Create prepared-style datasets and a matching prepared report/manifest."""
+    datasets = []
+    entries = []
+    for embryo_id in ("embryo_1", "embryo_2", "embryo_3"):
+        path = make_synthetic_h5ad(tmp_path / f"sc_{embryo_id}.h5ad", embryo_id=embryo_id, n_obs=5)
+        datasets.append(
+            {
+                "path": str(path),
+                "dataset_type": "single_cell",
+                "embryo_id": embryo_id,
+                "stage": "24hpf",
+                "cell_type": "neural",
+                "assay": "10x 3' v3",
+            }
+        )
+        entries.append(
+            {
+                "path": str(path),
+                "dataset_type": "single_cell",
+                "embryo_id": embryo_id,
+                "section_id": None,
+                "split": "train" if embryo_id != "embryo_3" else "validation",
+            }
+        )
+    spatial_path = make_synthetic_h5ad(
+        tmp_path / "spatial_1.h5ad",
+        dataset_type="spatial",
+        embryo_id="embryo_1",
+        section_id="section_1",
+        n_obs=5,
+    )
+    entries.append(
+        {
+            "path": str(spatial_path),
+            "dataset_type": "spatial",
+            "embryo_id": "embryo_1",
+            "section_id": "section_1",
+            "split": "train",
+        }
+    )
+    manifest = {"name": "backed", "output_dir": str(tmp_path / "run"), "seed": 0, "datasets": datasets}
+    return manifest, {"datasets": entries}
+
+
+def test_build_datasets_uses_backed_reads(tmp_path: Path) -> None:
+    from torch.utils.data import Subset
+
+    from transcriptformer.data.dataloader import AnnDatasetOOM
+    from transcriptformer.finetune.train import _build_datasets
+
+    manifest, report = _write_training_files(tmp_path)
+    dataset = _build_datasets(manifest, report, _make_cfg(), _make_gene_vocab(), None)
+
+    assert isinstance(dataset, BalancedDataset)
+    single_cell = dataset.single_cell_dataset
+    if isinstance(single_cell, Subset):
+        single_cell = single_cell.dataset
+    assert isinstance(single_cell, AnnDatasetOOM)
+    # Two train-split single-cell files of 5 observations each.
+    assert len(single_cell) == 10
+    assert all(handle.isbacked for handle in single_cell._handles)
+    assert all(handle.isbacked for handle in dataset.spatial_dataset._handles)
+
+    item = dataset[0]
+    assert item.gene_token_indices.shape == (64,)
+
+
+def test_build_datasets_stratified_subset_over_backed(tmp_path: Path) -> None:
+    from torch.utils.data import Subset
+
+    from transcriptformer.data.dataloader import AnnDatasetOOM
+    from transcriptformer.finetune.train import _build_datasets
+
+    manifest, report = _write_training_files(tmp_path)
+    manifest["sampling"] = {"max_single_cells": 6, "spatial_fraction": 0.5}
+    dataset = _build_datasets(manifest, report, _make_cfg(), _make_gene_vocab(), None)
+
+    assert isinstance(dataset.single_cell_dataset, Subset)
+    assert isinstance(dataset.single_cell_dataset.dataset, AnnDatasetOOM)
+    assert len(dataset.single_cell_dataset) == 6
+    item = dataset[0]
+    assert item.gene_token_indices.shape == (64,)
+
+
+def test_validation_loader_uses_backed_reads(tmp_path: Path) -> None:
+    from transcriptformer.data.dataloader import AnnDatasetOOM
+    from transcriptformer.finetune.train import _build_validation_loader
+
+    manifest, report = _write_training_files(tmp_path)
+    loader = _build_validation_loader(manifest, report, _make_cfg(), _make_gene_vocab(), None, batch_size=2)
+
+    assert loader is not None
+    assert isinstance(loader.dataset, AnnDatasetOOM)
+    assert len(loader.dataset) == 5
+    batch = next(iter(loader))
+    assert batch.gene_token_indices.shape == (2, 64)
+
+
+def test_dataloader_kwargs_defaults_and_overrides() -> None:
+    from transcriptformer.finetune.train import _dataloader_kwargs
+
+    defaults = _dataloader_kwargs({}, "cpu")
+    assert defaults == {"num_workers": 0, "pin_memory": False}
+
+    cuda_defaults = _dataloader_kwargs({}, "cuda")
+    assert cuda_defaults == {"num_workers": 0, "pin_memory": True}
+
+    manifest = {"dataloader": {"num_workers": 3, "prefetch_factor": 4, "pin_memory": False}}
+    kwargs = _dataloader_kwargs(manifest, "cuda")
+    assert kwargs["num_workers"] == 3
+    assert kwargs["prefetch_factor"] == 4
+    assert kwargs["pin_memory"] is False
+    assert kwargs["persistent_workers"] is True
+
+
+def test_backed_dataset_reopens_handles_in_new_process(tmp_path: Path) -> None:
+    from transcriptformer.data.dataloader import AnnDataset, AnnDatasetOOM
+
+    path = make_synthetic_h5ad(tmp_path / "sc.h5ad", n_obs=5)
+    vocab = _make_gene_vocab()
+    kwargs = dict(
+        files_list=[str(path)],
+        gene_vocab=vocab,
+        aux_vocab=None,
+        max_len=64,
+        sort_genes=False,
+        randomize_order=False,
+        pad_zeros=True,
+        filter_to_vocab=True,
+        clip_counts=30,
+        use_raw=None,
+        remove_duplicate_genes=False,
+    )
+    backed = AnnDatasetOOM(**kwargs)
+    in_memory = AnnDataset(gene_col_name="ensembl_id", min_expressed_genes=0, **kwargs)
+
+    before = backed[0]
+    assert np.array_equal(before.gene_token_indices.numpy(), in_memory[0].gene_token_indices.numpy())
+
+    # Simulate a forked DataLoader worker: the inherited handles must not be reused.
+    backed._open_pid = -1
+    after = backed[0]
+    assert backed._open_pid != -1
+    assert np.array_equal(before.gene_token_indices.numpy(), after.gene_token_indices.numpy())
+
+
+def test_distributed_sampler_shards_balanced_dataset(tmp_path: Path) -> None:
+    from torch.utils.data.distributed import DistributedSampler
+
+    from transcriptformer.finetune.train import _build_datasets
+
+    manifest, report = _write_training_files(tmp_path)
+    dataset = _build_datasets(manifest, report, _make_cfg(), _make_gene_vocab(), None)
+
+    samplers = [DistributedSampler(dataset, num_replicas=2, rank=rank, shuffle=False, seed=0) for rank in (0, 1)]
+    index_sets = [set(sampler) for sampler in samplers]
+    assert index_sets[0].isdisjoint(index_sets[1])
+    assert len(index_sets[0]) + len(index_sets[1]) >= len(dataset)

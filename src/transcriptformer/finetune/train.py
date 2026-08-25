@@ -17,7 +17,7 @@ from omegaconf import OmegaConf
 from torch.utils.data import DataLoader, Dataset, Subset
 from torch.utils.data.distributed import DistributedSampler
 
-from transcriptformer.data.dataloader import AnnDataset
+from transcriptformer.data.dataloader import AnnDatasetOOM
 from transcriptformer.data.dataclasses import BatchData
 from transcriptformer.finetune.early_stopping import EarlyStopping
 from transcriptformer.model.model import Transcriptformer
@@ -131,7 +131,7 @@ def stratified_sample_indices(
 class BalancedDataset(Dataset):
     """Mix single-cell and spatial observations with a configurable spatial fraction."""
 
-    collate_fn = staticmethod(AnnDataset.collate_fn)
+    collate_fn = staticmethod(AnnDatasetOOM.collate_fn)
 
     def __init__(
         self,
@@ -165,6 +165,23 @@ class BalancedDataset(Dataset):
         return self.single_cell_dataset[source_index]
 
 
+def _dataset_kwargs(cfg: Any) -> dict[str, Any]:
+    """AnnDatasetOOM keyword arguments shared by training and validation datasets."""
+    return {
+        "max_len": cfg.model.model_config.seq_len,
+        "pad_zeros": cfg.model.data_config.pad_zeros,
+        "pad_token": cfg.model.data_config.gene_pad_token,
+        "sort_genes": False,
+        "filter_to_vocab": True,
+        "gene_col_name": "ensembl_id",
+        "normalize_to_scale": 0,
+        "randomize_order": False,
+        "clip_counts": 30,
+        "use_raw": None,
+        "remove_duplicate_genes": False,
+    }
+
+
 def _build_datasets(
     manifest: dict[str, Any],
     prepared_report: dict[str, Any],
@@ -188,30 +205,18 @@ def _build_datasets(
         if entry["dataset_type"] == "spatial"
     ]
 
-    dataset_kwargs = {
-        "max_len": cfg.model.model_config.seq_len,
-        "pad_zeros": cfg.model.data_config.pad_zeros,
-        "pad_token": cfg.model.data_config.gene_pad_token,
-        "sort_genes": False,
-        "filter_to_vocab": True,
-        "filter_outliers": 0.0,
-        "gene_col_name": "ensembl_id",
-        "normalize_to_scale": 0,
-        "randomize_order": False,
-        "min_expressed_genes": 0,
-        "clip_counts": 30,
-        "use_raw": None,
-        "remove_duplicate_genes": False,
-    }
+    dataset_kwargs = _dataset_kwargs(cfg)
 
-    single_cell_dataset = AnnDataset(
+    # Backed reads keep peak RAM flat as dataset size grows; HDF5 handles are
+    # reopened lazily inside forked DataLoader workers (AnnDatasetOOM).
+    single_cell_dataset = AnnDatasetOOM(
         files_list=single_cell_files,
         gene_vocab=gene_vocab,
         aux_vocab=aux_vocab,
         **dataset_kwargs,
     )
     spatial_dataset = (
-        AnnDataset(files_list=spatial_files, gene_vocab=gene_vocab, aux_vocab=aux_vocab, **dataset_kwargs)
+        AnnDatasetOOM(files_list=spatial_files, gene_vocab=gene_vocab, aux_vocab=aux_vocab, **dataset_kwargs)
         if spatial_files
         else None
     )
@@ -223,7 +228,9 @@ def _build_datasets(
         obs_frames = [
             ad.read_h5ad(path, backed="r").obs for path in single_cell_files
         ]
-        obs = pd.concat(obs_frames)
+        # Backed obs frames carry string indices; reset to positional so the
+        # sampled indices line up with the concatenated dataset row offsets.
+        obs = pd.concat(obs_frames).reset_index(drop=True)
         indices = stratified_sample_indices(
             obs,
             max_single_cells,
@@ -242,12 +249,28 @@ def _build_datasets(
     )
 
 
+def _dataloader_kwargs(manifest: dict[str, Any], device_type: str) -> dict[str, Any]:
+    """Build DataLoader keyword arguments from the manifest's dataloader section."""
+    loader_cfg = manifest.get("dataloader", {})
+    num_workers = int(loader_cfg.get("num_workers", 0))
+    kwargs: dict[str, Any] = {
+        "num_workers": num_workers,
+        "pin_memory": bool(loader_cfg.get("pin_memory", device_type == "cuda")),
+    }
+    if num_workers > 0:
+        kwargs["prefetch_factor"] = int(loader_cfg.get("prefetch_factor", 2))
+        kwargs["persistent_workers"] = bool(loader_cfg.get("persistent_workers", True))
+    return kwargs
+
+
 def _build_validation_loader(
+    manifest: dict[str, Any],
     prepared_report: dict[str, Any],
     cfg: Any,
     gene_vocab: dict,
     aux_vocab: dict,
     batch_size: int,
+    device_type: str = "cpu",
 ) -> DataLoader | None:
     validation_files = [
         entry["path"]
@@ -257,30 +280,18 @@ def _build_validation_loader(
     if not validation_files:
         return None
 
-    dataset = AnnDataset(
+    dataset = AnnDatasetOOM(
         files_list=validation_files,
         gene_vocab=gene_vocab,
         aux_vocab=aux_vocab,
-        max_len=cfg.model.model_config.seq_len,
-        pad_zeros=cfg.model.data_config.pad_zeros,
-        pad_token=cfg.model.data_config.gene_pad_token,
-        sort_genes=False,
-        filter_to_vocab=True,
-        filter_outliers=0.0,
-        gene_col_name="ensembl_id",
-        normalize_to_scale=0,
-        randomize_order=False,
-        min_expressed_genes=0,
-        clip_counts=30,
-        use_raw=None,
-        remove_duplicate_genes=False,
+        **_dataset_kwargs(cfg),
     )
     return DataLoader(
         dataset,
         batch_size=batch_size,
         shuffle=False,
-        num_workers=0,
         collate_fn=dataset.collate_fn,
+        **_dataloader_kwargs(manifest, device_type),
     )
 
 
@@ -465,11 +476,13 @@ def _ddp_worker(
 
     dataset = _build_datasets(manifest, prepared_report, cfg, gene_vocab, aux_vocab)
     validation_loader = _build_validation_loader(
+        manifest,
         prepared_report,
         cfg,
         gene_vocab,
         aux_vocab,
         batch_size,
+        device_type="cuda",
     )
     early_stopping = EarlyStopping(patience=early_stopping_patience)
     sampler = DistributedSampler(
@@ -483,8 +496,8 @@ def _ddp_worker(
         dataset,
         batch_size=batch_size,
         sampler=sampler,
-        num_workers=0,
         collate_fn=dataset.collate_fn,
+        **_dataloader_kwargs(manifest, "cuda"),
     )
 
     trainable_params = [p for p in model.parameters() if p.requires_grad]
@@ -581,8 +594,8 @@ def train_finetune(
         dataset,
         batch_size=batch_size,
         shuffle=False,
-        num_workers=0,
         collate_fn=dataset.collate_fn,
+        **_dataloader_kwargs(manifest, target_device.type),
     )
 
     trainable_params = [p for p in model.parameters() if p.requires_grad]
@@ -591,11 +604,13 @@ def train_finetune(
     initial_step = _maybe_resume_model(model, output_dir, resume)
     model.to(target_device)
     validation_loader = _build_validation_loader(
+        manifest,
         prepared_report,
         cfg,
         gene_vocab,
         aux_vocab,
         batch_size,
+        device_type=target_device.type,
     )
     early_stopping = EarlyStopping(patience=early_stopping_patience)
     summary = _run_training_loop(
