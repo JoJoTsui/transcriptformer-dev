@@ -106,9 +106,7 @@ def run_finetune_cli(args: argparse.Namespace) -> None:
                 "grad_accumulation": grad_accumulation,
             }
         else:
-            os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(
-                str(index) for index in selection.physical_indices
-            )
+            os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(str(index) for index in selection.physical_indices)
             plan = derive_batch_plan(
                 selection.min_free_vram_gb,
                 num_gpus,
@@ -141,7 +139,5 @@ def run_finetune_cli(args: argparse.Namespace) -> None:
     complete_manifest["preparation"] = prepared_report
     complete_manifest["training"] = training_summary
     complete_manifest["gpu_plan"] = gpu_plan
-    (output_dir / "run_manifest.json").write_text(
-        json.dumps(complete_manifest, indent=2) + "\n"
-    )
+    (output_dir / "run_manifest.json").write_text(json.dumps(complete_manifest, indent=2) + "\n")
     print(f"Finetune complete -> {output_dir}")

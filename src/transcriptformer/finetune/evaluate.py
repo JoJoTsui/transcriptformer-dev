@@ -32,9 +32,7 @@ def _inference_cfg(
 ):
     with open(checkpoint_path / "config.json") as f:
         checkpoint_cfg = OmegaConf.create(json.load(f))
-    base_cfg = OmegaConf.load(
-        _repo_root() / "src" / "transcriptformer" / "cli" / "conf" / "inference_config.yaml"
-    )
+    base_cfg = OmegaConf.load(_repo_root() / "src" / "transcriptformer" / "cli" / "conf" / "inference_config.yaml")
     cfg = OmegaConf.merge(checkpoint_cfg, base_cfg)
     cfg.model.checkpoint_path = str(checkpoint_path)
     cfg.model.data_config.aux_vocab_path = str(checkpoint_path / "vocabs")

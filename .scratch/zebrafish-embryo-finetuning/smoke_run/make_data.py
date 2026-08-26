@@ -1,4 +1,5 @@
 """Generate contract-complete embryo H5ADs on the real zebrafish vocab for ticket 09."""
+
 import h5py
 import numpy as np
 import pandas as pd
@@ -17,6 +18,7 @@ with h5py.File(VOCAB, "r") as f:
 genes = list(rng.choice(all_genes, size=8000, replace=False))
 # Per-gene mean expression with a long tail, like real scRNA-seq.
 gene_means = rng.gamma(shape=0.3, scale=3.0, size=len(genes))
+
 
 def make(path, embryo_id, n_obs, dataset_type, stage, section_id=None):
     # Cell-type mixtures shift gene means slightly per cell.
@@ -40,6 +42,7 @@ def make(path, embryo_id, n_obs, dataset_type, stage, section_id=None):
     adata = ad.AnnData(X=sparse.csr_matrix(counts), obs=obs, var=var)
     adata.write_h5ad(path)
     print(f"wrote {path} {adata.shape}")
+
 
 make(OUT / "sc_embryo_1.h5ad", "embryo_1", 2000, "single_cell", "24hpf")
 make(OUT / "sc_embryo_2.h5ad", "embryo_2", 2000, "single_cell", "24hpf")

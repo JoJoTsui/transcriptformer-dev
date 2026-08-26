@@ -117,14 +117,10 @@ def test_prepare_only_produces_model_ready_h5ad(tmp_path: Path) -> None:
     embryo_splits = splits["embryo_splits"]
     assert set(embryo_splits.values()) == {"train", "validation", "final_holdout"}
 
-    holdout_embryos = {
-        embryo for embryo, split in embryo_splits.items() if split == "final_holdout"
-    }
+    holdout_embryos = {embryo for embryo, split in embryo_splits.items() if split == "final_holdout"}
     for prepared_file in prepared_files:
         adata = ad.read_h5ad(prepared_file)
-        assert adata.obs["embryo_id"].iloc[0] not in holdout_embryos or (
-            adata.obs["split"] == "final_holdout"
-        ).all()
+        assert adata.obs["embryo_id"].iloc[0] not in holdout_embryos or (adata.obs["split"] == "final_holdout").all()
 
 
 def test_prepare_rejects_normalized_counts(tmp_path: Path) -> None:
@@ -184,10 +180,7 @@ def test_targeted_panel_vocab_filtering(tmp_path: Path) -> None:
 
 
 def test_assign_splits_uses_embryo_boundaries() -> None:
-    entries = [
-        {"path": f"sc_{i}.h5ad", "embryo_id": f"embryo_{i}", "section_id": None}
-        for i in range(1, 6)
-    ]
+    entries = [{"path": f"sc_{i}.h5ad", "embryo_id": f"embryo_{i}", "section_id": None} for i in range(1, 6)]
     entries.append(
         {
             "path": "spatial_4.h5ad",

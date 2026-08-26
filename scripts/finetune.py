@@ -33,21 +33,28 @@ torch.set_float32_matmul_precision("high")
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Run a small finetuning smoke test on a TranscriptFormer checkpoint."
+    parser = argparse.ArgumentParser(description="Run a small finetuning smoke test on a TranscriptFormer checkpoint.")
+    parser.add_argument(
+        "--checkpoint-path",
+        required=True,
+        type=Path,
+        help="Directory containing config.json, model_weights.pt, and vocabs/.",
     )
-    parser.add_argument("--checkpoint-path", required=True, type=Path, help="Directory containing config.json, model_weights.pt, and vocabs/.")
     parser.add_argument("--data-file", required=True, type=Path, help="Input H5AD/AnnData file with raw counts.")
     parser.add_argument("--output-path", type=Path, default=Path("checkpoints/tf_metazoa_finetuned"))
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--weight-decay", type=float, default=0.0)
     parser.add_argument("--epochs", type=int, default=1)
-    parser.add_argument("--max-steps", type=int, default=2, help="Stop after this many optimizer steps; 0 means run the full epoch(s).")
+    parser.add_argument(
+        "--max-steps", type=int, default=2, help="Stop after this many optimizer steps; 0 means run the full epoch(s)."
+    )
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument("--precision", choices=["32", "16-mixed"], default="16-mixed")
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--compile-block-mask", action="store_true", help="Enable torch.compile for the FlexAttention block mask.")
+    parser.add_argument(
+        "--compile-block-mask", action="store_true", help="Enable torch.compile for the FlexAttention block mask."
+    )
     return parser.parse_args()
 
 

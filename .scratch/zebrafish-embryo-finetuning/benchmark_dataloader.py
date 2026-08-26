@@ -7,6 +7,7 @@ Usage:
   .venv/bin/python benchmark_dataloader.py                 # full benchmark
   .venv/bin/python benchmark_dataloader.py --rss MODE SIZE # subprocess helper
 """
+
 import json
 import subprocess
 import sys
@@ -72,9 +73,7 @@ def gene_vocab() -> dict:
 def build_dataset(mode: str, files: list[Path], vocab: dict):
     cls = AnnDatasetOOM if mode == "backed" else AnnDataset
     extra = (
-        {}
-        if mode == "backed"
-        else {"min_expressed_genes": 0, "filter_outliers": 0.0, "gene_col_name": "ensembl_id"}
+        {} if mode == "backed" else {"min_expressed_genes": 0, "filter_outliers": 0.0, "gene_col_name": "ensembl_id"}
     )
     return cls(
         files_list=[str(f) for f in files],

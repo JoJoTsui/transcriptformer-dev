@@ -67,9 +67,7 @@ def _load_model(checkpoint_path: Path):
     with open(checkpoint_path / "config.json") as f:
         checkpoint_cfg = OmegaConf.create(json.load(f))
 
-    base_cfg = OmegaConf.load(
-        _repo_root() / "src" / "transcriptformer" / "cli" / "conf" / "inference_config.yaml"
-    )
+    base_cfg = OmegaConf.load(_repo_root() / "src" / "transcriptformer" / "cli" / "conf" / "inference_config.yaml")
     cfg = OmegaConf.merge(checkpoint_cfg, base_cfg)
     cfg.model.checkpoint_path = str(checkpoint_path)
     cfg.model.data_config.aux_vocab_path = str(checkpoint_path / "vocabs")
@@ -154,14 +152,10 @@ class BalancedDataset(Dataset):
         use_spatial = random.Random(seed_int).random() < self.spatial_fraction
         if use_spatial and self.spatial_dataset is not None and len(self.spatial_dataset) > 0:
             source_seed = (self.seed * 1000003 + index * 100003 + 1) & 0xFFFFFFFF
-            source_index = random.Random(source_seed).randrange(
-                len(self.spatial_dataset)
-            )
+            source_index = random.Random(source_seed).randrange(len(self.spatial_dataset))
             return self.spatial_dataset[source_index]
         source_seed = (self.seed * 1000003 + index * 100003 + 2) & 0xFFFFFFFF
-        source_index = random.Random(source_seed).randrange(
-            len(self.single_cell_dataset)
-        )
+        source_index = random.Random(source_seed).randrange(len(self.single_cell_dataset))
         return self.single_cell_dataset[source_index]
 
 
@@ -189,21 +183,9 @@ def _build_datasets(
     gene_vocab: dict,
     aux_vocab: dict,
 ):
-    train_entries = [
-        entry
-        for entry in prepared_report["datasets"]
-        if entry["split"] == "train"
-    ]
-    single_cell_files = [
-        entry["path"]
-        for entry in train_entries
-        if entry["dataset_type"] == "single_cell"
-    ]
-    spatial_files = [
-        entry["path"]
-        for entry in train_entries
-        if entry["dataset_type"] == "spatial"
-    ]
+    train_entries = [entry for entry in prepared_report["datasets"] if entry["split"] == "train"]
+    single_cell_files = [entry["path"] for entry in train_entries if entry["dataset_type"] == "single_cell"]
+    spatial_files = [entry["path"] for entry in train_entries if entry["dataset_type"] == "spatial"]
 
     dataset_kwargs = _dataset_kwargs(cfg)
 
@@ -221,13 +203,9 @@ def _build_datasets(
         else None
     )
 
-    max_single_cells = int(
-        manifest.get("sampling", {}).get("max_single_cells", 1_000_000)
-    )
+    max_single_cells = int(manifest.get("sampling", {}).get("max_single_cells", 1_000_000))
     if len(single_cell_dataset) > max_single_cells:
-        obs_frames = [
-            ad.read_h5ad(path, backed="r").obs for path in single_cell_files
-        ]
+        obs_frames = [ad.read_h5ad(path, backed="r").obs for path in single_cell_files]
         # Backed obs frames carry string indices; reset to positional so the
         # sampled indices line up with the concatenated dataset row offsets.
         obs = pd.concat(obs_frames).reset_index(drop=True)
@@ -238,9 +216,7 @@ def _build_datasets(
         )
         single_cell_dataset = Subset(single_cell_dataset, indices)
 
-    spatial_fraction = float(
-        manifest.get("sampling", {}).get("spatial_fraction", 0.5)
-    )
+    spatial_fraction = float(manifest.get("sampling", {}).get("spatial_fraction", 0.5))
     return BalancedDataset(
         single_cell_dataset,
         spatial_dataset,
@@ -272,11 +248,7 @@ def _build_validation_loader(
     batch_size: int,
     device_type: str = "cpu",
 ) -> DataLoader | None:
-    validation_files = [
-        entry["path"]
-        for entry in prepared_report["datasets"]
-        if entry["split"] == "validation"
-    ]
+    validation_files = [entry["path"] for entry in prepared_report["datasets"] if entry["split"] == "validation"]
     if not validation_files:
         return None
 
@@ -406,11 +378,7 @@ def _run_training_loop(
                     step,
                     loss_value,
                 )
-                if (
-                    validation_loader is not None
-                    and early_stopping is not None
-                    and step % validation_interval == 0
-                ):
+                if validation_loader is not None and early_stopping is not None and step % validation_interval == 0:
                     validation_loss = _validation_loss(
                         model,
                         validation_loader,
@@ -442,9 +410,7 @@ def _run_training_loop(
 
 
 def _write_training_summary(output_dir: Path, summary: dict[str, Any]) -> None:
-    (output_dir / "training_summary.json").write_text(
-        json.dumps(summary, indent=2) + "\n"
-    )
+    (output_dir / "training_summary.json").write_text(json.dumps(summary, indent=2) + "\n")
 
 
 def _ddp_worker(

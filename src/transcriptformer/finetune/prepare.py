@@ -159,9 +159,7 @@ def prepare_dataset_file(
     gene_ids = _load_gene_ids(ad.AnnData(X=X, obs=obs, var=var_df))
     mapped_ids, keep_genes = _map_gene_ids(gene_ids, gene_mapping)
     if not any(keep_genes):
-        raise ValueError(
-            f"Dataset {input_path} has no ENSDARG gene IDs and no mapping provided"
-        )
+        raise ValueError(f"Dataset {input_path} has no ENSDARG gene IDs and no mapping provided")
 
     keep_idx = np.where(keep_genes)[0]
     X = X[:, keep_idx]
@@ -179,9 +177,7 @@ def prepare_dataset_file(
     cell_type_mapping = cell_type_mapping or {}
     obs = obs.copy()
     obs["stage"] = obs["stage"].map(lambda value: stage_mapping.get(value, value))
-    obs["cell_type"] = obs["cell_type"].map(
-        lambda value: cell_type_mapping.get(value, value)
-    )
+    obs["cell_type"] = obs["cell_type"].map(lambda value: cell_type_mapping.get(value, value))
 
     X, obs, removed = _apply_qc(X, obs, qc_config or {})
     if obs.shape[0] == 0:
@@ -216,10 +212,7 @@ def assign_splits(entries: list[dict[str, Any]], seed: int = 0) -> dict[str, Any
 
     embryos = sorted(embryos_by_id)
     if len(embryos) < 3:
-        raise ValueError(
-            "A three-way split requires at least 3 distinct embryos; "
-            f"found {len(embryos)}"
-        )
+        raise ValueError(f"A three-way split requires at least 3 distinct embryos; found {len(embryos)}")
 
     rng = np.random.default_rng(seed)
     rng.shuffle(embryos)
@@ -279,15 +272,11 @@ def prepare_run(manifest: dict[str, Any], output_dir: Path) -> dict[str, Any]:
             )
         )
 
-    (output_dir / "split_assignments.json").write_text(
-        json.dumps(splits, indent=2) + "\n"
-    )
+    (output_dir / "split_assignments.json").write_text(json.dumps(splits, indent=2) + "\n")
 
     report = {
         "datasets": prepared_entries,
         "splits": splits,
     }
-    (output_dir / "preparation_report.json").write_text(
-        json.dumps(report, indent=2) + "\n"
-    )
+    (output_dir / "preparation_report.json").write_text(json.dumps(report, indent=2) + "\n")
     return report

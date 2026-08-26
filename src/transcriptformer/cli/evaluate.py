@@ -38,11 +38,7 @@ def run_evaluate_cli(args: argparse.Namespace) -> None:
         )
 
     preparation = json.loads(preparation_path.read_text())
-    holdout_files = [
-        entry["path"]
-        for entry in preparation["datasets"]
-        if entry["split"] == "final_holdout"
-    ]
+    holdout_files = [entry["path"] for entry in preparation["datasets"] if entry["split"] == "final_holdout"]
     if not holdout_files:
         raise ValueError("No final holdout files found in preparation report")
 
@@ -84,7 +80,5 @@ def run_evaluate_cli(args: argparse.Namespace) -> None:
         "finetuned": results["finetuned"],
         "holdout_files": holdout_files,
     }
-    (output_dir / "evaluation_report.json").write_text(
-        json.dumps(report, indent=2) + "\n"
-    )
+    (output_dir / "evaluation_report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(f"Evaluation report -> {output_dir / 'evaluation_report.json'}")

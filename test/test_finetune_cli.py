@@ -103,6 +103,4 @@ def test_synthetic_fixture_has_expected_columns(tmp_path: Path) -> None:
 
     assert adata.shape == (5, 20)
     assert "ensembl_id" in adata.var.columns
-    assert {"embryo_id", "stage", "cell_type", "assay", "spatial_x", "spatial_y"}.issubset(
-        adata.obs.columns
-    )
+    assert {"embryo_id", "stage", "cell_type", "assay", "spatial_x", "spatial_y"}.issubset(adata.obs.columns)

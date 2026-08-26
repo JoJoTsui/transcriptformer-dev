@@ -41,9 +41,7 @@ def validate_run_manifest(data: dict[str, Any]) -> list[str]:
 
             dataset_type = dataset.get("dataset_type")
             if dataset_type not in VALID_DATASET_TYPES:
-                errors.append(
-                    f"datasets[{index}].dataset_type must be one of {VALID_DATASET_TYPES}"
-                )
+                errors.append(f"datasets[{index}].dataset_type must be one of {VALID_DATASET_TYPES}")
 
             if dataset_type == "spatial" and not dataset.get("section_id"):
                 errors.append(f"datasets[{index}] spatial datasets require section_id")

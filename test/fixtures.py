@@ -39,10 +39,7 @@ def make_synthetic_h5ad(
             "section_id": [section_id or f"section_{embryo_id}"] * n_obs,
             "stage": [stage] * n_obs,
             "cell_type": [cell_type] * n_obs,
-            "assay": [
-                "Visium Spatial Gene Expression" if dataset_type == "spatial" else "10x 3' v3"
-            ]
-            * n_obs,
+            "assay": ["Visium Spatial Gene Expression" if dataset_type == "spatial" else "10x 3' v3"] * n_obs,
             "spatial_x": rng.uniform(0, 100, n_obs),
             "spatial_y": rng.uniform(0, 100, n_obs),
         }

@@ -78,9 +78,9 @@ def load_vocabs_and_embeddings(cfg):
     )
 
     emb_matrix = torch.tensor(emb_matrix)
-    assert emb_matrix.shape[0] == len(
-        gene_vocab
-    ), f"Embeddings matrix has wrong shape, {emb_matrix.shape[0]} != {len(gene_vocab)}"
+    assert emb_matrix.shape[0] == len(gene_vocab), (
+        f"Embeddings matrix has wrong shape, {emb_matrix.shape[0]} != {len(gene_vocab)}"
+    )
 
     return (gene_vocab, aux_vocab), emb_matrix
 

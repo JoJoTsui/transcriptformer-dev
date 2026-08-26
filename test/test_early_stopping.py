@@ -24,9 +24,7 @@ def test_early_stopping_resets_on_improvement() -> None:
 
 
 def test_resume_state_reads_previous_summary(tmp_path) -> None:
-    (tmp_path / "training_summary.json").write_text(
-        json.dumps({"steps": 7, "last_loss": 1.5})
-    )
+    (tmp_path / "training_summary.json").write_text(json.dumps({"steps": 7, "last_loss": 1.5}))
     state = _resume_state(tmp_path)
     assert state["steps"] == 7
 
