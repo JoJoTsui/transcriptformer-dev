@@ -149,3 +149,46 @@ def test_evaluate_cli_writes_report(tmp_path: Path) -> None:
     assert "finetuned" in report
     assert (output_dir / "embeddings_baseline.h5ad").is_file()
     assert (output_dir / "embeddings_finetuned.h5ad").is_file()
+
+
+def test_pseudotime_stage_spearman_perfect_trajectory() -> None:
+    from transcriptformer.finetune.evaluate import pseudotime_stage_spearman
+
+    # Embeddings ordered along a line; stage increases monotonically along it.
+    n = 60
+    embeddings = np.zeros((n, 4))
+    embeddings[:, 0] = np.linspace(0, 10, n)
+    adata = ad.AnnData(
+        obs=pd.DataFrame({"stage": [f"{i}hpf" for i in range(n)]}),
+    )
+    adata.obsm["embeddings"] = embeddings
+
+    result = pseudotime_stage_spearman(adata)
+    assert result["spearman"] > 0.95
+    assert result["n_stages"] == n
+
+
+def test_pseudotime_stage_spearman_scrambled() -> None:
+    from transcriptformer.finetune.evaluate import pseudotime_stage_spearman
+
+    rng = np.random.default_rng(0)
+    n = 60
+    embeddings = rng.normal(size=(n, 4))
+    stages = rng.choice(["10hpf", "24hpf", "36hpf"], size=n)
+    adata = ad.AnnData(obs=pd.DataFrame({"stage": stages}))
+    adata.obsm["embeddings"] = embeddings
+
+    result = pseudotime_stage_spearman(adata)
+    assert -1.0 <= result["spearman"] <= 1.0
+    assert result["n_stages"] == 3
+
+
+def test_pseudotime_stage_spearman_single_stage() -> None:
+    from transcriptformer.finetune.evaluate import pseudotime_stage_spearman
+
+    adata = ad.AnnData(obs=pd.DataFrame({"stage": ["24hpf"] * 5}))
+    adata.obsm["embeddings"] = np.zeros((5, 4))
+
+    result = pseudotime_stage_spearman(adata)
+    assert np.isnan(result["spearman"])
+    assert result["n_stages"] == 1

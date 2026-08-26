@@ -1,4 +1,4 @@
-"""Benchmark backed vs in-memory dataloading for ticket 13.
+"""Benchmark backed vs in-memory dataloading (ticket 13; extended to 200k cells for ticket 18).
 
 Measures peak RSS at dataset construction (RAM scaling) in fresh subprocesses,
 and cells/sec iteration throughput at several num_workers settings.
@@ -23,7 +23,12 @@ HERE = Path(__file__).parent
 DATA = HERE / "benchmark_data"
 VOCAB_H5 = "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa/vocabs/danio_rerio_gene.h5"
 N_GENES = 8000
-SIZES = [10_000, 40_000]
+SIZES = [10_000, 40_000, 200_000]
+# In-memory loading materializes dense float32 matrices plus per-cell token
+# arrays; at 200k cells that is tens of GB and previously triggered a WSL
+# restart. Cap in-memory RSS probes at sizes that fit comfortably in RAM.
+IN_MEMORY_MAX_CELLS = 40_000
+GEN_CHUNK = 20_000
 N_ITER_SAMPLES = 2000
 BATCH_SIZE = 8
 
@@ -51,14 +56,18 @@ def make_file(path: Path, n_obs: int, seed: int) -> None:
         all_genes = [k.decode() for k in f["keys"][:]]
     genes = list(rng.choice(all_genes, size=N_GENES, replace=False))
     gene_means = rng.gamma(shape=0.3, scale=3.0, size=N_GENES)
-    lam = np.tile(gene_means, (n_obs, 1))
-    counts = rng.negative_binomial(2.0, 2.0 / (2.0 + lam)).astype(np.float32)
+    chunks = []
+    for start in range(0, n_obs, GEN_CHUNK):
+        n = min(GEN_CHUNK, n_obs - start)
+        lam = np.tile(gene_means, (n, 1))
+        chunks.append(sparse.csr_matrix(rng.negative_binomial(2.0, 2.0 / (2.0 + lam)).astype(np.float32)))
+    counts = sparse.vstack(chunks, format="csr")
     obs = pd.DataFrame(
         {"embryo_id": "bench", "stage": "24hpf", "cell_type": "neural", "assay": "10x 3' v3"},
         index=[f"cell_{seed}_{i}" for i in range(n_obs)],
     )
     var = pd.DataFrame({"ensembl_id": genes}, index=genes)
-    ad.AnnData(X=sparse.csr_matrix(counts), obs=obs, var=var).write_h5ad(path)
+    ad.AnnData(X=counts, obs=obs, var=var).write_h5ad(path)
 
 
 def gene_vocab() -> dict:
@@ -98,6 +107,9 @@ def measure_rss_scaling() -> dict:
     for mode in ("backed", "in_memory"):
         per_size = {}
         for size in SIZES:
+            if mode == "in_memory" and size > IN_MEMORY_MAX_CELLS:
+                per_size[size] = "skipped (exceeds IN_MEMORY_MAX_CELLS, RAM guard)"
+                continue
             out = subprocess.run(
                 [sys.executable, __file__, "--rss", mode, str(size)],
                 capture_output=True,

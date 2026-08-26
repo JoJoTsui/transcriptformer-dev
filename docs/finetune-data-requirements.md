@@ -44,8 +44,8 @@ Each dataset in the run manifest is one AnnData H5AD file containing one embryo
 | `cell_type`  | all datasets        | Evaluation metadata only — never a train target |
 | `assay`      | all datasets        | Provenance (e.g. `10x 3' v3`, `Visium`)        |
 | `section_id` | spatial only        | Section identifier for spatial datasets        |
-| `spatial_x`  | spatial only        | Spot x coordinate, kept as `.obs` metadata     |
-| `spatial_y`  | spatial only        | Spot y coordinate, kept as `.obs` metadata     |
+| `spatial_x`  | spatial only        | Spot x coordinate; discretized into grid bins when `"spatial"` conditioning is enabled (section 8) |
+| `spatial_y`  | spatial only        | Spot y coordinate; discretized into grid bins when `"spatial"` conditioning is enabled (section 8) |
 
 Spatial coordinates are metadata only — they are preserved for downstream
 analysis and are **not** model input.
@@ -131,6 +131,14 @@ Optional top-level sections:
   memory-mapped backed access, so raising `num_workers` increases throughput
   without growing RAM; backed HDF5 handles are reopened per worker process
   automatically
+- `"spatial"` — spatial conditioning prototype: `enabled` (default false) and
+  `grid_size` (default 32). When enabled, preparation discretizes
+  `spatial_x`/`spatial_y` into per-section grid cells (`obs["spatial_bin"]`,
+  `"unknown"` for single-cell rows), and training adds a `spatial_bin`
+  auxiliary token whose learned embedding is prepended to the gene sequence.
+  The grid must fit the aux vocabulary (`grid_size² + 1` tokens); the
+  effective `seq_len` is reduced by one so the block-attention length stays
+  divisible by 128
 
 ## 9. Preparation outputs
 

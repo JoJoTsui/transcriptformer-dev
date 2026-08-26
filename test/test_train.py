@@ -371,3 +371,54 @@ def test_training_loop_records_best_and_final_validation_loss(tmp_path: Path) ->
 
     assert summary["best_validation_loss"] == 0.3
     assert summary["final_validation_loss"] == 0.4
+
+
+def _mse_criterion(mu, input_counts, mask):
+    import torch
+
+    return torch.mean((mu - input_counts) ** 2)
+
+
+def _make_tiny_model():
+    """Minimal stand-in for TranscriptFormer on the _load_model seam."""
+    import torch
+    from types import SimpleNamespace
+
+    class Tiny(torch.nn.Module):
+        def __init__(self) -> None:
+            super().__init__()
+            self.linear = torch.nn.Linear(1, 1)
+            self.criterion = _mse_criterion
+            self.loss_config = SimpleNamespace(gene_id_loss_weight=0)
+
+        def forward(self, batch):
+            totals = batch.gene_counts.sum(dim=1, keepdim=True)
+            return {"mu": self.linear(totals), "input_counts": totals, "mask": None}
+
+    return Tiny()
+
+
+def test_ddp_cpu_gloo_smoke(tmp_path: Path) -> None:
+    """Exercise the multi-process DDP path on CPU via the gloo backend.
+
+    Runs in a clean subprocess: fork-based DDP children cannot call backward()
+    once this pytest process has already used autograd in an earlier test.
+    """
+    import os
+    import subprocess
+    import sys
+
+    repo_root = Path(__file__).resolve().parents[1]
+    env = {**os.environ, "PYTHONPATH": str(repo_root), "MASTER_PORT": "29551"}
+    result = subprocess.run(
+        [sys.executable, "-m", "test.ddp_gloo_driver", str(tmp_path)],
+        cwd=repo_root,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=300,
+    )
+
+    assert result.returncode == 0, result.stderr[-2000:]
+    assert (tmp_path / "run" / "training_summary.json").is_file()
+    assert (tmp_path / "run" / "model_weights.pt").is_file()

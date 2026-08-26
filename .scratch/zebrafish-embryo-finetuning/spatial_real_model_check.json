@@ -1,0 +1,14 @@
+{
+  "device": "cuda",
+  "seq_len": 2046,
+  "spatial_bins": 1025,
+  "losses": [
+    21.3973,
+    19.4729,
+    18.7887,
+    18.0572,
+    17.6262
+  ],
+  "loss_decreased": true,
+  "spatial_bin_embedding_requires_grad": true
+}

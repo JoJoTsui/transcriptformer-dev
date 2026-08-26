@@ -79,7 +79,12 @@ def derive_batch_plan(
     if min_free_vram_gb <= 0:
         per_gpu_batch = requested_batch_size
     else:
-        per_gpu_batch = max(1, int((min_free_vram_gb - 8) // 8))
+        # Calibrated on the RTX 3090 with the real tf_metazoa checkpoint
+        # (ticket 15, batch_memory_measurements.json): forward+backward with
+        # AdamW under fp16 AMP peaked at 16.3 GB (batch 1) and 24.4 GB
+        # (batch 2) at seq_len 2047 — ~8.2 GB fixed footprint and ~8.1 GB per
+        # sample. Reserve 10 GB fixed and budget 8.5 GB per sample for margin.
+        per_gpu_batch = max(1, int((min_free_vram_gb - 10.0) // 8.5))
         per_gpu_batch = min(per_gpu_batch, requested_batch_size)
 
     grad_accumulation = 1

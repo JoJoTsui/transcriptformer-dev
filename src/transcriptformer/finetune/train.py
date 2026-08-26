@@ -20,6 +20,12 @@ from torch.utils.data.distributed import DistributedSampler
 from transcriptformer.data.dataloader import AnnDatasetOOM
 from transcriptformer.data.dataclasses import BatchData
 from transcriptformer.finetune.early_stopping import EarlyStopping
+from transcriptformer.finetune.spatial import (
+    SPATIAL_VOCAB_NAME,
+    load_state_dict_with_new_aux,
+    setup_spatial_aux,
+    spatial_grid_size_from_manifest,
+)
 from transcriptformer.model.model import Transcriptformer
 from transcriptformer.tokenizer.vocab import load_vocabs_and_embeddings
 
@@ -61,7 +67,7 @@ def _compute_loss(model: Transcriptformer, outputs: dict) -> torch.Tensor:
     return loss
 
 
-def _load_model(checkpoint_path: Path):
+def _load_model(checkpoint_path: Path, spatial_grid_size: int | None = None, work_dir: Path | None = None):
     """Load a TranscriptFormer model from a checkpoint directory."""
     checkpoint_path = Path(checkpoint_path)
     with open(checkpoint_path / "config.json") as f:
@@ -74,6 +80,9 @@ def _load_model(checkpoint_path: Path):
     cfg.model.data_config.esm2_mappings_path = str(checkpoint_path / "vocabs")
     cfg.model.data_config.use_raw = None
     cfg.model.model_config.compile_block_mask = False
+
+    if spatial_grid_size is not None:
+        setup_spatial_aux(cfg, checkpoint_path, work_dir, spatial_grid_size)
 
     (gene_vocab, aux_vocab), emb_matrix = load_vocabs_and_embeddings(cfg)
     model = Transcriptformer(
@@ -90,7 +99,12 @@ def _load_model(checkpoint_path: Path):
         weights_only=True,
         map_location="cpu",
     )
-    model.load_state_dict(state_dict)
+    if spatial_grid_size is not None:
+        # The spatial_bin embedding rows are new parameters absent from the
+        # checkpoint; everything else must match exactly.
+        load_state_dict_with_new_aux(model, state_dict, SPATIAL_VOCAB_NAME)
+    else:
+        model.load_state_dict(state_dict)
     return model, cfg, gene_vocab, aux_vocab
 
 
@@ -402,6 +416,7 @@ def _run_training_loop(
         "steps": step,
         "epochs_run": last_epoch,
         "last_loss": losses[-1] if losses else None,
+        "losses": losses,
         "best_validation_loss": min(validation_losses) if validation_losses else None,
         "final_validation_loss": validation_losses[-1] if validation_losses else None,
         "stopped_early": stopped_early,
@@ -415,7 +430,6 @@ def _write_training_summary(output_dir: Path, summary: dict[str, Any]) -> None:
 
 def _ddp_worker(
     rank: int,
-    world_size: int,
     manifest: dict[str, Any],
     output_dir: Path,
     prepared_report: dict[str, Any],
@@ -429,23 +443,34 @@ def _ddp_worker(
     resume: bool,
     validation_interval: int,
     early_stopping_patience: int,
+    backend: str = "nccl",
+    spatial_grid_size: int | None = None,
 ) -> None:
     import torch.distributed as dist
 
     os.environ["MASTER_ADDR"] = "127.0.0.1"
     os.environ["MASTER_PORT"] = os.environ.get("MASTER_PORT", "29500")
-    dist.init_process_group("nccl", rank=rank, world_size=world_size)
-    torch.cuda.set_device(rank)
-    target_device = torch.device(f"cuda:{rank}")
-    use_amp = precision == "16-mixed"
+    # mp.spawn/start_processes call this as fn(rank, *args); the world size
+    # travels via the WORLD_SIZE env var set by train_finetune.
+    world_size = int(os.environ["WORLD_SIZE"])
+    dist.init_process_group(backend, rank=rank, world_size=world_size)
+    if backend == "nccl":
+        torch.cuda.set_device(rank)
+        target_device = torch.device(f"cuda:{rank}")
+    else:
+        # CPU backend (gloo): used by tests to exercise the DDP path without GPUs.
+        target_device = torch.device("cpu")
+    use_amp = target_device.type == "cuda" and precision == "16-mixed"
     amp_dtype = torch.float16 if use_amp else torch.float32
 
-    model, cfg, gene_vocab, aux_vocab = _load_model(Path(checkpoint_path))
+    model, cfg, gene_vocab, aux_vocab = _load_model(
+        Path(checkpoint_path), spatial_grid_size=spatial_grid_size, work_dir=output_dir
+    )
     initial_step = _maybe_resume_model(model, output_dir, resume)
     model.to(target_device)
     from torch.nn.parallel import DistributedDataParallel
 
-    model = DistributedDataParallel(model, device_ids=[rank])
+    model = DistributedDataParallel(model, device_ids=[rank] if backend == "nccl" else None)
 
     dataset = _build_datasets(manifest, prepared_report, cfg, gene_vocab, aux_vocab)
     validation_loader = _build_validation_loader(
@@ -455,7 +480,7 @@ def _ddp_worker(
         gene_vocab,
         aux_vocab,
         batch_size,
-        device_type="cuda",
+        device_type=target_device.type,
     )
     early_stopping = EarlyStopping(patience=early_stopping_patience)
     sampler = DistributedSampler(
@@ -470,7 +495,7 @@ def _ddp_worker(
         batch_size=batch_size,
         sampler=sampler,
         collate_fn=dataset.collate_fn,
-        **_dataloader_kwargs(manifest, "cuda"),
+        **_dataloader_kwargs(manifest, target_device.type),
     )
 
     trainable_params = [p for p in model.parameters() if p.requires_grad]
@@ -519,9 +544,11 @@ def train_finetune(
     resume: bool = True,
     validation_interval: int = 10,
     early_stopping_patience: int = 3,
+    backend: str = "nccl",
 ) -> dict[str, Any]:
     """Run a finetuning training loop and save a checkpoint and summary."""
     torch.manual_seed(int(manifest.get("seed", 0)))
+    spatial_grid_size = spatial_grid_size_from_manifest(manifest)
 
     if num_gpus > 1:
         os.environ["MASTER_ADDR"] = "127.0.0.1"
@@ -529,26 +556,35 @@ def train_finetune(
         os.environ["WORLD_SIZE"] = str(num_gpus)
         import torch.multiprocessing as mp
 
-        mp.spawn(
-            _ddp_worker,
-            args=(
-                manifest,
-                output_dir,
-                prepared_report,
-                str(checkpoint_path),
-                max_steps,
-                batch_size,
-                lr,
-                epochs,
-                precision,
-                grad_accumulation,
-                resume,
-                validation_interval,
-                early_stopping_patience,
-            ),
-            nprocs=num_gpus,
-            join=True,
+        spawn_args = (
+            manifest,
+            output_dir,
+            prepared_report,
+            str(checkpoint_path),
+            max_steps,
+            batch_size,
+            lr,
+            epochs,
+            precision,
+            grad_accumulation,
+            resume,
+            validation_interval,
+            early_stopping_patience,
+            backend,
+            spatial_grid_size,
         )
+        if backend == "nccl":
+            mp.spawn(_ddp_worker, args=spawn_args, nprocs=num_gpus, join=True)
+        else:
+            # fork lets in-process test doubles (e.g. a mocked _load_model)
+            # propagate to the DDP children; spawn would re-import and lose them.
+            mp.start_processes(
+                _ddp_worker,
+                args=spawn_args,
+                nprocs=num_gpus,
+                join=True,
+                start_method="fork",
+            )
         summary_path = output_dir / "training_summary.json"
         if summary_path.is_file():
             return json.loads(summary_path.read_text())
@@ -559,7 +595,9 @@ def train_finetune(
     amp_dtype = torch.float16 if use_amp else torch.float32
 
     logger.info("Loading checkpoint from %s", checkpoint_path)
-    model, cfg, gene_vocab, aux_vocab = _load_model(Path(checkpoint_path))
+    model, cfg, gene_vocab, aux_vocab = _load_model(
+        Path(checkpoint_path), spatial_grid_size=spatial_grid_size, work_dir=output_dir
+    )
 
     logger.info("Building balanced datasets")
     dataset = _build_datasets(manifest, prepared_report, cfg, gene_vocab, aux_vocab)

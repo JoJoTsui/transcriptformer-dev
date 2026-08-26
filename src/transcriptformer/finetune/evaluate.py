@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -92,11 +93,19 @@ def cell_type_macro_f1(adata: ad.AnnData, label_col: str = "cell_type") -> dict[
     }
 
 
-def _stage_numeric(stage_values: pd.Series) -> np.ndarray:
+def _stage_sort_key(value: Any) -> tuple:
+    """Sort stages numerically when possible, including labels like '24hpf'."""
     try:
-        unique = sorted(stage_values.unique(), key=lambda value: float(value))
+        return (0, float(value), "")
     except (TypeError, ValueError):
-        unique = sorted(stage_values.unique(), key=str)
+        match = re.match(r"^\s*(\d+(?:\.\d+)?)", str(value))
+        if match:
+            return (0, float(match.group(1)), str(value))
+        return (1, 0.0, str(value))
+
+
+def _stage_numeric(stage_values: pd.Series) -> np.ndarray:
+    unique = sorted(stage_values.unique(), key=_stage_sort_key)
     mapping = {value: index for index, value in enumerate(unique)}
     return stage_values.map(mapping).to_numpy()
 

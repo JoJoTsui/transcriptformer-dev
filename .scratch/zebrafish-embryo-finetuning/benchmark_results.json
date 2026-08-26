@@ -7,50 +7,49 @@
     "backed": {
       "10000": {
         "n_obs": 10000,
-        "peak_rss_mb": 10352.6,
-        "delta_mb": 0.0
+        "peak_rss_mb": 582.9,
+        "delta_mb": 12.7
       },
       "40000": {
         "n_obs": 40000,
-        "peak_rss_mb": 10352.6,
-        "delta_mb": 0.0
+        "peak_rss_mb": 591.7,
+        "delta_mb": 21.5
+      },
+      "200000": {
+        "n_obs": 200000,
+        "peak_rss_mb": 617.0,
+        "delta_mb": 46.4
       }
     },
     "in_memory": {
       "10000": {
         "n_obs": 10000,
-        "peak_rss_mb": 10352.6,
-        "delta_mb": 0.0
+        "peak_rss_mb": 5531.1,
+        "delta_mb": 4960.9
       },
       "40000": {
         "n_obs": 40000,
-        "peak_rss_mb": 20335.5,
-        "delta_mb": 9982.8
-      }
+        "peak_rss_mb": 20335.0,
+        "delta_mb": 19763.5
+      },
+      "200000": "skipped (exceeds IN_MEMORY_MAX_CELLS, RAM guard)"
     }
   },
   "throughput_backed": {
     "workers_0": {
       "cells": 2000,
-      "seconds": 4.48,
-      "cells_per_sec": 446.0
+      "seconds": 6.41,
+      "cells_per_sec": 311.8
     },
     "workers_2": {
       "cells": 2000,
-      "seconds": 2.47,
-      "cells_per_sec": 808.3
+      "seconds": 3.81,
+      "cells_per_sec": 525.0
     },
     "workers_4": {
       "cells": 2000,
-      "seconds": 1.48,
-      "cells_per_sec": 1354.6
-    }
-  },
-  "throughput_in_memory": {
-    "workers_0": {
-      "cells": 2000,
-      "seconds": 0.02,
-      "cells_per_sec": 104114.8
+      "seconds": 2.13,
+      "cells_per_sec": 937.0
     }
   }
 }

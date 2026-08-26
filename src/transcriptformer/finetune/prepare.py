@@ -12,6 +12,8 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 
+from transcriptformer.finetune.spatial import SPATIAL_BIN_COL, assign_spatial_bins, spatial_grid_size_from_manifest
+
 
 def _as_1d(values: Any) -> np.ndarray:
     return np.asarray(values).ravel()
@@ -37,9 +39,12 @@ def _load_gene_ids(adata: ad.AnnData) -> np.ndarray:
     return np.array([gene_id.split(".")[0] for gene_id in raw_ids])
 
 
-def _map_gene_ids(gene_ids: np.ndarray, gene_mapping: dict[str, str] | None) -> tuple[list[str], list[bool]]:
+def _map_gene_ids(
+    gene_ids: np.ndarray, gene_mapping: dict[str, str] | None
+) -> tuple[list[str], list[bool], list[str]]:
     mapped: list[str] = []
     keep: list[bool] = []
+    unmapped: list[str] = []
     gene_mapping = gene_mapping or {}
 
     for gene_id in gene_ids:
@@ -52,8 +57,9 @@ def _map_gene_ids(gene_ids: np.ndarray, gene_mapping: dict[str, str] | None) -> 
         else:
             mapped.append(gene_id)
             keep.append(False)
+            unmapped.append(gene_id)
 
-    return mapped, keep
+    return mapped, keep, unmapped
 
 
 def _load_vocab(vocab_path: str | Path | None) -> set[str] | None:
@@ -128,6 +134,7 @@ def prepare_dataset_file(
     cell_type_mapping: dict[str, str] | None = None,
     qc_config: dict[str, Any] | None = None,
     vocab_path: str | Path | None = None,
+    spatial_grid_size: int | None = None,
 ) -> dict[str, Any]:
     """Convert one dataset entry into a model-ready H5AD file."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -157,7 +164,7 @@ def prepare_dataset_file(
             gene_mapping = json.load(f)
 
     gene_ids = _load_gene_ids(ad.AnnData(X=X, obs=obs, var=var_df))
-    mapped_ids, keep_genes = _map_gene_ids(gene_ids, gene_mapping)
+    mapped_ids, keep_genes, unmapped_ids = _map_gene_ids(gene_ids, gene_mapping)
     if not any(keep_genes):
         raise ValueError(f"Dataset {input_path} has no ENSDARG gene IDs and no mapping provided")
 
@@ -183,6 +190,9 @@ def prepare_dataset_file(
     if obs.shape[0] == 0:
         raise ValueError(f"Dataset {input_path} was filtered out completely")
 
+    if spatial_grid_size is not None:
+        obs[SPATIAL_BIN_COL] = assign_spatial_bins(obs, spatial_grid_size, dataset["dataset_type"])
+
     obs["split"] = split
     prepared_adata = ad.AnnData(X=X, obs=obs, var=var)
 
@@ -200,6 +210,11 @@ def prepare_dataset_file(
         "n_obs": int(obs.shape[0]),
         "n_genes": int(var.shape[0]),
         "removed_obs": removed,
+        "unmapped_genes": {
+            "count": len(unmapped_ids),
+            "gene_ids": unmapped_ids[:50],
+            "truncated": len(unmapped_ids) > 50,
+        },
         "split": split,
     }
 
@@ -257,6 +272,7 @@ def prepare_run(manifest: dict[str, Any], output_dir: Path) -> dict[str, Any]:
     splits = assign_splits(metadata_entries, seed=int(manifest.get("seed", 0)))
 
     prepared_entries = []
+    spatial_grid_size = spatial_grid_size_from_manifest(manifest)
     for dataset in manifest["datasets"]:
         split = splits["splits"][dataset["path"]]
         prepared_entries.append(
@@ -269,6 +285,7 @@ def prepare_run(manifest: dict[str, Any], output_dir: Path) -> dict[str, Any]:
                 cell_type_mapping=manifest.get("cell_type_mapping"),
                 qc_config=manifest.get("qc", {}),
                 vocab_path=manifest.get("vocab_path"),
+                spatial_grid_size=spatial_grid_size,
             )
         )
 

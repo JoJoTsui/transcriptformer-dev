@@ -230,3 +230,46 @@ def test_preparation_report_contains_hashes(tmp_path: Path) -> None:
         source = Path(entry["source_path"])
         assert entry["sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
         assert entry["size_bytes"] == source.stat().st_size
+
+
+def test_prepare_reports_unmapped_genes(tmp_path: Path) -> None:
+    path = make_synthetic_h5ad(tmp_path / "symbols.h5ad", embryo_id="embryo_1", gene_mode="symbol")
+    # Map only the first 25 of 50 symbol genes; the rest are unmapped.
+    mapping = {f"gene_{i}": f"ENSDARG{i:011d}" for i in range(1, 26)}
+    mapping_path = tmp_path / "gene_mapping.json"
+    mapping_path.write_text(json.dumps(mapping))
+    dataset = _dataset(path, "single_cell", "embryo_1", "24hpf", "neural")
+
+    result = prepare_dataset_file(
+        dataset,
+        tmp_path / "prepared",
+        "train",
+        gene_mapping_path=mapping_path,
+    )
+    unmapped = result["unmapped_genes"]
+    assert unmapped["count"] == 25
+    assert "gene_26" in unmapped["gene_ids"]
+    assert all(not g.startswith("ENSDARG") for g in unmapped["gene_ids"])
+
+
+def test_prepare_only_manifest_includes_preparation(tmp_path: Path) -> None:
+    output_dir = tmp_path / "run"
+    datasets = [
+        _dataset(
+            make_synthetic_h5ad(tmp_path / f"sc_{i}.h5ad", embryo_id=f"embryo_{i}"),
+            "single_cell",
+            f"embryo_{i}",
+            "24hpf",
+            "neural",
+        )
+        for i in range(1, 4)
+    ]
+    manifest_path = _write_manifest(tmp_path, output_dir, datasets)
+    args = argparse.Namespace(manifest=manifest_path, output_dir=None, prepare_only=True)
+
+    run_finetune_cli(args)
+
+    manifest = json.loads((output_dir / "run_manifest.json").read_text())
+    assert "preparation" in manifest
+    assert all("removed_obs" in d for d in manifest["preparation"]["datasets"])
+    assert all("sha256" in d for d in manifest["preparation"]["datasets"])

@@ -52,15 +52,23 @@ def test_select_gpus_filters_utilized_or_low_vram(monkeypatch) -> None:
 
 
 def test_derive_batch_plan_scales_with_vram_and_global_batch() -> None:
+    # Calibrated constants: 10 GB reserve + 8.5 GB per sample (ticket 15).
     plan = derive_batch_plan(
         min_free_vram_gb=24.0,
         num_gpus=2,
         requested_batch_size=8,
         global_batch_size=8,
     )
-    assert plan["batch_size"] == 2
-    assert plan["grad_accumulation"] == 2
+    assert plan["batch_size"] == 1
+    assert plan["grad_accumulation"] == 4
     assert plan["num_gpus"] == 2
+
+    larger = derive_batch_plan(
+        min_free_vram_gb=48.0,
+        num_gpus=1,
+        requested_batch_size=8,
+    )
+    assert larger["batch_size"] == 4
 
 
 def test_derive_batch_plan_falls_back_without_gpus() -> None:

@@ -1,0 +1,13 @@
+{
+  "checkpoint": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa",
+  "device": "NVIDIA GeForce RTX 3090",
+  "seq_len": 2047,
+  "precision": "16-mixed",
+  "baseline_reserved_gb": 4.051,
+  "baseline_allocated_gb": 4.03,
+  "measurements": {
+    "1": 16.261,
+    "2": 24.365,
+    "4": "skipped (predicted OOM)"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "workers_0_pin_False": {
+    "cells": 2000,
+    "seconds": 5.61,
+    "cells_per_sec": 356.3
+  },
+  "workers_0_pin_True": {
+    "cells": 2000,
+    "seconds": 5.18,
+    "cells_per_sec": 385.9
+  },
+  "workers_2_pin_False": {
+    "cells": 2000,
+    "seconds": 2.96,
+    "cells_per_sec": 674.7
+  },
+  "workers_2_pin_True": {
+    "cells": 2000,
+    "seconds": 2.91,
+    "cells_per_sec": 687.7
+  },
+  "hardware": "RTX 3090, WSL2, data on /mnt/d (drvfs)",
+  "batch_size": 8
+}

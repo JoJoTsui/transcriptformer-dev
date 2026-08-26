@@ -71,6 +71,11 @@ def run_finetune_cli(args: argparse.Namespace) -> None:
     print(f"Prepared model-ready datasets -> {output_dir / 'prepared'}")
 
     if args.prepare_only:
+        # Record the preparation report (splits, QC removals, hashes) in the
+        # run manifest even though no training happens in this mode.
+        complete_manifest = dict(manifest)
+        complete_manifest["preparation"] = prepared_report
+        manifest_copy.write_text(json.dumps(complete_manifest, indent=2) + "\n")
         print("Prepare-only mode complete; training skipped.")
         return
 
