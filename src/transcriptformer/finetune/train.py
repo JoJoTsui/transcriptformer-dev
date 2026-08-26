@@ -367,7 +367,9 @@ def _run_training_loop(
     step = initial_step
     micro_steps = 0
     losses: list[float] = []
+    validation_losses: list[float] = []
     last_epoch = 0
+    stopped_early = False
 
     for epoch in range(1, epochs + 1):
         last_epoch = epoch
@@ -416,20 +418,25 @@ def _run_training_loop(
                         use_amp,
                         amp_dtype,
                     )
+                    validation_losses.append(validation_loss)
                     logger.info("Validation loss %.6f", validation_loss)
                     if early_stopping.should_stop(validation_loss):
+                        stopped_early = True
                         break
 
             if max_steps > 0 and step >= max_steps:
                 break
 
-        if max_steps > 0 and step >= max_steps:
+        if stopped_early or (max_steps > 0 and step >= max_steps):
             break
 
     return {
         "steps": step,
         "epochs_run": last_epoch,
         "last_loss": losses[-1] if losses else None,
+        "best_validation_loss": min(validation_losses) if validation_losses else None,
+        "final_validation_loss": validation_losses[-1] if validation_losses else None,
+        "stopped_early": stopped_early,
         "resumed_from_step": initial_step,
     }
 

@@ -4,11 +4,11 @@
 
 **Blocked by:** None — can start immediately.
 
-**Status:** triaged
+**Status:** resolved (first CI run pending)
 
-- [ ] A CI workflow runs all seven finetune test files on `ubuntu-latest` (CPU) and they pass.
-- [ ] Path filters include `src/transcriptformer/finetune/**`, `src/transcriptformer/cli/finetune.py`, `src/transcriptformer/cli/evaluate.py`, and `test/test_{finetune_cli,dataprep,train,gpu,early_stopping,evaluate,end_to_end}.py`.
-- [ ] The existing `cli-tests.yml` behavior is unchanged for its current scope.
+- [x] A CI workflow runs all seven finetune test files on `ubuntu-latest` (CPU) and they pass. (Workflow added as `.github/workflows/finetune-tests.yml` running the exact pytest invocation that passes locally; first green CI run to be confirmed after push.)
+- [x] Path filters include `src/transcriptformer/finetune/**`, `src/transcriptformer/cli/finetune.py`, `src/transcriptformer/cli/evaluate.py`, and `test/test_{finetune_cli,dataprep,train,gpu,early_stopping,evaluate,end_to_end}.py`.
+- [x] The existing `cli-tests.yml` behavior is unchanged for its current scope.
 
 ## Notes
 

@@ -20,3 +20,5 @@ Implemented in commit `6c516d5`.
 ## Comments
 
 Verification audit (2026-08-26): items 1–4 verified in `train.py`/`test_train.py`. Items 5–6 left open: no evidence of a CLI-pipeline run on the RTX 3090, and the CLI test mocks `train_finetune`, so no real training step has ever been executed through the CLI in a test.
+
+Hardware evidence (2026-08-26): the single-GPU CLI run on the RTX 3090 completed via ticket 09 — artifacts in `.scratch/zebrafish-embryo-finetuning/smoke_run/run/`. This closes item 5's single-GPU half.

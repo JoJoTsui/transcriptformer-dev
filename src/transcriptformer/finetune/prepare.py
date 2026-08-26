@@ -107,6 +107,17 @@ def _apply_qc(
     return X[keep], obs.iloc[keep], removed
 
 
+def _hash_file(path: Path, chunk_size: int = 8 * 1024 * 1024) -> str:
+    """Compute a streaming SHA-256 hash without loading the file into memory."""
+    import hashlib
+
+    digest = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(chunk_size), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def prepare_dataset_file(
     dataset: dict[str, Any],
     output_dir: Path,
@@ -184,6 +195,9 @@ def prepare_dataset_file(
 
     return {
         "path": str(prepared_path),
+        "source_path": str(input_path),
+        "sha256": _hash_file(input_path),
+        "size_bytes": input_path.stat().st_size,
         "dataset_type": dataset["dataset_type"],
         "embryo_id": dataset["embryo_id"],
         "section_id": dataset.get("section_id"),

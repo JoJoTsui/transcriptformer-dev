@@ -1,0 +1,51 @@
+name: Finetune Tests
+
+on:
+  push:
+    branches: [main]
+    paths: &finetune-paths
+      - "src/transcriptformer/finetune/**"
+      - "src/transcriptformer/cli/finetune.py"
+      - "src/transcriptformer/cli/evaluate.py"
+      - "src/transcriptformer/data/**"
+      - "test/test_finetune_cli.py"
+      - "test/test_dataprep.py"
+      - "test/test_train.py"
+      - "test/test_gpu.py"
+      - "test/test_early_stopping.py"
+      - "test/test_evaluate.py"
+      - "test/test_end_to_end.py"
+      - "test/fixtures.py"
+      - "pyproject.toml"
+  pull_request:
+    paths: *finetune-paths
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  finetune-unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Add uv to PATH
+        run: echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          uv pip install --system -e '.[dev]'
+
+      - name: Run finetune pipeline tests
+        run: |
+          pytest test/test_finetune_cli.py test/test_dataprep.py test/test_train.py test/test_gpu.py test/test_early_stopping.py test/test_evaluate.py test/test_end_to_end.py -v

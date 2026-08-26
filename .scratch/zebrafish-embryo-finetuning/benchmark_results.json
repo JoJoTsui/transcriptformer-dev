@@ -1,0 +1,56 @@
+{
+  "hardware": "RTX 3090, WSL2, data on /mnt/d (drvfs)",
+  "n_genes": 8000,
+  "batch_size": 8,
+  "iter_samples": 2000,
+  "rss_scaling": {
+    "backed": {
+      "10000": {
+        "n_obs": 10000,
+        "peak_rss_mb": 10352.6,
+        "delta_mb": 0.0
+      },
+      "40000": {
+        "n_obs": 40000,
+        "peak_rss_mb": 10352.6,
+        "delta_mb": 0.0
+      }
+    },
+    "in_memory": {
+      "10000": {
+        "n_obs": 10000,
+        "peak_rss_mb": 10352.6,
+        "delta_mb": 0.0
+      },
+      "40000": {
+        "n_obs": 40000,
+        "peak_rss_mb": 20335.5,
+        "delta_mb": 9982.8
+      }
+    }
+  },
+  "throughput_backed": {
+    "workers_0": {
+      "cells": 2000,
+      "seconds": 4.48,
+      "cells_per_sec": 446.0
+    },
+    "workers_2": {
+      "cells": 2000,
+      "seconds": 2.47,
+      "cells_per_sec": 808.3
+    },
+    "workers_4": {
+      "cells": 2000,
+      "seconds": 1.48,
+      "cells_per_sec": 1354.6
+    }
+  },
+  "throughput_in_memory": {
+    "workers_0": {
+      "cells": 2000,
+      "seconds": 0.02,
+      "cells_per_sec": 104114.8
+    }
+  }
+}

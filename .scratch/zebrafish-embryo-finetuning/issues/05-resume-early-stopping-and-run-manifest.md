@@ -4,12 +4,12 @@
 
 **Blocked by:** 04 — Shared-GPU preflight and distributed training
 
-**Status:** resolved (test coverage pending)
+**Status:** resolved
 
 - [x] A killed or interrupted run can resume from the latest checkpoint. (Code path exists: `_maybe_resume_model` + `--no-resume`; no test simulates an actual interruption — see last item.)
 - [x] Early stopping triggers on a validation-metric plateau.
-- [ ] The final run manifest contains all required reproducibility fields. (Partial: preparation, training summary, and GPU plan are recorded, but no data versions — input files are not hashed/versioned — and "final metrics" is only `last_loss`.)
-- [ ] Tests simulate interruption/resume and early stopping through the CLI. (Open: coverage is unit-level only — `_resume_state` and the `EarlyStopping` class.)
+- [x] The final run manifest contains all required reproducibility fields. (Closed by ticket 12: per-input SHA-256 + size, best/final validation loss.)
+- [x] Tests simulate interruption/resume and early stopping through the CLI. (Closed by ticket 11: `test_cli_resumes_interrupted_run`, `test_cli_no_resume_starts_fresh`, `test_training_loop_stops_on_plateau`.)
 
 ## Implementation
 

@@ -184,3 +184,9 @@ figures/
 # hydra
 .hydra/
 new_env/
+
+# Finetune smoke-run and benchmark artifacts (large binary data)
+.scratch/zebrafish-embryo-finetuning/smoke_run/data/
+.scratch/zebrafish-embryo-finetuning/smoke_run/run/
+.scratch/zebrafish-embryo-finetuning/smoke_run/smoke.log
+.scratch/zebrafish-embryo-finetuning/benchmark_data/

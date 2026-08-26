@@ -4,12 +4,12 @@
 
 **Blocked by:** 05 — Resume, early stopping, and complete run manifest
 
-**Status:** triaged
+**Status:** resolved
 
-- [ ] `preparation_report.json` and `run_manifest.json` include a SHA-256 hash and byte size per input dataset file.
-- [ ] Hashing is streaming (chunked reads) so it does not load multi-GB files into memory.
-- [ ] The final manifest records best/final validation loss, not only `last_loss`.
-- [ ] Tests verify hashes appear and match recomputed values on synthetic fixtures.
+- [x] `preparation_report.json` and `run_manifest.json` include a SHA-256 hash and byte size per input dataset file.
+- [x] Hashing is streaming (chunked reads) so it does not load multi-GB files into memory. (`_hash_file`, 8 MiB chunks.)
+- [x] The final manifest records best/final validation loss, not only `last_loss`.
+- [x] Tests verify hashes appear and match recomputed values on synthetic fixtures. (`test_prepare_records_input_file_hash`, `test_preparation_report_contains_hashes`, `test_training_loop_records_best_and_final_validation_loss`.)
 
 ## Notes
 

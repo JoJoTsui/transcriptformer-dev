@@ -1,0 +1,12 @@
+{
+  "name": "rtx3090-smoke",
+  "output_dir": ".scratch/zebrafish-embryo-finetuning/smoke_run/run",
+  "seed": 3,
+  "checkpoint_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa",
+  "datasets": [
+    {"path": ".scratch/zebrafish-embryo-finetuning/smoke_run/data/sc_embryo_1.h5ad", "dataset_type": "single_cell", "embryo_id": "embryo_1", "stage": "24hpf", "cell_type": "mixed", "assay": "10x 3' v3"},
+    {"path": ".scratch/zebrafish-embryo-finetuning/smoke_run/data/sc_embryo_2.h5ad", "dataset_type": "single_cell", "embryo_id": "embryo_2", "stage": "24hpf", "cell_type": "mixed", "assay": "10x 3' v3"},
+    {"path": ".scratch/zebrafish-embryo-finetuning/smoke_run/data/sc_embryo_3.h5ad", "dataset_type": "single_cell", "embryo_id": "embryo_3", "stage": "36hpf", "cell_type": "mixed", "assay": "10x 3' v3"},
+    {"path": ".scratch/zebrafish-embryo-finetuning/smoke_run/data/spatial_embryo_1.h5ad", "dataset_type": "spatial", "embryo_id": "embryo_1", "section_id": "section_1", "stage": "24hpf", "cell_type": "mixed", "assay": "Visium Spatial Gene Expression"}
+  ]
+}

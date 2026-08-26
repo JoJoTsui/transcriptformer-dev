@@ -320,3 +320,54 @@ def test_distributed_sampler_shards_balanced_dataset(tmp_path: Path) -> None:
     index_sets = [set(sampler) for sampler in samplers]
     assert index_sets[0].isdisjoint(index_sets[1])
     assert len(index_sets[0]) + len(index_sets[1]) >= len(dataset)
+
+
+def test_training_loop_records_best_and_final_validation_loss(tmp_path: Path) -> None:
+    import torch
+
+    from transcriptformer.data.dataclasses import BatchData
+    from transcriptformer.finetune.early_stopping import EarlyStopping
+    from transcriptformer.finetune.train import _run_training_loop
+
+    batch = BatchData(
+        gene_counts=torch.ones(2, 4),
+        gene_token_indices=torch.ones(2, 4, dtype=torch.long),
+        file_path=None,
+    )
+    validation_loader = [batch, batch]
+
+    model = mock.MagicMock()
+    param = torch.nn.Parameter(torch.zeros(1))
+    optimizer = torch.optim.AdamW([param], lr=1e-3)
+    scaler = torch.amp.GradScaler("cuda", enabled=False)
+
+    validation_losses = iter([0.5, 0.3, 0.4])
+
+    def fake_train_loss(model_arg, outputs):
+        return torch.tensor(1.0, requires_grad=True)
+
+    with (
+        mock.patch("transcriptformer.finetune.train._compute_loss", side_effect=fake_train_loss),
+        mock.patch(
+            "transcriptformer.finetune.train._validation_loss",
+            side_effect=lambda *a, **k: next(validation_losses),
+        ),
+    ):
+        summary = _run_training_loop(
+            model,
+            [batch, batch, batch],
+            optimizer,
+            scaler,
+            torch.device("cpu"),
+            use_amp=False,
+            amp_dtype=torch.float32,
+            max_steps=0,
+            epochs=1,
+            grad_accumulation=1,
+            validation_loader=validation_loader,
+            early_stopping=EarlyStopping(patience=10),
+            validation_interval=1,
+        )
+
+    assert summary["best_validation_loss"] == 0.3
+    assert summary["final_validation_loss"] == 0.4

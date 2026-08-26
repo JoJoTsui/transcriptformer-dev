@@ -199,3 +199,41 @@ def test_assign_splits_uses_embryo_boundaries() -> None:
     splits = assign_splits(entries, seed=0)
     assert set(splits["embryo_splits"].values()) == {"train", "validation", "final_holdout"}
     assert splits["splits"]["spatial_4.h5ad"] == splits["embryo_splits"]["embryo_4"]
+
+
+def test_prepare_records_input_file_hash(tmp_path: Path) -> None:
+    import hashlib
+
+    path = make_synthetic_h5ad(tmp_path / "sc_1.h5ad", embryo_id="embryo_1")
+    dataset = _dataset(path, "single_cell", "embryo_1", "24hpf", "neural")
+
+    result = prepare_dataset_file(dataset, tmp_path / "prepared", "train")
+
+    assert result["sha256"] == hashlib.sha256(path.read_bytes()).hexdigest()
+    assert result["size_bytes"] == path.stat().st_size
+
+
+def test_preparation_report_contains_hashes(tmp_path: Path) -> None:
+    import hashlib
+
+    output_dir = tmp_path / "run"
+    datasets = [
+        _dataset(
+            make_synthetic_h5ad(tmp_path / f"sc_{i}.h5ad", embryo_id=f"embryo_{i}"),
+            "single_cell",
+            f"embryo_{i}",
+            "24hpf",
+            "neural",
+        )
+        for i in range(1, 4)
+    ]
+    manifest_path = _write_manifest(tmp_path, output_dir, datasets)
+    args = argparse.Namespace(manifest=manifest_path, output_dir=None, prepare_only=True)
+
+    run_finetune_cli(args)
+
+    report = json.loads((output_dir / "preparation_report.json").read_text())
+    for entry in report["datasets"]:
+        source = Path(entry["source_path"])
+        assert entry["sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
+        assert entry["size_bytes"] == source.stat().st_size

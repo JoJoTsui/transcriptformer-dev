@@ -19,3 +19,5 @@ Implemented in commit `8dd03fc`.
 ## Comments
 
 Verification audit (2026-08-26): preflight and batch-derivation verified with mocked-NVML tests (`test_gpu.py`). Items 3 and 5 left open: DDP has never been launched in any test, and no GPU CI or evidenced RTX 3090 run exists.
+
+Hardware evidence (2026-08-26): single-GPU CLI run completed via ticket 09. The DDP launch item remains open — the local machine has one RTX 3090, so multi-GPU DDP is still unexecuted.
