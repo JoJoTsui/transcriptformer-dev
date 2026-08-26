@@ -4,14 +4,18 @@
 
 **Blocked by:** 03 — Single-GPU generative finetune smoke path
 
-**Status:** resolved
+**Status:** resolved (hardware validation pending)
 
-- [ ] NVML preflight selects only usable GPUs up to the configured maximum.
-- [ ] Batch size and gradient accumulation are derived from the smallest free GPU.
-- [ ] Training uses the selected GPUs with DDP and mixed precision.
-- [ ] GPU preflight is tested with a mocked NVML probe.
-- [ ] A single-GPU CI run and local RTX 3090 smoke run both pass.
+- [x] NVML preflight selects only usable GPUs up to the configured maximum.
+- [x] Batch size and gradient accumulation are derived from the smallest free GPU.
+- [ ] Training uses the selected GPUs with DDP and mixed precision. (In code: `_ddp_worker` with nccl/DDP/fp16 autocast — but no test has ever launched DDP; no multi-GPU environment exercised it.)
+- [x] GPU preflight is tested with a mocked NVML probe.
+- [ ] A single-GPU CI run and local RTX 3090 smoke run both pass. (Open: the only test workflow, `.github/workflows/cli-tests.yml`, runs `test_cli*.py` on CPU; no GPU CI exists and no RTX 3090 CLI smoke run is evidenced.)
 
 ## Implementation
 
 Implemented in commit `8dd03fc`.
+
+## Comments
+
+Verification audit (2026-08-26): preflight and batch-derivation verified with mocked-NVML tests (`test_gpu.py`). Items 3 and 5 left open: DDP has never been launched in any test, and no GPU CI or evidenced RTX 3090 run exists.

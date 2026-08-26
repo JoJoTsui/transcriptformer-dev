@@ -6,12 +6,16 @@
 
 **Status:** resolved
 
-- [ ] The finetune command appears in CLI help and accepts a run manifest.
-- [ ] A valid minimal manifest creates a run directory.
-- [ ] An invalid manifest fails with an actionable error naming the missing/invalid field.
-- [ ] Synthetic fixtures can generate small single-cell and spatial H5AD files with required metadata columns.
-- [ ] CLI-level tests exercise the command and fixture harness.
+- [x] The finetune command appears in CLI help and accepts a run manifest.
+- [x] A valid minimal manifest creates a run directory.
+- [x] An invalid manifest fails with an actionable error naming the missing/invalid field.
+- [x] Synthetic fixtures can generate small single-cell and spatial H5AD files with required metadata columns.
+- [x] CLI-level tests exercise the command and fixture harness.
 
 ## Implementation
 
 Implemented in commit `69d8b04`.
+
+## Comments
+
+Verification audit (2026-08-26): all acceptance items verified against code and passing tests (`test_finetune_cli.py`, `test/fixtures.py`).
