@@ -21,3 +21,5 @@ Implemented in commit `8dd03fc`.
 Verification audit (2026-08-26): preflight and batch-derivation verified with mocked-NVML tests (`test_gpu.py`). Items 3 and 5 left open: DDP has never been launched in any test, and no GPU CI or evidenced RTX 3090 run exists.
 
 Hardware evidence (2026-08-26): single-GPU CLI run completed via ticket 09. The DDP launch item remains open — the local machine has one RTX 3090, so multi-GPU DDP is still unexecuted.
+
+Batch-plan note (2026-08-26): `derive_batch_plan` reserves 8 GB + ~8 GB per sample, so on the 24 GB RTX 3090 it derived per-GPU batch 1 even with `--batch-size 8` requested (ticket-09 smoke run `gpu_plan`). The estimate is rough but not directionally wrong — full finetuning with AdamW holds ~15 GB of optimizer/weight state before activations. Revisit with measured per-sample activation memory when tuning production runs on the multi-GPU node.

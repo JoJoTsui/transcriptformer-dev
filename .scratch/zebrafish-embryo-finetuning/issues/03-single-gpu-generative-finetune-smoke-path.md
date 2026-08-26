@@ -4,14 +4,14 @@
 
 **Blocked by:** 02 — Model-ready dataset preparation
 
-**Status:** resolved (hardware validation pending)
+**Status:** resolved
 
 - [x] Smoke mode runs a configurable small number of steps on one GPU.
 - [x] Training batches mix single-cell and spatial observations.
 - [x] The single-cell side is sampled as a stratified subset by stage and cell type.
 - [x] A checkpoint and run manifest are produced.
-- [ ] The command works from prepared data on the local RTX 3090. (Open: no artifacts evidence a CLI-pipeline GPU run — the existing `checkpoints/tf_metazoa_finetuned/` predates the pipeline and matches the standalone `scripts/finetune.py` smoke output.)
-- [ ] CLI-level tests verify the smoke run produces expected outputs. (Partial: `test_finetune_cli_wires_training_call` mocks `train_finetune`; it verifies argument wiring and manifest writing, never a real training step.)
+- [x] The command works from prepared data on the local RTX 3090. (Closed by ticket 09: CLI-pipeline run completed 2026-08-26, artifacts in `.scratch/zebrafish-embryo-finetuning/smoke_run/run/`.)
+- [ ] CLI-level tests verify the smoke run produces expected outputs. (Remains partial by design: `test_finetune_cli_wires_training_call` mocks `train_finetune` — a real-model CLI test needs the 4.3 GB checkpoint, impractical in CI. Compensating evidence: the ticket-09 hardware run exercised the real CLI path end-to-end.)
 
 ## Implementation
 
