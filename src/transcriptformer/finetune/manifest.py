@@ -60,6 +60,14 @@ def validate_run_manifest(data: dict[str, Any]) -> list[str]:
             if dataset_type == "spatial" and not dataset.get("section_id"):
                 errors.append(f"datasets[{index}] spatial datasets require section_id")
 
+            species = dataset.get("species")
+            if species is not None and (not isinstance(species, str) or not species.strip()):
+                errors.append(f"datasets[{index}].species must be a non-empty string")
+
+            train_only = dataset.get("train_only")
+            if train_only is not None and not isinstance(train_only, bool):
+                errors.append(f"datasets[{index}].train_only must be a boolean")
+
             for field in ("obs_columns", "stage_mapping", "cell_type_mapping"):
                 if dataset.get(field) is not None:
                     _check_str_dict(dataset[field], f"datasets[{index}].{field}", errors)

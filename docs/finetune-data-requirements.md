@@ -27,7 +27,15 @@ Each dataset in the run manifest is one AnnData H5AD file containing one embryo
 
 - Genes must be identifiable as Ensembl-style stable IDs. The pipeline reads
   `var["ensembl_id"]` if that column exists, otherwise the `var` index.
-- Version suffixes are stripped (`ENSDARG00000000001.4` → `ENSDARG00000000001`).
+- Version suffixes are stripped **only from stable database IDs**
+  (`ENSDARG00000000001.4` → `ENSDARG00000000001`; also `WBGene…` and
+  `FBgn…`). Dots that are part of the identifier itself are preserved —
+  e.g. WormBase sequence names (`2L52.1`, `AC3.12`) and zebrafish paralog
+  symbols (`acy3.1`) pass through unchanged.
+- If several source columns land on the same vocabulary gene (symbol aliases,
+  versioned duplicates), their count columns are **summed** into one column.
+  The number of source columns merged away is reported per dataset as
+  `duplicate_genes_collapsed` in `preparation_report.json`.
 - The pipeline is multi-species. When the manifest sets `"vocab_path"` (the
   species' `*_gene.h5` vocabulary — always set for our runs), **any gene ID
   that is a member of that vocabulary passes through natively**, whatever its
@@ -101,11 +109,30 @@ Removed-observation counts per criterion are recorded in
 
 ## 7. Split requirements
 
-- Splits are assigned **by embryo** (and, transitively, by section): all
-  observations from one embryo land in the same split.
-- A run needs **at least 3 distinct embryos** — fewer fails preparation.
-- Roughly 20% of embryos go to validation and 10% to the final holdout
-  (minimum 1 embryo each); the rest are train.
+- Split units are **(dataset, embryo) pairs**: the distinct `embryo_id` values
+  in each file's `obs` (after `obs_columns` renaming) — not the manifest-level
+  `embryo_id` constant. A multi-embryo file therefore contributes embryos to
+  several splits; preparation writes one prepared H5AD **per split**
+  (`<name>_prepared_<split>.h5ad`), each with a constant `obs["split"]`.
+- Spatial datasets split by **`section_id`** (obs column, falling back to the
+  manifest `section_id`) instead of `embryo_id`, under the same rules.
+- Splits are **stratified per species**. Each dataset should declare
+  `"species"` (datasets without it share the `"unknown"` stratum). Within each
+  species, the splittable units are assigned ~70/20/10 to
+  train/validation/final holdout — with at least 1 unit in validation and 1 in
+  the holdout when the species has ≥3 splittable units.
+- **Train-only rules**: a dataset entry may set `"train_only": true` (never
+  leaves train). Additionally, a dataset whose file contains a **single split
+  unit** (one embryo; one section for spatial) is automatically train-only —
+  moving its only unit out of train would be a whole-dataset holdout. A
+  species with fewer than 3 splittable units keeps all of them in train.
+- Every species must keep **at least one embryo in train**; preparation fails
+  otherwise. The train-only rules above make this automatic in practice.
+- `split_assignments.json` records the seed, an `assignments` list with one
+  entry per (dataset, unit) — including `species`, `split`, and a `reason`
+  field (`stratified`, `train_only`, `single_embryo`, `single_section`,
+  `insufficient_embryos`) — plus `embryo_splits` (`"<path>::<unit>" → split`)
+  and `splits` (source path → split, or `"mixed"` for multi-split files).
 - The final holdout is reserved for evaluation only — never training, early
   stopping, or checkpoint selection.
 
@@ -143,6 +170,7 @@ Removed-observation counts per criterion are recorded in
         "embryo_id": "sample",
         "assay": "=10x 3' v3"
       },
+      "species": "mus_musculus",
       "stage_mapping": {"E7.5": "mouse E7.5"},
       "cell_type_mapping": {"epiblast": "pluripotent epiblast"}
     },
@@ -153,7 +181,9 @@ Removed-observation counts per criterion are recorded in
       "section_id": "s1",
       "stage": "10 hpf",
       "cell_type": "...",
-      "assay": "Visium Spatial Gene Expression"
+      "assay": "Visium Spatial Gene Expression",
+      "species": "homo_sapiens",
+      "train_only": true
     }
   ]
 }
@@ -164,7 +194,9 @@ Removed-observation counts per criterion are recorded in
   `cell_type`, `assay`; spatial datasets also require `section_id`.
 - Optional per-dataset fields: `obs_columns` (contract column → source column
   or `"=constant"`, section 4), `stage_mapping` / `cell_type_mapping`
-  (per-dataset label harmonization, section 5).
+  (per-dataset label harmonization, section 5), `species` (non-empty string
+  used for split stratification, section 7), `train_only` (boolean; the
+  dataset never leaves the train split, section 7).
 - `dataset_type` must be `"single_cell"` or `"spatial"`.
 - The manifest-level fields describe each file's labels; the H5AD itself must
   still carry the `obs` columns from section 4.
@@ -194,11 +226,15 @@ Optional top-level sections:
 `transcriptformer finetune --manifest run.json --prepare-only` writes to
 `output_dir`:
 
-- `prepared/<name>_prepared.h5ad` — one model-ready H5AD per dataset:
-  filtered to mapped/in-vocabulary genes, `var.ensembl_id` set, harmonized
-  labels, QC applied, `obs["split"]` assigned
-- `split_assignments.json` — embryo → split mapping
-- `preparation_report.json` — per-dataset observation/gene counts and QC removals
+- `prepared/<name>_prepared[_<split>].h5ad` — model-ready H5ADs per dataset:
+  filtered to mapped/in-vocabulary genes (duplicate target genes summed),
+  `var.ensembl_id` set, harmonized labels, QC applied, `obs["split"]`
+  assigned. Datasets whose embryos span several splits produce one file per
+  split, suffixed with the split name
+- `split_assignments.json` — per-(dataset, embryo/section) split assignments
+  with species and reason fields (section 7)
+- `preparation_report.json` — per-dataset observation/gene counts, QC
+  removals, unmapped genes, and `duplicate_genes_collapsed`
 
 Running with `--prepare-only` first is the recommended way to validate real
 data before committing GPU time to training.

@@ -22,11 +22,22 @@ def make_synthetic_h5ad(
     gene_prefix: str = "ENSDARG",
     raw_counts: bool = True,
     seed: int = 0,
+    embryo_ids: list[str] | None = None,
 ) -> Path:
-    """Create a small synthetic H5AD file with the expected metadata columns."""
+    """Create a small synthetic H5AD file with the expected metadata columns.
+
+    When ``embryo_ids`` is given, one observation is created per entry (and
+    ``n_obs`` is ignored), producing a multi-embryo file.
+    """
     out_path = Path(path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(seed)
+
+    if embryo_ids is not None:
+        n_obs = len(embryo_ids)
+        embryo_column = list(embryo_ids)
+    else:
+        embryo_column = [embryo_id] * n_obs
 
     if gene_mode == "ensembl":
         gene_ids = [f"{gene_prefix}{i:011d}" for i in range(1, n_genes + 1)]
@@ -36,7 +47,7 @@ def make_synthetic_h5ad(
 
     obs = pd.DataFrame(
         {
-            "embryo_id": [embryo_id] * n_obs,
+            "embryo_id": embryo_column,
             "section_id": [section_id or f"section_{embryo_id}"] * n_obs,
             "stage": [stage] * n_obs,
             "cell_type": [cell_type] * n_obs,
