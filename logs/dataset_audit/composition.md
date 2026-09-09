@@ -57,6 +57,23 @@
 Mouse is 53% of all observations — still dominant; natural weighting was
 accepted with balanced sampling as the documented fallback (ADR 0002).
 
+## Present on disk but excluded from the corpus
+
+- **Mouse E8–P0 prenatal time-lapse (Nature 2024, doi
+  10.1038/s41586-024-07069-w)** — 4 CELLxGENE shards
+  (`Nature_2024_prenatal_time_lapse/*.h5ad`), 11,441,407 nuclei total
+  (2.86M each × 45,525 ENSMUSG genes; matches the published count exactly),
+  sci-RNA-seq3, 74 donor embryos, 43 day bins E8.0–P0. Integer raw counts in
+  `raw.X`; `X` is log-normalized. Re-audited 2026-09-09 (see
+  `cells_and_spots.md`); the pre-remediation audit OOM'd on these files.
+  **Rationale placeholder**: exclusion is not yet a decision — see
+  `docs/finetune-major-issues.md` item 1.11 (status Open). Candidate reasons:
+  most stages extend past the embryogenesis scope (to birth), and inclusion
+  would raise mouse from 53% to ~90% of all observations. Note: the training
+  file TOME E8.5b is a 99.5% subset of this atlas (see 1.11), so the two must
+  never be included together.
+
+
 ## Per dataset (cells × genes)
 
 ### Single-cell (22)

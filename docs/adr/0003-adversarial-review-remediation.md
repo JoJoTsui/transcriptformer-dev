@@ -13,9 +13,11 @@ training corpus and the evaluation contract cannot be silently re-litigated late
   (105,373 cells) are 100% barcode-identical to the gastrulation atlas (same cells published
   in two archives), and E6.5 is 78.4% duplicated with identical count vectors (960 atlas-absent
   cells sacrificed; E6.5 phase coverage is preserved by the atlas). TOME E8.5b was kept — zero
-  barcode overlap with the atlas and a different barcode namespace — but its provenance is
-  unverified and it is flagged in `logs/dataset_audit/composition.md` as a drop candidate if
-  its origin cannot be confirmed.
+  barcode overlap with the atlas and a different barcode namespace. Its provenance was later
+  resolved (2026-09-09, audit of `Nature_2024_prenatal_time_lapse`): it is a republished slice
+  of the Nature 2024 prenatal time-lapse atlas (run_4, E8.0–E8.5; 99.54% barcode match,
+  identical count vectors). It stays in the corpus only while that atlas stays excluded — if
+  any part of the prenatal atlas is ever added, E8.5b must be dropped first.
 - **Human CS6 fig3 removed** (strict subset of fig2); the remaining CS6 sections (fig1, fig2)
   share one `embryo_id` (`human_cs6`) with distinct `section_id`s, so per-section splitting
   treats them as one embryo.

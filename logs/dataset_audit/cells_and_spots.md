@@ -35,6 +35,40 @@ timecourse source h5ad.
 | 26 | caenorhabditis_elegans | single_cell | 86,024 | 20,222 | 秀丽隐杆线虫_Caenorhabditis_elegans__A lineage-resolved molecular atlas of C elegans embryogenesis at single-cell resolution.h5ad |
 | 27 | lytechinus_variegatus | single_cell | 50,943 | 27,232 | 绿海胆_Lytechinus_variegatus__Developmental single-cell transcriptomics in the Lytechinus variegatus sea urchin embryo.h5ad |
 
+## Present on disk but NOT in the training corpus
+
+Audited 2026-09-09 (`.scratch/inspect_prenatal_timelapse.py`,
+`.scratch/extract_prenatal_metadata.py`) after these files appeared as bare
+`ERROR` lines in the pre-remediation audit. The failure was an OOM:
+anndata 0.11 `read_h5ad(backed="r")` eagerly materializes
+`layers["raw.X"]` (4.88 billion nnz; the int64 `indices` array alone needs
+36.4 GiB) and hit the 26 GiB address-space cap. The re-audit read the HDF5
+tree directly with h5py.
+
+Mouse E8–P0 prenatal time-lapse (Nature 2024, doi 10.1038/s41586-024-07069-w;
+CELLxGENE collection 45d5d2c3). The 4 files are **random disjoint shards of one
+11.4M-nucleus dataset** (uns title: "Whole dataset: Normalized subset N";
+obs_names pairwise disjoint; identical 45,525-gene ENSMUSG var in identical
+order; every shard spans all 43 day bins and all 16 sequencing runs):
+
+| # | Species | Type | Observations | Genes | Dataset file |
+|---|---|---|---|---|---|
+| - | mus_musculus | single_cell (nuclei) | 2,860,375 | 45,525 | 04912a4e-4fad-430b-9fd7-16d30c5c57fa.h5ad |
+| - | mus_musculus | single_cell (nuclei) | 2,857,008 | 45,525 | 3776b646-d6ae-4bd1-883f-5877e328b5ff.h5ad |
+| - | mus_musculus | single_cell (nuclei) | 2,863,559 | 45,525 | 4a321ccb-ec08-42bc-808f-167bbd1127d3.h5ad |
+| - | mus_musculus | single_cell (nuclei) | 2,860,465 | 45,525 | aaf0497e-a8a9-4a81-8b22-c1ac86507c6b.h5ad |
+
+**Shard total: 11,441,407 nuclei — exactly the publication's claimed count.**
+Per shard: `X` = log-normalized float32 (non-integer); `raw.X` and
+`layers["raw.X"]` = integer counts (float32 storage); obsm = `X_umap` only;
+assay = sci-RNA-seq3; suspension = nucleus; 74 donor embryos (`donor_id`),
+16 runs (`author_experimental_id`), 43 day bins `author_day`
+(E0800-E0850 … E1875, P0000; the paper advertises 45 timepoints), Theiler
+stages 12–27, `author_cell_type` (190 categories) / `cell_type` (134 CL terms).
+Barcode format `run_N_<plate>.<20bp barcode>-<i>`. None of these files is in
+`conf/finetune_run_multispecies.json`; see `composition.md` and
+`docs/finetune-major-issues.md` item 1.11.
+
 ## Removed since the previous version of this table
 
 | Species | Observations | Dataset file | Reason |
