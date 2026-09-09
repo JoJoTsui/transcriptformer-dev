@@ -48,13 +48,24 @@ These mappings become per-dataset `stage_mapping` dicts in the run manifest.
 | | 10, 11, 12, 13, 14, 15, 16 | gastrula |
 | | 18, 20, 24 (prism/early larva) | organogenesis |
 
-## Boundary calls to double-check
+## Boundary calls — resolved 2026-09-09
 
-- Human CS8–CS10 → neurula (CS8 = neural plate, CS9–10 = neural tube/early somites)
-- Rabbit GD9 → organogenesis (vs neurula)
-- Zebrafish 14–18hpf → neurula (vs gastrula tail-bud or organogenesis)
-- Mouse E8.0–8.5 → neurula (vs late gastrula)
-- Treating fly extended germ band / worm comma stage as `neurula` (phylotypic alignment)
+All boundary calls are now literature-anchored; see `docs/perturbation-and-baseline-design.md`
+§5 for the full citation table (human CS8–CS10, mouse E8.0–8.5, rabbit GD9, zebrafish
+14–18 hpf, fly germ-band, worm comma, urchin 10–16 hpf, chicken HH4–7).
+
+- **Fly sliding windows (hrs_XX_YY)**: the Calderon atlas labels are overlapping 4 h sampling
+  windows with 2 h offsets, not stages. Each window is assigned exactly one phase **by its
+  midpoint** (germ-band extension ≈ 4–9 h → neurula; hrs_08_12 midpoint 10 → organogenesis).
+  The current mapping is midpoint-consistent; overlapping windows are acceptable for training,
+  but phase-resolved analyses must assign each cell one phase via window midpoint (or the
+  atlas's per-cell estimated age if exported).
+- **Zebrafish 14–24 hpf → neurula** is a phylotypic-alignment convention (Kimmel staging has
+  no "neurula"; 14–18 hpf = segmentation, 24 hpf = pharyngula onset). Documented convention,
+  not fact.
+- **Sensitivity analysis (pre-registered):** shift every boundary one native-stage bin in each
+  direction, re-run headline metrics; acceptance = top-100 perturbation hits per stratum
+  retain ≥ 80% membership under both shifts.
 
 ## Recorded decisions (2026-09-09, user-approved)
 
