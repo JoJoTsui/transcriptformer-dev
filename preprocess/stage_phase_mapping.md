@@ -28,8 +28,7 @@ These mappings become per-dataset `stage_mapping` dicts in the run manifest.
 | | GD9 | organogenesis |
 | Zebrafish (Wagner 2018) | 4hpf | blastula |
 | | 6hpf, 8hpf, 10hpf | gastrula |
-| | 14hpf, 18hpf | neurula |
-| | 24hpf | organogenesis |
+| | 14hpf, 18hpf, 24hpf | neurula |
 | Chicken (eLife 2022) | HH4 | gastrula |
 | | HH5, HH6, HH7 | neurula |
 
@@ -41,8 +40,8 @@ These mappings become per-dataset `stage_mapping` dicts in the run manifest.
 | | hrs_02_04, hrs_03_07 | gastrula |
 | | hrs_04_08, hrs_06_10 (extended germ band) | neurula |
 | | hrs_08_12, hrs_10_14, hrs_12_16, hrs_14_18, hrs_16_20 | organogenesis |
-| C. elegans (embryo.time.bin, min) | < 100, 100-130 | blastula |
-| | 130-170, 170-210, 210-270 | gastrula |
+| C. elegans (embryo.time.bin, min) | < 100 | blastula |
+| | 100-130, 130-170, 170-210, 210-270 | gastrula |
 | | 270-330, 330-390 (comma/morphogenesis) | neurula |
 | | 390-450, 450-510, 510-580, 580-650, > 650 | organogenesis |
 | Sea urchin (hpf) | 2, 3, 4, 5, 6, 7, 8, 9 | blastula |
@@ -56,3 +55,14 @@ These mappings become per-dataset `stage_mapping` dicts in the run manifest.
 - Zebrafish 14–18hpf → neurula (vs gastrula tail-bud or organogenesis)
 - Mouse E8.0–8.5 → neurula (vs late gastrula)
 - Treating fly extended germ band / worm comma stage as `neurula` (phylotypic alignment)
+
+## Recorded decisions (2026-09-09, user-approved)
+
+- **C. elegans 100–130 min bin moved blastula → gastrula.** C. elegans gastrulation
+  begins at the 26–28 cell stage (~100 min post-fertilization), so the 100–130 bin is
+  predominantly gastrulating, not blastula. Decision: treat as gastrula (option 1);
+  recorded here because it shifts phase composition for the worm dataset.
+- **Zebrafish 24hpf moved organogenesis → neurula.** 24 hpf is the pharyngula period
+  onset (phylotypic stage), which this mapping aligns to `neurula` for cross-species
+  comparability. Decision: neurula (option 1); recorded here because it shifts the
+  zebrafish phase composition.

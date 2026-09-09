@@ -735,7 +735,7 @@
         "10hpf": "gastrula",
         "14hpf": "neurula",
         "18hpf": "neurula",
-        "24hpf": "organogenesis"
+        "24hpf": "neurula"
       },
       "gene_mapping": "preprocess/gene_mappings/zebrafish_loc_to_ensdarg.json"
     },
@@ -823,7 +823,7 @@
       },
       "stage_mapping": {
         "< 100": "blastula",
-        "100-130": "blastula",
+        "100-130": "gastrula",
         "130-170": "gastrula",
         "170-210": "gastrula",
         "210-270": "gastrula",
