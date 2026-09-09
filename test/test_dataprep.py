@@ -273,3 +273,107 @@ def test_prepare_only_manifest_includes_preparation(tmp_path: Path) -> None:
     assert "preparation" in manifest
     assert all("removed_obs" in d for d in manifest["preparation"]["datasets"])
     assert all("sha256" in d for d in manifest["preparation"]["datasets"])
+
+
+@pytest.mark.parametrize("gene_prefix", ["ENSG", "ENSMUSG", "ENSGALG", "ENSOCUG", "FBgn", "WBGene", "LOC"])
+def test_vocab_pass_through_multi_species(tmp_path: Path, gene_prefix: str) -> None:
+    path = make_synthetic_h5ad(
+        tmp_path / f"{gene_prefix.lower()}.h5ad",
+        n_genes=10,
+        embryo_id="embryo_1",
+        gene_prefix=gene_prefix,
+    )
+    vocab_path = tmp_path / f"{gene_prefix.lower()}_gene.h5"
+    with h5py.File(vocab_path, "w") as f:
+        keys = [f"{gene_prefix}{i:011d}".encode() for i in range(1, 8)]
+        f.create_dataset("keys", data=keys)
+        f.create_group("arrays")
+
+    dataset = _dataset(path, "single_cell", "embryo_1", "24hpf", "neural")
+    result = prepare_dataset_file(
+        dataset,
+        tmp_path / "prepared",
+        "train",
+        vocab_path=vocab_path,
+    )
+    prepared = ad.read_h5ad(result["path"])
+    assert prepared.shape[1] == 7
+    assert prepared.var["ensembl_id"].str.startswith(gene_prefix).all()
+    assert result["unmapped_genes"]["count"] == 3
+
+
+def test_prepare_fails_when_no_genes_mappable(tmp_path: Path) -> None:
+    path = make_synthetic_h5ad(tmp_path / "symbols.h5ad", embryo_id="embryo_1", gene_mode="symbol")
+    dataset = _dataset(path, "single_cell", "embryo_1", "24hpf", "neural")
+
+    with pytest.raises(ValueError, match="no mappable gene IDs"):
+        prepare_dataset_file(dataset, tmp_path / "prepared", "train")
+
+
+def test_obs_columns_rename_and_constant(tmp_path: Path) -> None:
+    path = make_synthetic_h5ad(tmp_path / "renamed.h5ad", embryo_id="embryo_1", stage="E7.5")
+    adata = ad.read_h5ad(path)
+    obs = adata.obs.rename(
+        columns={"stage": "developmental_time", "cell_type": "celltype", "embryo_id": "sample"}
+    ).drop(columns=["assay"])
+    adata.obs = obs
+    adata.write_h5ad(path)
+
+    dataset = _dataset(path, "single_cell", "embryo_1", "E7.5", "neural")
+    dataset["obs_columns"] = {
+        "stage": "developmental_time",
+        "cell_type": "celltype",
+        "embryo_id": "sample",
+        "assay": "=10x 3' v3",
+    }
+    result = prepare_dataset_file(dataset, tmp_path / "prepared", "train")
+
+    prepared = ad.read_h5ad(result["path"])
+    assert {"embryo_id", "stage", "cell_type", "assay"}.issubset(prepared.obs.columns)
+    assert (prepared.obs["stage"] == "E7.5").all()
+    assert (prepared.obs["cell_type"] == "neural").all()
+    assert (prepared.obs["embryo_id"] == "embryo_1").all()
+    assert (prepared.obs["assay"] == "10x 3' v3").all()
+
+
+def test_obs_columns_does_not_overwrite_existing(tmp_path: Path) -> None:
+    path = make_synthetic_h5ad(tmp_path / "sc_1.h5ad", embryo_id="embryo_1")
+    dataset = _dataset(path, "single_cell", "embryo_1", "24hpf", "neural")
+    dataset["obs_columns"] = {"assay": "=SMART-seq2"}
+
+    result = prepare_dataset_file(dataset, tmp_path / "prepared", "train")
+
+    prepared = ad.read_h5ad(result["path"])
+    assert (prepared.obs["assay"] == "10x 3' v3").all()
+
+
+def test_obs_columns_unknown_source_raises(tmp_path: Path) -> None:
+    path = make_synthetic_h5ad(tmp_path / "sc_1.h5ad", embryo_id="embryo_1")
+    adata = ad.read_h5ad(path)
+    adata.obs = adata.obs.drop(columns=["stage"])
+    adata.write_h5ad(path)
+
+    dataset = _dataset(path, "single_cell", "embryo_1", "24hpf", "neural")
+    dataset["obs_columns"] = {"stage": "developmental_time"}
+
+    with pytest.raises(ValueError, match="not an obs column"):
+        prepare_dataset_file(dataset, tmp_path / "prepared", "train")
+
+
+def test_per_dataset_stage_and_cell_type_mapping(tmp_path: Path) -> None:
+    path = make_synthetic_h5ad(tmp_path / "mouse.h5ad", embryo_id="embryo_1", stage="E7.5", cell_type="epiblast")
+    dataset = _dataset(path, "single_cell", "embryo_1", "E7.5", "epiblast")
+    dataset["stage_mapping"] = {"E7.5": "mouse E7.5"}
+    dataset["cell_type_mapping"] = {"epiblast": "pluripotent epiblast"}
+
+    result = prepare_dataset_file(
+        dataset,
+        tmp_path / "prepared",
+        "train",
+        stage_mapping={"E7.5": "rabbit E7.5"},
+        cell_type_mapping={"trophectoderm": "TE"},
+    )
+
+    prepared = ad.read_h5ad(result["path"])
+    assert (prepared.obs["stage"] == "mouse E7.5").all()
+    assert (prepared.obs["cell_type"] == "pluripotent epiblast").all()

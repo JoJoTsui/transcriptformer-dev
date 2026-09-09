@@ -150,3 +150,38 @@ def test_manifest_validates_sampling_section() -> None:
 
     errors = validate_run_manifest(_minimal_manifest(sampling={"spatial_fraction": -0.1}))
     assert any("spatial_fraction" in e for e in errors)
+
+
+def _minimal_manifest_with_dataset(**dataset_overrides) -> dict:
+    manifest = _minimal_manifest()
+    manifest["datasets"][0].update(dataset_overrides)
+    return manifest
+
+
+def test_manifest_validates_obs_columns() -> None:
+    assert validate_run_manifest(_minimal_manifest_with_dataset(obs_columns={"stage": "developmental_time"})) == []
+    assert validate_run_manifest(_minimal_manifest_with_dataset(obs_columns={"assay": "=10x 3' v3"})) == []
+
+    errors = validate_run_manifest(_minimal_manifest_with_dataset(obs_columns="stage"))
+    assert any("obs_columns" in e for e in errors)
+
+    errors = validate_run_manifest(_minimal_manifest_with_dataset(obs_columns={"stage": 5}))
+    assert any("obs_columns" in e for e in errors)
+
+
+def test_manifest_validates_per_dataset_mappings() -> None:
+    assert (
+        validate_run_manifest(
+            _minimal_manifest_with_dataset(
+                stage_mapping={"E7.5": "mouse E7.5"},
+                cell_type_mapping={"epiblast": "pluripotent epiblast"},
+            )
+        )
+        == []
+    )
+
+    errors = validate_run_manifest(_minimal_manifest_with_dataset(stage_mapping=["E7.5"]))
+    assert any("stage_mapping" in e for e in errors)
+
+    errors = validate_run_manifest(_minimal_manifest_with_dataset(cell_type_mapping={"a": 1}))
+    assert any("cell_type_mapping" in e for e in errors)

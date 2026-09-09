@@ -19,6 +19,7 @@ def make_synthetic_h5ad(
     stage: str = "24hpf",
     cell_type: str = "neural",
     gene_mode: str = "ensembl",
+    gene_prefix: str = "ENSDARG",
     raw_counts: bool = True,
     seed: int = 0,
 ) -> Path:
@@ -28,7 +29,7 @@ def make_synthetic_h5ad(
     rng = np.random.default_rng(seed)
 
     if gene_mode == "ensembl":
-        gene_ids = [f"ENSDARG{i:011d}" for i in range(1, n_genes + 1)]
+        gene_ids = [f"{gene_prefix}{i:011d}" for i in range(1, n_genes + 1)]
     else:
         gene_ids = [f"gene_{i}" for i in range(1, n_genes + 1)]
     var = pd.DataFrame({"ensembl_id": gene_ids}, index=gene_ids)

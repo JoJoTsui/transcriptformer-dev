@@ -22,6 +22,16 @@ def _is_int(value: Any, minimum: int) -> bool:
     return isinstance(value, int) and not isinstance(value, bool) and value >= minimum
 
 
+def _check_str_dict(value: Any, label: str, errors: list[str]) -> None:
+    if not isinstance(value, dict):
+        errors.append(f"{label} must be an object mapping strings to strings")
+        return
+    for key, item in value.items():
+        if not isinstance(key, str) or not isinstance(item, str):
+            errors.append(f"{label} must map strings to strings")
+            return
+
+
 def validate_run_manifest(data: dict[str, Any]) -> list[str]:
     """Return a list of validation errors for a run manifest."""
     errors: list[str] = []
@@ -49,6 +59,10 @@ def validate_run_manifest(data: dict[str, Any]) -> list[str]:
 
             if dataset_type == "spatial" and not dataset.get("section_id"):
                 errors.append(f"datasets[{index}] spatial datasets require section_id")
+
+            for field in ("obs_columns", "stage_mapping", "cell_type_mapping"):
+                if dataset.get(field) is not None:
+                    _check_str_dict(dataset[field], f"datasets[{index}].{field}", errors)
 
     dataloader = data.get("dataloader")
     if dataloader is not None:

@@ -40,7 +40,9 @@ def _load_gene_ids(adata: ad.AnnData) -> np.ndarray:
 
 
 def _map_gene_ids(
-    gene_ids: np.ndarray, gene_mapping: dict[str, str] | None
+    gene_ids: np.ndarray,
+    gene_mapping: dict[str, str] | None,
+    vocab: set[str] | None = None,
 ) -> tuple[list[str], list[bool], list[str]]:
     mapped: list[str] = []
     keep: list[bool] = []
@@ -48,11 +50,19 @@ def _map_gene_ids(
     gene_mapping = gene_mapping or {}
 
     for gene_id in gene_ids:
-        if gene_id.startswith("ENSDARG"):
-            mapped.append(gene_id)
-            keep.append(True)
+        # Multi-species pass-through: any ID already in the model vocabulary
+        # (ENSG, ENSMUSG, FBgn, WBGene, LOC*/GeneID_*, ...) is kept as-is.
+        if vocab is not None and gene_id in vocab:
+            mapped_id = gene_id
+        elif gene_id.startswith("ENSDARG"):
+            mapped_id = gene_id
         elif gene_id in gene_mapping:
-            mapped.append(gene_mapping[gene_id])
+            mapped_id = gene_mapping[gene_id]
+        else:
+            mapped_id = None
+
+        if mapped_id is not None and (vocab is None or mapped_id in vocab):
+            mapped.append(mapped_id)
             keep.append(True)
         else:
             mapped.append(gene_id)
@@ -60,6 +70,31 @@ def _map_gene_ids(
             unmapped.append(gene_id)
 
     return mapped, keep, unmapped
+
+
+def _apply_obs_columns(obs: pd.DataFrame, obs_columns: dict[str, str] | None) -> pd.DataFrame:
+    """Populate contract obs columns from per-dataset source columns or constants.
+
+    Entries map a contract column name to either an existing obs column name or
+    a constant value prefixed with ``=`` (e.g. ``"=10x 3' v3"``). Columns that
+    already exist under the contract name are left untouched.
+    """
+    if not obs_columns:
+        return obs
+    obs = obs.copy()
+    for contract_col, source in obs_columns.items():
+        if contract_col in obs.columns:
+            continue
+        if source.startswith("="):
+            obs[contract_col] = source[1:]
+        elif source in obs.columns:
+            obs[contract_col] = obs[source]
+        else:
+            raise ValueError(
+                f"obs_columns maps '{contract_col}' to '{source}', which is not an "
+                "obs column; prefix the value with '=' to use it as a constant"
+            )
+    return obs
 
 
 def _load_vocab(vocab_path: str | Path | None) -> set[str] | None:
@@ -145,7 +180,7 @@ def prepare_dataset_file(
     adata = ad.read_h5ad(input_path)
     using_raw = adata.raw is not None
     X = adata.raw.X if using_raw else adata.X
-    obs = adata.obs.copy()
+    obs = _apply_obs_columns(adata.obs, dataset.get("obs_columns"))
     var_df = adata.raw.var if using_raw else adata.var
 
     if not _is_raw_counts(X):
@@ -163,25 +198,25 @@ def prepare_dataset_file(
         with open(gene_mapping_path) as f:
             gene_mapping = json.load(f)
 
+    vocab = _load_vocab(vocab_path)
     gene_ids = _load_gene_ids(ad.AnnData(X=X, obs=obs, var=var_df))
-    mapped_ids, keep_genes, unmapped_ids = _map_gene_ids(gene_ids, gene_mapping)
+    mapped_ids, keep_genes, unmapped_ids = _map_gene_ids(gene_ids, gene_mapping, vocab)
     if not any(keep_genes):
-        raise ValueError(f"Dataset {input_path} has no ENSDARG gene IDs and no mapping provided")
+        if vocab is not None:
+            raise ValueError(f"Dataset {input_path} has no genes in the provided vocabulary")
+        raise ValueError(
+            f"Dataset {input_path} has no mappable gene IDs "
+            "(no vocab-native or Ensembl IDs and no gene mapping)"
+        )
 
     keep_idx = np.where(keep_genes)[0]
     X = X[:, keep_idx]
     var = pd.DataFrame({"ensembl_id": [mapped_ids[i] for i in keep_idx]})
 
-    vocab = _load_vocab(vocab_path)
-    if vocab is not None:
-        vocab_keep = np.array([gene in vocab for gene in var["ensembl_id"]])
-        X = X[:, vocab_keep]
-        var = var.loc[vocab_keep].reset_index(drop=True)
-        if var.shape[0] == 0:
-            raise ValueError(f"Dataset {input_path} has no genes in the provided vocabulary")
-
-    stage_mapping = stage_mapping or {}
-    cell_type_mapping = cell_type_mapping or {}
+    # Per-dataset mappings override/extend the run-level ones so that labels
+    # colliding across species (e.g. mouse E7.5 vs rabbit E7.5) stay distinct.
+    stage_mapping = {**(stage_mapping or {}), **(dataset.get("stage_mapping") or {})}
+    cell_type_mapping = {**(cell_type_mapping or {}), **(dataset.get("cell_type_mapping") or {})}
     obs = obs.copy()
     obs["stage"] = obs["stage"].map(lambda value: stage_mapping.get(value, value))
     obs["cell_type"] = obs["cell_type"].map(lambda value: cell_type_mapping.get(value, value))
@@ -280,11 +315,11 @@ def prepare_run(manifest: dict[str, Any], output_dir: Path) -> dict[str, Any]:
                 dataset,
                 prepared_dir,
                 split,
-                gene_mapping_path=manifest.get("gene_mapping"),
+                gene_mapping_path=dataset.get("gene_mapping", manifest.get("gene_mapping")),
                 stage_mapping=manifest.get("stage_mapping"),
                 cell_type_mapping=manifest.get("cell_type_mapping"),
                 qc_config=manifest.get("qc", {}),
-                vocab_path=manifest.get("vocab_path"),
+                vocab_path=dataset.get("vocab_path", manifest.get("vocab_path")),
                 spatial_grid_size=spatial_grid_size,
             )
         )

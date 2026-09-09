@@ -12,6 +12,20 @@ from transcriptformer.finetune.manifest import load_run_manifest
 from transcriptformer.finetune.prepare import prepare_run
 from transcriptformer.finetune.train import train_finetune
 
+MAX_ADDRESS_SPACE_BYTES = 26 * 1024**3
+
+
+def _set_address_space_limit(max_bytes: int = MAX_ADDRESS_SPACE_BYTES) -> None:
+    """Cap virtual memory so oversized H5AD loads raise MemoryError instead of
+    being OOM-killed (preparation reads whole files into RAM on a 31GB host)."""
+    import resource
+
+    soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+    if hard != resource.RLIM_INFINITY:
+        max_bytes = min(max_bytes, hard)
+    if soft == resource.RLIM_INFINITY or soft > max_bytes:
+        resource.setrlimit(resource.RLIMIT_AS, (max_bytes, hard))
+
 
 def setup_finetune_parser(subparsers: argparse._SubParsersAction) -> None:
     """Add the finetune subcommand parser."""
@@ -60,6 +74,7 @@ def setup_finetune_parser(subparsers: argparse._SubParsersAction) -> None:
 
 def run_finetune_cli(args: argparse.Namespace) -> None:
     """Validate a run manifest, prepare data, and optionally start training."""
+    _set_address_space_limit()
     manifest = load_run_manifest(args.manifest)
     output_dir = args.output_dir or Path(manifest["output_dir"])
     output_dir.mkdir(parents=True, exist_ok=True)
