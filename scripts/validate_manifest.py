@@ -11,6 +11,9 @@ Checks, per dataset, without writing any prepared output:
   6. The gene_mapping file exists (if referenced) and the fraction of var IDs that
      resolve (mapping hit or vocab-native, same logic as prepare._map_gene_ids).
   7. The vocab file exists.
+  8. Cross-file duplicate-cell check: within each species, sampled obs_names
+     (first 50k per file, backed mode) are compared pairwise; overlap > 1,000
+     barcodes hard-fails (same cells in two files), smaller overlaps warn.
 
 Usage: .venv/bin/python scripts/validate_manifest.py [manifest_path]
 """
@@ -40,6 +43,11 @@ MISSING_MARKERS = {"nan", "NaN", "None", "none", ""}
 # Fraction of var IDs that must resolve (mapping hit or vocab-native) for PASS.
 GENE_RESOLVE_PASS = 0.5
 GENE_RESOLVE_WARN = 0.1
+
+# Cross-file duplicate-cell check: sample up to this many obs_names per file
+# (first N, backed mode) and compare pairs of same-species datasets.
+DEDUP_SAMPLE_SIZE = 50_000
+DEDUP_FAIL_THRESHOLD = 1_000
 
 PASS, WARN, FAIL = "PASS", "WARN", "FAIL"
 
@@ -170,6 +178,61 @@ def validate_dataset(index: int, dataset: dict, manifest: dict) -> DatasetReport
     return rep
 
 
+def _sample_obs_names(dataset: dict) -> set[str] | None:
+    """Sample up to DEDUP_SAMPLE_SIZE obs_names in backed mode (X never loads)."""
+    path = Path(dataset["path"])
+    if not path.is_file():
+        return None
+    adata = ad.read_h5ad(path, backed="r")
+    try:
+        return set(adata.obs_names[:DEDUP_SAMPLE_SIZE])
+    finally:
+        adata.file.close()
+
+
+def check_cross_file_duplicates(manifest: dict) -> DatasetReport:
+    """Detect the same cells appearing in two files of the same species.
+
+    Compares sampled obs_names (first DEDUP_SAMPLE_SIZE per file) across every
+    pair of same-species datasets. Overlap above DEDUP_FAIL_THRESHOLD barcodes
+    means the same cells were published in two files -> FAIL; smaller overlaps
+    are reported as WARN.
+    """
+    rep = DatasetReport("cross-file duplicate-cell check")
+    by_species: dict[str, list[tuple[str, set[str]]]] = {}
+    for dataset in manifest["datasets"]:
+        names = _sample_obs_names(dataset)
+        if names is None:
+            rep.add(WARN, f"dedup sampling skipped, file not found: {dataset['path']}")
+            continue
+        species = dataset.get("species") or "unknown"
+        label = f"{dataset.get('embryo_id', '?')} ({Path(dataset['path']).name})"
+        by_species.setdefault(species, []).append((label, names))
+
+    n_pairs = 0
+    for species, group in sorted(by_species.items()):
+        for i in range(len(group)):
+            for j in range(i + 1, len(group)):
+                n_pairs += 1
+                overlap = len(group[i][1] & group[j][1])
+                if overlap > DEDUP_FAIL_THRESHOLD:
+                    rep.add(
+                        FAIL,
+                        f"{species}: {overlap:,} shared barcodes (> {DEDUP_FAIL_THRESHOLD:,}) between "
+                        f"{group[i][0]} and {group[j][0]} — same cells in two files",
+                    )
+                elif overlap > 0:
+                    rep.add(
+                        WARN,
+                        f"{species}: {overlap:,} shared barcodes between "
+                        f"{group[i][0]} and {group[j][0]}",
+                    )
+    if rep.status == PASS:
+        rep.add(PASS, f"no barcode overlap across {n_pairs} same-species file pairs "
+                      f"(sampled <= {DEDUP_SAMPLE_SIZE:,} obs_names per file)")
+    return rep
+
+
 def main() -> int:
     manifest_path = Path(sys.argv[1] if len(sys.argv) > 1 else "conf/finetune_run_multispecies.json")
 
@@ -185,6 +248,7 @@ def main() -> int:
         validate_dataset(i, dataset, manifest)
         for i, dataset in enumerate(manifest["datasets"], start=1)
     ]
+    reports.append(check_cross_file_duplicates(manifest))
 
     width = max(len(r.label) for r in reports)
     for rep in reports:

@@ -21,6 +21,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/人_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
       "dataset_type": "single_cell",
+      "species": "homo_sapiens",
       "embryo_id": "human_cs12_16",
       "stage": "CS12-CS16",
       "cell_type": "mixed",
@@ -39,6 +40,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS10_Cell_Stem_Cell_2023/人_CS10__The single-cell and spatial transcriptional landscape of human gastrulation and early brain development.h5ad",
       "dataset_type": "single_cell",
+      "species": "homo_sapiens",
       "embryo_id": "human_cs10",
       "stage": "CS10",
       "cell_type": "mixed",
@@ -57,6 +59,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/homo_sapiens/human_cs7_tyser_raw.h5ad",
       "dataset_type": "single_cell",
+      "species": "homo_sapiens",
       "embryo_id": "tyser_cs7",
       "stage": "CS7",
       "cell_type": "mixed",
@@ -76,6 +79,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS7_Spatial_transcriptomic_characterization/人_CS7__Spatial transcriptomic characterization of a Carnegie stage 7 human embryo.h5ad",
       "dataset_type": "spatial",
+      "species": "homo_sapiens",
       "embryo_id": "human_cs7_spatial",
       "stage": "CS7",
       "cell_type": "mixed",
@@ -96,6 +100,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS8_3D_reconstruction_of_a_gastrulating_human_embryo/人_CS8__3D reconstruction of a gastrulating human embryo.h5ad",
       "dataset_type": "spatial",
+      "species": "homo_sapiens",
       "embryo_id": "human_cs8_spatial",
       "stage": "CS8",
       "cell_type": "mixed",
@@ -116,6 +121,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS9_3D_reconstruction_early_body_plan/人_CS9_Stereo-seq__3D reconstruction of a human Carnegie stage 9 embryo provides a snapshot of early body plan formation.h5ad",
       "dataset_type": "spatial",
+      "species": "homo_sapiens",
       "embryo_id": "human_cs9_spatial",
       "stage": "CS9",
       "cell_type": "mixed",
@@ -137,7 +143,8 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig1.h5ad",
       "dataset_type": "spatial",
-      "embryo_id": "human_cs6_fig1",
+      "species": "homo_sapiens",
+      "embryo_id": "human_cs6",
       "stage": "CS6",
       "cell_type": "mixed",
       "assay": "unknown",
@@ -145,7 +152,7 @@
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/homo_sapiens_gene.h5",
       "obs_columns": {
         "stage": "=CS6",
-        "embryo_id": "=human_cs6_fig1",
+        "embryo_id": "=human_cs6",
         "section_id": "=human_cs6_fig1",
         "assay": "=unknown"
       },
@@ -157,7 +164,8 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig2.h5ad",
       "dataset_type": "spatial",
-      "embryo_id": "human_cs6_fig2",
+      "species": "homo_sapiens",
+      "embryo_id": "human_cs6",
       "stage": "CS6",
       "cell_type": "mixed",
       "assay": "unknown",
@@ -165,28 +173,8 @@
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/homo_sapiens_gene.h5",
       "obs_columns": {
         "stage": "=CS6",
-        "embryo_id": "=human_cs6_fig2",
+        "embryo_id": "=human_cs6",
         "section_id": "=human_cs6_fig2",
-        "assay": "=unknown"
-      },
-      "stage_mapping": {
-        "CS6": "gastrula"
-      },
-      "gene_mapping": "preprocess/gene_mappings/human_symbol_to_ensg.json"
-    },
-    {
-      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig3.h5ad",
-      "dataset_type": "spatial",
-      "embryo_id": "human_cs6_fig3",
-      "stage": "CS6",
-      "cell_type": "mixed",
-      "assay": "unknown",
-      "section_id": "human_cs6_fig3",
-      "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/homo_sapiens_gene.h5",
-      "obs_columns": {
-        "stage": "=CS6",
-        "embryo_id": "=human_cs6_fig3",
-        "section_id": "=human_cs6_fig3",
         "assay": "=unknown"
       },
       "stage_mapping": {
@@ -197,6 +185,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "tome_e10_5",
       "stage": "E10.5",
       "cell_type": "mixed",
@@ -214,6 +203,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "tome_e11_5",
       "stage": "E11.5",
       "cell_type": "mixed",
@@ -231,6 +221,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "tome_e12_5",
       "stage": "E12.5",
       "cell_type": "mixed",
@@ -248,6 +239,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "tome_e13_5",
       "stage": "E13.5",
       "cell_type": "mixed",
@@ -265,6 +257,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E3.5.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "tome_e3_5",
       "stage": "E3.5",
       "cell_type": "mixed",
@@ -282,6 +275,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E4.5.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "tome_e4_5",
       "stage": "E4.5",
       "cell_type": "mixed",
@@ -299,6 +293,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E5.25.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "tome_e5_25",
       "stage": "E5.25",
       "cell_type": "mixed",
@@ -316,6 +311,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E5.5.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "tome_e5_5",
       "stage": "E5.5",
       "cell_type": "mixed",
@@ -333,6 +329,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E6.25.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "tome_e6_25",
       "stage": "E6.25",
       "cell_type": "mixed",
@@ -348,161 +345,9 @@
       }
     },
     {
-      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E6.5.h5ad",
-      "dataset_type": "single_cell",
-      "embryo_id": "tome_e6_5",
-      "stage": "E6.5",
-      "cell_type": "mixed",
-      "assay": "10x 3' v3",
-      "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
-      "obs_columns": {
-        "stage": "=E6.5",
-        "embryo_id": "=tome_e6_5",
-        "assay": "=10x 3' v3"
-      },
-      "stage_mapping": {
-        "E6.5": "gastrula"
-      }
-    },
-    {
-      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E6.75.h5ad",
-      "dataset_type": "single_cell",
-      "embryo_id": "tome_e6_75",
-      "stage": "E6.75",
-      "cell_type": "mixed",
-      "assay": "10x 3' v3",
-      "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
-      "obs_columns": {
-        "stage": "=E6.75",
-        "embryo_id": "=tome_e6_75",
-        "assay": "=10x 3' v3"
-      },
-      "stage_mapping": {
-        "E6.75": "gastrula"
-      }
-    },
-    {
-      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E7.0.h5ad",
-      "dataset_type": "single_cell",
-      "embryo_id": "tome_e7_0",
-      "stage": "E7.0",
-      "cell_type": "mixed",
-      "assay": "10x 3' v3",
-      "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
-      "obs_columns": {
-        "stage": "=E7.0",
-        "embryo_id": "=tome_e7_0",
-        "assay": "=10x 3' v3"
-      },
-      "stage_mapping": {
-        "E7.0": "gastrula"
-      }
-    },
-    {
-      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E7.25.h5ad",
-      "dataset_type": "single_cell",
-      "embryo_id": "tome_e7_25",
-      "stage": "E7.25",
-      "cell_type": "mixed",
-      "assay": "10x 3' v3",
-      "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
-      "obs_columns": {
-        "stage": "=E7.25",
-        "embryo_id": "=tome_e7_25",
-        "assay": "=10x 3' v3"
-      },
-      "stage_mapping": {
-        "E7.25": "gastrula"
-      }
-    },
-    {
-      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E7.5.h5ad",
-      "dataset_type": "single_cell",
-      "embryo_id": "tome_e7_5",
-      "stage": "E7.5",
-      "cell_type": "mixed",
-      "assay": "10x 3' v3",
-      "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
-      "obs_columns": {
-        "stage": "=E7.5",
-        "embryo_id": "=tome_e7_5",
-        "assay": "=10x 3' v3"
-      },
-      "stage_mapping": {
-        "E7.5": "gastrula"
-      }
-    },
-    {
-      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E7.75.h5ad",
-      "dataset_type": "single_cell",
-      "embryo_id": "tome_e7_75",
-      "stage": "E7.75",
-      "cell_type": "mixed",
-      "assay": "10x 3' v3",
-      "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
-      "obs_columns": {
-        "stage": "=E7.75",
-        "embryo_id": "=tome_e7_75",
-        "assay": "=10x 3' v3"
-      },
-      "stage_mapping": {
-        "E7.75": "gastrula"
-      }
-    },
-    {
-      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E8.0.h5ad",
-      "dataset_type": "single_cell",
-      "embryo_id": "tome_e8_0",
-      "stage": "E8.0",
-      "cell_type": "mixed",
-      "assay": "10x 3' v3",
-      "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
-      "obs_columns": {
-        "stage": "=E8.0",
-        "embryo_id": "=tome_e8_0",
-        "assay": "=10x 3' v3"
-      },
-      "stage_mapping": {
-        "E8.0": "neurula"
-      }
-    },
-    {
-      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E8.25.h5ad",
-      "dataset_type": "single_cell",
-      "embryo_id": "tome_e8_25",
-      "stage": "E8.25",
-      "cell_type": "mixed",
-      "assay": "10x 3' v3",
-      "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
-      "obs_columns": {
-        "stage": "=E8.25",
-        "embryo_id": "=tome_e8_25",
-        "assay": "=10x 3' v3"
-      },
-      "stage_mapping": {
-        "E8.25": "neurula"
-      }
-    },
-    {
-      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E8.5a.h5ad",
-      "dataset_type": "single_cell",
-      "embryo_id": "tome_e8_5a",
-      "stage": "E8.5a",
-      "cell_type": "mixed",
-      "assay": "10x 3' v3",
-      "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
-      "obs_columns": {
-        "stage": "=E8.5a",
-        "embryo_id": "=tome_e8_5a",
-        "assay": "=10x 3' v3"
-      },
-      "stage_mapping": {
-        "E8.5a": "neurula"
-      }
-    },
-    {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E8.5b.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "tome_e8_5b",
       "stage": "E8.5b",
       "cell_type": "mixed",
@@ -520,6 +365,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "tome_e9_5",
       "stage": "E9.5",
       "cell_type": "mixed",
@@ -537,6 +383,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "mouse_gastrulation_atlas",
       "stage": "E6.5-E8.5",
       "cell_type": "mixed",
@@ -563,6 +410,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
       "dataset_type": "single_cell",
+      "species": "mus_musculus",
       "embryo_id": "mouse_single_embryo_timecourse",
       "stage": "E6.42-E8.13",
       "cell_type": "unknown",
@@ -717,6 +565,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/斑马鱼_Danio_rerio/斑马鱼_Danio_rerio__Single-cell mapping of gene expression landscapes and lineage in the zebrafish embryo.h5ad",
       "dataset_type": "single_cell",
+      "species": "danio_rerio",
       "embryo_id": "zebrafish_wagner2018",
       "stage": "4-24hpf",
       "cell_type": "mixed",
@@ -742,6 +591,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/鸡_Gallus_gallus/eLife_2022_HH4_HH7/鸡_Gallus_gallus__Single-cell atlas of early chick development reveals gradual segregation of neural crest lineage from the neural plate border during neurulation.h5ad",
       "dataset_type": "single_cell",
+      "species": "gallus_gallus",
       "embryo_id": "chicken_elife2022",
       "stage": "HH4-HH7",
       "cell_type": "mixed",
@@ -762,6 +612,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/oryctolagus_cuniculus/rabbit_atlas_raw.h5ad",
       "dataset_type": "single_cell",
+      "species": "oryctolagus_cuniculus",
       "embryo_id": "rabbit_atlas",
       "stage": "GD7-GD9",
       "cell_type": "mixed",
@@ -781,16 +632,16 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/drosophila_melanogaster/drosophila_continuum_raw.h5ad",
       "dataset_type": "single_cell",
+      "species": "drosophila_melanogaster",
       "embryo_id": "drosophila_continuum",
       "stage": "0-20h",
-      "cell_type": "unknown",
-      "assay": "10x 3' v3",
+      "cell_type": "mixed",
+      "assay": "sci-RNA-seq3",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/drosophila_melanogaster_gene.h5",
       "obs_columns": {
         "stage": "time",
-        "cell_type": "=unknown",
         "embryo_id": "=drosophila_continuum",
-        "assay": "=10x 3' v3"
+        "assay": "=sci-RNA-seq3"
       },
       "stage_mapping": {
         "hrs_00_02": "blastula",
@@ -810,6 +661,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/秀丽隐杆线虫_Caenorhabditis_elegans/秀丽隐杆线虫_Caenorhabditis_elegans__A lineage-resolved molecular atlas of C elegans embryogenesis at single-cell resolution.h5ad",
       "dataset_type": "single_cell",
+      "species": "caenorhabditis_elegans",
       "embryo_id": "celegans_packer2019",
       "stage": "<100->650min",
       "cell_type": "mixed",
@@ -840,6 +692,7 @@
     {
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/绿海胆_Lytechinus_variegatus/绿海胆_Lytechinus_variegatus__Developmental single-cell transcriptomics in the Lytechinus variegatus sea urchin embryo.h5ad",
       "dataset_type": "single_cell",
+      "species": "lytechinus_variegatus",
       "embryo_id": "urchin_lv",
       "stage": "2-24hpf",
       "cell_type": "unknown",
