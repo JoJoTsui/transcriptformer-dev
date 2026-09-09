@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import math
 from pathlib import Path
 from types import SimpleNamespace
@@ -246,7 +247,7 @@ def test_spatial_aux_tokens_flow_and_loss_decreases(tmp_path: Path) -> None:
     scaler = torch.amp.GradScaler("cuda", enabled=False)
 
     torch.manual_seed(0)
-    summary = _run_training_loop(
+    summary, best_state = _run_training_loop(
         model,
         dataloader,
         optimizer,
@@ -269,6 +270,9 @@ def test_spatial_aux_tokens_flow_and_loss_decreases(tmp_path: Path) -> None:
     # i.e. conditioning on coordinate bins generalizes across sections.
     assert summary["final_validation_loss"] is not None
     assert math.isfinite(summary["final_validation_loss"])
+    # Validation ran, so a best-validation snapshot was taken.
+    assert best_state is not None
+    assert "aux_embeddings.spatial_bin.weight" in best_state
 
     # Bin embeddings moved away from their (shared) initialization during training.
     bin_weight = model.aux_embeddings["spatial_bin"].weight
@@ -280,3 +284,54 @@ def test_spatial_grid_size_from_manifest() -> None:
     assert spatial_grid_size_from_manifest({}) is None
     assert spatial_grid_size_from_manifest({"spatial": {"enabled": False, "grid_size": 8}}) is None
     assert spatial_grid_size_from_manifest({"spatial": {"enabled": True, "grid_size": 8}}) == 8
+
+
+def test_save_finetuned_checkpoint_spatial_roundtrip_evaluatable(tmp_path: Path) -> None:
+    """A spatial-trained run dir must configure inference with spatial_bin (P2)."""
+    from transcriptformer.finetune.evaluate import _inference_cfg
+    from transcriptformer.finetune.spatial import spatial_grid_size_from_checkpoint
+    from transcriptformer.finetune.train import save_finetuned_checkpoint
+
+    source = tmp_path / "base"
+    (source / "vocabs").mkdir(parents=True)
+    (source / "config.json").write_text(
+        json.dumps({"model": {"data_config": {"aux_cols": "assay"}, "model_config": {"seq_len": 2047}}})
+    )
+    (source / "vocabs" / "assay_vocab.json").write_text('{"unknown": 0, "10x 3\' v3": 1}\n')
+
+    output_dir = tmp_path / "run"
+    save_finetuned_checkpoint(output_dir, source, {"weight": torch.zeros(1)}, spatial_grid_size=GRID)
+
+    assert (output_dir / "config.json").is_file()
+    assert (output_dir / "vocabs" / "assay_vocab.json").is_file()
+    assert (output_dir / "vocabs" / "spatial_bin_vocab.json").is_file()
+    assert spatial_grid_size_from_checkpoint(output_dir) == GRID
+
+    # The evaluation config path mirrors the training-time spatial setup:
+    # spatial_bin joins aux_cols and seq_len shrinks by one, so the saved
+    # weights (which include aux_embeddings.spatial_bin) load strictly.
+    cfg = _inference_cfg(output_dir, ["x.h5ad"], 1, "cpu", "32")
+    assert cfg.model.data_config.aux_cols == "assay,spatial_bin"
+    assert cfg.model.model_config.seq_len == 2046
+    assert Path(cfg.model.data_config.aux_vocab_path) == output_dir / "vocabs"
+
+
+def test_setup_spatial_aux_is_idempotent_on_complete_checkpoint(tmp_path: Path) -> None:
+    """A completed checkpoint dir can serve as its own work_dir (evaluate path)."""
+    checkpoint = tmp_path / "checkpoint"
+    vocabs = checkpoint / "vocabs"
+    vocabs.mkdir(parents=True)
+    (vocabs / "assay_vocab.json").write_text('{"unknown": 0}\n')
+    (vocabs / "spatial_bin_vocab.json").write_text(json.dumps(build_spatial_bin_vocab(GRID)) + "\n")
+
+    cfg = OmegaConf.create(
+        {
+            "model": {
+                "data_config": {"aux_cols": "assay", "aux_vocab_path": str(vocabs)},
+                "model_config": {"seq_len": 2047},
+            }
+        }
+    )
+    setup_spatial_aux(cfg, checkpoint, checkpoint, GRID)
+    assert cfg.model.data_config.aux_cols == "assay,spatial_bin"
+    assert json.loads((vocabs / "spatial_bin_vocab.json").read_text()) == build_spatial_bin_vocab(GRID)

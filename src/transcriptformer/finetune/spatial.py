@@ -9,6 +9,7 @@ observations use the vocab's `unknown` bin.
 from __future__ import annotations
 
 import json
+import math
 import shutil
 from pathlib import Path
 from typing import Any
@@ -68,6 +69,16 @@ def _to_bin(values: np.ndarray, grid_size: int) -> np.ndarray:
     return np.clip(scaled.astype(int), 0, grid_size - 1)
 
 
+def spatial_grid_size_from_checkpoint(checkpoint_path: Path) -> int | None:
+    """Grid size recorded in a checkpoint's spatial_bin vocab, else None."""
+    vocab_path = Path(checkpoint_path) / "vocabs" / f"{SPATIAL_VOCAB_NAME}_vocab.json"
+    if not vocab_path.is_file():
+        return None
+    vocab = json.loads(vocab_path.read_text())
+    # 'unknown' plus grid_size**2 bin tokens.
+    return math.isqrt(len(vocab) - 1)
+
+
 def setup_spatial_aux(
     cfg: Any,
     checkpoint_path: Path,
@@ -81,6 +92,10 @@ def setup_spatial_aux(
     ``spatial_bin_vocab.json`` there, and shrinks seq_len by one so that
     (seq_len + aux tokens) stays divisible by the attention block length now
     that a second aux token is prepended.
+
+    ``work_dir`` may equal ``checkpoint_path`` when evaluating a completed
+    finetuned checkpoint that already carries its own vocabs; all writes are
+    then no-ops.
     """
     vocabs_dir = work_dir / "vocabs"
     vocabs_dir.mkdir(parents=True, exist_ok=True)
@@ -88,9 +103,12 @@ def setup_spatial_aux(
         dest = vocabs_dir / source.name
         if not dest.exists():
             shutil.copy2(source, dest)
-    (vocabs_dir / f"{SPATIAL_VOCAB_NAME}_vocab.json").write_text(
-        json.dumps(build_spatial_bin_vocab(grid_size)) + "\n"
-    )
+    # Idempotent: a completed checkpoint dir doubles as its own work_dir at
+    # evaluation time and may be read-only, so never rewrite identical content.
+    vocab_content = json.dumps(build_spatial_bin_vocab(grid_size)) + "\n"
+    vocab_path = vocabs_dir / f"{SPATIAL_VOCAB_NAME}_vocab.json"
+    if not vocab_path.exists() or vocab_path.read_text() != vocab_content:
+        vocab_path.write_text(vocab_content)
 
     aux_cols = [col for col in str(cfg.model.data_config.aux_cols).split(",") if col]
     if SPATIAL_VOCAB_NAME not in aux_cols:

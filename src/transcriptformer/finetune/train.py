@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import random
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,7 @@ from transcriptformer.data.dataclasses import BatchData
 from transcriptformer.finetune.early_stopping import EarlyStopping
 from transcriptformer.finetune.spatial import (
     SPATIAL_VOCAB_NAME,
+    build_spatial_bin_vocab,
     load_state_dict_with_new_aux,
     setup_spatial_aux,
     spatial_grid_size_from_manifest,
@@ -156,19 +158,25 @@ class BalancedDataset(Dataset):
         self.spatial_dataset = spatial_dataset
         self.spatial_fraction = spatial_fraction
         self.seed = seed
+        self._epoch = 0
         self._length = max(len(single_cell_dataset), len(spatial_dataset or [])) * 2
 
     def __len__(self) -> int:
         return self._length
 
+    def set_epoch(self, epoch: int) -> None:
+        """Mix the epoch into the sampling seeds so epochs see different orders."""
+        self._epoch = int(epoch)
+
     def __getitem__(self, index: int):
-        seed_int = (self.seed * 1000003 + index) & 0xFFFFFFFF
+        base_seed = (self.seed * 1000003 + self._epoch * 10000019) & 0xFFFFFFFF
+        seed_int = (base_seed + index) & 0xFFFFFFFF
         use_spatial = random.Random(seed_int).random() < self.spatial_fraction
         if use_spatial and self.spatial_dataset is not None and len(self.spatial_dataset) > 0:
-            source_seed = (self.seed * 1000003 + index * 100003 + 1) & 0xFFFFFFFF
+            source_seed = (base_seed + index * 100003 + 1) & 0xFFFFFFFF
             source_index = random.Random(source_seed).randrange(len(self.spatial_dataset))
             return self.spatial_dataset[source_index]
-        source_seed = (self.seed * 1000003 + index * 100003 + 2) & 0xFFFFFFFF
+        source_seed = (base_seed + index * 100003 + 2) & 0xFFFFFFFF
         source_index = random.Random(source_seed).randrange(len(self.single_cell_dataset))
         return self.single_cell_dataset[source_index]
 
@@ -287,6 +295,7 @@ def _validation_loss(
     target_device: torch.device,
     use_amp: bool,
     amp_dtype: torch.dtype,
+    max_batches: int | None = None,
 ) -> float:
     if validation_loader is None:
         return float("inf")
@@ -295,7 +304,9 @@ def _validation_loss(
     total = 0.0
     n_obs = 0
     with torch.no_grad():
-        for batch in validation_loader:
+        for batch_index, batch in enumerate(validation_loader):
+            if max_batches is not None and batch_index >= max_batches:
+                break
             batch = _move_batch_to_device(batch, target_device)
             with torch.autocast(
                 device_type=target_device.type,
@@ -310,26 +321,153 @@ def _validation_loss(
     return total / n_obs if n_obs else float("inf")
 
 
-def _resume_state(output_dir: Path) -> dict[str, Any]:
-    summary_path = output_dir / "training_summary.json"
-    if summary_path.is_file():
-        return json.loads(summary_path.read_text())
-    return {"steps": 0, "epochs_run": 0}
+def _atomic_write(path: Path, write_fn) -> None:
+    """Write via a temp file and rename so a crash never leaves partial files."""
+    tmp_path = path.with_name(path.name + ".tmp")
+    write_fn(tmp_path)
+    os.replace(tmp_path, path)
 
 
-def _maybe_resume_model(
-    model: Transcriptformer,
+def _link_or_copy(source: Path, dest: Path) -> None:
+    """Hardlink vocab files (they can be gigabytes); copy across filesystems."""
+    try:
+        os.link(source, dest)
+    except OSError:
+        shutil.copy2(source, dest)
+
+
+def _snapshot_state_dict(model) -> dict[str, torch.Tensor]:
+    """CPU copy of the (possibly DDP-wrapped) model's state dict."""
+    module = model.module if hasattr(model, "module") else model
+    return {key: value.detach().cpu().clone() for key, value in module.state_dict().items()}
+
+
+def save_finetuned_checkpoint(
     output_dir: Path,
-    resume: bool,
-) -> int:
+    source_checkpoint_path: Path,
+    state_dict: dict[str, torch.Tensor],
+    spatial_grid_size: int | None = None,
+) -> None:
+    """Assemble a complete, evaluatable checkpoint directory in output_dir.
+
+    Writes config.json (from the training checkpoint), the vocab files
+    (hardlinked, including the spatial_bin vocab when spatial conditioning was
+    enabled), and model_weights.pt atomically.
+    """
+    output_dir = Path(output_dir)
+    source = Path(source_checkpoint_path)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    _atomic_write(output_dir / "config.json", lambda tmp: tmp.write_text((source / "config.json").read_text()))
+
+    vocabs_dir = output_dir / "vocabs"
+    vocabs_dir.mkdir(parents=True, exist_ok=True)
+    for vocab_file in sorted((source / "vocabs").iterdir()):
+        dest = vocabs_dir / vocab_file.name
+        if not dest.exists():
+            _link_or_copy(vocab_file, dest)
+    if spatial_grid_size is not None:
+        content = json.dumps(build_spatial_bin_vocab(spatial_grid_size)) + "\n"
+        vocab_path = vocabs_dir / f"{SPATIAL_VOCAB_NAME}_vocab.json"
+        if not vocab_path.exists() or vocab_path.read_text() != content:
+            _atomic_write(vocab_path, lambda tmp: tmp.write_text(content))
+
+    _atomic_write(output_dir / "model_weights.pt", lambda tmp: torch.save(state_dict, tmp))
+
+
+def _capture_rng_state() -> dict[str, Any]:
+    state = {
+        "torch": torch.get_rng_state(),
+        "numpy": np.random.get_state(),
+        "python": random.getstate(),
+    }
+    if torch.cuda.is_available():
+        state["torch_cuda"] = torch.cuda.get_rng_state_all()
+    return state
+
+
+def _checkpoint_step_number(path: Path) -> int:
+    return int(path.stem.removeprefix("checkpoint_step"))
+
+
+def _list_checkpoints(output_dir: Path) -> list[Path]:
+    checkpoints = [p for p in output_dir.glob("checkpoint_step*.pt") if p.stem.removeprefix("checkpoint_step").isdigit()]
+    return sorted(checkpoints, key=_checkpoint_step_number)
+
+
+def _latest_checkpoint_path(output_dir: Path) -> Path | None:
+    checkpoints = _list_checkpoints(output_dir)
+    return checkpoints[-1] if checkpoints else None
+
+
+def _save_periodic_checkpoint(
+    output_dir: Path,
+    model,
+    optimizer: torch.optim.Optimizer,
+    scaler: Any,
+    step: int,
+    keep: int = 2,
+) -> None:
+    """Atomically save a full resume checkpoint; keep only the latest `keep`."""
+    state = {
+        "model": _snapshot_state_dict(model),
+        "optimizer": optimizer.state_dict(),
+        "scaler": scaler.state_dict(),
+        "step": step,
+        "rng": _capture_rng_state(),
+    }
+    _atomic_write(output_dir / f"checkpoint_step{step}.pt", lambda tmp: torch.save(state, tmp))
+    for old in _list_checkpoints(output_dir)[:-keep]:
+        old.unlink()
+
+
+def _load_latest_checkpoint(output_dir: Path, resume: bool) -> dict[str, Any] | None:
+    """Load the latest periodic checkpoint, or None when starting fresh."""
     if not resume:
+        return None
+    checkpoint_path = _latest_checkpoint_path(output_dir)
+    if checkpoint_path is None:
+        logger.info("Resume requested but no periodic checkpoint found in %s; starting fresh", output_dir)
+        return None
+    logger.info("Resuming from %s", checkpoint_path)
+    return torch.load(checkpoint_path, weights_only=False, map_location="cpu")
+
+
+def _restore_training_state(
+    resume_state: dict[str, Any] | None,
+    optimizer: torch.optim.Optimizer,
+    scaler: Any,
+    target_device: torch.device,
+) -> int:
+    """Restore optimizer/scaler/RNG state from a checkpoint; return the step."""
+    if resume_state is None:
         return 0
-    checkpoint_path = output_dir / "model_weights.pt"
-    if not checkpoint_path.is_file():
-        return 0
-    state_dict = torch.load(checkpoint_path, weights_only=True, map_location="cpu")
-    model.load_state_dict(state_dict)
-    return int(_resume_state(output_dir).get("steps", 0))
+    optimizer.load_state_dict(resume_state["optimizer"])
+    # Optimizer state was saved from the training device; move it back.
+    for state in optimizer.state.values():
+        for key, value in state.items():
+            if isinstance(value, torch.Tensor):
+                state[key] = value.to(target_device)
+    scaler.load_state_dict(resume_state["scaler"])
+    rng = resume_state.get("rng") or {}
+    if "torch" in rng:
+        torch.set_rng_state(rng["torch"])
+    if "numpy" in rng:
+        np.random.set_state(rng["numpy"])
+    if "python" in rng:
+        random.setstate(rng["python"])
+    if target_device.type == "cuda" and "torch_cuda" in rng:
+        torch.cuda.set_rng_state_all(rng["torch_cuda"])
+    return int(resume_state.get("step", 0))
+
+
+def _set_epoch(dataloader: DataLoader, epoch: int) -> None:
+    dataset = getattr(dataloader, "dataset", None)
+    if hasattr(dataset, "set_epoch"):
+        dataset.set_epoch(epoch)
+    sampler = getattr(dataloader, "sampler", None)
+    if hasattr(sampler, "set_epoch"):
+        sampler.set_epoch(epoch)
 
 
 def _run_training_loop(
@@ -347,19 +485,35 @@ def _run_training_loop(
     initial_step: int = 0,
     validation_loader: DataLoader | None = None,
     early_stopping: EarlyStopping | None = None,
-    validation_interval: int = 10,
-) -> dict[str, Any]:
+    validation_interval: int = 500,
+    validation_max_batches: int | None = None,
+    output_dir: Path | None = None,
+    checkpoint_interval: int = 500,
+) -> tuple[dict[str, Any], dict[str, torch.Tensor] | None]:
+    """Run training; return (summary, best-validation CPU state dict or None).
+
+    ``initial_step`` resumes a previous run: the dataloader is deterministic,
+    so the first ``initial_step * grad_accumulation`` micro-batches are skipped.
+    """
     model.train()
     step = initial_step
     micro_steps = 0
+    skip_micro_steps = initial_step * grad_accumulation
     losses: list[float] = []
     validation_losses: list[float] = []
+    best_state: dict[str, torch.Tensor] | None = None
+    best_step: int | None = None
     last_epoch = 0
     stopped_early = False
 
     for epoch in range(1, epochs + 1):
         last_epoch = epoch
+        _set_epoch(dataloader, epoch)
         for batch in dataloader:
+            if skip_micro_steps > 0:
+                # Already consumed by the run being resumed; skip re-seeing it.
+                skip_micro_steps -= 1
+                continue
             batch = _move_batch_to_device(batch, target_device)
 
             with torch.autocast(
@@ -392,6 +546,8 @@ def _run_training_loop(
                     step,
                     loss_value,
                 )
+                if output_dir is not None and checkpoint_interval > 0 and step % checkpoint_interval == 0:
+                    _save_periodic_checkpoint(output_dir, model, optimizer, scaler, step)
                 if validation_loader is not None and early_stopping is not None and step % validation_interval == 0:
                     validation_loss = _validation_loss(
                         model,
@@ -399,9 +555,13 @@ def _run_training_loop(
                         target_device,
                         use_amp,
                         amp_dtype,
+                        max_batches=validation_max_batches,
                     )
                     validation_losses.append(validation_loss)
                     logger.info("Validation loss %.6f", validation_loss)
+                    if validation_loss <= min(validation_losses):
+                        best_state = _snapshot_state_dict(model)
+                        best_step = step
                     if early_stopping.should_stop(validation_loss):
                         stopped_early = True
                         break
@@ -412,16 +572,18 @@ def _run_training_loop(
         if stopped_early or (max_steps > 0 and step >= max_steps):
             break
 
-    return {
+    summary = {
         "steps": step,
         "epochs_run": last_epoch,
         "last_loss": losses[-1] if losses else None,
         "losses": losses,
         "best_validation_loss": min(validation_losses) if validation_losses else None,
+        "best_step": best_step,
         "final_validation_loss": validation_losses[-1] if validation_losses else None,
         "stopped_early": stopped_early,
         "resumed_from_step": initial_step,
     }
+    return summary, best_state
 
 
 def _write_training_summary(output_dir: Path, summary: dict[str, Any]) -> None:
@@ -445,6 +607,9 @@ def _ddp_worker(
     early_stopping_patience: int,
     backend: str = "nccl",
     spatial_grid_size: int | None = None,
+    validation_max_batches: int = 200,
+    validation_batch_size: int | None = None,
+    checkpoint_interval: int = 500,
 ) -> None:
     import torch.distributed as dist
 
@@ -466,7 +631,9 @@ def _ddp_worker(
     model, cfg, gene_vocab, aux_vocab = _load_model(
         Path(checkpoint_path), spatial_grid_size=spatial_grid_size, work_dir=output_dir
     )
-    initial_step = _maybe_resume_model(model, output_dir, resume)
+    resume_state = _load_latest_checkpoint(output_dir, resume)
+    if resume_state is not None:
+        model.load_state_dict(resume_state["model"])
     model.to(target_device)
     from torch.nn.parallel import DistributedDataParallel
 
@@ -479,7 +646,7 @@ def _ddp_worker(
         cfg,
         gene_vocab,
         aux_vocab,
-        batch_size,
+        validation_batch_size or batch_size,
         device_type=target_device.type,
     )
     early_stopping = EarlyStopping(patience=early_stopping_patience)
@@ -501,8 +668,9 @@ def _ddp_worker(
     trainable_params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.AdamW(trainable_params, lr=lr)
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
+    initial_step = _restore_training_state(resume_state, optimizer, scaler, target_device)
 
-    summary = _run_training_loop(
+    summary, best_state = _run_training_loop(
         model,
         dataloader,
         optimizer,
@@ -517,10 +685,14 @@ def _ddp_worker(
         validation_loader=validation_loader,
         early_stopping=early_stopping,
         validation_interval=validation_interval,
+        validation_max_batches=validation_max_batches,
+        output_dir=output_dir if rank == 0 else None,
+        checkpoint_interval=checkpoint_interval,
     )
 
     if rank == 0:
-        torch.save(model.module.state_dict(), output_dir / "model_weights.pt")
+        final_state = best_state if best_state is not None else _snapshot_state_dict(model)
+        save_finetuned_checkpoint(output_dir, Path(checkpoint_path), final_state, spatial_grid_size)
         summary.update({"device": str(target_device), "precision": precision})
         _write_training_summary(output_dir, summary)
 
@@ -542,9 +714,12 @@ def train_finetune(
     num_gpus: int = 1,
     grad_accumulation: int = 1,
     resume: bool = True,
-    validation_interval: int = 10,
+    validation_interval: int = 500,
     early_stopping_patience: int = 3,
     backend: str = "nccl",
+    validation_max_batches: int = 200,
+    validation_batch_size: int | None = None,
+    checkpoint_interval: int = 500,
 ) -> dict[str, Any]:
     """Run a finetuning training loop and save a checkpoint and summary."""
     torch.manual_seed(int(manifest.get("seed", 0)))
@@ -572,6 +747,9 @@ def train_finetune(
             early_stopping_patience,
             backend,
             spatial_grid_size,
+            validation_max_batches,
+            validation_batch_size,
+            checkpoint_interval,
         )
         if backend == "nccl":
             mp.spawn(_ddp_worker, args=spawn_args, nprocs=num_gpus, join=True)
@@ -598,6 +776,10 @@ def train_finetune(
     model, cfg, gene_vocab, aux_vocab = _load_model(
         Path(checkpoint_path), spatial_grid_size=spatial_grid_size, work_dir=output_dir
     )
+    resume_state = _load_latest_checkpoint(output_dir, resume)
+    if resume_state is not None:
+        model.load_state_dict(resume_state["model"])
+    model.to(target_device)
 
     logger.info("Building balanced datasets")
     dataset = _build_datasets(manifest, prepared_report, cfg, gene_vocab, aux_vocab)
@@ -612,19 +794,18 @@ def train_finetune(
     trainable_params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.AdamW(trainable_params, lr=lr)
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
-    initial_step = _maybe_resume_model(model, output_dir, resume)
-    model.to(target_device)
+    initial_step = _restore_training_state(resume_state, optimizer, scaler, target_device)
     validation_loader = _build_validation_loader(
         manifest,
         prepared_report,
         cfg,
         gene_vocab,
         aux_vocab,
-        batch_size,
+        validation_batch_size or batch_size,
         device_type=target_device.type,
     )
     early_stopping = EarlyStopping(patience=early_stopping_patience)
-    summary = _run_training_loop(
+    summary, best_state = _run_training_loop(
         model,
         dataloader,
         optimizer,
@@ -639,8 +820,12 @@ def train_finetune(
         validation_loader=validation_loader,
         early_stopping=early_stopping,
         validation_interval=validation_interval,
+        validation_max_batches=validation_max_batches,
+        output_dir=output_dir,
+        checkpoint_interval=checkpoint_interval,
     )
-    torch.save(model.state_dict(), output_dir / "model_weights.pt")
+    final_state = best_state if best_state is not None else _snapshot_state_dict(model)
+    save_finetuned_checkpoint(output_dir, Path(checkpoint_path), final_state, spatial_grid_size)
     summary.update({"device": str(target_device), "precision": precision})
     _write_training_summary(output_dir, summary)
     return summary

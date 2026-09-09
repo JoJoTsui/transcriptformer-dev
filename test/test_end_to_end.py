@@ -18,7 +18,7 @@ from transcriptformer.cli.finetune import run_finetune_cli
 
 def _write_manifest(tmp_path: Path, output_dir: Path) -> tuple[Path, dict]:
     datasets = []
-    for embryo_id in ("embryo_1", "embryo_2", "embryo_3"):
+    for embryo_id in ("embryo_1", "embryo_3"):
         path = make_synthetic_h5ad(
             tmp_path / f"sc_{embryo_id}.h5ad",
             embryo_id=embryo_id,
@@ -34,6 +34,24 @@ def _write_manifest(tmp_path: Path, output_dir: Path) -> tuple[Path, dict]:
                 "assay": "10x 3' v3",
             }
         )
+
+    # A multi-embryo file provides the embryos for validation/holdout splits
+    # (single-embryo datasets are train-only by design).
+    multi_embryos = [f"embryo_2_{i}" for i in range(6)]
+    multi_path = make_synthetic_h5ad(
+        tmp_path / "sc_embryo_2.h5ad",
+        embryo_ids=multi_embryos,
+    )
+    datasets.append(
+        {
+            "path": str(multi_path),
+            "dataset_type": "single_cell",
+            "embryo_id": "embryo_2",
+            "stage": "24hpf",
+            "cell_type": "neural",
+            "assay": "10x 3' v3",
+        }
+    )
 
     spatial_path = make_synthetic_h5ad(
         tmp_path / "spatial_1.h5ad",
@@ -88,13 +106,16 @@ def _finetune_args(manifest_path: Path) -> argparse.Namespace:
         no_resume=True,
         validation_interval=10,
         early_stopping_patience=3,
+        validation_max_batches=200,
+        validation_batch_size=0,
+        checkpoint_interval=500,
     )
 
 
 def _evaluate_args(manifest_path: Path) -> argparse.Namespace:
     return argparse.Namespace(
         manifest=manifest_path,
-        checkpoint_path=manifest_path.parent / "finetuned",
+        checkpoint_path=None,
         baseline_checkpoint_path=manifest_path.parent / "baseline",
         output_dir=None,
         batch_size=1,

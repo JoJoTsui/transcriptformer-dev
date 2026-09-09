@@ -18,7 +18,13 @@ def setup_evaluate_parser(subparsers: argparse._SubParsersAction) -> None:
         description="Compare finetuned and original embeddings on the final holdout.",
     )
     parser.add_argument("--manifest", required=True, type=Path)
-    parser.add_argument("--checkpoint-path", type=Path, default=None)
+    parser.add_argument(
+        "--checkpoint-path",
+        type=Path,
+        default=None,
+        help="Finetuned checkpoint directory; defaults to the run's output directory "
+        "(never the base checkpoint from the manifest)",
+    )
     parser.add_argument("--baseline-checkpoint-path", type=Path, default=None)
     parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument("--batch-size", type=int, default=1)
@@ -38,16 +44,28 @@ def run_evaluate_cli(args: argparse.Namespace) -> None:
         )
 
     preparation = json.loads(preparation_path.read_text())
-    holdout_files = [entry["path"] for entry in preparation["datasets"] if entry["split"] == "final_holdout"]
-    if not holdout_files:
+    holdout_entries = [entry for entry in preparation["datasets"] if entry["split"] == "final_holdout"]
+    if not holdout_entries:
         raise ValueError("No final holdout files found in preparation report")
+    holdout_files = [entry["path"] for entry in holdout_entries]
+    dataset_types = {entry["path"]: entry["dataset_type"] for entry in holdout_entries}
 
+    base_raw = manifest.get("checkpoint_path")
     finetuned_path = args.checkpoint_path
     if finetuned_path is None:
-        finetuned_raw = manifest.get("checkpoint_path")
-        if not finetuned_raw:
-            raise ValueError("--checkpoint-path is required unless set in the run manifest")
-        finetuned_path = Path(finetuned_raw)
+        # Training writes a complete checkpoint dir (config.json, vocabs,
+        # model_weights.pt) into the run's output directory.
+        finetuned_path = output_dir
+    finetuned_path = Path(finetuned_path)
+    if base_raw and finetuned_path.resolve() == Path(base_raw).resolve():
+        raise ValueError(
+            f"Finetuned checkpoint {finetuned_path} is the base checkpoint from the run manifest; "
+            "pass the training output directory via --checkpoint-path instead"
+        )
+    if not (finetuned_path / "model_weights.pt").is_file():
+        raise FileNotFoundError(
+            f"Finetuned checkpoint not found or incomplete (missing model_weights.pt): {finetuned_path}"
+        )
 
     baseline_path = args.baseline_checkpoint_path
     if baseline_path is None:
@@ -58,6 +76,11 @@ def run_evaluate_cli(args: argparse.Namespace) -> None:
 
     if not baseline_path.is_dir():
         raise FileNotFoundError(f"Baseline checkpoint directory not found: {baseline_path}")
+    if finetuned_path.resolve() == baseline_path.resolve():
+        raise ValueError(
+            f"Finetuned checkpoint {finetuned_path} equals the baseline checkpoint; "
+            "this would compare the base model against itself"
+        )
 
     results = {}
     for name, checkpoint_path in (
@@ -67,6 +90,7 @@ def run_evaluate_cli(args: argparse.Namespace) -> None:
         result = evaluate_checkpoint(
             checkpoint_path,
             holdout_files,
+            dataset_types=dataset_types,
             batch_size=args.batch_size,
             device=args.device,
             precision=args.precision,

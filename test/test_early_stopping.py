@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 
 from transcriptformer.finetune.early_stopping import EarlyStopping
-from transcriptformer.finetune.train import _resume_state
+from transcriptformer.finetune.train import _latest_checkpoint_path, _load_latest_checkpoint
 
 
 def test_early_stopping_stops_after_patience() -> None:
@@ -23,10 +23,10 @@ def test_early_stopping_resets_on_improvement() -> None:
     assert stopper.should_stop(0.9) is True
 
 
-def test_resume_state_reads_previous_summary(tmp_path) -> None:
-    (tmp_path / "training_summary.json").write_text(json.dumps({"steps": 7, "last_loss": 1.5}))
-    state = _resume_state(tmp_path)
-    assert state["steps"] == 7
+def test_resume_is_noop_without_checkpoint(tmp_path) -> None:
+    assert _latest_checkpoint_path(tmp_path) is None
+    assert _load_latest_checkpoint(tmp_path, resume=True) is None
+    assert _load_latest_checkpoint(tmp_path, resume=False) is None
 
 
 def _setup_resume_run(tmp_path):
@@ -78,6 +78,9 @@ def _setup_resume_run(tmp_path):
             no_resume=no_resume,
             validation_interval=10,
             early_stopping_patience=3,
+            validation_max_batches=200,
+            validation_batch_size=0,
+            checkpoint_interval=500,
         )
 
     return output_dir, make_args
@@ -86,13 +89,17 @@ def _setup_resume_run(tmp_path):
 def test_cli_resumes_interrupted_run(tmp_path) -> None:
     from unittest import mock
 
+    import torch
+
     from transcriptformer.cli.finetune import run_finetune_cli
 
     output_dir, make_args = _setup_resume_run(tmp_path)
 
-    # First run is "interrupted" after 5 steps: partial checkpoint + summary on disk.
+    # First run is "interrupted" after 5 steps: a periodic resume checkpoint
+    # (weights + optimizer + scaler + step + RNG) is on disk.
     def interrupted_train(*args, **kwargs):
-        (output_dir / "model_weights.pt").write_bytes(b"partial")
+        state = {"model": {}, "optimizer": {}, "scaler": {}, "step": 5, "rng": {}}
+        torch.save(state, output_dir / "checkpoint_step5.pt")
         summary = {"steps": 5, "epochs_run": 1, "last_loss": 0.9, "resumed_from_step": 0}
         (output_dir / "training_summary.json").write_text(json.dumps(summary))
         return summary
@@ -105,8 +112,8 @@ def test_cli_resumes_interrupted_run(tmp_path) -> None:
 
     def resuming_train(*args, **kwargs):
         captured["resume"] = kwargs["resume"]
-        state = _resume_state(args[1])  # output_dir is the second positional argument
-        return {"steps": 10, "epochs_run": 1, "last_loss": 0.5, "resumed_from_step": state["steps"]}
+        state = _load_latest_checkpoint(args[1], kwargs["resume"])  # output_dir is the second positional argument
+        return {"steps": 10, "epochs_run": 1, "last_loss": 0.5, "resumed_from_step": state["step"]}
 
     with mock.patch("transcriptformer.cli.finetune.train_finetune", side_effect=resuming_train):
         run_finetune_cli(make_args(no_resume=False))
@@ -153,6 +160,7 @@ def test_training_loop_stops_on_plateau(tmp_path) -> None:
         file_path=None,
     )
     model = mock.MagicMock()
+    model.module.state_dict.return_value = {"weight": torch.zeros(1)}
     param = torch.nn.Parameter(torch.zeros(1))
     optimizer = torch.optim.AdamW([param], lr=1e-3)
     scaler = torch.amp.GradScaler("cuda", enabled=False)
@@ -167,7 +175,7 @@ def test_training_loop_stops_on_plateau(tmp_path) -> None:
             return_value=0.5,  # plateau: never improves
         ),
     ):
-        summary = _run_training_loop(
+        summary, _ = _run_training_loop(
             model,
             [batch] * 10,
             optimizer,
@@ -202,6 +210,7 @@ def test_training_loop_early_stop_spans_epochs(tmp_path) -> None:
         file_path=None,
     )
     model = mock.MagicMock()
+    model.module.state_dict.return_value = {"weight": torch.zeros(1)}
     param = torch.nn.Parameter(torch.zeros(1))
     optimizer = torch.optim.AdamW([param], lr=1e-3)
     scaler = torch.amp.GradScaler("cuda", enabled=False)
@@ -216,7 +225,7 @@ def test_training_loop_early_stop_spans_epochs(tmp_path) -> None:
             return_value=0.5,  # plateau: never improves
         ),
     ):
-        summary = _run_training_loop(
+        summary, _ = _run_training_loop(
             model,
             [batch] * 10,
             optimizer,

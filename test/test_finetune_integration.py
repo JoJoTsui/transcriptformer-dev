@@ -102,6 +102,9 @@ def test_real_finetune_cli_steps(tmp_path: Path) -> None:
         no_resume=True,
         validation_interval=10,
         early_stopping_patience=3,
+        validation_max_batches=200,
+        validation_batch_size=0,
+        checkpoint_interval=500,
     )
     run_finetune_cli(args)
 

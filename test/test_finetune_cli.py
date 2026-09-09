@@ -185,3 +185,17 @@ def test_manifest_validates_per_dataset_mappings() -> None:
 
     errors = validate_run_manifest(_minimal_manifest_with_dataset(cell_type_mapping={"a": 1}))
     assert any("cell_type_mapping" in e for e in errors)
+
+
+def test_manifest_validates_species_and_train_only() -> None:
+    assert validate_run_manifest(_minimal_manifest_with_dataset(species="mus_musculus", train_only=True)) == []
+    assert validate_run_manifest(_minimal_manifest_with_dataset()) == []
+
+    errors = validate_run_manifest(_minimal_manifest_with_dataset(species=5))
+    assert any("species" in e for e in errors)
+
+    errors = validate_run_manifest(_minimal_manifest_with_dataset(species=""))
+    assert any("species" in e for e in errors)
+
+    errors = validate_run_manifest(_minimal_manifest_with_dataset(train_only="yes"))
+    assert any("train_only" in e for e in errors)

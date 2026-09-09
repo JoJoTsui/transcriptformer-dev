@@ -67,7 +67,20 @@ def setup_finetune_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--max-gpu-utilization", type=int, default=50)
     parser.add_argument("--global-batch-size", type=int, default=0)
     parser.add_argument("--no-resume", action="store_true")
-    parser.add_argument("--validation-interval", type=int, default=10)
+    parser.add_argument("--validation-interval", type=int, default=500)
+    parser.add_argument("--validation-max-batches", type=int, default=200)
+    parser.add_argument(
+        "--validation-batch-size",
+        type=int,
+        default=0,
+        help="Batch size for the forward-only validation loop; 0 = use the training batch size",
+    )
+    parser.add_argument(
+        "--checkpoint-interval",
+        type=int,
+        default=500,
+        help="Save a full resume checkpoint (weights + optimizer + scaler + step + RNG) every N optimizer steps",
+    )
     parser.add_argument("--early-stopping-patience", type=int, default=3)
     return parser
 
@@ -154,6 +167,9 @@ def run_finetune_cli(args: argparse.Namespace) -> None:
         resume=not args.no_resume,
         validation_interval=args.validation_interval,
         early_stopping_patience=args.early_stopping_patience,
+        validation_max_batches=args.validation_max_batches,
+        validation_batch_size=args.validation_batch_size or None,
+        checkpoint_interval=args.checkpoint_interval,
     )
     complete_manifest = dict(manifest)
     complete_manifest["preparation"] = prepared_report

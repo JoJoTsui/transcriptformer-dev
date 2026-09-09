@@ -124,6 +124,9 @@ def test_finetune_cli_wires_training_call(tmp_path: Path) -> None:
         no_resume=False,
         validation_interval=10,
         early_stopping_patience=3,
+        validation_max_batches=200,
+        validation_batch_size=0,
+        checkpoint_interval=500,
     )
 
     with mock.patch("transcriptformer.cli.finetune.train_finetune") as mock_train:
@@ -337,6 +340,7 @@ def test_training_loop_records_best_and_final_validation_loss(tmp_path: Path) ->
     validation_loader = [batch, batch]
 
     model = mock.MagicMock()
+    model.module.state_dict.return_value = {"weight": torch.zeros(1)}
     param = torch.nn.Parameter(torch.zeros(1))
     optimizer = torch.optim.AdamW([param], lr=1e-3)
     scaler = torch.amp.GradScaler("cuda", enabled=False)
@@ -353,7 +357,7 @@ def test_training_loop_records_best_and_final_validation_loss(tmp_path: Path) ->
             side_effect=lambda *a, **k: next(validation_losses),
         ),
     ):
-        summary = _run_training_loop(
+        summary, best_state = _run_training_loop(
             model,
             [batch, batch, batch],
             optimizer,
@@ -371,6 +375,8 @@ def test_training_loop_records_best_and_final_validation_loss(tmp_path: Path) ->
 
     assert summary["best_validation_loss"] == 0.3
     assert summary["final_validation_loss"] == 0.4
+    assert summary["best_step"] == 2
+    assert best_state is not None
 
 
 def _mse_criterion(mu, input_counts, mask):
@@ -422,3 +428,261 @@ def test_ddp_cpu_gloo_smoke(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr[-2000:]
     assert (tmp_path / "run" / "training_summary.json").is_file()
     assert (tmp_path / "run" / "model_weights.pt").is_file()
+
+
+def test_balanced_dataset_epoch_changes_order() -> None:
+    """Mixing the epoch into sampling seeds must decorrelate epoch orders (P6)."""
+    dataset = BalancedDataset(
+        _FakeDataset("single_cell", 100),
+        _FakeDataset("spatial", 100),
+        spatial_fraction=0.5,
+        seed=0,
+    )
+    dataset.set_epoch(0)
+    epoch0 = [dataset[i] for i in range(50)]
+    dataset.set_epoch(1)
+    epoch1 = [dataset[i] for i in range(50)]
+    assert epoch0 != epoch1
+    # Epochs remain deterministic: replaying epoch 0 reproduces its order.
+    dataset.set_epoch(0)
+    assert [dataset[i] for i in range(50)] == epoch0
+
+
+def _ones_batch():
+    import torch
+
+    from transcriptformer.data.dataclasses import BatchData
+
+    return BatchData(
+        gene_counts=torch.ones(2, 4),
+        gene_token_indices=torch.ones(2, 4, dtype=torch.long),
+        file_path=None,
+    )
+
+
+def test_training_loop_snapshots_best_validation_state() -> None:
+    """The best-validation snapshot, not the final state, is returned (P4)."""
+    import torch
+
+    from transcriptformer.finetune.early_stopping import EarlyStopping
+    from transcriptformer.finetune.train import _run_training_loop
+
+    torch.manual_seed(0)
+    model = _make_tiny_model()
+    batch = _ones_batch()
+    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
+    scaler = torch.amp.GradScaler("cuda", enabled=False)
+
+    snapshots = {}
+    real_step = optimizer.step
+
+    def recording_step(*args, **kwargs):
+        real_step(*args, **kwargs)
+        snapshots[len(snapshots) + 1] = model.linear.weight.detach().clone()
+
+    optimizer.step = recording_step
+
+    validation_losses = iter([0.5, 0.3, 0.4])  # best at step 2, worse at step 3
+    with mock.patch(
+        "transcriptformer.finetune.train._validation_loss",
+        side_effect=lambda *a, **k: next(validation_losses),
+    ):
+        summary, best_state = _run_training_loop(
+            model,
+            [batch, batch, batch],
+            optimizer,
+            scaler,
+            torch.device("cpu"),
+            use_amp=False,
+            amp_dtype=torch.float32,
+            max_steps=0,
+            epochs=1,
+            grad_accumulation=1,
+            validation_loader=[batch],
+            early_stopping=EarlyStopping(patience=10),
+            validation_interval=1,
+        )
+
+    assert summary["best_step"] == 2
+    assert torch.equal(best_state["linear.weight"], snapshots[2])
+    assert not torch.equal(best_state["linear.weight"], snapshots[3])
+
+
+def test_periodic_checkpoint_roundtrip_restores_optimizer_and_step(tmp_path: Path) -> None:
+    """Checkpoints keep last 2 and restore weights + Adam state + step (P5)."""
+    import torch
+
+    from transcriptformer.finetune.train import (
+        _load_latest_checkpoint,
+        _restore_training_state,
+        _save_periodic_checkpoint,
+    )
+
+    model = _make_tiny_model()
+    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
+    scaler = torch.amp.GradScaler("cuda", enabled=False)
+
+    # One real optimizer step so Adam moments exist.
+    loss = model(_ones_batch())["mu"].sum()
+    loss.backward()
+    optimizer.step()
+    optimizer.zero_grad()
+
+    for step in (5, 10, 15):
+        _save_periodic_checkpoint(tmp_path, model, optimizer, scaler, step)
+
+    remaining = sorted(p.name for p in tmp_path.glob("checkpoint_step*.pt"))
+    assert remaining == ["checkpoint_step10.pt", "checkpoint_step15.pt"]
+
+    state = _load_latest_checkpoint(tmp_path, resume=True)
+    assert state["step"] == 15
+
+    fresh = _make_tiny_model()
+    fresh_optimizer = torch.optim.AdamW(fresh.parameters(), lr=1e-3)
+    fresh_scaler = torch.amp.GradScaler("cuda", enabled=False)
+    fresh.load_state_dict(state["model"])
+    restored_step = _restore_training_state(state, fresh_optimizer, fresh_scaler, torch.device("cpu"))
+
+    assert restored_step == 15
+    for trained_param, fresh_param in zip(model.parameters(), fresh.parameters()):
+        assert torch.equal(trained_param, fresh_param)
+    original_state = optimizer.state_dict()["state"]
+    restored_state = fresh_optimizer.state_dict()["state"]
+    assert original_state.keys() == restored_state.keys()
+    for key in original_state:
+        assert torch.equal(original_state[key]["exp_avg"], restored_state[key]["exp_avg"])
+
+
+def test_training_loop_resume_skips_already_seen_data() -> None:
+    """Resume skips initial_step * grad_accumulation micro-batches (P5)."""
+    import torch
+
+    from transcriptformer.data.dataclasses import BatchData
+    from transcriptformer.finetune.train import _run_training_loop
+
+    model = _make_tiny_model()
+    batches = [
+        BatchData(
+            gene_counts=torch.full((2, 4), float(i + 1)),
+            gene_token_indices=torch.ones(2, 4, dtype=torch.long),
+            file_path=None,
+        )
+        for i in range(6)
+    ]
+    seen: list[float] = []
+    real_forward = model.forward
+
+    def recording_forward(batch):
+        seen.append(float(batch.gene_counts[0, 0]))
+        return real_forward(batch)
+
+    model.forward = recording_forward
+
+    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
+    scaler = torch.amp.GradScaler("cuda", enabled=False)
+    summary, _ = _run_training_loop(
+        model,
+        batches,
+        optimizer,
+        scaler,
+        torch.device("cpu"),
+        use_amp=False,
+        amp_dtype=torch.float32,
+        max_steps=0,
+        epochs=1,
+        grad_accumulation=2,
+        initial_step=2,
+    )
+
+    # initial_step=2 x grad_accumulation=2 -> the first 4 micro-batches are skipped.
+    assert seen == [5.0, 6.0]
+    assert summary["steps"] == 3
+    assert summary["resumed_from_step"] == 2
+
+
+def test_training_loop_writes_periodic_checkpoints(tmp_path: Path) -> None:
+    import torch
+
+    from transcriptformer.finetune.train import _run_training_loop
+
+    model = _make_tiny_model()
+    batch = _ones_batch()
+    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
+    scaler = torch.amp.GradScaler("cuda", enabled=False)
+
+    summary, _ = _run_training_loop(
+        model,
+        [batch, batch, batch],
+        optimizer,
+        scaler,
+        torch.device("cpu"),
+        use_amp=False,
+        amp_dtype=torch.float32,
+        max_steps=0,
+        epochs=1,
+        grad_accumulation=1,
+        output_dir=tmp_path,
+        checkpoint_interval=2,
+    )
+
+    assert summary["steps"] == 3
+    checkpoint_path = tmp_path / "checkpoint_step2.pt"
+    assert checkpoint_path.is_file()
+    state = torch.load(checkpoint_path, weights_only=False, map_location="cpu")
+    assert state["step"] == 2
+    assert {"model", "optimizer", "scaler", "rng"} <= state.keys()
+
+
+def test_validation_loss_respects_max_batches() -> None:
+    """The validation loop caps the number of batches it consumes (C4)."""
+    import torch
+
+    from transcriptformer.finetune.train import _validation_loss
+
+    model = _make_tiny_model()
+    calls = 0
+    real_forward = model.forward
+
+    def counting_forward(batch):
+        nonlocal calls
+        calls += 1
+        return real_forward(batch)
+
+    model.forward = counting_forward
+    batch = _ones_batch()
+
+    loss = _validation_loss(model, [batch] * 5, torch.device("cpu"), False, torch.float32, max_batches=2)
+    assert calls == 2
+    assert loss > 0
+
+    calls = 0
+    _validation_loss(model, [batch] * 5, torch.device("cpu"), False, torch.float32)
+    assert calls == 5
+
+
+def test_save_finetuned_checkpoint_without_spatial(tmp_path: Path) -> None:
+    """A non-spatial run dir is a complete, loadable checkpoint dir (P2)."""
+    import torch
+
+    from transcriptformer.finetune.evaluate import _inference_cfg
+    from transcriptformer.finetune.spatial import spatial_grid_size_from_checkpoint
+    from transcriptformer.finetune.train import save_finetuned_checkpoint
+
+    source = tmp_path / "base"
+    (source / "vocabs").mkdir(parents=True)
+    (source / "config.json").write_text(
+        json.dumps({"model": {"data_config": {"aux_cols": "assay"}, "model_config": {"seq_len": 2047}}})
+    )
+    (source / "vocabs" / "assay_vocab.json").write_text('{"unknown": 0}\n')
+
+    output_dir = tmp_path / "run"
+    save_finetuned_checkpoint(output_dir, source, {"weight": torch.zeros(1)})
+
+    assert (output_dir / "config.json").is_file()
+    assert (output_dir / "vocabs" / "assay_vocab.json").is_file()
+    assert not (output_dir / "vocabs" / "spatial_bin_vocab.json").exists()
+    assert torch.load(output_dir / "model_weights.pt", weights_only=True)["weight"].shape == (1,)
+    assert spatial_grid_size_from_checkpoint(output_dir) is None
+
+    cfg = _inference_cfg(output_dir, ["x.h5ad"], 1, "cpu", "32")
+    assert cfg.model.data_config.aux_cols == "assay"

@@ -20,6 +20,13 @@ def main() -> None:
     output_dir = tmp_path / "run"
     output_dir.mkdir()
 
+    # Minimal base checkpoint dir: saving the finetuned run as a complete
+    # checkpoint dir copies config.json and vocabs from here.
+    checkpoint = tmp_path / "checkpoint"
+    (checkpoint / "vocabs").mkdir(parents=True)
+    (checkpoint / "config.json").write_text("{}")
+    (checkpoint / "vocabs" / "assay_vocab.json").write_text("{}")
+
     # Patch before forking so the DDP children inherit the stand-in model.
     train_module._load_model = lambda path, **kwargs: (_make_tiny_model(), _make_cfg(), _make_gene_vocab(), None)
 
@@ -28,10 +35,10 @@ def main() -> None:
     original_loop = train_module._run_training_loop
 
     def recording_loop(model, *args, **kwargs):
-        summary = original_loop(model, *args, **kwargs)
+        summary, best_state = original_loop(model, *args, **kwargs)
         weight_sum = sum(float(p.detach().sum()) for p in model.parameters())
         (output_dir / f"rank_weight_{os.getpid()}.txt").write_text(f"{weight_sum:.10f}")
-        return summary
+        return summary, best_state
 
     train_module._run_training_loop = recording_loop
 
@@ -39,7 +46,7 @@ def main() -> None:
         manifest,
         output_dir,
         report,
-        checkpoint_path="unused",
+        checkpoint_path=str(checkpoint),
         max_steps=2,
         batch_size=2,
         lr=1e-3,
@@ -54,6 +61,9 @@ def main() -> None:
     assert summary["last_loss"] is not None, summary
     assert (output_dir / "training_summary.json").is_file()
     assert (output_dir / "model_weights.pt").is_file()
+    # The run dir is a complete checkpoint dir, evaluatable on its own.
+    assert (output_dir / "config.json").is_file()
+    assert (output_dir / "vocabs" / "assay_vocab.json").is_file()
     # Gradient synchronization: identical initial weights (fork) + all-reduced
     # gradients must leave both ranks with bit-identical parameters.
     rank_weights = sorted(f.read_text() for f in output_dir.glob("rank_weight_*.txt"))
