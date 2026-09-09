@@ -1,74 +1,6 @@
 {
  "homo_sapiens": [
   {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS10_Cell_Stem_Cell_2023/人_CS10__The single-cell and spatial transcriptional landscape of human gastrulation and early brain development.h5ad",
-   "size_gb": 0.106,
-   "n_obs": 12323,
-   "n_vars": 32738,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 320.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [
-    "gene_ids",
-    "feature_types-1-0-0-0-0-0-0-0-0-0-0-0",
-    "feature_types-1-0-0-0-0-0-0-0",
-    "feature_types-1-0-0-0-0-0"
-   ],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "MIR1302-10",
-    "FAM138A",
-    "OR4F5",
-    "RP11-34P13",
-    "RP11-34P13"
-   ],
-   "vocab_overlap_frac": 0.0,
-   "obs_columns": [
-    "week_stage",
-    "author_louvain",
-    "author_cell_type",
-    "author_umap1",
-    "author_umap2",
-    "barcode",
-    "stage",
-    "embryo",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "embryo_id": {
-     "column": "embryo",
-     "n_unique": 1,
-     "samples": [
-      "W3-1"
-     ]
-    },
-    "stage": {
-     "column": "stage",
-     "n_unique": 1,
-     "samples": [
-      "PCW3 / CS10"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "cell_type"
-   ]
-  },
-  {
    "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/人_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
    "size_gb": 0.995,
    "n_obs": 185140,
@@ -209,7 +141,419 @@
      ]
     }
    },
-   "missing_contract_cols": []
+   "missing_contract_cols": [
+    "assay"
+   ]
+  },
+  {
+   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS10_Cell_Stem_Cell_2023/人_CS10__The single-cell and spatial transcriptional landscape of human gastrulation and early brain development.h5ad",
+   "size_gb": 0.106,
+   "n_obs": 12323,
+   "n_vars": 32738,
+   "X_type": "_CSRDataset",
+   "has_raw": false,
+   "matrix_checks": [
+    {
+     "matrix": "X",
+     "dtype": "float32",
+     "sample_shape": [
+      512,
+      2000
+     ],
+     "max_value": 320.0,
+     "min_value": 0.0,
+     "integer_valued": true,
+     "all_nonnegative": true
+    }
+   ],
+   "var_columns": [
+    "gene_ids",
+    "feature_types-1-0-0-0-0-0-0-0-0-0-0-0",
+    "feature_types-1-0-0-0-0-0-0-0",
+    "feature_types-1-0-0-0-0-0"
+   ],
+   "gene_id_source": "index",
+   "gene_id_samples": [
+    "MIR1302-10",
+    "FAM138A",
+    "OR4F5",
+    "RP11-34P13",
+    "RP11-34P13"
+   ],
+   "vocab_overlap_frac": 0.0,
+   "obs_columns": [
+    "week_stage",
+    "author_louvain",
+    "author_cell_type",
+    "author_umap1",
+    "author_umap2",
+    "barcode",
+    "stage",
+    "embryo",
+    "species",
+    "species_cn"
+   ],
+   "obs_candidates": {
+    "embryo_id": {
+     "column": "embryo",
+     "n_unique": 1,
+     "samples": [
+      "W3-1"
+     ]
+    },
+    "stage": {
+     "column": "stage",
+     "n_unique": 1,
+     "samples": [
+      "PCW3 / CS10"
+     ]
+    }
+   },
+   "missing_contract_cols": [
+    "cell_type",
+    "assay"
+   ]
+  },
+  {
+   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/homo_sapiens/human_cs7_tyser_raw.h5ad",
+   "size_gb": 0.016,
+   "n_obs": 1170,
+   "n_vars": 33501,
+   "X_type": "_CSRDataset",
+   "has_raw": false,
+   "matrix_checks": [
+    {
+     "matrix": "X",
+     "dtype": "int32",
+     "sample_shape": [
+      512,
+      2000
+     ],
+     "max_value": 6229.0,
+     "min_value": 0.0,
+     "integer_valued": true,
+     "all_nonnegative": true
+    }
+   ],
+   "var_columns": [],
+   "gene_id_source": "index",
+   "gene_id_samples": [
+    "MIR1302-2HG",
+    "FAM138A",
+    "OR4F5",
+    "AL627309",
+    "AL627309"
+   ],
+   "vocab_overlap_frac": 0.0,
+   "obs_columns": [
+    "devTime",
+    "raw_annotation",
+    "pred_annotation",
+    "sub_pred_annotation",
+    "prediction_score_max",
+    "pred_psdt",
+    "proj_UMAP_1",
+    "proj_UMAP_2"
+   ],
+   "obs_candidates": {},
+   "missing_contract_cols": [
+    "embryo_id",
+    "stage",
+    "cell_type",
+    "assay"
+   ]
+  },
+  {
+   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS7_Spatial_transcriptomic_characterization/人_CS7__Spatial transcriptomic characterization of a Carnegie stage 7 human embryo.h5ad",
+   "size_gb": 0.111,
+   "n_obs": 28804,
+   "n_vars": 25833,
+   "X_type": "_CSRDataset",
+   "has_raw": false,
+   "matrix_checks": [
+    {
+     "matrix": "X",
+     "dtype": "int32",
+     "sample_shape": [
+      512,
+      2000
+     ],
+     "max_value": 70.0,
+     "min_value": 0.0,
+     "integer_valued": true,
+     "all_nonnegative": true
+    }
+   ],
+   "var_columns": [],
+   "gene_id_source": "index",
+   "gene_id_samples": [
+    "MT-TE",
+    "MAFIP",
+    "MT-TT",
+    "MT-TS2",
+    "MT-TP"
+   ],
+   "vocab_overlap_frac": 0.0,
+   "obs_columns": [
+    "orig.ident",
+    "nCount_RNA",
+    "nFeature_RNA",
+    "sample_final",
+    "newy",
+    "newx",
+    "clusters",
+    "developmental_stage",
+    "carnegie_stage",
+    "cell_type",
+    "slice",
+    "species",
+    "species_cn"
+   ],
+   "obs_candidates": {
+    "stage": {
+     "column": "carnegie_stage",
+     "n_unique": 1,
+     "samples": [
+      "CS7"
+     ]
+    },
+    "cell_type": {
+     "column": "cell_type",
+     "n_unique": 11,
+     "samples": [
+      "Connecting stalk",
+      "AM",
+      "YS.EXE.Em/EXE.Meso",
+      "Em/EXE.Meso",
+      "Epi",
+      "PS",
+      "DE/VE",
+      "HEP",
+      "YS.DE/VE",
+      "Ery",
+      "Noto"
+     ]
+    },
+    "section_id": {
+     "column": "slice",
+     "n_unique": 14,
+     "samples": [
+      "slice3",
+      "slice4",
+      "slice5",
+      "slice6",
+      "slice7",
+      "slice8",
+      "slice9",
+      "slice10",
+      "slice11",
+      "slice12",
+      "slice13",
+      "slice14",
+      "slice15",
+      "slice16"
+     ]
+    }
+   },
+   "missing_contract_cols": [
+    "embryo_id",
+    "assay"
+   ]
+  },
+  {
+   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS8_3D_reconstruction_of_a_gastrulating_human_embryo/人_CS8__3D reconstruction of a gastrulating human embryo.h5ad",
+   "size_gb": 0.121,
+   "n_obs": 38562,
+   "n_vars": 21532,
+   "X_type": "_CSRDataset",
+   "has_raw": false,
+   "matrix_checks": [
+    {
+     "matrix": "X",
+     "dtype": "float32",
+     "sample_shape": [
+      512,
+      2000
+     ],
+     "max_value": 132.0,
+     "min_value": 0.0,
+     "integer_valued": true,
+     "all_nonnegative": true
+    }
+   ],
+   "var_columns": [],
+   "gene_id_source": "index",
+   "gene_id_samples": [
+    "MT-TG",
+    "MT-TH",
+    "MT-TP",
+    "MT-TY",
+    "MT-TA"
+   ],
+   "vocab_overlap_frac": 0.0,
+   "obs_columns": [
+    "orig.ident",
+    "nCount_RNA",
+    "nFeature_RNA",
+    "celltype",
+    "reconstruction_block",
+    "section_id",
+    "spot_id"
+   ],
+   "obs_candidates": {
+    "cell_type": {
+     "column": "celltype",
+     "n_unique": 13,
+     "samples": [
+      "Ery",
+      "YS EXM meso-A",
+      "YS Endo",
+      "Visceral Endo",
+      "HEP",
+      "AM EXM Meso",
+      "YS EXM meso-B",
+      "Meso",
+      "Endo",
+      "Gast/PS",
+      "Epi/Ecto",
+      "AM",
+      "Noto"
+     ]
+    },
+    "section_id": {
+     "column": "section_id",
+     "n_unique": 62,
+     "samples": [
+      "S10",
+      "S11",
+      "S13",
+      "S15",
+      "S18",
+      "S20",
+      "S22",
+      "S24",
+      "S26",
+      "S33",
+      "S35",
+      "S37",
+      "S39",
+      "S41",
+      "S43",
+      "S45",
+      "S47",
+      "S49",
+      "S51",
+      "S53",
+      "S55",
+      "S64",
+      "S65",
+      "S67",
+      "S68",
+      "S69",
+      "S70",
+      "S74",
+      "S75",
+      "S76",
+      "S78",
+      "S79",
+      "S80",
+      "S87",
+      "S89",
+      "S91",
+      "S94",
+      "S96",
+      "S98",
+      "S100",
+      "S102",
+      "S104",
+      "S106",
+      "S109",
+      "S111",
+      "S116",
+      "S117",
+      "S119",
+      "S121",
+      "S123",
+      "S125",
+      "S128",
+      "S131",
+      "S133",
+      "S135",
+      "S137",
+      "S139",
+      "S141",
+      "S143",
+      "S145"
+     ]
+    }
+   },
+   "missing_contract_cols": [
+    "embryo_id",
+    "stage",
+    "assay"
+   ]
+  },
+  {
+   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS9_3D_reconstruction_early_body_plan/人_CS9_Stereo-seq__3D reconstruction of a human Carnegie stage 9 embryo provides a snapshot of early body plan formation.h5ad",
+   "size_gb": 0.797,
+   "n_obs": 96837,
+   "n_vars": 29627,
+   "X_type": "_CSRDataset",
+   "has_raw": true,
+   "matrix_checks": [
+    {
+     "matrix": "raw.X",
+     "dtype": "float64",
+     "sample_shape": [
+      512,
+      2000
+     ],
+     "max_value": 439.0,
+     "min_value": 0.0,
+     "integer_valued": true,
+     "all_nonnegative": true
+    },
+    {
+     "matrix": "X",
+     "dtype": "float64",
+     "sample_shape": [
+      512,
+      2000
+     ],
+     "max_value": 439.0,
+     "min_value": 0.0,
+     "integer_valued": true,
+     "all_nonnegative": true
+    }
+   ],
+   "var_columns": [
+    "features"
+   ],
+   "gene_id_source": "index",
+   "gene_id_samples": [
+    "5-8S-rRNA",
+    "A1BG",
+    "A1BG-AS1",
+    "A1CF",
+    "A2M"
+   ],
+   "vocab_overlap_frac": 0.0,
+   "obs_columns": [
+    "orig.ident",
+    "nCount_RNA",
+    "nFeature_RNA",
+    "percent.mito",
+    "cells",
+    "celltype_final_website"
+   ],
+   "obs_candidates": {},
+   "missing_contract_cols": [
+    "embryo_id",
+    "stage",
+    "cell_type",
+    "assay",
+    "section_id"
+   ]
   },
   {
    "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig1.h5ad",
@@ -281,11 +625,26 @@
       "AVE_like_Hypo",
       "Connecting Stalk"
      ]
+    },
+    "section_id": {
+     "column": "sample",
+     "n_unique": 8,
+     "samples": [
+      "EV1-24",
+      "EV1-31",
+      "EV1-62",
+      "EV1-68",
+      "EV1-105",
+      "EV1-116",
+      "EV1-128",
+      "EV1-135"
+     ]
     }
    },
    "missing_contract_cols": [
     "embryo_id",
-    "stage"
+    "stage",
+    "assay"
    ]
   },
   {
@@ -362,744 +721,13 @@
    },
    "missing_contract_cols": [
     "embryo_id",
-    "stage"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig3.h5ad",
-   "size_gb": 0.05,
-   "n_obs": 8445,
-   "n_vars": 28498,
-   "X_type": "_CSRDataset",
-   "has_raw": true,
-   "matrix_checks": [
-    {
-     "matrix": "raw.X",
-     "dtype": "float64",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 7.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    },
-    {
-     "matrix": "X",
-     "dtype": "float64",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 7.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [
-    "features"
-   ],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "A1BG",
-    "A1BG-AS1",
-    "A1CF",
-    "A2M",
-    "A2M-AS1"
-   ],
-   "vocab_overlap_frac": 0.0,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_Spatial",
-    "nFeature_Spatial",
-    "barcode",
-    "slice_num",
-    "celltype",
-    "Lineage1",
-    "Lineage2",
-    "Lineage3",
-    "BranchID",
-    "cell_type",
-    "developmental_stage"
-   ],
-   "obs_candidates": {
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 6,
-     "samples": [
-      "Inter.Epi",
-      "Anterior.Epi",
-      "PrCP",
-      "Posterior.Epi",
-      "AM.Ecto",
-      "AM"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id",
-    "stage"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig4&fig5.h5ad",
-   "size_gb": 0.059,
-   "n_obs": 19192,
-   "n_vars": 76,
-   "X_type": "Dataset",
-   "has_raw": true,
-   "matrix_checks": [
-    {
-     "matrix": "raw.X",
-     "dtype": "float64",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 4.1192708412239885,
-     "min_value": 0.0,
-     "integer_valued": false,
-     "all_nonnegative": true
-    },
-    {
-     "matrix": "X",
-     "dtype": "float64",
-     "sample_shape": [
-      512,
-      76
-     ],
-     "max_value": 10.0,
-     "min_value": -5.7985586360275745,
-     "integer_valued": false,
-     "all_nonnegative": false
-    }
-   ],
-   "var_columns": [
-    "vst.mean",
-    "vst.variance",
-    "vst.variance.expected",
-    "vst.variance.standardized",
-    "vst.variable"
-   ],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ACTA2",
-    "ACTC1",
-    "ACTG2",
-    "AFP",
-    "APOA1"
-   ],
-   "vocab_overlap_frac": 0.0,
-   "obs_columns": [
-    "cluster",
-    "barcode",
-    "slice_num",
-    "cell_type",
-    "developmental_stage"
-   ],
-   "obs_candidates": {
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 12,
-     "samples": [
-      "YS.EXMC2",
-      "YS.Endo2",
-      "YS.EXMC1",
-      "pMeg1",
-      "YS.Endo3",
-      "pEry1",
-      "pMP",
-      "Hypo1",
-      "YS.Endo1",
-      "pEry2",
-      "CS",
-      "pMeg2"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id",
-    "stage"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig6.h5ad",
-   "size_gb": 0.013,
-   "n_obs": 616,
-   "n_vars": 20612,
-   "X_type": "_CSRDataset",
-   "has_raw": true,
-   "matrix_checks": [
-    {
-     "matrix": "raw.X",
-     "dtype": "float64",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 1162.0,
-     "min_value": 0.0,
-     "integer_valued": false,
-     "all_nonnegative": true
-    },
-    {
-     "matrix": "X",
-     "dtype": "float64",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 3.9685834569787706,
-     "min_value": 0.0,
-     "integer_valued": false,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [
-    "features"
-   ],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "A1BG",
-    "A1CF",
-    "A2M",
-    "A2ML1",
-    "A4GALT"
-   ],
-   "vocab_overlap_frac": 0.0,
-   "obs_columns": [
     "stage",
-    "cluster_final",
-    "cell_type",
-    "developmental_stage"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "stage",
-     "n_unique": 2,
-     "samples": [
-      "CS7",
-      "CS6"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 10,
-     "samples": [
-      "pMeg",
-      "YS.EXMC_CS7",
-      "pEry",
-      "EC_CS7",
-      "YSMP_CS7",
-      "pMP_CS7",
-      "Mac_CS7",
-      "YS.EXMC2_CS6",
-      "pMP_CS6",
-      "YS.EXMC1_CS6"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS7_Nature_2021/人_Homo_sapiens__Single-cell transcriptomic characterization of a gastrulating human embryo.h5ad",
-   "size_gb": 0.03,
-   "n_obs": 1195,
-   "n_vars": 25330,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float64",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 69913.0,
-     "min_value": 0.0,
-     "integer_valued": false,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSG00000000003",
-    "ENSG00000000005",
-    "ENSG00000000419",
-    "ENSG00000000457",
-    "ENSG00000000460"
-   ],
-   "vocab_overlap_frac": 0.7668,
-   "obs_columns": [
-    "sample",
-    "source_matrix",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {},
-   "missing_contract_cols": [
-    "embryo_id",
-    "stage",
-    "cell_type"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS7_Spatial_transcriptomic_characterization/人_CS7__Spatial transcriptomic characterization of a Carnegie stage 7 human embryo.h5ad",
-   "size_gb": 0.111,
-   "n_obs": 28804,
-   "n_vars": 25833,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "int32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 70.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "MT-TE",
-    "MAFIP",
-    "MT-TT",
-    "MT-TS2",
-    "MT-TP"
-   ],
-   "vocab_overlap_frac": 0.0,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "sample_final",
-    "newy",
-    "newx",
-    "clusters",
-    "developmental_stage",
-    "carnegie_stage",
-    "cell_type",
-    "slice",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "carnegie_stage",
-     "n_unique": 1,
-     "samples": [
-      "CS7"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 11,
-     "samples": [
-      "Connecting stalk",
-      "AM",
-      "YS.EXE.Em/EXE.Meso",
-      "Em/EXE.Meso",
-      "Epi",
-      "PS",
-      "DE/VE",
-      "HEP",
-      "YS.DE/VE",
-      "Ery",
-      "Noto"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS8_3D_reconstruction_of_a_gastrulating_human_embryo/人_CS8__3D reconstruction of a gastrulating human embryo.h5ad",
-   "size_gb": 0.121,
-   "n_obs": 38562,
-   "n_vars": 21532,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 132.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "MT-TG",
-    "MT-TH",
-    "MT-TP",
-    "MT-TY",
-    "MT-TA"
-   ],
-   "vocab_overlap_frac": 0.0,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "celltype",
-    "reconstruction_block",
-    "section_id",
-    "spot_id"
-   ],
-   "obs_candidates": {
-    "cell_type": {
-     "column": "celltype",
-     "n_unique": 13,
-     "samples": [
-      "Ery",
-      "YS EXM meso-A",
-      "YS Endo",
-      "Visceral Endo",
-      "HEP",
-      "AM EXM Meso",
-      "YS EXM meso-B",
-      "Meso",
-      "Endo",
-      "Gast/PS",
-      "Epi/Ecto",
-      "AM",
-      "Noto"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id",
-    "stage"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS9_3D_reconstruction_early_body_plan/人_CS9_Stereo-seq__3D reconstruction of a human Carnegie stage 9 embryo provides a snapshot of early body plan formation.h5ad",
-   "size_gb": 0.797,
-   "n_obs": 96837,
-   "n_vars": 29627,
-   "X_type": "_CSRDataset",
-   "has_raw": true,
-   "matrix_checks": [
-    {
-     "matrix": "raw.X",
-     "dtype": "float64",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 439.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    },
-    {
-     "matrix": "X",
-     "dtype": "float64",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 439.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [
-    "features"
-   ],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "5-8S-rRNA",
-    "A1BG",
-    "A1BG-AS1",
-    "A1CF",
-    "A2M"
-   ],
-   "vocab_overlap_frac": 0.0,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "percent.mito",
-    "cells",
-    "celltype_final_website"
-   ],
-   "obs_candidates": {},
-   "missing_contract_cols": [
-    "embryo_id",
-    "stage",
-    "cell_type"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS9_3D_reconstruction_early_body_plan/人_CS9_scRNA__3D reconstruction of a human Carnegie stage 9 embryo provides a snapshot of early body plan formation.h5ad",
-   "size_gb": 0.018,
-   "n_obs": 2150,
-   "n_vars": 2000,
-   "X_type": "Dataset",
-   "has_raw": true,
-   "matrix_checks": [
-    {
-     "matrix": "raw.X",
-     "dtype": "float64",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 4.911972677090198,
-     "min_value": 0.0,
-     "integer_valued": false,
-     "all_nonnegative": true
-    },
-    {
-     "matrix": "X",
-     "dtype": "float64",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 10.0,
-     "min_value": -2.6993318397449633,
-     "integer_valued": false,
-     "all_nonnegative": false
-    }
-   ],
-   "var_columns": [
-    "vst.mean",
-    "vst.variance",
-    "vst.variance.expected",
-    "vst.variance.standardized",
-    "vst.variable"
-   ],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "LINC01409",
-    "FAM41C",
-    "HES5",
-    "TP73",
-    "ZBTB48"
-   ],
-   "vocab_overlap_frac": 0.0,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "percent.mt",
-    "percent.hb",
-    "new_celltype"
-   ],
-   "obs_candidates": {},
-   "missing_contract_cols": [
-    "embryo_id",
-    "stage",
-    "cell_type"
+    "assay",
+    "section_id"
    ]
   }
  ],
  "mus_musculus": [
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
-   "size_gb": 0.283,
-   "n_obs": 59136,
-   "n_vars": 27400,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "int32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 13.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "0610007C21Rik;Apr3",
-    "0610007L01Rik",
-    "0610007P08Rik;Rad26l",
-    "0610007P14Rik",
-    "0610007P22Rik"
-   ],
-   "vocab_overlap_frac": 0.0,
-   "obs_columns": [
-    "plate",
-    "embryo_id",
-    "well_barcode",
-    "pool_barcode",
-    "external_barcode",
-    "fsc_a",
-    "fsc_w",
-    "fsc_h",
-    "ssc_a",
-    "ssc_w",
-    "ssc_h",
-    "gfp_a",
-    "experiment_group",
-    "developmental_time",
-    "metacell_id",
-    "gsm",
-    "sample",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "embryo_id": {
-     "column": "embryo_id",
-     "n_unique": 189,
-     "samples": [
-      "181209_R_1",
-      "empty",
-      "181209_R_2",
-      "181209_R_3",
-      "181209_R_5",
-      "181209_R_14",
-      "181209_R_16",
-      "181209_R_11",
-      "181209_R_12",
-      "181209_R_13",
-      "181209_R_15",
-      "181209_R_7",
-      "190214_R_A2",
-      "190214_R_A1",
-      "190214_P02_B1",
-      "190214_R_B6",
-      "190214_P05_B3",
-      "190223_R_a1",
-      "190223_R_a2",
-      "190223_R_a4",
-      "190223_R_a6",
-      "190223_R_b3",
-      "190223_R_b2",
-      "190223_P10_a3",
-      "190304_W_wt01",
-      "190304_W_wt02",
-      "190304_W_wt03",
-      "190304_W_wt04",
-      "190304_W_wt06",
-      "190304_W_wt07",
-      "190304_W_wt08",
-      "190304_W_wt09",
-      "190304_W_wt10",
-      "190304_TKO_1_P6",
-      "190307_W_wt09",
-      "190307_W_wt10",
-      "190307_W_wt11",
-      "190307_W_wt12",
-      "190307_W_wt13",
-      "190307_W_wt14",
-      "190307_W_wt15",
-      "190307_W_wt16",
-      "190311_W_wt02",
-      "190311_W_wt01",
-      "190311_W_wt03",
-      "190311_W_wt04",
-      "190311_W_wt05",
-      "190311_W_wt06",
-      "190311_W_wt07",
-      "190311_W_wt08",
-      "190311_W_wt09",
-      "190313_W_wt01",
-      "190313_W_wt02",
-      "190313_W_wt03",
-      "190313_W_wt04",
-      "190313_W_wt05",
-      "190313_W_wt06",
-      "190506_E7.5_e1",
-      "190506_e1",
-      "190506_e2"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "stage",
-    "cell_type"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature2019_E4.5-E7.5/小鼠_Mus_musculus__Single-cell multi-omics profiling of mouse early embryos.h5ad",
-   "size_gb": 0.056,
-   "n_obs": 2971,
-   "n_vars": 22084,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 32295.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSMUSG00000051951",
-    "ENSMUSG00000025900",
-    "ENSMUSG00000025902",
-    "ENSMUSG00000033845",
-    "ENSMUSG00000025903"
-   ],
-   "vocab_overlap_frac": 0.962,
-   "obs_columns": [
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {},
-   "missing_contract_cols": [
-    "embryo_id",
-    "stage",
-    "cell_type"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_2024_prenatal_time_lapse/04912a4e-4fad-430b-9fd7-16d30c5c57fa.h5ad",
-   "error": "Traceback (most recent call last):\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/scripts/audit_datasets.py\", line 170, in main\n    rec = audit_file(f, vocab)\n          ^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/scripts/audit_datasets.py\", line 106, in audit_file\n    adata = ad.read_h5ad(path, backed=\"r\")\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/anndata/_io/h5ad.py\", line 219, in read_h5ad\n    return read_h5ad_backed(filename, mode)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nnumpy._core._exceptions._ArrayMemoryError: Unable to allocate 36.4 GiB for an array with shape (4879424245,) and data type int64\nError raised while reading key 'raw.X' of <class 'h5py._hl.group.Group'> from /layers\n"
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_2024_prenatal_time_lapse/3776b646-d6ae-4bd1-883f-5877e328b5ff.h5ad",
-   "error": "Traceback (most recent call last):\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/scripts/audit_datasets.py\", line 170, in main\n    rec = audit_file(f, vocab)\n          ^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/scripts/audit_datasets.py\", line 106, in audit_file\n    adata = ad.read_h5ad(path, backed=\"r\")\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/anndata/_io/h5ad.py\", line 219, in read_h5ad\n    return read_h5ad_backed(filename, mode)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nnumpy._core._exceptions._ArrayMemoryError: Unable to allocate 36.3 GiB for an array with shape (4872955851,) and data type int64\nError raised while reading key 'raw.X' of <class 'h5py._hl.group.Group'> from /layers\n"
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_2024_prenatal_time_lapse/4a321ccb-ec08-42bc-808f-167bbd1127d3.h5ad",
-   "error": "Traceback (most recent call last):\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/scripts/audit_datasets.py\", line 170, in main\n    rec = audit_file(f, vocab)\n          ^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/scripts/audit_datasets.py\", line 106, in audit_file\n    adata = ad.read_h5ad(path, backed=\"r\")\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/anndata/_io/h5ad.py\", line 219, in read_h5ad\n    return read_h5ad_backed(filename, mode)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nnumpy._core._exceptions._ArrayMemoryError: Unable to allocate 36.4 GiB for an array with shape (4883663563,) and data type int64\nError raised while reading key 'raw.X' of <class 'h5py._hl.group.Group'> from /layers\n"
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_2024_prenatal_time_lapse/aaf0497e-a8a9-4a81-8b22-c1ac86507c6b.h5ad",
-   "error": "Traceback (most recent call last):\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/scripts/audit_datasets.py\", line 170, in main\n    rec = audit_file(f, vocab)\n          ^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/scripts/audit_datasets.py\", line 106, in audit_file\n    adata = ad.read_h5ad(path, backed=\"r\")\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/anndata/_io/h5ad.py\", line 219, in read_h5ad\n    return read_h5ad_backed(filename, mode)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nnumpy._core._exceptions._ArrayMemoryError: Unable to allocate 36.4 GiB for an array with shape (4880711496,) and data type int64\nError raised while reading key 'raw.X' of <class 'h5py._hl.group.Group'> from /layers\n"
-  },
   {
    "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5.h5ad",
    "size_gb": 1.24,
@@ -1208,7 +836,8 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
    ]
   },
   {
@@ -1325,7 +954,8 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
    ]
   },
   {
@@ -1438,7 +1068,8 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
    ]
   },
   {
@@ -1550,7 +1181,8 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
    ]
   },
   {
@@ -1613,7 +1245,8 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
    ]
   },
   {
@@ -1677,7 +1310,8 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
    ]
   },
   {
@@ -1743,7 +1377,8 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
    ]
   },
   {
@@ -1810,7 +1445,8 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
    ]
   },
   {
@@ -1877,742 +1513,8 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E6.5.h5ad",
-   "size_gb": 0.099,
-   "n_obs": 4444,
-   "n_vars": 31435,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 144834.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSMUSG00000000001",
-    "ENSMUSG00000000028",
-    "ENSMUSG00000000031",
-    "ENSMUSG00000000049",
-    "ENSMUSG00000000056"
-   ],
-   "vocab_overlap_frac": 0.6797,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "sample",
-    "day",
-    "group",
-    "cell_state",
-    "cell_type",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "day",
-     "n_unique": 1,
-     "samples": [
-      "E6.5"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 6,
-     "samples": [
-      "Primitive streak and adjacent ectoderm",
-      "Epiblast",
-      "Extraembryonic ectoderm",
-      "Extraembryonic visceral endoderm",
-      "Embryonic visceral endoderm",
-      "Parietal endoderm"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E6.75.h5ad",
-   "size_gb": 0.028,
-   "n_obs": 2075,
-   "n_vars": 29452,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 384.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSMUSG00000051951",
-    "ENSMUSG00000089699",
-    "ENSMUSG00000102343",
-    "ENSMUSG00000025900",
-    "ENSMUSG00000025902"
-   ],
-   "vocab_overlap_frac": 0.7232,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "sample",
-    "day",
-    "group",
-    "cell_state",
-    "cell_type",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "day",
-     "n_unique": 1,
-     "samples": [
-      "E6.75"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 6,
-     "samples": [
-      "Epiblast",
-      "Primitive streak and adjacent ectoderm",
-      "Extraembryonic visceral endoderm",
-      "Embryonic visceral endoderm",
-      "Extraembryonic ectoderm",
-      "Nascent mesoderm"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E7.0.h5ad",
-   "size_gb": 0.228,
-   "n_obs": 14749,
-   "n_vars": 29452,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 675.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSMUSG00000051951",
-    "ENSMUSG00000089699",
-    "ENSMUSG00000102343",
-    "ENSMUSG00000025900",
-    "ENSMUSG00000025902"
-   ],
-   "vocab_overlap_frac": 0.7232,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "sample",
-    "day",
-    "group",
-    "cell_state",
-    "cell_type",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "day",
-     "n_unique": 1,
-     "samples": [
-      "E7"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 11,
-     "samples": [
-      "Extraembryonic ectoderm",
-      "Parietal endoderm",
-      "Epiblast",
-      "Extraembryonic visceral endoderm",
-      "Primitive streak and adjacent ectoderm",
-      "Anterior primitive streak",
-      "Nascent mesoderm",
-      "Embryonic visceral endoderm",
-      "Mixed mesoderm",
-      "Hematoendothelial progenitors",
-      "Primordial germ cells"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E7.25.h5ad",
-   "size_gb": 0.199,
-   "n_obs": 13537,
-   "n_vars": 29452,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 986.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSMUSG00000051951",
-    "ENSMUSG00000089699",
-    "ENSMUSG00000102343",
-    "ENSMUSG00000025900",
-    "ENSMUSG00000025902"
-   ],
-   "vocab_overlap_frac": 0.7232,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "sample",
-    "day",
-    "group",
-    "cell_state",
-    "cell_type",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "day",
-     "n_unique": 1,
-     "samples": [
-      "E7.25"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 15,
-     "samples": [
-      "Extraembryonic ectoderm",
-      "Primitive streak and adjacent ectoderm",
-      "Epiblast",
-      "Nascent mesoderm",
-      "Anterior primitive streak",
-      "Extraembryonic visceral endoderm",
-      "Hematoendothelial progenitors",
-      "Mixed mesoderm",
-      "Parietal endoderm",
-      "Embryonic visceral endoderm",
-      "Definitive endoderm",
-      "Primordial germ cells",
-      "Notochord",
-      "Blood progenitors",
-      "Amniochorionic mesoderm"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E7.5.h5ad",
-   "size_gb": 0.177,
-   "n_obs": 10994,
-   "n_vars": 29452,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 412.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSMUSG00000051951",
-    "ENSMUSG00000089699",
-    "ENSMUSG00000102343",
-    "ENSMUSG00000025900",
-    "ENSMUSG00000025902"
-   ],
-   "vocab_overlap_frac": 0.7232,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "sample",
-    "day",
-    "group",
-    "cell_state",
-    "cell_type",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "day",
-     "n_unique": 1,
-     "samples": [
-      "E7.5"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 24,
-     "samples": [
-      "Extraembryonic visceral endoderm",
-      "Rostral neuroectoderm",
-      "Blood progenitors",
-      "Extraembryonic ectoderm",
-      "Nascent mesoderm",
-      "Mixed mesoderm",
-      "Extraembryonic mesoderm",
-      "Splanchnic mesoderm",
-      "Caudal lateral epiblast",
-      "Amniochorionic mesoderm",
-      "Hematoendothelial progenitors",
-      "Caudal neuroectoderm",
-      "Surface ectoderm",
-      "Definitive endoderm",
-      "Paraxial mesoderm A",
-      "Notochord",
-      "Primitive streak and adjacent ectoderm",
-      "Paraxial mesoderm B",
-      "Gut",
-      "Embryonic visceral endoderm",
-      "Primordial germ cells",
-      "Epiblast",
-      "Parietal endoderm",
-      "Anterior primitive streak"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E7.75.h5ad",
-   "size_gb": 0.237,
-   "n_obs": 14493,
-   "n_vars": 29452,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 660.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSMUSG00000051951",
-    "ENSMUSG00000089699",
-    "ENSMUSG00000102343",
-    "ENSMUSG00000025900",
-    "ENSMUSG00000025902"
-   ],
-   "vocab_overlap_frac": 0.7232,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "sample",
-    "day",
-    "group",
-    "cell_state",
-    "cell_type",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "day",
-     "n_unique": 1,
-     "samples": [
-      "E7.75"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 27,
-     "samples": [
-      "Extraembryonic ectoderm",
-      "Blood progenitors",
-      "Caudal neuroectoderm",
-      "Rostral neuroectoderm",
-      "Surface ectoderm",
-      "Extraembryonic visceral endoderm",
-      "Allantois",
-      "Nascent mesoderm",
-      "Paraxial mesoderm A",
-      "Primitive erythroid cells",
-      "Caudal lateral epiblast",
-      "Amniochorionic mesoderm",
-      "Splanchnic mesoderm",
-      "Hematoendothelial progenitors",
-      "Extraembryonic mesoderm",
-      "Paraxial mesoderm B",
-      "Notochord",
-      "Gut",
-      "Definitive endoderm",
-      "Paraxial mesoderm C",
-      "Intermediate mesoderm",
-      "Embryonic visceral endoderm",
-      "Parietal endoderm",
-      "Somatic mesoderm",
-      "Primordial germ cells",
-      "Endothelium",
-      "First heart field"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E8.0.h5ad",
-   "size_gb": 0.253,
-   "n_obs": 16681,
-   "n_vars": 29452,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 508.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSMUSG00000051951",
-    "ENSMUSG00000089699",
-    "ENSMUSG00000102343",
-    "ENSMUSG00000025900",
-    "ENSMUSG00000025902"
-   ],
-   "vocab_overlap_frac": 0.7232,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "sample",
-    "day",
-    "group",
-    "cell_state",
-    "cell_type",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "day",
-     "n_unique": 1,
-     "samples": [
-      "E8"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 27,
-     "samples": [
-      "Caudal neuroectoderm",
-      "Paraxial mesoderm A",
-      "Surface ectoderm",
-      "Caudal lateral epiblast",
-      "Splanchnic mesoderm",
-      "Primitive erythroid cells",
-      "Paraxial mesoderm C",
-      "Extraembryonic visceral endoderm",
-      "Endothelium",
-      "Blood progenitors",
-      "Amniochorionic mesoderm",
-      "Gut",
-      "Rostral neuroectoderm",
-      "Hematoendothelial progenitors",
-      "Paraxial mesoderm B",
-      "Extraembryonic ectoderm",
-      "Extraembryonic mesoderm",
-      "Spinal cord",
-      "Allantois",
-      "Embryonic visceral endoderm",
-      "Notochord",
-      "Primordial germ cells",
-      "Intermediate mesoderm",
-      "Somatic mesoderm",
-      "First heart field",
-      "Definitive endoderm",
-      "Parietal endoderm"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E8.25.h5ad",
-   "size_gb": 0.247,
-   "n_obs": 15935,
-   "n_vars": 29452,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 358.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSMUSG00000051951",
-    "ENSMUSG00000089699",
-    "ENSMUSG00000102343",
-    "ENSMUSG00000025900",
-    "ENSMUSG00000025902"
-   ],
-   "vocab_overlap_frac": 0.7232,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "sample",
-    "day",
-    "group",
-    "cell_state",
-    "cell_type",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "day",
-     "n_unique": 1,
-     "samples": [
-      "E8.25"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 31,
-     "samples": [
-      "Amniochorionic mesoderm B",
-      "Second heart field",
-      "Neural crest",
-      "Paraxial mesoderm A",
-      "Surface ectoderm",
-      "Forebrain/midbrain",
-      "Primitive erythroid cells",
-      "First heart field",
-      "Somatic mesoderm",
-      "Hindbrain",
-      "Extraembryonic visceral endoderm",
-      "Extraembryonic mesoderm",
-      "Hematoendothelial progenitors",
-      "Gut",
-      "Endothelium",
-      "Paraxial mesoderm B",
-      "Caudal lateral epiblast",
-      "Spinal cord",
-      "Neuromesodermal progenitors",
-      "Splanchnic mesoderm",
-      "Amniochorionic mesoderm A",
-      "Rostral neuroectoderm",
-      "Intermediate mesoderm",
-      "Allantois",
-      "Paraxial mesoderm C",
-      "Extraembryonic ectoderm",
-      "Caudal neuroectoderm",
-      "Blood progenitors",
-      "Primordial germ cells",
-      "Notochord",
-      "Definitive endoderm"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E8.5a.h5ad",
-   "size_gb": 0.267,
-   "n_obs": 16909,
-   "n_vars": 29452,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 532.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSMUSG00000051951",
-    "ENSMUSG00000089699",
-    "ENSMUSG00000102343",
-    "ENSMUSG00000025900",
-    "ENSMUSG00000025902"
-   ],
-   "vocab_overlap_frac": 0.7232,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "sample",
-    "day",
-    "group",
-    "cell_state",
-    "cell_type",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "day",
-     "n_unique": 1,
-     "samples": [
-      "E8.5a"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 30,
-     "samples": [
-      "Neural crest",
-      "Allantois",
-      "Primitive erythroid cells",
-      "Hindbrain",
-      "Paraxial mesoderm B",
-      "Gut",
-      "Spinal cord",
-      "Blood progenitors",
-      "Hematoendothelial progenitors",
-      "Splanchnic mesoderm",
-      "Endothelium",
-      "Fusing epithelium",
-      "Extraembryonic visceral endoderm",
-      "Anterior floor plate",
-      "First heart field",
-      "Neuromesodermal progenitors",
-      "Forebrain/midbrain",
-      "Placodal area",
-      "Amniochorionic mesoderm B",
-      "Paraxial mesoderm A",
-      "Amniochorionic mesoderm A",
-      "Extraembryonic mesoderm",
-      "Pre-epidermal keratinocytes",
-      "Second heart field",
-      "Somatic mesoderm",
-      "Intermediate mesoderm",
-      "Posterior floor plate",
-      "Notochord",
-      "Definitive endoderm",
-      "Primordial germ cells"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
    ]
   },
   {
@@ -2705,7 +1607,8 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
    ]
   },
   {
@@ -2811,145 +1714,8 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis.h5ad",
-   "size_gb": 0.903,
-   "n_obs": 116312,
-   "n_vars": 29398,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "int32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 727.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "Xkr4",
-    "Gm1992",
-    "Gm37381",
-    "Rp1",
-    "Sox17"
-   ],
-   "vocab_overlap_frac": 0.0,
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "type",
-    "batch_set_id",
-    "amp_batch_id",
-    "seq_batch_id",
-    "spike_count",
-    "cell",
-    "barcode",
-    "sample",
-    "stage",
-    "sequencing.batch",
-    "theiler",
-    "doub.density",
-    "doublet",
-    "cluster",
-    "cluster.sub",
-    "cluster.stage",
-    "cluster.theiler",
-    "stripped",
-    "celltype",
-    "colour",
-    "umapX",
-    "umapY",
-    "haem_gephiX",
-    "haem_gephiY",
-    "haem_subclust",
-    "endo_gephiX",
-    "endo_gephiY",
-    "endo_trajectoryName",
-    "endo_trajectoryDPT",
-    "endo_gutX",
-    "endo_gutY",
-    "endo_gutDPT",
-    "endo_gutCluster",
-    "developmental_stage",
-    "cell_type",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "stage",
-     "n_unique": 10,
-     "samples": [
-      "E6.5",
-      "E7.5",
-      "E6.75",
-      "E7.75",
-      "E7.0",
-      "E8.0",
-      "E8.5",
-      "mixed_gastrulation",
-      "E7.25",
-      "E8.25"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 37,
-     "samples": [
-      "Epiblast",
-      "Primitive Streak",
-      "ExE ectoderm",
-      "Visceral endoderm",
-      "ExE endoderm",
-      "Nascent mesoderm",
-      "Rostral neurectoderm",
-      "Blood progenitors 2",
-      "Mixed mesoderm",
-      "ExE mesoderm",
-      "Intermediate mesoderm",
-      "Pharyngeal mesoderm",
-      "Caudal epiblast",
-      "PGC",
-      "Mesenchyme",
-      "Haematoendothelial progenitors",
-      "Blood progenitors 1",
-      "Surface ectoderm",
-      "Gut",
-      "Paraxial mesoderm",
-      "Caudal neurectoderm",
-      "Notochord",
-      "Somitic mesoderm",
-      "Caudal Mesoderm",
-      "Erythroid1",
-      "Def. endoderm",
-      "Parietal endoderm",
-      "Allantois",
-      "Anterior Primitive Streak",
-      "Endothelium",
-      "Forebrain/Midbrain/Hindbrain",
-      "Spinal cord",
-      "Cardiomyocytes",
-      "Erythroid2",
-      "NMP",
-      "Erythroid3",
-      "Neural crest"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
    ]
   },
   {
@@ -3070,7 +1836,134 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
+    "embryo_id",
+    "assay"
+   ]
+  },
+  {
+   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+   "size_gb": 1.044,
+   "n_obs": 54948,
+   "n_vars": 27400,
+   "X_type": "_CSRDataset",
+   "has_raw": false,
+   "matrix_checks": [
+    {
+     "matrix": "X",
+     "dtype": "int32",
+     "sample_shape": [
+      512,
+      2000
+     ],
+     "max_value": 13.0,
+     "min_value": 0.0,
+     "integer_valued": true,
+     "all_nonnegative": true
+    }
+   ],
+   "var_columns": [],
+   "gene_id_source": "index",
+   "gene_id_samples": [
+    "0610007C21Rik;Apr3",
+    "0610007L01Rik",
+    "0610007P08Rik;Rad26l",
+    "0610007P14Rik",
+    "0610007P22Rik"
+   ],
+   "vocab_overlap_frac": 0.0,
+   "obs_columns": [
+    "plate",
+    "embryo_id",
+    "well_barcode",
+    "pool_barcode",
+    "external_barcode",
+    "fsc_a",
+    "fsc_w",
+    "fsc_h",
+    "ssc_a",
+    "ssc_w",
+    "ssc_h",
+    "gfp_a",
+    "experiment_group",
+    "developmental_time",
+    "metacell_id",
+    "gsm",
+    "sample",
+    "species",
+    "species_cn"
+   ],
+   "obs_candidates": {
+    "embryo_id": {
+     "column": "embryo_id",
+     "n_unique": 188,
+     "samples": [
+      "181209_R_1",
+      "181209_R_2",
+      "181209_R_3",
+      "181209_R_5",
+      "181209_R_14",
+      "181209_R_16",
+      "181209_R_11",
+      "181209_R_12",
+      "181209_R_13",
+      "181209_R_15",
+      "181209_R_7",
+      "190214_R_A2",
+      "190214_R_A1",
+      "190214_P02_B1",
+      "190214_R_B6",
+      "190214_P05_B3",
+      "190223_R_a1",
+      "190223_R_a2",
+      "190223_R_a4",
+      "190223_R_a6",
+      "190223_R_b3",
+      "190223_R_b2",
+      "190223_P10_a3",
+      "190304_W_wt01",
+      "190304_W_wt02",
+      "190304_W_wt03",
+      "190304_W_wt04",
+      "190304_W_wt06",
+      "190304_W_wt07",
+      "190304_W_wt08",
+      "190304_W_wt09",
+      "190304_W_wt10",
+      "190304_TKO_1_P6",
+      "190307_W_wt09",
+      "190307_W_wt10",
+      "190307_W_wt11",
+      "190307_W_wt12",
+      "190307_W_wt13",
+      "190307_W_wt14",
+      "190307_W_wt15",
+      "190307_W_wt16",
+      "190311_W_wt02",
+      "190311_W_wt01",
+      "190311_W_wt03",
+      "190311_W_wt04",
+      "190311_W_wt05",
+      "190311_W_wt06",
+      "190311_W_wt07",
+      "190311_W_wt08",
+      "190311_W_wt09",
+      "190313_W_wt01",
+      "190313_W_wt02",
+      "190313_W_wt03",
+      "190313_W_wt04",
+      "190313_W_wt05",
+      "190313_W_wt06",
+      "190506_E7.5_e1",
+      "190506_e1",
+      "190506_e2",
+      "190506_e3"
+     ]
+    }
+   },
+   "missing_contract_cols": [
+    "stage",
+    "cell_type",
+    "assay"
    ]
   }
  ],
@@ -3122,143 +2015,8 @@
    "missing_contract_cols": [
     "embryo_id",
     "stage",
-    "cell_type"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/斑马鱼_Danio_rerio/斑马鱼_Danio_rerio__Single-cell mapping of gene expression landscapes and lineage in the zebrafish embryo__normal_untreated_subset.h5ad",
-   "size_gb": 0.185,
-   "n_obs": 36749,
-   "n_vars": 30677,
-   "X_type": "_CSCDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 22.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [
-    "gene_symbol"
-   ],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "LOC100000009",
-    "LOC100000024",
-    "LOC100000058",
-    "LOC100000086",
-    "LOC100000094"
-   ],
-   "vocab_overlap_frac": 0.0,
-   "obs_columns": [
-    "n_counts",
-    "unique_cell_id",
-    "cell_names",
-    "library_id",
-    "batch",
-    "ClusterID",
-    "ClusterName",
-    "TissueID",
-    "TissueName",
-    "TimeID",
-    "developmental_stage",
-    "hpf",
     "cell_type",
-    "tissue",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "hpf",
-     "n_unique": 7,
-     "samples": [
-      "4.0",
-      "6.0",
-      "8.0",
-      "10.0",
-      "14.0",
-      "18.0",
-      "24.0"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 195,
-     "samples": [
-      "04hpf-pluripotent",
-      "06hpf-non-dorsal margin",
-      "06hpf-non-dorsal margin involuted",
-      "06hpf-ectoderm - dorsal",
-      "06hpf-ectoderm - ventral",
-      "06hpf-dorsal margin",
-      "06hpf-dorsal margin involuted",
-      "06hpf-dorsal involuted anterior",
-      "06hpf-non-dorsal involuted anterior",
-      "06hpf-apoptotic-like",
-      "06hpf-EVL",
-      "06hpf-germline",
-      "08hpf-tailbud - spinal cord",
-      "08hpf-epidermal",
-      "08hpf-neural plate - anterior",
-      "08hpf-mesoderm - lateral plate",
-      "08hpf-neural plate - posterior",
-      "08hpf-tailbud - PSM",
-      "08hpf-prechordal plate",
-      "08hpf-apoptotic-like",
-      "08hpf-endoderm",
-      "08hpf-mesoderm - adaxial cells",
-      "08hpf-apoptotic-like 2",
-      "08hpf-notocord",
-      "08hpf-EVL",
-      "08hpf-nanog-high",
-      "08hpf-germline",
-      "08hpf-forerunner cells",
-      "10hpf-differentiating neurons",
-      "10hpf-endoderm",
-      "10hpf-neural - anterior",
-      "10hpf-epidermal - gbx2",
-      "10hpf-epidermal",
-      "10hpf-neural - hindbrain",
-      "10hpf-tailbud - spinal cord",
-      "10hpf-anterior neural ridge",
-      "10hpf-neural - midbrain",
-      "10hpf-tailbud - PSM",
-      "10hpf-neural crest",
-      "10hpf-neural - diencephalon ",
-      "10hpf-mesoderm - lateral plate - cxcl12a",
-      "10hpf-neural - telencephalon",
-      "10hpf-notocord",
-      "10hpf-prechordal plate - hatching gland",
-      "10hpf-epidermal - foxi3a",
-      "10hpf-mesoderm - adaxial cells",
-      "10hpf-mesoderm lateral plate - ripply1",
-      "10hpf-mesoderm - lateral plate - fli1a",
-      "10hpf-EVL",
-      "NaN",
-      "10hpf-germline",
-      "14hpf-tailbud - spinal cord",
-      "14hpf-optic primordium",
-      "14hpf-epidermal - pfn1",
-      "14hpf-mesoderm - pronephric duct",
-      "14hpf-mesoderm - pharyngeal arch",
-      "14hpf-periderm",
-      "14hpf-mesoderm - lateral plate - cxcl12a",
-      "14hpf-neural - hindbrain",
-      "14hpf-neural - midbrain"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
+    "assay"
    ]
   }
  ],
@@ -3321,38 +2079,38 @@
    },
    "missing_contract_cols": [
     "embryo_id",
-    "cell_type"
+    "cell_type",
+    "assay"
    ]
   }
  ],
  "oryctolagus_cuniculus": [
   {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/兔_Oryctolagus_cuniculus/Nature_Cell_Biology_2023_Rabbit_Development_Atlas/兔_Oryctolagus_cuniculus__An atlas of rabbit development as a model for single-cell comparative genomics.h5ad",
-   "size_gb": 9.303,
+   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/oryctolagus_cuniculus/rabbit_atlas_raw.h5ad",
+   "size_gb": 0.914,
    "n_obs": 146133,
    "n_vars": 30725,
-   "X_type": "_CSCDataset",
+   "X_type": "_CSRDataset",
    "has_raw": false,
    "matrix_checks": [
     {
      "matrix": "X",
-     "dtype": "float64",
+     "dtype": "int32",
      "sample_shape": [
       512,
       2000
      ],
-     "max_value": 10.583286172299958,
+     "max_value": 1025.0,
      "min_value": 0.0,
-     "integer_valued": false,
+     "integer_valued": true,
      "all_nonnegative": true
     }
    ],
    "var_columns": [
-    "ensembl_id",
     "gene_name",
     "is_human_align_gene"
    ],
-   "gene_id_source": "ensembl_id",
+   "gene_id_source": "index",
    "gene_id_samples": [
     "ENSOCUG00000014251",
     "ENSOCUG00000005054",
@@ -3366,22 +2124,25 @@
     "barcode",
     "sample",
     "stage",
-    "dissection",
     "doub.density",
+    "doublet",
     "stripped",
     "sizeFactor",
-    "singler",
     "celltype",
+    "singler",
     "leiden_res1",
-    "leiden_res1_5",
     "leiden_res2",
+    "leiden_res1_5",
     "leiden_res2_5",
     "leiden_res3",
     "leiden_res5",
+    "leiden_res10",
     "leiden_res6",
     "leiden_res7",
     "leiden_res8",
-    "leiden_res10"
+    "anatomical_loc",
+    "day",
+    "somite_count"
    ],
    "obs_candidates": {
     "stage": {
@@ -3433,8 +2194,8 @@
       "Forebrain",
       "Anterior cardiopharyngeal progenitors",
       "Cardiomyocytes FHF 1",
-      "Early SCT",
-      "SCT progenitors",
+      "Syncytiotrophoblast",
+      "Syncytiotrophoblast progenitors",
       "Venous endothelium",
       "Erythroid",
       "Hindbrain",
@@ -3461,140 +2222,15 @@
     }
    },
    "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/兔_Oryctolagus_cuniculus/兔_Oryctolagus_cuniculus__Tracing the emergence of primordial germ cells from bilaminar disc rabbit embryos and pluripotent stem cells.h5ad",
-   "size_gb": 0.013,
-   "n_obs": 381,
-   "n_vars": 16587,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float64",
-     "sample_shape": [
-      381,
-      2000
-     ],
-     "max_value": 44121.0,
-     "min_value": 0.0,
-     "integer_valued": false,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSOCUG00000000004",
-    "ENSOCUG00000000005",
-    "ENSOCUG00000000006",
-    "ENSOCUG00000000007",
-    "ENSOCUG00000000009"
-   ],
-   "vocab_overlap_frac": 0.9772,
-   "obs_columns": [
-    "sample",
-    "source_matrix",
-    "species",
-    "species_cn",
-    "single_cell_identifier",
-    "developmental_stage",
-    "embryonic_day",
-    "cell_type",
-    "organism_part",
-    "sampling_site",
-    "individual",
-    "ena_sample",
-    "ena_experiment"
-   ],
-   "obs_candidates": {
-    "embryo_id": {
-     "column": "individual",
-     "n_unique": 270,
-     "samples": [
-      "A1",
-      "B1",
-      "C1",
-      "D1",
-      "E1",
-      "I1",
-      "J1",
-      "M1",
-      "B3",
-      "D3",
-      "G3",
-      "H3",
-      "J3",
-      "M3",
-      "N3",
-      "O3",
-      "P3",
-      "A5",
-      "B5",
-      "F5",
-      "I5",
-      "J5",
-      "K5",
-      "O5",
-      "A7",
-      "B7",
-      "F7",
-      "G7",
-      "H7",
-      "I7",
-      "K7",
-      "L7",
-      "A9",
-      "B9",
-      "C9",
-      "D9",
-      "F9",
-      "G9",
-      "I9",
-      "J9",
-      "K9",
-      "L9",
-      "M9",
-      "N9",
-      "O9",
-      "P9",
-      "A11",
-      "B11",
-      "D11",
-      "F11",
-      "I11",
-      "N11",
-      "O11",
-      "A13",
-      "B13",
-      "D13",
-      "E13",
-      "G13",
-      "I13",
-      "J13"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 2,
-     "samples": [
-      "embryonic stem cell",
-      "epiblast cell"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "stage"
+    "embryo_id",
+    "assay"
    ]
   }
  ],
  "drosophila_melanogaster": [
   {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/果蝇_Drosophila_melanogaster/Science_2022_0_20h_embryogenesis/果蝇_Drosophila_melanogaster__The continuum of Drosophila embryonic development at single-cell resolution.h5ad",
-   "size_gb": 1.176,
+   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/drosophila_melanogaster/drosophila_continuum_raw.h5ad",
+   "size_gb": 1.776,
    "n_obs": 547805,
    "n_vars": 23932,
    "X_type": "_CSRDataset",
@@ -3602,14 +2238,14 @@
    "matrix_checks": [
     {
      "matrix": "X",
-     "dtype": "float32",
+     "dtype": "int32",
      "sample_shape": [
       512,
       2000
      ],
-     "max_value": 6.382748126983643,
+     "max_value": 26.0,
      "min_value": 0.0,
-     "integer_valued": false,
+     "integer_valued": true,
      "all_nonnegative": true
     }
    ],
@@ -3624,40 +2260,15 @@
    ],
    "vocab_overlap_frac": 0.0,
    "obs_columns": [
-    "orig.ident",
+    "exp",
     "nCount_RNA",
     "nFeature_RNA",
-    "rt_bc",
-    "cell",
     "time",
-    "percent.mt",
     "percent.ribo",
-    "barn_dro",
-    "barn_hu",
-    "barn_mus",
-    "RNA_snn_res.0.8",
-    "doublet_score",
-    "predicted_doublet",
-    "doublet_cluster",
-    "seurat_clusters",
-    "doublet_subcluster",
-    "RNA_snn_res.0.08",
-    "lasso_age",
+    "percent.mt",
     "NNv1_age",
-    "NNv2_age",
-    "lasso_shift",
-    "NNv1_shift",
-    "NNv2_shift",
-    "inferred_time_window",
-    "experiment",
-    "manual_annot",
-    "germ_layer",
-    "hex",
-    "hex2",
-    "species",
-    "species_cn",
-    "developmental_stage",
-    "cell_type"
+    "cell_type",
+    "predicted_doublet"
    ],
    "obs_candidates": {
     "cell_type": {
@@ -3720,7 +2331,8 @@
    },
    "missing_contract_cols": [
     "embryo_id",
-    "stage"
+    "stage",
+    "assay"
    ]
   }
  ],
@@ -3821,7 +2433,8 @@
    },
    "missing_contract_cols": [
     "embryo_id",
-    "stage"
+    "stage",
+    "assay"
    ]
   }
  ],
@@ -3893,603 +2506,8 @@
    },
    "missing_contract_cols": [
     "embryo_id",
-    "cell_type"
-   ]
-  }
- ],
- "macaca_fascicularis": [
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/Cell_ex_utero_embryogenesis/食蟹猴_Macaca_fascicularis__Ex utero monkey embryogenesis from blastocyst to early organogenesis.h5ad",
-   "size_gb": 1.349,
-   "n_obs": 204079,
-   "n_vars": 33960,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "int32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 256.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [
-    "gene_id",
-    "gene_symbol",
-    "feature_type"
-   ],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "PGBD2",
-    "LOC114674980",
-    "ZNF692",
-    "LOC114678402",
-    "ZNF672"
-   ],
-   "obs_columns": [
-    "sample",
-    "gsm",
-    "replicate",
-    "developmental_stage",
-    "embryonic_day",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {},
-   "missing_contract_cols": [
-    "embryo_id",
-    "stage",
-    "cell_type"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/Nature_2022_CS8-CS11/食蟹猴_Macaca_fascicularis__Primate gastrulation and early organogenesis at single-cell resolution.h5ad",
-   "size_gb": 0.406,
-   "n_obs": 56636,
-   "n_vars": 26135,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 4.668642520904541,
-     "min_value": 0.0,
-     "integer_valued": false,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "LOC102116409",
-    "LOC102116043",
-    "PGBD2",
-    "ZNF692",
-    "ZNF672"
-   ],
-   "obs_columns": [
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "doublet",
-    "doublet_score",
-    "stage",
-    "sample",
-    "theiler_stage",
-    "cell_cluster",
     "cell_type",
-    "color",
-    "UMAP_1",
-    "UMAP_2",
-    "source_object"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "stage",
-     "n_unique": 4,
-     "samples": [
-      "E20",
-      "E23",
-      "E26",
-      "E29"
-     ]
-    },
-    "cell_type": {
-     "column": "cell_type",
-     "n_unique": 38,
-     "samples": [
-      "Nas.Meso",
-      "EPI",
-      "Gut",
-      "ECT",
-      "PGC",
-      "Mes",
-      "VE",
-      "ys.Endo1",
-      "APS",
-      "AM",
-      "LP.Meso",
-      "AI",
-      "ys.Endo2",
-      "EC",
-      "DE",
-      "ExE.Meso",
-      "ys.Meso2",
-      "SE2",
-      "SE1",
-      "Pharyg.Meso",
-      "ys.Meso1",
-      "PS",
-      "Caud.Meso",
-      "Node",
-      "NC",
-      "BP",
-      "Ery2",
-      "Ery1",
-      "Mac",
-      "Para.Meso",
-      "SC",
-      "FB/MB/HB",
-      "Cardi.Meso",
-      "Rostr.Meso",
-      "NMP",
-      "Cardi.",
-      "Inter.Meso",
-      "PSM"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id"
-   ]
-  },
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/空间转录组_CS9_CS10_Nature_Cell_Biology/食蟹猴_CS9_CS10__A three-dimensional spatial transcriptome atlas reconstructs early organogenesis in primate Carnegie stages 9 and 10 embryos.h5ad",
-   "size_gb": 0.239,
-   "n_obs": 93888,
-   "n_vars": 4663,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "float32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 7.384110927581787,
-     "min_value": 0.0,
-     "integer_valued": false,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "MYL7",
-    "ACTC1",
-    "HBE1",
-    "HBG1",
-    "AFP"
-   ],
-   "obs_columns": [
-    "celltype_lineage",
-    "celltype_detailed",
-    "Carnegie_Stage",
-    "orig.ident",
-    "nCount_RNA",
-    "nFeature_RNA",
-    "barcode",
-    "stage",
-    "spatial_slice_id",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "stage",
-     "n_unique": 2,
-     "samples": [
-      "CS9",
-      "CS10"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id",
-    "cell_type"
-   ]
-  }
- ],
- "sus_scrofa": [
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/猪_Sus_scrofa/猪_Sus_scrofa__A single-cell atlas of pig gastrulation as a resource for comparative embryology.h5ad",
-   "size_gb": 0.719,
-   "n_obs": 91232,
-   "n_vars": 19443,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "int32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 749.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [
-    "gene_symbol",
-    "feature_type",
-    "gene_id_recovery_status"
-   ],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSSSCG00000004789",
-    "ENSSSCG00000035281",
-    "ENSSSCG00000047518",
-    "ENSSSCG00000042121",
-    "ENSSSCG00000004300"
-   ],
-   "obs_columns": [
-    "nCount_RNA",
-    "nFeature_RNA",
-    "orig.ident",
-    "percent.Ychromo",
-    "percent.mt",
-    "DF.classifications_0.25_0.005_38",
-    "Sample",
-    "Stage",
-    "integrated_snn_res.2",
-    "seurat_clusters",
-    "integrated_snn_res.1.5",
-    "integrated_snn_res.1.8",
-    "integrated_snn_res.1",
-    "integrated_snn_res.3",
-    "integrated_snn_res.1.6",
-    "Celltypes",
-    "Cellsubclusters",
-    "Sow",
-    "Chip",
-    "SeqPool",
-    "UMAP_1",
-    "UMAP_2",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "Stage",
-     "n_unique": 8,
-     "samples": [
-      "E11.5",
-      "E12",
-      "E12.5",
-      "E13",
-      "E13.5",
-      "E14",
-      "E14.5",
-      "E15"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id",
-    "cell_type"
-   ]
-  }
- ],
- "cavia_porcellus": [
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/豚鼠_Cavia_porcellus/Nature_Cell_Biology_2025/豚鼠_Cavia_porcellus__The guinea pig serves as an alternative model to study human preimplantation development.h5ad",
-   "size_gb": 0.011,
-   "n_obs": 541,
-   "n_vars": 19323,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "int32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 57485.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [
-    "gene_symbol",
-    "author_gene"
-   ],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "ENSCPOG00000017401:",
-    "ENSCPOG00000035693:RAP2C",
-    "ENSCPOG00000013211:PHF6",
-    "ENSCPOG00000002512:HPRT1",
-    "ENSCPOG00000011230:MOSPD1"
-   ],
-   "obs_columns": [
-    "cell",
-    "Picking_date",
-    "embryo",
-    "devTime",
-    "stage",
-    "picking_Wells",
-    "total_reads",
-    "ENS_mapped_percent",
-    "ENS_uniquely_mapped_percent",
-    "mt.perc",
-    "libsize",
-    "nGene",
-    "EML",
-    "big_EML",
-    "developmental_day",
-    "author_cell_type",
-    "author_cell_type_broad",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "embryo_id": {
-     "column": "embryo",
-     "n_unique": 42,
-     "samples": [
-      "21PG40-1",
-      "21PG40-2",
-      "21PG41-1",
-      "21PG53-1",
-      "21PG53-2",
-      "21PG32-2",
-      "21PG34-1",
-      "21PG39-1",
-      "21PG39-2",
-      "21PG77-1",
-      "21PG77-2",
-      "21PG50-1",
-      "21PG50-2",
-      "21PG50-3",
-      "21PG33-1",
-      "21PG33-2",
-      "21PG37-2",
-      "21PG37-3",
-      "21PG42-2",
-      "21PG49-1",
-      "21PG49-2",
-      "21PG49-3",
-      "21PG51-2",
-      "21PG51-3",
-      "21PG55-3",
-      "21PG65-1",
-      "21PG75-1",
-      "21PG76-2",
-      "21PG52-2",
-      "21PG57-1",
-      "21PG65-2",
-      "21PG76-1",
-      "20PG3-1",
-      "20PG4-1",
-      "20PG4-2",
-      "20PG4-3",
-      "21PG45-2",
-      "21PG55-1",
-      "21PG55-2",
-      "21PG57-2",
-      "21PG75-4",
-      "21PG35-1"
-     ]
-    },
-    "stage": {
-     "column": "stage",
-     "n_unique": 6,
-     "samples": [
-      "16-32 cell",
-      "16C",
-      "8C",
-      "EB",
-      "LB",
-      "MB"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "cell_type"
-   ]
-  }
- ],
- "xenopus_tropicalis": [
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/热带爪蟾_Xenopus_tropicalis/Science_2018/热带爪蟾_Xenopus_tropicalis__The dynamics of gene expression in vertebrate embryogenesis at single-cell resolution.h5ad",
-   "size_gb": 0.31,
-   "n_obs": 136966,
-   "n_vars": 26550,
-   "X_type": "_CSCDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "int32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 149.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "42Sp43",
-    "42Sp50",
-    "6330408a02rik-like",
-    "6330408a02rik-like",
-    "AK6"
-   ],
-   "obs_columns": [
-    "InDrops_version",
-    "Replicate_name",
-    "Clutch_name",
-    "Library_name",
-    "Barcode_name",
-    "Barcode_sequence",
-    "Developmental_stage",
-    "Cluster_name",
-    "Parent_cluster_name",
-    "stage",
-    "author_cell_type",
-    "author_parent_cell_type",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "stage",
-     "n_unique": 10,
-     "samples": [
-      "Stage_8",
-      "Stage_10",
-      "Stage_11",
-      "Stage_12",
-      "Stage_13",
-      "Stage_14",
-      "Stage_16",
-      "Stage_18",
-      "Stage_20",
-      "Stage_22"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id",
-    "cell_type"
-   ]
-  }
- ],
- "ciona_intestinalis": [
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/海鞘_Ciona_intestinalis/海鞘_Ciona_intestinalis__Comprehensive single cell transcriptome lineages of a proto-vertebrate.h5ad",
-   "size_gb": 0.544,
-   "n_obs": 91258,
-   "n_vars": 15269,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "int32",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 2977.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "KH2012:KH",
-    "KH2012:KH",
-    "KH2012:KH",
-    "KH2012:KH",
-    "KH2012:KH"
-   ],
-   "obs_columns": [
-    "sample",
-    "gsm",
-    "stage_code",
-    "developmental_stage",
-    "n_genes_by_counts",
-    "total_counts",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {},
-   "missing_contract_cols": [
-    "embryo_id",
-    "stage",
-    "cell_type"
-   ]
-  }
- ],
- "branchiostoma_floridae": [
-  {
-   "file": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/佛罗里达文昌鱼_Branchiostoma_floridae/佛罗里达文昌鱼_Branchiostoma_floridae__Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head.h5ad",
-   "size_gb": 0.047,
-   "n_obs": 12411,
-   "n_vars": 29726,
-   "X_type": "_CSRDataset",
-   "has_raw": false,
-   "matrix_checks": [
-    {
-     "matrix": "X",
-     "dtype": "int64",
-     "sample_shape": [
-      512,
-      2000
-     ],
-     "max_value": 268.0,
-     "min_value": 0.0,
-     "integer_valued": true,
-     "all_nonnegative": true
-    }
-   ],
-   "var_columns": [],
-   "gene_id_source": "index",
-   "gene_id_samples": [
-    "LOC118414000",
-    "LOC118420880",
-    "LOC118413228",
-    "LOC118415041",
-    "LOC118415051"
-   ],
-   "obs_columns": [
-    "stage",
-    "sample",
-    "species",
-    "species_cn"
-   ],
-   "obs_candidates": {
-    "stage": {
-     "column": "stage",
-     "n_unique": 4,
-     "samples": [
-      "G4",
-      "N0",
-      "N2",
-      "N5"
-     ]
-    }
-   },
-   "missing_contract_cols": [
-    "embryo_id",
-    "cell_type"
+    "assay"
    ]
   }
  ]
