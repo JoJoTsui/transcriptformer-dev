@@ -20,6 +20,7 @@
 | 1.8 | **脊椎动物囊胚期覆盖单薄(S7)。** 小鼠合计仅 952 个细胞(每文件 67–464);人囊胚期数据完全缺失。 | **已接受** — 已发表图谱的固有数据局限;囊胚期结论只能限于小鼠且须标注低样本量。 |
 | 1.9 | **物种鉴定错误。** 海胆数据集实为 *Lytechinus variegatus* 而非最初假定的 *S. purpuratus*;清单此前也没有显式物种字段。 | **已解决** — 全部 27 个条目均带显式 `species` 字段(校验器强制格式)。`c088eeb` |
 | 1.10 | **审计产物过时。** report.json/summary.txt 描述的还是整改前 37 条目的语料。 | **已解决** — 已按 27 条目清单重新生成(2,855,332 细胞 / 22 个单细胞文件 + 412,374 个 spot / 5 个空间文件)。`85d43fc` |
+| 1.11 | **小鼠 E8–P0 出生前时间序列(Nature 2024)在库但完全未使用。** 与用户的物种数据集思维导图(物种.xmind / 胚胎期单细胞转录组物种与数据集.png)核对时发现:`Nature_2024_prenatal_time_lapse`(45 个时间点、约 1,144 万细胞核,E8 至出生)在磁盘上,但从未进入审计、清单或任何计划文档——它是整个收藏中最大的数据集,比现有语料总和还大约 3.5 倍。 | **待决** — 建议明确记录为排除:其大部分阶段超出胚胎发生范围(延伸至出生),且纳入会让小鼠占比从 53% 升至约 90%,加剧鼠偏倚。可选:仅挖掘其 E8–E13.5 窗口补充神经胚/器官发生期数据。需用户裁定。 |
 
 ## 2. 胚胎发生(分期 → 阶段)映射
 
@@ -100,6 +101,7 @@
 4. **遗忘监控参照集**(7.4):批准并构建 Census 下载 + 金丝雀文件。
 5. **果蝇逐细胞阶段指派**(2.1):从 Calderon 图谱导出逐细胞估计年龄,或接受窗口中点指派。
 6. **ESM2 生成**(8.1):为猕猴/海鞘/文昌鱼运行 `preprocess/protein_embedding.py`(内存受限,需分块)。
+7. **小鼠 E8–P0 时间序列**(1.11):明确记录排除,或仅纳入其 E8–E13.5 窗口。
 
 *计算资源类问题(基因 ID 头显存、单轮训练时长、bf16、WSL 内存、A40 部署)有意不在本文范围内;见对抗性评审的 C 类发现与 ADR 0003 的计算部分。*
 
@@ -135,6 +137,7 @@ knowingly carry, with a mitigation).
 | 1.8 | **Vertebrate blastula coverage is thin (S7).** 952 mouse cells total (67–464 per file); human blastula absent entirely from the corpus. | **Accepted** — irreducible data limitation of published atlases; blastula-phase claims must be mouse-only and flagged as low-n. |
 | 1.9 | **Species identity errors.** The sea-urchin dataset is *Lytechinus variegatus*, not *S. purpuratus* as initially assumed; no explicit species field existed in the manifest. | **Resolved** — all 27 entries carry an explicit `species` field (validator-enforced format). `c088eeb` |
 | 1.10 | **Stale audit artifacts.** report.json/summary.txt described the pre-remediation 37-entry corpus. | **Resolved** — regenerated against the 27-entry manifest (2,855,332 cells / 22 sc files + 412,374 spots / 5 spatial files). `85d43fc` |
+| 1.11 | **Mouse E8–P0 prenatal time-lapse (Nature 2024) is on disk but entirely unused.** Found while reconciling the user's curated dataset map (`物种.xmind` / `胚胎期单细胞转录组物种与数据集.png`): `Nature_2024_prenatal_time_lapse` (45 timepoints, ~11.44M nuclei, E8 to birth) exists on disk but was never audited, never in the manifest, never mentioned in any plan doc — it is the largest dataset in the collection, ~3.5× the rest of the corpus combined. | **Open** — recommend documenting a deliberate exclusion: most stages are outside the embryogenesis scope (runs to birth), and inclusion would push mouse from 53% to ~90% of the corpus, worsening mouse bias. Optional: mine only its E8–E13.5 window for extra neurula/organogenesis data. Needs a user decision. |
 
 ## 2. Embryogenesis (stage → phase) mapping
 
@@ -215,5 +218,6 @@ knowingly carry, with a mitigation).
 4. **Forgetting reference set** (7.4): approve and build the Census download + canary files.
 5. **Fly per-cell phase assignment** (2.1): export per-cell estimated age from the Calderon atlas, or accept window-midpoint assignment.
 6. **ESM2 generation** (8.1): run `preprocess/protein_embedding.py` for macaque/ciona/amphioxus (memory-capped).
+7. **Mouse E8–P0 time-lapse** (1.11): document an explicit exclusion, or include only its E8–E13.5 window.
 
 *Compute-resource issues (gene-ID head VRAM, epoch time, bf16, WSL memory, A40 setup) are intentionally excluded here; see the C-findings in the adversarial review and ADR 0003 §compute.*

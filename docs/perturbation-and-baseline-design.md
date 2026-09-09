@@ -91,7 +91,7 @@ If the base model already satisfies the headline claims, the base-model results 
 | Source | Content | Notes |
 |---|---|---|
 | [CZ CELLxGENE Census](https://cellxgene.cziscience.com/) (`cellxgene-census` API, **pinned LTS release** recorded in the manifest) | 2,000 human + 2,000 mouse adult-tissue cells, stratified across ≥ 5 tissues | Census covers human/mouse only — hence the next two rows. |
-| Corpus non-embryo datasets (already excluded from training) | Sponge juvenile (Spongilla lacustris — **in vocab**), S. cerevisiae, P. falciparum (both in vocab) | Zero-shot transfer species for the base model; ideal forgetting canaries. Note: trichoplax and nematostella are **not** in the TF-Metazoa vocab and cannot serve. |
+| Corpus non-embryo datasets (already excluded from training) | Sponge juvenile (Spongilla lacustris — **in vocab**), S. cerevisiae (**in vocab**) | Zero-shot transfer species for the base model; ideal forgetting canaries. Note: trichoplax and nematostella are **not** in the TF-Metazoa vocab and cannot serve; P. falciparum is in the vocab but has **no local dataset**, so it is not an available canary. |
 | [Fly Cell Atlas](https://doi.org/10.1126/science.abk2432) (Li et al. 2022, Science) | 2,000 adult Drosophila cells | Adds an adult reference for a training species; optional if download budget is tight. |
 
 Freeze as versioned H5ADs under `preprocess/` provenance conventions (SHA-256 recorded).
@@ -151,7 +151,7 @@ For probe species (out-of-vocab; tokens built from ESM2 protein embeddings per `
 2. **FDR family definition:** BH per `species × phase` stratum at q = 0.05 — confirm, or prefer a global family.
 3. **Null bin resolution:** 10×10 quantile grid with min-bin 50 genes — confirm, or coarser.
 4. **Forgetting gate thresholds:** 3% likelihood degradation / CKA 0.90 — confirm.
-5. **Reference-set budget:** approve CELLxGENE Census download (pinned release) and optionally the Fly Cell Atlas; confirm sponge/yeast/plasmodium corpus files as canaries.
+5. **Reference-set budget:** approve CELLxGENE Census download (pinned release) and optionally the Fly Cell Atlas; confirm sponge/yeast corpus files as canaries.
 6. **Worm boundary:** move the 100–130 min bin from blastula to gastrula (gastrulation onset ≈ 60 min post first cleavage), or keep and rely on sensitivity analysis?
 7. **Zebrafish 24 hpf:** keep organogenesis (current) vs pharyngula→neurula; both defensible — pick one and record it.
 8. **Urchin orthology path:** single-source Metazoa Compara vs hybrid EchinoBase bridge — approve a quick coverage check (step 6.2) to decide empirically.
@@ -161,7 +161,7 @@ For probe species (out-of-vocab; tokens built from ESM2 protein embeddings per `
 
 ## Appendix — implementation notes from the research agent
 
-- TF-Metazoa's 12 vocabs include spongilla, yeast, plasmodium — this is why §4 can use the corpus's excluded non-embryo datasets as in-vocab forgetting canaries (trichoplax/nematostella are *not* in vocab and were excluded).
+- TF-Metazoa's 12 vocabs include spongilla, yeast, plasmodium — but only spongilla and yeast have local corpus files, so those two are the in-vocab forgetting canaries (trichoplax/nematostella are *not* in vocab and were excluded; plasmodium is in vocab but absent from the corpus).
 - The fly window fix reframes S4's "inconsistency" as an undocumented midpoint rule plus an analysis-level dedup requirement; the current mapping is already midpoint-consistent.
 - Because ADR 0002 already computes likelihood-drop genome-wide, the expression-matched null needs *zero extra model calls* — it's a within-bin resample of the score matrix.
 - All external resources were existence-checked via web search on 2026-09-09. Two citations given from memory (Kornblith 2019 CKA, Sulston 1983) — spot-check DOIs when implementing.
