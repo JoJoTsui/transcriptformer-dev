@@ -190,3 +190,7 @@ new_env/
 .scratch/zebrafish-embryo-finetuning/smoke_run/run/
 .scratch/zebrafish-embryo-finetuning/smoke_run/smoke.log
 .scratch/zebrafish-embryo-finetuning/benchmark_data/
+
+# Finetune run outputs and large mapping caches
+runs/
+preprocess/gene_mappings/cache/

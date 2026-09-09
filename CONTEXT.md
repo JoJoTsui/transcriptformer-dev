@@ -1,57 +1,57 @@
-# Zebrafish Embryo Finetuning
+# Multi-Species Embryogenesis Finetuning
 
-Finetuning the TranscriptFormer Metazoa checkpoint on zebrafish embryo development data so the resulting model can be used to study cellular development and regulation.
+Finetuning the TranscriptFormer Metazoa checkpoint on multi-species embryogenesis single-cell data so the resulting model can be used to study developmental regulation: phase-specific gene perturbation effects and cross-species comparison of regulation at the same developmental phase.
 
 ## Language
 
-**Zebrafish embryo**:
-The developmental-stage-resolved embryo data of *Danio rerio*, the species used for finetuning.
-_Avoid_: zebra embryo, zebra fish
+**Embryogenesis corpus**:
+The collection of developmental-stage-resolved single-cell and spatial H5AD datasets under `/mnt/d/sc/data/scRNAseq-YBY/`, spanning multiple species, from which finetuning and downstream data are drawn.
+_Avoid_: the data, YBY datasets
 
 **Metazoa checkpoint**:
-The pretrained TranscriptFormer model checkpoint for the twelve-species Metazoa model, including in-vocabulary *Danio rerio* gene embeddings.
-_Avoid_: metazoa model, the metazoa
+The pretrained TranscriptFormer TF-Metazoa model at `/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa`, covering twelve species' gene vocabularies; the base for finetuning.
+_Avoid_: metazoa model, the metazoa, base checkpoint
 
-**Independent embryo datasets**:
-Single-cell and spatial transcriptome datasets treated as separate collections with no assumed cell- or section-level correspondence between them.
-_Avoid_: matched datasets, paired datasets
+**Training species**:
+The in-vocabulary embryogenesis species used for finetuning: human, mouse, zebrafish, chicken, rabbit, fruit fly, C. elegans, and sea urchin.
+_Avoid_: in-distribution species, finetune species
 
-**Spatial spot**:
-The observation unit of the spatial transcriptomics dataset, treated as a pseudo-cell with its measured gene-expression counts, without assuming it is a single cell.
-_Avoid_: spatial cell, spot-cell
+**Zero-shot probe species**:
+Species with embryogenesis data that are never seen in finetuning and are reserved for downstream generalization tests: macaque, pig, guinea pig, Xenopus tropicalis, ciona, and amphioxus.
+_Avoid_: out-of-distribution species, held-out species, test species
 
-**Spatial coordinates**:
-The x/y (or section-level) positions of spatial spots, preserved as metadata in `.obs` for downstream spatial analysis, not consumed as model input during finetuning.
-_Avoid_: spatial input, position features
+**Non-embryo datasets**:
+Datasets in the corpus that do not measure embryogenesis (e.g. sponge juvenile, yeast culture, trichoplax, nematostella adult) and are excluded from the project entirely.
+_Avoid_: junk data, unused data
 
-**Developmental stage label**:
-The embryo-stage metadata for a cell or spatial spot (hpf, somite stage, or standardized stage name), which must be harmonized into one vocabulary across both datasets before training.
-_Avoid_: timepoint, stage column
+**Developmental phase**:
+A cross-species stage category from the coarse universal vocabulary (blastula, gastrula, neurula, organogenesis, fetal) that every native stage label maps into; the unit of "same phase" cross-species comparison.
+_Avoid_: timepoint, stage, Carnegie stage
 
-**Cell type annotation**:
-The cell-type label assigned to a cell or spatial spot, used for downstream evaluation and label harmonization rather than as a finetuning supervision target.
-_Avoid_: cell type target, classification label
-
-**Raw count matrix**:
-The unnormalized UMI or transcript counts used as model input; normalized or log-transformed matrices are not accepted without rebuilding from raw quantification.
-_Avoid_: normalized counts, log counts
-
-**Model-ready H5AD**:
-The standardized input format for finetuning: an AnnData H5AD with `var.ensembl_id` containing `ENSDARG...` IDs and a raw count matrix in `.X` or `.raw.X`.
-_Avoid_: processed H5AD, cleaned data
-
-**Raw spot counts**:
-The spatial spot-level count matrix used directly as pseudo-cell training input, with deconvolution left as an optional downstream extension rather than a training-time preprocessing step.
-_Avoid_: deconvolved spots, spot cell-type fractions
+**Native stage label**:
+The original per-dataset stage annotation (Carnegie stage, embryonic day, hpf, Nieuwkoop–Faber stage), preserved in `.obs` and mapped to a developmental phase via the manifest `stage_mapping`.
+_Avoid_: raw stage, original timepoint
 
 **Generative finetuning**:
-Continuing the model's original gene/count prediction objective on the embryo datasets, rather than training a supervised task head.
+Continuing the model's original gene/count prediction objective on the embryogenesis corpus, rather than training a supervised task head.
 _Avoid_: supervised finetuning, classification finetuning
 
-**Dataset-balanced sampling**:
-Mixing single-cell and spatial observations in each training batch so the smaller spatial modality contributes meaningfully despite the ~30M-cell single-cell side.
-_Avoid_: natural weighting, proportional sampling
+**Natural weighting**:
+Sampling training batches in proportion to dataset size, matching the base model's own unbalanced pretraining; per-species balancing is a documented fallback, not the default.
+_Avoid_: balanced sampling, equal weighting
 
 **Final holdout**:
-Embryos and spatial sections never used for training, early stopping, or checkpoint selection; they are reserved for the final evaluation metrics.
+Embryos never used for training, early stopping, or checkpoint selection; reserved for the final evaluation metrics, assigned per species.
 _Avoid_: test split, validation split
+
+**Single-embryo dataset**:
+A dataset measuring one embryo or spatial section (e.g. human CS7), assigned entirely to training because embryo-level splitting is impossible.
+_Avoid_: unsplittable dataset
+
+**Likelihood impact score**:
+The drop in the model's predicted transcriptome likelihood for a cell when a gene is perturbed, used to rank gene × phase impact genome-wide.
+_Avoid_: perturbation effect, gene importance
+
+**Counterfactual generation**:
+Regenerating the remainder of a cell's transcriptome after perturbing a gene, used to name predicted downstream-affected genes for top-ranked perturbations.
+_Avoid_: in-silico knockout simulation, virtual perturbation

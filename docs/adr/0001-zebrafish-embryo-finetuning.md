@@ -1,6 +1,6 @@
 # Zebrafish Embryo Finetuning Strategy
 
-**Status:** accepted
+**Status:** superseded by ADR 0002
 
 We will finetune the TranscriptFormer Metazoa checkpoint on independent *Danio rerio* single-cell and spatial transcriptomics datasets using the generative pretraining objective, full finetuning of the trainable weights, dataset-balanced sampling, and spatial coordinates kept as metadata rather than model input.
 
