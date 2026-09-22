@@ -16,6 +16,7 @@ SUITES = (
     "gpu",
     "early_stopping",
     "evaluate",
+    "small_group_evaluation",
     "end_to_end",
     "finetune_metadata",
     "spatial",

@@ -82,37 +82,73 @@ def generate_embeddings(
 
 
 def cell_type_macro_f1(adata: ad.AnnData, label_col: str = "cell_type") -> dict[str, Any]:
-    """Evaluate cell type classification with a simple logistic regression.
+    """Evaluate known, non-singleton labels using a feasible stratified split.
 
-    The literal label "unknown" is a missing-value sentinel, not a class, and
-    classes with fewer than two members cannot survive a stratified split;
-    both are dropped before scoring.
+    Expand the nominal 30% test partition when needed to include every class
+    in both partitions. Counts distinguish missing labels and rare classes;
+    neither filtering nor classification modifies the input observations.
     """
-    labels = adata.obs[label_col].astype(str)
-    known = labels != "unknown"
-    counts = labels[known].value_counts()
+    raw_labels = adata.obs[label_col]
+    known = _known_stage_mask(raw_labels)
+    labels = raw_labels.astype(str)
+    counts = labels.iloc[np.flatnonzero(known)].value_counts()
     frequent = counts[counts >= 2].index
-    keep = (known & labels.isin(frequent)).to_numpy()
-    y = labels[keep].to_numpy()
+    keep = known & labels.isin(frequent).to_numpy()
+    y = labels.iloc[np.flatnonzero(keep)].to_numpy()
     n_classes = int(len(np.unique(y)))
+    result = {
+        "macro_f1": float("nan"),
+        "n_classes": n_classes,
+        "n_input_obs": int(adata.n_obs),
+        "n_obs": int(keep.sum()),
+        "n_obs_missing_label": int((~known).sum()),
+        "n_obs_rare_class": int((known & ~keep).sum()),
+        "n_evaluated_obs": 0,
+        "n_train_obs": 0,
+        "n_test_obs": 0,
+    }
     if n_classes < 2:
-        return {"macro_f1": float("nan"), "n_classes": n_classes}
+        result["reason"] = "too_few_classes"
+        return result
 
+    n_test = min(len(y) - n_classes, max(n_classes, int(np.ceil(0.3 * len(y)))))
     X = np.asarray(adata.obsm["embeddings"])[keep]
     X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
-        test_size=0.3,
+        test_size=n_test,
         stratify=y,
         random_state=0,
     )
+    if len(np.unique(y_test)) != n_classes or len(np.unique(y_train)) != n_classes:
+        # Proportional rounding can consume both members of a rare class in
+        # the training partition. Reserve one observation per class on each
+        # side, then allocate the remaining test slots deterministically.
+        rng = np.random.default_rng(0)
+        test_indices, train_indices, remaining = [], [], []
+        for label in np.unique(y):
+            indices = rng.permutation(np.flatnonzero(y == label))
+            test_indices.append(indices[0])
+            train_indices.append(indices[1])
+            remaining.extend(indices[2:])
+        remaining = rng.permutation(remaining).astype(int)
+        extra_test = n_test - n_classes
+        test_indices.extend(remaining[:extra_test])
+        train_indices.extend(remaining[extra_test:])
+        X_train, X_test = X[train_indices], X[test_indices]
+        y_train, y_test = y[train_indices], y[test_indices]
     clf = LogisticRegression(max_iter=1000)
     clf.fit(X_train, y_train)
     predictions = clf.predict(X_test)
-    return {
-        "macro_f1": float(f1_score(y_test, predictions, average="macro")),
-        "n_classes": n_classes,
-    }
+    result.update(
+        macro_f1=float(f1_score(y_test, predictions, average="macro")),
+        n_evaluated_obs=int(len(y)),
+        n_train_obs=int(len(y_train)),
+        n_test_obs=int(len(y_test)),
+        n_train_classes=int(len(np.unique(y_train))),
+        n_test_classes=int(len(np.unique(y_test))),
+    )
+    return result
 
 
 # Explicit developmental ordering for named stages; numeric labels (e.g.
