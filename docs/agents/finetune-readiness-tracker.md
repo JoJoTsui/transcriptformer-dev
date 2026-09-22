@@ -1,5 +1,22 @@
 # Finetune readiness tracker
 
+## Continuing development — runtime correctness and artifact validation
+
+Status: in progress. These four follow-up tasks do not change pending corpus,
+sampling, QC, assay, or B1 decisions. Each gets a separate tested commit/push.
+
+| Task | Deliverable | Status | Evidence / commit |
+| --- | --- | --- | --- |
+| A | Propagate sampler epochs to persistent workers; deterministic resume regression | In progress | Prior CPU reproduction: epoch 1 = epoch 2 with persistent workers |
+| B | Exclude missing stages from pseudotime graph/scoring with explicit counts | Pending | Prior reproduction: unstaged rows changed score 0.867 → 0.930 |
+| C | Include readiness/runtime regressions and relevant paths in CI | Pending | Existing workflow enumerates only older test files |
+| D | Validate prepared artifacts before training; bounded full-expression rehearsal | Pending | Check provenance, membership, embryo isolation, output completeness |
+
+The five original readiness priorities below remain completed. Final follow-up
+validation and related-document updates will be recorded after A–D.
+
+## Original readiness priorities
+
 Started 2026-09-22. Scope: five engineering priorities that can proceed while
 collaborator decisions #1–#4 (corpus inclusion, sampling policy, QC) are pending.
 **Status: all five engineering steps complete.** Each was tested, committed, and
