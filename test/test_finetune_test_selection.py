@@ -18,6 +18,7 @@ SUITES = (
     "early_stopping",
     "evaluate",
     "small_group_evaluation",
+    "representation",
     "end_to_end",
     "finetune_metadata",
     "spatial",

@@ -59,6 +59,7 @@ jobs:
             test/test_early_stopping.py \
             test/test_evaluate.py \
             test/test_small_group_evaluation.py \
+            test/test_representation.py \
             test/test_end_to_end.py \
             test/test_finetune_metadata.py \
             test/test_spatial.py \
