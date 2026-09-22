@@ -2,18 +2,43 @@
 
 ## Continuing development — runtime correctness and artifact validation
 
-Status: in progress. These four follow-up tasks do not change pending corpus,
-sampling, QC, assay, or B1 decisions. Each gets a separate tested commit/push. D lands before C so CI only references committed tests.
+Status: complete (2026-09-22). All four tasks were tested, committed, and pushed
+separately to `gh/main`. Pending corpus, sampling, QC, assay, and B1 decisions
+are unchanged. D landed before C so CI only references committed tests.
 
 | Task | Deliverable | Status | Evidence / commit |
 | --- | --- | --- | --- |
 | A | Propagate sampler epochs to persistent workers; deterministic resume regression | Complete | `786d66c`; fork/spawn workers and cross-epoch resume pass; 30 training/worker/early-stopping tests |
 | B | Exclude missing stages from pseudotime graph/scoring with explicit counts | Complete | `bb8cd0d`; score now invariant to unstaged rows; 41 evaluation regressions pass |
-| C | Include readiness/runtime regressions and relevant paths in CI | Complete | All 18 selected CI modules passed locally: 204 tests; path/manual-trigger checks included |
+| C | Include readiness/runtime regressions and relevant paths in CI | Complete | `898fcd1`; all 18 selected CI modules passed locally: 204 tests; path/manual-trigger checks included |
 | D | Validate prepared artifacts before training; bounded full-expression rehearsal | Complete | `bd40932`; 48 artifact/CLI/training tests; synthetic + 256 real-row full-gene rehearsal passed (254 retained) |
 
-The five original readiness priorities below remain completed. Final follow-up
-validation and related-document updates will be recorded after A–D.
+The five original readiness priorities below remain completed. The major-issues
+register (both languages), data requirements, and readiness tool guide now reflect
+A–D. Earlier preparation reports must be regenerated before training.
+
+### Follow-up verification
+
+- The exact 18-module CPU CI suite passed locally: **204 passed**. Worker tests
+  exercised fork and spawn; CPU gloo exercised the public training gate and DDP.
+  Runtime verification used `OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1` and
+  `MPLCONFIGDIR=/tmp/mplconfig`, with local sockets available for multiprocessing.
+- The worker regression failed under both process-start methods before the fix.
+  The missing-stage regression reproduced score inflation from 0.8671 to 0.9303;
+  it now preserves the known-stage score. Training inclusion was not changed.
+- In-process CLI tests isolate the production CLI memory cap: applying a
+  fresh-process cap to pytest's accumulated model imports caused allocation
+  failures. The production memory cap is unchanged.
+- Ruff checks passed on every changed Python file; `git diff --check` passed.
+- [Preparation rehearsal](../../logs/dataset_audit/preparation_rehearsal.json):
+  48 synthetic input rows produced 46 prepared rows; two real sources sampled at
+  128 rows each (all gene columns) produced 254 prepared rows. Original sources
+  were read-only and temporary copies were removed. No GPU training or full
+  real-corpus preparation was performed.
+- The artifact gate checks trusted preparation evidence and streams full-file
+  hashes. It does not independently rerun expression QC. Final scientific
+  decisions, full-corpus preparation, B1 agreement, and probe assets remain gates.
+
 
 ## Original readiness priorities
 

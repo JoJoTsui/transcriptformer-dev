@@ -270,12 +270,28 @@ Optional top-level sections:
 - `prepared/<name>_prepared[_<split>].h5ad` — model-ready H5ADs per dataset:
   filtered to mapped/in-vocabulary genes (duplicate target genes summed),
   `var.ensembl_id` set, harmonized labels, QC applied, `obs["split"]`
-  assigned. Datasets whose embryos span several splits produce one file per
+  assigned. `source_row_index` preserves positional source membership even when
+  barcodes repeat. Datasets whose embryos span several splits produce one file per
   split, suffixed with the split name
 - `split_assignments.json` — per-(source file, embryo) split assignments
   with species and reason fields (section 7)
 - `preparation_report.json` — per-dataset observation/gene counts, QC
-  removals, unmapped genes, and `duplicate_genes_collapsed`
+  removals, unmapped genes, and `duplicate_genes_collapsed`; schema version,
+  preparation/configuration/asset fingerprints, source/output hashes, and post-QC
+  survivor count/membership digest
 
 Running with `--prepare-only` first is the recommended way to validate real
 data before committing GPU time to training.
+
+Before loading a model or starting DDP, training checks the preparation report
+against the current manifest, source files, and every prepared output. It rejects
+stale reports, missing outputs, duplicate rows, altered metadata, incomplete
+post-QC membership, and embryo leakage. Legacy reports must be regenerated.
+The same gate is available through `scripts/validate_prepared_artifacts.py`.
+It streams full-file hashes and trusts recorded QC evidence; it does not rerun
+expression QC. See [readiness tools](finetune-readiness-tools.md#6-prepared-artifact-gate-and-bounded-rehearsal)
+for commands and the bounded real-expression rehearsal.
+
+Missing stages remain a pending training-inclusion decision. Pseudotime evaluation
+excludes them before graph construction and reports eligible/evaluated/excluded
+counts explicitly; exclusion from evaluation does not remove training rows.

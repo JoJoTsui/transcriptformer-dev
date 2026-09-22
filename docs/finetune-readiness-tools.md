@@ -89,8 +89,8 @@ The [recorded first-epoch pre-QC projection](../logs/dataset_audit/sampling_audi
 has 2,000,000 draws, 1,069,876 unique sampled observations, and 930,124 repeat
 draws. Spatial draws are 600,504 (30.0252%). This sampler does not balance species.
 The report excludes max_steps truncation, early stopping, and DDP padding.
-`--epoch` selects direct sampler state; later-epoch results do not establish that
-persistent DataLoader workers receive the parent's epoch update.
+`--epoch` selects direct sampler state. Separate fork/spawn worker regressions
+verify shared epoch propagation and deterministic sample replay across resume.
 
 ## 5. Probe mapping and readiness
 
@@ -110,6 +110,43 @@ still need resolution. It does not substitute macaque species or invent embryo
 identities. Asset presence and shape checks do not validate gene coverage,
 protein provenance, phase-boundary sensitivity, or spatial metrics.
 
+## 6. Prepared-artifact gate and bounded rehearsal
+
+Fresh preparation records source-row positions, file hashes, configuration/asset
+fingerprints, and post-QC membership evidence. Training validates these before
+loading a checkpoint or starting DDP workers. Old reports require regeneration.
+
+```bash
+.venv/bin/python scripts/validate_prepared_artifacts.py \
+  runs/manifest.json runs/preparation_report.json \
+  --output runs/artifact_validation.json
+.venv/bin/python scripts/rehearse_preparation.py \
+  --manifest conf/finetune_run_multispecies.json \
+  --output runs/preparation_rehearsal.json
+```
+
+Use the exact manifest passed to preparation, including coordinate-copy paths.
+The gate checks complete source/split coverage, positional row membership,
+metadata, and embryo isolation. It streams source and output hashes, so full
+corpus validation incurs full-file I/O without loading expression into memory.
+The preparation report is trusted evidence; this does not independently replay
+expression QC or prove scientific suitability.
+
+The [recorded rehearsal](../logs/dataset_audit/preparation_rehearsal.json) passed
+synthetic multi-embryo/multi-section fixtures and 128 sampled rows each from one
+real single-cell and one real spatial source, retaining all gene columns. Of 256
+real input rows, 254 survived preparation: 212 train, 20 validation, 22 holdout.
+Original sources were read-only and temporary copies were removed. This is a
+bounded expression rehearsal, not full-corpus preparation or a training run.
+
+## 7. Evaluation and CI regressions
+
+Pseudotime excludes null/empty/unknown stage labels before building trajectories.
+Results report input, eligible, evaluated, and excluded-row counts, with reasons
+for unevaluable groups. Training inclusion of unstaged observations is unchanged.
+The CPU CI suite includes readiness tools, worker replay, missing-stage evaluation,
+and artifact validation; workflow triggers cover their scripts and configuration.
+
 ## Remaining gates
 
 - Collaborator decisions #1–#4 and assay normalization remain pending.
@@ -117,8 +154,6 @@ protein provenance, phase-boundary sensitivity, or spatial metrics.
 - Resolve probe assets and source annotations before evaluating B4.
 - Create complete coordinate copies, finalize the manifest, and run the real
   preparation/validation gate. Regenerate reports after corpus or QC changes.
-- Check epoch propagation with persistent workers before relying on multi-epoch
-  shuffling; the direct sampler audit is not a worker-process test.
 
 Synthetic regressions and metadata audits establish these tools' behavior; they
 do not establish biological performance or readiness to start a final training run.
