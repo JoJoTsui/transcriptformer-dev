@@ -74,6 +74,8 @@ Every headline analysis runs on the **zero-shot base TF-Metazoa checkpoint first
 | B3 | Full perturbation pipeline incl. §1 null and §2 AUROCs, on the base model | Spearman(base ranking, finetuned ranking) per stratum; ΔAUROC on external sets |
 | B4 | Zero-shot probe-species embedding quality on the base model (phase alignment vs species mixing for macaque/pig/etc.) | Alignment-score delta |
 
+**2026-09-22 review — B1 blocked:** The six-of-eight species threshold below is incompatible with five training species being train-only (register 3.3). Register item 7.7 requires a revised, agreed criterion over evaluable species or additional independent embryos before training. The original threshold remains below for decision history; it is not an executable acceptance gate, and no replacement has been approved.
+
 **Improvement criteria (proposed defaults — sign-off required before GPU time):** the finetune is adopted only if ALL of:
 1. Mean holdout likelihood improves ≥ 5% in ≥ 6 of 8 training species, with no species degrading > 2% (B1).
 2. Holdout phase kNN-purity improves ≥ 5 points absolute over base (B2).

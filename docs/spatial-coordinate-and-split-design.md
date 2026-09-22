@@ -1,7 +1,7 @@
 # Spatial Coordinate Lift and CS8 Split Design
 
-**Status:** design (resolves register items 1.12 and 3.9 of `docs/finetune-major-issues.md`; implementation pending user sign-off)
-**Date:** 2026-09-14
+**Status:** design; implementation pending. Continuation review reopened register item 3.9 and added 3.11; the revised CS8 mechanism below is proposed, not an implemented or verified corpus fix.
+**Date:** 2026-09-14; CS8 mechanism corrected as a proposal on 2026-09-22
 
 ## 1. Coordinate availability per spatial file (verified 2026-09-14, backed-mode reads)
 
@@ -32,7 +32,9 @@ Alternative considered and rejected: a `coordinate_parser` hook inside prepare.p
 
 **Decision: single-embryo spatial files are train-only, enforced at the embryo level, regardless of native section count.**
 
-Mechanism: for any spatial dataset whose `embryo_id` resolves to a single value, prepare treats `section_id` as constant (the manifest already supports `=` constants; CS8's entry will use `section_id: "=human_cs8"`, dropping reliance on the native 62-value column). The existing `single_section → train_only` eligibility rule then applies unchanged, and no split-logic code changes are needed.
+Proposed revised mechanism (2026-09-22): explicitly set `train_only: true` on the CS8 manifest entry and retain its native `section_id` column. The existing train-only eligibility rule keeps all 62 sections in training without changing per-section coordinate binning. Other single-embryo spatial entries must likewise be checked for train-only eligibility; this proposal does not add an automatic embryo-level guard.
+
+The original `section_id: "=human_cs8"` proposal is withdrawn: `_apply_obs_columns` ignores it when the native column exists, leaving leakage intact. Forcing it to overwrite the column would instead pool the sections during `assign_spatial_bins`. Executable reproductions and the separate findings are in [the continuation review](agents/continuation-review-2026-09-22.md).
 
 Rationale: sections of one embryo share embryonic state exactly as cells of one embryo do; ADR 0002 already rejected cell-level splitting for single-embryo datasets on that basis, and ADR 0003's two-pass split was built around it. CS8's native section column survived only because `_apply_obs_columns` never overwrites existing columns — an accident, not a design.
 
@@ -40,4 +42,4 @@ Rationale: sections of one embryo share embryonic state exactly as cells of one 
 
 - After this fix, **no spatial dataset lands in any holdout**: fig1/fig2 (one embryo), CS7 (one embryo), CS8 (one embryo), CS9 (one embryo) are all train-only. Spatial-specific evaluation metrics on the training species become descriptive-only (computed on training sections, no generalization claim).
 - Held-out spatial evaluation comes from the probe species instead: the macaque CS9–CS10 spatial atlas is a zero-shot probe and provides genuine unseen-spatial measurement. This is consistent with register item 3.10 (probes are the unseen-data instrument) while noting the 3.10 caveat that probes also measure ESM2-token construction quality.
-- The 62 native CS8 section labels are preserved in obs under their original column for per-section descriptive analyses; they just stop being split units.
+- The 62 native CS8 section labels are preserved in obs under their original column for per-section descriptive analyses; they remain distinct section units, all explicitly assigned to training.
