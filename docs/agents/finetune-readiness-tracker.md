@@ -1,5 +1,19 @@
 # Finetune readiness tracker
 
+## Next development — resume safety, evaluation, and broader rehearsal
+
+Status: in progress. Each task receives its own tested commit and push. Scientific
+corpus/QC decisions and acceptance thresholds remain unchanged.
+
+| Task | Deliverable | Status | Evidence / commit |
+| --- | --- | --- | --- |
+| E | Finished-run resume performs no further updates | In progress | Reproduced step 2 → 3 with max_steps=2 |
+| F | Checkpoint compatibility and validation/best-state continuity | Pending | Bind data, sampling and optimization contract; persist early stopping |
+| G | Robust cell-type F1 on small/missing-label groups | Pending | Six rows / three classes currently raise ValueError |
+| H | Bounded rehearsal for every manifest source | Pending | Source preservation, per-source outcomes and timing |
+| I | Production CLI subprocess and memory-cap coverage | Pending | Narrow in-process mocking; exercise actual cap |
+| J | B2 phase structure and paired linear CKA reports | Pending | Synthetic validation, stable cell identity, no pass/fail thresholds |
+
 ## Continuing development — runtime correctness and artifact validation
 
 Status: complete (2026-09-22). All four tasks were tested, committed, and pushed
