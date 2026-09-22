@@ -143,6 +143,11 @@ def _apply_obs_columns(obs: pd.DataFrame, obs_columns: dict[str, str] | None) ->
     return obs
 
 
+def map_obs_labels(values: pd.Series, mapping: dict[str, str]) -> pd.Series:
+    """Match native numeric labels to string JSON keys, preserving missing values."""
+    return values.map(lambda value: value if pd.isna(value) else mapping.get(value, mapping.get(str(value), value)))
+
+
 def _load_vocab(vocab_path: str | Path | None) -> set[str] | None:
     if vocab_path is None:
         return None
@@ -279,8 +284,8 @@ def prepare_dataset_file(
     obs["source_dataset"] = str(input_path.resolve())
     if "native_stage" not in obs.columns:
         obs["native_stage"] = obs["stage"].copy()
-    obs["stage"] = obs["stage"].map(lambda value: stage_mapping.get(value, value))
-    obs["cell_type"] = obs["cell_type"].map(lambda value: cell_type_mapping.get(value, value))
+    obs["stage"] = map_obs_labels(obs["stage"], stage_mapping)
+    obs["cell_type"] = map_obs_labels(obs["cell_type"], cell_type_mapping)
 
     X, obs, removed = _apply_qc(X, obs, qc_config or {})
     if obs.shape[0] == 0:

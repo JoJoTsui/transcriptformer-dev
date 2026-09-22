@@ -1,0 +1,2578 @@
+{
+  "scope": "pre_qc_metadata_projection",
+  "seed": 42,
+  "limitations": [
+    "QC may remove observations or whole strata; regenerate on the finalized corpus.",
+    "Embryo IDs must identify the same individual across files within each species.",
+    "No likelihood or improvement threshold is evaluated by this report."
+  ],
+  "b1": {
+    "required_improving_species": 6,
+    "registered_training_species": 8,
+    "training_species": [
+      "caenorhabditis_elegans",
+      "danio_rerio",
+      "drosophila_melanogaster",
+      "gallus_gallus",
+      "homo_sapiens",
+      "lytechinus_variegatus",
+      "mus_musculus",
+      "oryctolagus_cuniculus"
+    ],
+    "holdout_species": [
+      "homo_sapiens",
+      "mus_musculus"
+    ],
+    "species_without_holdout": [
+      "caenorhabditis_elegans",
+      "danio_rerio",
+      "drosophila_melanogaster",
+      "gallus_gallus",
+      "lytechinus_variegatus",
+      "oryctolagus_cuniculus"
+    ],
+    "measurable": false,
+    "status": "blocked_insufficient_holdout_species"
+  },
+  "coverage": [
+    {
+      "species": "caenorhabditis_elegans",
+      "phase": "blastula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 458,
+      "n_embryos": 1
+    },
+    {
+      "species": "caenorhabditis_elegans",
+      "phase": "gastrula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 19393,
+      "n_embryos": 1
+    },
+    {
+      "species": "caenorhabditis_elegans",
+      "phase": "neurula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 33882,
+      "n_embryos": 1
+    },
+    {
+      "species": "caenorhabditis_elegans",
+      "phase": "organogenesis",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 32291,
+      "n_embryos": 1
+    },
+    {
+      "species": "danio_rerio",
+      "phase": "blastula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 4277,
+      "n_embryos": 1
+    },
+    {
+      "species": "danio_rerio",
+      "phase": "gastrula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 13540,
+      "n_embryos": 1
+    },
+    {
+      "species": "danio_rerio",
+      "phase": "neurula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 45713,
+      "n_embryos": 1
+    },
+    {
+      "species": "drosophila_melanogaster",
+      "phase": "blastula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 134918,
+      "n_embryos": 1
+    },
+    {
+      "species": "drosophila_melanogaster",
+      "phase": "gastrula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 81740,
+      "n_embryos": 1
+    },
+    {
+      "species": "drosophila_melanogaster",
+      "phase": "neurula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 84426,
+      "n_embryos": 1
+    },
+    {
+      "species": "drosophila_melanogaster",
+      "phase": "organogenesis",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 246721,
+      "n_embryos": 1
+    },
+    {
+      "species": "gallus_gallus",
+      "phase": "gastrula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 2064,
+      "n_embryos": 1
+    },
+    {
+      "species": "gallus_gallus",
+      "phase": "neurula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 16770,
+      "n_embryos": 1
+    },
+    {
+      "species": "homo_sapiens",
+      "phase": "gastrula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 1170,
+      "n_embryos": 1
+    },
+    {
+      "species": "homo_sapiens",
+      "phase": "gastrula",
+      "split": "train",
+      "dataset_type": "spatial",
+      "n_observations": 276975,
+      "n_embryos": 2
+    },
+    {
+      "species": "homo_sapiens",
+      "phase": "neurula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 12323,
+      "n_embryos": 1
+    },
+    {
+      "species": "homo_sapiens",
+      "phase": "neurula",
+      "split": "train",
+      "dataset_type": "spatial",
+      "n_observations": 135399,
+      "n_embryos": 2
+    },
+    {
+      "species": "homo_sapiens",
+      "phase": "organogenesis",
+      "split": "final_holdout",
+      "dataset_type": "single_cell",
+      "n_observations": 32066,
+      "n_embryos": 1
+    },
+    {
+      "species": "homo_sapiens",
+      "phase": "organogenesis",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 123952,
+      "n_embryos": 5
+    },
+    {
+      "species": "homo_sapiens",
+      "phase": "organogenesis",
+      "split": "validation",
+      "dataset_type": "single_cell",
+      "n_observations": 29122,
+      "n_embryos": 1
+    },
+    {
+      "species": "lytechinus_variegatus",
+      "phase": "blastula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 20588,
+      "n_embryos": 1
+    },
+    {
+      "species": "lytechinus_variegatus",
+      "phase": "gastrula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 22321,
+      "n_embryos": 1
+    },
+    {
+      "species": "lytechinus_variegatus",
+      "phase": "organogenesis",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 8034,
+      "n_embryos": 2
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "blastula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 952,
+      "n_embryos": 4
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "gastrula",
+      "split": "final_holdout",
+      "dataset_type": "single_cell",
+      "n_observations": 7838,
+      "n_embryos": 11
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "gastrula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 72522,
+      "n_embryos": 126
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "gastrula",
+      "split": "validation",
+      "dataset_type": "single_cell",
+      "n_observations": 31817,
+      "n_embryos": 31
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "neurula",
+      "split": "final_holdout",
+      "dataset_type": "single_cell",
+      "n_observations": 12688,
+      "n_embryos": 4
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "neurula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 193665,
+      "n_embryos": 13
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "neurula",
+      "split": "validation",
+      "dataset_type": "single_cell",
+      "n_observations": 15608,
+      "n_embryos": 6
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "organogenesis",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 1393565,
+      "n_embryos": 5
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "unmapped",
+      "split": "final_holdout",
+      "dataset_type": "single_cell",
+      "n_observations": 3458,
+      "n_embryos": 7
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "unmapped",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 9013,
+      "n_embryos": 20
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "unmapped",
+      "split": "validation",
+      "dataset_type": "single_cell",
+      "n_observations": 2304,
+      "n_embryos": 8
+    },
+    {
+      "species": "oryctolagus_cuniculus",
+      "phase": "gastrula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 13674,
+      "n_embryos": 1
+    },
+    {
+      "species": "oryctolagus_cuniculus",
+      "phase": "neurula",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 34686,
+      "n_embryos": 1
+    },
+    {
+      "species": "oryctolagus_cuniculus",
+      "phase": "organogenesis",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 97773,
+      "n_embryos": 1
+    }
+  ],
+  "datasets": [
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/人_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "species": "homo_sapiens",
+      "n_observations": 185140,
+      "n_embryos": 7,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS10_Cell_Stem_Cell_2023/人_CS10__The single-cell and spatial transcriptional landscape of human gastrulation and early brain development.h5ad",
+      "species": "homo_sapiens",
+      "n_observations": 12323,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/homo_sapiens/human_cs7_tyser_raw.h5ad",
+      "species": "homo_sapiens",
+      "n_observations": 1170,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS7_Spatial_transcriptomic_characterization/人_CS7__Spatial transcriptomic characterization of a Carnegie stage 7 human embryo.h5ad",
+      "species": "homo_sapiens",
+      "n_observations": 28804,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS8_3D_reconstruction_of_a_gastrulating_human_embryo/人_CS8__3D reconstruction of a gastrulating human embryo.h5ad",
+      "species": "homo_sapiens",
+      "n_observations": 38562,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS9_3D_reconstruction_early_body_plan/人_CS9_Stereo-seq__3D reconstruction of a human Carnegie stage 9 embryo provides a snapshot of early body plan formation.h5ad",
+      "species": "homo_sapiens",
+      "n_observations": 96837,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig1.h5ad",
+      "species": "homo_sapiens",
+      "n_observations": 228028,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig2.h5ad",
+      "species": "homo_sapiens",
+      "n_observations": 20143,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 269513,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 455124,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 292726,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 265124,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E3.5.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 90,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E4.5.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 67,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E5.25.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 331,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E5.5.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 464,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E6.25.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 321,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E8.5b.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 154313,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 111078,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 139331,
+      "n_embryos": 36,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "species": "mus_musculus",
+      "n_observations": 54948,
+      "n_embryos": 188,
+      "unmapped_stage_counts": {
+        "<missing>": 14775
+      }
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/斑马鱼_Danio_rerio/斑马鱼_Danio_rerio__Single-cell mapping of gene expression landscapes and lineage in the zebrafish embryo.h5ad",
+      "species": "danio_rerio",
+      "n_observations": 63530,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/鸡_Gallus_gallus/eLife_2022_HH4_HH7/鸡_Gallus_gallus__Single-cell atlas of early chick development reveals gradual segregation of neural crest lineage from the neural plate border during neurulation.h5ad",
+      "species": "gallus_gallus",
+      "n_observations": 18834,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/oryctolagus_cuniculus/rabbit_atlas_raw.h5ad",
+      "species": "oryctolagus_cuniculus",
+      "n_observations": 146133,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/drosophila_melanogaster/drosophila_continuum_raw.h5ad",
+      "species": "drosophila_melanogaster",
+      "n_observations": 547805,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/秀丽隐杆线虫_Caenorhabditis_elegans/秀丽隐杆线虫_Caenorhabditis_elegans__A lineage-resolved molecular atlas of C elegans embryogenesis at single-cell resolution.h5ad",
+      "species": "caenorhabditis_elegans",
+      "n_observations": 86024,
+      "n_embryos": 1,
+      "unmapped_stage_counts": {}
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/绿海胆_Lytechinus_variegatus/绿海胆_Lytechinus_variegatus__Developmental single-cell transcriptomics in the Lytechinus variegatus sea urchin embryo.h5ad",
+      "species": "lytechinus_variegatus",
+      "n_observations": 50943,
+      "n_embryos": 2,
+      "unmapped_stage_counts": {}
+    }
+  ],
+  "assignments": [
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/人_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "dataset_type": "single_cell",
+      "species": "homo_sapiens",
+      "embryo_id": "emb1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/人_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "dataset_type": "single_cell",
+      "species": "homo_sapiens",
+      "embryo_id": "emb2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/人_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "dataset_type": "single_cell",
+      "species": "homo_sapiens",
+      "embryo_id": "emb3",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/人_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "dataset_type": "single_cell",
+      "species": "homo_sapiens",
+      "embryo_id": "emb4",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/人_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "dataset_type": "single_cell",
+      "species": "homo_sapiens",
+      "embryo_id": "emb5",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/人_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "dataset_type": "single_cell",
+      "species": "homo_sapiens",
+      "embryo_id": "emb6",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/人_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "dataset_type": "single_cell",
+      "species": "homo_sapiens",
+      "embryo_id": "emb7",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS10_Cell_Stem_Cell_2023/人_CS10__The single-cell and spatial transcriptional landscape of human gastrulation and early brain development.h5ad",
+      "dataset_type": "single_cell",
+      "species": "homo_sapiens",
+      "embryo_id": "W3-1",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/homo_sapiens/human_cs7_tyser_raw.h5ad",
+      "dataset_type": "single_cell",
+      "species": "homo_sapiens",
+      "embryo_id": "tyser_cs7",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS7_Spatial_transcriptomic_characterization/人_CS7__Spatial transcriptomic characterization of a Carnegie stage 7 human embryo.h5ad",
+      "dataset_type": "spatial",
+      "species": "homo_sapiens",
+      "embryo_id": "human_cs7_spatial",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS8_3D_reconstruction_of_a_gastrulating_human_embryo/人_CS8__3D reconstruction of a gastrulating human embryo.h5ad",
+      "dataset_type": "spatial",
+      "species": "homo_sapiens",
+      "embryo_id": "human_cs8_spatial",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS9_3D_reconstruction_early_body_plan/人_CS9_Stereo-seq__3D reconstruction of a human Carnegie stage 9 embryo provides a snapshot of early body plan formation.h5ad",
+      "dataset_type": "spatial",
+      "species": "homo_sapiens",
+      "embryo_id": "human_cs9_spatial",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig1.h5ad",
+      "dataset_type": "spatial",
+      "species": "homo_sapiens",
+      "embryo_id": "human_cs6",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig2.h5ad",
+      "dataset_type": "spatial",
+      "species": "homo_sapiens",
+      "embryo_id": "human_cs6",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "tome_e10_5",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "tome_e11_5",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "tome_e12_5",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "tome_e13_5",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E3.5.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "tome_e3_5",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E4.5.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "tome_e4_5",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E5.25.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "tome_e5_25",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E5.5.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "tome_e5_5",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E6.25.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "tome_e6_25",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E8.5b.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "tome_e8_5b",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/小鼠_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "tome_e9_5",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "10",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "12",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "13",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "14",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "15",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "16",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "17",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "18",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "19",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "20",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "21",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "22",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "23",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "24",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "25",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "26",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "27",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "28",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "29",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "30",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "31",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "32",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "33",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "34",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "35",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "36",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "37",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "4",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "5",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "6",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "7",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "8",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature_mouse_gastrulation_atlas/小鼠_Mus_musculus__A single-cell molecular map of mouse gastrulation and early organogenesis__all_cell_called_counts_archive.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "9",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "181209_R_1",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "181209_R_11",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "181209_R_12",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "181209_R_13",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "181209_R_14",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "181209_R_15",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "181209_R_16",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "181209_R_2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "181209_R_3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "181209_R_5",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "181209_R_7",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190214_P02_B1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190214_P05_B3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190214_R_A1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190214_R_A2",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190214_R_B6",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190223_P10_a3",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190223_R_a1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190223_R_a2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190223_R_a4",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190223_R_a6",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190223_R_b2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190223_R_b3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190304_TKO_1_P6",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190304_W_wt01",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190304_W_wt02",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190304_W_wt03",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190304_W_wt04",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190304_W_wt06",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190304_W_wt07",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190304_W_wt08",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190304_W_wt09",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190304_W_wt10",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190307_W_wt09",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190307_W_wt10",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190307_W_wt11",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190307_W_wt12",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190307_W_wt13",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190307_W_wt14",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190307_W_wt15",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190307_W_wt16",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190311_W_wt01",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190311_W_wt02",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190311_W_wt03",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190311_W_wt04",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190311_W_wt05",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190311_W_wt06",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190311_W_wt07",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190311_W_wt08",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190311_W_wt09",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190313_W_wt01",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190313_W_wt02",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190313_W_wt03",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190313_W_wt04",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190313_W_wt05",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190313_W_wt06",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_E7.5_e1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_E7.5_e2",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_E7.5_e3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_E7.5_e4",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_E7.5_e5",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_E7.5_e6",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_E7.5_e7",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_e1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_e10",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_e11",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_e12",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_e2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_e3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_e4",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_e5",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_e7",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_e8",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190506_e9",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_1B",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_1C",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_1E",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_1F",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_2B",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_2C",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_2D",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_2E",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_2F",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_3A",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_3B",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_3C",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_3D",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_3E",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_3F",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_4B",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_4C",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_4D",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_4E",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_4F",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_5B",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_5C",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_5D",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_5E",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_5F",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_6B",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_6E",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_6F",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_7B",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_7C",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_7D",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_7E",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_7F",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_8B",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_8D",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_8E",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190527_8F",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190710_C1",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190710_C2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190710_C3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190710_C4",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190710_c10",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190710_c11",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190710_c12",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190710_c6",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190710_c7",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190710_c8",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "190710_c9",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m1e1",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m1e10",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m1e12",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m1e13",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m1e14",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m1e4",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m1e5",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m1e7",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m1e9",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m2e1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m2e2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m2e4",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "191217_m2e6",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "2711_F4E1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "2711_F4E2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "2711_F4E4",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "2711_F4E5",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "3011_f2e1",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "3011_f2e2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "3011_f3e1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "3011_f4e2",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "3011_f4e5",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "3011_f5e2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "3011_f6e2",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "3011_f6e5",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "3011_f6e6",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "3011_f7e2",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "6D_2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "6D_m2e10",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "6D_m2e13",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "6D_m2e15",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "6D_m2e5",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "6D_m3e6",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "6D_m3e8",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE10_e10",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE10_e11",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE10_e8",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE10_e9",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE11_e1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE11_e2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE11_e3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE12_e3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE12_e4",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE12_e5",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE12_e6",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE1_E1",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE1_E2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE1_E3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE2_e3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE2_e4",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE3_m1_e1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE3_m1_e2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE3_m1_e3",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE3_m1_e4",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE3_m1_e5",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE3_m2_e1",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE3_m2_e2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE3_m2_e3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE3_m3_e2",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE5_E1",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE5_E2",
+      "split": "validation",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE5_E3",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE5_E4",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE5_E5",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE5_E6",
+      "split": "train",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Cell_single_embryo_time_resolved_gastrulation/小鼠_Mus_musculus__A single-embryo single-cell time-resolved model for mouse gastrulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "mus_musculus",
+      "embryo_id": "EXE5_E7",
+      "split": "final_holdout",
+      "reason": "stratified"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/斑马鱼_Danio_rerio/斑马鱼_Danio_rerio__Single-cell mapping of gene expression landscapes and lineage in the zebrafish embryo.h5ad",
+      "dataset_type": "single_cell",
+      "species": "danio_rerio",
+      "embryo_id": "zebrafish_wagner2018",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/鸡_Gallus_gallus/eLife_2022_HH4_HH7/鸡_Gallus_gallus__Single-cell atlas of early chick development reveals gradual segregation of neural crest lineage from the neural plate border during neurulation.h5ad",
+      "dataset_type": "single_cell",
+      "species": "gallus_gallus",
+      "embryo_id": "chicken_elife2022",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/oryctolagus_cuniculus/rabbit_atlas_raw.h5ad",
+      "dataset_type": "single_cell",
+      "species": "oryctolagus_cuniculus",
+      "embryo_id": "rabbit_atlas",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad_raw_rebuild/drosophila_melanogaster/drosophila_continuum_raw.h5ad",
+      "dataset_type": "single_cell",
+      "species": "drosophila_melanogaster",
+      "embryo_id": "drosophila_continuum",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/秀丽隐杆线虫_Caenorhabditis_elegans/秀丽隐杆线虫_Caenorhabditis_elegans__A lineage-resolved molecular atlas of C elegans embryogenesis at single-cell resolution.h5ad",
+      "dataset_type": "single_cell",
+      "species": "caenorhabditis_elegans",
+      "embryo_id": "celegans_packer2019",
+      "split": "train",
+      "reason": "single_embryo"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/绿海胆_Lytechinus_variegatus/绿海胆_Lytechinus_variegatus__Developmental single-cell transcriptomics in the Lytechinus variegatus sea urchin embryo.h5ad",
+      "dataset_type": "single_cell",
+      "species": "lytechinus_variegatus",
+      "embryo_id": "1",
+      "split": "train",
+      "reason": "insufficient_embryos"
+    },
+    {
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/绿海胆_Lytechinus_variegatus/绿海胆_Lytechinus_variegatus__Developmental single-cell transcriptomics in the Lytechinus variegatus sea urchin embryo.h5ad",
+      "dataset_type": "single_cell",
+      "species": "lytechinus_variegatus",
+      "embryo_id": "2",
+      "split": "train",
+      "reason": "insufficient_embryos"
+    }
+  ]
+}

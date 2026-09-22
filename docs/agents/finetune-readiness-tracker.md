@@ -7,8 +7,8 @@ Each completed step is tested, committed, and pushed to `gh/main` separately.
 | Step | Deliverable | Status | Evidence / commit |
 | --- | --- | --- | --- |
 | 1 | Embryo-level split safeguards; retain native section identity; reject leakage | Complete | `3c57776` (pushed); 53 distinct tests passed; real 27-file metadata check |
-| 2 | Coordinate extraction, safe output copies, derived manifest, validation | Complete | 16 tests; full 412,374-spot metadata-copy rehearsal |
-| 3 | Species × phase holdout coverage and explicit B1 feasibility report | Pending | |
+| 2 | Coordinate extraction, safe output copies, derived manifest, validation | Complete | `fee6970` (pushed); 16 tests; full 412,374-spot metadata-copy rehearsal |
+| 3 | Species × phase holdout coverage and explicit B1 feasibility report | Complete | 4 coverage regressions; 41 distinct related tests; real metadata report |
 | 4 | Actual-sampler exposure report by dataset, species, and phase | Pending | |
 | 5 | Machine-readable probe mappings and metadata/vocabulary readiness checks | Pending | |
 
@@ -60,3 +60,23 @@ Implementation and validation entries will be appended per step.
 - Full expression-matrix copies and final preparation have not run; the tool is
   ready for an explicitly selected output directory. This supersedes the older
   in-place source-mutation proposal.
+
+### Step 3 — holdout coverage
+
+- `scripts/report_holdout_coverage.py` reports pre-QC observation and unique
+  embryo counts per species × phase × split × modality, using preparation's
+  actual split policy. Unmapped/missing stages are reported explicitly.
+- Actual report: only human/mouse have final holdout; six species have none.
+  B1's six-of-eight threshold is therefore blocked, not silently redefined.
+  Human holdout is one organogenesis embryo; mouse has gastrula/neurula plus
+  unstaged observations. Embryo counts across phases must not be added as if
+  they were disjoint individuals.
+- Fixed a discovered prerequisite: numeric native stages now match JSON string
+  mapping keys in preparation and reporting, while actual missing values remain
+  missing. Regression failed before this fix; original numeric stages survive
+  in native_stage. Only the known 14,775 unstaged mouse observations remain
+  unmapped in the full-corpus projection.
+- Validation: 40 related preparation/metadata/coverage tests passed; four
+  coverage tests passed after adding null-preservation coverage (41 distinct).
+  Report: `logs/dataset_audit/holdout_coverage.json`. This is pre-QC and contains
+  no measured model likelihood; regenerate after final corpus/QC decisions.
