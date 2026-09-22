@@ -9,8 +9,8 @@ sampling, QC, assay, or B1 decisions. Each gets a separate tested commit/push. D
 | --- | --- | --- | --- |
 | A | Propagate sampler epochs to persistent workers; deterministic resume regression | Complete | `786d66c`; fork/spawn workers and cross-epoch resume pass; 30 training/worker/early-stopping tests |
 | B | Exclude missing stages from pseudotime graph/scoring with explicit counts | Complete | `bb8cd0d`; score now invariant to unstaged rows; 41 evaluation regressions pass |
-| C | Include readiness/runtime regressions and relevant paths in CI | Pending | Existing workflow enumerates only older test files |
-| D | Validate prepared artifacts before training; bounded full-expression rehearsal | Complete | 48 artifact/CLI/training tests; synthetic + 256 real-row full-gene rehearsal passed (254 retained) |
+| C | Include readiness/runtime regressions and relevant paths in CI | Complete | All 18 selected CI modules passed locally: 204 tests; path/manual-trigger checks included |
+| D | Validate prepared artifacts before training; bounded full-expression rehearsal | Complete | `bd40932`; 48 artifact/CLI/training tests; synthetic + 256 real-row full-gene rehearsal passed (254 retained) |
 
 The five original readiness priorities below remain completed. Final follow-up
 validation and related-document updates will be recorded after A–D.
@@ -114,8 +114,8 @@ Implementation and validation evidence is recorded below.
   organogenesis 897,461; missing stage 4,145. No sampling policy was changed.
 - Validation: 15 tests passed; report in `logs/dataset_audit/sampling_audit.json`.
   Scope is one full sampler epoch, not max_steps/early-stopping/DDP exposure.
-  Later-epoch projections do not model persistent-worker dataset state; workers
-  retaining old epoch values are a separate training follow-up.
+  Later-epoch projections do not model worker processes. Follow-up A now
+  separately verifies shared epoch propagation under fork/spawn and resume.
 
 ### Step 5 — probe preparation and readiness
 
@@ -133,7 +133,7 @@ Implementation and validation evidence is recorded below.
   establish gene coverage, protein provenance, spatial metric validity, or
   boundary sensitivity. No assets were downloaded or source files modified.
 
-## Final verification and remaining gates
+## Original readiness verification and remaining gates
 
 The combined suite passed **130 tests**:
 
@@ -147,7 +147,8 @@ The combined suite passed **130 tests**:
 Ruff checks/formatting passed for new and changed implementation modules/tests;
 `git diff --check` passed. The legacy validator's pre-existing E402 import-order
 exceptions remain outside these changes. No GPU training or full real-corpus
-preparation was performed.
+preparation was performed. Follow-up D subsequently added a bounded real-expression
+rehearsal; it does not replace the full-corpus gate.
 
 - Coordinate/source preservation is tested on synthetic full files and real
   full-metadata replicas; complete real matrix copies still need creation.
@@ -157,8 +158,8 @@ preparation was performed.
   silently changed.
 - Probe execution remains blocked by missing exact-species vocabularies/FASTA
   entries and unresolved source annotations, despite complete phase mappings.
-- Register 5.7 records the newly noticed persistent-worker epoch-propagation
-  validation gap. The first-epoch sampling report is unaffected.
+- Register 5.7 is now resolved by follow-up A. The original first-epoch sampling
+  report remains valid; no sampling probability changed.
 
 See [tool commands](../finetune-readiness-tools.md),
 [major issues](../finetune-major-issues.md),

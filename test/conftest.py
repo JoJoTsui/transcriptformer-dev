@@ -86,12 +86,11 @@ def cli_env():
 
 
 @pytest.fixture(autouse=True)
-def restore_address_space_limit():
-    """Do not let the finetune CLI's process-wide memory cap leak across tests."""
-    import resource
+def isolate_cli_memory_limit(monkeypatch):
+    """CLI unit tests share pytest's process, including unrelated loaded models.
 
-    original = resource.getrlimit(resource.RLIMIT_AS)
-    try:
-        yield
-    finally:
-        resource.setrlimit(resource.RLIMIT_AS, original)
+    The production cap targets a fresh CLI process. Applying it here can put
+    the already-running test process over its address-space limit before pytest
+    can report failures or run teardown.
+    """
+    monkeypatch.setattr("transcriptformer.cli.finetune._set_address_space_limit", lambda: None)

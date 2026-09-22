@@ -8,15 +8,15 @@ on:
       - "src/transcriptformer/cli/finetune.py"
       - "src/transcriptformer/cli/evaluate.py"
       - "src/transcriptformer/data/**"
-      - "test/test_finetune_cli.py"
-      - "test/test_dataprep.py"
-      - "test/test_train.py"
-      - "test/test_gpu.py"
-      - "test/test_early_stopping.py"
-      - "test/test_evaluate.py"
-      - "test/test_end_to_end.py"
-      - "test/fixtures.py"
+      - "src/transcriptformer/model/**"
+      - "src/transcriptformer/tokenizer/**"
+      - "test/**"
+      - "scripts/**"
+      - "conf/**"
+      - "preprocess/**"
+      - ".github/workflows/finetune-tests.yml"
       - "pyproject.toml"
+      - "uv.lock"
   pull_request:
     paths: *finetune-paths
   workflow_dispatch: # Allow manual triggering
@@ -47,5 +47,25 @@ jobs:
           uv pip install --system -e '.[dev]'
 
       - name: Run finetune pipeline tests
+        # Keep the CPU suite explicit: other test modules download real models/data.
+        # Add new finetune suites here and to test_finetune_test_selection.py.
         run: |
-          pytest test/test_finetune_cli.py test/test_dataprep.py test/test_train.py test/test_gpu.py test/test_early_stopping.py test/test_evaluate.py test/test_end_to_end.py -v
+          python -m pytest \
+            test/test_finetune_cli.py \
+            test/test_dataprep.py \
+            test/test_train.py \
+            test/test_gpu.py \
+            test/test_early_stopping.py \
+            test/test_evaluate.py \
+            test/test_end_to_end.py \
+            test/test_finetune_metadata.py \
+            test/test_spatial.py \
+            test/test_split_safeguards.py \
+            test/test_coordinates.py \
+            test/test_holdout_coverage.py \
+            test/test_sampling_audit.py \
+            test/test_probes.py \
+            test/test_worker_epochs.py \
+            test/test_missing_stage_evaluation.py \
+            test/test_prepared_artifacts.py \
+            test/test_finetune_test_selection.py -v
