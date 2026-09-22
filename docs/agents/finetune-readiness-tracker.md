@@ -2,7 +2,9 @@
 
 Started 2026-09-22. Scope: five engineering priorities that can proceed while
 collaborator decisions #1–#4 (corpus inclusion, sampling policy, QC) are pending.
-Each completed step is tested, committed, and pushed to `gh/main` separately.
+**Status: all five engineering steps complete.** Each was tested, committed, and
+pushed to `gh/main` separately. Related docs are synchronized in the final
+documentation commit. Training and probe execution still have the gates below.
 
 | Step | Deliverable | Status | Evidence / commit |
 | --- | --- | --- | --- |
@@ -10,7 +12,7 @@ Each completed step is tested, committed, and pushed to `gh/main` separately.
 | 2 | Coordinate extraction, safe output copies, derived manifest, validation | Complete | `fee6970` (pushed); 16 tests; full 412,374-spot metadata-copy rehearsal |
 | 3 | Species × phase holdout coverage and explicit B1 feasibility report | Complete | `649b702` (pushed); 4 coverage regressions; 41 distinct related tests; real metadata report |
 | 4 | Actual-sampler exposure report by dataset, species, and phase | Complete | `c447651` (pushed); 15 regressions; real 2,000,000-draw epoch audit |
-| 5 | Machine-readable probe mappings and metadata/vocabulary readiness checks | Complete | 12 regressions; all stage labels covered in 8 real datasets / 6 species |
+| 5 | Machine-readable probe mappings and metadata/vocabulary readiness checks | Complete | `865bc5f` (pushed); 12 regressions; all stage labels covered in 8 real datasets / 6 species |
 
 ## Completion criteria
 
@@ -27,7 +29,7 @@ Each completed step is tested, committed, and pushed to `gh/main` separately.
 
 ## Validation log
 
-Implementation and validation entries will be appended per step.
+Implementation and validation evidence is recorded below.
 
 ### Step 1 — split safeguards
 
@@ -113,3 +115,35 @@ Implementation and validation entries will be appended per step.
 - Report: `logs/dataset_audit/probe_readiness.json`. Presence/shape checks do not
   establish gene coverage, protein provenance, spatial metric validity, or
   boundary sensitivity. No assets were downloaded or source files modified.
+
+## Final verification and remaining gates
+
+The combined suite passed **130 tests**:
+
+```bash
+.venv/bin/python -m pytest test/test_split_safeguards.py test/test_coordinates.py \
+  test/test_holdout_coverage.py test/test_sampling_audit.py test/test_probes.py \
+  test/test_dataprep.py test/test_finetune_metadata.py test/test_evaluate.py \
+  test/test_spatial.py test/test_end_to_end.py -q
+```
+
+Ruff checks/formatting passed for new and changed implementation modules/tests;
+`git diff --check` passed. The legacy validator's pre-existing E402 import-order
+exceptions remain outside these changes. No GPU training or full real-corpus
+preparation was performed.
+
+- Coordinate/source preservation is tested on synthetic full files and real
+  full-metadata replicas; complete real matrix copies still need creation.
+- Collaborator corpus/sampling/QC/assay decisions remain open. Final preparation
+  and report regeneration follow those decisions.
+- B1 remains blocked by only two measurable training species; no threshold was
+  silently changed.
+- Probe execution remains blocked by missing exact-species vocabularies/FASTA
+  entries and unresolved source annotations, despite complete phase mappings.
+- Register 5.7 records the newly noticed persistent-worker epoch-propagation
+  validation gap. The first-epoch sampling report is unaffected.
+
+See [tool commands](../finetune-readiness-tools.md),
+[major issues](../finetune-major-issues.md),
+[data requirements](../finetune-data-requirements.md), and
+[spatial design](../spatial-coordinate-and-split-design.md).

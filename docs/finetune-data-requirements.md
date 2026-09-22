@@ -1,16 +1,20 @@
 # Data Requirements for Finetuning
 
 This document describes the input data contract for the `transcriptformer finetune`
-pipeline. Every rule below is enforced in code — violations fail fast with a clear
-error during `transcriptformer finetune --manifest <run.json> [--prepare-only]`.
+pipeline. Preparation validates its required columns, counts, and split identities.
+The [readiness tools](finetune-readiness-tools.md) provide additional metadata
+audits; the [tracker](agents/finetune-readiness-tracker.md) records completed work
+and remaining real-corpus validation.
 
 Primary sources: `src/transcriptformer/finetune/manifest.py`,
 `src/transcriptformer/finetune/prepare.py`, `conf/inference_config.yaml`.
 
 ## 1. Input files
 
-Each dataset in the run manifest is one AnnData H5AD file containing one embryo
-(single-cell) or one spatial section. Multiple files per modality are expected.
+Each dataset in the run manifest is one AnnData H5AD file. A file may contain
+multiple embryos or multiple spatial sections, and an embryo may occur in more
+than one file. Use consistent embryo IDs within a species across files; section
+IDs describe spatial coordinate frames, not independent split units.
 
 ## 2. Expression matrix
 
@@ -67,7 +71,9 @@ Each dataset in the run manifest is one AnnData H5AD file containing one embryo
 Preparation also writes `species` from the manifest when supplied (the canonical
 label takes precedence over a source-file label), `source_dataset` as the resolved
 source path, and `native_stage` before stage harmonization. An existing
-`native_stage` column is preserved, including missing values. Legacy manifests
+`native_stage` column is preserved, including missing values. Missing stage labels
+remain null during harmonization. For coordinate copies, `source_dataset` is the
+resolved copy path; the original path remains in the coordinate-lift provenance. Legacy manifests
 without species retain any source species column; otherwise evaluation falls
 back to embryo grouping. Re-run preparation to add these fields to older outputs.
 
@@ -99,12 +105,31 @@ A source value prefixed with `=` is treated as a constant rather than a column
 name: `{"assay": "=10x 3' v3"}` fills the column with that literal string. A
 column that already exists under the contract name is never overwritten.
 
+### Spatial coordinate copies
+
+The five current human spatial sources require explicit coordinate lifting before
+preparation. Use `scripts/prepare_spatial_coordinates.py` in audit mode first;
+`--output-dir` plus `--output-manifest` creates complete copies with canonical
+coordinates and native section IDs, preserving source files and original obs fields.
+Run preparation against that derived manifest. Existing outputs are refused.
+The [spatial design](spatial-coordinate-and-split-design.md) gives exact commands,
+verified coordinate ranges, and section mappings: CS6 fig1/fig2 `slice_num` (49
+each), CS7 `sample_final` (82), CS8 native `section_id` (62), and CS9 `EF1_<S>`
+prefix (13). Do not replace these native sections with file-level constants.
+
+All 412,374 coordinate vectors and full native metadata-copy round-trips were
+validated. Complete real expression matrices have not been copied and real-corpus
+preparation has not run. The original manifest still references unchanged files;
+its missing coordinate columns fail the manifest validator.
+
 ## 5. Label harmonization
 
 `stage` and `cell_type` values must be harmonized into one vocabulary across all
 datasets before training. The manifest accepts run-level `"stage_mapping"` and
 `"cell_type_mapping"` JSON objects; values not present in a mapping pass through
-unchanged.
+unchanged. Numeric native values also match their string JSON keys (for example,
+`8` matches `"8"` and `6.42` matches `"6.42"`); missing values remain missing.
+`native_stage` retains the pre-harmonization values for evaluation.
 
 Because stage labels collide across species (mouse E7.5 and rabbit E7.5 are
 different phases), each dataset entry may additionally carry its own
@@ -127,32 +152,30 @@ Removed-observation counts per criterion are recorded in
 
 ## 7. Split requirements
 
-- Split units are **(dataset, embryo) pairs**: the distinct `embryo_id` values
-  in each file's `obs` (after `obs_columns` renaming) — not the manifest-level
-  `embryo_id` constant. A multi-embryo file therefore contributes embryos to
-  several splits; preparation writes one prepared H5AD **per split**
-  (`<name>_prepared_<split>.h5ad`), each with a constant `obs["split"]`.
-- Spatial datasets split by **`section_id`** (obs column, falling back to the
-  manifest `section_id`) instead of `embryo_id`, under the same rules.
-- Splits are **stratified per species**. Each dataset should declare
-  `"species"` (datasets without it share the `"unknown"` stratum). Within each
-  species, the splittable units are assigned ~70/20/10 to
-  train/validation/final holdout — with at least 1 unit in validation and 1 in
-  the holdout when the species has ≥3 splittable units.
-- **Train-only rules**: a dataset entry may set `"train_only": true` (never
-  leaves train). Additionally, a dataset whose file contains a **single split
-  unit** (one embryo; one section for spatial) is automatically train-only —
-  moving its only unit out of train would be a whole-dataset holdout. A
-  species with fewer than 3 splittable units keeps all of them in train.
-- Every species must keep **at least one embryo in train**; preparation fails
-  otherwise. The train-only rules above make this automatic in practice.
-- `split_assignments.json` records the seed, an `assignments` list with one
-  entry per (dataset, unit) — including `species`, `split`, and a `reason`
-  field (`stratified`, `train_only`, `single_embryo`, `single_section`,
-  `insufficient_embryos`) — plus `embryo_splits` (`"<path>::<unit>" → split`)
-  and `splits` (source path → split, or `"mixed"` for multi-split files).
-- The final holdout is reserved for evaluation only — never training, early
-  stopping, or checkpoint selection.
+- Split identities are unique **(species, embryo_id)** pairs across the entire
+  manifest, using the distinct post-rename obs embryo labels. Both single-cell
+  and spatial files use this same identity. A shared embryo cannot cross splits
+  through another source file or modality; section IDs never determine splits.
+- Within a species, eligible unique embryos are assigned approximately 70/20/10
+  to train/validation/final holdout, with at least one embryo per split when
+  three or more are eligible. Missing manifest species use the `unknown` stratum.
+- **Train-only rules:** an explicitly `train_only` file or any file containing
+  only one embryo pins that embryo to training across every occurrence in the
+  manifest. Other species with fewer than three eligible embryos retain them
+  in training. Multiple spatial sections do not change single-embryo eligibility.
+- Preparation rejects missing/blank embryo identities and validates that no
+  (species, embryo) identity spans splits. Each species must retain training
+  embryos. Stable, consistent biological IDs are required for this guard to work.
+- A file with embryos assigned to multiple splits produces one prepared H5AD
+  per split (`<name>_prepared_<split>.h5ad`), each with constant `obs["split"]`.
+- `split_assignments.json` records the seed and one assignment per source-file
+  embryo occurrence, including `species`, `embryo_id`, `split`, and `reason`
+  (`stratified`, `train_only`, `single_embryo`, or `insufficient_embryos`).
+  `embryo_splits` maps `"<path>::<embryo>"` to split, while `splits` maps each
+  source path to its split or `"mixed"`. Repeated identities share one decision.
+- Final holdout is reserved for evaluation, never training, early stopping, or
+  checkpoint selection. Current spatial sources are all single-embryo inputs;
+  their section-level metrics are descriptive and cannot establish generalization.
 
 ## 8. Run manifest schema
 
@@ -249,7 +272,7 @@ Optional top-level sections:
   `var.ensembl_id` set, harmonized labels, QC applied, `obs["split"]`
   assigned. Datasets whose embryos span several splits produce one file per
   split, suffixed with the split name
-- `split_assignments.json` — per-(dataset, embryo/section) split assignments
+- `split_assignments.json` — per-(source file, embryo) split assignments
   with species and reason fields (section 7)
 - `preparation_report.json` — per-dataset observation/gene counts, QC
   removals, unmapped genes, and `duplicate_genes_collapsed`

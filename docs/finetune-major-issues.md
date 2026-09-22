@@ -2,7 +2,9 @@
 
 本文汇总本次微调的全部重大问题,来源包括:对抗性评审(`docs/agents/adversarial-review-2026-09-09.md`)、数据集审计(`logs/dataset_audit/`)、整改计划(ADR 0003)与验证设计文档(`docs/perturbation-and-baseline-design.md`)。本文自身亦经三方对抗性复核并据此修订(`docs/agents/register-review-2026-09-14.md`)。**计算资源类问题(显存、单轮训练时长、GPU 数量、WSL 内存)不在本文范围内**——它们单独记录于评审报告的 C 类发现与 ADR 0003 的计算部分。需要生物学合作方裁定的事项,另行汇总于文末《致合作者:待您裁定的事项》。
 
-**2026-09-22 续审:** 复现证据见 [续审报告](agents/continuation-review-2026-09-22.md)。3.9 的常量 section_id 方案无效,状态重新打开;新增 3.11(覆盖 section_id 会改变空间分箱)与 7.7(B1 的六物种留出标准不可达)。这些是设计缺陷,尚未实施修复。
+**工程进度:** 五项可独立推进的工程任务均已完成并分别推送;见 [执行跟踪](agents/finetune-readiness-tracker.md) 与 [工具用法](finetune-readiness-tools.md)。策略/QC/B1 决策、探测资源和完整 prepare 仍待完成。
+
+**2026-09-22 续审(历史记录):** 复现证据见 [续审报告](agents/continuation-review-2026-09-22.md)。3.9 的常量 section_id 方案无效,状态重新打开;新增 3.11(覆盖 section_id 会改变空间分箱)与 7.7(B1 的六物种留出标准不可达)。这些是设计缺陷,尚未实施修复。
 
 状态标记:**已解决**(已修复并验证,附提交号)· **已设计**(方案已确定,实现待做)· **待决**(尚无定论)· **已接受**(已知局限,附缓解措施)。
 
@@ -23,7 +25,7 @@
 | 1.9 | **物种鉴定错误。** 海胆数据集实为 *Lytechinus variegatus*,而非最初假定的 *S. purpuratus*;清单此前也没有显式的物种字段。 | **已解决** — 全部 27 个条目均带显式 `species` 字段(校验器强制格式)。`c088eeb` |
 | 1.10 | **审计产物过时。** report.json/summary.txt 描述的还是整改前 37 条目的语料。 | **已解决** — 已按 27 条目清单重新生成(2,855,332 个细胞 / 22 个单细胞文件 + 412,374 个 spot / 5 个空间文件)。`85d43fc` |
 | 1.11 | **小鼠 E8–P0 prenatal time-lapse 图谱(Nature 2024)在库但完全未使用。** 与用户的物种数据集思维导图(物种.xmind / 胚胎期单细胞转录组物种与数据集.png)核对时发现:`Nature_2024_prenatal_time_lapse` 在磁盘上,却从未进入审计、清单或任何计划文档——它是整个收藏中最大的数据集。**2026-09-09 已补审计**(h5py 直接读取,脚本在 `.scratch/`):磁盘上为 4 个 CELLxGENE 随机分片(UUID 文件名,各约 34 GB、约 286 万 × 45,525 个 ENSMUSG 基因;`uns/title` = "Whole dataset: Normalized subset N";obs 名两两零重叠;var 逐字相同;每个分片都覆盖全部 43 个 `author_day` 分箱和全部 16 个测序 run)。**合计 11,441,407 个细胞核,与论文声明完全一致。** 观测对象为细胞核(sci-RNA-seq3,`suspension_type=nucleus`);74 个供体胚胎(`donor_id`);`author_day` 共 43 个分箱 E0800-E0850…P0000(论文宣称 45 个时间点),Theiler 12–27;`author_cell_type` 190 类 / `cell_type` 134 个 CL 术语;`X` 为 log 归一化值,整数原始计数在 `raw.X`/`layers["raw.X"]`;obsm 仅 `X_umap`。原审计失败的原因是:anndata 0.11 的 `read_h5ad(backed="r")` 会把 `layers["raw.X"]`(48.8 亿 nnz,仅 int64 indices 就需 36.4 GiB)整体物化,超出 26 GiB 内存上限。与训练语料的重叠情况:与其他 12 个小鼠文件 barcode 零重叠;**但 TOME E8.5b(154,313 个细胞)去掉 `run_N_` 前缀后,99.54% 的 barcode 落在本图谱 run_4(E8.0–E8.5)子集中,抽样 120 个共享细胞的计数向量完全一致**——E8.5b 实为该 Nature 2024 图谱的再发布切片,这同时解释了 1.2 的来源疑问。 | **待决** — 建议明确记录为排除:其大部分阶段超出胚胎发生范围(延伸至出生),且纳入会让小鼠占比从 53% 升至约 90%,加剧鼠偏倚。也可选择仅挖掘其 E8–E13.5 窗口,补充 neurula(神经胚期)/organogenesis(器官发生期)数据。**若任何部分被纳入,必须先丢弃 TOME E8.5b(D1 式重复)。** 需用户裁定。 |
-| 1.12 | **5 个空间文件中有 3 个缺失空间坐标。** fig1、CS8、CS9 的 obsm 为**空**(校验器"坐标位于 obsm,暂缓处理"的注释有误):fig1/CS9 的坐标仅嵌在 obs_names 中,CS8 的嵌在 `spot_id` 中;仅 fig2 有 `X_spatial`、CS7 有 obsm `spatial`。 | **已设计** — 逐文件解析规则已验证并写入 `docs/spatial-coordinate-and-split-design.md`:fig1 解析 obs_names 尾部两段整数(30 单位网格);CS8/CS9 对尾部整数做位解包 `x=n>>32, y=n&0xFFFFFFFF`(50 单位网格,范围已核实);fig2 直接复制 obsm;CS7 改名 newx/newy。按"源头修复"惯例写回源 h5ad 并更新校验器;实现待用户批准。 |
+| 1.12 | **空间坐标准备工具已实现,原始文件尚未激活。** fig1、CS8、CS9 的坐标来自标识字符串;fig2 用 X_spatial,CS7 用 newx/newy。工具同时保留真实切片身份,避免原先清单常量合并多个切片。 | **已修复(工具)** — `fee6970`: `scripts/prepare_spatial_coordinates.py` 默认只读审计;显式复制模式输出新 H5AD 与派生清单,不改原始文件。412,374 个 spot 的全量坐标/元数据副本往返验证通过;16 项测试通过。完整表达矩阵副本与正式 prepare 尚未执行(5.5)。 |
 | 1.13 | **全库无双联体、线粒体或环境 RNA(ambient RNA)质控。** `_apply_qc` 仅支持 min/max 基因数与 counts(清单只设了 min_genes: 200);没有数据集带可用的双联体分数(1.5 的注释仅覆盖果蝇);`percent.mito` 虽存在于 fig1/CS9 的 obs 中但未被使用,也没有任何环境 RNA 处理。每个训练数据集都未经筛查即入库——双联体风险最高的 54.7 万细胞 sci-RNA-seq3 果蝇图谱被明确判为无法过滤。 | **待决** — 需裁定是否在训练前运行计算性双联体/质控筛查。 |
 | 1.14 | **assay 词表 token 错标。** 模型的 assay 词表(assay_vocab.json,40 个键)含 `sci-RNA-seq` 但**不含** `sci-RNA-seq3`,而分词器会把缺失键映射为 "unknown"。因此果蝇的 547,805 个细胞(约占语料 17%)、全部 Stereo-seq spot 和孔板法小鼠时间序列静默共用同一个 "unknown" assay token——三个平台在模型输入中被混为一谈。(另:composition.md 声称 inDrop 不在 assay 词表内——这是错的,它是第 13 号键。) | **待决** — 训练前需裁定 assay 字符串归一化方案。 |
 | 1.15 | **小鼠单胚胎时间序列 27% 的细胞无分期。** 54,948 个细胞中有 14,775 个 developmental_time 为 NaN。它们在准备过程中带着字面分期字符串 "nan",在子采样中形成自己的 (nan, unknown) 分层,在评估中带警告排在最后;阶段构成中也未计入这批细胞。 | **待决** |
@@ -43,22 +45,23 @@
 | 2.5 | **斑马鱼 "neurula" 是系统型对齐约定。** Kimmel 分期本无 "neurula" 一词;14–24 hpf = segmentation(体节期)/pharyngula。果蝇 germ-band 与线虫 comma 期归入 neurula 同理——无脊椎动物没有真正的神经胚结构。 | **已接受** — 明确记录为约定而非事实;所有跨物种结论必须承认这一粗粒度阶段词表。 |
 | 2.6 | **边界稳健性未验证。** 任何一个分箱边界的错误都会改变阶段构成。 | **已设计** — 预注册敏感性分析:每个边界向两侧各平移一个分箱,重跑核心指标。需注意:平移边界会重构分层本身,命中名单的成员资格会机械地随之改变——因此敏感性指标应以细胞层面分数的稳定性(与平移无关)为主要锚点,并以每个分层 top-100 扰动命中基因在两种平移下保持 ≥ 80% 重合作为次要校验。训练后执行。 |
 | 2.7 | **物种 × 阶段矩阵的空洞(超出 1.8 的 blastula 单薄问题)。** 海胆无 neurula 分层(16 hpf gastrula → 18–24 hpf prism(棱柱幼体)→ organogenesis);鸡只有 gastrula/neurula;兔和人均无 blastula。任何"全部 8 个物种在阶段 P"的陈述都会随阶段静默改变物种构成。 | **已接受** — 每份跨物种报告必须附阶段构成表。 |
+| 2.8 | **数值 native stage 未匹配 JSON 字符串键。** 小鼠时间序列浮点分期与海胆整数 hpf 原先绕过 stage_mapping,成为未映射标签。 | **已解决** — `649b702` 共用标签映射 helper,匹配数值的字符串键并保留 native_stage 和真实缺失值;准备/覆盖/采样共用。全库仅余已知14,775条缺分期小鼠观测,不擅自分期。 |
 
 ## 3. 数据集划分与留出设计
 
 | # | 问题 | 状态 |
 |---|---|---|
 | 3.1 | **划分按文件常量而非按胚胎(D4)。** 真实的逐胚胎 obs 列(小鼠时间序列 189 个 embryo_id 值 = 188 个真实胚胎 + 1 个 "empty" 伪胚胎(1.6);人 CS12–16 共 7 个胚胎)从未被使用;ADR 中"单胚胎数据集仅入训练集"的规则也没有实现机制。 | **已解决** — 改为两遍式按(数据集 × 胚胎)划分,并按物种分层;每条划分连同原因记录于 `split_assignments.json`。`55225c3` |
-| 3.2 | **seed-42 划分经实证损坏(P1)。** 斑马鱼整体落入验证集——从未参与训练,却驱动早停;最终留出集(holdout)仅覆盖 8 个物种中的 2 个。 | **已解决** — 按物种逐一分层;dataset_type 仅通过 train_only/single_section 资格规则进入划分(prepare.py);保证每个物种至少有 1 个胚胎进入训练集。`55225c3` |
-| 3.3 | **留出集代表性缺口(3.1 修复的必然结果)。** 混合单胚胎数据集(线虫、兔、鸡、果蝇、斑马鱼)永远只进训练集——留出指标只能来自多胚胎文件(小鼠时间序列、人 CS12–16;CS8 空间留出因泄漏不可用,见 3.9)。 | **已接受** — 依 ADR 0002/0003;留出指标对这五个物种的种内泛化不提供任何信息。跨物种结论须依靠 ortholog(直系同源)/阶段分析和零样本探测物种。 |
+| 3.2 | **seed-42 划分经实证损坏(P1)。** 斑马鱼整体落入验证集——从未参与训练,却驱动早停;最终留出集(holdout)仅覆盖 8 个物种中的 2 个。 | **已解决** — 按物种逐一分层;当前所有模态均按胚胎判定资格(2026-09-22 更新,见 3.9);保证每个物种至少有 1 个胚胎进入训练集。`55225c3` |
+| 3.3 | **留出集代表性缺口。** 实际 27 文件、pre-QC 元数据投影仅 human/mouse 有 final_holdout;线虫、兔、鸡、果蝇、斑马鱼和海胆六物种无留出。空间数据全部只进训练集。 | **已接受(范围限制)** — `logs/dataset_audit/holdout_coverage.json` 明确列出物种×阶段×划分的观测数和独立胚胎数。不得对无留出物种宣称种内泛化;B1 标准另须修订(7.7)。 |
 | 3.4 | **单胚胎数据集的细胞级泄漏(leakage)。** 在同一胚胎内按细胞划分,会把胚胎状态泄漏进留出集。 | **已解决** — 设计上已否决(ADR 0002);单胚胎/单切片数据集仅入训练集。 |
-| 3.5 | **同一胚胎的空间切片。** CS6 fig1/fig2 是同一胚胎的切片;若分开划分会产生泄漏。 | **已解决** — 二者共用 embryo_id、保留不同 section_id;按切片划分保证它们落在同侧。`c088eeb` |
+| 3.5 | **同一胚胎的空间切片。** CS6 fig1/fig2 是同一胚胎的切片;若分开划分会产生泄漏。 | **已解决** — 二者共用 embryo_id、保留不同 section_id;当前全局同胚胎划分保证它们落在同侧。`c088eeb` |
 | 3.6 | **没有阶段留出,也没有物种留出。** 当前设计按*胚胎*留出,因此无法度量对未见阶段或训练集内未见物种的泛化。 | **已接受** — 未见物种泛化改由保留的零样本探测物种覆盖(猕猴、猪、豚鼠、热带爪蟾、海鞘、文昌鱼)。阶段留出也并非"无意义":在逐胚胎划分下,中段阶段留出会近乎泄漏(E8.4 训练细胞 ≈ E8.5 留出细胞),末段阶段留出度量的其实是发育时间外推;本设计接受这一盲区——**没有任何指标度量对未见阶段的泛化**。另注意探测物种的构造性警告:探测物种在词表之外,运行于训练中从未见过的 ESM2 构造 token 上,因此探测成败会把 ESM2 token 构造质量与模型泛化混为一谈——这与词表内物种留出是根本不同的度量工具。 |
 | 3.7 | **伪重复(S5)。** 327 万细胞折算下来,每个物种 × 阶段组合仅 n = 1–3 个胚胎(人 gastrula(原肠胚期)= 3 个胚胎:1 个 CS6 + 2 个来自不同论文的不同 CS7 数据集——Tyser scRNA 1,170 个细胞 + CS7 Stereo-seq 空间 28,804 个 spot;兔/鸡/果蝇/线虫各为 1 个混合文件)。 | **已设计** — 所有推断在胚胎层面聚合;每张结果表报告每个物种 × 阶段组合的胚胎数 n;n = 1 的分层仅作描述性报告,不做不确定性声明、不用因果措辞。属分析层规则,在报告时强制执行。 |
-| 3.8 | **采样加权不一致(来自 C8)。** 计划声称"自然采样加权",但 `BalancedDataset` 实际会重复小数据集。清单现已设定 `spatial_fraction: 0.3`(对 41.2 万个 spot 每 epoch 约 1.46× 的复用——早前"约 2.4× 空间过采样"的数字已过时),其 (stage, cell_type) 上限会把果蝇 54.7 万细胞压缩进 ≤ 11 个组。 | **待决** — 训练配置定稿时需裁定:接受当前 `BalancedDataset` 行为,还是实现真正的自然加权模式。 |
-| 3.9 | **【严重】CS8 同胚胎切片泄漏。** 人 CS8 文件是**一个**胚胎,自带原生 `section_id` obs 列(62 个取值,S1–S62)。`_apply_obs_columns` 从不覆盖已存在的列,而空间划分以 section_id 为单位 → 62 个合格单元 → 同一胚胎的切片被分层进训练集**和**留出集。这正是 3.5 为 CS6 修复的泄漏类别,且更糟:fig1/fig2/CS7/CS9 得到常量 section_id → single_section → 仅入训练集,CS8 因而是唯一的空间留出数据——即整个空间留出都是泄漏的。 | **待决(P1,续审重新打开)** — 原常量 `section_id: "=human_cs8"` 方案会被 `_apply_obs_columns` 忽略,因为原生列已存在。62 切片的 seed-42 复现仍得到 44 train / 12 validation / 6 final_holdout。建议改为显式 `train_only: true`,保留原生 section_id;或实现按胚胎判定资格。强制覆盖列另有 3.11 的风险。修复后训练物种无空间留出,空间指标仅作描述性,独立空间评估由探测物种承担。实现与真实语料验证待做。 |
+| 3.8 | **采样加权决策仍待定;实际行为已量化。** BalancedDataset 在模态内均匀有放回抽样,单细胞先按 stage×cell_type 上限筛选,并无物种均衡机制。旧的“果蝇 ≤11 组”说法不再适用于已补注释并映射阶段的语料。 | **待决(策略);审计工具已完成** — `c447651`: 第一轮 pre-QC 投影 2,000,000 次抽样、1,069,876 个唯一观测、930,124 次重复;空间 600,504(30.0252%),果蝇 265,497。报告逐数据集/物种/阶段区分 QC、非训练集、cap 排除与重复。未改变策略;决定后须重跑。 |
+| 3.9 | **CS8 同胚胎切片泄漏已修复。** 原常量 section_id 方案无效;当前代码直接按胚胎身份划分,原生切片 ID 保留用于分箱和评估。 | **已解决(代码+真实元数据)** — `3c57776`: 所有模态按 `(species, embryo_id)` 全局划分;任一单胚胎/train-only 文件把同胚胎的所有文件固定到训练集。回归覆盖 CS8 62 切片、跨文件同胚胎与缺失 ID。真实 27 文件的五个空间文件均为 train-only;仍需新 prepare 产物。 |
 | 3.10 | **探测物种替代不了词表内物种留出。** 见 3.6 的构造性警告:词表外的 ESM2 构造 token 使探测评估成为另一种度量工具;词表内的未见物种泛化没有任何指标度量。 | **已接受** — 承认这一度量缺口(没有可匀出的词表内物种:语料中全部 8 个词表物种都是阶段覆盖所必需的)。 |
-| 3.11 | **覆盖 section_id 会改变训练空间条件(P2)。** 即使让 3.9 的常量覆盖生效,`assign_spatial_bins` 仍按 section_id 分组归一化坐标;把 62 个切片改为一个 ID 会合并坐标框架并改变模型输入 token,且违反保留原生切片标签的承诺。这不同于 6.6 的评估建图问题。 | **待决** — 将训练资格与切片身份分离;建议 `train_only: true` 并保留原生 section_id。两切片、4×4 网格复现已确认 token 改变,见续审报告。 |
+| 3.11 | **切片身份与划分资格已分离。** 强行覆盖 section_id 会合并坐标框架并改变模型输入;因此不再使用常量覆盖作为修复。 | **已解决** — `3c57776` 保留切片身份并按 embryo_id 划分;`fee6970` 的空间副本提取原生切片:CS6 fig1/fig2 各49、CS7 82、CS8 62、CS9 13。全量元数据往返验证通过。 |
 
 ## 4. 基因标识、映射覆盖率与直系同源
 
@@ -75,10 +78,11 @@
 |---|---|---|
 | 5.1 | **早停保存的是最终权重而非最佳权重(P4)。** | **已解决** — 验证集改善时快照最佳 checkpoint(检查点)。`7cb9a6c` |
 | 5.2 | **续训默认开启且实现损坏(P5)。** 未保存优化器/scaler/步数/RNG 状态;崩溃后重跑会用全新 AdamW 状态覆盖好 checkpoint。 | **已解决** — 周期性原子全状态 checkpoint(保留最近 2 个);真正的续训会恢复全部状态并跳过已完成的微批次。`7cb9a6c` |
-| 5.3 | **无 epoch 级打乱(P6)。** 每个 epoch 以相同顺序重放相同细胞。 | **已解决** — 由 `BalancedDataset.set_epoch()` 实现。`7cb9a6c` |
+| 5.3 | **无 epoch 级打乱(P6)。** 每个 epoch 以相同顺序重放相同细胞。 | **已解决** — 由 `BalancedDataset.set_epoch()` 实现。`7cb9a6c`;持久 worker 的传播另待 5.7 验证。 |
 | 5.4 | **checkpoint 不完整(P2 训练侧)。** 输出目录没有 config.json/词表 → 训练完成的产物不是可评估的模型。 | **已解决** — `save_finetuned_checkpoint()` 原子性地组装完整 checkpoint 目录(config + 硬链接词表 + 空间词表 + 权重)。`7cb9a6c` |
-| 5.5 | **【严重】整改后语料从未跑过 prepare;且当前会硬失败。** 磁盘上唯一的 split_assignments.json/preparation_report.json 是 8 月 26 日在 4 个玩具斑马鱼文件上的冒烟运行。每一项"已解决"的划分/准备修复(3.1、3.2、4.2)与阶段重映射(2.2/2.3)都未在真实的 27 数据集语料上验证过;ADR 0003 以一次重新验证的 prepare-only 运行作为训练闸门。且它会立即失败:prepare.py:243 要求空间数据集具备 spatial_x/spatial_y obs,没有任何清单 obs_columns 映射它们,而 5 个空间文件中有 3 个的坐标连 obsm 里都不存在(1.12)。 | **待决** — 坐标提取工作必须先于 prepare-only 运行。 |
+| 5.5 | **整改后真实语料仍需完整 prepare 验证。** 划分、坐标副本、元数据和阶段映射工具已验证,但未生成正式的完整表达矩阵副本与 27 数据集训练准备产物。 | **待执行 — 训练前闸门** — 先用坐标复制工具生成派生清单,完成待决语料/QC配置后重新运行校验器与 `--prepare-only`;源清单当前缺坐标会 FAIL。元数据审计/合成测试不替代完整语料运行。 |
 | 5.6 | **checkpoint 硬链接的可移植性。** save_finetuned_checkpoint 对词表文件使用硬链接;不带 -H 的普通 rsync/cp 会将其复制为独立文件(磁盘膨胀而非损坏——_link_or_copy 会回退为复制)。A40 rsync 时注意。 | **已接受** — 运维备注。 |
+| 5.7 | **persistent workers 的 epoch 传播尚未验证。** `_set_epoch` 更新父进程 dataset;已启动的持久 DataLoader worker 持有独立副本,不能据此认定收到新 epoch。 | **待验证** — 用多进程、多 epoch 回归检查 worker 状态传播;必要时显式共享 epoch 或重建 worker。采样审计的 epoch>1 仅为直接 sampler 投影,不是此路径的验证。 |
 
 ## 6. 评估框架的有效性
 
@@ -101,7 +105,7 @@
 | 7.4 | **灾难性遗忘无人监控(S3)。** 胚胎留出集上的提升度量的是域适应,而非探测评估所依赖的零样本能力保持。 | **已设计(阈值已冻结)** — 冻结的非胚胎参照集(CELLxGENE Census 人/小鼠成体组织 + 海绵/酵母金丝雀集(canary set),可选果蝇细胞图谱);每个 checkpoint 计算 likelihood 差值 + 线性 CKA;非回归门限(3% / CKA 0.90)+ 响应阶梯,最终以 LoRA 兜底。金丝雀集仅是总体表征崩溃的跳闸线(P. falciparum 虽在模型词表内但本地无数据集,不能作金丝雀——见设计文档 §4.1);与胚胎发生相关的遗忘监控是 B4 探测物种臂(见 7.3/B4)。**参照集尚未下载/构建。** |
 | 7.5 | **因果措辞风险。** likelihood 影响分是关联性指标。 | **已接受(附规则)** — 禁用:"基因 X 驱动/调控阶段 P"(除非有湿实验或外部筛选支持);允许:"在阶段 P 具有 top 级 likelihood 影响分(分箱零模型 z = …,FDR q = …)"。 |
 | 7.6 | **第二层反事实验证范围。** 反事实生成是否要用真实扰动数据验证? | **已解决(纳入范围)** — 对照 Jin et al. 2020(35 个 ASD/ND 风险基因的宫内 Perturb-seq):模型预测的下游受影响基因与实测差异表达基因的重合度。用户 2026-09-09 批准。 |
-| 7.7 | **B1 六物种留出成功标准不可达(P1)。** 7.3 要求 ≥ 6/8 训练物种的留出 likelihood 提升 ≥ 5%,但 3.3 已将线虫、兔、鸡、果蝇、斑马鱼五物种设为 train-only;至多三物种可能有合格留出。修复 CS8 泄漏也无法补足分母,且 B4 探测物种不能冒充 B1 训练物种。 | **待决 — 训练前闸门** — 在查看训练结果之前,重新约定针对明确可评估物种的标准及有限结论范围,或补充足够物种的独立胚胎。不得用训练细胞充当留出,也不得事后静默改变分母。原阈值保留作决策历史,尚未批准替代标准。 |
+| 7.7 | **B1 六物种留出标准不可达。** 7.3 要求 ≥6/8 训练物种改善,实际投影只有 human/mouse 两物种有 final_holdout;不能由 B4 探测物种补足分母。 | **待决 — 训练前闸门** — `649b702` 的覆盖工具实测并明确输出 blocked,未修改标准。须在查看训练结果之前约定可评估物种范围/新标准,或补充独立胚胎;原阈值保留作历史记录。 |
 
 ## 8. 探测物种与 ESM2 嵌入
 
@@ -109,13 +113,13 @@
 |---|---|---|
 | 8.1 | **探测物种不在词表内。** 猕猴、猪、豚鼠、热带爪蟾、海鞘、文昌鱼均非 TF-Metazoa 词表物种 → 其基因没有可学习的 token embedding(嵌入)。 | **已设计** — 按 `preprocess/fasta_manifest_pep.json` 用 ESM2 蛋白 embedding 构建 token;猪和热带爪蟾的 embedding 可下载现成版本;**猕猴(食蟹猴 *M. fascicularis*)、豚鼠、海鞘、文昌鱼须用 `preprocess/protein_embedding.py` 本地生成**(尚未执行——本机内存受限,必须分块推理)。预生成 ESM2 embedding 仅有 *M. mulatta*(另一物种),食蟹猴 embedding 确需本地生成;且 fasta_manifest_pep.json 目前**没有**海鞘、文昌鱼、豚鼠、食蟹猴的条目——须先补条目才能运行 protein_embedding.py(豚鼠此前被静默漏出 embedding 计划,现已补回)。 |
 | 8.2 | **探测物种的基因级跨物种陈述需要同一张一对一 ortholog(直系同源)表**(见 4.3);embedding 级比较则不需要。 | **已设计** — 共用 `docs/perturbation-and-baseline-design.md` §6 的 ortholog 框架(非本清单 §6)。 |
-| 8.3 | **【严重】探测物种没有 stage→phase mapping(分期→阶段映射),B4 按设计无法度量。** 探测数据集自带各自的分期体系(猪 E11.5–E15、文昌鱼 G4/N0/N2/N5、猕猴 CS/ME 期、爪蟾 NF 期),但 `preprocess/stage_phase_mapping.md` 只覆盖 8 个训练物种。冻结的改进标准"探测物种同阶段对齐退化 ≤ 2 点"(7.3/B4)需要逐细胞的探测物种阶段标签,当前无法计算。 | **已解决(映射表)** — 6 个探测物种的映射表已于 2026-09-14 补入 `preprocess/stage_phase_mapping.md`("Probe species (zero-shot evaluation)" 节),全部经文献核实:猕猴继承人 Carnegie 惯例(CS11→neurula(神经胚期)为判断题)、ME 天外培养的天数按 ~3–5 天滞后插值、猪 E13/E13.5 分界、豚鼠全部 blastula(囊胚期)、爪蟾 NF 13/14 分界、海鞘/文昌鱼为真神经胚直接映射;边界存疑处已标记并纳入敏感性分析。逐细胞标签在评估时按此表物化。 |
+| 8.3 | **探测阶段映射已机器化并完成真实标签覆盖检查。** 原文档表已编码到 `preprocess/probe_stage_mappings.json`,按数据集区分 native stage。 | **已解决(映射/校验工具)** — `865bc5f`: 八文件/六物种所有观测阶段均有映射,无缺失或未知标签;12 项回归通过。`scripts/validate_probes.py` 明确列出仍缺的物种词表、四项 FASTA 条目及未确认元数据,因此探测执行仍 blocked。报告不验证基因覆盖或边界敏感性。 |
 
 ---
 
 ## 致合作者:待您裁定的事项
 
-以下六个事项需要各位(生物学与数据合作方)裁定。我们为每项给出背景、需要回答的问题、候选方案(标注我们的建议)以及各方案的后果;涉及的机器学习侧术语均随文简要说明。各事项相互独立,可按编号分别回复。
+以下第1–5项需要各位(生物学与数据合作方)裁定;第6项记录已完成的工程工作。我们为每项给出背景、需要回答的问题、候选方案(标注我们的建议)以及各方案的后果;涉及的机器学习侧术语均随文简要说明。各事项相互独立,可按编号分别回复。
 
 ### 1. 小鼠 E8–P0 prenatal time-lapse 图谱的去留(对应 1.11、1.2)
 
@@ -143,16 +147,16 @@
 
 ### 3. 采样加权策略(对应 3.8)
 
-**背景。** 训练时每个 epoch(训练轮次,全部数据过一遍为 1 个 epoch)从各数据集采样的比例由 `BalancedDataset` 控制:它会上采样(重复利用)小数据集;为空间数据设定 `spatial_fraction: 0.3`,即 41.2 万个 Stereo-seq spot 每 epoch 约被复用 1.46×;并对每个 (stage, cell_type) 组合设上限,这会把 54.7 万细胞的果蝇图谱压缩进 ≤ 11 个组。原计划文档声称使用"自然采样加权"(按数据集真实大小成比例采样,与基座模型预训练一致),实现与之不符。
+**背景。** 实际采样审计已完成(见 3.8):当前算法先按 stage×cell_type 对单细胞池限额,再按模态比例做均匀有放回抽样;它不会按物种均衡。第一轮 pre-QC 投影为 200 万次抽样,其中空间约30%、人38.04%、鼠34.26%、果蝇13.27%;这些比例取决于当前语料与限额,不是固定物种权重。93.0万次为重复抽样。最终 QC 后须重跑审计。
 
 **问题。** 训练配置定稿时采用哪种加权?
 
 **选项。**
 
-- **维持 BalancedDataset(我们倾向此项)。** 后果:小鼠与脊椎动物在训练中的占比被人为压低——这是对语料鼠偏倚(53%)的一种缓解;代价是果蝇等大图谱被大幅降采样,且需要把文档表述更正为与实现一致。
+- **维持 BalancedDataset。** 后果:保留当前模态混合、分层限额和有放回抽样;物种比例由语料组成决定,不保证物种均衡。请按审计报告评估是否适合研究问题。
 - **改为自然加权。** 后果:与基座模型预训练的采样分布一致,实现更简单、无重复;代价是小鼠主导训练,鼠偏倚直接进入模型。
 
-**希望各位提供意见的地方:** 从生物学问题出发——尤其是跨物种同阶段比较(例如各物种 gastrula 期的基因程序对比)——果蝇、线虫、海胆在训练中的代表性不足,是否会损害各位关心的结论?若会,我们应进一步提高这些物种在 BalancedDataset 中的权重。
+**希望各位提供意见的地方:** 从生物学问题出发——尤其是跨物种同阶段比较(例如各物种 gastrula 期的基因程序对比)——果蝇、线虫、海胆在训练中的代表性不足,是否会损害各位关心的结论?若会,需要另行设计物种加权,当前 BalancedDataset 没有此参数。
 
 ### 4. 双联体与质控筛查(对应 1.13、1.5、1.15)
 
@@ -175,17 +179,13 @@
 
 **后续(确认后执行)。** 我们据此归一化各数据集的 assay 标签,使词表内平台各归其 token;对词表确实不覆盖的平台,再决定是显式标注,还是保持 "unknown" 但至少保证不同平台不共享同一标签。
 
-### 6. 空间坐标方案与修订后的 CS8 修复建议(对应 1.12、3.9、3.11)
+### 6. 空间工程任务完成记录(对应 1.12、3.9、3.11)
 
-**背景。** 坐标方案待实施;CS8 原方案经续审发现无效,以下为修订建议,详见 `docs/spatial-coordinate-and-split-design.md`:
+**已完成。** 胚胎级隔离已实现并在真实元数据上验证;坐标工具默认只读,显式复制模式生成新文件和派生清单,保留全部原始数据与真实切片标签。412,374 个 spot 的全元数据复制往返检查通过。原先的原地修改与常量切片覆盖方案已废止,不再请求对此旧方案签字。
 
-**(a) 空间坐标 lift(1.12)。** 5 个空间文件中,fig1、CS8、CS9 三个的 obsm 为空,坐标仅嵌在 obs_names 或 `spot_id` 字符串里。我们已逐文件验证解析规则(fig1 解析尾部两段整数;CS8/CS9 位解包),拟按"源头修复"惯例把解析出的坐标列直接写回三个原始空间 h5ad 文件(单细胞数据的标准文件格式),并同步更新校验器。后果:原始文件会被就地修改——仅新增坐标列,表达矩阵不受影响;作为训练闸门的 prepare-only 运行(5.5)依赖此步完成。
+**仍待执行。** 生成完整表达矩阵副本、确定最终语料/QC配置并运行正式 prepare。训练物种无空间留出;空间指标只能描述训练切片,独立探测评估仍受资源/元数据缺口阻塞。B1 标准另见 7.7。
 
-**(b) CS8 同胚胎切片泄漏修复(3.9)。** 人 CS8 文件来自单一胚胎,含 62 张切片;按切片划分会把同一胚胎的切片同时分进训练集与留出集,构成 leakage——且 CS8 是目前唯一的空间留出数据,即整个空间留出都是泄漏的。修订建议:CS8 清单显式设 `train_only: true`(仅入训练集),并保留原生 section_id。旧的常量方案会被现有列遮蔽;强制覆盖又会改变空间分箱(3.11)。后果:训练物种中将不再有任何空间留出,空间指标降级为描述性;真正的留出空间评估改由探测物种承担(猕猴 CS9–CS10 空间图谱,zero-shot(零样本,即模型在训练中从未见过的物种))。
-
-**请求。** 若无异议,请对此两项一并确认,我们即可开始实现并推进 prepare-only 运行。
-
-**如何反馈。** 请按编号(1–6)逐项回复;若仅对个别事项有异议,只回复这些项即可。凡在 [留空给项目所有者填期限] 前未收到回复的事项,我们将按上文标注的**建议方案**作为默认执行。
+**如何反馈。** 请按待决编号(1–5)逐项回复;若仅对个别事项有异议,只回复这些项即可。凡在 [留空给项目所有者填期限] 前未收到回复的事项,我们将按上文标注的**建议方案**作为默认执行。
 
 *计算资源类问题(基因 ID 头显存、单轮训练时长、bf16、WSL 内存、A40 部署)有意不在本文范围内;见对抗性评审的 C 类发现与 ADR 0003 的计算部分。*
 
@@ -196,7 +196,9 @@
 
 Aggregated register of every significant issue raised about this finetune — from the adversarial review (`docs/agents/adversarial-review-2026-09-09.md`), the dataset audit (`logs/dataset_audit/`), the remediation program (ADR 0003), and the validation design (`docs/perturbation-and-baseline-design.md`). This register itself passed a three-way adversarial re-review (`docs/agents/register-review-2026-09-14.md`). **Compute-resource issues (VRAM, epoch time, GPU count, WSL RAM) are deliberately out of scope** — they are tracked separately in the review's C-findings and ADR 0003's compute section. Items that need a ruling from our biology collaborators are collected at the end, in *For our collaborators: decisions we need from you*.
 
-**2026-09-22 continuation:** Reproduction evidence is in the [continuation review](agents/continuation-review-2026-09-22.md). Item 3.9 is reopened because the constant-section remedy is ineffective; new items 3.11 and 7.7 cover altered spatial binning and the unachievable six-species B1 gate. These are design findings; implementation fixes have not been applied.
+**Engineering status:** All five independent readiness tasks are completed and pushed separately; see the [tracker](agents/finetune-readiness-tracker.md) and [tool guide](finetune-readiness-tools.md). Policy/QC/B1 decisions, probe assets, and full preparation remain pending.
+
+**2026-09-22 continuation (historical):** Reproduction evidence is in the [continuation review](agents/continuation-review-2026-09-22.md). Item 3.9 is reopened because the constant-section remedy is ineffective; new items 3.11 and 7.7 cover altered spatial binning and the unachievable six-species B1 gate. These are design findings; implementation fixes have not been applied.
 
 Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix specified and agreed, implementation pending) · **open** (no agreed fix yet) · **accepted** (a limitation we knowingly carry, with a mitigation).
 
@@ -217,7 +219,7 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 | 1.9 | **Species-identity errors.** The sea-urchin dataset is *Lytechinus variegatus*, not *S. purpuratus* as initially assumed, and the manifest previously had no explicit species field. | **Resolved** — all 27 entries carry an explicit `species` field (validator-enforced format). `c088eeb` |
 | 1.10 | **Stale audit artifacts.** report.json/summary.txt still described the pre-remediation 37-entry corpus. | **Resolved** — regenerated against the 27-entry manifest (2,855,332 cells across 22 single-cell files + 412,374 spots across 5 spatial files). `85d43fc` |
 | 1.11 | **The mouse E8–P0 prenatal time-lapse atlas (Nature 2024) is on disk but entirely unused.** It surfaced while reconciling the user's curated dataset map (`物种.xmind` / `胚胎期单细胞转录组物种与数据集.png`): `Nature_2024_prenatal_time_lapse` exists on disk yet was never audited, never entered the manifest, and was never mentioned in any plan document — and it is the largest dataset in the collection. **Audited 2026-09-09** (direct h5py reads; scripts in `.scratch/`): on disk it is 4 random CELLxGENE shards (UUID filenames, ~34 GB and ~2.86M cells × 45,525 ENSMUSG genes each; `uns/title` = "Whole dataset: Normalized subset N"; obs_names pairwise disjoint; var byte-identical; every shard spans all 43 `author_day` bins and all 16 sequencing runs). **The shards total 11,441,407 nuclei, exactly the published count.** The observations are nuclei, not cells (sci-RNA-seq3, `suspension_type=nucleus`); 74 donor embryos (`donor_id`); 43 `author_day` bins E0800-E0850…P0000 (the paper advertises 45 timepoints), Theiler stages 12–27; `author_cell_type` (190 categories) / `cell_type` (134 CL terms); `X` is log-normalized, with integer raw counts in `raw.X`/`layers["raw.X"]`; obsm holds `X_umap` only. The original audit failed because anndata 0.11 `read_h5ad(backed="r")` eagerly materializes `layers["raw.X"]` (4.88B nnz; the int64 indices alone need 36.4 GiB) and blew the 26 GiB memory cap. Overlap with the training corpus: zero barcode overlap with the other 12 mouse files, **but TOME E8.5b (154,313 cells) matches this atlas's run_4 (E8.0–E8.5) subset at 99.54% of barcodes after stripping the `run_N_` prefix, with identical count vectors in 120/120 sampled shared cells** — E8.5b is a republished slice of this Nature 2024 atlas, which also answers the provenance question in 1.2. | **Open** — we recommend documenting a deliberate exclusion: most of its stages are outside the embryogenesis scope (it runs to birth), and inclusion would push mouse from 53% to ~90% of the corpus, worsening mouse bias. An alternative is to mine only the E8–E13.5 window for extra neurula/organogenesis data. **If any part is included, TOME E8.5b must be dropped first (D1-style duplication).** Needs a user decision. |
-| 1.12 | **Spatial coordinates are absent for 3 of the 5 spatial files.** fig1, CS8, and CS9 have EMPTY obsm (the validator's "coordinates live in obsm, deferred" note is wrong): fig1/CS9 coordinates exist only embedded in obs_names, CS8's in `spot_id`; only fig2 has `X_spatial` and CS7 an obsm `spatial`. | **Designed** — per-file extraction rules verified and recorded in `docs/spatial-coordinate-and-split-design.md`: fig1 parses the two trailing obs_names integers (30-unit grid); CS8/CS9 bit-decode the trailing integer as `x=n>>32, y=n&0xFFFFFFFF` (50-unit grid, ranges verified); fig2 copies obsm; CS7 renames newx/newy. The coordinates will be written back into the source h5ads per the "fix at source" precedent, with the validator updated; implementation pending user sign-off. |
+| 1.12 | **Coordinate preparation is implemented; source files remain unactivated.** fig1/CS8/CS9 coordinates come from identifiers, fig2 from X_spatial, and CS7 from newx/newy. Copies also preserve native section identities instead of pooling sections through manifest constants. | **Fixed (tooling)** — `fee6970`: `scripts/prepare_spatial_coordinates.py` defaults to read-only auditing; explicit copy mode writes new H5ADs and a derived manifest without changing originals. All 412,374 coordinate rows passed full metadata-copy round-trips; 16 tests pass. Full expression copies and final preparation remain pending (5.5). |
 | 1.13 | **No doublet, mitochondrial, or ambient-RNA QC anywhere.** `_apply_qc` supports only min/max genes and counts (the manifest sets only min_genes: 200); no dataset has usable doublet scores (1.5's is fly-only); `percent.mito` exists in fig1/CS9 obs but is unused; and there is no ambient-RNA handling. Every training dataset enters unscreened — the 547k-cell sci-RNA-seq3 fly atlas, the highest doublet risk, is explicitly unfilterable. | **Open** — decide whether to run a computational doublet/QC screen before training. |
 | 1.14 | **Assay-vocab token mislabeling.** The model assay vocab (assay_vocab.json, 40 keys) contains `sci-RNA-seq` but NOT `sci-RNA-seq3`, and the tokenizer maps missing keys to "unknown". The fly's 547,805 cells (~17% of the corpus), all Stereo-seq spots, and the plate-based mouse timecourse therefore silently share ONE "unknown" assay token — three platforms conflated in the model input. (Also: composition.md claims inDrop is absent from the assay vocab — wrong; it is key 13.) | **Open** — decide assay-string normalization before training. |
 | 1.15 | **27% of the mouse single-embryo timecourse has no stage.** 14,775 of 54,948 cells have NaN developmental_time. They carry the literal stage string "nan" through preparation, form their own (nan, unknown) stratum in subsampling, and sort last with a warning in evaluation; they are unaccounted for in phase composition. | **Open** |
@@ -237,22 +239,23 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 | 2.5 | **Zebrafish "neurula" is a phylotypic-alignment convention.** Kimmel staging has no neurula period; 14–24 hpf = segmentation/pharyngula. The same applies to fly germ-band and worm comma → neurula: invertebrates have no true neurula. | **Accepted** — documented as convention, not fact; all cross-species claims must acknowledge the coarse phase vocabulary. |
 | 2.6 | **Boundary robustness is unverified.** Any single-bin boundary error shifts phase composition. | **Designed** — pre-registered sensitivity analysis: shift every boundary one bin in each direction and rerun the core metrics. Caveat: shifting a boundary recomposes the strata themselves, so hit-list membership changes mechanically — the sensitivity metric should anchor primarily on the stability of cell-level scores (which is shift-invariant), with top-100 per-stratum perturbation-hit retention ≥ 80% under both shifts as the secondary check. Runs post-training. |
 | 2.7 | **Species × phase matrix holes beyond the blastula thinness (1.8).** Sea urchin has no neurula stratum (16 hpf gastrula → 18–24 hpf prism → organogenesis); chicken has gastrula/neurula only; rabbit and human have no blastula. Any "all-8-species at phase P" claim silently changes species composition across phases. | **Accepted** — a phase-composition table is required in every cross-species report. |
+| 2.8 | **Numeric native stages missed string JSON mapping keys.** Mouse timecourse floats and sea-urchin integer hpf previously bypassed stage_mapping. | **Resolved** — `649b702` shares numeric-to-string-key lookup across preparation, coverage, and sampling while preserving native stages and actual nulls. Only the known 14,775 unstaged mouse observations remain unmapped in the corpus projection; no phase is invented. |
 
 ## 3. Dataset splitting and holdout design
 
 | # | Issue | Status |
 |---|---|---|
 | 3.1 | **Splits were per-file-constant, not per-embryo (D4).** The real per-embryo obs columns (189 mouse timecourse embryo_id values = 188 real embryos + 1 "empty" pseudo-embryo (1.6); 7 human CS12–16 embryos) were never used, and the ADR's "single-embryo datasets are train-only" rule had no implementing mechanism. | **Resolved** — two-pass per-(dataset, embryo) splitting with per-species stratification; every assignment is recorded with its reason in `split_assignments.json`. `55225c3` |
-| 3.2 | **The seed-42 split was empirically broken (P1).** Zebrafish landed entirely in validation — never trained on, yet driving early stopping — and the final holdout covered only 2 of 8 species. | **Resolved** — stratified per species; dataset_type enters only via the train_only/single_section eligibility rules (prepare.py); every species is guaranteed ≥ 1 training embryo. `55225c3` |
-| 3.3 | **Holdout representation gap (a necessary consequence of 3.1's fix).** Pooled single-embryo datasets (worm, rabbit, chicken, fly, zebrafish) are always train-only, so holdout metrics come only from multi-embryo files (mouse timecourse and human CS12–16; the leaky CS8 spatial holdout is unusable, see 3.9). | **Accepted** — per ADR 0002/0003; held-out metrics say nothing about within-species generalization for those five species. Cross-species claims must lean on the ortholog/phase analyses and the zero-shot probe species. |
+| 3.2 | **The seed-42 split was empirically broken (P1).** Zebrafish landed entirely in validation — never trained on, yet driving early stopping — and the final holdout covered only 2 of 8 species. | **Resolved** — stratified per species; all modalities now use embryo-level eligibility (2026-09-22 update, see 3.9); every species is guaranteed ≥ 1 training embryo. `55225c3` |
+| 3.3 | **Holdout representation gap.** The actual pre-QC 27-file projection has final holdout only for human/mouse; worm, rabbit, chicken, fly, zebrafish, and sea urchin have none. All spatial files are train-only. | **Accepted (claim limitation)** — `logs/dataset_audit/holdout_coverage.json` lists observation and unique embryo counts by species × phase × split. No within-species generalization claim is supported for species without holdout; B1 still requires revision (7.7). |
 | 3.4 | **Cell-level leakage for single-embryo datasets.** Splitting cells within one embryo would leak embryonic state into the holdout. | **Resolved** — rejected by design (ADR 0002); single-embryo/single-section datasets are train-only. |
-| 3.5 | **Same-embryo spatial sections.** CS6 fig1/fig2 are sections of one embryo; splitting them apart would leak. | **Resolved** — they share an embryo_id with distinct section_ids, and per-section splitting keeps them on the same side. `c088eeb` |
+| 3.5 | **Same-embryo spatial sections.** CS6 fig1/fig2 are sections of one embryo; splitting them apart would leak. | **Resolved** — they share an embryo_id with distinct section_ids, and global same-embryo assignment now keeps them on the same side. `c088eeb` |
 | 3.6 | **No phase holdout and no species holdout.** The current design holds out *embryos*; it can measure neither generalization to an unseen phase nor to an unseen species within the training set. | **Accepted** — unseen-species generalization is covered instead by the reserved zero-shot probe species (macaque, pig, guinea pig, Xenopus tropicalis, ciona, amphioxus). Phase holdout is not "meaningless" either: under per-embryo splits a mid-course phase holdout would be near-leaky (E8.4 train cells ≈ E8.5 holdout cells), and a terminal-phase holdout would measure developmental-time extrapolation; the design accepts the blind spot that NOTHING measures unseen-phase generalization. Note also the probe-construct caveat: probe species are out-of-vocab and run on ESM2-constructed tokens never seen in training, so probe success/failure conflates ESM2 token-construction quality with model generalization — a fundamentally different instrument from an in-vocab species holdout. |
 | 3.7 | **Pseudoreplication (S5).** 3.27M cells boil down to n = 1–3 embryos per species × phase (human gastrula = 3 embryos: 1 CS6 + 2 distinct CS7 datasets from different publications — Tyser scRNA 1,170 cells + CS7 Stereo-seq spatial 28,804 spots; rabbit/chicken/fly/worm = 1 pooled file each). | **Designed** — all inference is aggregated at embryo level; every results table reports embryo n per species × phase; n = 1 strata are descriptive-only, with no uncertainty claims and no causal language. An analysis-layer rule, enforced at reporting time. |
-| 3.8 | **Sampling-weighting mismatch (from C8).** The plan claimed "natural sampling weighting", but `BalancedDataset` repeats small datasets; the manifest now sets `spatial_fraction: 0.3` (≈1.46× spot reuse per epoch over the 412k spots — the earlier "~2.4× spatial oversampling" figure is stale), and its (stage, cell_type) caps decimate the fly's 547k cells into ≤ 11 groups. | **Open** — decide at training-setup time whether to accept the implemented `BalancedDataset` behavior or implement a true natural-weighting mode. |
-| 3.9 | **[CRITICAL] CS8 same-embryo section leakage.** The human CS8 file is ONE embryo with a NATIVE `section_id` obs column (62 values, S1–S62). `_apply_obs_columns` never overwrites existing columns, and spatial splitting uses section_id as the unit → 62 eligible units → sections of the same embryo are stratified into train AND holdout. This is exactly the leakage class 3.5 fixed for CS6, and worse: fig1/fig2/CS7/CS9 get constant section_ids → single_section → train-only, so CS8 is the ONLY spatial holdout data — i.e. the entire spatial holdout is leaky. | **Open (P1, reopened by continuation review)** — the proposed `section_id: "=human_cs8"` constant is ignored by `_apply_obs_columns` because the native column exists. A 62-section seed-42 reproduction still yields 44 train / 12 validation / 6 final_holdout. Proposed correction: set `train_only: true` while retaining native section_id, or implement embryo-level eligibility. Forcing an override introduces the separate risk in 3.11. After correction, training species have no spatial holdout; their spatial metrics are descriptive-only, with independent spatial evaluation supplied by probe species. Implementation and real-corpus validation remain pending. |
+| 3.8 | **Sampling policy remains undecided; actual behavior is now measured.** BalancedDataset samples uniformly with replacement within modality, after a stage × cell_type single-cell cap; it has no species-balancing mechanism. The old fly “≤11 groups” claim no longer describes the annotated, phase-mapped corpus. | **Open (policy); audit implemented** — `c447651`: pre-QC epoch 1 projects 2,000,000 draws, 1,069,876 unique rows, and 930,124 repeats; spatial draws 600,504 (30.0252%), fly 265,497. Per-dataset/species/phase reports distinguish QC, split, cap exclusions and repeats. No policy change; regenerate after decisions. |
+| 3.9 | **CS8 same-embryo leakage is fixed.** The ineffective constant-section proposal is replaced by direct embryo-level assignment while native section IDs remain available for binning and evaluation. | **Resolved (code + real metadata)** — `3c57776`: every modality splits globally by `(species, embryo_id)`; any singleton/train-only occurrence pins all files of that embryo to training. Regressions cover 62-section CS8, shared embryos, and missing IDs. All five spatial files are train-only in the actual 27-file metadata check; fresh prepared outputs remain required. |
 | 3.10 | **Probes are not a substitute for an in-vocab species holdout.** See 3.6's caveat: out-of-vocab ESM2-constructed tokens make probe evaluation a different instrument; unseen-species generalization within the vocab is measured by nothing. | **Accepted** — acknowledged measurement gap (no in-vocab species can be spared: all 8 vocab species in the corpus are needed for phase coverage). |
-| 3.11 | **Overwriting section_id changes training spatial conditioning (P2).** Even if the constant override in 3.9 were made effective, `assign_spatial_bins` normalizes coordinates by section_id. Replacing 62 section IDs with one pools coordinate frames and changes model input tokens, contradicting the promise to preserve native section labels. This is distinct from the evaluation graph issue in 6.6. | **Open** — separate training eligibility from section identity; proposed correction is `train_only: true` with native section_id retained. A two-section, 4×4-grid reproduction confirms changed tokens; see the continuation review. |
+| 3.11 | **Section identity and split eligibility are separated.** Overwriting section_id pools coordinate frames and changes inputs, so constant overrides are no longer the remedy. | **Resolved** — `3c57776` preserves sections while splitting by embryo_id; `fee6970` copies recover native sections: 49 each for CS6 fig1/fig2, 82 CS7, 62 CS8, 13 CS9. Full metadata round-trips pass. |
 
 ## 4. Gene identity, mapping coverage, and orthology
 
@@ -269,10 +272,11 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 |---|---|---|
 | 5.1 | **Early stopping saved final weights, not best (P4).** | **Resolved** — best-checkpoint snapshot on validation improvement. `7cb9a6c` |
 | 5.2 | **Resume was default-on and broken (P5).** No optimizer/scaler/step/RNG state was saved; a crashed rerun could clobber a good checkpoint with fresh-AdamW weights. | **Resolved** — periodic atomic full-state checkpoints (keep last 2); a true resume restores all state and skips completed micro-batches. `7cb9a6c` |
-| 5.3 | **No epoch shuffling (P6).** Every epoch replayed identical cells in identical order. | **Resolved** — via `BalancedDataset.set_epoch()`. `7cb9a6c` |
+| 5.3 | **No epoch shuffling (P6).** Every epoch replayed identical cells in identical order. | **Resolved** — via `BalancedDataset.set_epoch()`. `7cb9a6c`; persistent-worker propagation still requires 5.7 validation. |
 | 5.4 | **Checkpoints were incomplete (P2, training half).** No config.json/vocabs in the output dir → a finished run was not an evaluatable model. | **Resolved** — `save_finetuned_checkpoint()` assembles a complete checkpoint dir (config + hardlinked vocabs + spatial vocab + weights) atomically. `7cb9a6c` |
-| 5.5 | **[CRITICAL] The remediated corpus has never been through prepare — and it would hard-fail today.** The only split_assignments.json/preparation_report.json on disk is the Aug-26 smoke run on 4 toy zebrafish files. Every "resolved" split/prepare fix (3.1, 3.2, 4.2) and stage re-mapping (2.2/2.3) is unvalidated on the real 27-dataset corpus, and ADR 0003 gates training on a fresh re-validated prepare-only run. Moreover it would fail immediately: prepare.py:243 requires spatial_x/spatial_y obs for spatial datasets, no manifest obs_columns maps them, and for 3 of the 5 files the coordinates do not even exist in obsm (1.12). | **Open** — the coordinate-lift work must precede the prepare-only run. |
+| 5.5 | **The remediated real corpus still needs a full prepare validation.** Splits, coordinate-copy tooling, metadata, and phase mapping have been checked, but full expression copies and final 27-dataset prepared outputs have not been generated. | **Pending — pre-training gate** — generate coordinate copies and a derived manifest, finalize corpus/QC choices, then rerun the validator and `--prepare-only`. The original manifest currently fails missing-coordinate checks. Metadata audits and synthetic tests are not a full-corpus run. |
 | 5.6 | **Checkpoint-hardlink portability.** save_finetuned_checkpoint hardlinks vocab files; plain rsync/cp without -H duplicates them (disk bloat, not corruption — _link_or_copy falls back to copy). A note for the A40 rsync. | **Accepted** — operational note. |
+| 5.7 | **Epoch propagation to persistent workers is unverified.** `_set_epoch` updates the parent dataset; already-running persistent DataLoader workers hold separate copies, so parent updates do not establish that they receive the new epoch. | **Open validation task** — verify worker state with a multi-process, multi-epoch regression; share epoch state or recreate workers if needed. Sampler-audit epochs >1 are direct-sampler projections, not validation of this path. |
 
 ## 6. Evaluation-harness validity
 
@@ -295,7 +299,7 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 | 7.4 | **Catastrophic forgetting is unmonitored (S3).** Improvement on the embryo holdout measures domain adaptation, not retention of the zero-shot ability the probe evaluation depends on. | **Designed (frozen thresholds)** — frozen non-embryo reference set (CELLxGENE Census human/mouse adult + sponge/yeast canaries, optional Fly Cell Atlas); per-checkpoint likelihood delta + linear CKA; non-regression gate (3% / CKA 0.90) with a response ladder ending in the LoRA fallback. The canaries are only a tripwire for gross representational collapse (P. falciparum is in the model vocab but has no local dataset, so it cannot serve as a canary — design doc §4.1); the embryogenesis-relevant forgetting monitor is the B4 probe-species arm (see 7.3/B4). **Reference set not yet downloaded/built.** |
 | 7.5 | **Causal-language risk.** Likelihood impact is associational. | **Accepted with rule** — prohibited: "gene X drives/regulates phase P" without wet-lab or external-screen support; permitted: "top-ranked likelihood impact score at phase P (bin-null z = …, FDR q = …)". |
 | 7.6 | **Tier-2 counterfactual-validation scope.** Does counterfactual generation get validated against real perturbation data? | **Resolved (in scope)** — against Jin et al. 2020 (35 ASD/ND risk genes, in-utero Perturb-seq): overlap of predicted downstream-affected genes with observed DE genes. User-approved 2026-09-09. |
-| 7.7 | **The six-species B1 success gate is unachievable (P1).** Item 7.3 requires ≥5% holdout-likelihood improvement in ≥6/8 training species, but 3.3 makes worm, rabbit, chicken, fly, and zebrafish train-only: at most three species can have eligible holdout. Fixing CS8 leakage cannot fill the denominator, and B4 probe species cannot substitute for B1 training species. | **Open — pre-training gate** — before observing training results, agree on a criterion over explicitly evaluable species with appropriately limited claims, or acquire independent embryos across enough species. Do not count training cells as holdout or silently change the denominator after results. The original threshold is retained as decision history; no replacement criterion is approved yet. |
+| 7.7 | **The six-species B1 gate is unachievable.** Item 7.3 requires improvement in ≥6/8 training species; the real projection provides holdout for only human/mouse. B4 probes cannot fill B1’s denominator. | **Open — pre-training gate** — `649b702` measures coverage and explicitly reports blocked without changing the criterion. Before observing results, agree on evaluable species and a revised criterion or acquire independent embryos; the original threshold remains decision history. |
 
 ## 8. Probe species and ESM2 embeddings
 
@@ -303,13 +307,13 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 |---|---|---|
 | 8.1 | **Probe species are out-of-vocabulary.** Macaque, pig, guinea pig, Xenopus tropicalis, ciona, and amphioxus are not TF-Metazoa vocab species → their genes have no learned token embeddings. | **Designed** — tokens built from ESM2 protein embeddings per `preprocess/fasta_manifest_pep.json`; pig and X. tropicalis embeddings are downloadable pre-generated; **macaque (*Macaca fascicularis*), guinea pig, ciona, and amphioxus must be generated locally** via `preprocess/protein_embedding.py` (not yet done — generation on this host is memory-constrained and must use chunked inference). Pre-generated ESM2 embeddings exist only for *M. mulatta* (a different species), so fascicularis embeddings genuinely need local generation; and fasta_manifest_pep.json currently has NO entries for ciona, amphioxus, guinea pig, or *M. fascicularis* — entries must be added before protein_embedding.py can run (guinea pig had been silently dropped from the embedding plan and is now restored). |
 | 8.2 | **Gene-level cross-species statements for probes need the same 1:1 ortholog table** (see 4.3); embedding-level comparisons do not. | **Designed** — shares the orthology framework of `docs/perturbation-and-baseline-design.md` §6 (not §6 of this register). |
-| 8.3 | **[CRITICAL] Probe species have no stage→phase mapping — criterion B4 is unmeasurable as designed.** Probe datasets carry their own stage systems (pig E11.5–E15, amphioxus G4/N0/N2/N5, macaque CS/ME stages, xenopus NF stages), but `preprocess/stage_phase_mapping.md` covers only the 8 training species. The frozen improvement criterion "probe-species same-phase alignment degrades ≤ 2 points" (7.3/B4) requires per-cell probe phase labels that could not be computed. | **Resolved (mapping table)** — mappings for all 6 probe species were added to `preprocess/stage_phase_mapping.md` ("Probe species (zero-shot evaluation)" section, 2026-09-14), all literature-verified: macaque inherits the human Carnegie convention (CS11→neurula a judgment call), ex-utero ME days interpolated at a ~3–5 day lag, pig boundary E13/E13.5, guinea pig all blastula, xenopus NF 13/14 boundary, ciona/amphioxus direct mappings (true neurulation). Uncertain boundaries are flagged and folded into the sensitivity analysis. Per-cell labels are materialized at evaluation time from this table. |
+| 8.3 | **Probe phase mappings are machine-readable and checked against real labels.** The documented conventions are encoded per dataset in `preprocess/probe_stage_mappings.json`. | **Resolved (mapping/checker)** — `865bc5f`: all observed stages in eight files/six species are covered, with no missing/unknown labels; 12 regressions pass. `scripts/validate_probes.py` explicitly reports missing species vocabularies, four FASTA entries, and unresolved metadata, so probe execution remains blocked. Gene coverage and boundary sensitivity are not validated by this report. |
 
 ---
 
 ## For our collaborators: decisions we need from you
 
-Six items below need a ruling from you, our biology and data collaborators. For each we give the background, the question, the candidate options (with our recommendation marked), and the consequence of each option; machine-learning terms are explained inline where they first appear. The items are independent — feel free to answer them separately by number.
+Items 1–5 need a ruling from our biology and data collaborators; item 6 records completed engineering work. For each we give the background, the question, the candidate options (with our recommendation marked), and the consequence of each option; machine-learning terms are explained inline where they first appear. The items are independent — feel free to answer them separately by number.
 
 ### 1. Fate of the mouse E8–P0 prenatal time-lapse atlas (see 1.11, 1.2)
 
@@ -337,16 +341,16 @@ Six items below need a ruling from you, our biology and data collaborators. For 
 
 ### 3. Sampling-weighting strategy (see 3.8)
 
-**Background.** The proportion of each dataset sampled per epoch (one epoch = one full pass over the data) is controlled by `BalancedDataset`: it oversamples (reuses) small datasets; it sets `spatial_fraction: 0.3` for spatial data, meaning the 412k Stereo-seq spots are reused about 1.46× per epoch; and it caps each (stage, cell_type) group, which compresses the 547k-cell fly atlas into ≤ 11 groups. The plan documents had claimed "natural sampling weighting" (sampling proportional to true dataset size, matching base-model pretraining); the implementation differs.
+**Background.** The actual sampler audit is available (3.8): the algorithm caps the single-cell pool by stage × cell_type, then samples uniformly with replacement within modality; it does not balance species. The pre-QC first epoch projects 2 million draws: spatial ~30%, human 38.04%, mouse 34.26%, fly 13.27%, with 930k repeated draws. These shares arise from the current corpus and cap, not fixed species weights. Regenerate after final QC.
 
 **Question.** Which weighting do we finalize for training?
 
 **Options.**
 
-- **Keep BalancedDataset (our leaning).** Consequence: the mouse/vertebrate share of training is deliberately suppressed — a documented mitigation of the corpus's mouse bias (53%) — at the cost of heavily downsampling large atlases such as fly, and the plan text needs correcting to match the implementation.
+- **Keep BalancedDataset.** Consequence: retain modality mixing, stratified caps, and replacement draws; species shares follow corpus composition, with no species-balance guarantee. Assess the measured exposure against the biological question.
 - **Switch to natural weighting.** Consequence: matches the sampling distribution of base-model pretraining and is simpler, with no repeats; the cost is that mouse dominates training and the bias flows straight into the model.
 
-**Where we would like your view:** from the biology side — above all for cross-species same-phase comparisons (e.g. comparing gene programs at gastrula across species) — would fly, worm, and sea urchin being underrepresented in training harm the conclusions you care about? If so, we should raise those species' weights inside BalancedDataset.
+**Where we would like your view:** from the biology side — above all for cross-species same-phase comparisons (e.g. comparing gene programs at gastrula across species) — would fly, worm, and sea urchin being underrepresented in training harm the conclusions you care about? If so, we would need an explicit species-weighting design; the current BalancedDataset has no such parameter.
 
 ### 4. Doublet and QC screening (see 1.13, 1.5, 1.15)
 
@@ -369,16 +373,12 @@ Six items below need a ruling from you, our biology and data collaborators. For 
 
 **Next step (after confirmation).** We normalize each dataset's assay label accordingly so that in-vocab platforms get their own token; for platforms the vocabulary genuinely lacks, we then decide between an explicit label and a kept "unknown" that at least is not shared across platforms.
 
-### 6. Spatial-coordinate design and revised CS8 remedy (see 1.12, 3.9, 3.11)
+### 6. Spatial engineering completion record (see 1.12, 3.9, 3.11)
 
-**Background.** The coordinate design awaits implementation; continuation review found the original CS8 remedy ineffective, so the revised proposal below replaces it. Details are in `docs/spatial-coordinate-and-split-design.md`:
+**Completed.** Embryo-level isolation is implemented and checked on real metadata. The coordinate tool defaults to read-only auditing; explicit copy mode writes new files and a derived manifest, preserving original data and native sections. Full metadata-copy round-trips cover all 412,374 spots. The in-place mutation and constant-section proposals are superseded; sign-off on those old mechanisms is no longer requested.
 
-**(a) Spatial-coordinate lift (1.12).** In 3 of the 5 spatial files — fig1, CS8, CS9 — obsm is empty and the coordinates exist only embedded in obs_names or `spot_id` strings. We have verified per-file parsing rules (fig1: parse the two trailing integers; CS8/CS9: bit-unpacking) and propose, per the "fix at source" precedent, to write the parsed coordinate columns back into the three raw spatial h5ad files (the standard single-cell data file format) and update the validator accordingly. Consequence: the source files are modified in place — new coordinate columns only, the expression matrices are untouched; the prepare-only run that gates training (5.5) depends on this step.
+**Still pending.** Create full expression copies, finalize corpus/QC configuration, and run preparation. Training species have no spatial holdout; their spatial scores are descriptive, and independent probe evaluation still needs missing assets/metadata. See 7.7 for the separate B1 decision.
 
-**(b) CS8 same-embryo section leakage fix (3.9).** The human CS8 file is a single embryo with 62 sections; per-section splitting would place sections of the same embryo in both train and holdout — leakage — and CS8 is currently the only spatial holdout data, so the entire spatial holdout is leaky. The revised proposal: explicitly set `train_only: true` for CS8 and retain native section_id. The previous constant mapping is ignored when the native column exists; forcing its replacement would change spatial binning (3.11). Consequence: no spatial holdout remains among training species and spatial metrics become descriptive-only; genuine held-out spatial evaluation shifts to the probe macaque CS9–CS10 atlas (zero-shot — a species the model never saw in training).
-
-**Request.** A quick OK on both items together lets us start implementation and proceed with the prepare-only run.
-
-**How to respond.** Please reply per item number (1–6); if you disagree with only some items, it is fine to answer just those. For anything unanswered by [a deadline the project owner fills in], we will proceed with the **recommended** option marked above as the default.
+**How to respond.** Please reply per pending item number (1–5); if you disagree with only some items, it is fine to answer just those. For anything unanswered by [a deadline the project owner fills in], we will proceed with the **recommended** option marked above as the default.
 
 *Compute-resource issues (gene-ID head VRAM, epoch time, bf16, WSL memory, A40 setup) are intentionally excluded here; see the C-findings in the adversarial review and ADR 0003 §compute.*

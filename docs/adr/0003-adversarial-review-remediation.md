@@ -79,3 +79,38 @@ training corpus and the evaluation contract cannot be silently re-litigated late
 - Training may not start until `validate_manifest.py` is green on the remediated manifest
   (done: 22 PASS, 6 pre-existing WARN, 0 FAIL) and a fresh `--prepare-only` run has been
   re-validated on the fixed corpus.
+
+
+## Superseding implementation addendum (2026-09-22)
+
+The decisions above remain the historical record. The following implementation findings
+supersede the earlier splitting and readiness claims; they do not approve a replacement
+scientific acceptance criterion.
+
+- **Split isolation now uses global `(species, embryo_id)` identities across files.**
+  Spatial sections retain their native `section_id` for coordinates and evaluation but
+  never act as independent split units. A train-only or single-embryo occurrence pins
+  every occurrence of that identity to training. The current five spatial files are all
+  train-only under this policy. The earlier per-(dataset, embryo) and spatial-section
+  holdout descriptions above no longer describe the implementation.
+- **The current holdout supports only human and mouse.** The
+  [coverage report](../../logs/dataset_audit/holdout_coverage.json) projects the actual
+  manifest and split policy before QC, reporting species × phase × split × modality
+  observations and unique embryos. Six of eight training species lack a holdout. The
+  original six-of-eight B1 improvement gate is therefore blocked; a revised criterion or
+  additional independent embryos requires agreement before training. This addendum does
+  not replace the original gate with a two-species gate. QC may further reduce coverage.
+- **Probe mapping preparation is implemented; B4 execution remains blocked.**
+  The [probe config](../../preprocess/probe_stage_mappings.json) reproduces the documented
+  eight-file/six-species mappings, with complete observed native-stage coverage in the
+  [readiness report](../../logs/dataset_audit/probe_readiness.json). All six exact-species
+  ESM2 vocabularies, four FASTA manifest entries, and source metadata prerequisites remain
+  unresolved. A rhesus vocabulary cannot stand in for the cynomolgus probes.
+- **The earlier validator status is historical.** Fresh source/preparation validation
+  remains required; metadata projections and temporary coordinate copies do not establish
+  that the full corpus is ready for training.
+
+Implementation evidence and commands are maintained in the
+[step tracker](../agents/finetune-readiness-tracker.md) and
+[readiness tool guide](../finetune-readiness-tools.md). Collaborator decisions on corpus
+inclusion, sampling, and QC remain pending independently of these repository fixes.

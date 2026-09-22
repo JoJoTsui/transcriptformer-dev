@@ -83,6 +83,27 @@ Same universal phase vocabulary and conventions as the training species above
 (invertebrate phylotypic/morphogenesis period → `neurula` where no true neurula
 exists). Native stage labels below are the exact values in each H5AD's `obs`.
 
+### Repository readiness (2026-09-22)
+
+The mappings below are encoded in [probe_stage_mappings.json](probe_stage_mappings.json),
+with source paths, native-stage columns, and metadata requirements for all eight probe
+files across six species. [validate_probes.py](../scripts/validate_probes.py) reads observation
+metadata without loading expression matrices. The [readiness report](../logs/dataset_audit/probe_readiness.json)
+finds no missing or unmapped native stages in those files. The mapping helper preserves
+native stages and rejects unknown labels; this implementation makes no new phase decisions.
+
+B4 remains blocked: all six species-specific ESM2 vocabularies are absent, and the FASTA
+manifest lacks `macaca_fascicularis`, `cavia_porcellus`, `ciona_intestinalis`, and
+`branchiostoma_floridae`. Seven files still need verified embryo identities; Gong, Ciona,
+and amphioxus need cell-type annotations; all eight need verified assay metadata. The Zhai
+file also lacks a species column, although its source README identifies *Macaca fascicularis*.
+Rhesus (`macaca_mulatta`) and *Xenopus laevis* assets are not substitutes for the actual
+probe species. No source files were modified and no assets were downloaded. Gene coverage,
+spatial metrics, and the registered boundary-sensitivity analysis remain to be checked.
+
+See the [step tracker](../docs/agents/finetune-readiness-tracker.md) and
+[tool guide](../docs/finetune-readiness-tools.md) for commands, evidence, and remaining blockers.
+
 ### Vertebrates
 
 | Dataset | Native stage(s) | Phase |
