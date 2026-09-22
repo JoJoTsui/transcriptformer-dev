@@ -8,8 +8,8 @@ Each completed step is tested, committed, and pushed to `gh/main` separately.
 | --- | --- | --- | --- |
 | 1 | Embryo-level split safeguards; retain native section identity; reject leakage | Complete | `3c57776` (pushed); 53 distinct tests passed; real 27-file metadata check |
 | 2 | Coordinate extraction, safe output copies, derived manifest, validation | Complete | `fee6970` (pushed); 16 tests; full 412,374-spot metadata-copy rehearsal |
-| 3 | Species × phase holdout coverage and explicit B1 feasibility report | Complete | 4 coverage regressions; 41 distinct related tests; real metadata report |
-| 4 | Actual-sampler exposure report by dataset, species, and phase | Pending | |
+| 3 | Species × phase holdout coverage and explicit B1 feasibility report | Complete | `649b702` (pushed); 4 coverage regressions; 41 distinct related tests; real metadata report |
+| 4 | Actual-sampler exposure report by dataset, species, and phase | Complete | 15 regressions; real 2,000,000-draw epoch audit |
 | 5 | Machine-readable probe mappings and metadata/vocabulary readiness checks | Pending | |
 
 ## Completion criteria
@@ -80,3 +80,20 @@ Implementation and validation entries will be appended per step.
   coverage tests passed after adding null-preservation coverage (41 distinct).
   Report: `logs/dataset_audit/holdout_coverage.json`. This is pre-QC and contains
   no measured model likelihood; regenerate after final corpus/QC decisions.
+
+### Step 4 — actual sampler exposure
+
+- `scripts/audit_sampling.py` enumerates the real BalancedDataset and stratified
+  cap with metadata-only row adapters. Explicit pre-QC and prepared-report modes
+  separate projections from post-QC audit. Prepared reports inconsistent with
+  the manifest or source group counts fail rather than yielding negative counts.
+- Real pre-QC epoch 1: 3,267,706 source observations; 3,132,805 training rows;
+  1,412,374-row sampling pool; 2,000,000 draws; 1,069,876 unique sampled rows;
+  930,124 repeat draws. Spatial draws: 600,504 (30.0252%).
+- Corrected phase mapping yields 43 dataset/species/phase/modality groups.
+  Phase draws: blastula 63,211; gastrula 538,875; neurula 496,308;
+  organogenesis 897,461; missing stage 4,145. No sampling policy was changed.
+- Validation: 15 tests passed; report in `logs/dataset_audit/sampling_audit.json`.
+  Scope is one full sampler epoch, not max_steps/early-stopping/DDP exposure.
+  Later-epoch projections do not model persistent-worker dataset state; workers
+  retaining old epoch values are a separate training follow-up.
