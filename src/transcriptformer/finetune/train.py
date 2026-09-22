@@ -509,6 +509,8 @@ def _run_training_loop(
     stopped_early = False
 
     for epoch in range(1, epochs + 1):
+        if max_steps > 0 and step >= max_steps:
+            break
         last_epoch = epoch
         _set_epoch(dataloader, epoch)
         for batch in dataloader:

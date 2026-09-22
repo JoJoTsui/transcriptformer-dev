@@ -65,6 +65,7 @@ jobs:
             test/test_holdout_coverage.py \
             test/test_sampling_audit.py \
             test/test_probes.py \
+            test/test_resume_contract.py \
             test/test_worker_epochs.py \
             test/test_missing_stage_evaluation.py \
             test/test_prepared_artifacts.py \
