@@ -2,8 +2,9 @@
 
 ## Next development — resume safety, evaluation, and broader rehearsal
 
-Status: in progress. Each task receives its own tested commit and push. Scientific
-corpus/QC decisions and acceptance thresholds remain unchanged.
+Status: complete (2026-09-22). All six tasks were tested, committed and pushed
+separately to `gh/main`. Scientific corpus/QC decisions and acceptance thresholds
+remain unchanged.
 
 | Task | Deliverable | Status | Evidence / commit |
 | --- | --- | --- | --- |
@@ -12,7 +13,34 @@ corpus/QC decisions and acceptance thresholds remain unchanged.
 | G | Robust cell-type F1 on small/missing-label groups | Complete | `43a2ac9`; 34 evaluation tests passed, including tiny and imbalanced classes with missing-label accounting |
 | H | Bounded rehearsal for every manifest source | Complete | `21ef730`; 14 regressions; all 27 sources / 8 species passed; 3,357 sampled → 3,308 prepared rows, 33 outputs |
 | I | Production CLI subprocess and memory-cap coverage | Complete | `9c7a17d`; installed CLI subprocess + six cap regressions passed; only five in-process tests bypass cap |
-| J | B2 phase structure and paired linear CKA reports | Complete | 11 synthetic/CLI regressions; matched-cell CKA and phase metrics with explicit cohort provenance |
+| J | B2 phase structure and paired linear CKA reports | Complete | `dd96222`; 11 synthetic/CLI regressions; matched-cell CKA and phase metrics with explicit cohort provenance |
+
+### E–J final verification
+
+- The exact expanded CI selection (24 modules) passed locally: **269 passed**.
+  This includes fresh installed CLI preparation with the real memory cap, CPU
+  gloo DDP, fork/spawn workers, changed-contract rejection, budget extension,
+  historical best-model/patience continuity, and completed-run no-op resume.
+- Validation used `OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1` and
+  `MPLCONFIGDIR=/tmp/mplconfig`, with local sockets available for multiprocessing.
+  Ruff checks on changed Python files and `git diff --check` passed.
+- The [current rehearsal report](../../logs/dataset_audit/preparation_rehearsal.json)
+  covers all 27 sources/eight species, with no failures: 3,357 sampled input rows,
+  3,308 survivors, 33 outputs. Sampled splits are 3,175 train/78 validation/55
+  holdout; 49 rows failed configured QC. These are rehearsal splits, not final
+  corpus coverage. Source files remained read-only; temporary copies removed.
+- Rehearsal exposed legacy CSC/raw-var handling and null-only label serialization;
+  both are covered by regressions. No missing stage was filled or policy changed.
+- Representation metrics are available from precomputed paired embeddings.
+  Synthetic tests validate geometry and identities; no real-model comparison,
+  scientific threshold verdict, frozen-reference creation, GPU training or
+  complete real-corpus preparation was performed.
+- Legacy/incompatible resume checkpoints need a new output directory. Resuming
+  identical data allows a larger training budget and preserves validation state.
+  Base asset hashing adds startup I/O; storing best weights adds checkpoint size.
+- Remaining gates: collaborator #1–#4/assay decisions, B1 criterion, full corpus
+  coordinate copies/preparation, probe assets and frozen reference datasets.
+  B1 likelihood and B3 perturbation/null-model execution remain separate work.
 
 ## Continuing development — runtime correctness and artifact validation
 
@@ -44,7 +72,7 @@ A–D. Earlier preparation reports must be regenerated before training.
   fresh-process cap to pytest's accumulated model imports caused allocation
   failures. The production memory cap is unchanged.
 - Ruff checks passed on every changed Python file; `git diff --check` passed.
-- [Preparation rehearsal](../../logs/dataset_audit/preparation_rehearsal.json):
+- Initial rehearsal (`bd40932`; superseded by H's all-source report):
   48 synthetic input rows produced 46 prepared rows; two real sources sampled at
   128 rows each (all gene columns) produced 254 prepared rows. Original sources
   were read-only and temporary copies were removed. No GPU training or full

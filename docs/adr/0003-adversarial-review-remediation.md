@@ -45,6 +45,11 @@ training corpus and the evaluation contract cannot be silently re-litigated late
 - **Checkpointing is now crash-safe**: periodic atomic full-state checkpoints (weights +
   optimizer + scaler + step + RNG, keep-last-2) with true resume, plus a complete
   evaluatable best-checkpoint directory (config, vocabs, weights).
+- **2026-09-22 resume follow-up:** periodic checkpoints bind the ordered prepared
+  data stream, sampling/optimization/validation settings and base asset hashes.
+  They preserve validation history, patience and best weights after validation.
+  Legacy/incompatible checkpoints require a new run directory. Training budgets
+  can be extended; completed or early-stopped runs perform no extra updates.
 - **Validation cost is capped** (`validation_max_batches=200`, `validation_interval=500`)
   so epoch time on the full corpus stays bounded.
 

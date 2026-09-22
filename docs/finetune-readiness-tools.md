@@ -121,7 +121,7 @@ loading a checkpoint or starting DDP workers. Old reports require regeneration.
   runs/manifest.json runs/preparation_report.json \
   --output runs/artifact_validation.json
 .venv/bin/python scripts/rehearse_preparation.py \
-  --manifest conf/finetune_run_multispecies.json \
+  --manifest conf/finetune_run_multispecies.json --max-rows 128 \
   --output runs/preparation_rehearsal.json
 ```
 
@@ -133,9 +133,14 @@ The preparation report is trusted evidence; this does not independently replay
 expression QC or prove scientific suitability.
 
 The [recorded rehearsal](../logs/dataset_audit/preparation_rehearsal.json) passed
-synthetic multi-embryo/multi-section fixtures and 128 sampled rows each from one
-real single-cell and one real spatial source, retaining all gene columns. Of 256
-real input rows, 254 survived preparation: 212 train, 20 validation, 22 holdout.
+synthetic fixtures and every one of the 27 real sources across eight species,
+retaining all gene columns and sampling at most 128 rows per source. Of 3,357
+input rows, 3,308 survived preparation: 3,175 train, 78 validation, 55 holdout,
+across 33 validated outputs. These are sampled-cohort splits, not final corpus
+coverage. Dense, CSR, CSC, legacy and raw expression encodings are exercised.
+Each source records extraction/preparation timing, sizes and failure details;
+source failures do not prevent checking the remaining sources. The CLI writes
+the report and exits nonzero if any source or combined validation fails.
 Original sources were read-only and temporary copies were removed. This is a
 bounded expression rehearsal, not full-corpus preparation or a training run.
 
@@ -146,6 +151,52 @@ Results report input, eligible, evaluated, and excluded-row counts, with reasons
 for unevaluable groups. Training inclusion of unstaged observations is unchanged.
 The CPU CI suite includes readiness tools, worker replay, missing-stage evaluation,
 and artifact validation; workflow triggers cover their scripts and configuration.
+Cell-type F1 now reserves feasible train/test partitions for small or imbalanced
+classes, excludes missing/singleton labels with counts, and gives unevaluable
+reasons. A real installed CLI subprocess tests preparation with the production
+memory cap enabled; only explicit in-process CLI tests bypass that process cap.
+
+## 8. Resume compatibility and validation continuity
+
+Periodic checkpoints bind source hashes and QC membership, ordered prepared
+entries, sampling/loader settings, base weights/config/vocabulary hashes, batch
+size, world size, gradient accumulation, learning rate, precision and validation
+settings. Incompatible or legacy checkpoints are rejected before constructing
+the training model. Start a new output directory for those runs. Identical data can be
+prepared again; output paths/HDF5 serialization are not the resume identity.
+
+Increasing epochs or max_steps and changing checkpoint frequency is allowed.
+At or above max_steps, resume performs no further training updates. Checkpoints
+preserve validation history, patience, best step/weights and stopped state; they
+are written after validation at each checkpoint boundary. A run already stopped
+by early stopping stays stopped. This is not a promise of bitwise accelerator
+reproducibility. Hashing base assets adds startup I/O; storing best weights adds
+checkpoint space.
+
+## 9. Paired representation reports
+
+```bash
+.venv/bin/python scripts/compare_representations.py \
+  --base runs/base_embeddings.h5ad --finetuned runs/finetuned_embeddings.h5ad \
+  --cohort-role final_holdout --k 15 --output runs/representation_comparison.json
+```
+
+Inputs require `obsm["embeddings"]`, species/stage labels, and stable
+`source_dataset` + `source_row_index` identities (column names are configurable).
+The tool aligns reordered rows and rejects duplicates, missing identities,
+different cell sets or species/stage annotation drift. Reports contain
+per-species phase kNN purity, silhouette, cross-species same-phase neighbors,
+finetuned-minus-base deltas, and matched-cell linear CKA. Silhouette uses a
+repeatable sample capped at 5,000 cells/species by default; kNN excludes self.
+Undefined metrics are JSON null with reasons.
+
+`final_holdout` requires every input row explicitly labeled `final_holdout`.
+Row labels alone do not prove embryo isolation: validate preparation provenance
+separately. Use `--cohort-role reference` for frozen-reference CKA, or
+`descriptive` for exploratory cohorts; those roles do not certify B2 eligibility.
+The tool does not establish reference freezing, compute likelihood, download
+assets, or apply scientific pass/fail thresholds. See the
+[baseline design](perturbation-and-baseline-design.md) for the remaining arms.
 
 ## Remaining gates
 

@@ -76,6 +76,18 @@ Every headline analysis runs on the **zero-shot base TF-Metazoa checkpoint first
 
 **2026-09-22 implementation audit — B1 blocked:** The [current coverage report](../logs/dataset_audit/holdout_coverage.json), using global `(species, embryo_id)` isolation across files, finds holdout embryos only in **human and mouse**. Six of eight training species lack holdouts, and all five spatial files are train-only; sections are not independent embryos. This is a pre-QC projection, so preparation may further reduce the measurable species × phase strata. The six-of-eight threshold below cannot be executed on this corpus. [Register item 7.7](finetune-major-issues.md) still requires a revised, agreed criterion or additional independent embryos before training. The original threshold remains for decision history; no replacement, including a two-species gate, has been approved.
 
+**2026-09-22 reporting implementation:** `scripts/compare_representations.py`
+now computes per-species phase kNN purity/silhouette, cross-species same-phase
+neighbors, base-to-finetuned deltas, and linear CKA from paired embedding H5ADs.
+Stable source/row identities align cells and reject mismatched cohorts or label
+drift. The `final_holdout` role requires explicit holdout row labels; source
+provenance must still establish embryo isolation. Reference/descriptive roles do
+not certify B2 eligibility. These are descriptive reports, with synthetic
+geometry/identity regressions; no threshold decisions or model performance
+claims follow from them. B1 likelihood, B3 perturbation/null analyses, B4 assets,
+and the frozen reference corpus remain separate work. See the
+[tool guide](finetune-readiness-tools.md#9-paired-representation-reports).
+
 **B4 preparation status:** The [probe mappings](../preprocess/probe_stage_mappings.json) and [validator](../scripts/validate_probes.py) cover all documented native stages in eight files across six species. The [readiness report](../logs/dataset_audit/probe_readiness.json) still blocks evaluation on missing exact-species ESM2 vocabularies, four FASTA manifest entries, and unresolved embryo, cell-type, assay, or species metadata. Mapping coverage alone does not establish embedding quality or satisfy B4. Boundary-sensitivity analysis remains required. See the [step tracker](agents/finetune-readiness-tracker.md) and [tool guide](finetune-readiness-tools.md).
 
 **Improvement criteria (proposed defaults — sign-off required before GPU time):** the finetune is adopted only if ALL of:

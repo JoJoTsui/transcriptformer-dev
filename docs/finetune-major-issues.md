@@ -83,7 +83,9 @@
 | 5.5 | **整改后真实语料仍需完整 prepare 验证。** 划分、坐标副本、元数据和阶段映射工具已验证,但未生成正式的完整表达矩阵副本与 27 数据集训练准备产物。 | **待执行 — 训练前闸门** — 先用坐标复制工具生成派生清单,完成待决语料/QC配置后重新运行校验器与 `--prepare-only`;源清单当前缺坐标会 FAIL。元数据审计/合成测试不替代完整语料运行。 |
 | 5.6 | **checkpoint 硬链接的可移植性。** save_finetuned_checkpoint 对词表文件使用硬链接;不带 -H 的普通 rsync/cp 会将其复制为独立文件(磁盘膨胀而非损坏——_link_or_copy 会回退为复制)。A40 rsync 时注意。 | **已接受** — 运维备注。 |
 | 5.7 | **persistent workers 未收到 epoch 更新。** 多进程回归证实旧实现的第二个 epoch 重放第一个 epoch。 | **已解决** — epoch 使用共享 CPU tensor; fork/spawn 持久 worker 与直接 sampler 一致,跨 epoch 恢复与连续运行的采样序列一致。不改变采样概率。 |
-| 5.8 | **训练缺少准备产物完整性门禁。** 旧报告无法证明配置、来源、QC 后成员和划分一致。 | **已解决(代码/有限表达矩阵演练)** — 新报告记录来源行号、配置/资产指纹与文件哈希;训练加载模型/DDP 前校验成员完整性和胚胎隔离。真实两文件共 256 行演练保留 254 行;全库 prepare 仍待决策后执行。 |
+| 5.8 | **训练缺少准备产物完整性门禁。** 旧报告无法证明配置、来源、QC 后成员和划分一致。 | **已解决(代码/有限表达矩阵演练)** — 新报告记录来源行号、配置/资产指纹与文件哈希;训练加载模型/DDP 前校验成员完整性和胚胎隔离。`21ef730`:真实 27 文件/八物种共 3,357 行演练保留 3,308 行;全库 prepare 仍待决策后执行。 |
+| 5.9 | **已完成训练恢复后仍多更新一步。** max_steps=2、恢复 step=2 曾产生 step=3。 | **已解决** — `d1a62a6`:达到/超过步数上限时不再读取训练样本或更新。 |
+| 5.10 | **恢复缺少配置兼容性和验证历史。** 同目录旧 checkpoint 可匹配不同采样配置,最佳权重和早停耐心会丢失。 | **已解决** — `3fd4a2b`:绑定数据/采样/优化/基座资产,保留验证历史、最佳权重与耐心;旧或不兼容 checkpoint 需新目录启动。 |
 
 ## 6. 评估框架的有效性
 
@@ -95,6 +97,7 @@
 | 6.4 | **"微调模型"可能静默默认为基座 checkpoint(P9)** → 基座对基座的零差异比较。 | **已解决** — 评估 CLI 拒绝把基座当微调模型,输出默认写入运行的 output_dir。`7cb9a6c` |
 | 6.5 | **pseudotime 按物种分组是死代码。** prepare.py 从不写入 `species` obs 列,评估总是回退到 embryo_id;当前留出集中大多数分组为单阶段 → Spearman = NaN,分组被静默丢弃——该指标退化为对少数多阶段分组取均值。 | **已修复(代码,2026-09-22)** — prepare 写入清单 species、native_stage 与 source_dataset;评估只要存在 species 列就优先按物种分组(包括单物种、多胚胎情况),并报告不可评估分组数与缺失分组标签的观测数。合成 H5AD 准备/划分及伪时序回归已通过;旧产物须重新 prepare,真实语料验证仍受 5.5 阻塞。 |
 | 6.6 | **空间指标跨胚胎/切片混合建图。** spatial_neighborhood_consistency 与 Moran's I 在所有空间文件上混合构建一张 kNN 图——来自不同胚胎/切片但坐标相近的 spot 会成为假邻居(与 6.3 的逐组 pseudotime 修复不同)。 | **已修复(代码,2026-09-22)** — 两项指标按 source_dataset/species/embryo_id/section_id 中可用的复合身份逐切片建图;汇总为可评估切片的等权均值,并保留逐切片结果。缺失身份、无效坐标/嵌入、过小切片显式报告;使用行位置兼容重复 obs 名。空间/评估合成回归已通过;真实语料仍待 5.5 的准备运行。 |
+| 6.7 | **小样本 cell-type F1 划分崩溃。** 六行/三类无法满足固定 30% 测试划分。 | **已解决** — `43a2ac9`:保证每类在训练/测试均有样本,处理比例取整边界,报告缺失/单例排除与不可评估原因。 |
 
 ## 7. 下游结论的统计与科学有效性
 
@@ -107,6 +110,7 @@
 | 7.5 | **因果措辞风险。** likelihood 影响分是关联性指标。 | **已接受(附规则)** — 禁用:"基因 X 驱动/调控阶段 P"(除非有湿实验或外部筛选支持);允许:"在阶段 P 具有 top 级 likelihood 影响分(分箱零模型 z = …,FDR q = …)"。 |
 | 7.6 | **第二层反事实验证范围。** 反事实生成是否要用真实扰动数据验证? | **已解决(纳入范围)** — 对照 Jin et al. 2020(35 个 ASD/ND 风险基因的宫内 Perturb-seq):模型预测的下游受影响基因与实测差异表达基因的重合度。用户 2026-09-09 批准。 |
 | 7.7 | **B1 六物种留出标准不可达。** 7.3 要求 ≥6/8 训练物种改善,实际投影只有 human/mouse 两物种有 final_holdout;不能由 B4 探测物种补足分母。 | **待决 — 训练前闸门** — `649b702` 的覆盖工具实测并明确输出 blocked,未修改标准。须在查看训练结果之前约定可评估物种范围/新标准,或补充独立胚胎;原阈值保留作历史记录。 |
+| 7.8 | **B2/CKA 描述性报告已有实现。** | **已实现(工具/合成验证)** — `dd96222`:同细胞对齐、分物种阶段纯度/轮廓系数/跨物种邻居及线性 CKA。留出标签检查不代替胚胎隔离证据;未执行真实模型对比、likelihood 或阈值裁决,参照集仍待构建。 |
 
 ## 8. 探测物种与 ESM2 嵌入
 
@@ -278,7 +282,9 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 | 5.5 | **The remediated real corpus still needs a full prepare validation.** Splits, coordinate-copy tooling, metadata, and phase mapping have been checked, but full expression copies and final 27-dataset prepared outputs have not been generated. | **Pending — pre-training gate** — generate coordinate copies and a derived manifest, finalize corpus/QC choices, then rerun the validator and `--prepare-only`. The original manifest currently fails missing-coordinate checks. Metadata audits and synthetic tests are not a full-corpus run. |
 | 5.6 | **Checkpoint-hardlink portability.** save_finetuned_checkpoint hardlinks vocab files; plain rsync/cp without -H duplicates them (disk bloat, not corruption — _link_or_copy falls back to copy). A note for the A40 rsync. | **Accepted** — operational note. |
 | 5.7 | **Persistent workers missed epoch updates.** Multiprocess regressions confirmed that the old implementation replayed epoch one during epoch two. | **Resolved** — shared CPU tensor propagates epochs under fork/spawn; worker draws match the direct sampler and resume across epochs matches uninterrupted sample order. Sampling probabilities are unchanged. |
-| 5.8 | **Training lacked a prepared-artifact integrity gate.** Old reports could not establish agreement of configuration, sources, post-QC membership, and splits. | **Resolved (code/bounded expression rehearsal)** — fresh reports record source positions, configuration/asset fingerprints, and file hashes; training validates complete membership and embryo isolation before model/DDP loading. A two-source, 256-row real rehearsal retained 254 rows; full-corpus preparation still awaits decisions. |
+| 5.8 | **Training lacked a prepared-artifact integrity gate.** Old reports could not establish agreement of configuration, sources, post-QC membership, and splits. | **Resolved (code/bounded expression rehearsal)** — fresh reports record source positions, configuration/asset fingerprints, and file hashes; training validates complete membership and embryo isolation before model/DDP loading. `21ef730`: all 27 sources/eight species rehearsed, with 3,357 sampled rows and 3,308 survivors; full-corpus preparation still awaits decisions. |
+| 5.9 | **Finished-run resume performed an extra update.** Resuming step=2 with max_steps=2 produced step=3. | **Resolved** — `d1a62a6`: no training observations read or updates at/above the step budget. |
+| 5.10 | **Resume lacked compatibility checks and validation history.** Checkpoints could resume under changed sampling settings and lose best weights/patience. | **Resolved** — `3fd4a2b`: bind data/sampling/optimization/base assets, retain validation history/best weights/patience; legacy or incompatible states require a new output directory. |
 
 ## 6. Evaluation-harness validity
 
@@ -290,6 +296,7 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 | 6.4 | **"Finetuned" could silently default to the base checkpoint (P9)** → a base-vs-base comparison with zero deltas. | **Resolved** — the evaluate CLI rejects base-as-finetuned and defaults output to the run's output_dir. `7cb9a6c` |
 | 6.5 | **Pseudotime per-species grouping is dead code.** prepare.py never writes a `species` obs column, so evaluate always falls back to embryo_id; in the current holdout most groups are single-phase → Spearman = NaN and groups are silently dropped — the metric degenerates to a mean over the few multi-phase groups. | **Fixed in code (2026-09-22)** — preparation writes manifest species, native_stage, and source_dataset; evaluation prefers species whenever the column exists, including a single species spanning multiple embryos, and reports unevaluable groups and observations missing group labels. Synthetic H5AD preparation/split and pseudotime regressions pass. Older outputs need re-preparation; real-corpus validation remains blocked by 5.5. |
 | 6.6 | **Spatial metrics pool spots across embryos/sections.** spatial_neighborhood_consistency and Moran's I build one kNN graph over all spatial files pooled, so spots from different embryos/sections with similar coordinates become false neighbors (unlike the per-group pseudotime fix, 6.3). | **Fixed in code (2026-09-22)** — both metrics build graphs per section using the available composite source_dataset/species/embryo_id/section_id identity. Reports retain per-section results and their unweighted mean, explicitly accounting for missing identity, invalid coordinates/embeddings, and undersized sections. Positional alignment supports duplicate obs names. Synthetic spatial/evaluation regressions pass; real-corpus validation still awaits the preparation run in 5.5. |
+| 6.7 | **Cell-type F1 crashed on small cohorts.** Six rows/three classes cannot fit the fixed 30% test split. | **Resolved** — `43a2ac9`: feasible train/test class coverage, rounding protection, missing/singleton counts and unevaluable reasons. |
 
 ## 7. Statistical and scientific validity of downstream claims
 
@@ -302,6 +309,7 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 | 7.5 | **Causal-language risk.** Likelihood impact is associational. | **Accepted with rule** — prohibited: "gene X drives/regulates phase P" without wet-lab or external-screen support; permitted: "top-ranked likelihood impact score at phase P (bin-null z = …, FDR q = …)". |
 | 7.6 | **Tier-2 counterfactual-validation scope.** Does counterfactual generation get validated against real perturbation data? | **Resolved (in scope)** — against Jin et al. 2020 (35 ASD/ND risk genes, in-utero Perturb-seq): overlap of predicted downstream-affected genes with observed DE genes. User-approved 2026-09-09. |
 | 7.7 | **The six-species B1 gate is unachievable.** Item 7.3 requires improvement in ≥6/8 training species; the real projection provides holdout for only human/mouse. B4 probes cannot fill B1’s denominator. | **Open — pre-training gate** — `649b702` measures coverage and explicitly reports blocked without changing the criterion. Before observing results, agree on evaluable species and a revised criterion or acquire independent embryos; the original threshold remains decision history. |
+| 7.8 | **B2/CKA descriptive reporting is implemented.** | **Implemented (tool/synthetic validation)** — `dd96222`: matched-cell per-species phase purity/silhouette/cross-species neighbors and linear CKA. Holdout labels do not replace embryo-isolation evidence; real-model comparisons, likelihood and threshold verdicts have not run; frozen references remain pending. |
 
 ## 8. Probe species and ESM2 embeddings
 

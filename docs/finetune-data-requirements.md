@@ -295,3 +295,19 @@ for commands and the bounded real-expression rehearsal.
 Missing stages remain a pending training-inclusion decision. Pseudotime evaluation
 excludes them before graph construction and reports eligible/evaluated/excluded
 counts explicitly; exclusion from evaluation does not remove training rows.
+
+## 10. Resuming a training run
+
+Periodic checkpoints now require resume identity and validation state. Source
+content, ordered prepared membership, sampling and loader settings, base assets,
+batch/world size, accumulation, learning rate, precision and validation settings
+must match. Old checkpoints without this evidence require a fresh run in a new
+output directory. Increasing epochs/max_steps or changing checkpoint frequency
+is allowed; identical re-preparation is supported. At the step limit, no further
+training update occurs. Validation history, early-stopping patience and selected
+best weights survive interruption. See [resume details](finetune-readiness-tools.md#8-resume-compatibility-and-validation-continuity).
+
+All-null mapped or native label columns serialize with real missing values,
+including when an individual split contains no known labels. The all-source
+bounded rehearsal covers all 27 current sources; its sampled split sizes do not
+replace final full-corpus preparation or holdout coverage.
