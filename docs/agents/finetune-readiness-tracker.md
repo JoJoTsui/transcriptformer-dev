@@ -9,8 +9,8 @@ Each completed step is tested, committed, and pushed to `gh/main` separately.
 | 1 | Embryo-level split safeguards; retain native section identity; reject leakage | Complete | `3c57776` (pushed); 53 distinct tests passed; real 27-file metadata check |
 | 2 | Coordinate extraction, safe output copies, derived manifest, validation | Complete | `fee6970` (pushed); 16 tests; full 412,374-spot metadata-copy rehearsal |
 | 3 | Species × phase holdout coverage and explicit B1 feasibility report | Complete | `649b702` (pushed); 4 coverage regressions; 41 distinct related tests; real metadata report |
-| 4 | Actual-sampler exposure report by dataset, species, and phase | Complete | 15 regressions; real 2,000,000-draw epoch audit |
-| 5 | Machine-readable probe mappings and metadata/vocabulary readiness checks | Pending | |
+| 4 | Actual-sampler exposure report by dataset, species, and phase | Complete | `c447651` (pushed); 15 regressions; real 2,000,000-draw epoch audit |
+| 5 | Machine-readable probe mappings and metadata/vocabulary readiness checks | Complete | 12 regressions; all stage labels covered in 8 real datasets / 6 species |
 
 ## Completion criteria
 
@@ -97,3 +97,19 @@ Implementation and validation entries will be appended per step.
   Scope is one full sampler epoch, not max_steps/early-stopping/DDP exposure.
   Later-epoch projections do not model persistent-worker dataset state; workers
   retaining old epoch values are a separate training follow-up.
+
+### Step 5 — probe preparation and readiness
+
+- `preprocess/probe_stage_mappings.json` encodes the documented per-dataset
+  phase conventions; `map_probe_stages` preserves native stages and rejects
+  missing/unmapped labels. No boundary or biological convention was changed.
+- `scripts/validate_probes.py` validates actual obs metadata and correct-species
+  FASTA/vocabulary availability, including embedding dimensions. It explicitly
+  refuses to treat mulatta assets as fascicularis assets.
+- 12 regressions passed. The real audit covers eight files/six species with
+  zero missing or unknown stage labels. It intentionally exits 1: probe execution
+  remains blocked by missing species-specific vocabularies (six species),
+  missing FASTA entries (four species), and unresolved source metadata.
+- Report: `logs/dataset_audit/probe_readiness.json`. Presence/shape checks do not
+  establish gene coverage, protein provenance, spatial metric validity, or
+  boundary sensitivity. No assets were downloaded or source files modified.

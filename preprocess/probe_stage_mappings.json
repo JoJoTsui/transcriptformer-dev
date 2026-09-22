@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "mapping_source": "preprocess/stage_phase_mapping.md#probe-species-zero-shot-evaluation",
+  "notes": [
+    "Mappings reproduce the documented conventions; boundary sensitivity remains required.",
+    "Null metadata columns require source annotation review; sample/replicate IDs are not assumed to be embryos.",
+    "Relative source and asset paths resolve from the repository root."
+  ],
+  "fasta_manifest": "preprocess/fasta_manifest_pep.json",
+  "vocab_dir": "checkpoints/tf_metazoa_finetuned/vocabs",
+  "datasets": [
+    {
+      "id": "macaque_zhai_2022",
+      "species": "macaca_fascicularis",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/Nature_2022_CS8-CS11/食蟹猴_Macaca_fascicularis__Primate gastrulation and early organogenesis at single-cell resolution.h5ad",
+      "stage_column": "stage",
+      "species_column": "species",
+      "metadata_columns": {
+        "cell_type": "cell_type",
+        "embryo_id": null,
+        "assay": null
+      },
+      "stage_mapping": {
+        "E20": "neurula",
+        "E23": "neurula",
+        "E26": "neurula",
+        "E29": "neurula"
+      },
+      "species_provenance": "Source README and Zhai 2022 identify Macaca fascicularis; source obs has no species column."
+    },
+    {
+      "id": "macaque_gong_2023",
+      "species": "macaca_fascicularis",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/Cell_ex_utero_embryogenesis/食蟹猴_Macaca_fascicularis__Ex utero monkey embryogenesis from blastocyst to early organogenesis.h5ad",
+      "stage_column": "developmental_stage",
+      "species_column": "species",
+      "metadata_columns": {
+        "cell_type": null,
+        "embryo_id": null,
+        "assay": null
+      },
+      "stage_mapping": {
+        "ME18": "gastrula",
+        "ME19": "gastrula",
+        "ME20": "gastrula",
+        "ME21": "neurula",
+        "ME22": "neurula",
+        "ME23": "neurula",
+        "ME24": "neurula",
+        "ME25": "neurula"
+      }
+    },
+    {
+      "id": "macaque_spatial",
+      "species": "macaca_fascicularis",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/空间转录组_CS9_CS10_Nature_Cell_Biology/食蟹猴_CS9_CS10__A three-dimensional spatial transcriptome atlas reconstructs early organogenesis in primate Carnegie stages 9 and 10 embryos.h5ad",
+      "stage_column": "stage",
+      "species_column": "species",
+      "metadata_columns": {
+        "cell_type": "celltype_detailed",
+        "embryo_id": null,
+        "assay": null
+      },
+      "stage_mapping": {
+        "CS9": "neurula",
+        "CS10": "neurula"
+      }
+    },
+    {
+      "id": "pig_simpson_2024",
+      "species": "sus_scrofa",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/猪_Sus_scrofa/猪_Sus_scrofa__A single-cell atlas of pig gastrulation as a resource for comparative embryology.h5ad",
+      "stage_column": "Stage",
+      "species_column": "species",
+      "metadata_columns": {
+        "cell_type": "Celltypes",
+        "embryo_id": null,
+        "assay": null
+      },
+      "stage_mapping": {
+        "E11.5": "gastrula",
+        "E12": "gastrula",
+        "E12.5": "gastrula",
+        "E13": "gastrula",
+        "E13.5": "neurula",
+        "E14": "neurula",
+        "E14.5": "neurula",
+        "E15": "neurula"
+      }
+    },
+    {
+      "id": "guinea_pig_canizo_2025",
+      "species": "cavia_porcellus",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/豚鼠_Cavia_porcellus/Nature_Cell_Biology_2025/豚鼠_Cavia_porcellus__The guinea pig serves as an alternative model to study human preimplantation development.h5ad",
+      "stage_column": "stage",
+      "species_column": "species",
+      "metadata_columns": {
+        "cell_type": "author_cell_type",
+        "embryo_id": "embryo",
+        "assay": null
+      },
+      "stage_mapping": {
+        "8C": "blastula",
+        "16C": "blastula",
+        "16-32 cell": "blastula",
+        "EB": "blastula",
+        "MB": "blastula",
+        "LB": "blastula"
+      }
+    },
+    {
+      "id": "xenopus_briggs_2018",
+      "species": "xenopus_tropicalis",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/热带爪蟾_Xenopus_tropicalis/Science_2018/热带爪蟾_Xenopus_tropicalis__The dynamics of gene expression in vertebrate embryogenesis at single-cell resolution.h5ad",
+      "stage_column": "stage",
+      "species_column": "species",
+      "metadata_columns": {
+        "cell_type": "author_cell_type",
+        "embryo_id": null,
+        "assay": null
+      },
+      "stage_mapping": {
+        "Stage_8": "blastula",
+        "Stage_10": "gastrula",
+        "Stage_11": "gastrula",
+        "Stage_12": "gastrula",
+        "Stage_13": "gastrula",
+        "Stage_14": "neurula",
+        "Stage_16": "neurula",
+        "Stage_18": "neurula",
+        "Stage_20": "neurula",
+        "Stage_22": "organogenesis"
+      }
+    },
+    {
+      "id": "ciona_cao_2019",
+      "species": "ciona_intestinalis",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/海鞘_Ciona_intestinalis/海鞘_Ciona_intestinalis__Comprehensive single cell transcriptome lineages of a proto-vertebrate.h5ad",
+      "stage_column": "stage_code",
+      "species_column": "species",
+      "metadata_columns": {
+        "cell_type": null,
+        "embryo_id": null,
+        "assay": null
+      },
+      "stage_mapping": {
+        "iniG": "gastrula",
+        "midG": "gastrula",
+        "earN": "neurula",
+        "latN": "neurula",
+        "iniTI": "organogenesis",
+        "earTI": "organogenesis",
+        "midTII": "organogenesis",
+        "latTI": "organogenesis",
+        "latTII": "organogenesis",
+        "larva": "organogenesis"
+      }
+    },
+    {
+      "id": "amphioxus_markos_2024",
+      "species": "branchiostoma_floridae",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/佛罗里达文昌鱼_Branchiostoma_floridae/佛罗里达文昌鱼_Branchiostoma_floridae__Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head.h5ad",
+      "stage_column": "stage",
+      "species_column": "species",
+      "metadata_columns": {
+        "cell_type": null,
+        "embryo_id": null,
+        "assay": null
+      },
+      "stage_mapping": {
+        "G4": "gastrula",
+        "N0": "neurula",
+        "N2": "neurula",
+        "N5": "neurula"
+      }
+    }
+  ]
+}
