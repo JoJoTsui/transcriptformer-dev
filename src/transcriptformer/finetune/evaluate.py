@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -144,7 +145,11 @@ def _pseudotime_spearman_single(embeddings: np.ndarray, stage: np.ndarray) -> di
     """Correlate sparse kNN-graph distance from the earliest stage with stage order."""
     n_stages = int(len(np.unique(stage)))
     if n_stages < 2:
-        return {"spearman": float("nan"), "n_stages": n_stages}
+        return {
+            "spearman": float("nan"),
+            "n_stages": n_stages,
+            "reason": "no_known_stages" if n_stages == 0 else "too_few_stages",
+        }
 
     n = embeddings.shape[0]
     k = min(15, n - 1)
@@ -162,6 +167,31 @@ def _pseudotime_spearman_single(embeddings: np.ndarray, stage: np.ndarray) -> di
     return {"spearman": float(corr), "n_stages": n_stages}
 
 
+def _known_stage_mask(stages: pd.Series) -> np.ndarray:
+    """Recognize nulls before inference's string conversion as well as after it."""
+    normalized = stages.astype("string").str.strip().str.lower()
+    missing = stages.isna() | normalized.isin({"", "nan", "none", "<na>", "unknown"})
+    return ~missing.to_numpy(dtype=bool)
+
+
+def _pseudotime_known_stages(adata: ad.AnnData, stage_col: str) -> dict[str, Any]:
+    keep = _known_stage_mask(adata.obs[stage_col])
+    result = _pseudotime_spearman_single(
+        np.asarray(adata.obsm["embeddings"])[keep],
+        _stage_numeric(adata.obs[stage_col].iloc[np.flatnonzero(keep)]),
+    )
+    evaluable = np.isfinite(result["spearman"])
+    if not evaluable and "reason" not in result:
+        result["reason"] = "undefined_correlation"
+    result.update(
+        n_input_obs=int(adata.n_obs),
+        n_obs=int(keep.sum()),
+        n_evaluated_obs=int(keep.sum()) if evaluable else 0,
+        n_obs_missing_stage=int((~keep).sum()),
+    )
+    return result
+
+
 def pseudotime_stage_spearman(
     adata: ad.AnnData,
     stage_col: str = "stage",
@@ -172,7 +202,11 @@ def pseudotime_stage_spearman(
     One trajectory cannot span species, so the metric is computed per group:
     the ``group_col`` column when given, else "species" or "embryo_id" when
     present in obs, else globally. The reported "spearman" is the mean over
-    per-group correlations.
+    per-group correlations. Missing stages (nulls and string sentinels) are
+    excluded before graph construction, root selection, and correlation.
+    ``n_obs`` counts eligible known-stage rows; ``n_evaluated_obs`` counts
+    rows in groups with a finite score. Missing-stage and missing-group counts
+    can overlap. Input observations are never modified.
     """
     if group_col is None:
         for candidate in ("species", "embryo_id"):
@@ -181,31 +215,36 @@ def pseudotime_stage_spearman(
                 break
 
     if group_col is None:
-        embeddings = np.asarray(adata.obsm["embeddings"])
-        return _pseudotime_spearman_single(embeddings, _stage_numeric(adata.obs[stage_col]))
+        return _pseudotime_known_stages(adata, stage_col)
 
     per_group: dict[str, Any] = {}
     correlations: list[float] = []
     for group, positions in adata.obs.groupby(group_col, observed=True).indices.items():
         sub = adata[positions]
-        result = _pseudotime_spearman_single(
-            np.asarray(sub.obsm["embeddings"]),
-            _stage_numeric(sub.obs[stage_col]),
-        )
+        result = _pseudotime_known_stages(sub, stage_col)
         per_group[str(group)] = result
-        if not np.isnan(result["spearman"]):
+        if np.isfinite(result["spearman"]):
             correlations.append(result["spearman"])
 
-    return {
+    known = _known_stage_mask(adata.obs[stage_col])
+    result = {
         "spearman": float(np.mean(correlations)) if correlations else float("nan"),
-        "n_stages": int(adata.obs[stage_col].nunique()),
+        "n_stages": int(adata.obs[stage_col].iloc[np.flatnonzero(known)].nunique()),
+        "n_input_obs": int(adata.n_obs),
+        "n_obs": sum(group["n_obs"] for group in per_group.values()),
+        "n_evaluated_obs": sum(group["n_evaluated_obs"] for group in per_group.values()),
+        "n_obs_missing_stage": int((~known).sum()),
         "group_col": group_col,
         "per_group": per_group,
         "n_groups": len(per_group),
         "n_groups_evaluated": len(correlations),
         "n_groups_unevaluable": len(per_group) - len(correlations),
         "n_obs_missing_group": int(adata.obs[group_col].isna().sum()),
+        "unevaluable_reason_counts": dict(Counter(g["reason"] for g in per_group.values() if "reason" in g)),
     }
+    if not correlations:
+        result["reason"] = "no_evaluable_groups"
+    return result
 
 
 def _spatial_metric(adata: ad.AnnData, k: int, metric: str) -> dict[str, Any]:

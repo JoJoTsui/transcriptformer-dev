@@ -7,8 +7,8 @@ sampling, QC, assay, or B1 decisions. Each gets a separate tested commit/push. D
 
 | Task | Deliverable | Status | Evidence / commit |
 | --- | --- | --- | --- |
-| A | Propagate sampler epochs to persistent workers; deterministic resume regression | Complete | Fork/spawn workers and cross-epoch resume pass; 30 training/worker/early-stopping tests |
-| B | Exclude missing stages from pseudotime graph/scoring with explicit counts | Pending | Prior reproduction: unstaged rows changed score 0.867 → 0.930 |
+| A | Propagate sampler epochs to persistent workers; deterministic resume regression | Complete | `786d66c`; fork/spawn workers and cross-epoch resume pass; 30 training/worker/early-stopping tests |
+| B | Exclude missing stages from pseudotime graph/scoring with explicit counts | Complete | Score now invariant to unstaged rows; 41 evaluation regressions pass |
 | C | Include readiness/runtime regressions and relevant paths in CI | Pending | Existing workflow enumerates only older test files |
 | D | Validate prepared artifacts before training; bounded full-expression rehearsal | Pending | Check provenance, membership, embryo isolation, output completeness |
 
