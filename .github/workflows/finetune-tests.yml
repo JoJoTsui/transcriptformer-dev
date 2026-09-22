@@ -71,4 +71,5 @@ jobs:
             test/test_worker_epochs.py \
             test/test_missing_stage_evaluation.py \
             test/test_prepared_artifacts.py \
+            test/test_preparation_rehearsal.py \
             test/test_finetune_test_selection.py -v

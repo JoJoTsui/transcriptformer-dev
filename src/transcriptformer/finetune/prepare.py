@@ -321,6 +321,12 @@ def prepare_dataset_file(
     for split_name, mask in plan:
         sub_obs = obs.copy() if mask is None else obs.iloc[mask].copy()
         sub_obs["split"] = split_name
+        # AnnData cannot encode an object column containing only null values.
+        # Label mapping can create this case in one split even when the source
+        # has known labels elsewhere; an empty categorical preserves every null.
+        for column in ("stage", "native_stage", "cell_type"):
+            if sub_obs[column].dtype == object and sub_obs[column].isna().all():
+                sub_obs[column] = pd.Categorical(sub_obs[column], categories=[])
         sub_X = X if mask is None else X[mask]
         suffix = "" if mask is None else f"_{split_name}"
         prepared_path = output_dir / f"{input_path.stem}_prepared{suffix}.h5ad"

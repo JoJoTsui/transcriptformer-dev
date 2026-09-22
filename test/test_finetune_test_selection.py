@@ -30,6 +30,7 @@ SUITES = (
     "worker_epochs",
     "missing_stage_evaluation",
     "prepared_artifacts",
+    "preparation_rehearsal",
     "finetune_test_selection",
 )
 

@@ -9,8 +9,8 @@ corpus/QC decisions and acceptance thresholds remain unchanged.
 | --- | --- | --- | --- |
 | E | Finished-run resume performs no further updates | Complete | `d1a62a6`; four boundary regressions + three CI-selection checks passed; no data read or update at/above limit |
 | F | Checkpoint compatibility and validation/best-state continuity | Complete | `3fd4a2b`; 61 combined resume/training/worker checks + public budget-extension/best-checkpoint test passed |
-| G | Robust cell-type F1 on small/missing-label groups | Complete | 34 evaluation tests passed, including tiny and imbalanced classes with missing-label accounting |
-| H | Bounded rehearsal for every manifest source | Pending | Source preservation, per-source outcomes and timing |
+| G | Robust cell-type F1 on small/missing-label groups | Complete | `43a2ac9`; 34 evaluation tests passed, including tiny and imbalanced classes with missing-label accounting |
+| H | Bounded rehearsal for every manifest source | Complete | 14 regressions; all 27 sources / 8 species passed; 3,357 sampled → 3,308 prepared rows, 33 outputs |
 | I | Production CLI subprocess and memory-cap coverage | Pending | Narrow in-process mocking; exercise actual cap |
 | J | B2 phase structure and paired linear CKA reports | Pending | Synthetic validation, stable cell identity, no pass/fail thresholds |
 
