@@ -83,3 +83,15 @@ def cli_env():
     os.environ.clear()
     os.environ.update(original_env)
     os.sys.argv = original_argv
+
+
+@pytest.fixture(autouse=True)
+def restore_address_space_limit():
+    """Do not let the finetune CLI's process-wide memory cap leak across tests."""
+    import resource
+
+    original = resource.getrlimit(resource.RLIMIT_AS)
+    try:
+        yield
+    finally:
+        resource.setrlimit(resource.RLIMIT_AS, original)

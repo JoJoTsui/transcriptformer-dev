@@ -3,11 +3,11 @@
 ## Continuing development — runtime correctness and artifact validation
 
 Status: in progress. These four follow-up tasks do not change pending corpus,
-sampling, QC, assay, or B1 decisions. Each gets a separate tested commit/push.
+sampling, QC, assay, or B1 decisions. Each gets a separate tested commit/push. D lands before C so CI only references committed tests.
 
 | Task | Deliverable | Status | Evidence / commit |
 | --- | --- | --- | --- |
-| A | Propagate sampler epochs to persistent workers; deterministic resume regression | In progress | Prior CPU reproduction: epoch 1 = epoch 2 with persistent workers |
+| A | Propagate sampler epochs to persistent workers; deterministic resume regression | Complete | Fork/spawn workers and cross-epoch resume pass; 30 training/worker/early-stopping tests |
 | B | Exclude missing stages from pseudotime graph/scoring with explicit counts | Pending | Prior reproduction: unstaged rows changed score 0.867 → 0.930 |
 | C | Include readiness/runtime regressions and relevant paths in CI | Pending | Existing workflow enumerates only older test files |
 | D | Validate prepared artifacts before training; bounded full-expression rehearsal | Pending | Check provenance, membership, embryo isolation, output completeness |

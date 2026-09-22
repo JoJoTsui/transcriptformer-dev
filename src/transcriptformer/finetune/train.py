@@ -158,7 +158,8 @@ class BalancedDataset(Dataset):
         self.spatial_dataset = spatial_dataset
         self.spatial_fraction = spatial_fraction
         self.seed = seed
-        self._epoch = 0
+        # Share epoch updates with persistent DataLoader workers (fork and spawn).
+        self._epoch = torch.zeros((), dtype=torch.int64).share_memory_()
         self._length = max(len(single_cell_dataset), len(spatial_dataset or [])) * 2
 
     def __len__(self) -> int:
@@ -166,10 +167,10 @@ class BalancedDataset(Dataset):
 
     def set_epoch(self, epoch: int) -> None:
         """Mix the epoch into the sampling seeds so epochs see different orders."""
-        self._epoch = int(epoch)
+        self._epoch.fill_(int(epoch))
 
     def __getitem__(self, index: int):
-        base_seed = (self.seed * 1000003 + self._epoch * 10000019) & 0xFFFFFFFF
+        base_seed = (self.seed * 1000003 + int(self._epoch.item()) * 10000019) & 0xFFFFFFFF
         seed_int = (base_seed + index) & 0xFFFFFFFF
         use_spatial = random.Random(seed_int).random() < self.spatial_fraction
         if use_spatial and self.spatial_dataset is not None and len(self.spatial_dataset) > 0:
