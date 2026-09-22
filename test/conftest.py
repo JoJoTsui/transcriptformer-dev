@@ -85,7 +85,7 @@ def cli_env():
     os.sys.argv = original_argv
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def isolate_cli_memory_limit(monkeypatch):
     """CLI unit tests share pytest's process, including unrelated loaded models.
 

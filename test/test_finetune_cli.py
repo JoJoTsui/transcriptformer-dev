@@ -56,7 +56,7 @@ def _write_manifest(path: Path, output_dir: Path) -> Path:
     return manifest_path
 
 
-def test_valid_manifest_creates_run_directory(tmp_path: Path) -> None:
+def test_valid_manifest_creates_run_directory(isolate_cli_memory_limit, tmp_path: Path) -> None:
     output_dir = tmp_path / "run"
     manifest_path = _write_manifest(tmp_path, output_dir)
 

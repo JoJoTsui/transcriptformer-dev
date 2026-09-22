@@ -52,6 +52,7 @@ jobs:
         run: |
           python -m pytest \
             test/test_finetune_cli.py \
+            test/test_cli_process.py \
             test/test_dataprep.py \
             test/test_train.py \
             test/test_gpu.py \

@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ".github/workflows/finetune-tests.yml"
 SUITES = (
     "finetune_cli",
+    "cli_process",
     "dataprep",
     "train",
     "gpu",

@@ -124,7 +124,7 @@ def _evaluate_args(manifest_path: Path) -> argparse.Namespace:
     )
 
 
-def test_end_to_end_synthetic_pipeline(tmp_path: Path) -> None:
+def test_end_to_end_synthetic_pipeline(isolate_cli_memory_limit, tmp_path: Path) -> None:
     output_dir = tmp_path / "run"
     manifest_path, _ = _write_manifest(tmp_path, output_dir)
 

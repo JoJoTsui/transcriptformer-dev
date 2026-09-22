@@ -76,7 +76,7 @@ def test_stratified_sample_respects_groups_and_cap() -> None:
     assert sampled.groupby(["stage", "cell_type"]).size().tolist() == [2, 2, 2, 2]
 
 
-def test_finetune_cli_wires_training_call(tmp_path: Path) -> None:
+def test_finetune_cli_wires_training_call(isolate_cli_memory_limit, tmp_path: Path) -> None:
     output_dir = tmp_path / "run"
     datasets = []
     for embryo_id in ("embryo_1", "embryo_2", "embryo_3"):

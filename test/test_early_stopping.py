@@ -86,7 +86,7 @@ def _setup_resume_run(tmp_path):
     return output_dir, make_args
 
 
-def test_cli_resumes_interrupted_run(tmp_path) -> None:
+def test_cli_resumes_interrupted_run(isolate_cli_memory_limit, tmp_path) -> None:
     from unittest import mock
 
     import torch
@@ -123,7 +123,7 @@ def test_cli_resumes_interrupted_run(tmp_path) -> None:
     assert complete_manifest["training"]["resumed_from_step"] == 5
 
 
-def test_cli_no_resume_starts_fresh(tmp_path) -> None:
+def test_cli_no_resume_starts_fresh(isolate_cli_memory_limit, tmp_path) -> None:
     from unittest import mock
 
     from transcriptformer.cli.finetune import run_finetune_cli
