@@ -6,8 +6,8 @@ Each completed step is tested, committed, and pushed to `gh/main` separately.
 
 | Step | Deliverable | Status | Evidence / commit |
 | --- | --- | --- | --- |
-| 1 | Embryo-level split safeguards; retain native section identity; reject leakage | Complete | Split regression + related suites: 53 distinct tests passed; real 27-file metadata check |
-| 2 | Coordinate extraction, safe output copies, derived manifest, validation | Pending | |
+| 1 | Embryo-level split safeguards; retain native section identity; reject leakage | Complete | `3c57776` (pushed); 53 distinct tests passed; real 27-file metadata check |
+| 2 | Coordinate extraction, safe output copies, derived manifest, validation | Complete | 16 tests; full 412,374-spot metadata-copy rehearsal |
 | 3 | Species × phase holdout coverage and explicit B1 feasibility report | Pending | |
 | 4 | Actual-sampler exposure report by dataset, species, and phase | Pending | |
 | 5 | Machine-readable probe mappings and metadata/vocabulary readiness checks | Pending | |
@@ -44,3 +44,19 @@ Implementation and validation entries will be appended per step.
   occurrences are training-only; final-holdout species are human and mouse.
 - Source H5ADs and corpus membership are unchanged. Split changes require fresh
   preparation; old split assignments must not be reused.
+
+### Step 2 — coordinate copies
+
+- `scripts/prepare_spatial_coordinates.py` audits all five source files read-only,
+  or writes explicit no-clobber copies plus a derived manifest. Original matrices
+  and metadata remain unchanged. Copies add coordinates, provenance, and native
+  section identity: CS6 fig1/fig2 49 each; CS7 82; CS8 62; CS9 13.
+- `scripts/validate_manifest.py` now fails missing spatial contract columns,
+  replacing the misleading warning that coordinates always live in obsm.
+- 16 regressions passed. Full obs/obsm replicas of all five sources passed copy
+  and AnnData round-trip checks for all 412,374 spots; synthetic matrix-copy
+  tests also verify expression preservation and source hashes. See
+  `logs/dataset_audit/spatial_coordinates.json`.
+- Full expression-matrix copies and final preparation have not run; the tool is
+  ready for an explicitly selected output directory. This supersedes the older
+  in-place source-mutation proposal.

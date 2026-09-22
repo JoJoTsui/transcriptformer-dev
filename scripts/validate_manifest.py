@@ -6,7 +6,7 @@ Checks, per dataset, without writing any prepared output:
   3. Every obs_columns source column exists in obs (``=constant`` entries exempt).
   4. Contract obs columns (embryo_id, stage, cell_type, assay; plus section_id /
      spatial_x / spatial_y for spatial) will exist after the obs_columns renames.
-     Missing spatial coordinate columns are a known obsm-lift gap -> WARN, not FAIL.
+     Missing spatial contract columns fail; prepare coordinate copies first.
   5. Every post-rename stage value is covered by the dataset's stage_mapping.
   6. The gene_mapping file exists (if referenced) and the fraction of var IDs that
      resolve (mapping hit or vocab-native, same logic as prepare._map_gene_ids).
@@ -130,9 +130,9 @@ def validate_dataset(index: int, dataset: dict, manifest: dict) -> DatasetReport
             missing_spatial = [c for c in SPATIAL_COLS if c not in post_cols]
             if missing_spatial:
                 rep.add(
-                    WARN,
-                    f"spatial coord lift pending: {', '.join(missing_spatial)} absent from obs "
-                    "(coordinates live in obsm; deferred)",
+                    FAIL,
+                    f"spatial contract columns absent from obs: {', '.join(missing_spatial)}; "
+                    "create coordinate copies with scripts/prepare_spatial_coordinates.py",
                 )
 
         # (5) stage_mapping coverage of post-rename stage values

@@ -1,0 +1,151 @@
+{
+  "mode": "read_only_audit",
+  "datasets": [
+    {
+      "section_rule": "obs_sample_final",
+      "native_section_count": 82,
+      "section_checks": {
+        "each_section_in_one_capture_slice": true,
+        "capture_slice_count": 14
+      },
+      "source": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS7_Spatial_transcriptomic_characterization/人_CS7__Spatial transcriptomic characterization of a Carnegie stage 7 human embryo.h5ad",
+      "dataset": "human_cs7_spatial",
+      "rule": "obs_newx_newy",
+      "n_spots": 28804,
+      "x_range": [
+        0.0,
+        1288.69206392934
+      ],
+      "y_range": [
+        0.0,
+        2300.0
+      ],
+      "source_modified": false
+    },
+    {
+      "section_rule": "native_section_id",
+      "native_section_count": 62,
+      "section_checks": {
+        "native_section_matches_identifier": true
+      },
+      "source": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS8_3D_reconstruction_of_a_gastrulating_human_embryo/人_CS8__3D reconstruction of a gastrulating human embryo.h5ad",
+      "dataset": "human_cs8_spatial",
+      "rule": "spot_id_packed_xy",
+      "n_spots": 38562,
+      "x_range": [
+        2600.0,
+        24550.0
+      ],
+      "y_range": [
+        5800.0,
+        22650.0
+      ],
+      "source_modified": false
+    },
+    {
+      "section_rule": "index_EF1_section_prefix",
+      "native_section_count": 13,
+      "section_checks": {},
+      "source": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/空间转录组_CS9_3D_reconstruction_early_body_plan/人_CS9_Stereo-seq__3D reconstruction of a human Carnegie stage 9 embryo provides a snapshot of early body plan formation.h5ad",
+      "dataset": "human_cs9_spatial",
+      "rule": "index_packed_xy",
+      "n_spots": 96837,
+      "x_range": [
+        1300.0,
+        25700.0
+      ],
+      "y_range": [
+        1650.0,
+        25050.0
+      ],
+      "source_modified": false
+    },
+    {
+      "section_rule": "obs_slice_num",
+      "native_section_count": 49,
+      "section_checks": {},
+      "source": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig1.h5ad",
+      "dataset": "human_cs6_fig1",
+      "rule": "index_trailing_xy",
+      "n_spots": 228028,
+      "x_range": [
+        600.0,
+        21720.0
+      ],
+      "y_range": [
+        2370.0,
+        22350.0
+      ],
+      "source_modified": false
+    },
+    {
+      "section_rule": "obs_slice_num",
+      "native_section_count": 49,
+      "section_checks": {},
+      "source": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/人_Homo_sapiens/CS6_Nature_2026/fig2.h5ad",
+      "dataset": "human_cs6_fig2",
+      "rule": "obsm_X_spatial",
+      "n_spots": 20143,
+      "x_range": [
+        222.62234787067723,
+        37725.31798082961
+      ],
+      "y_range": [
+        200.0,
+        50123.04415364172
+      ],
+      "source_modified": false
+    }
+  ],
+  "copy_rehearsal": {
+    "scope": "Full native obs/obsm replicas with zero genes; expression matrices omitted. Actual source files read-only; full dataset copying remains an explicit operator step.",
+    "datasets": [
+      {
+        "dataset": "human_cs7_spatial",
+        "n_spots": 28804,
+        "native_section_count": 82,
+        "native_obs_preserved": true,
+        "coordinate_roundtrip": true,
+        "section_roundtrip": true
+      },
+      {
+        "dataset": "human_cs8_spatial",
+        "n_spots": 38562,
+        "native_section_count": 62,
+        "native_obs_preserved": true,
+        "coordinate_roundtrip": true,
+        "section_roundtrip": true
+      },
+      {
+        "dataset": "human_cs9_spatial",
+        "n_spots": 96837,
+        "native_section_count": 13,
+        "native_obs_preserved": true,
+        "coordinate_roundtrip": true,
+        "section_roundtrip": true
+      },
+      {
+        "dataset": "human_cs6_fig1",
+        "n_spots": 228028,
+        "native_section_count": 49,
+        "native_obs_preserved": true,
+        "coordinate_roundtrip": true,
+        "section_roundtrip": true
+      },
+      {
+        "dataset": "human_cs6_fig2",
+        "n_spots": 20143,
+        "native_section_count": 49,
+        "native_obs_preserved": true,
+        "coordinate_roundtrip": true,
+        "section_roundtrip": true
+      }
+    ]
+  },
+  "section_evidence": {
+    "human_cs7_spatial": {
+      "publication": "https://www.nature.com/articles/s41556-024-01597-3",
+      "reason": "Publication reports 82 serial cryosections. Native sample_final has S1–S82; each section belongs to exactly one of 14 slice capture areas. Using slice would merge 2–8 tissue sections per capture area."
+    }
+  }
+}
