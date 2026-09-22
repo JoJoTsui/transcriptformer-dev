@@ -8,9 +8,9 @@ sampling, QC, assay, or B1 decisions. Each gets a separate tested commit/push. D
 | Task | Deliverable | Status | Evidence / commit |
 | --- | --- | --- | --- |
 | A | Propagate sampler epochs to persistent workers; deterministic resume regression | Complete | `786d66c`; fork/spawn workers and cross-epoch resume pass; 30 training/worker/early-stopping tests |
-| B | Exclude missing stages from pseudotime graph/scoring with explicit counts | Complete | Score now invariant to unstaged rows; 41 evaluation regressions pass |
+| B | Exclude missing stages from pseudotime graph/scoring with explicit counts | Complete | `bb8cd0d`; score now invariant to unstaged rows; 41 evaluation regressions pass |
 | C | Include readiness/runtime regressions and relevant paths in CI | Pending | Existing workflow enumerates only older test files |
-| D | Validate prepared artifacts before training; bounded full-expression rehearsal | Pending | Check provenance, membership, embryo isolation, output completeness |
+| D | Validate prepared artifacts before training; bounded full-expression rehearsal | Complete | 48 artifact/CLI/training tests; synthetic + 256 real-row full-gene rehearsal passed (254 retained) |
 
 The five original readiness priorities below remain completed. Final follow-up
 validation and related-document updates will be recorded after A–D.

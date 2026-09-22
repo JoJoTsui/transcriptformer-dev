@@ -16,7 +16,12 @@ def main() -> None:
     import transcriptformer.finetune.train as train_module
     from test.test_train import _make_cfg, _make_gene_vocab, _make_tiny_model, _write_training_files
 
-    manifest, report = _write_training_files(tmp_path)
+    manifest, legacy_report = _write_training_files(tmp_path)
+    # Exercise the public validation gate with genuine preparation evidence.
+    from transcriptformer.finetune.prepare import prepare_run
+
+    manifest["datasets"].append({"path": legacy_report["datasets"][-1]["path"], "dataset_type": "spatial"})
+    report = prepare_run(manifest, tmp_path / "preparation")
     output_dir = tmp_path / "run"
     output_dir.mkdir()
 

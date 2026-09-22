@@ -231,6 +231,8 @@ def prepare_dataset_file(
     report entries is returned; with a plain split name a single
     ``<stem>_prepared.h5ad`` is written and one report entry is returned.
     """
+    from transcriptformer.finetune.artifacts import membership_digest
+
     output_dir.mkdir(parents=True, exist_ok=True)
     input_path = Path(dataset["path"])
     if not input_path.is_file():
@@ -282,6 +284,7 @@ def prepare_dataset_file(
     if dataset.get("species") is not None:
         obs["species"] = dataset["species"]
     obs["source_dataset"] = str(input_path.resolve())
+    obs["source_row_index"] = np.arange(len(obs), dtype=np.int64)
     if "native_stage" not in obs.columns:
         obs["native_stage"] = obs["stage"].copy()
     obs["stage"] = map_obs_labels(obs["stage"], stage_mapping)
@@ -326,6 +329,9 @@ def prepare_dataset_file(
             {
                 "path": str(prepared_path),
                 "source_path": str(input_path),
+                "prepared_sha256": _hash_file(prepared_path),
+                "survivor_count": len(obs),
+                "survivor_digest": membership_digest(obs["source_row_index"].astype(int).tolist()),
                 "sha256": sha256,
                 "size_bytes": size_bytes,
                 "dataset_type": dataset["dataset_type"],
@@ -503,6 +509,13 @@ def prepare_run(manifest: dict[str, Any], output_dir: Path) -> dict[str, Any]:
     prepared_dir = output_dir / "prepared"
     prepared_dir.mkdir(parents=True, exist_ok=True)
 
+    from transcriptformer.finetune.artifacts import preparation_fingerprint
+
+    paths = [str(Path(dataset["path"]).resolve()) for dataset in manifest["datasets"]]
+    stems = [Path(dataset["path"]).stem for dataset in manifest["datasets"]]
+    if len(set(paths)) != len(paths) or len(set(stems)) != len(stems):
+        raise ValueError("Dataset paths and stems must be unique to prevent overwritten prepared outputs")
+    provenance = preparation_fingerprint(manifest)
     metadata_entries = [_read_split_metadata(dataset) for dataset in manifest["datasets"]]
     splits = assign_splits(metadata_entries, seed=int(manifest.get("seed", 0)))
 
@@ -532,6 +545,8 @@ def prepare_run(manifest: dict[str, Any], output_dir: Path) -> dict[str, Any]:
     (output_dir / "split_assignments.json").write_text(json.dumps(splits, indent=2) + "\n")
 
     report = {
+        "artifact_schema_version": 1,
+        "preparation_fingerprint": provenance,
         "datasets": prepared_entries,
         "splits": splits,
     }

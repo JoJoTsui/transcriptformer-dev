@@ -20,6 +20,7 @@ from torch.utils.data.distributed import DistributedSampler
 
 from transcriptformer.data.dataloader import AnnDatasetOOM
 from transcriptformer.data.dataclasses import BatchData
+from transcriptformer.finetune.artifacts import validate_prepared_artifacts
 from transcriptformer.finetune.early_stopping import EarlyStopping
 from transcriptformer.finetune.spatial import (
     SPATIAL_VOCAB_NAME,
@@ -723,6 +724,7 @@ def train_finetune(
     checkpoint_interval: int = 500,
 ) -> dict[str, Any]:
     """Run a finetuning training loop and save a checkpoint and summary."""
+    validate_prepared_artifacts(manifest, prepared_report)
     torch.manual_seed(int(manifest.get("seed", 0)))
     spatial_grid_size = spatial_grid_size_from_manifest(manifest)
 
