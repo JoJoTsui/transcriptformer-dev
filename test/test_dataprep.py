@@ -187,7 +187,7 @@ def test_prepare_only_produces_model_ready_h5ad(tmp_path: Path) -> None:
     singles = [a for a in assignments if a["path"].endswith(("sc_1.h5ad", "sc_2.h5ad", "sc_3.h5ad"))]
     assert singles and all(a["split"] == "train" and a["reason"] == "single_embryo" for a in singles)
     spatial = [a for a in assignments if a["path"].endswith("spatial_3.h5ad")]
-    assert all(a["split"] == "train" and a["reason"] == "single_section" for a in spatial)
+    assert all(a["split"] == "train" and a["reason"] == "single_embryo" for a in spatial)
 
     # Every species keeps at least one training embryo.
     for species in ("danio_rerio", "homo_sapiens"):
@@ -435,7 +435,7 @@ def test_assign_splits_three_embryos_cover_all_splits() -> None:
     assert sorted(a["split"] for a in splits["assignments"]) == ["final_holdout", "train", "validation"]
 
 
-def test_assign_splits_spatial_units_are_sections() -> None:
+def test_assign_splits_spatial_units_are_embryos() -> None:
     entries = [
         _split_entry("spatial_a.h5ad", ["s1", "s2", "s3", "s4"], "human", dataset_type="spatial"),
         _split_entry("spatial_b.h5ad", ["s5"], "human", dataset_type="spatial"),
@@ -444,13 +444,13 @@ def test_assign_splits_spatial_units_are_sections() -> None:
     splits = assign_splits(entries, seed=0)
     assignments = splits["assignments"]
 
-    # A multi-section spatial dataset stratifies by section.
+    # A multi-embryo spatial dataset stratifies by embryo.
     a_assignments = [a for a in assignments if a["path"] == "spatial_a.h5ad"]
     assert {a["split"] for a in a_assignments} == {"train", "validation", "final_holdout"}
-    # A single-section spatial dataset is train-only.
+    # A single-embryo spatial dataset is train-only.
     b_assignments = [a for a in assignments if a["path"] == "spatial_b.h5ad"]
     assert len(b_assignments) == 1
-    assert b_assignments[0]["split"] == "train" and b_assignments[0]["reason"] == "single_section"
+    assert b_assignments[0]["split"] == "train" and b_assignments[0]["reason"] == "single_embryo"
 
 
 def test_prepare_records_input_file_hash(tmp_path: Path) -> None:

@@ -6,6 +6,8 @@ import json
 import re
 from collections import defaultdict
 from pathlib import Path
+
+import h5py
 from typing import Any
 
 import anndata as ad
@@ -218,7 +220,7 @@ def prepare_dataset_file(
     """Convert one dataset entry into model-ready H5AD file(s).
 
     ``split`` is either a split name applied to every observation, or a mapping
-    from split unit (obs ``embryo_id``; obs ``section_id`` for spatial
+    from split unit (obs ``embryo_id`` for both single-cell and spatial
     datasets) to split name. With a mapping, one prepared file is written per
     split present in the data (``<stem>_prepared_<split>.h5ad``) and a list of
     report entries is returned; with a plain split name a single
@@ -291,7 +293,7 @@ def prepare_dataset_file(
         plan = [(split, None)]
     else:
         split_map = {str(unit): split_name for unit, split_name in split.items()}
-        unit_col = "section_id" if dataset["dataset_type"] == "spatial" else "embryo_id"
+        unit_col = "embryo_id"
         units = obs[unit_col].astype(str)
         unassigned = sorted(set(units) - set(split_map))
         if unassigned:
@@ -347,8 +349,7 @@ def _split_assignment(entry: dict[str, Any], unit: str, split: str, reason: str)
         "path": entry["path"],
         "dataset_type": entry["dataset_type"],
         "species": entry["species"],
-        # The split unit: an embryo_id for single-cell datasets, a section_id
-        # for spatial datasets.
+        # Sections retain their identities, but never act as split units.
         "embryo_id": unit,
         "split": split,
         "reason": reason,
@@ -356,33 +357,20 @@ def _split_assignment(entry: dict[str, Any], unit: str, split: str, reason: str)
 
 
 def assign_splits(entries: list[dict[str, Any]], seed: int = 0) -> dict[str, Any]:
-    """Assign train/validation/final holdout splits per (dataset, embryo) unit.
+    """Assign unique (species, embryo) identities to train/validation/holdout.
 
-    Each entry describes one dataset file with keys:
-
-    - ``path`` — source file path
-    - ``units`` — split units: the obs ``embryo_id`` values (``section_id``
-      values for spatial datasets); falls back to the entry's scalar
-      ``embryo_id``/``section_id`` when absent
-    - ``species`` — species label used for stratification (default ``"unknown"``)
-    - ``dataset_type`` — ``"single_cell"`` (default) or ``"spatial"``
-    - ``train_only`` — when true, all of the dataset's units stay in train
-
-    Rules: ``train_only`` datasets never leave train (reason ``train_only``);
-    datasets with a single split unit are train-only (reason ``single_embryo``
-    / ``single_section``) because moving their only unit out of train would be
-    a whole-dataset holdout; every other unit is stratified per species to
-    roughly 70/20/10 train/validation/final holdout — with at least one unit
-    per split when the species has 3+ eligible units (reason ``stratified``),
-    and all-train otherwise (reason ``insufficient_embryos``). Every species
-    must keep at least one unit in train.
+    Entries carry path, species, dataset_type, units (embryo IDs), and optional
+    train_only. Spatial sections are never independent split units. Any embryo
+    seen in a train-only or single-embryo file is pinned to training across all
+    files. Other unique embryos are stratified 70/20/10 within species, with
+    at least one per split when three or more eligible embryos exist.
     """
     normalized = []
     for entry in entries:
         dataset_type = entry.get("dataset_type", "single_cell")
         units = entry.get("units")
         if not units:
-            fallback = entry.get("section_id") if dataset_type == "spatial" else entry.get("embryo_id")
+            fallback = entry.get("embryo_id")
             units = [] if fallback is None else [fallback]
         units = sorted({str(unit) for unit in units})
         if not units:
@@ -399,37 +387,45 @@ def assign_splits(entries: list[dict[str, Any]], seed: int = 0) -> dict[str, Any
 
     rng = np.random.default_rng(seed)
     assignments: list[dict[str, Any]] = []
-    eligible_by_species: dict[str, list[tuple[int, str]]] = defaultdict(list)
-
+    occurrences: dict[tuple[str, str], list[int]] = defaultdict(list)
+    forced: dict[tuple[str, str], str] = {}
     for index, entry in enumerate(normalized):
-        single_reason = "single_section" if entry["dataset_type"] == "spatial" else "single_embryo"
         for unit in entry["units"]:
+            identity = (entry["species"], unit)
+            occurrences[identity].append(index)
             if entry["train_only"]:
-                assignments.append(_split_assignment(entry, unit, "train", "train_only"))
-            elif len(entry["units"]) < 2:
-                assignments.append(_split_assignment(entry, unit, "train", single_reason))
-            else:
-                eligible_by_species[entry["species"]].append((index, unit))
+                forced[identity] = "train_only"
+            elif len(entry["units"]) == 1:
+                forced.setdefault(identity, "single_embryo")
 
+    eligible_by_species: dict[str, list[str]] = defaultdict(list)
+    decisions: dict[tuple[str, str], tuple[str, str]] = {}
+    for identity in occurrences:
+        if identity in forced:
+            decisions[identity] = ("train", forced[identity])
+        else:
+            eligible_by_species[identity[0]].append(identity[1])
     for species in sorted(eligible_by_species):
-        species_units = eligible_by_species[species]
-        if len(species_units) < 3:
-            for index, unit in species_units:
-                assignments.append(_split_assignment(normalized[index], unit, "train", "insufficient_embryos"))
+        units = sorted(eligible_by_species[species])
+        if len(units) < 3:
+            for unit in units:
+                decisions[(species, unit)] = ("train", "insufficient_embryos")
             continue
-        order = np.arange(len(species_units))
-        rng.shuffle(order)
-        n_validation = max(1, round(len(species_units) * 0.2))
-        n_holdout = max(1, round(len(species_units) * 0.1))
-        shuffled = [species_units[i] for i in order]
-        for position, (index, unit) in enumerate(shuffled):
-            if position < n_validation:
-                split = "validation"
-            elif position < n_validation + n_holdout:
-                split = "final_holdout"
-            else:
-                split = "train"
-            assignments.append(_split_assignment(normalized[index], unit, split, "stratified"))
+        order = rng.permutation(len(units))
+        n_validation = max(1, round(len(units) * 0.2))
+        n_holdout = max(1, round(len(units) * 0.1))
+        for position, index in enumerate(order):
+            split = (
+                "validation"
+                if position < n_validation
+                else ("final_holdout" if position < n_validation + n_holdout else "train")
+            )
+            decisions[(species, units[index])] = (split, "stratified")
+    for identity, indices in occurrences.items():
+        split, reason = decisions[identity]
+        for index in indices:
+            assignments.append(_split_assignment(normalized[index], identity[1], split, reason))
+    validate_split_isolation(assignments)
 
     train_species = {assignment["species"] for assignment in assignments if assignment["split"] == "train"}
     missing_train = sorted({entry["species"] for entry in normalized} - train_species)
@@ -452,42 +448,48 @@ def assign_splits(entries: list[dict[str, Any]], seed: int = 0) -> dict[str, Any
     }
 
 
+def validate_split_isolation(assignments: list[dict[str, Any]]) -> None:
+    """Reject any species/embryo identity assigned to multiple splits."""
+    seen: dict[tuple[str, str], str] = {}
+    for assignment in assignments:
+        key = (assignment["species"], assignment["embryo_id"])
+        previous = seen.setdefault(key, assignment["split"])
+        if previous != assignment["split"]:
+            raise ValueError(f"Embryo crosses splits: {key}: {previous}, {assignment['split']}")
+
+
+def read_dataset_obs(dataset: dict[str, Any]) -> pd.DataFrame:
+    """Read only obs, avoiding AnnData backed-mode materialization of layers."""
+    from anndata._io.h5ad import read_dataframe
+
+    with h5py.File(dataset["path"], "r") as handle:
+        obs = read_dataframe(handle["obs"])
+        # Legacy H5ADs store category codes in obs and labels separately in uns.
+        if isinstance(handle["obs"], h5py.Dataset):
+            for column in obs:
+                key = f"uns/{column}_categories"
+                if key in handle:
+                    categories = ad.io.read_elem(handle[key])
+                    categories = [v.decode() if isinstance(v, bytes) else v for v in categories]
+                    obs[column] = pd.Categorical.from_codes(obs[column].to_numpy(), categories)
+    return _apply_obs_columns(obs, dataset.get("obs_columns"))
+
+
 def _read_split_metadata(dataset: dict[str, Any]) -> dict[str, Any]:
-    """Read a dataset's split units via backed, obs-only access (X never loads).
-
-    The split unit is the obs ``embryo_id`` (after ``obs_columns`` renaming);
-    for spatial datasets it is the obs ``section_id``, falling back to the
-    manifest-level ``section_id`` constant.
-    """
-    input_path = Path(dataset["path"])
-    if not input_path.is_file():
-        raise FileNotFoundError(f"Dataset file not found: {input_path}")
-
-    adata = ad.read_h5ad(input_path, backed="r")
-    try:
-        obs = _apply_obs_columns(adata.obs, dataset.get("obs_columns"))
-    finally:
-        adata.file.close()
-
-    dataset_type = dataset["dataset_type"]
-    if dataset_type == "spatial":
-        if "section_id" in obs.columns:
-            units = sorted(obs["section_id"].astype(str).unique())
-        elif dataset.get("section_id"):
-            units = [str(dataset["section_id"])]
-        else:
-            raise ValueError(f"Dataset {input_path} has no section_id obs column or manifest section_id")
-    else:
-        if "embryo_id" not in obs.columns:
-            raise ValueError(f"Dataset {input_path} has no embryo_id obs column after obs_columns renaming")
-        units = sorted(obs["embryo_id"].astype(str).unique())
-
+    """Read real embryo IDs for every modality, preserving native section IDs."""
+    obs = read_dataset_obs(dataset)
+    if "embryo_id" not in obs:
+        raise ValueError(f"Dataset {dataset['path']} has no embryo_id after obs_columns renaming")
+    ids = obs["embryo_id"].astype("string")
+    if ids.isna().any() or ids.str.strip().isin(["", "nan", "None", "unknown"]).any():
+        raise ValueError(f"Dataset {dataset['path']} contains missing embryo_id values")
     return {
         "path": dataset["path"],
-        "dataset_type": dataset_type,
+        "dataset_type": dataset["dataset_type"],
         "species": dataset.get("species") or "unknown",
         "train_only": bool(dataset.get("train_only", False)),
-        "units": units,
+        "split_unit": "embryo_id",
+        "units": sorted(ids.unique().tolist()),
     }
 
 

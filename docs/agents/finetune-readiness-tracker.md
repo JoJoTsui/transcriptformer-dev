@@ -6,7 +6,7 @@ Each completed step is tested, committed, and pushed to `gh/main` separately.
 
 | Step | Deliverable | Status | Evidence / commit |
 | --- | --- | --- | --- |
-| 1 | Embryo-level split safeguards; retain native section identity; reject leakage | In progress | |
+| 1 | Embryo-level split safeguards; retain native section identity; reject leakage | Complete | Split regression + related suites: 53 distinct tests passed; real 27-file metadata check |
 | 2 | Coordinate extraction, safe output copies, derived manifest, validation | Pending | |
 | 3 | Species × phase holdout coverage and explicit B1 feasibility report | Pending | |
 | 4 | Actual-sampler exposure report by dataset, species, and phase | Pending | |
@@ -28,3 +28,19 @@ Each completed step is tested, committed, and pushed to `gh/main` separately.
 ## Validation log
 
 Implementation and validation entries will be appended per step.
+
+### Step 1 — split safeguards
+
+- All modalities split by `(species, embryo_id)`; section IDs remain unchanged.
+  Repeated embryos across files share one assignment; a train-only occurrence
+  pins that embryo to training everywhere. Explicit isolation validation rejects
+  conflicting assignments. Missing embryo IDs fail rather than becoming groups.
+- Obs-only reads handle modern and legacy H5AD categorical annotations without
+  loading expression layers.
+- Validation: the original four regressions failed before the fix. The five-file
+  regression/integration suite passed 51 tests, then all six split tests passed
+  after adding isolation-validator and legacy-category coverage (53 distinct).
+- Actual manifest: 27 files, 256 embryo/file occurrences; all five spatial file
+  occurrences are training-only; final-holdout species are human and mouse.
+- Source H5ADs and corpus membership are unchanged. Split changes require fresh
+  preparation; old split assignments must not be reused.
