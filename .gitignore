@@ -194,3 +194,7 @@ new_env/
 # Finetune run outputs and large mapping caches
 runs/
 preprocess/gene_mappings/cache/
+
+# Local data-remediation backup and captured validator output
+/.scratch/manifest_before.json
+/.scratch/validator_out.txt
