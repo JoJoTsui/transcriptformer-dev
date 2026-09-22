@@ -64,8 +64,26 @@ Each dataset in the run manifest is one AnnData H5AD file containing one embryo
 | `spatial_x`  | spatial only        | Spot x coordinate; discretized into grid bins when `"spatial"` conditioning is enabled (section 8) |
 | `spatial_y`  | spatial only        | Spot y coordinate; discretized into grid bins when `"spatial"` conditioning is enabled (section 8) |
 
-Spatial coordinates are metadata only — they are preserved for downstream
-analysis and are **not** model input.
+Preparation also writes `species` from the manifest when supplied (the canonical
+label takes precedence over a source-file label), `source_dataset` as the resolved
+source path, and `native_stage` before stage harmonization. An existing
+`native_stage` column is preserved, including missing values. Legacy manifests
+without species retain any source species column; otherwise evaluation falls
+back to embryo grouping. Re-run preparation to add these fields to older outputs.
+
+Spatial coordinates remain available for downstream analysis. When spatial
+conditioning is enabled, their per-section grid bins are model inputs.
+
+Spatial evaluation requires `section_id` and groups by all available identity
+columns among `source_dataset`, `species`, `embryo_id`, and `section_id`. Both
+neighborhood consistency and Moran's I are computed separately for each group;
+the top-level score is the unweighted mean over evaluable sections. Reports
+include per-section scores, effective neighbor counts, and counts of excluded
+observations and unevaluable groups. Missing section identity returns an
+unevaluable result rather than pooling coordinates. Invalid coordinates or
+embeddings and missing group values are excluded explicitly; exclusion counts
+may overlap. These descriptive section averages do not provide embryo-level
+uncertainty estimates or turn training sections into independent holdout.
 
 ### Renaming heterogeneous obs columns
 

@@ -35,6 +35,8 @@ def _adata_with_embeddings(
             "spatial_x": coords[:, 0] if coords is not None else np.zeros(n),
             "spatial_y": coords[:, 1] if coords is not None else np.zeros(n),
             "assay": [assay] * n,
+            "section_id": ["section"] * n,
+            "embryo_id": ["embryo"] * n,
         }
     )
     adata = ad.AnnData(obs=obs)
@@ -404,3 +406,85 @@ def test_evaluate_cli_requires_trained_weights(tmp_path: Path) -> None:
     args, output_dir, _ = _write_evaluate_scaffold(tmp_path)
     with pytest.raises(FileNotFoundError, match="model_weights.pt"):
         run_evaluate_cli(args)
+
+
+@pytest.mark.parametrize(
+    "metric,key", [(spatial_neighborhood_consistency, "neighborhood_consistency"), (morans_i, "morans_i")]
+)
+@pytest.mark.parametrize("identity", ["source_dataset", "species", "embryo_id", "section_id"])
+def test_spatial_metrics_isolate_sections(metric, key, identity) -> None:
+    rng = np.random.default_rng(83)
+    coords = rng.uniform(size=(14, 2))
+    first = _adata_with_embeddings(coords, coords=coords)
+    second = _adata_with_embeddings(rng.normal(size=(9, 2)), coords=coords[:9])
+    for data in (first, second):
+        for column in ("source_dataset", "species", "embryo_id", "section_id"):
+            data.obs[column] = "same"
+    second.obs[identity] = "other"
+    expected = np.mean([metric(first, k=3)[key], metric(second, k=3)[key]])
+    combined = ad.concat([first, second])  # Intentionally duplicated obs names.
+    result = metric(combined, k=3)
+    assert result[key] == pytest.approx(expected)
+    assert result["n_groups"] == result["n_evaluable_groups"] == 2
+    assert result["aggregation"] == "unweighted_mean_per_section"
+    combined.obs.iloc[14:, combined.obs.columns.get_indexer(["spatial_x", "spatial_y"])] += 10000
+    assert metric(combined, k=3)[key] == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    "metric,key", [(spatial_neighborhood_consistency, "neighborhood_consistency"), (morans_i, "morans_i")]
+)
+def test_spatial_metrics_report_exclusions(metric, key) -> None:
+    coords = np.array([[0.0, 0.0], [1.0, 1.0], [2.0, 1.0], [np.inf, 2.0], [1.0, np.nan], [4.0, 2.0], [8.0, 1.0]])
+    data = _adata_with_embeddings(np.arange(14).reshape(7, 2).astype(float), coords=coords)
+    data.obs["section_id"] = ["good"] * 5 + ["small", None]
+    result = metric(data, k=2)
+    assert np.isfinite(result[key])
+    assert result["n_spots"] == 4
+    assert result["n_evaluated_spots"] == 3
+    assert result["n_missing_group_metadata"] == 1
+    assert result["n_invalid_coordinates"] == 2
+    assert result["n_evaluable_groups"] == 1
+    assert result["per_group"][1]["reason"] == "too_few_spots"
+    data.obs = data.obs.drop(columns="section_id")
+    result = metric(data)
+    assert np.isnan(result[key])
+    assert result["reason"] == "missing_section_id"
+    assert result["n_missing_group_metadata"] == 7
+
+
+def test_morans_i_reports_constant_signal() -> None:
+    data = _adata_with_embeddings(np.ones((4, 2)), coords=np.arange(8).reshape(4, 2))
+    result = morans_i(data)
+    assert np.isnan(result["morans_i"])
+    assert result["per_group"][0]["reason"] == "constant_embedding_signal"
+    assert result["n_evaluable_groups"] == 0
+
+
+@pytest.mark.parametrize(
+    "metric,key", [(spatial_neighborhood_consistency, "neighborhood_consistency"), (morans_i, "morans_i")]
+)
+def test_spatial_metrics_handle_missing_coordinates_and_invalid_embeddings(metric, key) -> None:
+    coords = np.array([[0.0, 0.0], [1.0, 1.0], [2.0, 3.0], [4.0, 2.0]])
+    data = _adata_with_embeddings(coords.copy(), coords=coords)
+    data.obsm["embeddings"][0] = np.inf
+    result = metric(data)
+    assert np.isfinite(result[key])
+    assert result["n_invalid_embeddings"] == 1
+    assert result["n_spots"] == 3
+    data.obs["embryo_id"] = " "
+    result = metric(data)
+    assert np.isnan(result[key])
+    assert result["n_missing_group_metadata"] == 4
+    data.obs = data.obs.drop(columns="spatial_x")
+    result = metric(data)
+    assert np.isnan(result[key])
+    assert result["reason"] == "missing_coordinate_columns"
+
+
+def test_spatial_knn_excludes_self_with_duplicate_coordinates() -> None:
+    from transcriptformer.finetune.evaluate import _spatial_knn
+
+    neighbors = _spatial_knn(np.zeros((7, 2)), k=3)
+    assert neighbors.shape == (7, 3)
+    assert all(i not in row for i, row in enumerate(neighbors))

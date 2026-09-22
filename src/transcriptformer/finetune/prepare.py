@@ -270,6 +270,13 @@ def prepare_dataset_file(
     stage_mapping = {**(stage_mapping or {}), **(dataset.get("stage_mapping") or {})}
     cell_type_mapping = {**(cell_type_mapping or {}), **(dataset.get("cell_type_mapping") or {})}
     obs = obs.copy()
+    # Use the manifest's canonical species name for cross-file evaluation.
+    # Legacy manifests without species retain source metadata and eval fallback.
+    if dataset.get("species") is not None:
+        obs["species"] = dataset["species"]
+    obs["source_dataset"] = str(input_path.resolve())
+    if "native_stage" not in obs.columns:
+        obs["native_stage"] = obs["stage"].copy()
     obs["stage"] = obs["stage"].map(lambda value: stage_mapping.get(value, value))
     obs["cell_type"] = obs["cell_type"].map(lambda value: cell_type_mapping.get(value, value))
 

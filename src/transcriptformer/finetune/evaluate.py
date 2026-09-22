@@ -14,7 +14,6 @@ import pandas as pd
 from omegaconf import OmegaConf
 from scipy import sparse
 from scipy.sparse.csgraph import shortest_path
-from scipy.spatial import cKDTree
 from scipy.stats import spearmanr
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
@@ -177,7 +176,7 @@ def pseudotime_stage_spearman(
     """
     if group_col is None:
         for candidate in ("species", "embryo_id"):
-            if candidate in adata.obs.columns and adata.obs[candidate].nunique() > 1:
+            if candidate in adata.obs.columns:
                 group_col = candidate
                 break
 
@@ -202,70 +201,131 @@ def pseudotime_stage_spearman(
         "n_stages": int(adata.obs[stage_col].nunique()),
         "group_col": group_col,
         "per_group": per_group,
+        "n_groups": len(per_group),
+        "n_groups_evaluated": len(correlations),
+        "n_groups_unevaluable": len(per_group) - len(correlations),
+        "n_obs_missing_group": int(adata.obs[group_col].isna().sum()),
     }
 
 
-def spatial_neighborhood_consistency(
-    adata: ad.AnnData,
-    k: int = 10,
-) -> dict[str, Any]:
-    """Measure overlap between embedding neighbors and spatial neighbors."""
-    spatial = adata.obs[["spatial_x", "spatial_y"]].dropna()
-    if spatial.shape[0] < 2:
-        return {"neighborhood_consistency": float("nan"), "n_spots": int(spatial.shape[0])}
+def _spatial_metric(adata: ad.AnnData, k: int, metric: str) -> dict[str, Any]:
+    """Evaluate independent coordinate frames; exclusion counts may overlap.
 
-    row_indices = spatial.index
+    Section IDs are required. Every available provenance column participates in
+    the identity so repeated section labels cannot join different samples. Rows
+    missing any available identity field are excluded, never pooled together.
+    """
+    if k < 1:
+        raise ValueError("k must be positive")
+    group_cols = [c for c in ("source_dataset", "species", "embryo_id", "section_id") if c in adata.obs]
+    result: dict[str, Any] = {
+        metric: float("nan"),
+        "n_spots": 0,
+        "n_input_spots": int(adata.n_obs),
+        "n_evaluated_spots": 0,
+        "n_groups": 0,
+        "n_evaluable_groups": 0,
+        "n_unevaluable_groups": 0,
+        "n_missing_group_metadata": 0,
+        "n_invalid_coordinates": 0,
+        "n_invalid_embeddings": 0,
+        "group_cols": group_cols,
+        "aggregation": "unweighted_mean_per_section",
+        "per_group": [],
+    }
+    if "section_id" not in group_cols:
+        result.update(reason="missing_section_id", n_missing_group_metadata=int(adata.n_obs))
+        return result
+    if not {"spatial_x", "spatial_y"}.issubset(adata.obs.columns):
+        result.update(reason="missing_coordinate_columns", n_invalid_coordinates=int(adata.n_obs))
+        return result
+
+    metadata = adata.obs[group_cols].reset_index(drop=True)
+    missing = metadata.isna().any(axis=1).to_numpy()
+    for column in group_cols:
+        missing |= metadata[column].astype("string").str.strip().eq("").fillna(True).to_numpy(dtype=bool)
+    coords = adata.obs[["spatial_x", "spatial_y"]].apply(pd.to_numeric, errors="coerce").to_numpy(dtype=float)
     embeddings = np.asarray(adata.obsm["embeddings"])
-    embedding_matrix = embeddings[adata.obs.index.get_indexer(row_indices)]
-    coords = spatial.to_numpy()
-    n = coords.shape[0]
-    k = min(k, n - 1)
+    valid_coords = np.isfinite(coords).all(axis=1)
+    valid_embeddings = np.isfinite(embeddings).all(axis=1)
+    valid = valid_coords & valid_embeddings
+    result.update(
+        n_missing_group_metadata=int(missing.sum()),
+        n_invalid_coordinates=int((~valid_coords).sum()),
+        n_invalid_embeddings=int((~valid_embeddings).sum()),
+        n_spots=int((~missing & valid).sum()),
+    )
+    minimum = 2 if metric == "neighborhood_consistency" else 3
+    for identity, rows in metadata.loc[~missing].groupby(group_cols, sort=False, observed=True).groups.items():
+        identity = identity if isinstance(identity, tuple) else (identity,)
+        positions = np.asarray(rows, dtype=int)
+        selected = positions[valid[positions]]
+        n = len(selected)
+        group = {
+            "group": dict(zip(group_cols, map(str, identity))),
+            metric: float("nan"),
+            "n_input_spots": len(positions),
+            "n_spots": n,
+            "n_invalid_coordinates": int((~valid_coords[positions]).sum()),
+            "n_invalid_embeddings": int((~valid_embeddings[positions]).sum()),
+        }
+        if n < minimum:
+            group["reason"] = "too_few_spots"
+        else:
+            effective_k = min(k, n - 1)
+            group["k"] = effective_k
+            spatial_neighbors = _spatial_knn(coords[selected], effective_k)
+            if metric == "neighborhood_consistency":
+                embedding_neighbors = _spatial_knn(embeddings[selected], effective_k)
+                group[metric] = float(
+                    np.mean(
+                        [len(set(a) & set(b)) / effective_k for a, b in zip(embedding_neighbors, spatial_neighbors)]
+                    )
+                )
+            else:
+                z = embeddings[selected].mean(axis=1)
+                z = z - z.mean()
+                # Sparse symmetric weights avoid a dense n x n holdout matrix.
+                graph_rows = np.repeat(np.arange(n), effective_k)
+                weights = sparse.csr_matrix(
+                    (np.ones(len(graph_rows)), (graph_rows, spatial_neighbors.ravel())), shape=(n, n)
+                )
+                weights = weights.maximum(weights.T)
+                denominator = float(weights.sum()) * float(z @ z)
+                if denominator:
+                    group[metric] = float(n * (z @ (weights @ z)) / denominator)
+                else:
+                    group["reason"] = "constant_embedding_signal"
+        result["per_group"].append(group)
 
-    embedding_neighbors = NearestNeighbors(n_neighbors=k + 1).fit(embedding_matrix)
-    _, emb_indices = embedding_neighbors.kneighbors(embedding_matrix)
-    spatial_neighbors = NearestNeighbors(n_neighbors=k + 1).fit(coords)
-    _, spa_indices = spatial_neighbors.kneighbors(coords)
+    evaluable = [g for g in result["per_group"] if np.isfinite(g[metric])]
+    result.update(
+        n_groups=len(result["per_group"]),
+        n_evaluable_groups=len(evaluable),
+        n_unevaluable_groups=len(result["per_group"]) - len(evaluable),
+        n_evaluated_spots=sum(g["n_spots"] for g in evaluable),
+    )
+    if evaluable:
+        result[metric] = float(np.mean([g[metric] for g in evaluable]))
+    else:
+        result["reason"] = "no_evaluable_sections"
+    return result
 
-    overlaps = []
-    for emb_row, spa_row in zip(emb_indices[:, 1:], spa_indices[:, 1:]):
-        overlaps.append(len(set(emb_row) & set(spa_row)) / k)
-    return {
-        "neighborhood_consistency": float(np.mean(overlaps)),
-        "n_spots": int(n),
-    }
+
+def _spatial_knn(values: np.ndarray, k: int) -> np.ndarray:
+    """Exclude self by position, including when multiple spots share coordinates."""
+    _, indices = NearestNeighbors(n_neighbors=k + 1).fit(values).kneighbors(values)
+    return np.asarray([row[row != i][:k] for i, row in enumerate(indices)])
+
+
+def spatial_neighborhood_consistency(adata: ad.AnnData, k: int = 10) -> dict[str, Any]:
+    """Mean embedding/spatial neighbor overlap, weighted equally per valid section."""
+    return _spatial_metric(adata, k, "neighborhood_consistency")
 
 
 def morans_i(adata: ad.AnnData, k: int = 10) -> dict[str, Any]:
-    """Compute Moran's I on mean embedding values using spatial kNN weights."""
-    spatial = adata.obs[["spatial_x", "spatial_y"]].dropna()
-    if spatial.shape[0] < 3:
-        return {"morans_i": float("nan"), "n_spots": int(spatial.shape[0])}
-
-    row_indices = spatial.index
-    embeddings = np.asarray(adata.obsm["embeddings"])
-    z = embeddings[adata.obs.index.get_indexer(row_indices)].mean(axis=1)
-    coords = spatial.to_numpy()
-    n = coords.shape[0]
-    k = min(k, n - 1)
-
-    tree = cKDTree(coords)
-    _, neighbor_indices = tree.query(coords, k=k + 1)
-    if n == 1:
-        return {"morans_i": float("nan"), "n_spots": 1}
-    neighbor_indices = np.atleast_2d(neighbor_indices)[:, 1:]
-
-    # Sparse symmetric kNN weights; a dense n×n matrix OOMs on large holdouts.
-    rows = np.repeat(np.arange(n), neighbor_indices.shape[1])
-    cols = neighbor_indices.ravel()
-    weights = sparse.csr_matrix((np.ones(len(rows)), (rows, cols)), shape=(n, n))
-    weights = weights.maximum(weights.T)
-
-    z_centered = z - z.mean()
-    w_sum = weights.sum()
-    numerator = n * float(z_centered @ (weights @ z_centered))
-    denominator = w_sum * float(np.sum(z_centered**2))
-    moran = numerator / denominator if denominator else float("nan")
-    return {"morans_i": float(moran), "n_spots": int(n)}
+    """Mean section Moran's I of mean embedding values, with symmetric kNN weights."""
+    return _spatial_metric(adata, k, "morans_i")
 
 
 def _dataset_type_labels(
