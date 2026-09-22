@@ -7,8 +7,8 @@ corpus/QC decisions and acceptance thresholds remain unchanged.
 
 | Task | Deliverable | Status | Evidence / commit |
 | --- | --- | --- | --- |
-| E | Finished-run resume performs no further updates | Complete | Four boundary regressions + three CI-selection checks passed; no data read or update at/above limit |
-| F | Checkpoint compatibility and validation/best-state continuity | Pending | Bind data, sampling and optimization contract; persist early stopping |
+| E | Finished-run resume performs no further updates | Complete | `d1a62a6`; four boundary regressions + three CI-selection checks passed; no data read or update at/above limit |
+| F | Checkpoint compatibility and validation/best-state continuity | Complete | 61 combined resume/training/worker checks + public budget-extension/best-checkpoint test passed |
 | G | Robust cell-type F1 on small/missing-label groups | Pending | Six rows / three classes currently raise ValueError |
 | H | Bounded rehearsal for every manifest source | Pending | Source preservation, per-source outcomes and timing |
 | I | Production CLI subprocess and memory-cap coverage | Pending | Narrow in-process mocking; exercise actual cap |

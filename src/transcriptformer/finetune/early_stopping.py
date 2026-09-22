@@ -20,3 +20,12 @@ class EarlyStopping:
             return False
         self.wait += 1
         return self.wait >= self.patience
+
+    def state_dict(self) -> dict:
+        return {"best": self.best, "wait": self.wait, "patience": self.patience, "min_delta": self.min_delta}
+
+    def load_state_dict(self, state: dict) -> None:
+        if state["patience"] != self.patience or state["min_delta"] != self.min_delta:
+            raise ValueError("Early-stopping settings changed across resume")
+        self.best = state["best"]
+        self.wait = state["wait"]

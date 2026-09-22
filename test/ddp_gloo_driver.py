@@ -30,6 +30,7 @@ def main() -> None:
     checkpoint = tmp_path / "checkpoint"
     (checkpoint / "vocabs").mkdir(parents=True)
     (checkpoint / "config.json").write_text("{}")
+    (checkpoint / "model_weights.pt").write_bytes(b"tiny-model-test-double")
     (checkpoint / "vocabs" / "assay_vocab.json").write_text("{}")
 
     # Patch before forking so the DDP children inherit the stand-in model.

@@ -24,6 +24,7 @@ SUITES = (
     "holdout_coverage",
     "sampling_audit",
     "probes",
+    "checkpoint_compatibility",
     "resume_contract",
     "worker_epochs",
     "missing_stage_evaluation",

@@ -22,6 +22,7 @@ from transcriptformer.data.dataloader import AnnDatasetOOM
 from transcriptformer.data.dataclasses import BatchData
 from transcriptformer.finetune.artifacts import validate_prepared_artifacts
 from transcriptformer.finetune.early_stopping import EarlyStopping
+from transcriptformer.finetune.resume import build_resume_contract, validate_resume_contract
 from transcriptformer.finetune.spatial import (
     SPATIAL_VOCAB_NAME,
     build_spatial_bin_vocab,
@@ -393,7 +394,9 @@ def _checkpoint_step_number(path: Path) -> int:
 
 
 def _list_checkpoints(output_dir: Path) -> list[Path]:
-    checkpoints = [p for p in output_dir.glob("checkpoint_step*.pt") if p.stem.removeprefix("checkpoint_step").isdigit()]
+    checkpoints = [
+        p for p in output_dir.glob("checkpoint_step*.pt") if p.stem.removeprefix("checkpoint_step").isdigit()
+    ]
     return sorted(checkpoints, key=_checkpoint_step_number)
 
 
@@ -409,6 +412,9 @@ def _save_periodic_checkpoint(
     scaler: Any,
     step: int,
     keep: int = 2,
+    *,
+    resume_contract: dict | None = None,
+    loop_state: dict | None = None,
 ) -> None:
     """Atomically save a full resume checkpoint; keep only the latest `keep`."""
     state = {
@@ -417,13 +423,17 @@ def _save_periodic_checkpoint(
         "scaler": scaler.state_dict(),
         "step": step,
         "rng": _capture_rng_state(),
+        "resume_contract": resume_contract,
+        "loop_state": loop_state,
     }
     _atomic_write(output_dir / f"checkpoint_step{step}.pt", lambda tmp: torch.save(state, tmp))
     for old in _list_checkpoints(output_dir)[:-keep]:
         old.unlink()
 
 
-def _load_latest_checkpoint(output_dir: Path, resume: bool) -> dict[str, Any] | None:
+def _load_latest_checkpoint(
+    output_dir: Path, resume: bool, *, expected_contract: dict | None = None
+) -> dict[str, Any] | None:
     """Load the latest periodic checkpoint, or None when starting fresh."""
     if not resume:
         return None
@@ -432,7 +442,10 @@ def _load_latest_checkpoint(output_dir: Path, resume: bool) -> dict[str, Any] | 
         logger.info("Resume requested but no periodic checkpoint found in %s; starting fresh", output_dir)
         return None
     logger.info("Resuming from %s", checkpoint_path)
-    return torch.load(checkpoint_path, weights_only=False, map_location="cpu")
+    state = torch.load(checkpoint_path, weights_only=False, map_location="cpu")
+    if expected_contract is not None:
+        validate_resume_contract(state, expected_contract)
+    return state
 
 
 def _restore_training_state(
@@ -491,6 +504,8 @@ def _run_training_loop(
     validation_max_batches: int | None = None,
     output_dir: Path | None = None,
     checkpoint_interval: int = 500,
+    resume_contract: dict | None = None,
+    resume_loop_state: dict | None = None,
 ) -> tuple[dict[str, Any], dict[str, torch.Tensor] | None]:
     """Run training; return (summary, best-validation CPU state dict or None).
 
@@ -507,9 +522,18 @@ def _run_training_loop(
     best_step: int | None = None
     last_epoch = 0
     stopped_early = False
+    if resume_loop_state is not None:
+        losses = list(resume_loop_state["losses"])
+        validation_losses = list(resume_loop_state["validation_losses"])
+        best_state = resume_loop_state["best_state"]
+        best_step = resume_loop_state["best_step"]
+        last_epoch = resume_loop_state["last_epoch"]
+        stopped_early = resume_loop_state["stopped_early"]
+        if early_stopping is not None and resume_loop_state["early_stopping"] is not None:
+            early_stopping.load_state_dict(resume_loop_state["early_stopping"])
 
     for epoch in range(1, epochs + 1):
-        if max_steps > 0 and step >= max_steps:
+        if stopped_early or (max_steps > 0 and step >= max_steps):
             break
         last_epoch = epoch
         _set_epoch(dataloader, epoch)
@@ -550,8 +574,6 @@ def _run_training_loop(
                     step,
                     loss_value,
                 )
-                if output_dir is not None and checkpoint_interval > 0 and step % checkpoint_interval == 0:
-                    _save_periodic_checkpoint(output_dir, model, optimizer, scaler, step)
                 if validation_loader is not None and early_stopping is not None and step % validation_interval == 0:
                     validation_loss = _validation_loss(
                         model,
@@ -568,7 +590,29 @@ def _run_training_loop(
                         best_step = step
                     if early_stopping.should_stop(validation_loss):
                         stopped_early = True
-                        break
+                # Save after validation so patience and the selected best weights
+                # describe this exact optimizer boundary, including a stop event.
+                if output_dir is not None and checkpoint_interval > 0 and step % checkpoint_interval == 0:
+                    loop_state = {
+                        "losses": losses,
+                        "validation_losses": validation_losses,
+                        "best_state": best_state,
+                        "best_step": best_step,
+                        "last_epoch": last_epoch,
+                        "stopped_early": stopped_early,
+                        "early_stopping": early_stopping.state_dict() if early_stopping is not None else None,
+                    }
+                    _save_periodic_checkpoint(
+                        output_dir,
+                        model,
+                        optimizer,
+                        scaler,
+                        step,
+                        resume_contract=resume_contract,
+                        loop_state=loop_state,
+                    )
+                if stopped_early:
+                    break
 
             if max_steps > 0 and step >= max_steps:
                 break
@@ -614,6 +658,7 @@ def _ddp_worker(
     validation_max_batches: int = 200,
     validation_batch_size: int | None = None,
     checkpoint_interval: int = 500,
+    resume_contract: dict | None = None,
 ) -> None:
     import torch.distributed as dist
 
@@ -632,10 +677,10 @@ def _ddp_worker(
     use_amp = target_device.type == "cuda" and precision == "16-mixed"
     amp_dtype = torch.float16 if use_amp else torch.float32
 
+    resume_state = _load_latest_checkpoint(output_dir, resume, expected_contract=resume_contract)
     model, cfg, gene_vocab, aux_vocab = _load_model(
         Path(checkpoint_path), spatial_grid_size=spatial_grid_size, work_dir=output_dir
     )
-    resume_state = _load_latest_checkpoint(output_dir, resume)
     if resume_state is not None:
         model.load_state_dict(resume_state["model"])
     model.to(target_device)
@@ -692,6 +737,8 @@ def _ddp_worker(
         validation_max_batches=validation_max_batches,
         output_dir=output_dir if rank == 0 else None,
         checkpoint_interval=checkpoint_interval,
+        resume_contract=resume_contract,
+        resume_loop_state=resume_state.get("loop_state") if resume_state else None,
     )
 
     if rank == 0:
@@ -729,6 +776,21 @@ def train_finetune(
     validate_prepared_artifacts(manifest, prepared_report)
     torch.manual_seed(int(manifest.get("seed", 0)))
     spatial_grid_size = spatial_grid_size_from_manifest(manifest)
+    resume_contract = build_resume_contract(
+        manifest,
+        prepared_report,
+        Path(checkpoint_path),
+        batch_size=batch_size,
+        world_size=num_gpus,
+        grad_accumulation=grad_accumulation,
+        lr=lr,
+        precision=precision,
+        backend=backend if num_gpus > 1 else None,
+        validation_interval=validation_interval,
+        validation_max_batches=validation_max_batches,
+        validation_batch_size=validation_batch_size or batch_size,
+        early_stopping_patience=early_stopping_patience,
+    )
 
     if num_gpus > 1:
         os.environ["MASTER_ADDR"] = "127.0.0.1"
@@ -755,6 +817,7 @@ def train_finetune(
             validation_max_batches,
             validation_batch_size,
             checkpoint_interval,
+            resume_contract,
         )
         if backend == "nccl":
             mp.spawn(_ddp_worker, args=spawn_args, nprocs=num_gpus, join=True)
@@ -778,10 +841,10 @@ def train_finetune(
     amp_dtype = torch.float16 if use_amp else torch.float32
 
     logger.info("Loading checkpoint from %s", checkpoint_path)
+    resume_state = _load_latest_checkpoint(output_dir, resume, expected_contract=resume_contract)
     model, cfg, gene_vocab, aux_vocab = _load_model(
         Path(checkpoint_path), spatial_grid_size=spatial_grid_size, work_dir=output_dir
     )
-    resume_state = _load_latest_checkpoint(output_dir, resume)
     if resume_state is not None:
         model.load_state_dict(resume_state["model"])
     model.to(target_device)
@@ -828,6 +891,8 @@ def train_finetune(
         validation_max_batches=validation_max_batches,
         output_dir=output_dir,
         checkpoint_interval=checkpoint_interval,
+        resume_contract=resume_contract,
+        resume_loop_state=resume_state.get("loop_state") if resume_state else None,
     )
     final_state = best_state if best_state is not None else _snapshot_state_dict(model)
     save_finetuned_checkpoint(output_dir, Path(checkpoint_path), final_state, spatial_grid_size)
