@@ -17,6 +17,9 @@ preparation and remain pending.
 
 ### Open decisions from this batch
 
+Full forward-looking context, defaults, and the ordered next-steps plan are in
+[development state and next steps](development-state-2026-09-23.md).
+
 - B1 sign-off (the draft freezes at training start; no denominator
   changes after results are seen).
 - Ortholog release pin: release 110 (current; matches the pinned FASTAs)
