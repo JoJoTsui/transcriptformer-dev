@@ -4,10 +4,53 @@
   "notes": [
     "Mappings reproduce the documented conventions; boundary sensitivity remains required.",
     "Null metadata columns require source annotation review; sample/replicate IDs are not assumed to be embryos.",
-    "Relative source and asset paths resolve from the repository root."
+    "Relative source and asset paths resolve from the repository root.",
+    "2026-09-23 probe-asset audit (read-only): unresolved cell_type/embryo_id/assay fields were reviewed against each dataset README and the source papers (citations in per-dataset metadata_provenance). Fields are resolved only to real obs columns; documented constants are recorded in metadata_provenance with citations but stay null in metadata_columns because audit_probe_dataset requires a real source column (remaining 'assay lacks a verified source column' blockers are expected).",
+    "Embryo pooling is documented for pig_simpson_2024 (23 pooled samples / 62 embryos), xenopus_briggs_2018 (5-15 embryos per library), ciona_cao_2019 (100-500 embryos per sample) and amphioxus_markos_2024 (15-20 embryos per sample): embryo_id stays null with precise reasons in metadata_provenance.",
+    "fasta_manifest_pep.json now covers all six probe species (verified URLs: HTTP 200, Content-Length and headers inspected 2026-09-23). Key-namespace findings per species are in fasta_provenance below and in logs/dataset_audit/probe_b4_esm2_plan.md."
   ],
   "fasta_manifest": "preprocess/fasta_manifest_pep.json",
   "vocab_dir": "checkpoints/tf_metazoa_finetuned/vocabs",
+  "fasta_provenance": {
+    "macaca_fascicularis": {
+      "url": "https://ftp.ensembl.org/pub/release-110/fasta/macaca_fascicularis/pep/Macaca_fascicularis.Macaca_fascicularis_6.0.pep.all.fa.gz",
+      "verified_http": 200,
+      "content_length_bytes": 10128609,
+      "proteins": 49919,
+      "genes_by_gene_tag": 22504,
+      "header_gene_tag": "gene:ENSMFAG00000030318.2 (present; version stripped by protein_embedding.py)",
+      "var_namespace_check": "MISMATCH: the three macaque probe files index genes by symbols/LOC tags (macaque_zhai_2022 var 'gene': 16,895 symbol-like + 9,230 LOC*; macaque_gong_2023 var 'gene_id': 18,168 + 15,790; macaque_spatial var 'gene_symbol': 4,663 symbols). Parsed FASTA keys are ENSMFAG stable IDs: 0/26,135, 0/33,960 and 0/4,663 exact var matches. pep gene_symbol values overlap 12,613 / 14,202 / 3,263 var names, so joining would require a symbol->ENSMFAG map (symbol ambiguity unresolved)."
+    },
+    "cavia_porcellus": {
+      "url": "https://ftp.ensembl.org/pub/release-110/fasta/cavia_porcellus/pep/Cavia_porcellus.Cavpor3.0.pep.all.fa.gz",
+      "verified_http": 200,
+      "content_length_bytes": 7883700,
+      "proteins": 25582,
+      "genes_by_gene_tag": 18095,
+      "header_gene_tag": "gene:ENSCPOG00000017403.2 (present; version stripped by protein_embedding.py)",
+      "var_namespace_check": "MATCH at the gene-ID level: var index is composite 'ENSCPOGxxxxx:SYMBOL'; the ENSCPOG component matches the Cavpor3.0 pep gene: namespace for 15,333/19,323 var genes (the remainder are non-coding genes without protein products). Exact string keys differ by the ':symbol' suffix, so a lookup must strip the suffix. Canizo et al. 2025 aligned to Cavpor.3.0.v105, the same assembly as this FASTA."
+    },
+    "ciona_intestinalis": {
+      "url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/224/145/GCF_000224145.3_KH/GCF_000224145.3_KH_protein.faa.gz",
+      "verified_http": 200,
+      "content_length_bytes": 6803777,
+      "proteins": 21096,
+      "genes_by_gene_tag": 0,
+      "header_gene_tag": "ABSENT: headers are '>NP_001007565.1 hyaluronan-mediated motility receptor [Ciona intestinalis]'; no gene: tag, no KH2012 IDs (feature table uses LOC100xxxxxx symbols / GeneID).",
+      "var_namespace_check": "MISMATCH: var index is 'KH2012:KH.C1.xxx' (15,228/15,269; plus 39 ENSCING000000xxxxxx and 2 constructs mChSV40/CFPSV40). protein_embedding.py would key this FASTA by NP_/XP_ protein accessions. No verified FASTA exposes KH2012 gene IDs: Ensembl Metazoa (checked release-39..63) has no Ciona; the Ghost database cited by Cao et al. 2019 now publishes KY/KY21 models (e.g. 'KY.Chr1.580.v1.ND1-1'), not KH2012. GCF_000224145.3 is the exact species and the KH assembly used by Cao et al., but a KH2012<->RefSeq mapping table would be required (not built here)."
+    },
+    "branchiostoma_floridae": {
+      "url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/003/815/GCF_000003815.2_Bfl_VNyyK/GCF_000003815.2_Bfl_VNyyK_protein.faa.gz",
+      "verified_http": 200,
+      "content_length_bytes": 10031501,
+      "proteins": 43041,
+      "genes_by_gene_tag": 0,
+      "header_gene_tag": "ABSENT: headers are '>XP_035657338.1 uncharacterized protein LOC118403009 [Branchiostoma floridae]'; no gene: tag.",
+      "var_namespace_check": "PARTIAL MISMATCH: var index is NCBI locus tags 'LOC1184xxxxx' (29,309/29,726; rest tRNA/etc.) from the Bfl_VNyyK annotation (Markos et al. 2024 quantified against GCA_000003815.2 = GenBank counterpart of GCF_000003815.2). 6,273/29,726 var genes appear verbatim as 'LOC1184xxxxx' tokens in pep descriptions (6,274 unique), but protein_embedding.py parses only 'gene:' and would key by XP_/NP_ accessions instead of LOC gene IDs. The older GCF_000003815.1 (JGI 'Version 2') pep carries JGI protein-model IDs ('BRAFLDRAFT_111961', 0 LOC overlap) and is the wrong key namespace."
+    },
+    "sus_scrofa_existing_entry": "pep keys ENSSSCG (Sscrofa11.1) match pig_simpson_2024 var 'gene_id' (ENSSSCG; Simpson et al. 2024 used Sscrofa11.1 / Ensembl v109) - compatible.",
+    "xenopus_tropicalis_existing_entry": "pep keys ENSXETG do NOT match xenopus_briggs_2018 var 'gene_name', which uses gene symbols / JGI v1 names ('arhgef26', 'Xetrov90007505m', 'LOC100485680'). Pre-generated xenopus embeddings (see logs/dataset_audit/probe_b4_esm2_plan.md) inherit the same ENSXETG keys and will not join to var_names without a symbol->ENSXETG map."
+  },
   "datasets": [
     {
       "id": "macaque_zhai_2022",
@@ -17,7 +60,7 @@
       "species_column": "species",
       "metadata_columns": {
         "cell_type": "cell_type",
-        "embryo_id": null,
+        "embryo_id": "sample",
         "assay": null
       },
       "stage_mapping": {
@@ -26,7 +69,12 @@
         "E26": "neurula",
         "E29": "neurula"
       },
-      "species_provenance": "Source README and Zhai 2022 identify Macaca fascicularis; source obs has no species column."
+      "species_provenance": "Source README and Zhai 2022 identify Macaca fascicularis; source obs has no species column.",
+      "metadata_provenance": {
+        "cell_type": "resolved: obs['cell_type'] (38 author clusters) - Zhai et al. 2022, Nature, DOI 10.1038/s41586-022-05526-y (GEO GSE193007).",
+        "embryo_id": "resolved: obs['sample'] (6 values CS8-e1/CS8-e2/CS9-e1/CS9-e2/CS11-e1/CS11-e2). Zhai et al. 2022 abstract: 'we collected six Carnegie stage 8-11 cynomolgus monkey embryos and performed in-depth transcriptomic analyses of 56,636 single cells' (56,636 = n_obs); Sup. Tables 1-2 describe 7 embryonic samples, matching the 7 obs['orig.ident'] libraries. Cross-tab: sample CS11-e1 pools orig.ident {E26-E1, E26-Y1} - the 7th library is a second tissue sample of the same CS11 embryo (Fig. 1a distinguishes embryo tissue 'e' and yolk sac 'ys'). Residual caveat: the E/Y tissue reading of orig.ident is inferred from that figure legend; if E26-Y1 were an independent embryo, embryo_id would have to be orig.ident (7 values) instead of sample (6 values).",
+        "assay": "unresolved by column (obs has no assay column). Documented constant = 10x Genomics Chromium: Zhai et al. 2022 Methods ('Samples were dissociated into single cells, with 67,418 sequenced using the 10X Genomics Chromium platform') and Sup. Table 1."
+      }
     },
     {
       "id": "macaque_gong_2023",
@@ -36,7 +84,7 @@
       "species_column": "species",
       "metadata_columns": {
         "cell_type": null,
-        "embryo_id": null,
+        "embryo_id": "sample",
         "assay": null
       },
       "stage_mapping": {
@@ -48,6 +96,11 @@
         "ME23": "neurula",
         "ME24": "neurula",
         "ME25": "neurula"
+      },
+      "metadata_provenance": {
+        "cell_type": "unresolved: the source provides no cell-type annotation. Dataset README (Cell_ex_utero_embryogenesis/README.md): the GEO matrices carry no author UMAP/PCA/coordinates or final cell-type annotations and none were recomputed or added.",
+        "embryo_id": "resolved: obs['sample'] (24 values 'GSM…_replicate_N_MEdd', 1:1 with obs['gsm']). GEO GSE207534 titles each GSM 'ME…, replicate N, scRNAseq' with characteristic 'cell type: Embryo' (singular), i.e. each 10x library is one embryo replicate destructively sampled from an individually cultured ex utero embryo (Ma et al., Cell 2023, DOI 10.1016/j.cell.2023.04.020). Residual caveat: neither GEO GSE207534 nor the dataset README states embryo counts per library; if any replicate pooled embryos this column is per-library rather than per-embryo identity. obs['replicate'] (4 values) alone is NOT an embryo identity - it restarts at each ME stage.",
+        "assay": "unresolved by column. Documented constant = 10x Genomics Chromium Single Cell 3' v3.1: GEO GSE207534 '!Sample_description = 10x Genomics' and extract_protocol 'Chromium Single Cell 3' Reagent Kit v3.1 protocol, 10x Genomics'; dataset README ('10x 矩阵'). Note: the GEO extract_protocol field also contains unrelated mouse goblet-cell text (deposit artefact); the 10x lines cited here are corroborated by the dataset README."
       }
     },
     {
@@ -64,6 +117,11 @@
       "stage_mapping": {
         "CS9": "neurula",
         "CS10": "neurula"
+      },
+      "metadata_provenance": {
+        "cell_type": "resolved: obs['celltype_detailed'] (32 publication annotation values).",
+        "embryo_id": "unresolved: no per-cell embryo identity in obs. The finest sampling identity is obs['spatial_slice_id'] (20 serial sections, 10 per stage) - sections are not embryos (docs/finetune-readiness-tools.md §2) and must not be used as embryo IDs. Neither the dataset README (空间转录组_CS9_CS10_Nature_Cell_Biology/README.md), the Zenodo record README (10.5281/zenodo.19061842) nor the Nature Cell Biology 2026 abstract (DOI 10.1038/s41556-026-01956-2) states how many embryos the 20 slices came from, so stage->embryo identity is not derivable. obs['orig.ident'] (157 values) is a capture/technical identifier, not an embryo.",
+        "assay": "unresolved: no assay column and no citable platform constant. Available sources say only 'high-resolution spatial transcriptomics' (Nature Cell Biology 2026 abstract) and 'Spateo-aligned 3D coordinates, 20 slices' (dataset README and Zenodo README). Spateo suggests but does not document the imaging/sequencing platform, so no constant is asserted."
       }
     },
     {
@@ -86,6 +144,11 @@
         "E14": "neurula",
         "E14.5": "neurula",
         "E15": "neurula"
+      },
+      "metadata_provenance": {
+        "cell_type": "resolved: obs['Celltypes'] (36 author cell types).",
+        "embryo_id": "unresolved: pooled embryos without per-cell labels. Simpson et al. 2024 (Nat Commun, DOI 10.1038/s41467-024-49407-6) Results: 'we obtained scRNA-seq profiles from 23 pooled samples encompassing 62 pig embryos'; Methods: cells from pools of same-stage embryos were loaded per 10x chip lane. obs['Sample'] (23) is the pooled-sample ID, obs['Sow'] (7) the dam, obs['Chip']/obs['SeqPool'] 10x/sequencing batches - none is a per-cell embryo identity.",
+        "assay": "unresolved by column. Documented constant = 10x Genomics Chromium: Simpson et al. 2024 Methods ('Approximately 4000-14000 cells per lane of each 10x chip were transferred. The chip was then loaded into a Chromium Controller') and GEO GSE236766; dataset README."
       }
     },
     {
@@ -106,6 +169,11 @@
         "EB": "blastula",
         "MB": "blastula",
         "LB": "blastula"
+      },
+      "metadata_provenance": {
+        "cell_type": "resolved: obs['author_cell_type'] (8 EML lineage labels from the author Supplementary Table 1 - Canizo et al. 2025, Nat Cell Biol, DOI 10.1038/s41556-025-01642-9).",
+        "embryo_id": "resolved: obs['embryo'] (42 embryo IDs, e.g. '21PG40-1'); per-cell embryo identity retained from the author supplementary table (dataset README, Nature_Cell_Biology_2025/README.md).",
+        "assay": "unresolved by column. Documented constant = Smart-seq2 after single-cell picking: Canizo et al. 2025 Methods ('embryos were dissociated into single cells with TrypLE Express … collected using fine glass capillaries'; 'Libraries were prepared using Smart-Seq2')."
       }
     },
     {
@@ -117,7 +185,7 @@
       "metadata_columns": {
         "cell_type": "author_cell_type",
         "embryo_id": null,
-        "assay": null
+        "assay": "InDrops_version"
       },
       "stage_mapping": {
         "Stage_8": "blastula",
@@ -130,6 +198,11 @@
         "Stage_18": "neurula",
         "Stage_20": "neurula",
         "Stage_22": "organogenesis"
+      },
+      "metadata_provenance": {
+        "cell_type": "resolved: obs['author_cell_type'] (260 author cluster names = Cluster_name).",
+        "embryo_id": "unresolved: pooled embryos without per-cell labels. GEO GSE113074 extract protocol (Briggs et al. 2018, Science, DOI 10.1126/science.aar5780): '5-15 healthy embryos at each desired developmental stage were collected, devitellinized …, dissociated to single cells … for scRNA-seq analysis by InDrops'. obs['Clutch_name'] (6) is an egg-clutch/batch and obs['Library_name'] (75) an inDrop library - neither is an embryo identity.",
+        "assay": "resolved: obs['InDrops_version'] (per-cell inDrop protocol version, v2 = 42,835 cells / v3 = 94,131 cells). Platform = inDrop scRNA-seq per Briggs et al. 2018 Methods (GEO GSE113074 extract protocol; Zilionis et al., Nat. Protoc. 2017) and the dataset README (Science_2018/README.md, 'InDrops 版本')."
       }
     },
     {
@@ -154,6 +227,11 @@
         "latTI": "organogenesis",
         "latTII": "organogenesis",
         "larva": "organogenesis"
+      },
+      "metadata_provenance": {
+        "cell_type": "unresolved: source obs has no cell-type/lineage column (dataset README lists obs = sample, GSM, stage, n_genes_by_counts, total_counts); the Cao et al. 2019 lineage annotations were not carried into the H5AD.",
+        "embryo_id": "unresolved: pooled embryos without per-cell labels. Cao et al. 2019 (Nature, DOI 10.1038/s41586-019-1385-y) Methods: 'For each sample, 100 to 500 morphologically normal embryos were randomly picked … and transferred into tubes' before dissociation, with at least 2 biological replicates per stage. obs['sample']/obs['gsm'] (23) are pooled library IDs, not embryos.",
+        "assay": "unresolved by column. Documented constant = 10x Genomics Chromium Single Cell 3' v2: Cao et al. 2019 Methods ('Chromium Single Cell 3' Library and Gel Bead Kit v2 (10x Genomics)'; Cell Ranger 2.0.1)."
       }
     },
     {
@@ -172,6 +250,11 @@
         "N0": "neurula",
         "N2": "neurula",
         "N5": "neurula"
+      },
+      "metadata_provenance": {
+        "cell_type": "unresolved: source obs has no cell-type column (dataset README: obs keeps only stage and sample).",
+        "embryo_id": "unresolved: pooled embryos without per-cell labels. Markos et al. 2024 (Nat Commun, DOI 10.1038/s41467-024-52938-7) Methods: 'For each sample, 15 to 20 morphologically normal embryos were randomly picked and transferred into 4 well plates' before dissociation. obs['sample'] duplicates obs['stage'] (G4/N0/N2/N5) - one pooled library per stage, not an embryo identity.",
+        "assay": "unresolved by column. Documented constant = 10x Genomics Chromium Next GEM Single Cell 3' v3.1: Markos et al. 2024 Methods ('Chromium nextGEM single cells 3' reagent kit v3.1') and the dataset README ('10x 过滤矩阵')."
       }
     }
   ]

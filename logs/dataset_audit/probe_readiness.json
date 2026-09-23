@@ -7,13 +7,11 @@
       "species": "macaca_fascicularis",
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/Nature_2022_CS8-CS11/食蟹猴_Macaca_fascicularis__Primate gastrulation and early organogenesis at single-cell resolution.h5ad",
       "blockers": [
-        "Missing FASTA manifest entry for macaca_fascicularis",
         "Missing species-specific ESM2 vocabulary for macaca_fascicularis",
         "Missing species metadata: species; explicit source identity must be populated",
-        "Required metadata embryo_id lacks a verified source column",
         "Required metadata assay lacks a verified source column"
       ],
-      "fasta_manifest_entry": null,
+      "fasta_manifest_entry": "https://ftp.ensembl.org/pub/release-110/fasta/macaca_fascicularis/pep/Macaca_fascicularis.Macaca_fascicularis_6.0.pep.all.fa.gz",
       "vocab_path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/macaca_fascicularis_gene.h5",
       "vocab_present": false,
       "n_obs": 56636,
@@ -37,8 +35,9 @@
           "unique_count": 38
         },
         "embryo_id": {
-          "source_column": null,
-          "status": "missing_or_unresolved"
+          "source_column": "sample",
+          "missing_count": 0,
+          "unique_count": 6
         },
         "assay": {
           "source_column": null,
@@ -52,13 +51,11 @@
       "species": "macaca_fascicularis",
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/Cell_ex_utero_embryogenesis/食蟹猴_Macaca_fascicularis__Ex utero monkey embryogenesis from blastocyst to early organogenesis.h5ad",
       "blockers": [
-        "Missing FASTA manifest entry for macaca_fascicularis",
         "Missing species-specific ESM2 vocabulary for macaca_fascicularis",
         "Required metadata cell_type lacks a verified source column",
-        "Required metadata embryo_id lacks a verified source column",
         "Required metadata assay lacks a verified source column"
       ],
-      "fasta_manifest_entry": null,
+      "fasta_manifest_entry": "https://ftp.ensembl.org/pub/release-110/fasta/macaca_fascicularis/pep/Macaca_fascicularis.Macaca_fascicularis_6.0.pep.all.fa.gz",
       "vocab_path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/macaca_fascicularis_gene.h5",
       "vocab_present": false,
       "n_obs": 204079,
@@ -88,8 +85,9 @@
           "status": "missing_or_unresolved"
         },
         "embryo_id": {
-          "source_column": null,
-          "status": "missing_or_unresolved"
+          "source_column": "sample",
+          "missing_count": 0,
+          "unique_count": 24
         },
         "assay": {
           "source_column": null,
@@ -103,12 +101,11 @@
       "species": "macaca_fascicularis",
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/空间转录组_CS9_CS10_Nature_Cell_Biology/食蟹猴_CS9_CS10__A three-dimensional spatial transcriptome atlas reconstructs early organogenesis in primate Carnegie stages 9 and 10 embryos.h5ad",
       "blockers": [
-        "Missing FASTA manifest entry for macaca_fascicularis",
         "Missing species-specific ESM2 vocabulary for macaca_fascicularis",
         "Required metadata embryo_id lacks a verified source column",
         "Required metadata assay lacks a verified source column"
       ],
-      "fasta_manifest_entry": null,
+      "fasta_manifest_entry": "https://ftp.ensembl.org/pub/release-110/fasta/macaca_fascicularis/pep/Macaca_fascicularis.Macaca_fascicularis_6.0.pep.all.fa.gz",
       "vocab_path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/macaca_fascicularis_gene.h5",
       "vocab_present": false,
       "n_obs": 93888,
@@ -197,11 +194,10 @@
       "species": "cavia_porcellus",
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/豚鼠_Cavia_porcellus/Nature_Cell_Biology_2025/豚鼠_Cavia_porcellus__The guinea pig serves as an alternative model to study human preimplantation development.h5ad",
       "blockers": [
-        "Missing FASTA manifest entry for cavia_porcellus",
         "Missing species-specific ESM2 vocabulary for cavia_porcellus",
         "Required metadata assay lacks a verified source column"
       ],
-      "fasta_manifest_entry": null,
+      "fasta_manifest_entry": "https://ftp.ensembl.org/pub/release-110/fasta/cavia_porcellus/pep/Cavia_porcellus.Cavpor3.0.pep.all.fa.gz",
       "vocab_path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/cavia_porcellus_gene.h5",
       "vocab_present": false,
       "n_obs": 541,
@@ -246,8 +242,7 @@
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/热带爪蟾_Xenopus_tropicalis/Science_2018/热带爪蟾_Xenopus_tropicalis__The dynamics of gene expression in vertebrate embryogenesis at single-cell resolution.h5ad",
       "blockers": [
         "Missing species-specific ESM2 vocabulary for xenopus_tropicalis",
-        "Required metadata embryo_id lacks a verified source column",
-        "Required metadata assay lacks a verified source column"
+        "Required metadata embryo_id lacks a verified source column"
       ],
       "fasta_manifest_entry": "https://ftp.ensembl.org/pub/release-113/fasta/xenopus_tropicalis/pep/Xenopus_tropicalis.UCB_Xtro_10.0.pep.all.fa.gz",
       "vocab_path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/xenopus_tropicalis_gene.h5",
@@ -288,8 +283,9 @@
           "status": "missing_or_unresolved"
         },
         "assay": {
-          "source_column": null,
-          "status": "missing_or_unresolved"
+          "source_column": "InDrops_version",
+          "missing_count": 0,
+          "unique_count": 2
         }
       },
       "ready": false
@@ -299,13 +295,13 @@
       "species": "ciona_intestinalis",
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/海鞘_Ciona_intestinalis/海鞘_Ciona_intestinalis__Comprehensive single cell transcriptome lineages of a proto-vertebrate.h5ad",
       "blockers": [
-        "Missing FASTA manifest entry for ciona_intestinalis",
+        "FASTA reference does not identify ciona_intestinalis; verify species provenance",
         "Missing species-specific ESM2 vocabulary for ciona_intestinalis",
         "Required metadata cell_type lacks a verified source column",
         "Required metadata embryo_id lacks a verified source column",
         "Required metadata assay lacks a verified source column"
       ],
-      "fasta_manifest_entry": null,
+      "fasta_manifest_entry": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/224/145/GCF_000224145.3_KH/GCF_000224145.3_KH_protein.faa.gz",
       "vocab_path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/ciona_intestinalis_gene.h5",
       "vocab_present": false,
       "n_obs": 91258,
@@ -353,13 +349,13 @@
       "species": "branchiostoma_floridae",
       "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/佛罗里达文昌鱼_Branchiostoma_floridae/佛罗里达文昌鱼_Branchiostoma_floridae__Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head.h5ad",
       "blockers": [
-        "Missing FASTA manifest entry for branchiostoma_floridae",
+        "FASTA reference does not identify branchiostoma_floridae; verify species provenance",
         "Missing species-specific ESM2 vocabulary for branchiostoma_floridae",
         "Required metadata cell_type lacks a verified source column",
         "Required metadata embryo_id lacks a verified source column",
         "Required metadata assay lacks a verified source column"
       ],
-      "fasta_manifest_entry": null,
+      "fasta_manifest_entry": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/003/815/GCF_000003815.2_Bfl_VNyyK/GCF_000003815.2_Bfl_VNyyK_protein.faa.gz",
       "vocab_path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/branchiostoma_floridae_gene.h5",
       "vocab_present": false,
       "n_obs": 12411,

@@ -59,5 +59,17 @@
   },
   "rattus_norvegicus": {
     "fa": "https://ftp.ensembl.org/pub/release-113/fasta/rattus_norvegicus/pep/Rattus_norvegicus.mRatBN7.2.pep.all.fa.gz"
+  },
+  "macaca_fascicularis": {
+    "fa": "https://ftp.ensembl.org/pub/release-110/fasta/macaca_fascicularis/pep/Macaca_fascicularis.Macaca_fascicularis_6.0.pep.all.fa.gz"
+  },
+  "cavia_porcellus": {
+    "fa": "https://ftp.ensembl.org/pub/release-110/fasta/cavia_porcellus/pep/Cavia_porcellus.Cavpor3.0.pep.all.fa.gz"
+  },
+  "ciona_intestinalis": {
+    "fa": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/224/145/GCF_000224145.3_KH/GCF_000224145.3_KH_protein.faa.gz"
+  },
+  "branchiostoma_floridae": {
+    "fa": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/003/815/GCF_000003815.2_Bfl_VNyyK/GCF_000003815.2_Bfl_VNyyK_protein.faa.gz"
   }
 }
