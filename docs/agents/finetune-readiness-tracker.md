@@ -38,7 +38,8 @@ remain unchanged.
 - Legacy/incompatible resume checkpoints need a new output directory. Resuming
   identical data allows a larger training budget and preserves validation state.
   Base asset hashing adds startup I/O; storing best weights adds checkpoint size.
-- Remaining gates: collaborator #1–#4/assay decisions, B1 criterion, full corpus
+- Remaining gates: collaborator #1–#4/assay decisions, B1 criterion (revision
+  draft in `docs/b1-criterion-proposal.md`, sign-off pending), full corpus
   coordinate copies/preparation, probe assets and frozen reference datasets.
   B1 likelihood and B3 perturbation/null-model execution remain separate work.
 

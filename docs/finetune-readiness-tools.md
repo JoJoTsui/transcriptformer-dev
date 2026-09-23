@@ -201,7 +201,9 @@ assets, or apply scientific pass/fail thresholds. See the
 ## Remaining gates
 
 - Collaborator decisions #1–#4 and assay normalization remain pending.
-- Agree on a measurable B1 criterion before observing model results.
+- Agree on a measurable B1 criterion before observing model results; a
+  pre-registration draft ([b1-criterion-proposal.md](b1-criterion-proposal.md))
+  awaits sign-off.
 - Resolve probe assets and source annotations before evaluating B4.
 - Create complete coordinate copies, finalize the manifest, and run the real
   preparation/validation gate. Regenerate reports after corpus or QC changes.
