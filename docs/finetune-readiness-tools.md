@@ -111,8 +111,14 @@ labels and rejects missing or unknown stages.
 
 The [recorded audit](../logs/dataset_audit/probe_readiness.json) finds complete
 stage coverage, but all six correct-species vocabularies are absent at the
-configured paths; four species lack FASTA manifest entries; source annotations
-still need resolution. It does not substitute macaque species or invent embryo
+configured paths and ESM-2 generation has not run ([plan and known script
+defects](../logs/dataset_audit/probe_b4_esm2_plan.md)). All six FASTA manifest
+entries now exist and are verified (2026-09-23); source annotations were
+resolved only to real obs columns (embryo_id for zhai/gong, assay for xenopus),
+with documented pooling and platform constants recorded in `metadata_provenance`
+without fabricating columns. Key-namespace mismatches between embedding keys
+and probe `var_names` (macaque ×3, ciona, amphioxus, xenopus) require mapping
+tables before B4. It does not substitute macaque species or invent embryo
 identities. Asset presence and shape checks do not validate gene coverage,
 protein provenance, phase-boundary sensitivity, or spatial metrics.
 
