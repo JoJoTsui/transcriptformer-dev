@@ -1,5 +1,39 @@
 # Finetune readiness tracker
 
+## Readiness work while collaborator decisions #1–#3 are pending
+
+Started and completed 2026-09-23. Scope: workstreams independent of the
+pending corpus-inclusion (#1, #2) and sampling-policy (#3) decisions.
+All four were tested, committed, and pushed separately to `gh/main`.
+Decisions #4/#5 (QC screen, assay normalization) also gate final
+preparation and remain pending.
+
+| Task | Deliverable | Status | Evidence / commit |
+| --- | --- | --- | --- |
+| K | Complete spatial coordinate copies + derived manifest | Complete | `2ea75b3`; five files (~2.5 GB, sources unchanged); validator 27 PASS / 1 WARN / 0 FAIL on the derived manifest; all-27-source bounded rehearsal passed (3,357 → 3,308 rows) |
+| L | B1 criterion revision pre-registration draft | Complete (sign-off pending) | `ee6f934`; `docs/b1-criterion-proposal.md` (B1-A recommended; B1-B/B1-C alternatives; metric convention; freeze discipline). Collaborator #1–#3 cannot change B1 feasibility |
+| M | Probe asset audit: FASTA entries, metadata, ESM-2 plan | Complete | `6c67547`, `4d95645`; four verified FASTA entries (exact-species NCBI proteomes for ciona/amphioxus); metadata resolved to real columns with citations; register 8.4 added (key-namespace mismatches); readiness report regenerated (exit 1 by design) |
+| N | 1:1 ortholog table + coverage floors + cross-check | Complete | `c117bd3`; 402,495 pairs / 68 of 91 pairs; only 6 pairs pass both floors; 200-pair check OrthoDB 40/21/139, Alliance DIOPT 35/0/1 (21 discordant dropped); 32 offline tests, ruff clean |
+
+### Open decisions from this batch
+
+- B1 sign-off (the draft freezes at training start; no denominator
+  changes after results are seen).
+- Ortholog release pin: release 110 (current; matches the pinned FASTAs)
+  vs 116 (available; exploratory numbers closely match).
+- Coverage-floor reality check: only 6/91 pairs pass. Either accept that
+  failing pairs downgrade to single-species findings, or revise the floor
+  definition before any results are seen.
+- 139/200 sampled pairs are unverified (OrthoDB xref gaps; kept as
+  "unverified", never fabricated) — accept or schedule a second pass.
+- Before B4: ESM-2 embedding generation (est. 8–23 h GPU; `fair-esm` and
+  biopython must be installed and the `preprocess/protein_embedding.py`
+  defects fixed first — see `logs/dataset_audit/probe_b4_esm2_plan.md`)
+  plus key-namespace mapping tables (register 8.4; macaque symbol
+  ambiguity needs a ruling).
+- Unchanged gates: collaborator #1–#4/assay decisions, full preparation
+  and the artifact gate on the derived manifest, frozen reference sets.
+
 ## Next development — resume safety, evaluation, and broader rehearsal
 
 Status: complete (2026-09-22). All six tasks were tested, committed and pushed
@@ -39,8 +73,9 @@ remain unchanged.
   identical data allows a larger training budget and preserves validation state.
   Base asset hashing adds startup I/O; storing best weights adds checkpoint size.
 - Remaining gates: collaborator #1–#4/assay decisions, B1 criterion (revision
-  draft in `docs/b1-criterion-proposal.md`, sign-off pending), full corpus
-  coordinate copies/preparation, probe assets and frozen reference datasets.
+  draft in `docs/b1-criterion-proposal.md`, sign-off pending), full preparation
+  on the derived coordinate manifest (coordinate copies now complete), probe
+  assets (embeddings/vocabularies) and frozen reference datasets.
   B1 likelihood and B3 perturbation/null-model execution remain separate work.
 
 ## Continuing development — runtime correctness and artifact validation

@@ -216,7 +216,12 @@ assets, or apply scientific pass/fail thresholds. See the
 - Agree on a measurable B1 criterion before observing model results; a
   pre-registration draft ([b1-criterion-proposal.md](b1-criterion-proposal.md))
   awaits sign-off.
-- Resolve probe assets and source annotations before evaluating B4.
+- Resolve probe assets (ESM-2 embeddings/vocabularies and key-namespace
+  maps) and remaining source annotations before evaluating B4.
+
+- Only 6 of 91 ortholog pairs pass the pre-registered coverage floors;
+  failing pairs downgrade cross-species gene-level claims to single-species
+  findings unless the floor is revised before results are seen.
 - Complete coordinate copies and their derived manifest now exist and validate;
 finalize the corpus manifest and run the real
   preparation/validation gate. Regenerate reports after corpus or QC changes.
