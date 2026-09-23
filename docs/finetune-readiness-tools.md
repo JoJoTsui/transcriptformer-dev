@@ -45,8 +45,14 @@ warning. Validate the derived manifest before preparation:
 
 The [coordinate evidence](../logs/dataset_audit/spatial_coordinates.json) covers
 all 412,374 coordinate rows and full obs/obsm metadata-copy rehearsals, plus
-synthetic expression-copy tests. Full real expression copies and final preparation
-have not run. The original manifest still points to files without lifted columns.
+synthetic expression-copy tests. Complete copies now exist (2026-09-23, five
+files, ~2.5 GB; sources unchanged) and the derived manifest passes validation:
+27 PASS, 1 WARN (the known missing-stage marker), 0 FAIL, clean 106-pair
+cross-file barcode check. A bounded rehearsal against the derived manifest
+passed all 27 sources ([copy evidence](../logs/dataset_audit/spatial_coordinate_copies.json),
+[rehearsal](../logs/dataset_audit/preparation_rehearsal_spatial_copies.json)).
+Final preparation still awaits the corpus/QC decisions. The original manifest
+still points to files without lifted columns.
 
 ## 3. Holdout feasibility
 
@@ -205,7 +211,8 @@ assets, or apply scientific pass/fail thresholds. See the
   pre-registration draft ([b1-criterion-proposal.md](b1-criterion-proposal.md))
   awaits sign-off.
 - Resolve probe assets and source annotations before evaluating B4.
-- Create complete coordinate copies, finalize the manifest, and run the real
+- Complete coordinate copies and their derived manifest now exist and validate;
+finalize the corpus manifest and run the real
   preparation/validation gate. Regenerate reports after corpus or QC changes.
 
 Synthetic regressions and metadata audits establish these tools' behavior; they

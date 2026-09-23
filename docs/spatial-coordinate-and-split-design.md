@@ -1,6 +1,6 @@
 # Spatial Coordinate Preparation and Embryo Split Design
 
-**Status:** implemented and tested, 2026-09-22. All five spatial sources were audited read-only; full metadata replicas passed copy round-trips. Full expression-matrix copies and real-corpus preparation have not run.
+**Status:** implemented and tested, 2026-09-22. All five spatial sources were audited read-only; full metadata replicas passed copy round-trips. Complete expression copies were created and validated on 2026-09-23 (five files, ~2.5 GB, sources unchanged; the derived manifest passes the validator at 27 PASS / 1 WARN / 0 FAIL and a bounded rehearsal passed all 27 sources). Real-corpus preparation has not run.
 
 See the [readiness tracker](agents/finetune-readiness-tracker.md), [tool commands and validation limits](finetune-readiness-tools.md), and [machine-readable coordinate audit](../logs/dataset_audit/spatial_coordinates.json).
 
@@ -40,7 +40,7 @@ The derived manifest points spatial entries at the copies and maps all three can
 
 `scripts/validate_manifest.py` now fails missing spatial contract columns instead of claiming all coordinates are deferred in obsm. The original manifest still points to unmodified sources; use the derived manifest after executing copy mode. A successful metadata audit alone does not make the original manifest preparation-ready.
 
-Validation covered malformed identifiers, nonfinite coordinates, output collisions, source preservation, section containment, and tiny complete H5AD copies. Full native obs/obsm replicas of all five sources, with zero genes and no expression matrices, passed AnnData round-trips preserving every original obs column and all extracted coordinates/sections. This is not a full-data copy or a real-corpus `--prepare-only` run.
+Validation covered malformed identifiers, nonfinite coordinates, output collisions, source preservation, section containment, and tiny complete H5AD copies. Full native obs/obsm replicas of all five sources, with zero genes and no expression matrices, passed AnnData round-trips preserving every original obs column and all extracted coordinates/sections. Those validation replicas were not full-data copies; complete copies now exist under `runs/spatial_coordinate_copies` with derived manifest `runs/spatial_coordinate_manifest.json` (2026-09-23), and a real-corpus `--prepare-only` run is still pending.
 
 ## 3. Embryo isolation across sections and files
 

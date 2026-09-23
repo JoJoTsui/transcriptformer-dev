@@ -118,8 +118,9 @@ each), CS7 `sample_final` (82), CS8 native `section_id` (62), and CS9 `EF1_<S>`
 prefix (13). Do not replace these native sections with file-level constants.
 
 All 412,374 coordinate vectors and full native metadata-copy round-trips were
-validated. Complete real expression matrices have not been copied and real-corpus
-preparation has not run. The original manifest still references unchanged files;
+validated. Complete expression copies now exist (2026-09-23; five files, sources
+unchanged) and their derived manifest passes the validator for all 27 datasets;
+real-corpus preparation has not run. The original manifest still references unchanged files;
 its missing coordinate columns fail the manifest validator.
 
 ## 5. Label harmonization
