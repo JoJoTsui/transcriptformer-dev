@@ -1,0 +1,679 @@
+{
+ "pairs": {
+  "caenorhabditis_elegans__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "caenorhabditis_elegans__cavia_porcellus": {
+   "collection": "main",
+   "n_raw_rows": 22559,
+   "reason": "",
+   "status": "compara"
+  },
+  "caenorhabditis_elegans__ciona_intestinalis": {
+   "collection": "main",
+   "n_raw_rows": 12415,
+   "reason": "",
+   "status": "compara"
+  },
+  "caenorhabditis_elegans__danio_rerio": {
+   "collection": "main",
+   "n_raw_rows": 31076,
+   "reason": "",
+   "status": "compara"
+  },
+  "caenorhabditis_elegans__drosophila_melanogaster": {
+   "collection": "main",
+   "n_raw_rows": 11832,
+   "reason": "",
+   "status": "compara"
+  },
+  "caenorhabditis_elegans__gallus_gallus": {
+   "collection": "main",
+   "n_raw_rows": 20343,
+   "reason": "",
+   "status": "compara"
+  },
+  "caenorhabditis_elegans__homo_sapiens": {
+   "collection": "main",
+   "n_raw_rows": 23928,
+   "reason": "",
+   "status": "compara"
+  },
+  "caenorhabditis_elegans__lytechinus_variegatus": {
+   "collection": "metazoa",
+   "n_raw_rows": 26688,
+   "reason": "",
+   "status": "compara"
+  },
+  "caenorhabditis_elegans__macaca_fascicularis": {
+   "collection": "main",
+   "n_raw_rows": 22156,
+   "reason": "",
+   "status": "compara"
+  },
+  "caenorhabditis_elegans__mus_musculus": {
+   "collection": "main",
+   "n_raw_rows": 24796,
+   "reason": "",
+   "status": "compara"
+  },
+  "caenorhabditis_elegans__oryctolagus_cuniculus": {
+   "collection": "main",
+   "n_raw_rows": 23780,
+   "reason": "",
+   "status": "compara"
+  },
+  "caenorhabditis_elegans__sus_scrofa": {
+   "collection": "main",
+   "n_raw_rows": 23883,
+   "reason": "",
+   "status": "compara"
+  },
+  "caenorhabditis_elegans__xenopus_tropicalis": {
+   "collection": "main",
+   "n_raw_rows": 22784,
+   "reason": "",
+   "status": "compara"
+  },
+  "cavia_porcellus__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "cavia_porcellus__ciona_intestinalis": {
+   "collection": "main",
+   "n_raw_rows": 16898,
+   "reason": "",
+   "status": "compara"
+  },
+  "cavia_porcellus__xenopus_tropicalis": {
+   "collection": "main",
+   "n_raw_rows": 16131,
+   "reason": "",
+   "status": "compara"
+  },
+  "ciona_intestinalis__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "danio_rerio__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "danio_rerio__cavia_porcellus": {
+   "collection": "main",
+   "n_raw_rows": 19286,
+   "reason": "",
+   "status": "compara"
+  },
+  "danio_rerio__ciona_intestinalis": {
+   "collection": "main",
+   "n_raw_rows": 21693,
+   "reason": "",
+   "status": "compara"
+  },
+  "danio_rerio__drosophila_melanogaster": {
+   "collection": "main",
+   "n_raw_rows": 24025,
+   "reason": "",
+   "status": "compara"
+  },
+  "danio_rerio__gallus_gallus": {
+   "collection": "main",
+   "n_raw_rows": 17091,
+   "reason": "",
+   "status": "compara"
+  },
+  "danio_rerio__homo_sapiens": {
+   "collection": "main",
+   "n_raw_rows": 20946,
+   "reason": "",
+   "status": "compara"
+  },
+  "danio_rerio__lytechinus_variegatus": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "Ensembl Compara computes homologies within gene-tree collections; this pair spans the Ensembl (vertebrates) and Ensembl Metazoa collections and has no Compara homologies",
+   "status": "no_homology_data"
+  },
+  "danio_rerio__macaca_fascicularis": {
+   "collection": "main",
+   "n_raw_rows": 20531,
+   "reason": "",
+   "status": "compara"
+  },
+  "danio_rerio__mus_musculus": {
+   "collection": "main",
+   "n_raw_rows": 22392,
+   "reason": "",
+   "status": "compara"
+  },
+  "danio_rerio__oryctolagus_cuniculus": {
+   "collection": "main",
+   "n_raw_rows": 19711,
+   "reason": "",
+   "status": "compara"
+  },
+  "danio_rerio__sus_scrofa": {
+   "collection": "main",
+   "n_raw_rows": 20405,
+   "reason": "",
+   "status": "compara"
+  },
+  "danio_rerio__xenopus_tropicalis": {
+   "collection": "main",
+   "n_raw_rows": 23999,
+   "reason": "",
+   "status": "compara"
+  },
+  "drosophila_melanogaster__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "drosophila_melanogaster__cavia_porcellus": {
+   "collection": "main",
+   "n_raw_rows": 18717,
+   "reason": "",
+   "status": "compara"
+  },
+  "drosophila_melanogaster__ciona_intestinalis": {
+   "collection": "main",
+   "n_raw_rows": 10791,
+   "reason": "",
+   "status": "compara"
+  },
+  "drosophila_melanogaster__gallus_gallus": {
+   "collection": "main",
+   "n_raw_rows": 15888,
+   "reason": "",
+   "status": "compara"
+  },
+  "drosophila_melanogaster__homo_sapiens": {
+   "collection": "main",
+   "n_raw_rows": 19773,
+   "reason": "",
+   "status": "compara"
+  },
+  "drosophila_melanogaster__lytechinus_variegatus": {
+   "collection": "metazoa",
+   "n_raw_rows": 12859,
+   "reason": "",
+   "status": "compara"
+  },
+  "drosophila_melanogaster__macaca_fascicularis": {
+   "collection": "main",
+   "n_raw_rows": 18628,
+   "reason": "",
+   "status": "compara"
+  },
+  "drosophila_melanogaster__mus_musculus": {
+   "collection": "main",
+   "n_raw_rows": 20412,
+   "reason": "",
+   "status": "compara"
+  },
+  "drosophila_melanogaster__oryctolagus_cuniculus": {
+   "collection": "main",
+   "n_raw_rows": 19026,
+   "reason": "",
+   "status": "compara"
+  },
+  "drosophila_melanogaster__sus_scrofa": {
+   "collection": "main",
+   "n_raw_rows": 20051,
+   "reason": "",
+   "status": "compara"
+  },
+  "drosophila_melanogaster__xenopus_tropicalis": {
+   "collection": "main",
+   "n_raw_rows": 17785,
+   "reason": "",
+   "status": "compara"
+  },
+  "gallus_gallus__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "gallus_gallus__cavia_porcellus": {
+   "collection": "main",
+   "n_raw_rows": 17121,
+   "reason": "",
+   "status": "compara"
+  },
+  "gallus_gallus__ciona_intestinalis": {
+   "collection": "main",
+   "n_raw_rows": 14714,
+   "reason": "",
+   "status": "compara"
+  },
+  "gallus_gallus__homo_sapiens": {
+   "collection": "main",
+   "n_raw_rows": 16895,
+   "reason": "",
+   "status": "compara"
+  },
+  "gallus_gallus__lytechinus_variegatus": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "Ensembl Compara computes homologies within gene-tree collections; this pair spans the Ensembl (vertebrates) and Ensembl Metazoa collections and has no Compara homologies",
+   "status": "no_homology_data"
+  },
+  "gallus_gallus__macaca_fascicularis": {
+   "collection": "main",
+   "n_raw_rows": 17004,
+   "reason": "",
+   "status": "compara"
+  },
+  "gallus_gallus__mus_musculus": {
+   "collection": "main",
+   "n_raw_rows": 20440,
+   "reason": "",
+   "status": "compara"
+  },
+  "gallus_gallus__oryctolagus_cuniculus": {
+   "collection": "main",
+   "n_raw_rows": 17904,
+   "reason": "",
+   "status": "compara"
+  },
+  "gallus_gallus__sus_scrofa": {
+   "collection": "main",
+   "n_raw_rows": 20695,
+   "reason": "",
+   "status": "compara"
+  },
+  "gallus_gallus__xenopus_tropicalis": {
+   "collection": "main",
+   "n_raw_rows": 16317,
+   "reason": "",
+   "status": "compara"
+  },
+  "homo_sapiens__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "homo_sapiens__cavia_porcellus": {
+   "collection": "main",
+   "n_raw_rows": 17741,
+   "reason": "",
+   "status": "compara"
+  },
+  "homo_sapiens__ciona_intestinalis": {
+   "collection": "main",
+   "n_raw_rows": 17659,
+   "reason": "",
+   "status": "compara"
+  },
+  "homo_sapiens__lytechinus_variegatus": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "Ensembl Compara computes homologies within gene-tree collections; this pair spans the Ensembl (vertebrates) and Ensembl Metazoa collections and has no Compara homologies",
+   "status": "no_homology_data"
+  },
+  "homo_sapiens__macaca_fascicularis": {
+   "collection": "main",
+   "n_raw_rows": 18267,
+   "reason": "",
+   "status": "compara"
+  },
+  "homo_sapiens__mus_musculus": {
+   "collection": "main",
+   "n_raw_rows": 23119,
+   "reason": "",
+   "status": "compara"
+  },
+  "homo_sapiens__oryctolagus_cuniculus": {
+   "collection": "main",
+   "n_raw_rows": 18051,
+   "reason": "",
+   "status": "compara"
+  },
+  "homo_sapiens__sus_scrofa": {
+   "collection": "main",
+   "n_raw_rows": 20607,
+   "reason": "",
+   "status": "compara"
+  },
+  "homo_sapiens__xenopus_tropicalis": {
+   "collection": "main",
+   "n_raw_rows": 16936,
+   "reason": "",
+   "status": "compara"
+  },
+  "lytechinus_variegatus__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "lytechinus_variegatus__cavia_porcellus": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "Ensembl Compara computes homologies within gene-tree collections; this pair spans the Ensembl (vertebrates) and Ensembl Metazoa collections and has no Compara homologies",
+   "status": "no_homology_data"
+  },
+  "lytechinus_variegatus__ciona_intestinalis": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "Ensembl Compara computes homologies within gene-tree collections; this pair spans the Ensembl (vertebrates) and Ensembl Metazoa collections and has no Compara homologies",
+   "status": "no_homology_data"
+  },
+  "lytechinus_variegatus__macaca_fascicularis": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "Ensembl Compara computes homologies within gene-tree collections; this pair spans the Ensembl (vertebrates) and Ensembl Metazoa collections and has no Compara homologies",
+   "status": "no_homology_data"
+  },
+  "lytechinus_variegatus__mus_musculus": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "Ensembl Compara computes homologies within gene-tree collections; this pair spans the Ensembl (vertebrates) and Ensembl Metazoa collections and has no Compara homologies",
+   "status": "no_homology_data"
+  },
+  "lytechinus_variegatus__oryctolagus_cuniculus": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "Ensembl Compara computes homologies within gene-tree collections; this pair spans the Ensembl (vertebrates) and Ensembl Metazoa collections and has no Compara homologies",
+   "status": "no_homology_data"
+  },
+  "lytechinus_variegatus__sus_scrofa": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "Ensembl Compara computes homologies within gene-tree collections; this pair spans the Ensembl (vertebrates) and Ensembl Metazoa collections and has no Compara homologies",
+   "status": "no_homology_data"
+  },
+  "lytechinus_variegatus__xenopus_tropicalis": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "Ensembl Compara computes homologies within gene-tree collections; this pair spans the Ensembl (vertebrates) and Ensembl Metazoa collections and has no Compara homologies",
+   "status": "no_homology_data"
+  },
+  "macaca_fascicularis__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "macaca_fascicularis__cavia_porcellus": {
+   "collection": "main",
+   "n_raw_rows": 16754,
+   "reason": "",
+   "status": "compara"
+  },
+  "macaca_fascicularis__ciona_intestinalis": {
+   "collection": "main",
+   "n_raw_rows": 16951,
+   "reason": "",
+   "status": "compara"
+  },
+  "macaca_fascicularis__sus_scrofa": {
+   "collection": "main",
+   "n_raw_rows": 20356,
+   "reason": "",
+   "status": "compara"
+  },
+  "macaca_fascicularis__xenopus_tropicalis": {
+   "collection": "main",
+   "n_raw_rows": 17074,
+   "reason": "",
+   "status": "compara"
+  },
+  "mus_musculus__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "mus_musculus__cavia_porcellus": {
+   "collection": "main",
+   "n_raw_rows": 22291,
+   "reason": "",
+   "status": "compara"
+  },
+  "mus_musculus__ciona_intestinalis": {
+   "collection": "main",
+   "n_raw_rows": 19185,
+   "reason": "",
+   "status": "compara"
+  },
+  "mus_musculus__macaca_fascicularis": {
+   "collection": "main",
+   "n_raw_rows": 20722,
+   "reason": "",
+   "status": "compara"
+  },
+  "mus_musculus__oryctolagus_cuniculus": {
+   "collection": "main",
+   "n_raw_rows": 21897,
+   "reason": "",
+   "status": "compara"
+  },
+  "mus_musculus__sus_scrofa": {
+   "collection": "main",
+   "n_raw_rows": 24624,
+   "reason": "",
+   "status": "compara"
+  },
+  "mus_musculus__xenopus_tropicalis": {
+   "collection": "main",
+   "n_raw_rows": 19021,
+   "reason": "",
+   "status": "compara"
+  },
+  "oryctolagus_cuniculus__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "oryctolagus_cuniculus__cavia_porcellus": {
+   "collection": "main",
+   "n_raw_rows": 17158,
+   "reason": "",
+   "status": "compara"
+  },
+  "oryctolagus_cuniculus__ciona_intestinalis": {
+   "collection": "main",
+   "n_raw_rows": 17428,
+   "reason": "",
+   "status": "compara"
+  },
+  "oryctolagus_cuniculus__macaca_fascicularis": {
+   "collection": "main",
+   "n_raw_rows": 18614,
+   "reason": "",
+   "status": "compara"
+  },
+  "oryctolagus_cuniculus__sus_scrofa": {
+   "collection": "main",
+   "n_raw_rows": 46617,
+   "reason": "",
+   "status": "compara"
+  },
+  "oryctolagus_cuniculus__xenopus_tropicalis": {
+   "collection": "main",
+   "n_raw_rows": 17153,
+   "reason": "",
+   "status": "compara"
+  },
+  "sus_scrofa__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "sus_scrofa__cavia_porcellus": {
+   "collection": "main",
+   "n_raw_rows": 19323,
+   "reason": "",
+   "status": "compara"
+  },
+  "sus_scrofa__ciona_intestinalis": {
+   "collection": "main",
+   "n_raw_rows": 18423,
+   "reason": "",
+   "status": "compara"
+  },
+  "sus_scrofa__xenopus_tropicalis": {
+   "collection": "main",
+   "n_raw_rows": 18629,
+   "reason": "",
+   "status": "compara"
+  },
+  "xenopus_tropicalis__branchiostoma_floridae": {
+   "collection": null,
+   "n_raw_rows": 0,
+   "reason": "branchiostoma_floridae has no Ensembl Compara gene set",
+   "status": "no_compara_gene_set"
+  },
+  "xenopus_tropicalis__ciona_intestinalis": {
+   "collection": "main",
+   "n_raw_rows": 16748,
+   "reason": "",
+   "status": "compara"
+  }
+ },
+ "species": {
+  "branchiostoma_floridae": {
+   "genomes": {},
+   "has_vocab": false,
+   "note": "Ensembl (Compara release 110) and Ensembl Metazoa (release 57) carry no Branchiostoma floridae gene set; Ensembl Metazoa carries Branchiostoma lanceolatum only, which is a different species and is NOT substituted here.",
+   "role": "probe",
+   "status": "no_compara_gene_set",
+   "taxid": "7739"
+  },
+  "caenorhabditis_elegans": {
+   "genomes": {
+    "main": "caenorhabditis_elegans",
+    "metazoa": "caenorhabditis_elegans"
+   },
+   "has_vocab": true,
+   "role": "training",
+   "status": "compara",
+   "taxid": "6239"
+  },
+  "cavia_porcellus": {
+   "genomes": {
+    "main": "cavia_porcellus"
+   },
+   "has_vocab": false,
+   "role": "probe",
+   "status": "compara",
+   "taxid": "10141"
+  },
+  "ciona_intestinalis": {
+   "genomes": {
+    "main": "ciona_intestinalis"
+   },
+   "has_vocab": false,
+   "role": "probe",
+   "status": "compara",
+   "taxid": "7719"
+  },
+  "danio_rerio": {
+   "genomes": {
+    "main": "danio_rerio"
+   },
+   "has_vocab": true,
+   "role": "training",
+   "status": "compara",
+   "taxid": "7955"
+  },
+  "drosophila_melanogaster": {
+   "genomes": {
+    "main": "drosophila_melanogaster",
+    "metazoa": "drosophila_melanogaster"
+   },
+   "has_vocab": true,
+   "role": "training",
+   "status": "compara",
+   "taxid": "7227"
+  },
+  "gallus_gallus": {
+   "genomes": {
+    "main": "gallus_gallus"
+   },
+   "has_vocab": true,
+   "role": "training",
+   "status": "compara",
+   "taxid": "9031"
+  },
+  "homo_sapiens": {
+   "genomes": {
+    "main": "homo_sapiens"
+   },
+   "has_vocab": true,
+   "role": "training",
+   "status": "compara",
+   "taxid": "9606"
+  },
+  "lytechinus_variegatus": {
+   "genomes": {
+    "metazoa": "lytechinus_variegatus_gca018143015v1"
+   },
+   "has_vocab": true,
+   "role": "training",
+   "status": "compara",
+   "taxid": "7665"
+  },
+  "macaca_fascicularis": {
+   "genomes": {
+    "main": "macaca_fascicularis"
+   },
+   "has_vocab": false,
+   "role": "probe",
+   "status": "compara",
+   "taxid": "9541"
+  },
+  "mus_musculus": {
+   "genomes": {
+    "main": "mus_musculus"
+   },
+   "has_vocab": true,
+   "role": "training",
+   "status": "compara",
+   "taxid": "10090"
+  },
+  "oryctolagus_cuniculus": {
+   "genomes": {
+    "main": "oryctolagus_cuniculus"
+   },
+   "has_vocab": true,
+   "role": "training",
+   "status": "compara",
+   "taxid": "9986"
+  },
+  "sus_scrofa": {
+   "genomes": {
+    "main": "sus_scrofa"
+   },
+   "has_vocab": false,
+   "role": "probe",
+   "status": "compara",
+   "taxid": "9823"
+  },
+  "xenopus_tropicalis": {
+   "genomes": {
+    "main": "xenopus_tropicalis"
+   },
+   "has_vocab": false,
+   "role": "probe",
+   "status": "compara",
+   "taxid": "8364"
+  }
+ }
+}

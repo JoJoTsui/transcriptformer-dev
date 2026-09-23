@@ -1,0 +1,3385 @@
+{
+ "checks": [
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000034415",
+    "gene_b": "ENSSSCG00000016189",
+    "species_a": "macaca_fascicularis",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0036761",
+    "gene_b": "ENSMFAG00000034262",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "WBGene00006061",
+    "gene_b": "ENSXETG00000025791",
+    "species_a": "caenorhabditis_elegans",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSCPOG00000000856",
+    "gene_b": "ENSXETG00000007674",
+    "species_a": "cavia_porcellus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000087266",
+    "gene_b": "ENSMUSG00000054520",
+    "species_a": "homo_sapiens",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010023642",
+    "gene_b": "ENSCPOG00000007245",
+    "species_a": "gallus_gallus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010021576",
+    "gene_b": "ENSSSCG00000002307",
+    "species_a": "gallus_gallus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010015068",
+    "gene_b": "ENSG00000164283",
+    "species_a": "gallus_gallus",
+    "species_b": "homo_sapiens"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000002555",
+    "gene_b": "ENSCING00000021217",
+    "species_a": "sus_scrofa",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0030806",
+    "gene_b": "ENSMUSG00000035062",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000003442",
+    "gene_b": "ENSXETG00000009290",
+    "species_a": "macaca_fascicularis",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000039681",
+    "gene_b": "ENSCING00000016259",
+    "species_a": "sus_scrofa",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000050503",
+    "gene_b": "ENSXETG00000038110",
+    "species_a": "mus_musculus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000062449",
+    "gene_b": "ENSXETG00000023134",
+    "species_a": "danio_rerio",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000026054",
+    "gene_b": "ENSSSCG00000025616",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000142168",
+    "gene_b": "ENSXETG00000047863",
+    "species_a": "homo_sapiens",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000042995",
+    "gene_b": "FBgn0086532",
+    "species_a": "danio_rerio",
+    "species_b": "drosophila_melanogaster"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "WBGene00022306",
+    "gene_b": "ENSCING00000009548",
+    "species_a": "caenorhabditis_elegans",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0039451",
+    "gene_b": "ENSGALG00010017133",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "gallus_gallus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010015801",
+    "gene_b": "ENSSSCG00000007338",
+    "species_a": "gallus_gallus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010005756",
+    "gene_b": "ENSCPOG00000005784",
+    "species_a": "gallus_gallus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000014195",
+    "gene_b": "ENSCPOG00000023384",
+    "species_a": "mus_musculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000011362",
+    "gene_b": "ENSCPOG00000033943",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "WBGene00019522",
+    "gene_b": "ENSXETG00000020183",
+    "species_a": "caenorhabditis_elegans",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000008992",
+    "gene_b": "ENSMFAG00000037286",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010015055",
+    "gene_b": "ENSMFAG00000035432",
+    "species_a": "gallus_gallus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000038471",
+    "gene_b": "ENSCPOG00000011773",
+    "species_a": "sus_scrofa",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000045217",
+    "gene_b": "ENSSSCG00000015907",
+    "species_a": "macaca_fascicularis",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000008902",
+    "gene_b": "ENSCPOG00000000216",
+    "species_a": "sus_scrofa",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000048058",
+    "gene_b": "ENSXETG00000007552",
+    "species_a": "mus_musculus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000128604",
+    "gene_b": "ENSXETG00000015005",
+    "species_a": "homo_sapiens",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010017888",
+    "gene_b": "ENSSSCG00000016768",
+    "species_a": "gallus_gallus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000049076",
+    "gene_b": "ENSOCUG00000001798",
+    "species_a": "mus_musculus",
+    "species_b": "oryctolagus_cuniculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000022712",
+    "gene_b": "ENSSSCG00000017991",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000108839",
+    "gene_b": "ENSMUSG00000000320",
+    "species_a": "homo_sapiens",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 33208,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "WBGene00006917",
+    "gene_b": "ENSGALG00010012315",
+    "species_a": "caenorhabditis_elegans",
+    "species_b": "gallus_gallus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSCPOG00000004478",
+    "gene_b": "ENSCING00000006681",
+    "species_a": "cavia_porcellus",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010012090",
+    "gene_b": "ENSMUSG00000020228",
+    "species_a": "gallus_gallus",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000004823",
+    "gene_b": "ENSCPOG00000008329",
+    "species_a": "sus_scrofa",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000146247",
+    "gene_b": "ENSXETG00000011747",
+    "species_a": "homo_sapiens",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000143994",
+    "gene_b": "ENSMFAG00000041476",
+    "species_a": "homo_sapiens",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000107372",
+    "gene_b": "ENSMUSG00000024750",
+    "species_a": "homo_sapiens",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010005516",
+    "gene_b": "ENSMUSG00000033499",
+    "species_a": "gallus_gallus",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010010940",
+    "gene_b": "ENSSSCG00000010344",
+    "species_a": "gallus_gallus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSXETG00000004767",
+    "gene_b": "ENSCING00000012910",
+    "species_a": "xenopus_tropicalis",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000130244",
+    "gene_b": "ENSMFAG00000031808",
+    "species_a": "homo_sapiens",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0028697",
+    "gene_b": "ENSMUSG00000012405",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0034997",
+    "gene_b": "ENSGALG00010001570",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "gallus_gallus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000183780",
+    "gene_b": "ENSSSCG00000010162",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0033757",
+    "gene_b": "ENSG00000128585",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "homo_sapiens"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000099860",
+    "gene_b": "ENSSSCG00000022689",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000162923",
+    "gene_b": "ENSMFAG00000036710",
+    "species_a": "homo_sapiens",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000013438",
+    "gene_b": "ENSCPOG00000005531",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010024977",
+    "gene_b": "ENSXETG00000033897",
+    "species_a": "gallus_gallus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000020201",
+    "gene_b": "ENSG00000134371",
+    "species_a": "danio_rerio",
+    "species_b": "homo_sapiens"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000022501",
+    "gene_b": "ENSXETG00000046055",
+    "species_a": "sus_scrofa",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000024409",
+    "gene_b": "ENSMFAG00000053880",
+    "species_a": "mus_musculus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000026335",
+    "gene_b": "ENSXETG00000023863",
+    "species_a": "mus_musculus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0083953",
+    "gene_b": "ENSXETG00000032301",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000177728",
+    "gene_b": "ENSSSCG00000034608",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000021853",
+    "gene_b": "ENSCPOG00000008589",
+    "species_a": "danio_rerio",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000038827",
+    "gene_b": "ENSCING00000012914",
+    "species_a": "mus_musculus",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000169679",
+    "gene_b": "ENSMUSG00000027379",
+    "species_a": "homo_sapiens",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000021391",
+    "gene_b": "ENSCING00000005044",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000011457",
+    "gene_b": "ENSXETG00000012404",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000109787",
+    "gene_b": "ENSSSCG00000036488",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000005751",
+    "gene_b": "ENSSSCG00000010581",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010004243",
+    "gene_b": "ENSMFAG00000030541",
+    "species_a": "gallus_gallus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000012914",
+    "gene_b": "ENSCPOG00000033699",
+    "species_a": "sus_scrofa",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000063167",
+    "gene_b": "ENSMFAG00000043916",
+    "species_a": "danio_rerio",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000038882",
+    "gene_b": "ENSG00000113810",
+    "species_a": "danio_rerio",
+    "species_b": "homo_sapiens"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000033375",
+    "gene_b": "ENSCPOG00000012530",
+    "species_a": "macaca_fascicularis",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 32523,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010027831",
+    "gene_b": "ENSSSCG00000026754",
+    "species_a": "gallus_gallus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 314146,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSG00000158815",
+    "gene_b": "ENSMUSG00000022101",
+    "species_a": "homo_sapiens",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000042069",
+    "gene_b": "ENSCPOG00000038781",
+    "species_a": "danio_rerio",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010005997",
+    "gene_b": "ENSCPOG00000009170",
+    "species_a": "gallus_gallus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0264307",
+    "gene_b": "GeneID_121425103",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "lytechinus_variegatus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 32523,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSG00000184471",
+    "gene_b": "ENSSSCG00000032400",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSG00000107929",
+    "gene_b": "ENSMUSG00000033499",
+    "species_a": "homo_sapiens",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000000374",
+    "gene_b": "ENSMFAG00000041704",
+    "species_a": "mus_musculus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000030693",
+    "gene_b": "ENSSSCG00000033003",
+    "species_a": "macaca_fascicularis",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 32523,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSG00000125255",
+    "gene_b": "ENSSSCG00000026317",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010016481",
+    "gene_b": "ENSMUSG00000038537",
+    "species_a": "gallus_gallus",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSG00000146576",
+    "gene_b": "ENSSSCG00000036192",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000283526",
+    "gene_b": "ENSMFAG00000058024",
+    "species_a": "homo_sapiens",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010001292",
+    "gene_b": "ENSSSCG00000014232",
+    "species_a": "gallus_gallus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000043831",
+    "gene_b": "ENSCPOG00000004488",
+    "species_a": "macaca_fascicularis",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010029546",
+    "gene_b": "ENSXETG00000021353",
+    "species_a": "gallus_gallus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000009557",
+    "gene_b": "ENSCPOG00000014206",
+    "species_a": "sus_scrofa",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000038506",
+    "gene_b": "ENSXETG00000025055",
+    "species_a": "macaca_fascicularis",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000043537",
+    "gene_b": "ENSSSCG00000010396",
+    "species_a": "macaca_fascicularis",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000002536",
+    "gene_b": "ENSSSCG00000007246",
+    "species_a": "danio_rerio",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000025668",
+    "gene_b": "ENSCPOG00000013132",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000028794",
+    "gene_b": "ENSSSCG00000002105",
+    "species_a": "macaca_fascicularis",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010027253",
+    "gene_b": "ENSMUSG00000030315",
+    "species_a": "gallus_gallus",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000022089",
+    "gene_b": "ENSXETG00000044280",
+    "species_a": "mus_musculus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000017918",
+    "gene_b": "ENSXETG00000044534",
+    "species_a": "sus_scrofa",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010023514",
+    "gene_b": "ENSCPOG00000003789",
+    "species_a": "gallus_gallus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010017384",
+    "gene_b": "ENSMUSG00000048118",
+    "species_a": "gallus_gallus",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000028034",
+    "gene_b": "ENSMFAG00000031825",
+    "species_a": "mus_musculus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000182117",
+    "gene_b": "ENSSSCG00000036960",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010018143",
+    "gene_b": "ENSCING00000001800",
+    "species_a": "gallus_gallus",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000035512",
+    "gene_b": "ENSSSCG00000038281",
+    "species_a": "macaca_fascicularis",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000045062",
+    "gene_b": "ENSXETG00000015973",
+    "species_a": "macaca_fascicularis",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000003999",
+    "gene_b": "ENSMFAG00000002653",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010017012",
+    "gene_b": "ENSSSCG00000008036",
+    "species_a": "gallus_gallus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000040036",
+    "gene_b": "ENSXETG00000015863",
+    "species_a": "macaca_fascicularis",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000197901",
+    "gene_b": "ENSOCUG00000024091",
+    "species_a": "homo_sapiens",
+    "species_b": "oryctolagus_cuniculus"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000014626",
+    "gene_b": "ENSMUSG00000001510",
+    "species_a": "danio_rerio",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010029357",
+    "gene_b": "ENSSSCG00000034058",
+    "species_a": "gallus_gallus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000054867",
+    "gene_b": "FBgn0038326",
+    "species_a": "danio_rerio",
+    "species_b": "drosophila_melanogaster"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000152592",
+    "gene_b": "ENSOCUG00000011753",
+    "species_a": "homo_sapiens",
+    "species_b": "oryctolagus_cuniculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000157110",
+    "gene_b": "ENSCPOG00000038597",
+    "species_a": "homo_sapiens",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010003680",
+    "gene_b": "ENSCING00000008070",
+    "species_a": "gallus_gallus",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000004318",
+    "gene_b": "ENSMFAG00000044635",
+    "species_a": "danio_rerio",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010003848",
+    "gene_b": "ENSSSCG00000009407",
+    "species_a": "gallus_gallus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000016068",
+    "gene_b": "ENSMFAG00000041064",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000056729",
+    "gene_b": "ENSCPOG00000030913",
+    "species_a": "sus_scrofa",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000147689",
+    "gene_b": "ENSOCUG00000015368",
+    "species_a": "homo_sapiens",
+    "species_b": "oryctolagus_cuniculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010006404",
+    "gene_b": "ENSSSCG00000009040",
+    "species_a": "gallus_gallus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000002619",
+    "gene_b": "ENSCPOG00000009223",
+    "species_a": "macaca_fascicularis",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000055720",
+    "gene_b": "ENSSSCG00000001907",
+    "species_a": "mus_musculus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000132436",
+    "gene_b": "ENSCPOG00000005892",
+    "species_a": "homo_sapiens",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000038405",
+    "gene_b": "ENSSSCG00000029533",
+    "species_a": "macaca_fascicularis",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000023013",
+    "gene_b": "ENSMFAG00000042087",
+    "species_a": "mus_musculus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010018933",
+    "gene_b": "ENSG00000116273",
+    "species_a": "gallus_gallus",
+    "species_b": "homo_sapiens"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010025559",
+    "gene_b": "ENSXETG00000002025",
+    "species_a": "gallus_gallus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010015153",
+    "gene_b": "ENSG00000186871",
+    "species_a": "gallus_gallus",
+    "species_b": "homo_sapiens"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010025610",
+    "gene_b": "ENSCPOG00000008885",
+    "species_a": "gallus_gallus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSCPOG00000005641",
+    "gene_b": "ENSXETG00000006357",
+    "species_a": "cavia_porcellus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000009133",
+    "gene_b": "ENSMFAG00000057275",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000030654",
+    "gene_b": "ENSXETG00000002943",
+    "species_a": "mus_musculus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010022739",
+    "gene_b": "ENSXETG00000009811",
+    "species_a": "gallus_gallus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSCPOG00000008525",
+    "gene_b": "ENSXETG00000023419",
+    "species_a": "cavia_porcellus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000013662",
+    "gene_b": "ENSSSCG00000003776",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000182521",
+    "gene_b": "ENSXETG00000015710",
+    "species_a": "homo_sapiens",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000012496",
+    "gene_b": "ENSSSCG00000038186",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000147166",
+    "gene_b": "ENSCPOG00000038156",
+    "species_a": "homo_sapiens",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000111641",
+    "gene_b": "ENSSSCG00000000696",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010016724",
+    "gene_b": "ENSSSCG00000003402",
+    "species_a": "gallus_gallus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010013331",
+    "gene_b": "ENSG00000101350",
+    "species_a": "gallus_gallus",
+    "species_b": "homo_sapiens"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000023079",
+    "gene_b": "ENSCPOG00000004421",
+    "species_a": "mus_musculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000038534",
+    "gene_b": "ENSSSCG00000017518",
+    "species_a": "mus_musculus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0011016",
+    "gene_b": "ENSGALG00010028760",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "gallus_gallus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 32523,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSCPOG00000034245",
+    "gene_b": "ENSXETG00000044336",
+    "species_a": "cavia_porcellus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000045486",
+    "gene_b": "ENSG00000177425",
+    "species_a": "danio_rerio",
+    "species_b": "homo_sapiens"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0025519",
+    "gene_b": "ENSMFAG00000038632",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010001219",
+    "gene_b": "ENSMUSG00000029553",
+    "species_a": "gallus_gallus",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000011742",
+    "gene_b": "ENSCING00000012565",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010012680",
+    "gene_b": "ENSMUSG00000036251",
+    "species_a": "gallus_gallus",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000033387",
+    "gene_b": "ENSXETG00000014562",
+    "species_a": "macaca_fascicularis",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "unresolved_in_alliance:gene_b",
+    "verdict": "unavailable"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000143543",
+    "gene_b": "ENSXETG00000047205",
+    "species_a": "homo_sapiens",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000004774",
+    "gene_b": "ENSCPOG00000005341",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSDARG00000045957",
+    "gene_b": "ENSOCUG00000008519",
+    "species_a": "danio_rerio",
+    "species_b": "oryctolagus_cuniculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000275074",
+    "gene_b": "ENSSSCG00000009615",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSG00000196305",
+    "gene_b": "ENSSSCG00000008068",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000004221",
+    "gene_b": "ENSCPOG00000014078",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000037525",
+    "gene_b": "ENSMFAG00000038249",
+    "species_a": "mus_musculus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000074004",
+    "gene_b": "ENSCPOG00000040405",
+    "species_a": "mus_musculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010004251",
+    "gene_b": "ENSXETG00000008245",
+    "species_a": "gallus_gallus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000071415",
+    "gene_b": "ENSCING00000018165",
+    "species_a": "mus_musculus",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "WBGene00012203",
+    "gene_b": "GeneID_121405995",
+    "species_a": "caenorhabditis_elegans",
+    "species_b": "lytechinus_variegatus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000033101",
+    "gene_b": "ENSXETG00000014651",
+    "species_a": "macaca_fascicularis",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000004387",
+    "gene_b": "ENSXETG00000014847",
+    "species_a": "sus_scrofa",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0033055",
+    "gene_b": "ENSSSCG00000034844",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000035751",
+    "gene_b": "ENSXETG00000016040",
+    "species_a": "macaca_fascicularis",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000027469",
+    "gene_b": "ENSXETG00000002548",
+    "species_a": "mus_musculus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSCPOG00000013945",
+    "gene_b": "ENSXETG00000024584",
+    "species_a": "cavia_porcellus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010029365",
+    "gene_b": "ENSXETG00000019515",
+    "species_a": "gallus_gallus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 32523,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000036558",
+    "gene_b": "ENSSSCG00000032563",
+    "species_a": "macaca_fascicularis",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 314146,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSG00000143748",
+    "gene_b": "ENSMFAG00000003164",
+    "species_a": "homo_sapiens",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0037689",
+    "gene_b": "ENSMFAG00000003540",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000170606",
+    "gene_b": "ENSMUSG00000020361",
+    "species_a": "homo_sapiens",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000017548",
+    "gene_b": "ENSOCUG00000002536",
+    "species_a": "mus_musculus",
+    "species_b": "oryctolagus_cuniculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010010009",
+    "gene_b": "ENSMUSG00000037174",
+    "species_a": "gallus_gallus",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000001632",
+    "gene_b": "ENSMFAG00000045669",
+    "species_a": "mus_musculus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "WBGene00004338",
+    "gene_b": "FBgn0260985",
+    "species_a": "caenorhabditis_elegans",
+    "species_b": "drosophila_melanogaster"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000006512",
+    "gene_b": "ENSXETG00000040625",
+    "species_a": "sus_scrofa",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSSSCG00000002490",
+    "gene_b": "ENSXETG00000023328",
+    "species_a": "sus_scrofa",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010023623",
+    "gene_b": "ENSXETG00000015011",
+    "species_a": "gallus_gallus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000063651",
+    "gene_b": "ENSSSCG00000027022",
+    "species_a": "mus_musculus",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSCPOG00000031098",
+    "gene_b": "ENSCING00000024495",
+    "species_a": "cavia_porcellus",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010010940",
+    "gene_b": "ENSOCUG00000015023",
+    "species_a": "gallus_gallus",
+    "species_b": "oryctolagus_cuniculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000021098",
+    "gene_b": "ENSCPOG00000013118",
+    "species_a": "mus_musculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "FBgn0028707",
+    "gene_b": "ENSOCUG00000007235",
+    "species_a": "drosophila_melanogaster",
+    "species_b": "oryctolagus_cuniculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000000757",
+    "gene_b": "ENSCING00000006880",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000189171",
+    "gene_b": "ENSMUSG00000042312",
+    "species_a": "homo_sapiens",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMFAG00000033938",
+    "gene_b": "ENSSSCG00000011477",
+    "species_a": "macaca_fascicularis",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000021069",
+    "gene_b": "ENSCPOG00000006129",
+    "species_a": "mus_musculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000025154",
+    "gene_b": "ENSCPOG00000007872",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": true,
+   "orthodb": {
+    "reason": "no_shared_orthogroup_level_with_one_gene_per_species",
+    "verdict": "discordant"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010015143",
+    "gene_b": "ENSMFAG00000040087",
+    "species_a": "gallus_gallus",
+    "species_b": "macaca_fascicularis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010001216",
+    "gene_b": "ENSMUSG00000027833",
+    "species_a": "gallus_gallus",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSG00000163902",
+    "gene_b": "ENSSSCG00000011612",
+    "species_a": "homo_sapiens",
+    "species_b": "sus_scrofa"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSCPOG00000037844",
+    "gene_b": "ENSCING00000018224",
+    "species_a": "cavia_porcellus",
+    "species_b": "ciona_intestinalis"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSGALG00010014767",
+    "gene_b": "ENSMUSG00000052316",
+    "species_a": "gallus_gallus",
+    "species_b": "mus_musculus"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000031523",
+    "gene_b": "ENSXETG00000005630",
+    "species_a": "mus_musculus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSMUSG00000000214",
+    "gene_b": "ENSXETG00000014030",
+    "species_a": "mus_musculus",
+    "species_b": "xenopus_tropicalis"
+   }
+  },
+  {
+   "alliance": {
+    "verdict": "concordant"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "WBGene00004803",
+    "gene_b": "ENSDARG00000102963",
+    "species_a": "caenorhabditis_elegans",
+    "species_b": "danio_rerio"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "reason": "unresolved_in_orthodb:gene_a,gene_b",
+    "verdict": "unavailable"
+   },
+   "pair": {
+    "gene_a": "ENSOCUG00000007768",
+    "gene_b": "ENSCPOG00000006205",
+    "species_a": "oryctolagus_cuniculus",
+    "species_b": "cavia_porcellus"
+   }
+  },
+  {
+   "alliance": {
+    "reason": "species_not_in_alliance_member_set",
+    "verdict": "skipped"
+   },
+   "drop": false,
+   "orthodb": {
+    "level_taxid": 2759,
+    "verdict": "concordant"
+   },
+   "pair": {
+    "gene_a": "ENSG00000197415",
+    "gene_b": "ENSOCUG00000010133",
+    "species_a": "homo_sapiens",
+    "species_b": "oryctolagus_cuniculus"
+   }
+  }
+ ],
+ "summary": {
+  "alliance": {
+   "concordant": 35,
+   "discordant": 0,
+   "skipped": 164,
+   "unavailable": 1
+  },
+  "n_dropped": 21,
+  "n_sampled": 200,
+  "orthodb": {
+   "concordant": 40,
+   "discordant": 21,
+   "unavailable": 139
+  },
+  "seed": 42
+ }
+}
