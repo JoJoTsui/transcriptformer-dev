@@ -44,6 +44,10 @@ _Avoid_: balanced sampling, equal weighting
 Embryos never used for training, early stopping, or checkpoint selection; reserved for the final evaluation metrics, assigned per species.
 _Avoid_: test split, validation split
 
+**Checkpoint-selection cohort**:
+A fixed subset of validation embryos used for early stopping and checkpoint selection, covering the available developmental phases. Each evaluable species has equal weight, and embryos within each species have equal weight; this cohort is separate from the final holdout.
+_Avoid_: final holdout, test cohort
+
 **Single-embryo dataset**:
 A dataset measuring one embryo or spatial section (e.g. human CS7), assigned entirely to training because embryo-level splitting is impossible.
 _Avoid_: unsplittable dataset

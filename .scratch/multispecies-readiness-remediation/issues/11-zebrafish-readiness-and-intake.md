@@ -1,0 +1,43 @@
+# 11 — Require zebrafish training participation and track additional-source intake
+
+Category: correctness and readiness
+Status: ready-for-agent
+Priority: P1
+Execution: held by owner — do not implement yet.
+Depends on: 03, 10
+Traceability: Owner requirement; pending collaborator data
+Spec: [Multispecies readiness remediation](../spec.md)
+
+## Outcome
+
+Add inspectable readiness evidence for existing zebrafish training participation and document intake of potential additional collaborator data without pretending it has arrived.
+
+## Acceptance Criteria
+
+- [ ] Check nonzero zebrafish post-QC training observations and usable vocabulary-mapped expression, distinguishing manifest presence from prepared readiness.
+- [ ] Report nonzero sampler exposure under the configured run assumptions; distinguish an epoch projection from actual realized draws at the intended training budget and flag missing evidence honestly.
+- [ ] A required-species readiness check fails when QC, capping or sampling removes zebrafish; it never manufactures validation splits within a pooled embryo.
+- [ ] Retain the existing Wagner dataset and record the verified 63,530-source-observation/128-row historical-rehearsal evidence as historical, not full training validation.
+- [ ] Provide an intake record for source identity, provenance, count matrix, gene namespace, assay, native stages, independent embryo IDs and cross-source overlap.
+- [ ] Undelivered source identity/delivery and unverified metadata remain pending. Once real data arrive, actual ingestion must pass those checks and regenerate post-QC coverage before corpus/cohort freezing.
+- [ ] Support a newly eligible zebrafish validation species through the generic cohort policy; new cells alone do not establish eligibility.
+- [ ] Track assessment of the new source or an explicit owner decision to proceed without it before the final production freeze; do not set an invented deadline or authorize a launch.
+
+## Testing Seam
+
+Use the existing prepared-report/sampler-audit boundaries with tiny synthetic zebrafish fixtures, missing/zero-survivor and cap-exclusion cases, plus duplicate/independent-embryo intake examples.
+
+## Constraints and Completion Limits
+
+Tooling and intake documentation can complete without new data. Actual collaborator-data ingestion and any expanded scientific claims remain externally gated and must not be marked complete with this ticket's fixtures.
+
+Use bounded CPU fixtures and metadata/streamed reads, preserve existing WSL
+limits, cap native threads and run memory-heavy checks sequentially. No full
+model training, broad download, production launch or automatic scientific
+sign-off is authorized. The ready-for-agent label describes specification
+readiness; it does not override the owner's implementation hold.
+
+## Comments
+
+Created from the adversarial review and grill-with-docs decisions. No
+implementation or new test execution has occurred as part of ticket publication.

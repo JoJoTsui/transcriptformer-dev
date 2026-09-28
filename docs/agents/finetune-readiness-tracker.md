@@ -1,5 +1,27 @@
 # Finetune readiness tracker
 
+## Current follow-up — 2026-09-28 review remediation
+
+The [adversarial review](adversarial-review-2026-09-28.md) reopens terminal
+resume guarantees in E/F and ortholog join/eligibility claims in N. It also
+identifies missing post-QC coverage for the B1 freeze, biased validation selection,
+unsupported B2 metrics and stochastic-resume gaps. Historical completion entries
+below record the earlier scope and evidence; they do not close these findings.
+
+The owner approved the checkpoint-selection policy in
+[ADR 0004](../adr/0004-multispecies-checkpoint-selection.md). The
+[remediation plan](review-remediation-plan-2026-09-28.md) covers all seven findings,
+their completion evidence and WSL constraints. The owner subsequently requested
+[a specification](../../.scratch/multispecies-readiness-remediation/spec.md) and
+[12 ready-for-agent tickets](../../.scratch/multispecies-readiness-remediation/README.md),
+with an explicit instruction not to implement yet. Status: specified and ticketed;
+implementation has not started. The triage labels do not lift that hold.
+
+Additional zebrafish data may be supplied by collaborators for this finetune.
+Source identity and delivery are pending. The existing Wagner dataset is already
+included; new data require overlap, metadata and post-QC split assessment before
+the final corpus/cohort freeze. See the remediation plan's zebrafish section.
+
 ## Readiness work while collaborator decisions #1–#3 are pending
 
 Started and completed 2026-09-23. Scope: workstreams independent of the
