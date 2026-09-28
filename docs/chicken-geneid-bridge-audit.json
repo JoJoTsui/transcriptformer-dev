@@ -1,0 +1,44 @@
+{
+  "checkpoint_genes": 16878,
+  "checkpoint_source_release_verified": false,
+  "confidence_tier": "shared_DIRECT_RefSeq_accession_base",
+  "excluded": {
+    "NCBI_GeneID_multiple_new_genes": 57,
+    "NCBI_GeneID_multiple_old_genes": 83,
+    "NCBI_GeneID_no_new_gene": 704,
+    "biotype_mismatch": 4,
+    "different_RefSeq_parent_accession": 3035,
+    "different_RefSeq_parent_database": 2418,
+    "new_RefSeq_parent_not_DIRECT": 200,
+    "new_multiple_NCBI_GeneIDs": 167,
+    "old_RefSeq_parent_not_DIRECT": 17,
+    "old_multiple_NCBI_GeneIDs": 113,
+    "old_no_NCBI_GeneID": 2813
+  },
+  "mapping_rows": 7267,
+  "mapping_sha256": "c324274577b91376d726ea6f1e2e9235cec719f9bab2b3cf31cebcf85e52ba9b",
+  "matching_RefSeq_accession_rows": 7267,
+  "matching_RefSeq_version_rows": 2876,
+  "reference_target_assembly": "GCA_000002315.5",
+  "reference_target_release": 106,
+  "source_assembly": "GCA_016699485.1",
+  "source_release": 110,
+  "source_sha256": {
+    "checkpoint_chicken_vocab_h5": "ff5d5f03e074e267a4ec4ed63f5f805e20e9f3f95f94d1e547b4e90115f874f9",
+    "release_106_biomart_tsv": "c00412890f236218ed476d958d66292ee9b361f3b73779ffa7629e07e3c3b04b",
+    "release_106_core": {
+      "dependent_xref": "d71602f9d1007e185351f0b50ab728d2a4a748b617576707cc1938e0d3391777",
+      "external_db": "182deb8082b05e97e5d4a20fd586070fd682286fb7ec9cecbe82e97baf72317c",
+      "gene": "92d264925ee93e1221004b4a53283fad97958975643201d86b55f1a18f535f1b",
+      "object_xref": "15afb34186d20ac67be89b7562f601461ba6d5e7b6d2ef296e2e9010557c0ef3",
+      "xref": "12250a954cb5103e3f594476349d890e218e9c21184f7cbe8198a5a5fd6e2527"
+    },
+    "release_110_core": {
+      "dependent_xref": "e560a9d15798c1014189eaf4420c0cce0b5c5c2f75d4f5b20ab86336697987e8",
+      "external_db": "6765f4d1b6dbe7b70a53df81001d2ae6135d5db4dbf9bef6d5801c849c702e43",
+      "gene": "0a7dbc216f89d52300f515789496097cadd4095ed0ba66d9e7955823c7be12ea",
+      "object_xref": "92616ecb083f03528e9752b9cd7d757c59af67ffc92b52146c0bc5148cdb9711",
+      "xref": "6b21feae4e7c9288f02980cc3d1d47fdf83ab6d7d0684e359f565b6631e48eb1"
+    }
+  }
+}

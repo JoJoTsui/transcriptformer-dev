@@ -8,7 +8,7 @@ This records bounded engineering checks for the [12 implementation tickets](../.
 | --- | --- | --- |
 | 01–02, terminal and stochastic resume | Bounded CPU tests covered stochastic continuation, terminal state, and pending gradients across epoch extension; the integrated suite passed. | Local Gloo socket creation returned `EPERM`; distributed runtime remains unverified. |
 | 03, prepared holdout coverage | Five targeted coverage tests passed, including an embryo removed by QC. | Full prepared corpus is unavailable; no real post-QC B1 stratum freeze. |
-| 04–05, ortholog joins and statistic eligibility | 50 targeted ortholog/representation tests passed with ticket 09. The finalized-table audit totals 402,495 pairs and finds 0 usable human–chicken joins among 12,166 raw pairs. | No authoritative chicken old-to-new ID mapping; no frozen gene rankings for named statistics. R2 asset repair remains open. |
+| 04–05, ortholog joins and statistic eligibility | Earlier 50 targeted ortholog/representation tests passed with ticket 09. The unmapped audit has 0 human–chicken joins; the new strict Ensembl/NCBI/RefSeq bridge has 7,267 mapped chicken genes and 6,129 usable human–chicken pairs among 12,166 raw pairs. | Exact checkpoint annotation release and 9,611 chicken genes remain unresolved; no frozen gene rankings or scored comparisons for named statistics. R2 remains open. |
 | 06–07, validation cohort and scoring | Seven command/boundary tests passed after adversarial review repairs. Semantic cohort identity is independent of prepared output paths, and the exact 2% boundary is enforced. | No real post-QC cohort or production model validation losses have been frozen. |
 | 08, training integration | Public bounded selection tested three species, baseline evidence changes, score history, and baseline spatial export. A tiny real checkpoint was loaded, exported as baseline and reloaded. Selection uses the shared causal gene prefix when candidate spatial length differs by one. | No production model training or accelerator evidence. |
 | 09, B2 metric eligibility | Included in the 50 targeted tests above. Single-phase purity and no-shared-phase alignment are reported as unevaluable; CKA remains available. | No embeddings generated or B2 acceptance threshold approved. |
@@ -38,9 +38,10 @@ A 2026-09-28 continuation found no frozen named statistic gene inputs. The
 eligibility command now calculates the 60% fraction from pairs that survive
 both final one-to-one filtering and both model-vocabulary joins; it reports
 when the selected input sets have no pair for a distributional comparison.
-The chicken table and checkpoint vocabulary hashes, zero identifier join and
-the required source-release/ID-history evidence are recorded in the
-[ortholog report](../ortholog-eligibility-report.md). This continuation was
+The chicken table and checkpoint vocabulary hashes, original zero join,
+strict partial bridge, raw-source hashes and remaining producer-release gate
+are recorded in the [ortholog report](../ortholog-eligibility-report.md) and
+[bridge audit](../chicken-geneid-bridge-audit.json). This continuation was
 reviewed with Ruff, Python compilation and diff checks; no new test suite was
 run for these follow-up edits.
 

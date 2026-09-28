@@ -1,7 +1,7 @@
 # 04 — Validate actual ortholog joins and reconcile chicken identifiers
 
 Category: correctness and readiness
-Status: Join reporting implemented; chicken asset repair blocked
+Status: Strict partial chicken bridge implemented; exact checkpoint release and full repair pending
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: none
@@ -17,8 +17,8 @@ Retain real identifier sets through ortholog preparation and compute usable join
 - [x] A table whose gene counts look plausible but whose keys do not match the vocabulary reports zero usable coverage, never the raw-count percentage.
 - [x] Validate keys on both sides and retain counts for raw pairs, joined pairs, ambiguous mappings and unresolved identifiers.
 - [x] Audit the existing chicken vocabulary against the retained ortholog table, recording the observed zero-join case before any correction.
-- [ ] Where a defensible unambiguous mapping exists, record source/release/assembly provenance and demonstrate actual joined genes. Exclude ambiguous or missing mappings without guessing aliases.
-- [ ] Do not silently change species, release or assembly; preserve source assets and produce inspectable derived mapping/report artifacts.
+- [x] Where a defensible unambiguous mapping exists, record source/release/assembly provenance and demonstrate actual joined genes. Exclude ambiguous or missing mappings without guessing aliases.
+- [x] Do not silently change species, release or assembly; preserve source assets and produce inspectable derived mapping/report artifacts.
 - [x] If mapping evidence is unavailable, complete accurate validation/reporting but explicitly leave the chicken asset repair and R2 unresolved. Do not mark usable mapping complete from a zero-coverage report.
 
 ## Testing Seam
@@ -57,3 +57,17 @@ source release or assembly metadata, and no authoritative one-to-one
 cross-assembly conversion was obtained. The cited
 [investigation](../../../docs/agents/chicken-identifier-provenance-2026-09-28.md)
 sets out the evidence required to close R2. Zero usable chicken joins remain.
+
+Further bounded work on 2026-09-28 established that the checkpoint chicken IDs
+exactly match the selected GRCg6a genes in archived Ensembl releases 99, 100,
+101 and 106, without distinguishing the producer's exact release. A strict
+NCBI GeneID and shared unversioned `DIRECT` RefSeq accession bridge supplies 7,267
+unambiguous release-110-to-checkpoint pairs. The optional
+[join report](../../../docs/ortholog-eligibility-chicken-geneid-bridge.json)
+shows 6,129 usable human–chicken pairs out of 12,166 raw pairs. The
+[mapping TSV](../../../preprocess/orthologs/chicken_ncbi_geneid_bridge_r110_to_r106.tsv),
+[builder](../../../scripts/build_chicken_geneid_bridge.py), and
+[source audit](../../../docs/chicken-geneid-bridge-audit.json) preserve row-level
+evidence and hashes. The 9,611 remaining checkpoint genes are unresolved;
+the producer's exact annotation release and scientific review remain open.
+R2 is not closed by this partial genome-wide join.

@@ -14,13 +14,14 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python scripts/report_ortholo
   --output logs/dataset_audit/orthologs/join_audit.json
 ```
 
-The checked-in join audit identifies **0 usable human–chicken pairs out of
-12,166 raw pairs**, against 16,878 chicken vocabulary keys. Every other chicken
-pair involving a training species also has zero usable vocabulary joins. The
+The original join audit, run without a conversion, identifies **0 usable
+human–chicken pairs out of 12,166 raw pairs**, against 16,878 chicken
+vocabulary keys. Every other chicken pair involving a training species also
+has zero usable direct vocabulary joins. The
 cached chicken BioMart queries contain `ENSGALG000100…` identifiers, matching
 the Compara side. The model vocabulary instead uses `ENSGALG000000…` keys.
-Those facts do not establish a unique old-to-new mapping, so chicken gene-level
-cross-species analysis remains blocked. The original table is preserved.
+The original table is preserved. A conservative, optional cross-assembly bridge
+now yields 6,129 usable human–chicken joins; its scope and limits follow.
 
 ### Chicken reconciliation evidence needed
 
@@ -42,20 +43,46 @@ lists the newer bGalGal1.mat.broiler.GRCg7b assembly and
 the older GRCg6a assembly separately in its
 [chicken annotation report](https://www.ensembl.org/info/genome/genebuild/2022_05_Gallus_gallus_gene_annotation.pdf).
 The `ENSGALG000000` vocabulary suggests an older annotation, but the
-checkpoint file has no release or assembly attributes. Confirm the vocabulary's
-exact source assembly, annotation release, and build procedure before
-converting IDs. The cached BioMart files contain current-side IDs and homologs,
-not a conversion into this vocabulary.
+checkpoint file has no release or assembly attributes. The archived GRCg6a
+release 99, 100, 101 and 106 selected gene sets all exactly match the checkpoint
+keys, so their equality cannot identify one build release. The cached BioMart
+files used for the original table contain current-side IDs and homologs.
 
 Primary-source follow-up: Ensembl [announced the reference switch from GRCg6a
 to GRCg7b at release 107](https://lists.ensembl.org/pipermail/announce_ensembl.org/2022-July/000553.html),
 and still displays an `ENSGALG000000…` gene on its [separate GRCg6a assembly](https://www.ensembl.org/Gallus_gallus_GCA_000002315.5/Gene/Summary?g=ENSGALG00000004781).
 This strengthens the assembly-mismatch hypothesis but does not identify the
-checkpoint's exact annotation release or verify any gene pair. The bounded
+checkpoint's exact annotation release by itself. The bounded
 [provenance investigation](agents/chicken-identifier-provenance-2026-09-28.md)
-records the source evidence and remaining gate. No conversion TSV was produced.
+records the archived annotation comparisons and derived cross-reference bridge.
 
-For R2 asset repair, obtain an authoritative, inspectable Ensembl
+The [strict chicken bridge](../preprocess/orthologs/chicken_ncbi_geneid_bridge_r110_to_r106.tsv)
+retains 7,267 unique gene pairs with a shared NCBI GeneID, matching biotype,
+and the same unversioned RefSeq parent accession labeled `DIRECT` in both
+Ensembl releases. The TSV records each side's RefSeq version; matching base
+accessions do not establish identical transcript sequences.
+Its [audited join report](ortholog-eligibility-chicken-geneid-bridge.json) has
+6,129 usable human–chicken pairs out of 12,166 raw pairs. Run the optional
+mapping explicitly:
+
+```sh
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 .venv/bin/python scripts/report_ortholog_eligibility.py \
+  --table preprocess/orthologs/ortholog_pairs.tsv.gz \
+  --mapping preprocess/orthologs/chicken_ncbi_geneid_bridge_r110_to_r106.tsv \
+  --mapping-source 'Ensembl r106/r110 core EntrezGene xrefs with shared DIRECT RefSeq accession base' \
+  --mapping-release '110 GRCg7b source to 106 GRCg6a reference target' \
+  --mapping-assembly 'GCA_016699485.1 source to GCA_000002315.5 target' \
+  --vocab-dir checkpoints/tf_metazoa_finetuned/vocabs \
+  --output docs/ortholog-eligibility-chicken-geneid-bridge.json
+```
+
+The [builder](../scripts/build_chicken_geneid_bridge.py) and
+[source-hash audit](chicken-geneid-bridge-audit.json) make the partial mapping
+reproducible. Its 9,611 unmapped checkpoint genes remain unresolved. The
+producer's exact checkpoint release is still unknown, and no named statistic
+is eligible merely because the genome-wide pair count exceeds 5,000.
+
+For complete R2 asset repair, obtain an authoritative, inspectable Ensembl
 [ID History converter](https://mart.ensembl.org/Help/View?id=560) export or
 equivalent stable-ID history for **Gallus gallus** between the verified source
 and target releases. Preserve its source URL/job identifier, retrieval date,
@@ -66,8 +93,9 @@ be treated as proof that a differently numbered target ID is equivalent.
 For each proposed pair, retain the source ID, target ID and history evidence;
 exclude missing, one-to-many, many-to-one and conflicting mappings. Then run
 the offline audit below with the derived TSV and confirm positive joins to
-*both* model vocabularies. Freeze that derived artifact before evaluating
-named statistic gene sets. R2 remains open until these checks pass.
+*both* model vocabularies. The strict bridge provides a scoped subset, but
+the checkpoint build provenance and remaining genes still require review.
+R2 remains open.
 
 An independently verified conversion can be supplied as a TSV with
 `species`, `source_gene`, and `target_gene` columns, using `--mapping` plus

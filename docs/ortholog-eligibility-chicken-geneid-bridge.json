@@ -1,0 +1,1001 @@
+{
+  "mapping": {
+    "ambiguous_sources": {},
+    "assembly": "GCA_016699485.1 source to GCA_000002315.5 target",
+    "release": "110 GRCg7b source to 106 GRCg6a reference target",
+    "sha256": "c324274577b91376d726ea6f1e2e9235cec719f9bab2b3cf31cebcf85e52ba9b",
+    "source": "Ensembl r106/r110 core EntrezGene xrefs with shared DIRECT RefSeq accession base"
+  },
+  "pairs": {
+    "caenorhabditis_elegans__cavia_porcellus": {
+      "excluded": {
+        "missing_gene_universe": 1415
+      },
+      "gene_universe_a": 19985,
+      "gene_universe_b": null,
+      "raw_pairs": 1415,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "caenorhabditis_elegans__ciona_intestinalis": {
+      "excluded": {
+        "missing_gene_universe": 1545
+      },
+      "gene_universe_a": 19985,
+      "gene_universe_b": null,
+      "raw_pairs": 1545,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "caenorhabditis_elegans__danio_rerio": {
+      "excluded": {},
+      "gene_universe_a": 19985,
+      "gene_universe_b": 30312,
+      "raw_pairs": 1254,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.06274706029522141,
+      "usable_fraction_b": 0.04136975455265241,
+      "usable_genes_a": 1254,
+      "usable_genes_b": 1254,
+      "usable_pairs": 1254
+    },
+    "caenorhabditis_elegans__drosophila_melanogaster": {
+      "excluded": {},
+      "gene_universe_a": 19985,
+      "gene_universe_b": 13986,
+      "raw_pairs": 1721,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.08611458593945459,
+      "usable_fraction_b": 0.12305162305162305,
+      "usable_genes_a": 1721,
+      "usable_genes_b": 1721,
+      "usable_pairs": 1721
+    },
+    "caenorhabditis_elegans__gallus_gallus": {
+      "excluded": {
+        "unresolved_identifier": 529
+      },
+      "gene_universe_a": 19985,
+      "gene_universe_b": 16878,
+      "raw_pairs": 1309,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 529,
+      "usable_fraction_a": 0.03902927195396547,
+      "usable_fraction_b": 0.046214006398862424,
+      "usable_genes_a": 780,
+      "usable_genes_b": 780,
+      "usable_pairs": 780
+    },
+    "caenorhabditis_elegans__homo_sapiens": {
+      "excluded": {},
+      "gene_universe_a": 19985,
+      "gene_universe_b": 23823,
+      "raw_pairs": 1504,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.07525644233174882,
+      "usable_fraction_b": 0.06313226713680058,
+      "usable_genes_a": 1504,
+      "usable_genes_b": 1504,
+      "usable_pairs": 1504
+    },
+    "caenorhabditis_elegans__lytechinus_variegatus": {
+      "excluded": {},
+      "gene_universe_a": 19985,
+      "gene_universe_b": 22667,
+      "raw_pairs": 387,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.019364523392544408,
+      "usable_fraction_b": 0.017073278334142145,
+      "usable_genes_a": 387,
+      "usable_genes_b": 387,
+      "usable_pairs": 387
+    },
+    "caenorhabditis_elegans__macaca_fascicularis": {
+      "excluded": {
+        "missing_gene_universe": 1229
+      },
+      "gene_universe_a": 19985,
+      "gene_universe_b": null,
+      "raw_pairs": 1229,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "caenorhabditis_elegans__mus_musculus": {
+      "excluded": {},
+      "gene_universe_a": 19985,
+      "gene_universe_b": 22178,
+      "raw_pairs": 1473,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.07370527895921941,
+      "usable_fraction_b": 0.06641717016863559,
+      "usable_genes_a": 1473,
+      "usable_genes_b": 1473,
+      "usable_pairs": 1473
+    },
+    "caenorhabditis_elegans__oryctolagus_cuniculus": {
+      "excluded": {},
+      "gene_universe_a": 19985,
+      "gene_universe_b": 20612,
+      "raw_pairs": 1101,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.05509131848886665,
+      "usable_fraction_b": 0.053415486124587616,
+      "usable_genes_a": 1101,
+      "usable_genes_b": 1101,
+      "usable_pairs": 1101
+    },
+    "caenorhabditis_elegans__sus_scrofa": {
+      "excluded": {
+        "missing_gene_universe": 1336
+      },
+      "gene_universe_a": 19985,
+      "gene_universe_b": null,
+      "raw_pairs": 1336,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "caenorhabditis_elegans__xenopus_tropicalis": {
+      "excluded": {
+        "missing_gene_universe": 1410
+      },
+      "gene_universe_a": 19985,
+      "gene_universe_b": null,
+      "raw_pairs": 1410,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "cavia_porcellus__ciona_intestinalis": {
+      "excluded": {
+        "missing_gene_universe": 2565
+      },
+      "gene_universe_a": null,
+      "gene_universe_b": null,
+      "raw_pairs": 2565,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": null,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "cavia_porcellus__xenopus_tropicalis": {
+      "excluded": {
+        "missing_gene_universe": 8872
+      },
+      "gene_universe_a": null,
+      "gene_universe_b": null,
+      "raw_pairs": 8872,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": null,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "danio_rerio__cavia_porcellus": {
+      "excluded": {
+        "missing_gene_universe": 3003
+      },
+      "gene_universe_a": 30312,
+      "gene_universe_b": null,
+      "raw_pairs": 3003,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "danio_rerio__ciona_intestinalis": {
+      "excluded": {
+        "missing_gene_universe": 804
+      },
+      "gene_universe_a": 30312,
+      "gene_universe_b": null,
+      "raw_pairs": 804,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "danio_rerio__drosophila_melanogaster": {
+      "excluded": {},
+      "gene_universe_a": 30312,
+      "gene_universe_b": 13986,
+      "raw_pairs": 2019,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.06660728424386382,
+      "usable_fraction_b": 0.14435864435864437,
+      "usable_genes_a": 2019,
+      "usable_genes_b": 2019,
+      "usable_pairs": 2019
+    },
+    "danio_rerio__gallus_gallus": {
+      "excluded": {
+        "unresolved_identifier": 1649
+      },
+      "gene_universe_a": 30312,
+      "gene_universe_b": 16878,
+      "raw_pairs": 3441,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 1649,
+      "usable_fraction_a": 0.05911850092372658,
+      "usable_fraction_b": 0.1061737172650788,
+      "usable_genes_a": 1792,
+      "usable_genes_b": 1792,
+      "usable_pairs": 1792
+    },
+    "danio_rerio__homo_sapiens": {
+      "excluded": {},
+      "gene_universe_a": 30312,
+      "gene_universe_b": 23823,
+      "raw_pairs": 7679,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.2533320137239377,
+      "usable_fraction_b": 0.32233555807413006,
+      "usable_genes_a": 7679,
+      "usable_genes_b": 7679,
+      "usable_pairs": 7679
+    },
+    "danio_rerio__macaca_fascicularis": {
+      "excluded": {
+        "missing_gene_universe": 2796
+      },
+      "gene_universe_a": 30312,
+      "gene_universe_b": null,
+      "raw_pairs": 2796,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "danio_rerio__mus_musculus": {
+      "excluded": {},
+      "gene_universe_a": 30312,
+      "gene_universe_b": 22178,
+      "raw_pairs": 3263,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.10764713644761151,
+      "usable_fraction_b": 0.14712778429073858,
+      "usable_genes_a": 3263,
+      "usable_genes_b": 3263,
+      "usable_pairs": 3263
+    },
+    "danio_rerio__oryctolagus_cuniculus": {
+      "excluded": {},
+      "gene_universe_a": 30312,
+      "gene_universe_b": 20612,
+      "raw_pairs": 2498,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0824096067564001,
+      "usable_fraction_b": 0.12119153890937318,
+      "usable_genes_a": 2498,
+      "usable_genes_b": 2498,
+      "usable_pairs": 2498
+    },
+    "danio_rerio__sus_scrofa": {
+      "excluded": {
+        "missing_gene_universe": 3204
+      },
+      "gene_universe_a": 30312,
+      "gene_universe_b": null,
+      "raw_pairs": 3204,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "danio_rerio__xenopus_tropicalis": {
+      "excluded": {
+        "missing_gene_universe": 3086
+      },
+      "gene_universe_a": 30312,
+      "gene_universe_b": null,
+      "raw_pairs": 3086,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "drosophila_melanogaster__cavia_porcellus": {
+      "excluded": {
+        "missing_gene_universe": 2243
+      },
+      "gene_universe_a": 13986,
+      "gene_universe_b": null,
+      "raw_pairs": 2243,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "drosophila_melanogaster__ciona_intestinalis": {
+      "excluded": {
+        "missing_gene_universe": 2016
+      },
+      "gene_universe_a": 13986,
+      "gene_universe_b": null,
+      "raw_pairs": 2016,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "drosophila_melanogaster__gallus_gallus": {
+      "excluded": {
+        "unresolved_identifier": 859
+      },
+      "gene_universe_a": 13986,
+      "gene_universe_b": 16878,
+      "raw_pairs": 2106,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 859,
+      "usable_fraction_a": 0.08916058916058917,
+      "usable_fraction_b": 0.07388316151202749,
+      "usable_genes_a": 1247,
+      "usable_genes_b": 1247,
+      "usable_pairs": 1247
+    },
+    "drosophila_melanogaster__homo_sapiens": {
+      "excluded": {},
+      "gene_universe_a": 13986,
+      "gene_universe_b": 23823,
+      "raw_pairs": 2358,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.16859716859716858,
+      "usable_fraction_b": 0.09897997733282962,
+      "usable_genes_a": 2358,
+      "usable_genes_b": 2358,
+      "usable_pairs": 2358
+    },
+    "drosophila_melanogaster__lytechinus_variegatus": {
+      "excluded": {},
+      "gene_universe_a": 13986,
+      "gene_universe_b": 22667,
+      "raw_pairs": 1059,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.07571857571857572,
+      "usable_fraction_b": 0.04671990117792386,
+      "usable_genes_a": 1059,
+      "usable_genes_b": 1059,
+      "usable_pairs": 1059
+    },
+    "drosophila_melanogaster__macaca_fascicularis": {
+      "excluded": {
+        "missing_gene_universe": 1982
+      },
+      "gene_universe_a": 13986,
+      "gene_universe_b": null,
+      "raw_pairs": 1982,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "drosophila_melanogaster__mus_musculus": {
+      "excluded": {},
+      "gene_universe_a": 13986,
+      "gene_universe_b": 22178,
+      "raw_pairs": 2316,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.1655941655941656,
+      "usable_fraction_b": 0.10442781134457571,
+      "usable_genes_a": 2316,
+      "usable_genes_b": 2316,
+      "usable_pairs": 2316
+    },
+    "drosophila_melanogaster__oryctolagus_cuniculus": {
+      "excluded": {},
+      "gene_universe_a": 13986,
+      "gene_universe_b": 20612,
+      "raw_pairs": 1788,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.12784212784212784,
+      "usable_fraction_b": 0.08674558509606055,
+      "usable_genes_a": 1788,
+      "usable_genes_b": 1788,
+      "usable_pairs": 1788
+    },
+    "drosophila_melanogaster__sus_scrofa": {
+      "excluded": {
+        "missing_gene_universe": 2176
+      },
+      "gene_universe_a": 13986,
+      "gene_universe_b": null,
+      "raw_pairs": 2176,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "drosophila_melanogaster__xenopus_tropicalis": {
+      "excluded": {
+        "missing_gene_universe": 2222
+      },
+      "gene_universe_a": 13986,
+      "gene_universe_b": null,
+      "raw_pairs": 2222,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "gallus_gallus__cavia_porcellus": {
+      "excluded": {
+        "missing_gene_universe": 10330
+      },
+      "gene_universe_a": 16878,
+      "gene_universe_b": null,
+      "raw_pairs": 10330,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "gallus_gallus__ciona_intestinalis": {
+      "excluded": {
+        "missing_gene_universe": 2434
+      },
+      "gene_universe_a": 16878,
+      "gene_universe_b": null,
+      "raw_pairs": 2434,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "gallus_gallus__homo_sapiens": {
+      "excluded": {
+        "unresolved_identifier": 6037
+      },
+      "gene_universe_a": 16878,
+      "gene_universe_b": 23823,
+      "raw_pairs": 12166,
+      "unresolved_identifiers_a": 6037,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.36313544258798436,
+      "usable_fraction_b": 0.2572723838307518,
+      "usable_genes_a": 6129,
+      "usable_genes_b": 6129,
+      "usable_pairs": 6129
+    },
+    "gallus_gallus__macaca_fascicularis": {
+      "excluded": {
+        "missing_gene_universe": 9849
+      },
+      "gene_universe_a": 16878,
+      "gene_universe_b": null,
+      "raw_pairs": 9849,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "gallus_gallus__mus_musculus": {
+      "excluded": {
+        "unresolved_identifier": 5438
+      },
+      "gene_universe_a": 16878,
+      "gene_universe_b": 22178,
+      "raw_pairs": 10967,
+      "unresolved_identifiers_a": 5438,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.3275862068965517,
+      "usable_fraction_b": 0.24930110920732257,
+      "usable_genes_a": 5529,
+      "usable_genes_b": 5529,
+      "usable_pairs": 5529
+    },
+    "gallus_gallus__oryctolagus_cuniculus": {
+      "excluded": {
+        "unresolved_identifier": 4430
+      },
+      "gene_universe_a": 16878,
+      "gene_universe_b": 20612,
+      "raw_pairs": 8869,
+      "unresolved_identifiers_a": 4430,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.2630050953904491,
+      "usable_fraction_b": 0.21535998447506308,
+      "usable_genes_a": 4439,
+      "usable_genes_b": 4439,
+      "usable_pairs": 4439
+    },
+    "gallus_gallus__sus_scrofa": {
+      "excluded": {
+        "missing_gene_universe": 10797
+      },
+      "gene_universe_a": 16878,
+      "gene_universe_b": null,
+      "raw_pairs": 10797,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "gallus_gallus__xenopus_tropicalis": {
+      "excluded": {
+        "missing_gene_universe": 9434
+      },
+      "gene_universe_a": 16878,
+      "gene_universe_b": null,
+      "raw_pairs": 9434,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "homo_sapiens__cavia_porcellus": {
+      "excluded": {
+        "missing_gene_universe": 14496
+      },
+      "gene_universe_a": 23823,
+      "gene_universe_b": null,
+      "raw_pairs": 14496,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "homo_sapiens__ciona_intestinalis": {
+      "excluded": {
+        "missing_gene_universe": 867
+      },
+      "gene_universe_a": 23823,
+      "gene_universe_b": null,
+      "raw_pairs": 867,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "homo_sapiens__macaca_fascicularis": {
+      "excluded": {
+        "missing_gene_universe": 15149
+      },
+      "gene_universe_a": 23823,
+      "gene_universe_b": null,
+      "raw_pairs": 15149,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "homo_sapiens__mus_musculus": {
+      "excluded": {},
+      "gene_universe_a": 23823,
+      "gene_universe_b": 22178,
+      "raw_pairs": 15705,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.6592368719304873,
+      "usable_fraction_b": 0.7081341870321941,
+      "usable_genes_a": 15705,
+      "usable_genes_b": 15705,
+      "usable_pairs": 15705
+    },
+    "homo_sapiens__oryctolagus_cuniculus": {
+      "excluded": {},
+      "gene_universe_a": 23823,
+      "gene_universe_b": 20612,
+      "raw_pairs": 12841,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.5390169164253032,
+      "usable_fraction_b": 0.6229866097418979,
+      "usable_genes_a": 12841,
+      "usable_genes_b": 12841,
+      "usable_pairs": 12841
+    },
+    "homo_sapiens__sus_scrofa": {
+      "excluded": {
+        "missing_gene_universe": 15552
+      },
+      "gene_universe_a": 23823,
+      "gene_universe_b": null,
+      "raw_pairs": 15552,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "homo_sapiens__xenopus_tropicalis": {
+      "excluded": {
+        "missing_gene_universe": 9688
+      },
+      "gene_universe_a": 23823,
+      "gene_universe_b": null,
+      "raw_pairs": 9688,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "macaca_fascicularis__cavia_porcellus": {
+      "excluded": {
+        "missing_gene_universe": 11120
+      },
+      "gene_universe_a": null,
+      "gene_universe_b": null,
+      "raw_pairs": 11120,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": null,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "macaca_fascicularis__ciona_intestinalis": {
+      "excluded": {
+        "missing_gene_universe": 2302
+      },
+      "gene_universe_a": null,
+      "gene_universe_b": null,
+      "raw_pairs": 2302,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": null,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "macaca_fascicularis__sus_scrofa": {
+      "excluded": {
+        "missing_gene_universe": 12454
+      },
+      "gene_universe_a": null,
+      "gene_universe_b": null,
+      "raw_pairs": 12454,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": null,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "macaca_fascicularis__xenopus_tropicalis": {
+      "excluded": {
+        "missing_gene_universe": 8410
+      },
+      "gene_universe_a": null,
+      "gene_universe_b": null,
+      "raw_pairs": 8410,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": null,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "mus_musculus__cavia_porcellus": {
+      "excluded": {
+        "missing_gene_universe": 14355
+      },
+      "gene_universe_a": 22178,
+      "gene_universe_b": null,
+      "raw_pairs": 14355,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "mus_musculus__ciona_intestinalis": {
+      "excluded": {
+        "missing_gene_universe": 2677
+      },
+      "gene_universe_a": 22178,
+      "gene_universe_b": null,
+      "raw_pairs": 2677,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "mus_musculus__macaca_fascicularis": {
+      "excluded": {
+        "missing_gene_universe": 12215
+      },
+      "gene_universe_a": 22178,
+      "gene_universe_b": null,
+      "raw_pairs": 12215,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "mus_musculus__oryctolagus_cuniculus": {
+      "excluded": {},
+      "gene_universe_a": 22178,
+      "gene_universe_b": 20612,
+      "raw_pairs": 10772,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.4857065560465326,
+      "usable_fraction_b": 0.5226081894042306,
+      "usable_genes_a": 10772,
+      "usable_genes_b": 10772,
+      "usable_pairs": 10772
+    },
+    "mus_musculus__sus_scrofa": {
+      "excluded": {
+        "missing_gene_universe": 13797
+      },
+      "gene_universe_a": 22178,
+      "gene_universe_b": null,
+      "raw_pairs": 13797,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "mus_musculus__xenopus_tropicalis": {
+      "excluded": {
+        "missing_gene_universe": 9441
+      },
+      "gene_universe_a": 22178,
+      "gene_universe_b": null,
+      "raw_pairs": 9441,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "oryctolagus_cuniculus__cavia_porcellus": {
+      "excluded": {
+        "missing_gene_universe": 9680
+      },
+      "gene_universe_a": 20612,
+      "gene_universe_b": null,
+      "raw_pairs": 9680,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "oryctolagus_cuniculus__ciona_intestinalis": {
+      "excluded": {
+        "missing_gene_universe": 2122
+      },
+      "gene_universe_a": 20612,
+      "gene_universe_b": null,
+      "raw_pairs": 2122,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "oryctolagus_cuniculus__macaca_fascicularis": {
+      "excluded": {
+        "missing_gene_universe": 9682
+      },
+      "gene_universe_a": 20612,
+      "gene_universe_b": null,
+      "raw_pairs": 9682,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "oryctolagus_cuniculus__sus_scrofa": {
+      "excluded": {
+        "missing_gene_universe": 10656
+      },
+      "gene_universe_a": 20612,
+      "gene_universe_b": null,
+      "raw_pairs": 10656,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "oryctolagus_cuniculus__xenopus_tropicalis": {
+      "excluded": {
+        "missing_gene_universe": 7583
+      },
+      "gene_universe_a": 20612,
+      "gene_universe_b": null,
+      "raw_pairs": 7583,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": 0.0,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "sus_scrofa__cavia_porcellus": {
+      "excluded": {
+        "missing_gene_universe": 12507
+      },
+      "gene_universe_a": null,
+      "gene_universe_b": null,
+      "raw_pairs": 12507,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": null,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "sus_scrofa__ciona_intestinalis": {
+      "excluded": {
+        "missing_gene_universe": 2535
+      },
+      "gene_universe_a": null,
+      "gene_universe_b": null,
+      "raw_pairs": 2535,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": null,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "sus_scrofa__xenopus_tropicalis": {
+      "excluded": {
+        "missing_gene_universe": 9254
+      },
+      "gene_universe_a": null,
+      "gene_universe_b": null,
+      "raw_pairs": 9254,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": null,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    },
+    "xenopus_tropicalis__ciona_intestinalis": {
+      "excluded": {
+        "missing_gene_universe": 2609
+      },
+      "gene_universe_a": null,
+      "gene_universe_b": null,
+      "raw_pairs": 2609,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "usable_fraction_a": null,
+      "usable_fraction_b": null,
+      "usable_genes_a": 0,
+      "usable_genes_b": 0,
+      "usable_pairs": 0
+    }
+  },
+  "schema_version": 1,
+  "source_table_sha256": "bce2e8dee39311e8c2c571660556af09f8de2c6a26c31de295bc4f3f95e06d60",
+  "statistics": [],
+  "statistics_source_sha256": null
+}

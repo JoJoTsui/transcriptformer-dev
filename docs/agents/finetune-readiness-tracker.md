@@ -16,7 +16,8 @@ their completion evidence and WSL constraints. The owner subsequently requested
 [12 implementation tickets](../../.scratch/multispecies-readiness-remediation/README.md).
 Implementation was authorized on 2026-09-28. Bounded CPU checks have verified
 the individual tools; integrated training selection remains in progress. The
-chicken identifier mapping, additional zebrafish delivery, actual full-corpus
+partial chicken identifier bridge still requires source-release review;
+additional zebrafish delivery, actual full-corpus
 preparation, accelerator behavior and scientific sign-off remain open.
 
 Additional zebrafish data may be supplied by collaborators for this finetune.
@@ -37,7 +38,7 @@ preparation and remain pending.
 | K | Complete spatial coordinate copies + derived manifest | Complete | `2ea75b3`; five files (~2.5 GB, sources unchanged); validator 27 PASS / 1 WARN / 0 FAIL on the derived manifest; all-27-source bounded rehearsal passed (3,357 → 3,308 rows) |
 | L | B1 criterion revision pre-registration draft | Complete (sign-off pending) | `ee6f934`; `docs/b1-criterion-proposal.md` (B1-A recommended; B1-B/B1-C alternatives; metric convention; freeze discipline). Collaborator #1–#3 cannot change B1 feasibility |
 | M | Probe asset audit: FASTA entries, metadata, ESM-2 plan | Complete | `6c67547`, `4d95645`; four verified FASTA entries (exact-species NCBI proteomes for ciona/amphioxus); metadata resolved to real columns with citations; register 8.4 added (key-namespace mismatches); readiness report regenerated (exit 1 by design) |
-| N | 1:1 ortholog table + usable joins + statistic-specific coverage floors | Incomplete | Historical table: 402,495 pairs / 68 of 91 pairs; the old 6/91 result used whole-vocabulary counts and is descriptive only. Finalized-table join audit finds zero usable chicken pairs against the model vocabulary; an authoritative identifier mapping and named statistic inputs are still needed. |
+| N | 1:1 ortholog table + usable joins + statistic-specific coverage floors | Incomplete | Historical table: 402,495 pairs / 68 of 91 pairs; old 6/91 is descriptive. Unmapped chicken audit has zero joins; an optional strict Ensembl/NCBI/RefSeq bridge yields 6,129 usable human–chicken pairs, with 9,611 checkpoint chicken genes still unresolved. Exact checkpoint source release and named statistic inputs remain pending. See the [provenance audit](chicken-identifier-provenance-2026-09-28.md). |
 
 ### Open decisions from this batch
 
@@ -51,7 +52,8 @@ Full forward-looking context, defaults, and the ordered next-steps plan are in
 - Coverage-floor reality check: the old 6/91 result does not evaluate the registered
   statistic-specific 60% floor. Use validated one-to-one pairs, actual genes entering
   each named species/phase statistic, and the independent 5,000-pair floor before any
-  eligibility decision. Chicken identifier reconciliation remains unresolved. Either accept that
+  eligibility decision. Chicken identifier reconciliation is partial and its
+  exact checkpoint release remains unresolved. Either accept that
   genuinely failing pairs downgrade to single-species findings, or revise the floor
   definition before any results are seen.
 - 139/200 sampled pairs are unverified (OrthoDB xref gaps; kept as

@@ -54,9 +54,9 @@ sequentially on this WSL host.
 - **Additional zebrafish:** collaborator source identity, delivery and metadata
   are pending. Ticket 11 prepares checks/intake records; it cannot claim actual
   ingestion before delivery.
-- **Chicken identifiers:** ticket 04 must distinguish working join/report tools
-  from an externally unresolved mapping. Accurate zero coverage alone does not
-  close R2's asset repair.
+- **Chicken identifiers:** ticket 04 has an optional, strict partial bridge
+  with inspectable gene-level evidence and positive joins. Its 9,611 unresolved
+  checkpoint genes and unknown exact source release keep R2 open.
 - **Named ortholog statistics:** ticket 05's report boundary is implemented, but
   no frozen B3 phase rankings or scored distributional comparison exist. The
   checked acceptance items cover the tooling; the comparison criterion remains

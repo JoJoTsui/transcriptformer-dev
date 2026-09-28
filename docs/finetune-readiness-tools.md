@@ -259,7 +259,11 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python scripts/report_ortholo
   --output logs/dataset_audit/orthologs/join_audit.json
 ```
 
-The current audit finds zero usable human–chicken joins among 12,166 raw pairs.
+The original unmapped audit finds zero usable human–chicken joins among 12,166
+raw pairs. A separately derived, strict chicken bridge gives 6,129 usable
+human–chicken joins with 7,267 conservatively mapped chicken genes. Its
+[source audit and limits](ortholog-eligibility-report.md#chicken-reconciliation-evidence-needed)
+must accompany any use of that optional mapping.
 The historic six-of-91 result used raw pair counts and whole-vocabulary sizes;
 it is descriptive, not a registered scientific eligibility decision. Supply
 named species/phase statistic gene sets with `--statistics` to evaluate each
@@ -286,10 +290,11 @@ training exposure or new-source ingestion has yet been demonstrated.
 - Resolve probe assets (ESM-2 embeddings/vocabularies and key-namespace
   maps) and remaining source annotations before evaluating B4.
 
-- Resolve the chicken identifier mapping and provide named statistic inputs
-  before applying ortholog eligibility. The old six-of-91 count is not that
-  decision. Genuinely failing pairs downgrade cross-species gene-level claims
-  under the registered rule.
+- Review the partial chicken identifier bridge, resolve the checkpoint's exact
+  source annotation release, and provide named statistic inputs before applying
+  ortholog eligibility. The old six-of-91 count and the new genome-wide join
+  count are neither statistic-specific decisions. Genuinely failing pairs
+  downgrade cross-species gene-level claims under the registered rule.
 - Complete coordinate copies and their derived manifest now exist and validate;
 finalize the corpus manifest and run the real
   preparation/validation gate. Regenerate reports after corpus or QC changes.

@@ -67,7 +67,7 @@
 
 ## 4. 基因标识、映射覆盖率与直系同源
 
-**2026-09-28 更正（4.3）：** 下表中“6/91 通过双下限”是旧版按整套词表数量计算的描述性结果，并非已注册的逐物种、逐发育阶段统计输入基因 60% 覆盖率判定。最终同源表与鸡模型词表实际交集为零；在有可靠来源的标识映射及具体统计输入基因集前，4.3 的科学适用性判定尚未完成。见 [同源基因评估说明](ortholog-eligibility-report.md)。
+**2026-09-28 更正（4.3）：** 下表中“6/91 通过双下限”是旧版按整套词表数量计算的描述性结果，并非已注册的逐物种、逐发育阶段统计输入基因 60% 覆盖率判定。未经转换的最终同源表与鸡模型词表实际交集为零；另行审计的严格部分映射在人–鸡配对中产生 6,129 个可用基因对，但仍有 9,611 个鸡模型基因未解决，模型词表的确切注释版本也未确认。在取得具体统计输入基因集前，4.3 的科学适用性判定尚未完成。见 [同源基因评估说明](ortholog-eligibility-report.md)。
 
 | # | 问题 | 状态 |
 |---|---|---|
@@ -271,7 +271,7 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 
 ## 4. Gene identity, mapping coverage, and orthology
 
-**2026-09-28 correction to 4.3:** The table's “6/91 pass both floors” is a historical count-only result, not the registered 60% rule on genes entering each species/phase statistic. The finalized ortholog table has zero usable joins with the chicken model vocabulary. Scientific eligibility remains unevaluated until a provenance-backed identifier mapping and named statistic gene sets exist. See the [ortholog eligibility guide](ortholog-eligibility-report.md).
+**2026-09-28 correction to 4.3:** The table's “6/91 pass both floors” is a historical count-only result, not the registered 60% rule on genes entering each species/phase statistic. The finalized ortholog table has zero direct joins with the chicken model vocabulary. An audited strict partial bridge yields 6,129 usable human–chicken pairs, while 9,611 chicken checkpoint genes and the checkpoint's exact annotation release remain unresolved. Scientific eligibility still needs named statistic gene sets. See the [ortholog eligibility guide](ortholog-eligibility-report.md).
 
 | # | Issue | Status |
 |---|---|---|
