@@ -122,3 +122,12 @@ likelihood-drop impact ranking by species and developmental phase described in
 contains that design but no completed ranking pipeline or output from which a
 real list can be derived. Ortholog availability and model vocabularies are
 input universes, not ranked statistic inputs.
+
+The available `runs/` artifacts are probe-readiness metadata and spatial H5AD
+copies; `logs/dataset_audit/` holds preparation and coverage audits, not a
+likelihood-drop matrix or per-phase ranking. The `comparable_pairs` field is an
+exact, inspectable input to a downstream distributional analysis. The request
+contains gene IDs but no scores, and this command does not perform a
+distributional test or publish its result. Ticket 05's distributional-analysis
+criterion remains open until a named B3 analysis supplies scores and method,
+uses those pairs, and records its result and exclusions.

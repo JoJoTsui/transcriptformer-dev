@@ -14,13 +14,13 @@ Separate descriptive genome-wide availability from eligibility for a named speci
 
 ## Acceptance Criteria
 
-- [ ] Accept the actual input gene set for each species, with species pair, developmental phase, statistic identity and provenance.
-- [ ] Measure the 60% mapped fraction separately for each input set, and apply the independent at-least-5,000 genome-wide one-to-one pair floor.
-- [ ] An otherwise genome-wide passing pair with zero mapped statistic genes fails; a low whole-vocabulary fraction does not veto a fully covered statistic when the 5,000-pair floor is met.
-- [ ] Missing or empty required statistic inputs are explicitly unevaluable; no input-free report claims to pass both scientific floors.
+- [x] Accept the actual input gene set for each species, with species pair, developmental phase, statistic identity and provenance.
+- [x] Measure the 60% mapped fraction separately for each input set, and apply the independent at-least-5,000 genome-wide one-to-one pair floor.
+- [x] An otherwise genome-wide passing pair with zero mapped statistic genes fails; a low whole-vocabulary fraction does not veto a fully covered statistic when the 5,000-pair floor is met.
+- [x] Missing or empty required statistic inputs are explicitly unevaluable; no input-free report claims to pass both scientific floors.
 - [ ] Compute distributional comparisons on the relevant one-to-one intersection and publish denominators, exclusions and reasons. Do not reinterpret missing mappings as biological absence.
-- [ ] Apply disagreement and ambiguity filtering before final counts/coverage/hashes; table and reports reconcile exactly. Keep unavailable cross-check evidence distinct from disagreement.
-- [ ] Correct the claim that the old six-of-91 report implements the registered eligibility rule; retain historical counts as descriptive evidence only.
+- [x] Apply disagreement and ambiguity filtering before final counts/coverage/hashes; table and reports reconcile exactly. Keep unavailable cross-check evidence distinct from disagreement.
+- [x] Correct the claim that the old six-of-91 report implements the registered eligibility rule; retain historical counts as descriptive evidence only.
 
 ## Testing Seam
 
@@ -60,3 +60,22 @@ The input JSON hash protects the submitted request, but its free-text
 `provenance` field does not prove the rankings' origin. A real decision remains
 pending until full ranking artifacts, run/data identity, top-k selection rule,
 and hashes are frozen and linked to the submitted gene lists.
+
+Artifact audit on 2026-09-28: `runs/` contains probe-readiness metadata and
+spatial H5AD copies; `logs/dataset_audit/` contains preparation, coverage and
+ortholog audits. Neither location contains a likelihood-drop score matrix,
+null-corrected per-species/per-phase ranking, or a frozen top-k input list.
+The checked-in `src/` and `scripts/` code does not implement the B3
+perturbation/null ranking pipeline described in
+`docs/perturbation-and-baseline-design.md` §§1–3. A checkpoint weight file and
+model vocabulary cannot establish the missing ranking, so no genuine
+`impact_top_200` request can be generated from current artifacts.
+
+The report emits exact `comparable_pairs` and denominators, but it does not
+compute a distributional comparison. The request format supplies gene IDs
+only, with no per-gene scores or distributional statistic; the current design
+does not specify a generic cross-species test to run on IDs alone. Keep that
+acceptance item open. The B3 analysis must provide the score values and named
+comparison method, consume only the reported paired intersection, and publish
+its result, denominator and exclusions. Do not treat `comparison_supported`
+as an observed biological result.

@@ -22,6 +22,15 @@ not identify the exact checkpoint annotation release or prove that any specific
 old and new ID represent the same gene. GRCg6a remains a separate Ensembl
 assembly, so the old prefix alone is not a release identifier.
 
+A [published GRCg6a/Ensembl v100 annotation analysis](https://pmc.ncbi.nlm.nih.gov/articles/PMC7686352/)
+reports 16,878 protein-coding genes, numerically equal to the local chicken
+vocabulary size. This is a useful lead for checking archived gene sets, but a
+matching count cannot identify the vocabulary's release or establish that its
+individual IDs are those genes. The [model producer's public README](https://github.com/czi-ai/transcriptformer/blob/main/README.md)
+confirms chicken is a TF-Metazoa training species and expects Ensembl gene IDs;
+it does not identify the chicken annotation release or describe how this exact
+vocabulary was generated.
+
 Ensembl's [ID History converter help](https://mart.ensembl.org/Help/View?id=560)
 says it maps identifiers from a previous release to current IDs and may return
 all matching IDs. Its [archive endpoint documentation](https://rest.ensembl.org/documentation/info/archive_id_get)

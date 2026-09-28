@@ -57,6 +57,10 @@ sequentially on this WSL host.
 - **Chicken identifiers:** ticket 04 must distinguish working join/report tools
   from an externally unresolved mapping. Accurate zero coverage alone does not
   close R2's asset repair.
+- **Named ortholog statistics:** ticket 05's report boundary is implemented, but
+  no frozen B3 phase rankings or scored distributional comparison exist. The
+  checked acceptance items cover the tooling; the comparison criterion remains
+  open until ranked scores and a named method are available.
 - **Still pending separately:** corpus/QC/assay/training sampling decisions, B1
   sign-off, missing probe resources, complete preparation and actual-model/GPU
   evidence.

@@ -14,12 +14,12 @@ Retain real identifier sets through ortholog preparation and compute usable join
 
 ## Acceptance Criteria
 
-- [ ] A table whose gene counts look plausible but whose keys do not match the vocabulary reports zero usable coverage, never the raw-count percentage.
-- [ ] Validate keys on both sides and retain counts for raw pairs, joined pairs, ambiguous mappings and unresolved identifiers.
-- [ ] Audit the existing chicken vocabulary against the retained ortholog table, recording the observed zero-join case before any correction.
+- [x] A table whose gene counts look plausible but whose keys do not match the vocabulary reports zero usable coverage, never the raw-count percentage.
+- [x] Validate keys on both sides and retain counts for raw pairs, joined pairs, ambiguous mappings and unresolved identifiers.
+- [x] Audit the existing chicken vocabulary against the retained ortholog table, recording the observed zero-join case before any correction.
 - [ ] Where a defensible unambiguous mapping exists, record source/release/assembly provenance and demonstrate actual joined genes. Exclude ambiguous or missing mappings without guessing aliases.
 - [ ] Do not silently change species, release or assembly; preserve source assets and produce inspectable derived mapping/report artifacts.
-- [ ] If mapping evidence is unavailable, complete accurate validation/reporting but explicitly leave the chicken asset repair and R2 unresolved. Do not mark usable mapping complete from a zero-coverage report.
+- [x] If mapping evidence is unavailable, complete accurate validation/reporting but explicitly leave the chicken asset repair and R2 unresolved. Do not mark usable mapping complete from a zero-coverage report.
 
 ## Testing Seam
 
