@@ -34,4 +34,16 @@ The WSL host reported 31 GiB RAM, about 29 GiB available and 8 GiB swap during t
 
 The historical six-of-91 ortholog result is a count-only audit. The registered 60% floor requires actual gene sets entering each named species/phase statistic, separately on both sides, plus at least 5,000 finalized genome-wide one-to-one pairs. The [join report](../../logs/dataset_audit/orthologs/join_audit.json) makes no scientific eligibility claim without those inputs.
 
+A 2026-09-28 continuation found no frozen named statistic gene inputs. The
+eligibility command now calculates the 60% fraction from pairs that survive
+both final one-to-one filtering and both model-vocabulary joins; it reports
+when the selected input sets have no pair for a distributional comparison.
+The chicken table and checkpoint vocabulary hashes, zero identifier join and
+the required source-release/ID-history evidence are recorded in the
+[ortholog report](../ortholog-eligibility-report.md). This continuation was
+reviewed with Ruff, Python compilation and diff checks; no new test suite was
+run for these follow-up edits.
+
 The current final holdout supports only human and mouse. Post-QC freeze evidence, B1 criterion sign-off, added independent zebrafish embryos, chicken ID reconciliation, probe assets, actual production preparation, accelerator validation and collaborator corpus/QC/assay decisions remain separate gates. Tooling test passes must not be recorded as production or scientific readiness.
+The local normal/untreated zebrafish file is derived from Wagner and does not
+count as collaborator delivery or an independent validation source.

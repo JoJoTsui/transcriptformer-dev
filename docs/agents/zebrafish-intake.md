@@ -6,6 +6,14 @@ columns. A historical 128-row rehearsal retained 128 training rows and 17,895
 prepared gene columns. These are historical, bounded observations, not evidence
 that the full corpus was prepared or used in training.
 
+The local zebrafish directory also contains a 36,749-cell normal, untreated
+subset derived from the same Wagner H5AD. Its source README identifies it as a
+subset of the author file, so it is **not** an additional independent
+collaborator dataset and must not be counted as a new validation embryo source.
+No additional zebrafish source is listed in either current finetuning manifest,
+and no completed production preparation or training summary was found under
+`runs/` during the 2026-09-28 local check.
+
 After preparation, run:
 
 ```bash
@@ -25,8 +33,10 @@ training budget; a completed training run needs separate exposure evidence.
 
 ## Collaborator source intake record
 
-Status: **pending delivery and assessment**. No additional source is recorded
-as received. Fill in and verify these fields when it arrives:
+Status: **pending delivery and assessment**. The owner confirmed on
+2026-09-28 that the collaborator zebrafish files are not ready yet. No
+additional source is recorded as received. Fill in and verify these fields
+when it arrives:
 
 | Field | Evidence required |
 | --- | --- |

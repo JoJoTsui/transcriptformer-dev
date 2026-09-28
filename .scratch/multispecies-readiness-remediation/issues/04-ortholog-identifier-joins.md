@@ -38,3 +38,13 @@ scientific and external-data gates remain in effect.
 ## Comments
 
 Initially published as a specification-only ticket. 2026-09-28 implementation evidence: The offline join audit reports zero usable human–chicken pairs out of 12,166 finalized pairs against 16,878 chicken vocabulary keys. No authoritative identifier conversion is available. Mapping repair remains open; the shipped source table is preserved.
+
+2026-09-28 follow-up: A bounded local audit found 13,145 distinct
+`ENSGALG000100` chicken IDs in the finalized table and 16,878
+`ENSGALG000000` checkpoint keys, with zero intersection. The checkpoint
+vocabulary carries no source release or assembly metadata; cached BioMart
+queries contain current IDs but no old-to-current conversion. The exact
+required Ensembl history export, provenance fields, ambiguity exclusions and
+post-mapping audit are recorded in
+[the ortholog eligibility report](../../../docs/ortholog-eligibility-report.md#chicken-reconciliation-evidence-needed).
+The chicken asset repair is still blocked on that evidence.

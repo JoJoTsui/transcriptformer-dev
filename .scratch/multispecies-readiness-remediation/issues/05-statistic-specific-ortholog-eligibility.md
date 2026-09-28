@@ -39,3 +39,13 @@ scientific and external-data gates remain in effect.
 ## Comments
 
 Initially published as a specification-only ticket. 2026-09-28 implementation evidence: Named statistic inputs and independent 60%/5,000 floors are implemented at the report boundary. Fifty targeted ortholog/representation tests passed with ticket 09. Real gene rankings and a reconciled chicken mapping remain pending.
+
+Continuation audit on 2026-09-28 found no frozen named phase/statistic gene
+input files in the repository. The report boundary now bases the 60% fraction
+on vocabulary-joined, final one-to-one pairs while retaining the separate
+genome-wide pair denominator. It records the input JSON hash and marks a
+missing vocabulary as unevaluable. A floor-passing request with no shared
+input-gene pair now reports that distributional comparison is unsupported.
+The checked-in join audit still contains
+zero statistic decisions. Scientific eligibility cannot be completed until
+the actual ranked input lists and their provenance are supplied.

@@ -40,3 +40,11 @@ scientific and external-data gates remain in effect.
 ## Comments
 
 Initially published as a specification-only ticket. 2026-09-28 implementation evidence: Wagner participation tooling is implemented; six targeted readiness tests passed, including actual checkpoint gene-vocabulary joins and positive expression checks. Actual full training draws and any additional zebrafish delivery remain unverified.
+
+Continuation metadata check on 2026-09-28 found only the Wagner author H5AD
+and its 36,749-cell normal/untreated derivative in the local zebrafish folder.
+The derivative shares source cells and does not meet the independent-source
+intake gate. Neither current manifest lists a second zebrafish dataset, and
+there is no production preparation/training summary under `runs/` to establish
+realized draws. The owner confirmed on 2026-09-28 that the collaborator files
+are not ready yet. The addition and production exposure remain open.

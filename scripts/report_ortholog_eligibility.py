@@ -67,6 +67,7 @@ def audit_pair(rows, species_a, species_b, genes_a, genes_b, mapping=None, ambig
     genes_a = {canonical_gene_id(species_a, x) for x in genes_a} if genes_a is not None else None
     genes_b = {canonical_gene_id(species_b, x) for x in genes_b} if genes_b is not None else None
     raw, usable, excluded = 0, set(), defaultdict(int)
+    converted = []
     unresolved_a, unresolved_b = set(), set()
     for a, b in rows:
         raw += 1
@@ -76,6 +77,17 @@ def audit_pair(rows, species_a, species_b, genes_a, genes_b, mapping=None, ambig
             continue
         a = mapping.get(species_a, {}).get(a, a)
         b = mapping.get(species_b, {}).get(b, b)
+        converted.append((a, b))
+    # Assess one-to-one identity before vocabulary filtering. A colliding pair
+    # cannot make another pair appear unique merely because it lacks a vocab key.
+    count_a, count_b = defaultdict(int), defaultdict(int)
+    for a, b in set(converted):
+        count_a[a] += 1
+        count_b[b] += 1
+    for a, b in converted:
+        if count_a[a] > 1 or count_b[b] > 1:
+            excluded["ambiguous_mapping"] += 1
+            continue
         if genes_a is None or genes_b is None:
             excluded["missing_gene_universe"] += 1
         elif a not in genes_a or b not in genes_b:
@@ -86,14 +98,6 @@ def audit_pair(rows, species_a, species_b, genes_a, genes_b, mapping=None, ambig
                 unresolved_b.add(b)
         else:
             usable.add((a, b))
-    # A derived mapping may cause two different pairs to share a target.
-    count_a, count_b = defaultdict(int), defaultdict(int)
-    for a, b in usable:
-        count_a[a] += 1
-        count_b[b] += 1
-    collision = {(a, b) for a, b in usable if count_a[a] > 1 or count_b[b] > 1}
-    usable -= collision
-    excluded["ambiguous_mapping"] += len(collision)
     return {
         "raw_pairs": raw,
         "usable_pairs": len(usable),
@@ -125,17 +129,24 @@ def mapped_pairs(rows, species_a, species_b, mapping=None, ambiguous=None):
     return {(a, b) for a, b in converted if count_a[a] == 1 and count_b[b] == 1}
 
 
-def evaluate_statistic(rows, request, *, min_fraction=0.6, min_pairs=5000):
+def evaluate_statistic(
+    rows, request, *, min_fraction=0.6, min_pairs=5000,
+    genome_wide_pairs=None, gene_universes_available=True,
+):
     """Evaluate the two independent registered floors for one named comparison."""
     required = ("species_a", "species_b", "phase", "statistic", "provenance")
     if any(not request.get(key) for key in required):
         raise ValueError("Statistic requires species pair, phase, statistic and provenance")
     genes_a, genes_b = request.get("genes_a"), request.get("genes_b")
     result = {key: request[key] for key in required}
-    result["genome_wide_pairs"] = len(rows)
-    result["pass_min_pairs_floor"] = len(rows) >= min_pairs
+    result["genome_wide_pairs"] = len(rows) if genome_wide_pairs is None else genome_wide_pairs
+    result["pass_min_pairs_floor"] = result["genome_wide_pairs"] >= min_pairs
     if not genes_a or not genes_b:
-        return {**result, "status": "unevaluable", "reason": "missing_or_empty_statistic_input", "floors_pass": None}
+        return {**result, "status": "unevaluable", "reason": "missing_or_empty_statistic_input",
+                "floors_pass": None, "comparison_supported": None}
+    if not gene_universes_available:
+        return {**result, "status": "unevaluable", "reason": "missing_gene_universe",
+                "floors_pass": None, "comparison_supported": None}
     a_set = {canonical_gene_id(request["species_a"], x) for x in genes_a}
     b_set = {canonical_gene_id(request["species_b"], x) for x in genes_b}
     covered_a = a_set & {a for a, _ in rows}
@@ -152,6 +163,8 @@ def evaluate_statistic(rows, request, *, min_fraction=0.6, min_pairs=5000):
         "n_mapped_a": len(covered_a), "n_mapped_b": len(covered_b),
         "mapped_fraction_a": fraction_a, "mapped_fraction_b": fraction_b,
         "n_comparable_pairs": len(selected),
+        "comparison_supported": bool(selected),
+        "comparison_reason": None if selected else "no_shared_ortholog_input_pairs",
         "n_excluded_a": len(a_set - covered_a), "n_excluded_b": len(b_set - covered_b),
         "comparable_pairs": [list(pair) for pair in sorted(selected)],
     }
@@ -175,35 +188,39 @@ def main():
     for a, ga, b, gb in read_pairs(args.table):
         pairs[(a, b)].append((ga, gb))
     report = {"schema_version": 1, "source_table_sha256": hashlib.sha256(args.table.read_bytes()).hexdigest(),
+              "statistics_source_sha256": hashlib.sha256(args.statistics.read_bytes()).hexdigest() if args.statistics else None,
               "mapping": None if not args.mapping else {"source": args.mapping_source, "release": args.mapping_release,
               "assembly": args.mapping_assembly, "sha256": hashlib.sha256(args.mapping.read_bytes()).hexdigest(),
               "ambiguous_sources": {k: len(v) for k, v in ambiguous.items()}},
               "pairs": {}, "statistics": []}
     joined = {}
     vocab_cache = {}
-    for (a, b), rows in sorted(pairs.items()):
-        def vocab(species):
-            if species in vocab_cache:
-                return vocab_cache[species]
+    def vocab(species):
+        if species not in vocab_cache:
             path = (args.vocab_dir / f"{species}_gene.h5") if args.vocab_dir else None
-            vocab_cache[species] = load_vocab(species) if path is None else _load_vocab_path(path)
-            return vocab_cache[species]
-        try:
-            genes_a = vocab(a)
-        except FileNotFoundError:
-            genes_a = None
-        try:
-            genes_b = vocab(b)
-        except FileNotFoundError:
-            genes_b = None
+            try:
+                vocab_cache[species] = load_vocab(species) if path is None else _load_vocab_path(path)
+            except FileNotFoundError:
+                vocab_cache[species] = None
+        return vocab_cache[species]
+
+    for (a, b), rows in sorted(pairs.items()):
+        genes_a = vocab(a)
+        genes_b = vocab(b)
         audit, joined[(a, b)] = audit_pair(rows, a, b, genes_a, genes_b, mapping, ambiguous)
         report["pairs"][f"{a}__{b}"] = audit
     if args.statistics:
         requests = json.loads(args.statistics.read_text())["statistics"]
         for request in requests:
             key = (request["species_a"], request["species_b"])
+            genes_available = vocab(key[0]) is not None and vocab(key[1]) is not None
+            # The pair floor is genome-wide, but statistic coverage must use
+            # identifiers that survived the actual model-vocabulary join.
+            genome_wide = mapped_pairs(pairs.get(key, []), *key, mapping, ambiguous)
             report["statistics"].append(evaluate_statistic(
-                mapped_pairs(pairs.get(key, []), *key, mapping, ambiguous), request
+                joined.get(key, set()) & genome_wide, request,
+                genome_wide_pairs=len(genome_wide),
+                gene_universes_available=genes_available,
             ))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n")
