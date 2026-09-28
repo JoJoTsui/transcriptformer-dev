@@ -48,3 +48,12 @@ required Ensembl history export, provenance fields, ambiguity exclusions and
 post-mapping audit are recorded in
 [the ortholog eligibility report](../../../docs/ortholog-eligibility-report.md#chicken-reconciliation-evidence-needed).
 The chicken asset repair is still blocked on that evidence.
+
+Primary-source follow-up on 2026-09-28: Ensembl announced the GRCg6a-to-GRCg7b
+reference switch at release 107 and still serves `ENSGALG000000…` genes on
+the separate GRCg6a assembly. This supports, but does not prove for the exact
+checkpoint, an assembly mismatch. The checkpoint vocabulary/config has no
+source release or assembly metadata, and no authoritative one-to-one
+cross-assembly conversion was obtained. The cited
+[investigation](../../../docs/agents/chicken-identifier-provenance-2026-09-28.md)
+sets out the evidence required to close R2. Zero usable chicken joins remain.

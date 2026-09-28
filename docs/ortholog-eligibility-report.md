@@ -47,6 +47,14 @@ exact source assembly, annotation release, and build procedure before
 converting IDs. The cached BioMart files contain current-side IDs and homologs,
 not a conversion into this vocabulary.
 
+Primary-source follow-up: Ensembl [announced the reference switch from GRCg6a
+to GRCg7b at release 107](https://lists.ensembl.org/pipermail/announce_ensembl.org/2022-July/000553.html),
+and still displays an `ENSGALG000000…` gene on its [separate GRCg6a assembly](https://www.ensembl.org/Gallus_gallus_GCA_000002315.5/Gene/Summary?g=ENSGALG00000004781).
+This strengthens the assembly-mismatch hypothesis but does not identify the
+checkpoint's exact annotation release or verify any gene pair. The bounded
+[provenance investigation](agents/chicken-identifier-provenance-2026-09-28.md)
+records the source evidence and remaining gate. No conversion TSV was produced.
+
 For R2 asset repair, obtain an authoritative, inspectable Ensembl
 [ID History converter](https://mart.ensembl.org/Help/View?id=560) export or
 equivalent stable-ID history for **Gallus gallus** between the verified source
@@ -74,6 +82,19 @@ For scientific eligibility, pass `--statistics` with JSON shaped as:
 {"statistics": [{"species_a": "homo_sapiens", "species_b": "mus_musculus", "phase": "gastrula", "statistic": "impact_top_200", "provenance": "run-and-ranking-hash", "genes_a": ["ENSG..."], "genes_b": ["ENSMUSG..."]}]}
 ```
 
+The `genes_a` and `genes_b` values must be JSON arrays of nonempty gene-ID
+strings. An omitted or empty array is reported as unevaluable; a string in
+place of an array is rejected because treating its characters as separate genes
+would produce a false denominator. The `provenance` field is a label, not a
+verified link to the rankings. To freeze a real request, retain the complete
+ranked gene output for each species and phase, the model/run identity, the
+ranking method and selection rule (including how ties and the top-k boundary
+were handled), input data/split identity, and SHA-256 hashes of those artifacts.
+Put an immutable reference to that record in `provenance` and archive the exact
+statistic-input JSON. The report's `statistics_source_sha256` then binds the
+decision to that JSON; it does not independently establish that the lists came
+from the stated ranking run.
+
 Each side's mapped fraction uses its own input genes. The 5,000-pair floor uses
 the finalized one-to-one table after disagreement and ambiguity filtering.
 The 60% fraction and `comparable_pairs` use only pairs that also join both
@@ -94,3 +115,10 @@ registered 60% input-gene floor for any named statistic. Freeze the actual
 gene lists and their ranking provenance before running `--statistics`; do not
 substitute the model vocabulary, whole-genome ortholog list, or a synthetic
 fixture for those lists.
+
+The intended source of `impact_top_200` inputs is the post-training
+likelihood-drop impact ranking by species and developmental phase described in
+`docs/perturbation-and-baseline-design.md` §1 and §6. The current repository
+contains that design but no completed ranking pipeline or output from which a
+real list can be derived. Ortholog availability and model vocabularies are
+input universes, not ranked statistic inputs.

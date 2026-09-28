@@ -141,6 +141,12 @@ def evaluate_statistic(
     result = {key: request[key] for key in required}
     result["genome_wide_pairs"] = len(rows) if genome_wide_pairs is None else genome_wide_pairs
     result["pass_min_pairs_floor"] = result["genome_wide_pairs"] >= min_pairs
+    for field, genes in (("genes_a", genes_a), ("genes_b", genes_b)):
+        if genes is not None and (
+            not isinstance(genes, list)
+            or any(not isinstance(gene, str) or not gene.strip() for gene in genes)
+        ):
+            raise ValueError(f"{field} must be a JSON array of nonempty gene IDs")
     if not genes_a or not genes_b:
         return {**result, "status": "unevaluable", "reason": "missing_or_empty_statistic_input",
                 "floors_pass": None, "comparison_supported": None}

@@ -49,3 +49,14 @@ input-gene pair now reports that distributional comparison is unsupported.
 The checked-in join audit still contains
 zero statistic decisions. Scientific eligibility cannot be completed until
 the actual ranked input lists and their provenance are supplied.
+
+Further repository tracing on 2026-09-28 found no implementation or output of
+the planned per-species, per-phase likelihood-drop impact rankings. The design
+in `docs/perturbation-and-baseline-design.md` §§1, 6 identifies those rankings
+as the source for examples such as `impact_top_200`; model vocabularies and
+whole-genome ortholog sets are not substitutes. The CLI now rejects malformed
+string-valued gene lists rather than silently counting individual characters.
+The input JSON hash protects the submitted request, but its free-text
+`provenance` field does not prove the rankings' origin. A real decision remains
+pending until full ranking artifacts, run/data identity, top-k selection rule,
+and hashes are frozen and linked to the submitted gene lists.
