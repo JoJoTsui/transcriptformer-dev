@@ -1,9 +1,9 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
 Category: correctness and readiness
-Status: ready-for-agent
+Status: Eligibility tooling implemented; scientific inputs pending
 Priority: P1
-Execution: held by owner — do not implement yet.
+Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
 Traceability: R3; stale post-filter counts; register 4.3; tracker N
 Spec: [Multispecies readiness remediation](../spec.md)
@@ -33,10 +33,9 @@ No threshold change or owner acceptance of downgraded scientific claims is impli
 Use bounded CPU fixtures and metadata/streamed reads, preserve existing WSL
 limits, cap native threads and run memory-heavy checks sequentially. No full
 model training, broad download, production launch or automatic scientific
-sign-off is authorized. The ready-for-agent label describes specification
-readiness; it does not override the owner's implementation hold.
+sign-off is authorized. Implementation was authorized on 2026-09-28; the
+scientific and external-data gates remain in effect.
 
 ## Comments
 
-Created from the adversarial review and grill-with-docs decisions. No
-implementation or new test execution has occurred as part of ticket publication.
+Initially published as a specification-only ticket. 2026-09-28 implementation evidence: Named statistic inputs and independent 60%/5,000 floors are implemented at the report boundary. Fifty targeted ortholog/representation tests passed with ticket 09. Real gene rankings and a reconciled chicken mapping remain pending.

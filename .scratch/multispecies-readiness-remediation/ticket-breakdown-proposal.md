@@ -1,5 +1,10 @@
 # Proposed tracer-bullet revision of the existing 12 tickets
 
+**Historical proposal:** The owner later authorized implementation of the
+published specification and tickets on 2026-09-28. Current execution status
+and evidence are tracked in the [ticket index](README.md) and
+[remediation report](../../docs/agents/multispecies-remediation-evidence-2026-09-28.md).
+
 Publication state: proposal awaiting breakdown approval under to-tickets.
 Execution: held by owner — do not implement.
 

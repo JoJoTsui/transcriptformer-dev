@@ -1,9 +1,9 @@
 # 12 — Reconcile progress records and validate the bounded remediation workflow
 
 Category: correctness and readiness
-Status: ready-for-agent
+Status: Implemented locally; external readiness gates remain open
 Priority: P2
-Execution: held by owner — do not implement yet.
+Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11
 Traceability: All findings; readiness claims; WSL constraint
 Spec: [Multispecies readiness remediation](../spec.md)
@@ -33,10 +33,9 @@ Dependency completion includes explicit unresolved external evidence where a pri
 Use bounded CPU fixtures and metadata/streamed reads, preserve existing WSL
 limits, cap native threads and run memory-heavy checks sequentially. No full
 model training, broad download, production launch or automatic scientific
-sign-off is authorized. The ready-for-agent label describes specification
-readiness; it does not override the owner's implementation hold.
+sign-off is authorized. Implementation was authorized on 2026-09-28; the
+scientific and external-data gates remain in effect.
 
 ## Comments
 
-Created from the adversarial review and grill-with-docs decisions. No
-implementation or new test execution has occurred as part of ticket publication.
+Initially published as a specification-only ticket. 2026-09-28 implementation evidence: The CPU CI selection includes ortholog, cohort, training selection and species readiness suites with native threads capped. The local explicit CPU suite passed 332 tests with one Gloo case deselected; the persistent-worker module stalled in this sandbox and is recorded as unverified. A later added tiny real-checkpoint export/reload test passed separately. Remote CI, GPU and full-corpus validation remain unverified.

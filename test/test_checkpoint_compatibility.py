@@ -153,17 +153,27 @@ def test_reordered_prepared_entries_rejected(resume_inputs):
         validate_resume_contract(state, expected)
 
 
-def test_public_resume_extends_budget_and_preserves_best_checkpoint(resume_inputs, tmp_path, monkeypatch):
+@pytest.mark.parametrize("checkpoint_interval", [0, 2, 500])
+def test_public_resume_extends_budget_and_preserves_best_checkpoint(
+    resume_inputs, tmp_path, monkeypatch, checkpoint_interval
+):
     from test.test_train import _make_cfg, _make_gene_vocab, _make_tiny_model
     from transcriptformer.finetune import train
 
     manifest, report, checkpoint, _ = resume_inputs
     output = tmp_path / "run"
+    torch.manual_seed(41)
+    base_weights = _make_tiny_model().state_dict()
+    torch.save(base_weights, checkpoint / "model_weights.pt")
+
+    def load_tiny(*args, **kwargs):
+        model = _make_tiny_model()
+        model.load_state_dict(base_weights)
+        return model, _make_cfg(), _make_gene_vocab(), None
+
     monkeypatch.setattr(
-        train, "_load_model", lambda *a, **kw: (_make_tiny_model(), _make_cfg(), _make_gene_vocab(), None)
+        train, "_load_model", load_tiny
     )
-    losses = iter([1.0, 2.0])
-    monkeypatch.setattr(train, "_validation_loss", lambda *a, **kw: next(losses))
     kwargs = dict(
         checkpoint_path=checkpoint,
         batch_size=2,
@@ -171,7 +181,7 @@ def test_public_resume_extends_budget_and_preserves_best_checkpoint(resume_input
         epochs=2,
         device="cpu",
         precision="32",
-        checkpoint_interval=1,
+        checkpoint_interval=checkpoint_interval,
         validation_interval=1,
     )
     first = train.train_finetune(manifest, output, report, max_steps=1, **kwargs)
@@ -180,12 +190,14 @@ def test_public_resume_extends_budget_and_preserves_best_checkpoint(resume_input
     regenerated = prepare_run(manifest, output)
     second = train.train_finetune(manifest, output, regenerated, max_steps=2, **kwargs)
     assert first["steps"] == 1 and second["steps"] == 2
-    assert second["best_step"] == 1 and second["final_validation_loss"] == 2.0
-    assert second["best_validation_loss"] == 1.0
+    assert len(first["selection"]["history"]) == 1
+    assert len(second["selection"]["history"]) == 2
+    assert second["selection"]["cohort_digest"] == first["selection"]["cohort_digest"]
     after = torch.load(output / "model_weights.pt", weights_only=False)
-    assert all(torch.equal(best[k], after[k]) for k in best)
+    if second["selection"]["best_step"] == 1:
+        assert all(torch.equal(best[k], after[k]) for k in best)
     finished = train.train_finetune(manifest, output, regenerated, max_steps=2, **kwargs)
     assert finished["steps"] == 2
-    assert finished["best_step"] == 1
+    assert finished["selection"]["history"] == second["selection"]["history"]
     final = torch.load(output / "model_weights.pt", weights_only=False)
-    assert all(torch.equal(best[k], final[k]) for k in best)
+    assert all(torch.equal(after[k], final[k]) for k in after)

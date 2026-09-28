@@ -19,6 +19,8 @@ SUITES = (
     "evaluate",
     "small_group_evaluation",
     "representation",
+    "orthologs",
+    "ortholog_eligibility",
     "end_to_end",
     "finetune_metadata",
     "spatial",
@@ -33,6 +35,10 @@ SUITES = (
     "missing_stage_evaluation",
     "prepared_artifacts",
     "preparation_rehearsal",
+    "selection_cli",
+    "selection_boundaries",
+    "selection_training",
+    "species_readiness",
     "finetune_test_selection",
 )
 

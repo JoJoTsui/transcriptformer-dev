@@ -267,10 +267,14 @@ def test_dataloader_kwargs_defaults_and_overrides() -> None:
     from transcriptformer.finetune.train import _dataloader_kwargs
 
     defaults = _dataloader_kwargs({}, "cpu")
-    assert defaults == {"num_workers": 0, "pin_memory": False}
+    assert defaults["num_workers"] == 0
+    assert defaults["pin_memory"] is False
+    assert defaults["generator"].initial_seed() == 0
 
     cuda_defaults = _dataloader_kwargs({}, "cuda")
-    assert cuda_defaults == {"num_workers": 0, "pin_memory": True}
+    assert cuda_defaults["num_workers"] == 0
+    assert cuda_defaults["pin_memory"] is True
+    assert cuda_defaults["generator"].initial_seed() == 0
 
     manifest = {"dataloader": {"num_workers": 3, "prefetch_factor": 4, "pin_memory": False}}
     kwargs = _dataloader_kwargs(manifest, "cuda")

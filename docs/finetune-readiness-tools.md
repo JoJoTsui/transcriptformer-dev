@@ -58,6 +58,7 @@ still points to files without lifted columns.
 
 ```bash
 .venv/bin/python scripts/report_holdout_coverage.py conf/finetune_run_multispecies.json \
+  --pre-qc \
   --output runs/holdout_coverage.json
 ```
 
@@ -65,6 +66,18 @@ The [recorded projection](../logs/dataset_audit/holdout_coverage.json) counts
 observations and unique embryos by species, phase, split, and modality, before
 QC. It uses the same split and label-mapping logic as preparation. Numeric stage
 labels match JSON string keys; missing labels remain explicit.
+
+After preparation, count validated survivors for the B1 cohort freeze:
+
+```bash
+.venv/bin/python scripts/report_holdout_coverage.py runs/spatial_coordinate_manifest.json \
+  --prepared-report runs/multispecies_v1/preparation_report.json \
+  --output runs/holdout_coverage_prepared.json
+```
+
+This report checks preparation provenance and output integrity, then reads
+prepared observation metadata. Empty splits and unmapped native stages remain
+visible. The pre-QC projection cannot be used to freeze post-QC eligibility.
 
 Only human and mouse currently have final holdout; six species have none.
 B1's six-of-eight criterion is reported as blocked. This is a coverage check,
@@ -185,6 +198,23 @@ by early stopping stays stopped. This is not a promise of bitwise accelerator
 reproducibility. Hashing base assets adds startup I/O; storing best weights adds
 checkpoint space.
 
+Checkpoint selection uses the named comparable-loss contract
+`shared_causal_prefix_combined_loss_per_observation_v1`. The Metazoa checkpoint
+and finetuned candidate keep their native input lengths and auxiliary
+conditioning. Per-observation selection loss and its target fingerprint use
+only causal gene positions shared by both models before either terminal
+target. This matters for spatial observations, where the candidate sequence
+length is one token shorter. The score therefore compares the same gene
+targets under each model; it is not a whole-sequence loss comparison. The
+frozen cohort and baseline identity remain part of resume compatibility.
+The training output saves full observation membership and weights in
+`validation_cohort.json`, baseline per-observation losses and target provenance
+in `validation_baseline.json`, the selected identity and reason in
+`selected_model.json`, and terminal optimizer state in `terminal_state.pt`.
+The resume record also binds the baseline evidence digest and preserves pending
+gradient-accumulation work across epoch extensions. Candidate-only spatial
+vocabulary assets are removed when the baseline wins.
+
 ## 9. Paired representation reports
 
 ```bash
@@ -202,6 +232,14 @@ finetuned-minus-base deltas, and matched-cell linear CKA. Silhouette uses a
 repeatable sample capped at 5,000 cells/species by default; kNN excludes self.
 Undefined metrics are JSON null with reasons.
 
+A species with only one known developmental phase has unevaluable phase purity.
+Cross-species same-phase alignment is unevaluable when no phase is shared.
+The report includes phase counts, shared phases, supported and unsupported
+query counts, and the actual scored denominator. For partial overlap, the
+descriptive score still covers every query and labels the unsupported fraction;
+it must not be presented as a whole-cohort same-phase verdict. Matched-cell
+CKA and supported within-species metrics remain available.
+
 `final_holdout` requires every input row explicitly labeled `final_holdout`.
 Row labels alone do not prove embryo isolation: validate preparation provenance
 separately. Use `--cohort-role reference` for frozen-reference CKA, or
@@ -209,6 +247,35 @@ separately. Use `--cohort-role reference` for frozen-reference CKA, or
 The tool does not establish reference freezing, compute likelihood, download
 assets, or apply scientific pass/fail thresholds. See the
 [baseline design](perturbation-and-baseline-design.md) for the remaining arms.
+
+## 10. Ortholog joins and statistic eligibility
+
+The finalized shipped table can be audited offline without reading expression
+or rebuilding Compara sources:
+
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python scripts/report_ortholog_eligibility.py \
+  --table preprocess/orthologs/ortholog_pairs.tsv.gz \
+  --output logs/dataset_audit/orthologs/join_audit.json
+```
+
+The current audit finds zero usable human–chicken joins among 12,166 raw pairs.
+The historic six-of-91 result used raw pair counts and whole-vocabulary sizes;
+it is descriptive, not a registered scientific eligibility decision. Supply
+named species/phase statistic gene sets with `--statistics` to evaluate each
+side's 60% mapped fraction and the independent 5,000 finalized-pair floor.
+Missing sets are unevaluable. An identifier conversion needs explicit source,
+release and assembly provenance; ambiguous conversions are excluded. See the
+[input contract and current mapping gap](ortholog-eligibility-report.md).
+
+## 11. Zebrafish participation and additional source intake
+
+The existing Wagner zebrafish source is present in the training manifests.
+Use the bounded [species readiness check](agents/zebrafish-intake.md) to verify
+manifest participation, prepared assignment, and available exposure evidence.
+Additional collaborator data require source identity, independent embryo IDs,
+raw-count and stage metadata before the final corpus can be frozen. No full
+training exposure or new-source ingestion has yet been demonstrated.
 
 ## Remaining gates
 
@@ -219,9 +286,10 @@ assets, or apply scientific pass/fail thresholds. See the
 - Resolve probe assets (ESM-2 embeddings/vocabularies and key-namespace
   maps) and remaining source annotations before evaluating B4.
 
-- Only 6 of 91 ortholog pairs pass the pre-registered coverage floors;
-  failing pairs downgrade cross-species gene-level claims to single-species
-  findings unless the floor is revised before results are seen.
+- Resolve the chicken identifier mapping and provide named statistic inputs
+  before applying ortholog eligibility. The old six-of-91 count is not that
+  decision. Genuinely failing pairs downgrade cross-species gene-level claims
+  under the registered rule.
 - Complete coordinate copies and their derived manifest now exist and validate;
 finalize the corpus manifest and run the real
   preparation/validation gate. Regenerate reports after corpus or QC changes.

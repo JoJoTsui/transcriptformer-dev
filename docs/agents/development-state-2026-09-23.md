@@ -1,5 +1,12 @@
 # Development state and next steps (2026-09-23)
 
+**2026-09-28 superseding status:** The claim below that all collaborator-independent
+engineering is complete was invalidated by the [adversarial review](adversarial-review-2026-09-28.md).
+The owner authorized [12 remediation tickets](../../.scratch/multispecies-readiness-remediation/README.md).
+Bounded implementation is underway; current evidence and unresolved external
+gates are in the [remediation evidence report](multispecies-remediation-evidence-2026-09-28.md).
+The K–N entries below remain a historical record of their 2026-09-23 scope.
+
 Durable record for future development sessions: where the finetune-readiness
 program stands, every decision still open (with consequences and defaults), and
 the ordered sequence of next steps with exact commands. Historical detail lives
@@ -56,11 +63,12 @@ Key artifacts on disk:
    resolution (10×10 quantile grid, min 50 genes), forgetting gates (3%
    likelihood / CKA 0.90), reference-set budget (CELLxGENE Census pinned LTS +
    sponge/yeast canaries; optional Fly Cell Atlas).
-3. **Coverage-floor reality check** (register 4.3): only 6 of 91 ortholog pairs
-   pass the ≥ 60% / ≥ 5,000-gene floors. Either accept that failing pairs
-   downgrade cross-species gene-level claims to single-species findings, or
-   revise the floor definition **before unblinding**. Default: keep the
-   pre-registered floor and accept the downgrades.
+3. **Historical count-only coverage check** (register 4.3): the 6-of-91 figure
+   used whole-vocabulary counts and is not the registered statistic-specific
+   ≥60% / ≥5,000-gene decision. Finalized identifier joins and named statistic
+   input genes are required before scientific eligibility can be evaluated.
+   Genuine failing pairs downgrade cross-species gene-level claims to
+   single-species findings under the pre-registered rule.
 4. **Ortholog release pin** (register 4.3): release 110 (current; matches the
    pinned FASTAs) vs 116 (exploratory numbers closely match: human × mouse
    16,092 vs 15,705). Decide before freezing cross-species analyses; rebuilding
@@ -113,12 +121,13 @@ changes B1 feasibility** (only human and mouse have holdout embryos under
      runs/<run>/preparation_report.json --output runs/artifact_validation.json
    ```
 
-4. Regenerate all pre-QC projections against prepared outputs and freeze the
+4. Count validated post-QC survivors from prepared outputs and freeze the
    B1 stratum list (post-QC numbers; a stratum below 3 holdout embryos demotes
    to descriptive by pre-stated rule):
 
    ```bash
-   .venv/bin/python scripts/report_holdout_coverage.py runs/spatial_coordinate_manifest.json --output runs/holdout_coverage.json
+   .venv/bin/python scripts/report_holdout_coverage.py runs/spatial_coordinate_manifest.json \
+     --prepared-report runs/<run>/preparation_report.json --output runs/holdout_coverage_prepared.json
    .venv/bin/python scripts/audit_sampling.py runs/spatial_coordinate_manifest.json \
      --prepared-report runs/<run>/preparation_report.json --output runs/sampling_prepared.json
    ```

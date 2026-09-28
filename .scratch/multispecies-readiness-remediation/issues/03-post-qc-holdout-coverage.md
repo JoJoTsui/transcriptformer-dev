@@ -1,9 +1,9 @@
 # 03 — Report surviving holdout observations and embryos from prepared artifacts
 
 Category: correctness and readiness
-Status: ready-for-agent
+Status: Implemented; bounded CPU validation passed
 Priority: P1
-Execution: held by owner — do not implement yet.
+Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: none
 Traceability: R4; B1 freeze workflow
 Spec: [Multispecies readiness remediation](../spec.md)
@@ -32,10 +32,9 @@ No actual full-corpus preparation is necessary to implement the tool. Final real
 Use bounded CPU fixtures and metadata/streamed reads, preserve existing WSL
 limits, cap native threads and run memory-heavy checks sequentially. No full
 model training, broad download, production launch or automatic scientific
-sign-off is authorized. The ready-for-agent label describes specification
-readiness; it does not override the owner's implementation hold.
+sign-off is authorized. Implementation was authorized on 2026-09-28; the
+scientific and external-data gates remain in effect.
 
 ## Comments
 
-Created from the adversarial review and grill-with-docs decisions. No
-implementation or new test execution has occurred as part of ticket publication.
+Initially published as a specification-only ticket. 2026-09-28 implementation evidence: Prepared-output coverage mode is implemented; five targeted coverage tests passed. A real full-corpus post-QC freeze has not been run.

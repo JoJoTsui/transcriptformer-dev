@@ -105,6 +105,13 @@ def audit_rows(
             else record["sampling_pool_rows"] * (1 - fraction if len(spatial) else 1) / len(sc)
         )
         records.append(record)
+    unrepresented = [
+        {name: record[name] for name in GROUP_COLUMNS}
+        for record in records
+        if record["train_rows"] > 0 and record["sampling_pool_rows"] == 0
+    ]
+    train_species = {record["species"] for record in records if record["train_rows"] > 0}
+    pool_species = {record["species"] for record in records if record["sampling_pool_rows"] > 0}
     numeric = list(counters) + [
         "excluded_rows",
         "qc_excluded_rows",
@@ -120,6 +127,8 @@ def audit_rows(
         "weighting": "Uniform replacement within modality after stage × cell_type single-cell cap; no species balancing",
         "totals": {name: sum(record[name] for record in records) for name in numeric},
         "groups": records,
+        "unrepresented_groups": unrepresented,
+        "species_removed_by_cap": sorted(train_species - pool_species),
     }
 
 

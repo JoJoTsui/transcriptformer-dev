@@ -1,0 +1,219 @@
+#!/usr/bin/env python3
+"""Audit finalized ortholog joins and named statistic eligibility without downloads.
+
+The input table has four tab-separated fields (species_a, gene_a, species_b,
+gene_b). Statistic JSON contains a ``statistics`` list with species_a,
+species_b, phase, statistic, provenance, genes_a and genes_b. Missing statistic
+inputs are unevaluable. Optional mapping TSV has species, source_gene and
+target_gene columns; source/release/assembly provenance is required separately.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import gzip
+import hashlib
+import json
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from scripts.build_ortholog_table import canonical_gene_id, load_vocab
+
+
+def read_pairs(path: Path):
+    opener = gzip.open if path.suffix == ".gz" else open
+    with opener(path, "rt") as handle:
+        for line in handle:
+            fields = line.rstrip("\n").split("\t")
+            if len(fields) != 4:
+                raise ValueError("Ortholog table must have four tab-separated fields")
+            yield tuple(fields)
+
+
+def read_mapping(path: Path):
+    mapping = defaultdict(lambda: defaultdict(set))
+    with path.open(newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        if not {"species", "source_gene", "target_gene"} <= set(reader.fieldnames or []):
+            raise ValueError("Mapping requires species, source_gene, target_gene columns")
+        for row in reader:
+            species = row["species"]
+            mapping[species][canonical_gene_id(species, row["source_gene"])].add(
+                canonical_gene_id(species, row["target_gene"])
+            )
+    # Both one-to-many and many-to-one conversions are ambiguous.
+    reverse = defaultdict(lambda: defaultdict(set))
+    for species, entries in mapping.items():
+        for source, targets in entries.items():
+            for target in targets:
+                reverse[species][target].add(source)
+    clean, ambiguous = defaultdict(dict), defaultdict(set)
+    for species, entries in mapping.items():
+        for source, targets in entries.items():
+            if len(targets) != 1 or any(len(reverse[species][target]) != 1 for target in targets):
+                ambiguous[species].add(source)
+            else:
+                clean[species][source] = next(iter(targets))
+    return clean, ambiguous
+
+
+def audit_pair(rows, species_a, species_b, genes_a, genes_b, mapping=None, ambiguous=None):
+    """Return raw and usable pairs with explicit exclusion counts."""
+    mapping = mapping or {}
+    ambiguous = ambiguous or {}
+    genes_a = {canonical_gene_id(species_a, x) for x in genes_a} if genes_a is not None else None
+    genes_b = {canonical_gene_id(species_b, x) for x in genes_b} if genes_b is not None else None
+    raw, usable, excluded = 0, set(), defaultdict(int)
+    unresolved_a, unresolved_b = set(), set()
+    for a, b in rows:
+        raw += 1
+        a, b = canonical_gene_id(species_a, a), canonical_gene_id(species_b, b)
+        if a in ambiguous.get(species_a, set()) or b in ambiguous.get(species_b, set()):
+            excluded["ambiguous_mapping"] += 1
+            continue
+        a = mapping.get(species_a, {}).get(a, a)
+        b = mapping.get(species_b, {}).get(b, b)
+        if genes_a is None or genes_b is None:
+            excluded["missing_gene_universe"] += 1
+        elif a not in genes_a or b not in genes_b:
+            excluded["unresolved_identifier"] += 1
+            if a not in genes_a:
+                unresolved_a.add(a)
+            if b not in genes_b:
+                unresolved_b.add(b)
+        else:
+            usable.add((a, b))
+    # A derived mapping may cause two different pairs to share a target.
+    count_a, count_b = defaultdict(int), defaultdict(int)
+    for a, b in usable:
+        count_a[a] += 1
+        count_b[b] += 1
+    collision = {(a, b) for a, b in usable if count_a[a] > 1 or count_b[b] > 1}
+    usable -= collision
+    excluded["ambiguous_mapping"] += len(collision)
+    return {
+        "raw_pairs": raw,
+        "usable_pairs": len(usable),
+        "usable_genes_a": len({a for a, _ in usable}),
+        "usable_genes_b": len({b for _, b in usable}),
+        "gene_universe_a": len(genes_a) if genes_a is not None else None,
+        "gene_universe_b": len(genes_b) if genes_b is not None else None,
+        "usable_fraction_a": len({a for a, _ in usable}) / len(genes_a) if genes_a else None,
+        "usable_fraction_b": len({b for _, b in usable}) / len(genes_b) if genes_b else None,
+        "unresolved_identifiers_a": len(unresolved_a),
+        "unresolved_identifiers_b": len(unresolved_b),
+        "excluded": dict(sorted(excluded.items())),
+    }, usable
+
+
+def mapped_pairs(rows, species_a, species_b, mapping=None, ambiguous=None):
+    """Convert only unique identifiers, preserving strict one-to-one pair identity."""
+    mapping, ambiguous = mapping or {}, ambiguous or {}
+    converted = set()
+    for a, b in rows:
+        a, b = canonical_gene_id(species_a, a), canonical_gene_id(species_b, b)
+        if a in ambiguous.get(species_a, set()) or b in ambiguous.get(species_b, set()):
+            continue
+        converted.add((mapping.get(species_a, {}).get(a, a), mapping.get(species_b, {}).get(b, b)))
+    count_a, count_b = defaultdict(int), defaultdict(int)
+    for a, b in converted:
+        count_a[a] += 1
+        count_b[b] += 1
+    return {(a, b) for a, b in converted if count_a[a] == 1 and count_b[b] == 1}
+
+
+def evaluate_statistic(rows, request, *, min_fraction=0.6, min_pairs=5000):
+    """Evaluate the two independent registered floors for one named comparison."""
+    required = ("species_a", "species_b", "phase", "statistic", "provenance")
+    if any(not request.get(key) for key in required):
+        raise ValueError("Statistic requires species pair, phase, statistic and provenance")
+    genes_a, genes_b = request.get("genes_a"), request.get("genes_b")
+    result = {key: request[key] for key in required}
+    result["genome_wide_pairs"] = len(rows)
+    result["pass_min_pairs_floor"] = len(rows) >= min_pairs
+    if not genes_a or not genes_b:
+        return {**result, "status": "unevaluable", "reason": "missing_or_empty_statistic_input", "floors_pass": None}
+    a_set = {canonical_gene_id(request["species_a"], x) for x in genes_a}
+    b_set = {canonical_gene_id(request["species_b"], x) for x in genes_b}
+    covered_a = a_set & {a for a, _ in rows}
+    covered_b = b_set & {b for _, b in rows}
+    selected = {(a, b) for a, b in rows if a in a_set and b in b_set}
+    fraction_a, fraction_b = len(covered_a) / len(a_set), len(covered_b) / len(b_set)
+    pass_fraction = fraction_a >= min_fraction and fraction_b >= min_fraction
+    return {
+        **result,
+        "status": "eligible" if pass_fraction and result["pass_min_pairs_floor"] else "ineligible",
+        "floors_pass": pass_fraction and result["pass_min_pairs_floor"],
+        "pass_fraction_floor": pass_fraction,
+        "n_input_a": len(a_set), "n_input_b": len(b_set),
+        "n_mapped_a": len(covered_a), "n_mapped_b": len(covered_b),
+        "mapped_fraction_a": fraction_a, "mapped_fraction_b": fraction_b,
+        "n_comparable_pairs": len(selected),
+        "n_excluded_a": len(a_set - covered_a), "n_excluded_b": len(b_set - covered_b),
+        "comparable_pairs": [list(pair) for pair in sorted(selected)],
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--table", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--statistics", type=Path)
+    parser.add_argument("--mapping", type=Path)
+    parser.add_argument("--mapping-source")
+    parser.add_argument("--mapping-release")
+    parser.add_argument("--mapping-assembly")
+    parser.add_argument("--vocab-dir", type=Path)
+    args = parser.parse_args()
+    if args.mapping and not all((args.mapping_source, args.mapping_release, args.mapping_assembly)):
+        parser.error("Mapping requires source, release and assembly provenance")
+    mapping, ambiguous = read_mapping(args.mapping) if args.mapping else ({}, {})
+    pairs = defaultdict(list)
+    for a, ga, b, gb in read_pairs(args.table):
+        pairs[(a, b)].append((ga, gb))
+    report = {"schema_version": 1, "source_table_sha256": hashlib.sha256(args.table.read_bytes()).hexdigest(),
+              "mapping": None if not args.mapping else {"source": args.mapping_source, "release": args.mapping_release,
+              "assembly": args.mapping_assembly, "sha256": hashlib.sha256(args.mapping.read_bytes()).hexdigest(),
+              "ambiguous_sources": {k: len(v) for k, v in ambiguous.items()}},
+              "pairs": {}, "statistics": []}
+    joined = {}
+    vocab_cache = {}
+    for (a, b), rows in sorted(pairs.items()):
+        def vocab(species):
+            if species in vocab_cache:
+                return vocab_cache[species]
+            path = (args.vocab_dir / f"{species}_gene.h5") if args.vocab_dir else None
+            vocab_cache[species] = load_vocab(species) if path is None else _load_vocab_path(path)
+            return vocab_cache[species]
+        try:
+            genes_a = vocab(a)
+        except FileNotFoundError:
+            genes_a = None
+        try:
+            genes_b = vocab(b)
+        except FileNotFoundError:
+            genes_b = None
+        audit, joined[(a, b)] = audit_pair(rows, a, b, genes_a, genes_b, mapping, ambiguous)
+        report["pairs"][f"{a}__{b}"] = audit
+    if args.statistics:
+        requests = json.loads(args.statistics.read_text())["statistics"]
+        for request in requests:
+            key = (request["species_a"], request["species_b"])
+            report["statistics"].append(evaluate_statistic(
+                mapped_pairs(pairs.get(key, []), *key, mapping, ambiguous), request
+            ))
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n")
+
+
+def _load_vocab_path(path):
+    import h5py
+    with h5py.File(path) as handle:
+        return {x.decode() if isinstance(x, bytes) else str(x) for x in handle["keys"][:]}
+
+
+if __name__ == "__main__":
+    main()

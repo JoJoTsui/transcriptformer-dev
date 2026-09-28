@@ -1,11 +1,11 @@
 # Multispecies readiness remediation — ticket index
 
-Status: ready-for-agent
-Execution: held by owner — specs and tickets only; do not implement yet.
+Status: bounded tooling implemented; external scientific and data gates remain open
+Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 
-[Read the specification](spec.md). All 12 tickets carry the ready-for-agent
-triage state. Dependencies still govern execution order, and the owner's
-explicit implementation hold takes precedence over every triage label.
+[Read the specification](spec.md). Implementation was authorized on 2026-09-28.
+Dependencies still govern execution order. Scientific sign-off, collaborator
+data, chicken identifier repair and production training remain separate gates.
 
 ## Tickets and dependencies
 
@@ -24,7 +24,7 @@ explicit implementation hold takes precedence over every triage label.
 | [11 — Require zebrafish training participation and track additional-source intake](issues/11-zebrafish-readiness-and-intake.md) | Owner requirement; pending collaborator data | 03, 10 |
 | [12 — Reconcile progress records and validate the bounded remediation workflow](issues/12-readiness-evidence-and-ci.md) | All findings; readiness claims; WSL constraint | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 |
 
-## Suggested future execution order
+## Dependency order
 
 1. Terminal resume (01), prepared coverage (03), identifier joins (04),
    representation eligibility (09), and the cap correction (10) have no ticket
@@ -37,9 +37,8 @@ explicit implementation hold takes precedence over every triage label.
 4. Evidence reconciliation and CI (12) follow the implemented contracts, keeping
    external gaps explicit.
 
-Independent design work can proceed concurrently when later authorized, but
-memory-heavy checks must run sequentially on this WSL host. This index does not
-start agents or authorize execution.
+Independent slices can proceed concurrently; memory-heavy checks run
+sequentially on this WSL host.
 
 ## Scientific decisions and external gates
 
@@ -68,6 +67,6 @@ start agents or authorize execution.
 ## Publication record
 
 Published to the repository's Local Markdown issue tracker using its existing
-conventions. No external messages, remote issues, implementation, executable
-tests or model runs were created. Historical tests cited in the review are not
-validation of these new tickets.
+conventions. The initial publication was specification-only. Implementation
+and bounded verification evidence are recorded in the ticket comments and
+readiness report; historical review tests alone do not validate the repairs.

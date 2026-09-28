@@ -4,10 +4,11 @@ from pathlib import Path
 
 import anndata as ad
 import pandas as pd
+import pytest
 
 from test.fixtures import make_synthetic_h5ad
-from transcriptformer.finetune.coverage import holdout_coverage
-from transcriptformer.finetune.prepare import map_obs_labels, prepare_dataset_file
+from transcriptformer.finetune.coverage import holdout_coverage, prepared_holdout_coverage
+from transcriptformer.finetune.prepare import _read_split_metadata, assign_splits, map_obs_labels, prepare_dataset_file, prepare_run
 
 
 def test_coverage_deduplicates_embryos_and_reports_unknown_stages(tmp_path: Path) -> None:
@@ -63,3 +64,24 @@ def test_numeric_native_stages_match_json_mapping_keys(tmp_path: Path) -> None:
 def test_missing_stage_is_not_mapped_to_a_phase() -> None:
     values = pd.Series([None, float("nan"), pd.NA], dtype=object)
     assert map_obs_labels(values, {"None": "gastrula", "nan": "gastrula", "<NA>": "gastrula"}).isna().all()
+
+
+def test_prepared_coverage_excludes_qc_removed_holdout_embryo(tmp_path: Path) -> None:
+    path = make_synthetic_h5ad(tmp_path / "source.h5ad", embryo_ids=["e1", "e2", "e3"], stage="early")
+    dataset = {"path": str(path), "species": "mouse", "dataset_type": "single_cell", "stage_mapping": {"early": "gastrula"}}
+    holdout_id = next(a["embryo_id"] for a in assign_splits([_read_split_metadata(dataset)])["assignments"] if a["split"] == "final_holdout")
+    source = ad.read_h5ad(path)
+    source.X[source.obs["embryo_id"].astype(str).eq(holdout_id).to_numpy()] = 0
+    source.write_h5ad(path)
+    manifest = {"datasets": [dataset], "qc": {"min_counts": 1}}
+    prepared = prepare_run(manifest, tmp_path / "prepared")
+
+    report = prepared_holdout_coverage(manifest, prepared)
+    assert report["scope"] == "post_qc_prepared"
+    assert report["b1"]["holdout_species"] == []
+    assert report["empty_splits"] == [{"species": "mouse", "split": "final_holdout"}]
+    assert not any(row["split"] == "final_holdout" for row in report["coverage"])
+    assert sum(row["n_observations"] for row in report["coverage"]) == 2
+    prepared["datasets"][0]["n_obs"] += 1
+    with pytest.raises(ValueError):
+        prepared_holdout_coverage(manifest, prepared)

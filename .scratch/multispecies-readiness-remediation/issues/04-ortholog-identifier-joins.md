@@ -1,9 +1,9 @@
 # 04 — Validate actual ortholog joins and reconcile chicken identifiers
 
 Category: correctness and readiness
-Status: ready-for-agent
+Status: Join reporting implemented; chicken asset repair blocked
 Priority: P1
-Execution: held by owner — do not implement yet.
+Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: none
 Traceability: R2; register 4.3; tracker N
 Spec: [Multispecies readiness remediation](../spec.md)
@@ -32,10 +32,9 @@ Targeted source retrieval may be needed during future implementation. Mapping av
 Use bounded CPU fixtures and metadata/streamed reads, preserve existing WSL
 limits, cap native threads and run memory-heavy checks sequentially. No full
 model training, broad download, production launch or automatic scientific
-sign-off is authorized. The ready-for-agent label describes specification
-readiness; it does not override the owner's implementation hold.
+sign-off is authorized. Implementation was authorized on 2026-09-28; the
+scientific and external-data gates remain in effect.
 
 ## Comments
 
-Created from the adversarial review and grill-with-docs decisions. No
-implementation or new test execution has occurred as part of ticket publication.
+Initially published as a specification-only ticket. 2026-09-28 implementation evidence: The offline join audit reports zero usable human–chicken pairs out of 12,166 finalized pairs against 16,878 chicken vocabulary keys. No authoritative identifier conversion is available. Mapping repair remains open; the shipped source table is preserved.

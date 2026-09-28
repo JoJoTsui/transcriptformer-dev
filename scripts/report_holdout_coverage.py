@@ -7,16 +7,23 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from transcriptformer.finetune.coverage import holdout_coverage  # noqa: E402
+from transcriptformer.finetune.coverage import holdout_coverage, prepared_holdout_coverage  # noqa: E402
 from transcriptformer.finetune.manifest import load_run_manifest  # noqa: E402
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("manifest", type=Path)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--pre-qc", action="store_true", help="Project coverage before QC")
+    mode.add_argument("--prepared-report", type=Path, help="Count validated prepared survivors")
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
-    report = holdout_coverage(load_run_manifest(args.manifest))
+    manifest = load_run_manifest(args.manifest)
+    report = (
+        prepared_holdout_coverage(manifest, json.loads(args.prepared_report.read_text()))
+        if args.prepared_report else holdout_coverage(manifest)
+    )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n")
     print(json.dumps(report["b1"], indent=2))

@@ -64,15 +64,16 @@ def phase_structure(data, *, phase_col="stage", species_col="species", k=15, sil
         values, labels = x[mask], phases[mask]
         n, classes = len(values), len(set(labels))
         row = {"n_obs": n, "n_phases": classes, "knn_phase_purity": None, "silhouette": None}
+        row["phase_counts"] = {str(p): int((labels == p).sum()) for p in sorted(set(labels))}
         effective_k = min(k, n - 1)
         row["knn_k"] = max(0, effective_k)
-        if effective_k:
+        if effective_k and classes >= 2:
             # Query without X explicitly excludes each observation itself,
             # including when other observations have identical coordinates.
             neighbors = NearestNeighbors(n_neighbors=effective_k).fit(values).kneighbors(return_distance=False)
             row["knn_phase_purity"] = float(np.mean(labels[neighbors] == labels[:, None]))
         else:
-            row["knn_reason"] = "too_few_observations"
+            row["knn_reason"] = "single_phase" if classes < 2 else "too_few_observations"
         sample = np.arange(n)
         if n > silhouette_max_cells:
             sample = np.sort(np.random.default_rng(0).choice(n, silhouette_max_cells, replace=False))
@@ -85,13 +86,24 @@ def phase_structure(data, *, phase_col="stage", species_col="species", k=15, sil
         cross_k = min(k, int(candidates.sum()))
         row["cross_species_k"] = cross_k
         row["cross_species_same_phase"] = None
-        if cross_k:
+        shared = set(labels) & set(phases[candidates])
+        supported = np.isin(labels, list(shared))
+        row["cross_species_shared_phases"] = sorted(shared)
+        row["cross_species_supported_queries"] = int(supported.sum())
+        row["cross_species_unsupported_queries"] = int(n - supported.sum())
+        row["cross_species_scored_queries"] = int(n if cross_k and shared else 0)
+        row["cross_species_candidate_phase_counts"] = {
+            str(p): int((phases[candidates] == p).sum()) for p in sorted(set(phases[candidates]))
+        }
+        if cross_k and shared:
             neighbors = (
                 NearestNeighbors(n_neighbors=cross_k).fit(x[candidates]).kneighbors(values, return_distance=False)
             )
             row["cross_species_same_phase"] = float(np.mean(phases[candidates][neighbors] == labels[:, None]))
+            if n != int(supported.sum()):
+                row["cross_species_reason"] = "partial_phase_overlap_includes_unsupported_queries"
         else:
-            row["cross_species_reason"] = "no_other_species"
+            row["cross_species_reason"] = "no_shared_phase" if cross_k else "no_other_species"
         groups[group] = row
     return {
         "n_input_obs": len(embeddings),

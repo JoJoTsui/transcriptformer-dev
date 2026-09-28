@@ -102,6 +102,37 @@ def test_silhouette_sampling_is_bounded_and_repeatable():
     assert first["per_species"]["mouse"]["silhouette_n_obs"] == 5
 
 
+def test_structurally_unsupported_b2_metrics_are_unavailable():
+    base = cohort()
+    base.obs.loc[base.obs["species"] == "human", "stage"] = "organogenesis"
+    fine = base.copy()
+    fine.obsm["embeddings"] = np.random.default_rng(7).normal(size=(16, 2))
+    report = compare_representations(base, fine, k=2)
+    for arm in ("base", "finetuned"):
+        human = report[arm]["per_species"]["human"]
+        mouse = report[arm]["per_species"]["mouse"]
+        assert human["knn_phase_purity"] is None
+        assert human["knn_reason"] == "single_phase"
+        assert human["phase_counts"] == {"organogenesis": 8}
+        assert human["cross_species_same_phase"] is None
+        assert human["cross_species_reason"] == "no_shared_phase"
+        assert mouse["cross_species_same_phase"] is None
+        assert mouse["knn_phase_purity"] is not None
+    assert report["delta_finetuned_minus_base"]["human"]["knn_phase_purity"] is None
+    assert report["cka_per_species"]["human"]["linear_cka"] is not None
+
+
+def test_partial_overlap_exposes_unsupported_query_denominator():
+    data = cohort()
+    data.obs.loc[(data.obs["species"] == "human") & (data.obs["stage"] == "neurula"), "stage"] = "organogenesis"
+    row = phase_structure(data, k=2)["per_species"]["mouse"]
+    assert row["cross_species_shared_phases"] == ["gastrula"]
+    assert row["cross_species_supported_queries"] == 4
+    assert row["cross_species_unsupported_queries"] == 4
+    assert row["cross_species_scored_queries"] == 8
+    assert row["cross_species_reason"] == "partial_phase_overlap_includes_unsupported_queries"
+
+
 def test_cli_generates_strict_json(tmp_path):
     base, fine, output = tmp_path / "base.h5ad", tmp_path / "fine.h5ad", tmp_path / "report.json"
     cohort().write_h5ad(base)

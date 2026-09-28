@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import logging
 import os
 import random
@@ -23,6 +24,7 @@ from transcriptformer.data.dataclasses import BatchData
 from transcriptformer.finetune.artifacts import validate_prepared_artifacts
 from transcriptformer.finetune.early_stopping import EarlyStopping
 from transcriptformer.finetune.resume import build_resume_contract, validate_resume_contract
+from transcriptformer.finetune.selection import build_validation_cohort, score_validation_candidate
 from transcriptformer.finetune.spatial import (
     SPATIAL_VOCAB_NAME,
     build_spatial_bin_vocab,
@@ -118,11 +120,19 @@ def stratified_sample_indices(
     seed: int = 0,
 ) -> np.ndarray:
     """Sample indices stratified by stage and cell type, capped at max_cells."""
+    if max_cells < 0:
+        raise ValueError("max_cells must be nonnegative")
     if len(obs) <= max_cells:
         return np.arange(len(obs))
+    if max_cells == 0:
+        return np.empty(0, dtype=np.int64)
 
     rng = np.random.default_rng(seed)
-    groups = obs.groupby(["stage", "cell_type"], dropna=False).groups
+    groups = obs.reset_index(drop=True).groupby(["stage", "cell_type"], dropna=False).groups
+    if len(groups) > max_cells:
+        chosen_groups = rng.choice(len(groups), size=max_cells, replace=False)
+        selected = [rng.choice(np.asarray(list(groups.values())[i])) for i in chosen_groups]
+        return np.asarray(sorted(selected), dtype=np.int64)
     per_group = max(1, max_cells // len(groups))
     selected: list[int] = []
 
@@ -257,6 +267,7 @@ def _dataloader_kwargs(manifest: dict[str, Any], device_type: str) -> dict[str, 
     kwargs: dict[str, Any] = {
         "num_workers": num_workers,
         "pin_memory": bool(loader_cfg.get("pin_memory", device_type == "cuda")),
+        "generator": torch.Generator().manual_seed(int(manifest.get("seed", 0))),
     }
     if num_workers > 0:
         kwargs["prefetch_factor"] = int(loader_cfg.get("prefetch_factor", 2))
@@ -324,6 +335,194 @@ def _validation_loss(
     return total / n_obs if n_obs else float("inf")
 
 
+def _build_cohort_loader(
+    manifest: dict[str, Any], cohort: dict[str, Any], cfg: Any, gene_vocab: dict,
+    aux_vocab: dict, batch_size: int, device_type: str,
+) -> tuple[DataLoader, list[str]]:
+    """Read only frozen validation rows, in the cohort's recorded order."""
+    rows = cohort["observations"]
+    paths = list(dict.fromkeys(row["prepared_path"] for row in rows))
+    dataset = AnnDatasetOOM(
+        files_list=paths, gene_vocab=gene_vocab, aux_vocab=aux_vocab,
+        **_dataset_kwargs(cfg),
+    )
+    offsets = dict(zip(paths, dataset._offsets, strict=False))
+    indices = [int(offsets[row["prepared_path"]]) + int(row["prepared_row_index"]) for row in rows]
+    loader = DataLoader(
+        Subset(dataset, indices), batch_size=batch_size, shuffle=False,
+        collate_fn=dataset.collate_fn, **_dataloader_kwargs(manifest, device_type),
+    )
+    return loader, [row["id"] for row in rows]
+
+
+def _cohort_losses(
+    model, loader: DataLoader, ids: list[str], target_device: torch.device,
+    use_amp: bool, amp_dtype: torch.dtype, target_length: int,
+) -> tuple[dict[str, float], str]:
+    """Evaluate the shared causal prefix and fingerprint its actual targets."""
+    model.eval()
+    module = model.module if hasattr(model, "module") else model
+    digest = hashlib.sha256()
+    losses: dict[str, float] = {}
+    offset = 0
+    try:
+        with torch.no_grad():
+            for batch in loader:
+                batch = _move_batch_to_device(batch, target_device)
+                count = len(batch.gene_counts)
+                batch_ids = ids[offset : offset + count]
+                if len(batch_ids) != count:
+                    raise ValueError("Frozen validation cohort and loader have different row counts")
+                with torch.autocast(device_type=target_device.type, dtype=amp_dtype, enabled=use_amp):
+                    outputs = model(batch)
+                    for index, observation_id in enumerate(batch_ids):
+                        one = {
+                            key: (
+                                value[index : index + 1, :target_length]
+                                if isinstance(value, torch.Tensor) and value.ndim >= 2
+                                else value[index : index + 1] if isinstance(value, torch.Tensor) else value
+                            )
+                            for key, value in outputs.items()
+                        }
+                        digest.update(observation_id.encode())
+                        for key in ("input_counts", "input_gene_token_indices", "mask"):
+                            value = one.get(key)
+                            if isinstance(value, torch.Tensor):
+                                cpu = value.detach().cpu().contiguous().numpy()
+                                digest.update(key.encode())
+                                digest.update(str((cpu.dtype.str, tuple(cpu.shape))).encode())
+                                digest.update(cpu.tobytes())
+                        if module.loss_config.gene_id_loss_weight > 0 and "input_gene_token_indices" not in one:
+                            raise ValueError("Gene target missing from validation output")
+                        value = _compute_loss(module, one)
+                        losses[observation_id] = float(value.detach().cpu())
+                offset += count
+    finally:
+        model.train()
+    if offset != len(ids):
+        raise ValueError("Frozen validation cohort and loader have different row counts")
+    return losses, digest.hexdigest()
+
+
+def _selection_loss_contract(
+    cohort: dict[str, Any], target_digest: str, cfg: Any, aux_vocab: dict | None,
+    spatial_grid_size: int | None, target_length: int,
+) -> dict[str, Any]:
+    return {
+        "cohort_digest": cohort["digest"],
+        "objective": "shared_causal_prefix_combined_loss_per_observation_v1",
+        "target_digest": target_digest,
+        "preprocessing": {
+            "sort_genes": False, "randomize_order": False, "filter_to_vocab": True,
+            "normalize_to_scale": 0, "clip_counts": 30,
+            "pad_zeros": bool(cfg.model.data_config.pad_zeros),
+            "pad_token": str(cfg.model.data_config.gene_pad_token),
+        },
+        "sequence_length": target_length,
+        "conditioning": {
+            "auxiliary_fields": sorted(aux_vocab or {}),
+            "spatial_grid_size": spatial_grid_size,
+        },
+    }
+
+
+def _prepare_baseline_evidence(
+    manifest: dict[str, Any], cohort: dict[str, Any], checkpoint_path: Path,
+    output_dir: Path, resume_contract: dict[str, Any], target_device: torch.device,
+    use_amp: bool, amp_dtype: torch.dtype, batch_size: int,
+    spatial_grid_size: int | None,
+) -> dict[str, Any]:
+    """Load or evaluate the fixed baseline before candidate optimization."""
+    cache_path = output_dir / "validation_baseline.json"
+    identity = {
+        "base_checkpoint": resume_contract["base_checkpoint"],
+        "cohort_digest": cohort["digest"],
+        "objective": "shared_causal_prefix_combined_loss_per_observation_v1",
+    }
+    if cache_path.is_file():
+        cached = json.loads(cache_path.read_text())
+        if cached.get("identity") != identity:
+            raise ValueError("Baseline validation evidence changed; use a new output directory for a fresh run")
+        try:
+            baseline_losses = cached["losses"]
+            baseline_contract = cached["loss_contract"]
+        except KeyError as exc:
+            raise ValueError("Incomplete baseline validation evidence; use a new output directory") from exc
+    else:
+        rng = _capture_rng_state()
+        baseline_model, baseline_cfg, base_genes, base_aux = _load_model(checkpoint_path)
+        baseline_model.to(target_device)
+        baseline_loader, baseline_ids = _build_cohort_loader(
+            manifest, cohort, baseline_cfg, base_genes, base_aux, batch_size, target_device.type
+        )
+        target_length = int(baseline_cfg.model.model_config.seq_len) - (2 if spatial_grid_size is not None else 1)
+        if target_length < 1:
+            raise ValueError("No shared gene target positions for baseline and candidate")
+        try:
+            baseline_losses, target_digest = _cohort_losses(
+                baseline_model, baseline_loader, baseline_ids, target_device, use_amp, amp_dtype,
+                target_length,
+            )
+        finally:
+            del baseline_model, baseline_loader
+            _set_rng_state(rng, target_device)
+        baseline_contract = _selection_loss_contract(
+            cohort, target_digest, baseline_cfg, base_aux, None, target_length
+        )
+        if not torch.distributed.is_available() or not torch.distributed.is_initialized() or torch.distributed.get_rank() == 0:
+            _atomic_write(
+                cache_path,
+                lambda tmp: tmp.write_text(json.dumps({
+                    "identity": identity, "loss_contract": baseline_contract, "losses": baseline_losses,
+                }, indent=2) + "\n"),
+            )
+    evidence = {"identity": identity, "loss_contract": baseline_contract, "losses": baseline_losses}
+    evidence_digest = hashlib.sha256(json.dumps(evidence, sort_keys=True).encode()).hexdigest()
+    return {
+        "baseline_losses": baseline_losses,
+        "baseline_contract": baseline_contract,
+        "baseline_evidence_digest": evidence_digest,
+    }
+
+
+def _check_baseline_evidence(resume_state: dict[str, Any] | None, baseline: dict[str, Any]) -> None:
+    if resume_state is None:
+        return
+    saved = resume_state["loop_state"].get("baseline_evidence_digest")
+    if saved != baseline["baseline_evidence_digest"]:
+        raise ValueError("Baseline validation evidence changed; use a new output directory for a fresh run")
+
+
+def _persist_validation_cohort(output_dir: Path, cohort: dict[str, Any], resume: bool) -> None:
+    """Record full frozen membership while allowing equivalent prepared paths to move."""
+    path = output_dir / "validation_cohort.json"
+    if resume and path.is_file():
+        saved = json.loads(path.read_text())
+        if saved.get("digest") != cohort["digest"]:
+            raise ValueError("Frozen validation cohort changed; use a new output directory for a fresh run")
+        identifying = ("id", "species", "embryo_id", "phase", "weight")
+        saved_rows = [{key: row[key] for key in identifying} for row in saved["observations"]]
+        current_rows = [{key: row[key] for key in identifying} for row in cohort["observations"]]
+        if saved_rows != current_rows:
+            raise ValueError("Frozen validation cohort membership changed; use a new output directory")
+    _atomic_write(path, lambda tmp: tmp.write_text(json.dumps(cohort, indent=2) + "\n"))
+
+
+def _candidate_selection_context(
+    manifest: dict[str, Any], cohort: dict[str, Any], baseline: dict[str, Any],
+    candidate_cfg: Any, gene_vocab: dict, aux_vocab: dict, batch_size: int,
+    device_type: str, spatial_grid_size: int | None,
+) -> dict[str, Any]:
+    loader, ids = _build_cohort_loader(
+        manifest, cohort, candidate_cfg, gene_vocab, aux_vocab, batch_size, device_type
+    )
+    return {
+        **baseline, "cohort": cohort, "loader": loader, "ids": ids,
+        "candidate_cfg": candidate_cfg, "candidate_aux_vocab": aux_vocab,
+        "spatial_grid_size": spatial_grid_size,
+    }
+
+
 def _atomic_write(path: Path, write_fn) -> None:
     """Write via a temp file and rename so a crash never leaves partial files."""
     tmp_path = path.with_name(path.name + ".tmp")
@@ -343,6 +542,24 @@ def _snapshot_state_dict(model) -> dict[str, torch.Tensor]:
     """CPU copy of the (possibly DDP-wrapped) model's state dict."""
     module = model.module if hasattr(model, "module") else model
     return {key: value.detach().cpu().clone() for key, value in module.state_dict().items()}
+
+
+def _pending_gradients(model) -> dict[str, torch.Tensor]:
+    module = model.module if hasattr(model, "module") else model
+    return {
+        name: parameter.grad.detach().cpu().clone()
+        for name, parameter in module.named_parameters()
+        if parameter.grad is not None
+    }
+
+
+def _restore_pending_gradients(model, saved: dict[str, torch.Tensor], target_device: torch.device) -> None:
+    module = model.module if hasattr(model, "module") else model
+    parameters = dict(module.named_parameters())
+    if not set(saved) <= parameters.keys():
+        raise ValueError("Checkpoint pending gradients do not match the model; use a fresh output directory")
+    for name, parameter in parameters.items():
+        parameter.grad = saved[name].to(device=target_device, dtype=parameter.dtype) if name in saved else None
 
 
 def save_finetuned_checkpoint(
@@ -365,17 +582,62 @@ def save_finetuned_checkpoint(
 
     vocabs_dir = output_dir / "vocabs"
     vocabs_dir.mkdir(parents=True, exist_ok=True)
+    source_names = set()
     for vocab_file in sorted((source / "vocabs").iterdir()):
+        if not vocab_file.is_file():
+            continue
+        source_names.add(vocab_file.name)
         dest = vocabs_dir / vocab_file.name
-        if not dest.exists():
-            _link_or_copy(vocab_file, dest)
+        def write_vocab(tmp: Path, source_file: Path = vocab_file) -> None:
+            tmp.unlink(missing_ok=True)
+            _link_or_copy(source_file, tmp)
+        _atomic_write(dest, write_vocab)
     if spatial_grid_size is not None:
         content = json.dumps(build_spatial_bin_vocab(spatial_grid_size)) + "\n"
         vocab_path = vocabs_dir / f"{SPATIAL_VOCAB_NAME}_vocab.json"
         if not vocab_path.exists() or vocab_path.read_text() != content:
             _atomic_write(vocab_path, lambda tmp: tmp.write_text(content))
+        source_names.add(vocab_path.name)
+    for previous in vocabs_dir.iterdir():
+        if previous.is_file() and previous.name not in source_names:
+            previous.unlink()
 
     _atomic_write(output_dir / "model_weights.pt", lambda tmp: torch.save(state_dict, tmp))
+
+
+def _export_selected_checkpoint(
+    output_dir: Path, checkpoint_path: Path, summary: dict[str, Any],
+    best_state: dict[str, torch.Tensor] | None, spatial_grid_size: int | None,
+) -> None:
+    """Export the selected model while keeping terminal optimization state."""
+    selection = summary["selection"]
+    if selection["selected"] == "candidate":
+        if best_state is None:
+            raise ValueError("Selected candidate has no saved validation weights")
+        save_finetuned_checkpoint(output_dir, checkpoint_path, best_state, spatial_grid_size)
+    else:
+        _atomic_write(
+            output_dir / "config.json",
+            lambda tmp: shutil.copy2(checkpoint_path / "config.json", tmp),
+        )
+        _atomic_write(
+            output_dir / "model_weights.pt",
+            lambda tmp: shutil.copy2(checkpoint_path / "model_weights.pt", tmp),
+        )
+        source_vocabs = checkpoint_path / "vocabs"
+        selected_vocabs = output_dir / "vocabs"
+        selected_vocabs.mkdir(parents=True, exist_ok=True)
+        names = {path.name for path in source_vocabs.iterdir() if path.is_file()}
+        for source in source_vocabs.iterdir():
+            if source.is_file():
+                _atomic_write(selected_vocabs / source.name, lambda tmp, src=source: shutil.copy2(src, tmp))
+        for previous in selected_vocabs.iterdir():
+            if previous.is_file() and previous.name not in names:
+                previous.unlink()
+    _atomic_write(
+        output_dir / "selected_model.json",
+        lambda tmp: tmp.write_text(json.dumps(selection, indent=2) + "\n"),
+    )
 
 
 def _capture_rng_state() -> dict[str, Any]:
@@ -387,6 +649,14 @@ def _capture_rng_state() -> dict[str, Any]:
     if torch.cuda.is_available():
         state["torch_cuda"] = torch.cuda.get_rng_state_all()
     return state
+
+
+def _set_rng_state(rng: dict[str, Any], target_device: torch.device) -> None:
+    torch.set_rng_state(rng["torch"])
+    np.random.set_state(rng["numpy"])
+    random.setstate(rng["python"])
+    if target_device.type == "cuda" and "torch_cuda" in rng:
+        torch.cuda.set_rng_state_all(rng["torch_cuda"])
 
 
 def _checkpoint_step_number(path: Path) -> int:
@@ -402,7 +672,32 @@ def _list_checkpoints(output_dir: Path) -> list[Path]:
 
 def _latest_checkpoint_path(output_dir: Path) -> Path | None:
     checkpoints = _list_checkpoints(output_dir)
+    terminal = output_dir / "terminal_state.pt"
+    if terminal.is_file():
+        # An extended run may be interrupted after newer periodic saves.
+        try:
+            terminal_step = int(torch.load(terminal, weights_only=False, map_location="cpu")["step"])
+        except Exception as exc:
+            raise ValueError("Invalid terminal resume state; use a new output directory for a fresh run") from exc
+        if not checkpoints or terminal_step >= _checkpoint_step_number(checkpoints[-1]):
+            return terminal
     return checkpoints[-1] if checkpoints else None
+
+
+def _discard_resume_records(output_dir: Path) -> None:
+    """An explicit fresh start must not inherit a previous run's state."""
+    for path in [*(_list_checkpoints(output_dir)), output_dir / "terminal_state.pt"]:
+        path.unlink(missing_ok=True)
+
+
+def _rank_rng_states() -> list[dict[str, Any]]:
+    """Collect each process's RNG state at the same optimizer boundary."""
+    local = _capture_rng_state()
+    if not torch.distributed.is_available() or not torch.distributed.is_initialized():
+        return [local]
+    states: list[dict[str, Any]] = [{} for _ in range(torch.distributed.get_world_size())]
+    torch.distributed.all_gather_object(states, local)
+    return states
 
 
 def _save_periodic_checkpoint(
@@ -415,17 +710,26 @@ def _save_periodic_checkpoint(
     *,
     resume_contract: dict | None = None,
     loop_state: dict | None = None,
+    terminal: bool = False,
 ) -> None:
-    """Atomically save a full resume checkpoint; keep only the latest `keep`."""
+    """Atomically save a full resume checkpoint; retain terminal state separately."""
+    rank_rng = _rank_rng_states()
+    if torch.distributed.is_available() and torch.distributed.is_initialized() and torch.distributed.get_rank() != 0:
+        return
     state = {
+        "state_format": 3,
         "model": _snapshot_state_dict(model),
         "optimizer": optimizer.state_dict(),
         "scaler": scaler.state_dict(),
         "step": step,
-        "rng": _capture_rng_state(),
+        "rank_rng": rank_rng,
+        "rng": rank_rng[0],
         "resume_contract": resume_contract,
         "loop_state": loop_state,
     }
+    if terminal:
+        _atomic_write(output_dir / "terminal_state.pt", lambda tmp: torch.save(state, tmp))
+        return
     _atomic_write(output_dir / f"checkpoint_step{step}.pt", lambda tmp: torch.save(state, tmp))
     for old in _list_checkpoints(output_dir)[:-keep]:
         old.unlink()
@@ -434,17 +738,24 @@ def _save_periodic_checkpoint(
 def _load_latest_checkpoint(
     output_dir: Path, resume: bool, *, expected_contract: dict | None = None
 ) -> dict[str, Any] | None:
-    """Load the latest periodic checkpoint, or None when starting fresh."""
+    """Load terminal state when present, otherwise the latest periodic state."""
     if not resume:
         return None
     checkpoint_path = _latest_checkpoint_path(output_dir)
     if checkpoint_path is None:
-        logger.info("Resume requested but no periodic checkpoint found in %s; starting fresh", output_dir)
+        logger.info("Resume requested but no checkpoint found in %s; starting fresh", output_dir)
         return None
     logger.info("Resuming from %s", checkpoint_path)
     state = torch.load(checkpoint_path, weights_only=False, map_location="cpu")
     if expected_contract is not None:
         validate_resume_contract(state, expected_contract)
+        if state.get("state_format") != 3 or not isinstance(state.get("rank_rng"), list):
+            raise ValueError("Legacy checkpoint lacks rank-local RNG evidence; use a new output directory for a fresh run")
+        if len(state["rank_rng"]) != expected_contract["training"]["world_size"]:
+            raise ValueError("Incompatible resume rank count; use a new output directory for a fresh run")
+        loop = state.get("loop_state") or {}
+        if "micro_steps" not in loop or "pending_gradients" not in loop:
+            raise ValueError("Legacy checkpoint lacks microbatch position and gradients; use a fresh output directory")
     return state
 
 
@@ -464,15 +775,16 @@ def _restore_training_state(
             if isinstance(value, torch.Tensor):
                 state[key] = value.to(target_device)
     scaler.load_state_dict(resume_state["scaler"])
-    rng = resume_state.get("rng") or {}
-    if "torch" in rng:
-        torch.set_rng_state(rng["torch"])
-    if "numpy" in rng:
-        np.random.set_state(rng["numpy"])
-    if "python" in rng:
-        random.setstate(rng["python"])
-    if target_device.type == "cuda" and "torch_cuda" in rng:
-        torch.cuda.set_rng_state_all(rng["torch_cuda"])
+    if "rank_rng" in resume_state:
+        rank = torch.distributed.get_rank() if torch.distributed.is_available() and torch.distributed.is_initialized() else 0
+        rng = resume_state["rank_rng"][rank]
+    else:
+        rng = resume_state.get("rng") or {}
+    if not {"torch", "numpy", "python"} <= rng.keys():
+        raise ValueError("Checkpoint lacks complete RNG state; use a new output directory for a fresh run")
+    if target_device.type == "cuda" and "torch_cuda" not in rng:
+        raise ValueError("Checkpoint lacks CUDA RNG state; use a new output directory for a fresh run")
+    _set_rng_state(rng, target_device)
     return int(resume_state.get("step", 0))
 
 
@@ -506,42 +818,90 @@ def _run_training_loop(
     checkpoint_interval: int = 500,
     resume_contract: dict | None = None,
     resume_loop_state: dict | None = None,
+    selection_context: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], dict[str, torch.Tensor] | None]:
     """Run training; return (summary, best-validation CPU state dict or None).
 
-    ``initial_step`` resumes a previous run: the dataloader is deterministic,
-    so the first ``initial_step * grad_accumulation`` micro-batches are skipped.
+    ``initial_step`` resumes a previous run by replaying its deterministic
+    observation stream to the saved optimizer boundary.
     """
     model.train()
     step = initial_step
-    micro_steps = 0
-    skip_micro_steps = initial_step * grad_accumulation
+    micro_steps = initial_step * grad_accumulation
+    skip_micro_steps = micro_steps
     losses: list[float] = []
     validation_losses: list[float] = []
     best_state: dict[str, torch.Tensor] | None = None
     best_step: int | None = None
     last_epoch = 0
     stopped_early = False
+    best_score = 0.0
+    selection_history: list[dict[str, Any]] = []
     if resume_loop_state is not None:
+        if "micro_steps" not in resume_loop_state or "pending_gradients" not in resume_loop_state:
+            raise ValueError("Resume state lacks microbatch position and gradients; use a fresh output directory")
+        micro_steps = int(resume_loop_state["micro_steps"])
+        if not initial_step * grad_accumulation <= micro_steps < (initial_step + 1) * grad_accumulation:
+            raise ValueError("Resume microbatch position is incompatible with optimizer step")
+        skip_micro_steps = micro_steps
+        saved_gradients = resume_loop_state["pending_gradients"]
+        if micro_steps % grad_accumulation and not saved_gradients:
+            raise ValueError("Resume state lacks pending accumulation gradients")
+        if micro_steps % grad_accumulation == 0 and saved_gradients:
+            raise ValueError("Resume state has gradients at an optimizer boundary")
+        _restore_pending_gradients(model, saved_gradients, target_device)
         losses = list(resume_loop_state["losses"])
         validation_losses = list(resume_loop_state["validation_losses"])
         best_state = resume_loop_state["best_state"]
         best_step = resume_loop_state["best_step"]
         last_epoch = resume_loop_state["last_epoch"]
         stopped_early = resume_loop_state["stopped_early"]
+        if selection_context is not None:
+            best_score = float(resume_loop_state["best_score"])
+            selection_history = list(resume_loop_state["selection_history"])
         if early_stopping is not None and resume_loop_state["early_stopping"] is not None:
             early_stopping.load_state_dict(resume_loop_state["early_stopping"])
+    elif selection_context is not None and early_stopping is not None:
+        early_stopping.best = 0.0  # The baseline is a real score-zero candidate.
+
+    replay_rng = _capture_rng_state() if skip_micro_steps > 0 else None
+
+    def loop_state() -> dict[str, Any]:
+        return {
+            "losses": losses,
+            "micro_steps": micro_steps,
+            "pending_gradients": _pending_gradients(model),
+            "validation_losses": validation_losses,
+            "best_state": best_state,
+            "best_step": best_step,
+            "last_epoch": last_epoch,
+            "stopped_early": stopped_early,
+            "early_stopping": early_stopping.state_dict() if early_stopping is not None else None,
+            "best_score": best_score if selection_context is not None else None,
+            "selection_history": selection_history if selection_context is not None else None,
+            "baseline_evidence_digest": (
+                selection_context["baseline_evidence_digest"] if selection_context is not None else None
+            ),
+        }
 
     for epoch in range(1, epochs + 1):
         if stopped_early or (max_steps > 0 and step >= max_steps):
             break
         last_epoch = epoch
         _set_epoch(dataloader, epoch)
-        for batch in dataloader:
-            if skip_micro_steps > 0:
-                # Already consumed by the run being resumed; skip re-seeing it.
-                skip_micro_steps -= 1
-                continue
+        # Replay can create worker iterators and read historical batches. Keep
+        # their RNG use away from model dropout after state restoration.
+        iterator = iter(dataloader)
+        while skip_micro_steps > 0:
+            try:
+                next(iterator)
+            except StopIteration:
+                break
+            skip_micro_steps -= 1
+        if replay_rng is not None and skip_micro_steps == 0:
+            _set_rng_state(replay_rng, target_device)
+            replay_rng = None
+        for batch in iterator:
             batch = _move_batch_to_device(batch, target_device)
 
             with torch.autocast(
@@ -574,34 +934,53 @@ def _run_training_loop(
                     step,
                     loss_value,
                 )
-                if validation_loader is not None and early_stopping is not None and step % validation_interval == 0:
-                    validation_loss = _validation_loss(
-                        model,
-                        validation_loader,
-                        target_device,
-                        use_amp,
-                        amp_dtype,
-                        max_batches=validation_max_batches,
-                    )
-                    validation_losses.append(validation_loss)
-                    logger.info("Validation loss %.6f", validation_loss)
-                    if validation_loss <= min(validation_losses):
-                        best_state = _snapshot_state_dict(model)
-                        best_step = step
-                    if early_stopping.should_stop(validation_loss):
-                        stopped_early = True
+                if early_stopping is not None and step % validation_interval == 0:
+                    if selection_context is not None:
+                        candidate_losses, target_digest = _cohort_losses(
+                            model, selection_context["loader"], selection_context["ids"],
+                            target_device, use_amp, amp_dtype,
+                            selection_context["baseline_contract"]["sequence_length"],
+                        )
+                        result = score_validation_candidate(
+                            selection_context["cohort"], selection_context["baseline_losses"],
+                            candidate_losses,
+                            baseline_contract=selection_context["baseline_contract"],
+                            candidate_contract=_selection_loss_contract(
+                                selection_context["cohort"], target_digest,
+                                selection_context["candidate_cfg"],
+                                selection_context["candidate_aux_vocab"],
+                                selection_context["spatial_grid_size"],
+                                selection_context["baseline_contract"]["sequence_length"],
+                            ),
+                        )
+                        result["step"] = step
+                        selection_history.append(result)
+                        validation_loss = sum(
+                            values["candidate"] for values in result["species_losses"].values()
+                        ) / len(result["species_losses"])
+                        validation_losses.append(validation_loss)
+                        eligible = result["selected"] == "candidate"
+                        score = float(result["score"])
+                        if eligible and score > best_score:
+                            best_score = score
+                            best_state = _snapshot_state_dict(model)
+                            best_step = step
+                        if early_stopping.should_stop(-score if eligible else float("inf")):
+                            stopped_early = True
+                    elif validation_loader is not None:
+                        validation_loss = _validation_loss(
+                            model, validation_loader, target_device, use_amp, amp_dtype,
+                            max_batches=validation_max_batches,
+                        )
+                        validation_losses.append(validation_loss)
+                        if validation_loss <= min(validation_losses):
+                            best_state = _snapshot_state_dict(model)
+                            best_step = step
+                        if early_stopping.should_stop(validation_loss):
+                            stopped_early = True
                 # Save after validation so patience and the selected best weights
                 # describe this exact optimizer boundary, including a stop event.
                 if output_dir is not None and checkpoint_interval > 0 and step % checkpoint_interval == 0:
-                    loop_state = {
-                        "losses": losses,
-                        "validation_losses": validation_losses,
-                        "best_state": best_state,
-                        "best_step": best_step,
-                        "last_epoch": last_epoch,
-                        "stopped_early": stopped_early,
-                        "early_stopping": early_stopping.state_dict() if early_stopping is not None else None,
-                    }
                     _save_periodic_checkpoint(
                         output_dir,
                         model,
@@ -609,7 +988,7 @@ def _run_training_loop(
                         scaler,
                         step,
                         resume_contract=resume_contract,
-                        loop_state=loop_state,
+                        loop_state=loop_state(),
                     )
                 if stopped_early:
                     break
@@ -619,6 +998,18 @@ def _run_training_loop(
 
         if stopped_early or (max_steps > 0 and step >= max_steps):
             break
+
+    if output_dir is not None:
+        _save_periodic_checkpoint(
+            output_dir,
+            model,
+            optimizer,
+            scaler,
+            step,
+            resume_contract=resume_contract,
+            loop_state=loop_state(),
+            terminal=True,
+        )
 
     summary = {
         "steps": step,
@@ -631,6 +1022,25 @@ def _run_training_loop(
         "stopped_early": stopped_early,
         "resumed_from_step": initial_step,
     }
+    if selection_context is not None:
+        if best_step is not None:
+            outcome = "candidate_selected"
+        elif not selection_history:
+            outcome = "no_candidate_evaluated"
+        elif all(result["vetoed_species"] for result in selection_history):
+            outcome = "no_eligible_candidate"
+        else:
+            outcome = "eligible_candidates_nonpositive"
+        summary["selection"] = {
+            "selected": "candidate" if best_step is not None else "baseline",
+            "outcome": outcome,
+            "best_step": best_step,
+            "best_score": best_score,
+            "cohort_digest": selection_context["cohort"]["digest"],
+            "species": sorted(selection_context["cohort"]["species"]),
+            "history": selection_history,
+            "evidence_limit": "Validation species only; final holdout and unrepresented species require separate evaluation",
+        }
     return summary, best_state
 
 
@@ -659,6 +1069,7 @@ def _ddp_worker(
     validation_batch_size: int | None = None,
     checkpoint_interval: int = 500,
     resume_contract: dict | None = None,
+    cohort: dict[str, Any] | None = None,
 ) -> None:
     import torch.distributed as dist
 
@@ -678,6 +1089,12 @@ def _ddp_worker(
     amp_dtype = torch.float16 if use_amp else torch.float32
 
     resume_state = _load_latest_checkpoint(output_dir, resume, expected_contract=resume_contract)
+    baseline = _prepare_baseline_evidence(
+        manifest, cohort, Path(checkpoint_path), output_dir, resume_contract,
+        target_device, use_amp, amp_dtype, validation_batch_size or batch_size,
+        spatial_grid_size,
+    )
+    _check_baseline_evidence(resume_state, baseline)
     model, cfg, gene_vocab, aux_vocab = _load_model(
         Path(checkpoint_path), spatial_grid_size=spatial_grid_size, work_dir=output_dir
     )
@@ -689,14 +1106,9 @@ def _ddp_worker(
     model = DistributedDataParallel(model, device_ids=[rank] if backend == "nccl" else None)
 
     dataset = _build_datasets(manifest, prepared_report, cfg, gene_vocab, aux_vocab)
-    validation_loader = _build_validation_loader(
-        manifest,
-        prepared_report,
-        cfg,
-        gene_vocab,
-        aux_vocab,
-        validation_batch_size or batch_size,
-        device_type=target_device.type,
+    selection_context = _candidate_selection_context(
+        manifest, cohort, baseline, cfg, gene_vocab, aux_vocab,
+        validation_batch_size or batch_size, target_device.type, spatial_grid_size,
     )
     early_stopping = EarlyStopping(patience=early_stopping_patience)
     sampler = DistributedSampler(
@@ -731,19 +1143,18 @@ def _ddp_worker(
         epochs=epochs,
         grad_accumulation=grad_accumulation,
         initial_step=initial_step,
-        validation_loader=validation_loader,
+        selection_context=selection_context,
         early_stopping=early_stopping,
         validation_interval=validation_interval,
         validation_max_batches=validation_max_batches,
-        output_dir=output_dir if rank == 0 else None,
+        output_dir=output_dir,
         checkpoint_interval=checkpoint_interval,
         resume_contract=resume_contract,
         resume_loop_state=resume_state.get("loop_state") if resume_state else None,
     )
 
     if rank == 0:
-        final_state = best_state if best_state is not None else _snapshot_state_dict(model)
-        save_finetuned_checkpoint(output_dir, Path(checkpoint_path), final_state, spatial_grid_size)
+        _export_selected_checkpoint(output_dir, Path(checkpoint_path), summary, best_state, spatial_grid_size)
         summary.update({"device": str(target_device), "precision": precision})
         _write_training_summary(output_dir, summary)
 
@@ -774,8 +1185,18 @@ def train_finetune(
 ) -> dict[str, Any]:
     """Run a finetuning training loop and save a checkpoint and summary."""
     validate_prepared_artifacts(manifest, prepared_report)
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    if not resume:
+        _discard_resume_records(output_dir)
+        (output_dir / "validation_baseline.json").unlink(missing_ok=True)
     torch.manual_seed(int(manifest.get("seed", 0)))
     spatial_grid_size = spatial_grid_size_from_manifest(manifest)
+    cohort = build_validation_cohort(
+        manifest, prepared_report,
+        max_observations=validation_max_batches * (validation_batch_size or batch_size),
+    )
+    _persist_validation_cohort(output_dir, cohort, resume)
     resume_contract = build_resume_contract(
         manifest,
         prepared_report,
@@ -790,6 +1211,14 @@ def train_finetune(
         validation_max_batches=validation_max_batches,
         validation_batch_size=validation_batch_size or batch_size,
         early_stopping_patience=early_stopping_patience,
+        selection={
+            "cohort_digest": cohort["digest"],
+            "species": sorted(cohort["species"]),
+            "score_policy": "baseline_relative_equal_species_embryo_v1",
+            "loss_objective": "shared_causal_prefix_combined_loss_per_observation_v1",
+            "deterioration_limit": 0.02,
+            "spatial_grid_size": spatial_grid_size,
+        },
     )
 
     if num_gpus > 1:
@@ -818,6 +1247,7 @@ def train_finetune(
             validation_batch_size,
             checkpoint_interval,
             resume_contract,
+            cohort,
         )
         if backend == "nccl":
             mp.spawn(_ddp_worker, args=spawn_args, nprocs=num_gpus, join=True)
@@ -842,6 +1272,12 @@ def train_finetune(
 
     logger.info("Loading checkpoint from %s", checkpoint_path)
     resume_state = _load_latest_checkpoint(output_dir, resume, expected_contract=resume_contract)
+    baseline = _prepare_baseline_evidence(
+        manifest, cohort, Path(checkpoint_path), output_dir, resume_contract,
+        target_device, use_amp, amp_dtype, validation_batch_size or batch_size,
+        spatial_grid_size,
+    )
+    _check_baseline_evidence(resume_state, baseline)
     model, cfg, gene_vocab, aux_vocab = _load_model(
         Path(checkpoint_path), spatial_grid_size=spatial_grid_size, work_dir=output_dir
     )
@@ -863,14 +1299,9 @@ def train_finetune(
     optimizer = torch.optim.AdamW(trainable_params, lr=lr)
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
     initial_step = _restore_training_state(resume_state, optimizer, scaler, target_device)
-    validation_loader = _build_validation_loader(
-        manifest,
-        prepared_report,
-        cfg,
-        gene_vocab,
-        aux_vocab,
-        validation_batch_size or batch_size,
-        device_type=target_device.type,
+    selection_context = _candidate_selection_context(
+        manifest, cohort, baseline, cfg, gene_vocab, aux_vocab,
+        validation_batch_size or batch_size, target_device.type, spatial_grid_size,
     )
     early_stopping = EarlyStopping(patience=early_stopping_patience)
     summary, best_state = _run_training_loop(
@@ -885,7 +1316,7 @@ def train_finetune(
         epochs=epochs,
         grad_accumulation=grad_accumulation,
         initial_step=initial_step,
-        validation_loader=validation_loader,
+        selection_context=selection_context,
         early_stopping=early_stopping,
         validation_interval=validation_interval,
         validation_max_batches=validation_max_batches,
@@ -894,8 +1325,7 @@ def train_finetune(
         resume_contract=resume_contract,
         resume_loop_state=resume_state.get("loop_state") if resume_state else None,
     )
-    final_state = best_state if best_state is not None else _snapshot_state_dict(model)
-    save_finetuned_checkpoint(output_dir, Path(checkpoint_path), final_state, spatial_grid_size)
+    _export_selected_checkpoint(output_dir, Path(checkpoint_path), summary, best_state, spatial_grid_size)
     summary.update({"device": str(target_device), "precision": precision})
     _write_training_summary(output_dir, summary)
     return summary

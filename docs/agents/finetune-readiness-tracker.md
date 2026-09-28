@@ -13,9 +13,11 @@ The owner approved the checkpoint-selection policy in
 [remediation plan](review-remediation-plan-2026-09-28.md) covers all seven findings,
 their completion evidence and WSL constraints. The owner subsequently requested
 [a specification](../../.scratch/multispecies-readiness-remediation/spec.md) and
-[12 ready-for-agent tickets](../../.scratch/multispecies-readiness-remediation/README.md),
-with an explicit instruction not to implement yet. Status: specified and ticketed;
-implementation has not started. The triage labels do not lift that hold.
+[12 implementation tickets](../../.scratch/multispecies-readiness-remediation/README.md).
+Implementation was authorized on 2026-09-28. Bounded CPU checks have verified
+the individual tools; integrated training selection remains in progress. The
+chicken identifier mapping, additional zebrafish delivery, actual full-corpus
+preparation, accelerator behavior and scientific sign-off remain open.
 
 Additional zebrafish data may be supplied by collaborators for this finetune.
 Source identity and delivery are pending. The existing Wagner dataset is already
@@ -35,7 +37,7 @@ preparation and remain pending.
 | K | Complete spatial coordinate copies + derived manifest | Complete | `2ea75b3`; five files (~2.5 GB, sources unchanged); validator 27 PASS / 1 WARN / 0 FAIL on the derived manifest; all-27-source bounded rehearsal passed (3,357 → 3,308 rows) |
 | L | B1 criterion revision pre-registration draft | Complete (sign-off pending) | `ee6f934`; `docs/b1-criterion-proposal.md` (B1-A recommended; B1-B/B1-C alternatives; metric convention; freeze discipline). Collaborator #1–#3 cannot change B1 feasibility |
 | M | Probe asset audit: FASTA entries, metadata, ESM-2 plan | Complete | `6c67547`, `4d95645`; four verified FASTA entries (exact-species NCBI proteomes for ciona/amphioxus); metadata resolved to real columns with citations; register 8.4 added (key-namespace mismatches); readiness report regenerated (exit 1 by design) |
-| N | 1:1 ortholog table + coverage floors + cross-check | Complete | `c117bd3`; 402,495 pairs / 68 of 91 pairs; only 6 pairs pass both floors; 200-pair check OrthoDB 40/21/139, Alliance DIOPT 35/0/1 (21 discordant dropped); 32 offline tests, ruff clean |
+| N | 1:1 ortholog table + usable joins + statistic-specific coverage floors | Incomplete | Historical table: 402,495 pairs / 68 of 91 pairs; the old 6/91 result used whole-vocabulary counts and is descriptive only. Finalized-table join audit finds zero usable chicken pairs against the model vocabulary; an authoritative identifier mapping and named statistic inputs are still needed. |
 
 ### Open decisions from this batch
 
@@ -46,8 +48,11 @@ Full forward-looking context, defaults, and the ordered next-steps plan are in
   changes after results are seen).
 - Ortholog release pin: release 110 (current; matches the pinned FASTAs)
   vs 116 (available; exploratory numbers closely match).
-- Coverage-floor reality check: only 6/91 pairs pass. Either accept that
-  failing pairs downgrade to single-species findings, or revise the floor
+- Coverage-floor reality check: the old 6/91 result does not evaluate the registered
+  statistic-specific 60% floor. Use validated one-to-one pairs, actual genes entering
+  each named species/phase statistic, and the independent 5,000-pair floor before any
+  eligibility decision. Chicken identifier reconciliation remains unresolved. Either accept that
+  genuinely failing pairs downgrade to single-species findings, or revise the floor
   definition before any results are seen.
 - 139/200 sampled pairs are unverified (OrthoDB xref gaps; kept as
   "unverified", never fabricated) — accept or schedule a second pass.

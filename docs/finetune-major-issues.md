@@ -1,5 +1,7 @@
 # 多物种胚胎发生微调的主要问题清单(中文版)
 
+**2026-09-28 状态更新：** 旧版“全部可独立推进的工程工作已完成”仅记录当时范围，已被[新对抗性复核](agents/adversarial-review-2026-09-28.md)推翻。12 项整改已获实施授权；当前已验证范围及未解决的鸡基因标识、斑马鱼新增数据和科学审批见[整改证据](agents/multispecies-remediation-evidence-2026-09-28.md)。下文旧提交和旧测试数保留为历史证据。
+
 本文汇总本次微调的全部重大问题,来源包括:对抗性评审(`docs/agents/adversarial-review-2026-09-09.md`)、数据集审计(`logs/dataset_audit/`)、整改计划(ADR 0003)与验证设计文档(`docs/perturbation-and-baseline-design.md`)。本文自身亦经三方对抗性复核并据此修订(`docs/agents/register-review-2026-09-14.md`)。**计算资源类问题(显存、单轮训练时长、GPU 数量、WSL 内存)不在本文范围内**——它们单独记录于评审报告的 C 类发现与 ADR 0003 的计算部分。需要生物学合作方裁定的事项,另行汇总于文末《致合作者:待您裁定的事项》。
 
 **工程进度:** 五项可独立推进的工程任务均已完成并分别推送;见 [执行跟踪](agents/finetune-readiness-tracker.md) 与 [工具用法](finetune-readiness-tools.md)。策略/QC/B1 决策、探测资源和完整 prepare 仍待完成。
@@ -64,6 +66,8 @@
 | 3.11 | **切片身份与划分资格已分离。** 强行覆盖 section_id 会合并坐标框架并改变模型输入;因此不再使用常量覆盖作为修复。 | **已解决** — `3c57776` 保留切片身份并按 embryo_id 划分;`fee6970` 的空间副本提取原生切片:CS6 fig1/fig2 各49、CS7 82、CS8 62、CS9 13。全量元数据往返验证通过。 |
 
 ## 4. 基因标识、映射覆盖率与直系同源
+
+**2026-09-28 更正（4.3）：** 下表中“6/91 通过双下限”是旧版按整套词表数量计算的描述性结果，并非已注册的逐物种、逐发育阶段统计输入基因 60% 覆盖率判定。最终同源表与鸡模型词表实际交集为零；在有可靠来源的标识映射及具体统计输入基因集前，4.3 的科学适用性判定尚未完成。见 [同源基因评估说明](ortholog-eligibility-report.md)。
 
 | # | 问题 | 状态 |
 |---|---|---|
@@ -200,6 +204,8 @@
 
 # Major Issues for the Multi-Species Embryogenesis Finetune
 
+**2026-09-28 status update:** The earlier “all independent engineering complete” claim was overturned by the [new adversarial review](agents/adversarial-review-2026-09-28.md). The owner authorized implementation of 12 remediation tickets. See the [current evidence report](agents/multispecies-remediation-evidence-2026-09-28.md) for bounded checks and unresolved chicken identifiers, additional zebrafish data, and scientific approval. Earlier commits and test counts below remain historical evidence.
+
 Aggregated register of every significant issue raised about this finetune — from the adversarial review (`docs/agents/adversarial-review-2026-09-09.md`), the dataset audit (`logs/dataset_audit/`), the remediation program (ADR 0003), and the validation design (`docs/perturbation-and-baseline-design.md`). This register itself passed a three-way adversarial re-review (`docs/agents/register-review-2026-09-14.md`). **Compute-resource issues (VRAM, epoch time, GPU count, WSL RAM) are deliberately out of scope** — they are tracked separately in the review's C-findings and ADR 0003's compute section. Items that need a ruling from our biology collaborators are collected at the end, in *For our collaborators: decisions we need from you*.
 
 **Engineering status:** All five independent readiness tasks are completed and pushed separately; see the [tracker](agents/finetune-readiness-tracker.md) and [tool guide](finetune-readiness-tools.md). Policy/QC/B1 decisions, probe assets, and full preparation remain pending.
@@ -264,6 +270,8 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 | 3.11 | **Section identity and split eligibility are separated.** Overwriting section_id pools coordinate frames and changes inputs, so constant overrides are no longer the remedy. | **Resolved** — `3c57776` preserves sections while splitting by embryo_id; `fee6970` copies recover native sections: 49 each for CS6 fig1/fig2, 82 CS7, 62 CS8, 13 CS9. Full metadata round-trips pass. |
 
 ## 4. Gene identity, mapping coverage, and orthology
+
+**2026-09-28 correction to 4.3:** The table's “6/91 pass both floors” is a historical count-only result, not the registered 60% rule on genes entering each species/phase statistic. The finalized ortholog table has zero usable joins with the chicken model vocabulary. Scientific eligibility remains unevaluated until a provenance-backed identifier mapping and named statistic gene sets exist. See the [ortholog eligibility guide](ortholog-eligibility-report.md).
 
 | # | Issue | Status |
 |---|---|---|

@@ -1,9 +1,9 @@
 # 02 — Preserve stochastic optimization across single-process and distributed resume
 
 Category: correctness and readiness
-Status: ready-for-agent
+Status: Implemented; bounded CPU validation passed; distributed runtime unverified
 Priority: P2
-Execution: held by owner — do not implement yet.
+Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 01
 Traceability: R7; tracker A/F
 Spec: [Multispecies readiness remediation](../spec.md)
@@ -32,10 +32,9 @@ Actual GPU validation is a separate environment gate. No allocation of GPU memor
 Use bounded CPU fixtures and metadata/streamed reads, preserve existing WSL
 limits, cap native threads and run memory-heavy checks sequentially. No full
 model training, broad download, production launch or automatic scientific
-sign-off is authorized. The ready-for-agent label describes specification
-readiness; it does not override the owner's implementation hold.
+sign-off is authorized. Implementation was authorized on 2026-09-28; the
+scientific and external-data gates remain in effect.
 
 ## Comments
 
-Created from the adversarial review and grill-with-docs decisions. No
-implementation or new test execution has occurred as part of ticket publication.
+Initially published as a specification-only ticket. 2026-09-28 implementation evidence: Stochastic CPU continuation is implemented and covered by the bounded 37-test resume/compatibility selection. A local Gloo runtime could not start because sockets returned EPERM; distributed behavior still needs an environment that permits it.

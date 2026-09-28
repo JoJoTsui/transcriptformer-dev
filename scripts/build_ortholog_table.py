@@ -33,12 +33,10 @@ docs/finetune-major-issues.md item 4.3. Sources and rules:
     with are dropped. A source "disagrees" when it resolves both genes and does not support
     the pairing; a source that cannot resolve a gene - or is unavailable at build time - is
     "unavailable" and the pair is kept, reported as unverified (never fabricated).
-  - Coverage floors per species pair (design section 6, rule 4): (a) >= 60% of each side's
-    compared genes have 1:1 orthologs across the pair, (b) the genome-wide 1:1 set is
-    >= 5,000 genes. Every pair failing either floor is flagged so later claims on it are
-    downgraded to single-species findings. "Compared genes" is the species' model vocabulary
-    (training species) or its Ensembl protein-coding gene count from the pinned release's
-    GTF (zero-shot probe species); the denominator source is recorded per species.
+  - Genome-wide availability and usable identifier joins are descriptive. Scientific
+    eligibility requires actual genes entering a named species/phase statistic, separately
+    on each side, plus >=5,000 finalized genome-wide one-to-one pairs. Use
+    scripts/report_ortholog_eligibility.py for named statistic inputs.
   - Version suffixes are stripped only from Ensembl/FBgn/WBGene-style stable IDs
     (docs/finetune-data-requirements.md section 3; the regex is kept in sync with
     src/transcriptformer/finetune/prepare.py). Dots that are part of an identifier
@@ -314,10 +312,11 @@ def merge_bridge(
 def evaluate_floors(
     n_pairs: int, n_compared_a: int, n_compared_b: int, min_fraction: float = 0.6, min_pairs: int = 5000
 ) -> dict:
-    """Evaluate the per-pair coverage floors (design section 6, rule 4).
+    """Legacy count-only calculation retained for historical fixture compatibility.
 
-    (a) fraction of compared genes with a 1:1 ortholog >= ``min_fraction`` on both sides;
-    (b) genome-wide 1:1 set size >= ``min_pairs``. Pairs with no data fail both.
+    This cannot establish scientific eligibility: identifiers are not joined and
+    the statistic-specific input genes are absent. New reports must use actual
+    sets through ``report_ortholog_eligibility.evaluate_statistic``.
     """
     frac_a = n_pairs / n_compared_a if n_compared_a else None
     frac_b = n_pairs / n_compared_b if n_compared_b else None
@@ -787,16 +786,15 @@ def load_echinobase_consensus(path: Path) -> list[tuple[str, str]]:
     return kept
 
 
-def compared_genes(sp: Species, vocab: set[str] | None, n_protein_coding: int) -> tuple[set[str] | None, str, int]:
+def compared_genes(sp: Species, vocab: set[str] | None, protein_coding: set[str]) -> tuple[set[str] | None, str, int]:
     """Compared-gene set and denominator source for a species.
 
     Training species use the model vocabulary; probe species use the Ensembl protein-coding
-    gene count of the pinned release (their only stable genome-wide gene universe) - only
-    the count is needed for the floor fractions.
+    gene set of the pinned release, retaining actual keys for join validation.
     """
     if vocab is not None:
-        return {canonical_gene_id(sp.name, g) for g in vocab}, "model_vocabulary", n_protein_coding
-    return None, "ensembl_protein_coding_genes", n_protein_coding
+        return {canonical_gene_id(sp.name, g) for g in vocab}, "model_vocabulary", len(protein_coding)
+    return {canonical_gene_id(sp.name, g) for g in protein_coding}, "ensembl_protein_coding_genes", len(protein_coding)
 
 
 # ---------------------------------------------------------------- build
@@ -989,53 +987,31 @@ def build(args) -> int:
 
     # ---- compared gene sets ----
     print("counting probe protein-coding genes (pinned release GTFs)...", flush=True)
-    n_protein_coding: dict[str, int] = {}
+    protein_coding: dict[str, set[str]] = {}
     for name in SPECIES_ORDER:
         sp = SPECIES[name]
         if sp.has_vocab or not sp.datasets_any():
-            n_protein_coding[name] = 0
+            protein_coding[name] = set()
             continue
         url = gtf_url(http, name, args.compara_release)
         if url is None:
-            n_protein_coding[name] = 0
+            protein_coding[name] = set()
             continue
         path = http.get_binary(f"gtf_{name}", url)
-        n_protein_coding[name] = len(protein_coding_genes(path))
-        print(f"  {name}: {n_protein_coding[name]} protein-coding genes", flush=True)
+        protein_coding[name] = protein_coding_genes(path)
+        print(f"  {name}: {len(protein_coding[name])} protein-coding genes", flush=True)
 
     compared = {}
     for name in SPECIES_ORDER:
         sp = SPECIES[name]
         vocab = load_vocab(name) if sp.has_vocab else None
-        genes, source, n_pc = compared_genes(sp, vocab, n_protein_coding.get(name, 0))
+        genes, source, n_pc = compared_genes(sp, vocab, protein_coding.get(name, set()))
         compared[name] = {
             "source": source,
-            "n_compared": len(genes) if genes is not None else n_pc,
+            "n_compared": len(genes),
+            "genes": genes,
             "n_ensembl_protein_coding": n_pc,
         }
-
-    # ---- coverage report ----
-    coverage = {}
-    for key in pair_keys:
-        plan = plans[key]
-        n_pairs = len(pair_sets[key])
-        a, b = compared[plan.species_a], compared[plan.species_b]
-        floors = evaluate_floors(n_pairs, a["n_compared"], b["n_compared"], args.min_fraction, args.min_pairs)
-        floors.update(
-            {
-                "denominator_source_a": a["source"],
-                "denominator_source_b": b["source"],
-                "n_ensembl_protein_coding_a": a["n_ensembl_protein_coding"],
-                "n_ensembl_protein_coding_b": b["n_ensembl_protein_coding"],
-            }
-        )
-        coverage[key] = floors
-        cov_a = f"{floors['coverage_a']:.3f}" if floors["coverage_a"] is not None else "n/a"
-        cov_b = f"{floors['coverage_b']:.3f}" if floors["coverage_b"] is not None else "n/a"
-        print(
-            f"  {key}: {n_pairs} pairs, cov {cov_a}/{cov_b} [{'ok' if floors['floors_pass'] else 'FLAGGED'}]",
-            flush=True,
-        )
 
     # ---- cross-check ----
     table_rows = [
@@ -1084,8 +1060,33 @@ def build(args) -> int:
     final_counts = {key: 0 for key in pair_keys}
     for r in kept_rows:
         final_counts[f"{r['species_a']}__{r['species_b']}"] += 1
+    # All counts and joins refer to the written table after discordance filtering.
+    final_rows = {key: [] for key in pair_keys}
+    for r in kept_rows:
+        final_rows[f"{r['species_a']}__{r['species_b']}"].append((r["gene_a"], r["gene_b"]))
+    coverage = {}
+    for key in pair_keys:
+        plan = plans[key]
+        a, b = compared[plan.species_a], compared[plan.species_b]
+        rows = final_rows[key]
+        joined = [(ga, gb) for ga, gb in rows if ga in a["genes"] and gb in b["genes"]]
+        coverage[key] = {
+            "n_pairs": len(rows),
+            "n_usable_pairs": len(joined),
+            "n_compared_a": a["n_compared"], "n_compared_b": b["n_compared"],
+            "n_usable_genes_a": len({ga for ga, _ in joined}),
+            "n_usable_genes_b": len({gb for _, gb in joined}),
+            "coverage_a": len({ga for ga, _ in joined}) / a["n_compared"] if a["n_compared"] else None,
+            "coverage_b": len({gb for _, gb in joined}) / b["n_compared"] if b["n_compared"] else None,
+            "n_unresolved_pair_identifiers": len(rows) - len(joined),
+            "denominator_source_a": a["source"], "denominator_source_b": b["source"],
+            "n_ensembl_protein_coding_a": a["n_ensembl_protein_coding"],
+            "n_ensembl_protein_coding_b": b["n_ensembl_protein_coding"],
+            "pass_min_pairs_floor": len(rows) >= args.min_pairs,
+            "statistic_eligibility": "unevaluable_without_named_statistic_inputs",
+        }
     manifest = {
-        "schema_version": 1,
+        "schema_version": 2,
         "built_by": "scripts/build_ortholog_table.py",
         "design": "docs/perturbation-and-baseline-design.md#6-orthology-framework-s6",
         "snapshot_utc": snapshot,
@@ -1101,7 +1102,11 @@ def build(args) -> int:
             "many_to_one_many_to_many": "dropped, never collapsed",
             "version_stripping": "only ENS*/FBgn/WBGene stable IDs (docs/finetune-data-requirements.md section 3)",
             "id_aliases": "urchin LOC<n> and GeneID_<n> name the same NCBI gene; the table uses GeneID_<n>",
-            "coverage_floors": {"min_fraction_compared_genes": args.min_fraction, "min_pairs": args.min_pairs},
+            "coverage_floors": {
+                "min_fraction_statistic_input_genes": args.min_fraction,
+                "min_genome_wide_pairs": args.min_pairs,
+                "statistic_inputs_required": True,
+            },
             "bridge_threshold_pairs": args.bridge_threshold,
         },
         "species": {
@@ -1144,8 +1149,8 @@ def build(args) -> int:
         json.dumps(
             {
                 "denominator_note": (
-                    "floor (a) is evaluated on each side's compared genes: the model vocabulary for training "
-                    "species, the Ensembl protein-coding gene count of the pinned release for zero-shot probe species"
+                    "Descriptive joins use actual model-vocabulary or pinned-release protein-coding identifiers. "
+                    "The registered 60% floor requires named statistic gene inputs; this report cannot pass it."
                 ),
                 "pairs": {key: coverage[key] for key in pair_keys},
             },
@@ -1184,7 +1189,8 @@ def main():
     parser.add_argument("--sample-size", type=int, default=200, help="cross-check sample size (frozen design: 200)")
     parser.add_argument("--seed", type=int, default=42, help="cross-check sampling seed")
     parser.add_argument(
-        "--min-fraction", type=float, default=0.6, help="coverage floor (a): fraction of compared genes"
+        "--min-fraction", type=float, default=0.6,
+        help="registered floor for named statistic inputs; recorded in manifest, not evaluated by this builder"
     )
     parser.add_argument("--min-pairs", type=int, default=5000, help="coverage floor (b): genome-wide 1:1 set size")
     parser.add_argument(

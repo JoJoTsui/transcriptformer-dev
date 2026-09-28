@@ -24,6 +24,10 @@ on:
 jobs:
   finetune-unit-tests:
     runs-on: ubuntu-latest
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
     strategy:
       matrix:
         python-version: ["3.11"]
@@ -60,6 +64,8 @@ jobs:
             test/test_evaluate.py \
             test/test_small_group_evaluation.py \
             test/test_representation.py \
+            test/test_orthologs.py \
+            test/test_ortholog_eligibility.py \
             test/test_end_to_end.py \
             test/test_finetune_metadata.py \
             test/test_spatial.py \
@@ -74,4 +80,8 @@ jobs:
             test/test_missing_stage_evaluation.py \
             test/test_prepared_artifacts.py \
             test/test_preparation_rehearsal.py \
+            test/test_selection_cli.py \
+            test/test_selection_boundaries.py \
+            test/test_selection_training.py \
+            test/test_species_readiness.py \
             test/test_finetune_test_selection.py -v

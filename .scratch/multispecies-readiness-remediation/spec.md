@@ -1,8 +1,8 @@
 # Multispecies embryogenesis readiness remediation
 
 Category: correctness and readiness
-Status: ready-for-agent
-Execution: held by owner — specification and tickets only; do not implement yet.
+Status: bounded tooling implemented; external scientific and data gates remain open
+Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 
 ## Problem Statement
 
@@ -41,10 +41,9 @@ phase-stratified sampling preserving post-QC phase proportions; a maximum 2%
 deterioration per evaluable species; and the Metazoa checkpoint as the score-zero
 candidate, retained on ties or when no eligible candidate has positive score.
 
-Implementations will be validated at existing public command/report boundaries
-using bounded fixtures. No implementation or test execution is authorized by this
-specification-only turn. The tickets describe future work and its acceptance
-criteria; their triage labels do not lift that execution hold.
+Implementations are being validated at existing public command/report boundaries
+using bounded fixtures under the owner's 2026-09-28 authorization. The tickets
+retain the scientific and external-data gates separately from engineering work.
 
 ## User Stories
 
@@ -95,7 +94,7 @@ criteria; their triage labels do not lift that execution hold.
 
 ## Implementation Decisions
 
-1. **Authority and scope.** ADR 0004 records the accepted selection policy. Existing embryo isolation, one-to-one orthology requirements and final-holdout separation remain binding. Technical defaults below operationalize those contracts; they are not new scientific sign-offs. The execution hold remains in force until the owner requests implementation.
+1. **Authority and scope.** ADR 0004 records the accepted selection policy. Existing embryo isolation, one-to-one orthology requirements and final-holdout separation remain binding. Technical defaults below operationalize those contracts; they are not new scientific sign-offs. The owner authorized implementation on 2026-09-28; this does not approve scientific claims or missing external assets.
 2. **Terminal state.** Extend the existing training/checkpoint orchestration to atomically persist a complete terminal resume record regardless of periodic cadence, including when periodic saves are disabled. Preserve optimizer, scaler, step, stream position, RNG, stopping state and selection history. Best evaluation weights must not overwrite terminal optimization weights.
 3. **Resume boundaries.** The same completed budget performs no additional updates. Extending a completed budget may continue from terminal optimization state; an explicitly early-stopped run retains its stop decision. A fresh-start request continues to be explicit. Legacy or incompatible records must fail clearly rather than start over in a completed output directory.
 4. **Stochastic continuity.** Isolate data-loader randomness from model randomness and restore continuation at the correct boundary. Persist per-rank state for distributed runs. Bind supported worker, world-size and data-order assumptions to compatibility. Do not promise bitwise equivalence across different hardware or unsupported kernels.
@@ -106,7 +105,7 @@ criteria; their triage labels do not lift that execution hold.
 9. **Final table consistency.** Apply disagreement/ambiguity filtering before producing final counts, hashes and coverage. Preserve the existing distinction between cross-check disagreement and unavailable external verification; absence of a cross-check result is not itself a fabricated disagreement.
 10. **Selection cohort.** Add a coherent validation-cohort/report interface within the current finetuning boundary. Build from validated prepared validation observations only, with stable observation identities, deterministic allocation, recorded seed, fixed species/embryo membership, phase counts, sample weights and provenance. Consolidate repeated occurrences of the same species/embryo across source files.
 11. **Bounded representation.** Represent every available developmental phase within each included embryo. If sampling oversamples a phase, weight its sample mean by its full post-QC proportion within that embryo. Preserve unknown-stage rows as an explicitly accounted category rather than inventing phases or silently changing inclusion policy. A budget insufficient to satisfy representation must fail clearly, not silently discard groups or expand without bound. Exact sample counts are deployment settings fixed before results.
-12. **Hierarchical loss.** Form observation losses on comparable prediction targets; obtain the proportion-weighted embryo means and average embryos equally within each species. Baseline and candidate share the same frozen cohort, loss definition and target selection. Report preprocessing, truncation and auxiliary-conditioning comparability; do not equate batch means with per-observation means when their reduction semantics differ.
+12. **Hierarchical loss.** Form observation losses on comparable prediction targets; obtain the proportion-weighted embryo means and average embryos equally within each species. The implemented loss contract `shared_causal_prefix_combined_loss_per_observation_v1` scores only causal gene positions shared by the native Metazoa and candidate sequences before either terminal target, while each model retains its native input length and auxiliary conditioning. This handles the one-token spatial length difference. Baseline and candidate share the same frozen cohort, loss definition and target selection. Report preprocessing, truncation and auxiliary-conditioning comparability; do not equate batch means with per-observation means when their reduction semantics differ.
 13. **Relative score.** For each evaluable species, subtract candidate loss from baseline loss and divide by the absolute baseline loss. Average those improvements equally across species. A zero/nonfinite baseline or missing/nonfinite required candidate score is an explicit invalid evaluation, never an epsilon substitution or a silently reduced species set. This score is not the final-holdout B1 likelihood metric.
 14. **Eligibility and baseline.** Reject a candidate when any species' relative improvement is below minus 0.02; exactly minus 0.02 is allowed. The baseline has score zero. A candidate must be eligible and strictly exceed zero to replace it. Baseline wins a zero tie. Report separately no eligible candidate and eligible candidates without positive combined improvement.
 15. **Selection continuity.** Bind the cohort, species set, weights, baseline identity, comparable loss definition and selection policy to the resume contract. Persist per-species scores, selected model identity, eligibility reasons and patience history. As an implementation default, patience measures lack of improvement in the eligible selection objective; an ineligible checkpoint cannot reset it. Retain the existing configurable patience/minimum-change semantics without introducing a new scientific threshold.

@@ -111,6 +111,28 @@ def test_missing_phase_is_retained_in_report():
     assert report["totals"]["source_rows"] == 12
 
 
+def test_cap_smaller_than_strata_reports_excluded_groups_and_species():
+    obs = pd.DataFrame({
+        "source_dataset": ["single"] * 10,
+        "species": ["zebrafish"] * 7 + ["mouse"] * 3,
+        "stage": [f"phase_{i}" for i in range(10)],
+        "cell_type": ["cell"] * 10,
+        "dataset_type": ["single_cell"] * 10,
+    })
+    manifest = {"seed": 27, "sampling": {"max_single_cells": 3}}
+    first = audit_rows(manifest, obs, obs, obs)
+    second = audit_rows(manifest, obs, obs, obs)
+    assert first["totals"]["sampling_pool_rows"] == 3
+    assert first["unrepresented_groups"] == second["unrepresented_groups"]
+    assert len(first["unrepresented_groups"]) == 7
+    assert len(stratified_sample_indices(obs, 3, seed=27)) == 3
+
+    two_species = obs.iloc[[0, 7]].reset_index(drop=True)
+    removed = audit_rows({"seed": 0, "sampling": {"max_single_cells": 1}},
+                         two_species, two_species, two_species)
+    assert removed["species_removed_by_cap"] == ["zebrafish"]
+
+
 @pytest.mark.parametrize(
     "problem,expected",
     [
