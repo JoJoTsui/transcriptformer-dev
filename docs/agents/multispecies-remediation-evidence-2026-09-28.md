@@ -48,3 +48,18 @@ run for these follow-up edits.
 The current final holdout supports only human and mouse. Post-QC freeze evidence, B1 criterion sign-off, added independent zebrafish embryos, chicken ID reconciliation, probe assets, actual production preparation, accelerator validation and collaborator corpus/QC/assay decisions remain separate gates. Tooling test passes must not be recorded as production or scientific readiness.
 The local normal/untreated zebrafish file is derived from Wagner and does not
 count as collaborator delivery or an independent validation source.
+
+## 2026-09-30 evidence update
+
+The table above is the original 2026-09-28 local snapshot. Later remote CPU
+evidence supersedes its statement that remote CI had not run: the
+[finetune workflow](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896770)
+passed 337 selected tests and the
+[change-scoped pre-commit workflow](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896960)
+passed on commit `fb2f648`. Those runs exercised a two-rank Gloo launch,
+but did not establish interrupted/resumed per-rank RNG continuity. They also
+did not produce a full prepared corpus, real B3 scores, a chicken source-build
+record, GPU behavior or scientific sign-off. The
+[ticket index](../../.scratch/multispecies-readiness-remediation/README.md)
+is the current closure record; this dated report retains the original local
+commands and observations as historical evidence.

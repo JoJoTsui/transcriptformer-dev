@@ -114,6 +114,47 @@ absent from the local H5AD; the report lists them explicitly.
 This candidate sidecar is intentionally not a derived training H5AD. Inclusion
 still needs the owner/collaborator source decision, assay-specific QC and token
 choice, phase/cell-type mapping, independent-embryo check, and a verified
-row-filtered H5AD if the source is selected. The sidecar preserves `lineage10x`
+row-filtered H5AD if the source is selected (the conservative candidate below
+is one possible starting point). The sidecar preserves `lineage10x`
 and `lineage10x_2` as author annotations without choosing which one becomes
 the training cell-type label.
+
+## Isolated source-QC candidate H5AD derived 2026-09-30
+
+The [derivation script](../../scripts/derive_nature2019_candidate_h5ad.py) uses
+the pinned source and row-sidecar SHA-256 values above. It confirms each
+sidecar sample matches its source H5AD row, checks the RNA-QC and holdout
+dispositions, then copies only RNA-QC-passing rows with a non-mixed author
+embryo label. This is a conservative candidate: all 491 known source RNA-QC
+failures and all 494 passing rows labelled `embryomixed` are excluded. The
+result has 1,986 cells, 22,084 genes, 14,696,237 sparse nonzero values, and
+33 distinct author embryo labels. All 1,986 rows retain a
+`pending_independence_verification` status. It has no `embryo_id`, `stage`,
+`cell_type`, `assay`, or split assignment required by the training preparation
+contract.
+
+The local compressed candidate is 44,433,036 bytes at
+`logs/dataset_audit/nature2019_candidate/candidate_source_qc_filtered.h5ad`.
+It is ignored by Git to avoid storing a derived count matrix. Its SHA-256 is
+`92f6ee6ec8d24fb196d2f1f1490827d3d12f0167f1e21127ee0ce44290333081`;
+the tracked [provenance report](../../logs/dataset_audit/nature2019_candidate/candidate_h5ad_provenance.json)
+records the source and sidecar hashes, counts, exclusions, and remaining
+limits. A backed read confirmed the resulting H5AD shape and all retained
+RNA-QC and review labels.
+
+To reproduce on the current host, use the source path in the provenance report
+and choose unused output/report paths (the script refuses overwrites):
+
+```bash
+.venv/bin/python scripts/derive_nature2019_candidate_h5ad.py \
+  --source '/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature2019_E4.5-E7.5/小鼠_Mus_musculus__Single-cell multi-omics profiling of mouse early embryos.h5ad' \
+  --sidecar logs/dataset_audit/nature2019_candidate/candidate_rows.tsv \
+  --provenance logs/dataset_audit/nature2019_candidate/provenance.json \
+  --output /tmp/nature2019_candidate_source_qc_filtered.h5ad \
+  --report /tmp/nature2019_candidate_h5ad_provenance.json
+```
+
+This artifact does not decide corpus inclusion or make the source fit for
+training. The 33 remaining author labels still need independence and leakage
+review. Assay-specific QC, true assay token, cell-type and phase mappings, and
+owner/collaborator source selection remain open.

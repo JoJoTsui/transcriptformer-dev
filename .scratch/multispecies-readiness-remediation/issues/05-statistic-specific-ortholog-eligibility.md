@@ -204,6 +204,13 @@ first block are placeholders for a single registered species pair and phase.
 Keep this work off the constrained WSL host if producing B3 requires a model
 run.
 
+The [2026-09-30 producer audit](../../../docs/agents/b3-score-producer-audit-2026-09-30.md)
+confirms that upstream inference `llh` and `gene_llh` are different quantities
+from the required leave-one-gene-out, null-corrected impact score. Neither can
+be substituted for the missing B3 tables. The producer must freeze the
+likelihood target, normalization, deletion rule and cell/embryo provenance
+before generating the score and top-k artifacts below.
+
 ```sh
 STATISTICS=/path/to/frozen-statistics.json
 SCORES_A=/path/to/species-a-phase-scores.tsv

@@ -1,0 +1,20 @@
+# Ticket 05 B3 score producer audit — 2026-09-30
+
+Ticket 05's ortholog report, top-k verifier, paired-score handoff and descriptive comparators are ready for genuine B3 inputs. A bounded inventory of `runs/`, `logs/dataset_audit/`, the ticket directory and score-like file names in this checkout found no frozen per-species/per-phase likelihood-impact matrix, null-corrected z table or top-k request. The files in `runs/` are probe metadata and spatial H5AD copies. The small `test/data/*_val.h5ad` and reference embedding files are fixtures, not B3 output. No model run or broad download was made on this WSL host.
+
+## Native inference is not the B3 score
+
+The [upstream model inference method](https://github.com/czi-ai/transcriptformer/blob/main/src/transcriptformer/model/model.py) computes `llh` with `self.criterion`, a zero-truncated Poisson **count negative log likelihood**. In evaluation mode, [the loss](https://github.com/czi-ai/transcriptformer/blob/main/src/transcriptformer/model/losses.py) averages over nonmasked genes within each cell. The optional `gene_llh` is gene-ID token cross entropy from the unperturbed forward pass. The [default inference config](https://github.com/czi-ai/transcriptformer/blob/main/src/transcriptformer/cli/conf/inference_config.yaml) enables embeddings and leaves `llh` commented out. The [inference writer](https://github.com/czi-ai/transcriptformer/blob/main/src/transcriptformer/model/inference.py) can save `llh` per cell. None of these outputs is the proposed leave-one-gene-out `ΔL(c,g)`, an embryo-aggregated species/phase impact, or a matched-bin null z-score. Relabeling them as `null_corrected_z` would invalidate the statistic.
+
+This matters beyond missing files: the [B3 draft](../perturbation-and-baseline-design.md#1-null-model-for-likelihood-impact-scores-s1) calls its quantity `logL(c) - logL(c \ g)`, while the existing `llh` implementation is a per-cell mean count **loss**, not a summed joint gene-plus-count log likelihood. The B3 producer must freeze the precise likelihood target, sign convention, normalization across different sentence lengths, and deletion/re-tokenization rule before running the base and finetuned arms on identical cells. That decision must be recorded before inspecting the resulting rankings.
+
+## Minimum producer artifact contract
+
+For each named species and phase, the producer should supply:
+
+1. A frozen source artifact from actual paired unperturbed and gene-deleted model evaluations, or an inspectable upstream result with equivalent identity and hashes. Record checkpoint hash, source-data and split hashes, cell/embryo identity, phase assignment, gene universe, sequence ordering, count handling, deletion rule, exact `logL` computation, precision and software commit. Preserve base and finetuned arms separately.
+2. The raw `ΔL` observations or reproducible sufficient summaries with embryo IDs, bin assignment, expression and dropout summaries, per-bin null parameters, embryo count and the resulting finite null-corrected z for every scored canonical gene. Record the approved null/FDR settings and exclusion reasons.
+3. A complete `gene_id,null_corrected_z` TSV per stratum and its sidecar, matching the fields and size caps in [the top-k verifier](../../scripts/verify_ortholog_topk_origin.py), followed by the frozen statistic JSON. The score table must be traceable to the source artifact; the verifier checks hashes and ranking arithmetic, not scientific producer identity or completeness.
+4. A signed cross-species comparison plan defining the eligible ortholog universe, question/effect size, uncertainty or null procedure, multiple-comparison family and treatment of ties and missing pairs. The [current proposal](non-zebrafish-online-followup-2026-09-29.md#ticket-05-paired-comparison) is descriptive only until approved.
+
+With those artifacts, run the existing ticket 05 verifier, eligibility report, handoff and full-universe comparator. Until then, the final distributional-comparison acceptance item is unevaluable. No public upstream output found in the bounded code search supplies project-specific phase z-scores.

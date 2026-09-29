@@ -1,10 +1,13 @@
 # Development state and next steps (2026-09-23)
 
-**2026-09-28 superseding status:** The claim below that all collaborator-independent
+**2026-09-30 superseding status:** The claim below that all collaborator-independent
 engineering is complete was invalidated by the [adversarial review](adversarial-review-2026-09-28.md).
 The owner authorized [12 remediation tickets](../../.scratch/multispecies-readiness-remediation/README.md).
-Bounded implementation is underway; current evidence and unresolved external
-gates are in the [remediation evidence report](multispecies-remediation-evidence-2026-09-28.md).
+As of 2026-09-30, seven tickets are closed for bounded engineering acceptance;
+02, 05, 08 and 12 remain open, and 11 is excluded from the current continuation
+at the owner's request. The current state and unresolved external gates are in
+the [ticket index](../../.scratch/multispecies-readiness-remediation/README.md)
+and [remediation evidence report](multispecies-remediation-evidence-2026-09-28.md).
 The K–N entries below remain a historical record of their 2026-09-23 scope.
 
 Durable record for future development sessions: where the finetune-readiness

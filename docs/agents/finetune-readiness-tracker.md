@@ -14,8 +14,9 @@ The owner approved the checkpoint-selection policy in
 their completion evidence and WSL constraints. The owner subsequently requested
 [a specification](../../.scratch/multispecies-readiness-remediation/spec.md) and
 [12 implementation tickets](../../.scratch/multispecies-readiness-remediation/README.md).
-Implementation was authorized on 2026-09-28. Bounded CPU checks have verified
-the individual tools; integrated training selection remains in progress. The
+Implementation was authorized on 2026-09-28. Bounded CPU checks and remote
+finetune CI have verified the individual tools and integrated selection path;
+real-corpus selection evidence remains pending. The
 partial chicken identifier bridge still requires source-release review;
 additional zebrafish delivery, actual full-corpus
 preparation, accelerator behavior and scientific sign-off remain open.
@@ -28,6 +29,9 @@ shows why the 27-source bounded rehearsal and a local Nature2019 metadata check
 cannot serve as a final corpus or post-QC cohort. Ticket 05 now has a
 [producer-artifact closure runbook](../../.scratch/multispecies-readiness-remediation/issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison),
 but real B3 scores and a signed analysis method are still absent.
+The [B3 producer audit](b3-score-producer-audit-2026-09-30.md) also confirms
+that upstream inference `llh` and `gene_llh` are different from the planned
+deletion-based, null-corrected scores and cannot fill that gap.
 
 The later [Nature2019 source audit](nature2019-source-suitability-2026-09-29.md)
 recovered exact cell metadata and 491 source RNA-QC failures still present in
@@ -36,6 +40,9 @@ the local H5AD; it does not approve inclusion. On commit `fb2f648`, remote
 passed 337 selected tests and [change-scoped pre-commit CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896960)
 passed. Distributed launch is now smoke-checked on that runner, while per-rank
 RNG continuity across resume and real-corpus/GPU behavior remain unverified.
+An [isolated candidate H5AD](../../logs/dataset_audit/nature2019_candidate/candidate_h5ad_provenance.json)
+now contains 1,986 source-QC-passing, non-mixed cells. It is not part of the
+manifest and still lacks independent-embryo, assay, phase and cell-type approval.
 The [remediation index](../../.scratch/multispecies-readiness-remediation/README.md)
 now closes tickets 01, 03, 04, 06, 07, 09 and 10 for their bounded engineering
 acceptance. Ticket 08 remains open because its ticket-02 distributed-resume

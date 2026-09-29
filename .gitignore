@@ -199,3 +199,6 @@ cache/
 # Local data-remediation backup and captured validator output
 /.scratch/manifest_before.json
 /.scratch/validator_out.txt
+
+# Reproducible candidate matrix; retain its small JSON provenance in Git
+/logs/dataset_audit/nature2019_candidate/candidate_source_qc_filtered.h5ad

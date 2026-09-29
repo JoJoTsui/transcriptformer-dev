@@ -22,7 +22,7 @@ data, chicken identifier repair and production training remain separate gates.
 | [09 — Mark structurally unsupported B2 metrics unevaluable](issues/09-representation-metric-eligibility.md) | R6; tracker J | None | Closed for bounded engineering acceptance |
 | [10 — Enforce the single-cell cap when strata outnumber slots](issues/10-hard-sampling-cap.md) | Additional review edge case; sampler exposure | None | Closed for bounded engineering acceptance |
 | [11 — Require zebrafish training participation and track additional-source intake](issues/11-zebrafish-readiness-and-intake.md) | Owner requirement; pending collaborator data | 03, 10 | Excluded from this continuation by owner |
-| [12 — Reconcile progress records and validate the bounded remediation workflow](issues/12-readiness-evidence-and-ci.md) | All findings; readiness claims; WSL constraint | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 | Remote finetune CPU and change-scoped pre-commit CI passed; real-corpus, GPU and scientific gates open |
+| [12 — Reconcile progress records and validate the bounded remediation workflow](issues/12-readiness-evidence-and-ci.md) | All findings; readiness claims; WSL constraint | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 | Engineering evidence criteria met; cross-ticket real-corpus, GPU and scientific dependencies open |
 
 ## Dependency order
 
@@ -88,7 +88,10 @@ the owner's current instruction.
   can recompute vocabulary-joined pairs and score-available denominators; the
   comparison criterion remains open until real ranked scores and a frozen
   scientific method are available. The [ticket 05 closure runbook](issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison)
-  lists the required producer artifacts and commands.
+  lists the required producer artifacts and commands. The
+  [B3 producer audit](../../docs/agents/b3-score-producer-audit-2026-09-30.md)
+  explains why upstream `llh` and `gene_llh` cannot substitute for
+  deletion-based, null-corrected impact scores.
 - **Still pending separately:** corpus/QC/assay/training sampling decisions, B1
   sign-off, missing probe vocabularies, complete preparation and actual-model/GPU
   evidence. The [probe vocabulary audit](../../docs/agents/b4-vocabulary-join-audit-2026-09-29.md)

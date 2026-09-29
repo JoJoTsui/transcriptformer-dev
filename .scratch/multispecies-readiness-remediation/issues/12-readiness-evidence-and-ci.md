@@ -1,7 +1,7 @@
 # 12 — Reconcile progress records and validate the bounded remediation workflow
 
 Category: correctness and readiness
-Status: Implemented locally; external readiness gates remain open
+Status: Engineering acceptance evidenced; open on cross-ticket scientific and production dependencies
 Priority: P2
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11
@@ -14,13 +14,13 @@ Integrate the new behavioral checks into the existing CPU CI selection and recon
 
 ## Acceptance Criteria
 
-- [ ] Ensure existing CI path filters and explicit CPU test selection include the new remediation regressions, including ortholog coverage tests.
-- [ ] Run focused suites under measured WSL limits with bounded fixtures, capped native threads and sequential memory-heavy processes; do not raise existing process limits.
-- [ ] Record commands, outcomes and limitations per ticket. Socket/GPU restrictions and unresolved mapping/data assets are explicit gaps, not passing results.
-- [ ] Replace obsolete completion claims with precise states while retaining prior review evidence. Fix both language versions of affected issue-register entries.
-- [ ] Document prepared coverage commands, selection reports/resume semantics, ortholog input-specific eligibility, metric unavailability and zebrafish intake/freeze status.
-- [ ] Do not close R2 as an asset repair without a verified mapping, or declare training/scientific readiness from tooling tests. Preserve pending collaborator and B1 decisions.
-- [ ] Confirm source files, checkpoint assets and scientific thresholds were not silently mutated during validation; no full-corpus preparation, GPU run or embedding generation is needed.
+- [x] Ensure existing CI path filters and explicit CPU test selection include the new remediation regressions, including ortholog coverage tests.
+- [x] Run focused suites under measured WSL limits with bounded fixtures, capped native threads and sequential memory-heavy processes; do not raise existing process limits.
+- [x] Record commands, outcomes and limitations per ticket. Socket/GPU restrictions and unresolved mapping/data assets are explicit gaps, not passing results.
+- [x] Replace obsolete completion claims with precise states while retaining prior review evidence. Fix both language versions of affected issue-register entries.
+- [x] Document prepared coverage commands, selection reports/resume semantics, ortholog input-specific eligibility, metric unavailability and zebrafish intake/freeze status.
+- [x] Do not close R2 as an asset repair without a verified mapping, or declare training/scientific readiness from tooling tests. Preserve pending collaborator and B1 decisions.
+- [x] Confirm source files, checkpoint assets and scientific thresholds were not silently mutated during validation; no full-corpus preparation, GPU run or embedding generation is needed.
 
 ## Testing Seam
 
@@ -61,3 +61,11 @@ both passed on commit `fb2f648` (337 selected finetune tests). Untouched
 formatting debt is outside that change-scoped result and remains subject to
 the hooks when its files change. Real-corpus, GPU, scientific and distributed
 resume-continuity evidence remain open.
+
+The seven acceptance boxes above cover ticket 12's bounded engineering and
+record-keeping contract, as evidenced by the local command record and remote
+CI. They are checked without closing the ticket's cross-ticket dependency:
+ticket 02 still lacks a two-rank interrupted/resumed proof, ticket 05 lacks
+real B3 inputs and an approved method, and the final corpus/B1 and production
+evidence are not frozen. The current owner instruction excludes new zebrafish
+work; historical ticket-11 intake documentation is retained as prior evidence.

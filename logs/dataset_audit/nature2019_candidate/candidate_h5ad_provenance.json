@@ -1,0 +1,38 @@
+{
+  "status": "candidate_only_not_approved_for_corpus_or_holdout",
+  "source_h5ad": {
+    "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature2019_E4.5-E7.5/小鼠_Mus_musculus__Single-cell multi-omics profiling of mouse early embryos.h5ad",
+    "sha256": "788374a277000c16a27f0350ce2e7f9bd29f3a809caf06869b0cf51f66e07e65",
+    "rows": 2971
+  },
+  "row_sidecar": {
+    "path": "/mnt/d/sc/transcriptformer/transcriptformer/logs/dataset_audit/nature2019_candidate/candidate_rows.tsv",
+    "sha256": "841d5d115bce077a02c05f7d2e49251d2ad3ccd0f061f8fb3613d668ba566c3a"
+  },
+  "metadata_provenance": "/mnt/d/sc/transcriptformer/transcriptformer/logs/dataset_audit/nature2019_candidate/provenance.json",
+  "candidate_h5ad": {
+    "path": "/mnt/d/sc/transcriptformer/transcriptformer/logs/dataset_audit/nature2019_candidate/candidate_source_qc_filtered.h5ad",
+    "sha256": "92f6ee6ec8d24fb196d2f1f1490827d3d12f0167f1e21127ee0ce44290333081",
+    "size_bytes": 44433036,
+    "rows": 1986,
+    "genes": 22084,
+    "nonzero_values": 14696237
+  },
+  "excluded_rows": {
+    "mixed_embryo_label": 494,
+    "source_rna_qc_fail": 491
+  },
+  "retained_stage_counts": {
+    "E4.5": 175,
+    "E5.5": 173,
+    "E6.5": 590,
+    "E7.5": 1048
+  },
+  "retained_embryo_labels": 33,
+  "limitations": [
+    "All known source RNA-QC failures and all mixed embryo labels were excluded.",
+    "Remaining embryo labels have not been verified as independent split units.",
+    "No assay-specific additional QC, assay token, cell type, phase, split, or corpus inclusion is approved.",
+    "The filtered count matrix has not been compared row-for-row with the public GEO source."
+  ]
+}
