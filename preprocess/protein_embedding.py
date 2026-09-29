@@ -227,7 +227,6 @@ def main():
 
     # Convert to gene IDs
     new_records = []
-    seen_names = set()
     for record in SeqIO.parse(fasta_file, "fasta"):
         if not args.use_large_model:
             gene_id = record.description.split("gene:")[-1].split(" ")[0].strip().split(".")[0]
@@ -237,9 +236,6 @@ def main():
             else:
                 gene_id = record.description.split("gene_symbol:")[-1].split(" ")[0].strip()
 
-        if gene_id in seen_names:
-            continue
-        seen_names.add(gene_id)
         record.id = gene_id
         record.name = gene_id
         new_records.append(record)

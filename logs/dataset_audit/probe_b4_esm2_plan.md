@@ -112,6 +112,16 @@ were repaired on 2026-09-29; chunking/resume remain open):
 4. **Resolved path footgun:** the FASTA manifest and stable-ID cache now resolve
    relative to `preprocess/protein_embedding.py`, independent of the invocation
    directory. `--output_dir` still resolves from the caller's working directory.
+5. **Protein aggregation discrepancy (code adjusted, not run):** the [TranscriptFormer author preprint,
+   Methods 1.4](https://www.biorxiv.org/content/10.1101/2025.04.25.650731v1)
+   describes averaging ESM-2 protein embeddings when a gene has multiple
+   proteins. The public generator had dropped every protein after the first
+   encountered `gene_id` while rewriting FASTA (`seen_names`), before its
+   existing accumulation/mean step. The local script now retains all protein
+   records for that step; no embedding job or runtime validation was run. The
+   Ghost audit found 8,908 Ciona gene roots with multiple protein records.
+   Resolve the Ghost header-to-gene rewrite, chunk/resume behavior and assay
+   resource plan before generating new B4 assets.
 
 ## 4. Pre-generated ESM-2 embeddings for sus_scrofa / xenopus_tropicalis — provenance
 

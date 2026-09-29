@@ -71,3 +71,16 @@ shows 6,129 usable human–chicken pairs out of 12,166 raw pairs. The
 evidence and hashes. The 9,611 remaining checkpoint genes are unresolved;
 the producer's exact annotation release and scientific review remain open.
 R2 is not closed by this partial genome-wide join.
+
+Article/code follow-up on 2026-09-29: The author preprint says pretraining and
+evaluation gene features were updated to Ensembl v113, and the later public
+preprocessing manifest points chicken to release-113 GRCg7b. Neither is bound
+to the released chicken HDF5, whose old-prefix genes match GRCg6a archives.
+The initial public repository's `test/data/chicken_val.h5ad` contains all
+16,878 checkpoint chicken keys in the same old namespace. A bounded audit of
+official release-99/100/101/106 GRCg6a peptide FASTAs found identical
+per-gene protein-sequence multisets across all four; even sequence-based
+fingerprinting cannot select one exact release. See the
+[provenance follow-up](../../../docs/agents/chicken-identifier-provenance-2026-09-28.md#article-code-and-peptide-follow-up--2026-09-29).
+The exact source now requires a producer build manifest/log or artifact record
+tied to the HDF5 hash. Release 106 remains a reference mapping release only.
