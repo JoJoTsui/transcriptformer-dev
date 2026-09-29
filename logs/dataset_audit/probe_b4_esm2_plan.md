@@ -70,20 +70,21 @@ Whole-proteome embeddings are held in RAM and re-pickled after every batch (~0.5
 duplicated); batch token budget at the default `--batch_size 16` is 65,536 tokens/batch — too
 large for 24 GB with a 3B model; use `--batch_size 1-2` (4,096-8,192 tokens) or fix chunking first.
 
-Known defects of `preprocess/protein_embedding.py` (recorded, **not fixed** — out of scope):
+Known limits of `preprocess/protein_embedding.py` (the CPU guard and path resolution
+were repaired on 2026-09-29; chunking/resume remain open):
 1. **`fair-esm`/`esm` is NOT installed in `.venv`** (verified `ModuleNotFoundError: No module
    named 'esm'`; `Bio`/biopython is also missing and imported at module top) — the script cannot
    even import today.
-2. **Embedding computation happens only inside `if torch.cuda.is_available():`** (the model
-   forward, pooling and accumulation in `generate_embeddings`); a CPU run iterates the loader and
-   **silently produces an empty `keys`/`arrays` HDF5** with no error.
+2. **CUDA remains required.** The model forward, pooling and accumulation occur
+   only on the CUDA path. A CPU invocation now fails before writing an output,
+   preventing the former silent empty `keys`/`arrays` HDF5 result. CPU inference
+   itself has not been implemented.
 3. **No chunked-inference mode** although register 8.1 requires chunking on this memory-limited
    host (~26 GiB RAM). There is also no resume (the `.tmp` pickle is written but never reloaded)
    and the batch token budget above is not clamped to VRAM.
-4. Footgun: `FASTA_MANIFEST = "fasta_manifest_pep.json"` and `STABLE_ID_DIR` resolve relative to
-   the **current working directory**, so the commands above must be run with CWD = `preprocess/`
-   (with `--output_dir ../../checkpoints/tf_metazoa_finetuned/vocabs`) or the manifest must be
-   staged at the CWD; as written from the repo root they fail to find the manifest.
+4. **Resolved path footgun:** the FASTA manifest and stable-ID cache now resolve
+   relative to `preprocess/protein_embedding.py`, independent of the invocation
+   directory. `--output_dir` still resolves from the caller's working directory.
 
 ## 4. Pre-generated ESM-2 embeddings for sus_scrofa / xenopus_tropicalis — provenance
 

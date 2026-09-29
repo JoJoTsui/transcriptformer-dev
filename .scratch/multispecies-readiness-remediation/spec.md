@@ -150,7 +150,10 @@ grill-with-docs decisions. Its sources are [the review](../../docs/agents/advers
 and the existing domain glossary and scientific design documents.
 
 The review's 96 passing tests are historical evidence, not validation of this
-unimplemented specification. Local inspection found 63,530 existing zebrafish
+specification. Bounded tooling implementation was subsequently authorized on
+2026-09-28; see the [ticket index](README.md) and
+[readiness tracker](../../docs/agents/finetune-readiness-tracker.md) for current
+evidence and remaining gates. Local inspection found 63,530 existing zebrafish
 observations and a historical 128-row successful rehearsal. Neither establishes
 full preparation or actual training exposure. The WSL snapshot was approximately
 31.3 GiB total RAM, 28.5 GiB available and 8 GiB swap; it is not a permanent budget.

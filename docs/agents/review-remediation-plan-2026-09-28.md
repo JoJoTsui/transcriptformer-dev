@@ -1,12 +1,17 @@
 # Remediation plan for the 2026-09-28 adversarial review
 
-Status: specified and ticketed; implementation explicitly held by the owner.
+Status: specified and ticketed; bounded tooling implementation authorized on
+2026-09-28 and recorded in the ticket index. External scientific and data gates
+remain open.
 Checkpoint-selection decisions are accepted in
-[ADR 0004](../adr/0004-multispecies-checkpoint-selection.md). The owner requested
-specs and tickets instead of implementation. See the
+[ADR 0004](../adr/0004-multispecies-checkpoint-selection.md). The owner initially
+requested specs and tickets before implementation, then authorized implementation
+on 2026-09-28. See the
 [specification](../../.scratch/multispecies-readiness-remediation/spec.md) and
 [12-ticket index](../../.scratch/multispecies-readiness-remediation/README.md).
-No finding is resolved merely by this plan or its ready-for-agent tickets.
+No finding is resolved merely by this plan or its ready-for-agent tickets;
+consult the ticket evidence and [readiness tracker](finetune-readiness-tracker.md)
+for current bounded-tooling status.
 
 The objective is reliable multispecies embryogenic inference. The
 [review](adversarial-review-2026-09-28.md) establishes seven findings and two

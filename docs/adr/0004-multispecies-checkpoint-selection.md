@@ -1,7 +1,7 @@
 # Equal species and embryo weight for checkpoint selection
 
-Status: accepted checkpoint-selection policy; implementation explicitly held
-by the owner while specs and tickets are prepared.
+Status: accepted checkpoint-selection policy; bounded implementation was
+authorized on 2026-09-28. Scientific and external-data gates remain open.
 
 The project targets multispecies embryogenic inference. The owner approved equal
 weight for each evaluable species, with equal weight for each independent embryo
@@ -90,9 +90,11 @@ Equal phase weighting within embryos was considered and rejected. Representing
 each phase in the bounded sample while retaining post-QC proportions exposes
 rare-phase behavior without allowing a small phase group to dominate its embryo.
 
-The owner requested specification and ticket publication instead of implementation.
+The owner initially requested specification and ticket publication before implementation.
 The resulting [specification](../../.scratch/multispecies-readiness-remediation/spec.md)
 and [ticket index](../../.scratch/multispecies-readiness-remediation/README.md)
-record the work; ready-for-agent triage does not override the implementation hold.
+record the work. The owner subsequently authorized implementation on 2026-09-28;
+the [readiness tracker](../agents/finetune-readiness-tracker.md) records bounded
+evidence and unresolved gates.
 The host is WSL; validation work must respect measured hardware limits and use
 bounded fixtures and metadata reads during development.

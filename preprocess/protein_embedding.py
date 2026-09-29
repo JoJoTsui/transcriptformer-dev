@@ -16,8 +16,9 @@ from Bio import SeqIO
 from esm import FastaBatchedDataset
 from esm.data import Alphabet
 
-STABLE_ID_DIR = "gene_protein_stable_ids/"
-FASTA_MANIFEST = "fasta_manifest_pep.json"
+PREPROCESS_DIR = Path(__file__).resolve().parent
+STABLE_ID_DIR = PREPROCESS_DIR / "gene_protein_stable_ids"
+FASTA_MANIFEST = PREPROCESS_DIR / "fasta_manifest_pep.json"
 
 
 def save_as_hdf5(data_dict, output_path):
@@ -90,6 +91,9 @@ def generate_embeddings(
     -------
         None
     """
+    if not torch.cuda.is_available():
+        raise RuntimeError("Protein embedding generation requires CUDA; refusing to write an empty output")
+
     save_dir = os.path.dirname(save_file)
     if save_dir and not os.path.exists(save_dir):
         os.makedirs(save_dir)
@@ -170,6 +174,9 @@ def main():
         help="Whether to use the large ESM-2 model",
     )
     args = parser.parse_args()
+
+    if not torch.cuda.is_available():
+        parser.error("Protein embedding generation requires CUDA; no output was written")
 
     logging.basicConfig(level=logging.INFO)
 
