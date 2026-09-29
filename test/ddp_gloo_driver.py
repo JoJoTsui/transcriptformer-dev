@@ -14,9 +14,20 @@ def main() -> None:
     tmp_path = Path(sys.argv[1])
 
     import transcriptformer.finetune.train as train_module
+    from test.fixtures import make_synthetic_h5ad
     from test.test_train import _make_cfg, _make_gene_vocab, _make_tiny_model, _write_training_files
 
     manifest, legacy_report = _write_training_files(tmp_path)
+    # The legacy helper writes one embryo per file. Preparation intentionally
+    # pins those sources to training, so add a small multi-embryo source to
+    # exercise the frozen validation cohort before DDP begins.
+    validation_source = make_synthetic_h5ad(
+        tmp_path / "multi_embryo.h5ad",
+        embryo_ids=[f"cohort_{embryo}" for embryo in ("a", "b", "c") for _ in range(4)],
+    )
+    manifest["datasets"].append(
+        {"path": str(validation_source), "species": "synthetic", "dataset_type": "single_cell"}
+    )
     # Exercise the public validation gate with genuine preparation evidence.
     from transcriptformer.finetune.prepare import prepare_run
 
