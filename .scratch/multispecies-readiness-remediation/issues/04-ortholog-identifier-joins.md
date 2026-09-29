@@ -76,6 +76,11 @@ Article/code follow-up on 2026-09-29: The author preprint says pretraining and
 evaluation gene features were updated to Ensembl v113, and the later public
 preprocessing manifest points chicken to release-113 GRCg7b. Neither is bound
 to the released chicken HDF5, whose old-prefix genes match GRCg6a archives.
+Ensembl also publishes GRCg6a as a release-113 alternative assembly, so the
+paper's release number and the old-ID namespace can coexist. Its official
+peptide FASTA contains only 14,204 of the 16,878 checkpoint keys, however:
+2,674 checkpoint genes are missing and 2,873 extra genes appear. This rules
+out a direct unfiltered build from that particular release-113 FASTA.
 The initial public repository's `test/data/chicken_val.h5ad` contains all
 16,878 checkpoint chicken keys in the same old namespace. A bounded audit of
 official release-99/100/101/106 GRCg6a peptide FASTAs found identical

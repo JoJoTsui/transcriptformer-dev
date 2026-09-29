@@ -215,13 +215,14 @@ The [author preprint, Methods 1.1.1–1.1.2](https://www.biorxiv.org/content/10.
 states that pretraining and evaluation gene features were updated to Ensembl
 stable IDs at **v113**. The [published Science article](https://doi.org/10.1126/science.aec8514)
 summarizes mapping to Ensembl stable IDs without naming a release in its main
-methods summary. This stated v113 processing target is an **apparent provenance
-conflict**, not evidence that the released chicken embedding HDF5 uses release
-113: its 16,878 gene keys all have the GRCg6a-era `ENSGALG000000…` namespace,
-and GRCg7b became Ensembl's main chicken assembly at release 107. The preprint
-does not bind a specific FASTA, assembly or generation log to this HDF5 hash.
-An alternative-assembly source within a later release, or an exception in the
-data/embedding workflow, cannot be ruled out from the prose.
+methods summary. The v113 statement does not identify the released chicken
+embedding HDF5's source: its 16,878 gene keys all have the GRCg6a-era
+`ENSGALG000000…` namespace, while GRCg7b became Ensembl's main chicken
+assembly at release 107. Crucially, [Ensembl's release-113 species list](https://oct2024.rest.ensembl.org/documentation/info/species)
+also includes the **GRCg6a alternative assembly** under
+`gallus_gallus_gca000002315v5` (`GCA_000002315.5`). Thus v113 and an old-ID
+namespace are not inherently contradictory. The preprint does not bind a
+specific FASTA, assembly or generation log to this HDF5 hash.
 
 The producer's [protein FASTA manifest](https://github.com/czi-ai/transcriptformer/blob/181193c/preprocess/fasta_manifest_pep.json)
 specifies chicken **release 113 GRCg7b**, but first appeared with the
@@ -250,14 +251,15 @@ checkpoint chicken vocabulary keys present. Its one `dataset_id` is
 inference example in the initial public package; it does not prove the training
 corpus or embedding FASTA release.
 
-The four official archived GRCg6a peptide FASTAs below were streamed from
+The five official archived GRCg6a peptide FASTAs below were streamed from
 `/tmp` without loading the model or expression matrix. For each FASTA header,
 the `gene:` stable ID was stripped of its version suffix and each amino-acid
-sequence was SHA-256 hashed. All four have **28,444 protein records from exactly
-the 16,878 checkpoint genes**, with no missing or extra gene keys. For each
-gene, the multiset of protein-sequence hashes is identical across all four
-releases. The canonical digest of lines `gene_id<TAB>sorted protein hashes`,
-sorted by gene ID and newline-terminated, is the same for all:
+sequence was SHA-256 hashed. Releases 99/100/101/106 each have **28,444 protein
+records from exactly the 16,878 checkpoint genes**, with no missing or extra
+gene keys. For each gene, the multiset of protein-sequence hashes is identical
+across those four releases. The canonical digest of lines
+`gene_id<TAB>sorted protein hashes`, sorted by gene ID and newline-terminated,
+is the same for those four:
 `edb6c87effe2c0412228f45b8cf271eccd9fc3eda92332ebb1cc54363e3352e9`.
 
 | Release and official peptide FASTA | Compressed SHA-256 | Records / genes / checkpoint joins |
@@ -266,17 +268,26 @@ sorted by gene ID and newline-terminated, is the same for all:
 | [100](https://ftp.ensembl.org/pub/release-100/fasta/gallus_gallus/pep/Gallus_gallus.GRCg6a.pep.all.fa.gz) | `370810259a383f273889b5b68ec6f18b92587a63442c69e6e493493c1291c9e6` | 28,444 / 16,878 / 16,878 |
 | [101](https://ftp.ensembl.org/pub/release-101/fasta/gallus_gallus/pep/Gallus_gallus.GRCg6a.pep.all.fa.gz) | `7a07780b480b64dcd82a71bbef3053120e10780f245655a1c71bf91b6f1cadab` | 28,444 / 16,878 / 16,878 |
 | [106](https://ftp.ensembl.org/pub/release-106/fasta/gallus_gallus/pep/Gallus_gallus.GRCg6a.pep.all.fa.gz) | `cabe20ffd9caf961d33f40e4dc94332fb8f39863661be8f9818777129c48da98` | 28,444 / 16,878 / 16,878 |
+| [113 alternative GRCg6a assembly](https://ftp.ensembl.org/pub/release-113/fasta/gallus_gallus_gca000002315v5/pep/Gallus_gallus_gca000002315v5.GRCg6a.pep.all.fa.gz) | `24951bfcfff9c4db23d4dc21f5b15af16dff91be789480bda834c1c1992bd3d9` | 44,826 / 17,077 / 14,204 |
 
-This stronger fingerprint makes **protein-sequence matching incapable of
-distinguishing releases 99, 100, 101 and 106** for this set. It makes those
-archives compatible candidates; it does not prove any one produced the HDF5.
-The exact release can only be recovered from provenance outside the released
-gene-key/protein-sequence content, such as the producer's original build
-manifest/log, archived input FASTA URL or hash, or a versioned artifact record
-bound to this vocabulary SHA-256. A producer clarification should ask how the
-preprint's v113 mapping relates to the old-ID chicken embedding and whether a
-separate GRCg6a annotation source was used. Pending that, release 106 remains
-an explicit **reference mapping release**, not an asserted checkpoint origin.
+The release-113 alternative assembly is a materially different annotation:
+**2,674** checkpoint genes have no peptide in that archive, while it has
+**2,873** genes absent from the checkpoint. Among the 14,204 shared genes,
+12,110 have different per-gene protein-sequence multisets from release 106.
+Its canonical digest under the same rule is
+`2aa531f8a129750f10ccb35feace1f46843ef4d94c61b759f7764b6dd3046917`.
+It therefore cannot explain the complete checkpoint vocabulary as a direct
+unfiltered build from that official release-113 peptide FASTA. The paper's
+v113 feature mapping may describe a different processing step or source; the
+code and paper do not resolve which.
+
+Protein-sequence matching remains incapable of distinguishing releases 99,
+100, 101 and 106 for this set. Those are compatible candidates, but none is
+proven to have produced the HDF5. The exact source needs evidence outside the
+released gene-key/protein-sequence content, such as the producer's original
+build manifest/log, archived input FASTA URL or hash, or a versioned artifact
+record bound to this vocabulary SHA-256. Pending that, release 106 remains an
+explicit **reference mapping release**, not an asserted checkpoint origin.
 
 The smallest decisive producer evidence request is: (1) the original chicken
 embedding build manifest or command, including FASTA URL, Ensembl release,
@@ -285,9 +296,10 @@ FASTA hash and the resulting `gallus_gallus_gene.h5` hash; and (3) an
 explanation of the preprint's v113 statement alongside the old-ID file in the
 S3 archive version above. If the producer cannot recover this record, a
 scientific owner may explicitly adopt the evidenced **GRCg6a 99/100/101/106
-equivalence class** and release 106 as a mapping reference, while recording
-the exact producer release as unknown. This is a proposed decision path, not
-an automatic closure of the 9,611 unresolved identifier mappings.
+peptide-content equivalence class** and release 106 as a mapping reference,
+while recording the exact producer release as unknown. This is a proposed
+decision path, not an automatic closure of the 9,611 unresolved identifier
+mappings.
 
 ## Remaining provenance and scientific review
 

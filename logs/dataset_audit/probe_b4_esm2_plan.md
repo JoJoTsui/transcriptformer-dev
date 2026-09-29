@@ -50,9 +50,11 @@ the other 41 probe keys are 39
 ENSCING IDs and two constructs. This verifies a candidate identifier bridge,
 not the biological equivalence of every protein isoform or a generated vocab.
 Of the 15,285 roots, 8,908 have multiple protein records (maximum 154), so a
-deterministic, documented per-gene protein-selection/aggregation rule is needed
-before embedding generation. The current generator does not read ZIP and would
-not add the `KH2012:` prefix. Keep the raw Ghost ZIP outside the repository,
+deterministic, documented per-gene aggregation rule is needed before embedding
+generation. The author preprint specifies averaging protein embeddings per
+gene, and the local generator now retains multiple isoforms for that mean;
+this has not been verified on Ghost data. The current generator does not read
+ZIP and would not add the `KH2012:` prefix. Keep the raw Ghost ZIP outside the repository,
 attribute the source, and do not redistribute its files without permission
 under the page's stated terms. No expression matrix was opened.
 
