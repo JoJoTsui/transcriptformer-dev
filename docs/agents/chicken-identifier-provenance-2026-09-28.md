@@ -66,6 +66,14 @@ no additional release fingerprint. Archived peptide FASTA files were not
 available locally, and this audit's retrieval attempt failed at DNS resolution;
 their order and sequences remain unchecked.
 
+A deeper metadata audit found no HDF5 attributes on the root, `keys`,
+`arrays`, or any of the 16,878 per-gene datasets. The local checkpoint config
+also lacks an annotation release. The producer's
+[model card](https://virtualcellmodels.cziscience.com/model/transcriptformer)
+identifies the model download but does not state the chicken annotation build.
+An S3 object-metadata request failed at DNS resolution during this audit, so
+it supplied no release evidence.
+
 The official GRCg7b core MySQL dumps for [release 107](https://ftp.ensembl.org/pub/release-107/mysql/gallus_gallus_core_107_7/)
 and [release 110](https://ftp.ensembl.org/pub/release-110/mysql/gallus_gallus_core_110_7/)
 each publish `mapping_session.txt.gz` and `stable_id_event.txt.gz` as 20-byte

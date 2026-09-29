@@ -129,16 +129,26 @@ def mapped_pairs(rows, species_a, species_b, mapping=None, ambiguous=None):
     return {(a, b) for a, b in converted if count_a[a] == 1 and count_b[b] == 1}
 
 
+STATISTIC_REQUIRED_FIELDS = ("species_a", "species_b", "phase", "statistic", "provenance")
+
+
+def validate_statistic_identity(request):
+    if not isinstance(request, dict):
+        raise ValueError("Statistic request must be a JSON object")
+    for key in STATISTIC_REQUIRED_FIELDS:
+        value = request.get(key)
+        if not isinstance(value, str) or not value or value != value.strip():
+            raise ValueError(f"Statistic {key} must be a nonempty trimmed string")
+
+
 def evaluate_statistic(
     rows, request, *, min_fraction=0.6, min_pairs=5000,
     genome_wide_pairs=None, gene_universes_available=True,
 ):
     """Evaluate the two independent registered floors for one named comparison."""
-    required = ("species_a", "species_b", "phase", "statistic", "provenance")
-    if any(not request.get(key) for key in required):
-        raise ValueError("Statistic requires species pair, phase, statistic and provenance")
+    validate_statistic_identity(request)
     genes_a, genes_b = request.get("genes_a"), request.get("genes_b")
-    result = {key: request[key] for key in required}
+    result = {key: request[key] for key in STATISTIC_REQUIRED_FIELDS}
     result["genome_wide_pairs"] = len(rows) if genome_wide_pairs is None else genome_wide_pairs
     result["pass_min_pairs_floor"] = result["genome_wide_pairs"] >= min_pairs
     for field, genes in (("genes_a", genes_a), ("genes_b", genes_b)):
@@ -223,13 +233,21 @@ def main():
     if args.statistics:
         requests = json.loads(args.statistics.read_text())["statistics"]
         for request in requests:
+            validate_statistic_identity(request)
             key = (request["species_a"], request["species_b"])
+            reverse = (key[1], key[0])
+            rows = list(pairs.get(key, []))
+            joined_rows = set(joined.get(key, set()))
+            if reverse != key:
+                rows.extend((gene_b, gene_a) for gene_a, gene_b in pairs.get(reverse, []))
+                joined_rows.update((gene_b, gene_a) for gene_a, gene_b in joined.get(reverse, set()))
             genes_available = vocab(key[0]) is not None and vocab(key[1]) is not None
             # The pair floor is genome-wide, but statistic coverage must use
             # identifiers that survived the actual model-vocabulary join.
-            genome_wide = mapped_pairs(pairs.get(key, []), *key, mapping, ambiguous)
+            # A request may name the species in either table orientation.
+            genome_wide = mapped_pairs(rows, *key, mapping, ambiguous)
             report["statistics"].append(evaluate_statistic(
-                joined.get(key, set()) & genome_wide, request,
+                joined_rows & genome_wide, request,
                 genome_wide_pairs=len(genome_wide),
                 gene_universes_available=genes_available,
             ))

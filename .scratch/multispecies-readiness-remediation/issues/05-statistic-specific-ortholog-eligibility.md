@@ -80,6 +80,15 @@ comparison method, consume only the reported paired intersection, and publish
 its result, denominator and exclusions. Do not treat `comparison_supported`
 as an observed biological result.
 
+Downstream score handoff (pending B3 artifacts and scientific method sign-off):
+freeze canonical-gene-ID keyed, finite null-corrected z-score tables for each
+species and phase, with hashes, model/run and input-data identity, phase
+assignment, score definition, and the gene-list selection rule. Verify each
+submitted statistic gene list against its frozen table. Pair scores only through
+the eligibility report's `comparable_pairs`, then publish the chosen method,
+paired denominator, exclusions and reasons, result, and input/report hashes.
+This records the required inputs without choosing an unapproved test statistic.
+
 Reaudit on 2026-09-29 included ignored local artifacts without opening the
 large spatial matrices. The only files under `runs/` are probe-readiness
 metadata, a spatial-copy manifest, and spatial H5AD copies. The files under
@@ -91,3 +100,8 @@ distributional-comparison acceptance criterion remains unevaluable from
 current artifacts. The report now rejects duplicate IDs after canonicalization,
 including stable-ID version collisions, rather than silently shrinking the
 60% denominator.
+
+The report also accepts either species-pair order for a named statistic. It
+orients the finalized table and vocabulary-joined pairs to the request before
+computing the independent floors, preventing a valid reverse-order request
+from being falsely labeled ineligible because its exact table key was absent.

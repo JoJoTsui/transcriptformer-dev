@@ -110,10 +110,11 @@ For scientific eligibility, pass `--statistics` with JSON shaped as:
 {"statistics": [{"species_a": "homo_sapiens", "species_b": "mus_musculus", "phase": "gastrula", "statistic": "impact_top_200", "provenance": "run-and-ranking-hash", "genes_a": ["ENSG..."], "genes_b": ["ENSMUSG..."]}]}
 ```
 
-The `genes_a` and `genes_b` values must be JSON arrays of nonempty gene-ID
-strings. An omitted or empty array is reported as unevaluable; a string in
-place of an array is rejected because treating its characters as separate genes
-would produce a false denominator. Duplicate IDs after gene-ID
+The species names, phase, statistic name and provenance label must be nonempty
+trimmed strings. The `genes_a` and `genes_b` values must be JSON arrays of
+nonempty gene-ID strings. An omitted or empty array is reported as unevaluable;
+a string in place of an array is rejected because treating its characters as
+separate genes would produce a false denominator. Duplicate IDs after gene-ID
 canonicalization, including stable-ID version collisions, are also rejected
 so they cannot silently shrink the coverage denominator. The `provenance`
 field is a label, not a verified link to the rankings. To freeze a real request,
@@ -128,6 +129,8 @@ from the stated ranking run.
 
 Each side's mapped fraction uses its own input genes. The 5,000-pair floor uses
 the finalized one-to-one table after disagreement and ambiguity filtering.
+Species pair order in a statistic request may be reversed relative to the
+table; the report orients gene IDs to the request before applying either floor.
 The 60% fraction and `comparable_pairs` use only pairs that also join both
 model vocabularies. `comparable_pairs` is the smaller intersection where both
 input sets contain the paired genes; distributional comparisons must use this
@@ -162,6 +165,17 @@ contains gene IDs but no scores, and this command does not perform a
 distributional test or publish its result. Ticket 05's distributional-analysis
 criterion remains open until a named B3 analysis supplies scores and method,
 uses those pairs, and records its result and exclusions.
+
+For that handoff, freeze one scored gene table per species and phase, keyed by
+canonical gene ID, with finite null-corrected z-scores from the B3 analysis.
+Record each table's SHA-256, model/run and input-data identity, phase assignment,
+score definition, and the selection rule that produced the submitted gene list.
+The downstream analysis must verify the submitted `genes_a` and `genes_b`
+against those frozen tables, then pair scores using only this report's
+`comparable_pairs`. Its result must name the comparison method, paired-gene
+denominator, excluded genes and reasons, and the report and score-table hashes.
+The method and any inferential claim require scientific sign-off before use;
+this handoff does not select a test or turn an eligibility report into a result.
 
 A 2026-09-29 audit of ignored local artifacts found no newer score or ranking
 output: `runs/` contains probe-readiness metadata, a spatial-copy manifest,
