@@ -147,6 +147,11 @@ def evaluate_statistic(
             or any(not isinstance(gene, str) or not gene.strip() for gene in genes)
         ):
             raise ValueError(f"{field} must be a JSON array of nonempty gene IDs")
+        if genes:
+            species = request["species_a" if field == "genes_a" else "species_b"]
+            canonical = [canonical_gene_id(species, gene) for gene in genes]
+            if len(canonical) != len(set(canonical)):
+                raise ValueError(f"{field} contains duplicate canonical gene IDs")
     if not genes_a or not genes_b:
         return {**result, "status": "unevaluable", "reason": "missing_or_empty_statistic_input",
                 "floors_pass": None, "comparison_supported": None}

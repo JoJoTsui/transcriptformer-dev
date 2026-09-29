@@ -113,11 +113,14 @@ For scientific eligibility, pass `--statistics` with JSON shaped as:
 The `genes_a` and `genes_b` values must be JSON arrays of nonempty gene-ID
 strings. An omitted or empty array is reported as unevaluable; a string in
 place of an array is rejected because treating its characters as separate genes
-would produce a false denominator. The `provenance` field is a label, not a
-verified link to the rankings. To freeze a real request, retain the complete
-ranked gene output for each species and phase, the model/run identity, the
-ranking method and selection rule (including how ties and the top-k boundary
-were handled), input data/split identity, and SHA-256 hashes of those artifacts.
+would produce a false denominator. Duplicate IDs after gene-ID
+canonicalization, including stable-ID version collisions, are also rejected
+so they cannot silently shrink the coverage denominator. The `provenance`
+field is a label, not a verified link to the rankings. To freeze a real request,
+retain the complete ranked gene output for each species and phase, the
+model/run identity, the ranking method and selection rule (including how ties
+and the top-k boundary were handled), input data/split identity, and SHA-256
+hashes of those artifacts.
 Put an immutable reference to that record in `provenance` and archive the exact
 statistic-input JSON. The report's `statistics_source_sha256` then binds the
 decision to that JSON; it does not independently establish that the lists came
@@ -159,3 +162,9 @@ contains gene IDs but no scores, and this command does not perform a
 distributional test or publish its result. Ticket 05's distributional-analysis
 criterion remains open until a named B3 analysis supplies scores and method,
 uses those pairs, and records its result and exclusions.
+
+A 2026-09-29 audit of ignored local artifacts found no newer score or ranking
+output: `runs/` contains probe-readiness metadata, a spatial-copy manifest,
+and spatial H5AD copies; `logs/dataset_audit/` contains preparation and audit
+artifacts. No frozen per-species/phase gene list is available for a real
+statistic request.

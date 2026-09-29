@@ -57,6 +57,15 @@ set, the comparison cannot name a unique source release or establish the
 producer's filtering/build procedure. It also does not map any old gene to a
 GRCg7b gene.
 
+The HDF5 `keys` dataset is lexicographically sorted, contains 16,878 unique
+IDs, and has no release attributes. The `arrays` group also has no recorded
+link-creation order. In the archived GTFs, selected gene rows are in genomic
+order rather than this sorted HDF5 order (including release 106, whose first
+five selected IDs differ from releases 99–101). Thus HDF5 key order provides
+no additional release fingerprint. Archived peptide FASTA files were not
+available locally, and this audit's retrieval attempt failed at DNS resolution;
+their order and sequences remain unchecked.
+
 The official GRCg7b core MySQL dumps for [release 107](https://ftp.ensembl.org/pub/release-107/mysql/gallus_gallus_core_107_7/)
 and [release 110](https://ftp.ensembl.org/pub/release-110/mysql/gallus_gallus_core_110_7/)
 each publish `mapping_session.txt.gz` and `stable_id_event.txt.gz` as 20-byte

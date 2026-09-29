@@ -79,3 +79,15 @@ acceptance item open. The B3 analysis must provide the score values and named
 comparison method, consume only the reported paired intersection, and publish
 its result, denominator and exclusions. Do not treat `comparison_supported`
 as an observed biological result.
+
+Reaudit on 2026-09-29 included ignored local artifacts without opening the
+large spatial matrices. The only files under `runs/` are probe-readiness
+metadata, a spatial-copy manifest, and spatial H5AD copies. The files under
+`logs/dataset_audit/` are preparation, coverage, sampling, ortholog, and
+spatial audits. A repository-wide filename inventory of JSON, TSV, CSV,
+Parquet, Arrow, Feather, NumPy and NPZ artifacts likewise found no B3
+likelihood-impact scores or frozen species/phase rankings. The ticket's
+distributional-comparison acceptance criterion remains unevaluable from
+current artifacts. The report now rejects duplicate IDs after canonicalization,
+including stable-ID version collisions, rather than silently shrinking the
+60% denominator.
