@@ -1,0 +1,22 @@
+{
+  "candidate_tsv_sha256": "5f21d37ee107a068b3db9d849c6b6c8e30d90b4e0856282ab44ac076224dad59",
+  "checkpoint_vocab_sha256": "ff5d5f03e074e267a4ec4ed63f5f805e20e9f3f95f94d1e547b4e90115f874f9",
+  "distinct_new_ensembl_ids": 2266,
+  "distinct_old_ensembl_ids": 2304,
+  "ensembl_to_ensembl_rows": 2654,
+  "existing_bridge_sha256": "c324274577b91376d726ea6f1e2e9235cec719f9bab2b3cf31cebcf85e52ba9b",
+  "mapping_accepted": false,
+  "orthologs_sha256": "bce2e8dee39311e8c2c571660556af09f8de2c6a26c31de295bc4f3f95e06d60",
+  "reason": "Research-atlas correspondence conflicts with the existing strict bridge; row-level review required",
+  "source_rows_excluding_header": 56871,
+  "source_sha256": "45498dac89c430439817df71b469a205f2fe68e180b6dc3f881f69c3527ced4c",
+  "source_sheet": "GRCg6a_GRCg7b_geneByGene",
+  "source_url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41598-024-56705-y/MediaObjects/41598_2024_56705_MOESM15_ESM.xlsx",
+  "status_counts": {
+    "additional_ortholog_candidate": 28,
+    "additional_without_ortholog": 156,
+    "agrees_existing": 3,
+    "conflicts_existing": 37
+  },
+  "strict_checkpoint_rows": 224
+}

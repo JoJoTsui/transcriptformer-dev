@@ -115,3 +115,11 @@ hash-bound manifest. The sidecar selection list must match the submitted gene
 list, but this does not prove that list's top-k ranking origin. No real B3
 score tables exist yet, and no distributional test or biological result is
 computed; the distributional-comparison criterion remains open.
+
+Online methods follow-up on 2026-09-29: the
+[non-zebrafish gate note](../../../docs/agents/non-zebrafish-online-followup-2026-09-29.md#ticket-05-paired-comparison)
+proposes full eligible-universe paired Spearman concordance and descriptive
+score differences, with selected top-k overlap reported separately. This is
+a reviewable proposal, not a frozen statistic or a biological result. The
+observed B3 tables, paired-score comparability checks and project-approved
+uncertainty/multiple-comparison plan are still required.

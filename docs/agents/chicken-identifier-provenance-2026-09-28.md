@@ -301,6 +301,11 @@ while recording the exact producer release as unknown. This is a proposed
 decision path, not an automatic closure of the 9,611 unresolved identifier
 mappings.
 
+A subsequent [published cross-assembly table audit](chicken-online-followup-2026-09-29.md)
+found candidate GRCg6a/GRCg7b links, but 37 of 40 rows overlapping this
+strict bridge disagree with it. The new table has not been used to change
+the accepted mapping or infer the producer's source release.
+
 ## Remaining provenance and scientific review
 
 1. Obtain the model producer's source for `gallus_gallus_gene.h5`: annotation

@@ -89,3 +89,16 @@ fingerprinting cannot select one exact release. See the
 [provenance follow-up](../../../docs/agents/chicken-identifier-provenance-2026-09-28.md#article-code-and-peptide-follow-up--2026-09-29).
 The exact source now requires a producer build manifest/log or artifact record
 tied to the HDF5 hash. Release 106 remains a reference mapping release only.
+
+Published-table follow-up on 2026-09-29: A [primary chicken annotation study](https://pmc.ncbi.nlm.nih.gov/articles/PMC10951430/)
+provides GRCg6a-to-GRCg7b correspondences in Supplementary Table 12. The
+[bounded audit](../../../docs/agents/chicken-online-followup-2026-09-29.md)
+compared its direct Ensembl-ID rows with the exact checkpoint HDF5 and the
+current strict bridge. Of 224 unique-in-that-subset checkpoint candidate rows,
+40 overlap the bridge and **37 conflict**; only 28 other candidates have a
+local ortholog-table join. Row coordinates and both conflicting IDs are in
+the [candidate report](../../../docs/chicken-published-table12-candidates.tsv),
+with source hashes in the [audit summary](../../../docs/chicken-published-table12-audit.json).
+No candidate was applied; the 7,267-pair accepted bridge and R2 state remain
+unchanged. Resolve the conflicting gene identities and producer provenance
+before accepting another mapping layer.
