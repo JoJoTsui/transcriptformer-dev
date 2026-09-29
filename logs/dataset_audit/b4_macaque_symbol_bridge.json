@@ -1,0 +1,46 @@
+{
+  "assembly": "Macaca_fascicularis_6.0",
+  "ensembl_release": 110,
+  "gtf_sha256": "27144c10fa3555c357ebef8f0c2e697963cd04b47f3a04303c2967e48deadc78",
+  "gtf_url": "https://ftp.ensembl.org/pub/release-110/gtf/macaca_fascicularis/Macaca_fascicularis.Macaca_fascicularis_6.0.110.gtf.gz",
+  "mapping_entries": 14570,
+  "mapping_sha256": "80e0cfecb5ff0ba5799ad1c426e2b14609b01f7d4b89c6327b653b3603dbfc3b",
+  "mapping_target_gene_ids": 14570,
+  "output_scope": "Only exact probe var-index symbols present in the listed H5ADs; one-to-one to peptide gene IDs cross-checked against same-release GTF",
+  "pep_sha256": "8f7bc5ebd229d78ea0d1eb261d292f19cd5e10590ac278ea10c736b0b13fd41a",
+  "pep_url": "https://ftp.ensembl.org/pub/release-110/fasta/macaca_fascicularis/pep/Macaca_fascicularis.Macaca_fascicularis_6.0.pep.all.fa.gz",
+  "probes": {
+    "macaque_gong_2023": {
+      "accepted": 14202,
+      "ambiguous_peptide_symbols": 0,
+      "loc_accepted": 0,
+      "peptide_unique_gtf_conflicts": 0,
+      "probe_genes": 33960,
+      "probe_key_sha256": "2cc1e222c0a939638b8c1435d61e9dddc55b8ad4c93c872494d5f8d83283743d",
+      "unmatched": 19758,
+      "var_column": "gene_id"
+    },
+    "macaque_spatial": {
+      "accepted": 3263,
+      "ambiguous_peptide_symbols": 0,
+      "loc_accepted": 0,
+      "peptide_unique_gtf_conflicts": 0,
+      "probe_genes": 4663,
+      "probe_key_sha256": "bf79da7866ea72292adbc2f1e10b4116cd81c5f5dba80abb4a3a7fed3128de19",
+      "unmatched": 1400,
+      "var_column": "gene_symbol"
+    },
+    "macaque_zhai_2022": {
+      "accepted": 12613,
+      "ambiguous_peptide_symbols": 0,
+      "loc_accepted": 0,
+      "peptide_unique_gtf_conflicts": 0,
+      "probe_genes": 26135,
+      "probe_key_sha256": "006469f9a174c9772e398cd56b6cfb93cbe87e5440c613f7148d0839e7886f65",
+      "unmatched": 13522,
+      "var_column": "gene"
+    }
+  },
+  "species": "macaca_fascicularis",
+  "status": "candidate_gene_key_bridge_only"
+}

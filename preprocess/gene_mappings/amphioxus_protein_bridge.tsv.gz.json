@@ -1,0 +1,18 @@
+{
+  "annotation_release": "NCBI Branchiostoma floridae Annotation Release 100",
+  "assembly": "GCF_000003815.2",
+  "bridge_rule": "CDS protein_id -> CDS Dbxref GeneID -> gene Dbxref GeneID -> gene Name",
+  "bridge_sha256": "2695e59c5c5774db9a88ca46f9655058f0b16f8250a01a25c4be4169bc9286dd",
+  "gff_sha256": "df14aad495f14c4fda6b6e210ebc510839034d0785f92cc26e4b264907e42eb6",
+  "gff_url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/003/815/GCF_000003815.2_Bfl_VNyyK/GCF_000003815.2_Bfl_VNyyK_genomic.gff.gz",
+  "probe_absent_from_gff": 378,
+  "probe_coverage_fraction": 0.897396,
+  "probe_gene_keys": 29726,
+  "probe_h5ad_sha256": "4123e437126222591c6d99382af72ef1f5a5aca0e09d426d92df44c756af8c6c",
+  "probe_in_gff_without_protein": 2672,
+  "probe_with_protein": 26676,
+  "protein_bearing_gene_keys": 26689,
+  "protein_fasta_sha256": "de341da4441b5d120437e23242b794f46e9f4aaf49d2f1b465abcd4388aacd89",
+  "protein_fasta_url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/003/815/GCF_000003815.2_Bfl_VNyyK/GCF_000003815.2_Bfl_VNyyK_protein.faa.gz",
+  "protein_rows": 43041
+}

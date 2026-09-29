@@ -1,0 +1,26 @@
+{
+  "assembly": "UCB_Xtro_10.0",
+  "ensembl_release": 113,
+  "gtf_sha256": "6995905c2b97eaf0c79c58545049bd32f44d1d260812544db3777c89494dfbd9",
+  "gtf_url": "https://ftp.ensembl.org/pub/release-113/gtf/xenopus_tropicalis/Xenopus_tropicalis.UCB_Xtro_10.0.113.gtf.gz",
+  "mapping_entries": 9485,
+  "mapping_sha256": "7bc8ae852176a5fc3d9a8aaf86a7d12e6e6fa645116573f25017ccb07b8fe165",
+  "mapping_target_gene_ids": 9485,
+  "output_scope": "Only exact probe var-index symbols present in the listed H5ADs; one-to-one to peptide gene IDs cross-checked against same-release GTF",
+  "pep_sha256": "203398cc98855ddf0ddb79c2bbe1a7590849b97ada176ba951d27d4c82e8a1bd",
+  "pep_url": "https://ftp.ensembl.org/pub/release-113/fasta/xenopus_tropicalis/pep/Xenopus_tropicalis.UCB_Xtro_10.0.pep.all.fa.gz",
+  "probes": {
+    "xenopus_briggs_2018": {
+      "accepted": 9485,
+      "ambiguous_peptide_symbols": 174,
+      "loc_accepted": 0,
+      "peptide_unique_gtf_conflicts": 0,
+      "probe_genes": 26550,
+      "probe_key_sha256": "43e10f3a4f9f68d7f52ade110b7221c5d2565ad2973f90a435930934829bdbe7",
+      "unmatched": 17065,
+      "var_column": "gene_name"
+    }
+  },
+  "species": "xenopus_tropicalis",
+  "status": "candidate_gene_key_bridge_only"
+}

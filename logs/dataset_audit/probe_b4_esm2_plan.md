@@ -63,7 +63,25 @@ specification](https://www.ncbi.nlm.nih.gov/datasets/docs/v2/reference-docs/file
 documents `protein_id` and parent/GeneID relationships. A same-assembly
 protein-to-gene bridge using those fields or [NCBI gene product reports](https://www.ncbi.nlm.nih.gov/datasets/docs/v2/reference-docs/data-reports/gene-product/)
 is a better candidate than parsing free-text `LOC` tokens; reject ambiguous
-relationships and audit probe joins. The amphioxus bridge is not yet validated locally.
+relationships and audit probe joins. A [same-assembly RefSeq bridge](../../docs/agents/amphioxus-protein-bridge-2026-09-29.md)
+now maps every one of 43,041 proteins to an unambiguous GeneID and gene Name;
+26,676/29,726 local probe keys have protein input. The remaining 3,050 do not
+have an accepted protein in this release. Its gene-key FASTA adapter and any
+ESM output remain separate steps.
+
+A [Ghost KH2012 normalization audit](../../docs/agents/ciona-ghost-bridge-2026-09-29.md)
+now writes an external gene-key FASTA with unique protein labels and verifies
+the 15,228 KH probe-key joins. The embedding generator accepts a local FASTA
+only with its audit JSON and raw source archive, and checks the organism and
+both byte hashes before loading ESM. This does not represent the 41 non-KH
+features or establish a safe GPU budget.
+
+Pinned [same-release Ensembl symbol bridges](../../docs/agents/b4-macaque-xenopus-symbol-bridges-2026-09-29.md)
+offer candidate joins for the three macaque probes (12,613/26,135;
+14,202/33,960; 3,263/4,663) and Xenopus (9,485/26,550). They exclude
+ambiguous symbols and enforce one-to-one stable-ID targets. Actual ESM/vocab
+release joins remain unverified, and the many unmatched LOC/JGI keys need a
+source-specific ruling before any B4 metric is interpreted.
 
 Validator caveats (expected, captured in the report): the URL-substring check flags
 "FASTA reference does not identify ciona_intestinalis / branchiostoma_floridae" because NCBI URLs
@@ -98,10 +116,17 @@ protein-to-gene bridge is supplied; the displayed gene/output estimates are
 historical accession-key estimates, not a runnable plan. Add ~2.5 GB one-off ESM-2 3B
 checkpoint download. Sequences longer than 1,022 residues are truncated (`seq_length=1022`).
 The generator now defaults to 2,048 tokens per inference batch; this is a starting limit,
-not a measured safe value for the RTX 3090. A single long protein can still exceed the
-budget before its input is truncated. Probe VRAM with a small job before any proteome run.
+not a measured safe value for the RTX 3090. Batch accounting includes the
+ESM-2 beginning/end tokens and rejects a sequence whose truncated token count
+could exceed the budget; longer raw proteins are still truncated at 1,022
+residues. Pooling uses encoded residue counts, so replacement of a stop
+symbol by the ESM `<unk>` token cannot include end/padding tokens in the mean.
+These rules follow the [official ESM batching and alphabet source](https://github.com/facebookresearch/esm/blob/main/esm/data.py)
+and [ESM-2 model loader](https://github.com/facebookresearch/esm/blob/main/esm/pretrained.py).
+Probe VRAM with a small job before any proteome run.
 Each completed batch is stored once in `<output>.parts/batch_*.h5`. The run manifest fixes
-the source URL and SHA-256, normalized FASTA SHA-256, model checkpoint SHA-256, ESM version,
+the source URL and SHA-256, optional local normalization audit SHA-256,
+normalized FASTA SHA-256, model checkpoint SHA-256, ESM version,
 layer, sequence length, token budget, and batch count. Resume skips only chunks with matching
 identity, batch index, gene labels, shape and content checksum. Per-gene protein means are assembled from chunks via
 an on-disk HDF5 sum/count file; the final `keys`/`arrays` HDF5 is atomically published only

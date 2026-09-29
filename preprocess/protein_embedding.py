@@ -159,6 +159,7 @@ def generate_embeddings(
     model_sha256=None,
     source_sha256=None,
     source_url=None,
+    source_audit_sha256=None,
     layer=33,
 ):
     """
@@ -180,6 +181,8 @@ def generate_embeddings(
         raise RuntimeError("Protein embedding generation requires CUDA; refusing to write an empty output")
     if max_tokens < 1:
         raise ValueError("max_tokens must be positive")
+    if seq_length < 1:
+        raise ValueError("seq_length must be positive")
     if not model_sha256 or not source_sha256:
         raise ValueError("A model checkpoint hash and source FASTA hash are required")
 
@@ -189,8 +192,10 @@ def generate_embeddings(
 
     dataset = FastaBatchedDataset.from_file(fasta)
     dataset.sequence_strs = [clean_sequence(seq) for seq in dataset.sequence_strs]
-
-    batches = dataset.get_batch_indices(max_tokens, extra_toks_per_seq=1)
+    special_tokens = int(alphabet.prepend_bos) + int(alphabet.append_eos)
+    if any(min(seq_length, len(seq)) + special_tokens > max_tokens for seq in dataset.sequence_strs):
+        raise ValueError("A truncated protein exceeds max_tokens; raise the budget or lower seq_length")
+    batches = dataset.get_batch_indices(max_tokens, extra_toks_per_seq=special_tokens)
 
     data_loader = torch.utils.data.DataLoader(
         dataset,
@@ -203,6 +208,7 @@ def generate_embeddings(
         "format": 1,
         "source_url": source_url,
         "source_sha256": source_sha256,
+        "source_audit_sha256": source_audit_sha256,
         "fasta_sha256": sha256_file(fasta),
         "model_name": model_name,
         "model_sha256": model_sha256,
@@ -238,7 +244,7 @@ def generate_embeddings(
     chunk_expectations = []
     num_gpus = torch.cuda.device_count()
     with torch.no_grad():
-        for batch_idx, (labels, strs, toks) in enumerate(data_loader):
+        for batch_idx, (labels, _sequences, toks) in enumerate(data_loader):
             chunk_path = parts_dir / f"batch_{batch_idx:08d}.h5"
             expected_labels = [label.split()[0] for label in labels]
             for gene_id in expected_labels:
@@ -252,13 +258,18 @@ def generate_embeddings(
                 chunk_expectations.append((chunk_path, batch_idx, expected_labels))
                 continue
             logging.info("Processing batch %d of %d", batch_idx + 1, len(batches))
+            residue_lengths = (
+                toks.ne(alphabet.padding_idx).sum(dim=1) - special_tokens
+            ).tolist()
             toks = pad_batch(toks, num_gpus).to(device="cuda", non_blocking=True)
             out = model(toks, repr_layers=[layer], return_contacts=False)
             representations = out["representations"][layer].to(device="cpu")
             vectors = []
-            for i, sequence in enumerate(strs):
-                truncate_len = min(seq_length, len(sequence))
-                vectors.append(representations[i, 1 : truncate_len + 1].mean(0).numpy())
+            for i, residue_length in enumerate(residue_lengths):
+                if residue_length < 1:
+                    raise ValueError(f"Empty encoded protein in batch {batch_idx}, row {i}")
+                start = int(alphabet.prepend_bos)
+                vectors.append(representations[i, start : start + residue_length].mean(0).numpy())
             publish_chunk(chunk_path, identity, batch_idx, expected_labels, vectors)
             chunks.append(chunk_path)
             chunk_expectations.append((chunk_path, batch_idx, expected_labels))
@@ -294,12 +305,18 @@ def main():
         action="store_true",
         help="Whether to use the large ESM-2 model",
     )
+    parser.add_argument("--input_gene_fasta", type=Path, help="Verified local gene-key FASTA")
+    parser.add_argument("--input_gene_audit", type=Path, help="Audit JSON for local gene-key FASTA")
+    parser.add_argument("--input_source_archive", type=Path, help="Raw source archive bound by the audit")
     args = parser.parse_args()
 
     if not torch.cuda.is_available():
         parser.error("Protein embedding generation requires CUDA; no output was written")
     if args.max_tokens < 1:
         parser.error("--max_tokens must be positive")
+    local_inputs = (args.input_gene_fasta, args.input_gene_audit, args.input_source_archive)
+    if any(path is not None for path in local_inputs) and not all(path is not None for path in local_inputs):
+        parser.error("Local input requires --input_gene_fasta, --input_gene_audit and --input_source_archive")
 
     logging.basicConfig(level=logging.INFO)
 
@@ -310,12 +327,76 @@ def main():
     if args.organism_key not in fasta_urls:
         raise ValueError(f"Organism {args.organism_key} is not a valid organism in the fasta manifest")
 
-    # Create stable_id_dir if it doesn't exist
-    stable_id_dir = Path(STABLE_ID_DIR)
-    stable_id_dir.mkdir(parents=True, exist_ok=True)
-
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    organism = args.organism_key
+    source_audit_sha256 = None
+    if args.input_gene_fasta is not None:
+        if args.input_gene_audit.stat().st_size > 1024 * 1024:
+            raise ValueError("Local gene-FASTA audit exceeds 1 MiB")
+        audit = json.loads(args.input_gene_audit.read_text(encoding="utf-8"))
+        if not isinstance(audit, dict) or audit.get("schema_version") != 1:
+            raise ValueError("Invalid local gene-FASTA audit schema")
+        if audit.get("organism_key") != organism:
+            raise ValueError("Local gene-FASTA organism disagrees with --organism_key")
+        if audit.get("normalized_fasta_sha256") != sha256_file(args.input_gene_fasta):
+            raise ValueError("Local gene-FASTA hash disagrees with audit")
+        source_sha256 = sha256_file(args.input_source_archive)
+        if audit.get("source_archive_sha256") != source_sha256:
+            raise ValueError("Local source archive hash disagrees with audit")
+        source_url = audit.get("source_page")
+        if not isinstance(source_url, str) or not source_url.startswith("https://"):
+            raise ValueError("Local gene-FASTA audit requires an HTTPS source page")
+        source_audit_sha256 = sha256_file(args.input_gene_audit)
+        converted_fasta = args.input_gene_fasta
+    else:
+        stable_id_dir = Path(STABLE_ID_DIR)
+        stable_id_dir.mkdir(parents=True, exist_ok=True)
+        source_url = fasta_urls[organism]["fa"]
+        fasta_file = stable_id_dir / f"{organism}.fa"
+        if not fasta_file.exists():
+            logging.info("Downloading FASTA for %s", organism)
+            temporary = fasta_file.with_name(fasta_file.name + ".tmp")
+            with urllib.request.urlopen(source_url) as response, open(temporary, "wb") as out_file:
+                if source_url.endswith(".gz") or response.headers.get("Content-Encoding") == "gzip":
+                    with gzip.GzipFile(fileobj=response) as gz_file:
+                        shutil.copyfileobj(gz_file, out_file)
+                else:
+                    shutil.copyfileobj(response, out_file)
+                out_file.flush()
+                os.fsync(out_file.fileno())
+            os.replace(temporary, fasta_file)
+        source_sha256 = sha256_file(fasta_file)
+
+        # Convert to gene IDs without changing the cached source FASTA.
+        converted_fasta = stable_id_dir / f"{organism}_gene_input.fa"
+        converted_tmp = converted_fasta.with_name(converted_fasta.name + ".tmp")
+        seen_labels = set()
+        with open(converted_tmp, "w", encoding="utf-8") as output:
+            for record in SeqIO.parse(fasta_file, "fasta"):
+                protein_id = record.id
+                if args.use_large_model and "gene_symbol:" in record.description:
+                    gene_id = record.description.split("gene_symbol:")[-1].split(" ")[0].strip()
+                else:
+                    if "gene:" not in record.description:
+                        raise ValueError(
+                            f"{organism}: protein {record.id} has no gene: field; "
+                            "provide a verified protein-to-gene bridge before embedding generation"
+                        )
+                    gene_id = record.description.split("gene:")[-1].split(" ")[0].strip().split(".")[0]
+                if not gene_id:
+                    raise ValueError(f"{organism}: protein {record.id} has an empty gene key")
+                record.id = gene_id
+                record.name = gene_id
+                record.description = f"{gene_id} protein={protein_id}"
+                if record.description in seen_labels:
+                    raise ValueError(f"{organism}: duplicate protein label {record.description}")
+                seen_labels.add(record.description)
+                SeqIO.write(record, output, "fasta")
+            output.flush()
+            os.fsync(output.fileno())
+        os.replace(converted_tmp, converted_fasta)
 
     # Load ESM-2 model
     if args.use_large_model:
@@ -341,48 +422,6 @@ def main():
     if torch.cuda.device_count() > 1:
         model = torch.nn.DataParallel(model)
 
-    organism = args.organism_key
-    fasta_url = fasta_urls[organism]["fa"]
-
-    fasta_file = stable_id_dir / f"{organism}.fa"
-    if not fasta_file.exists():
-        logging.info(f"Downloading FASTA for {organism}")
-        temporary = fasta_file.with_name(fasta_file.name + ".tmp")
-        with urllib.request.urlopen(fasta_url) as response, open(temporary, "wb") as out_file:
-            if fasta_url.endswith(".gz") or response.headers.get("Content-Encoding") == "gzip":
-                with gzip.GzipFile(fileobj=response) as gz_file:
-                    shutil.copyfileobj(gz_file, out_file)
-            else:
-                shutil.copyfileobj(response, out_file)
-            out_file.flush()
-            os.fsync(out_file.fileno())
-        os.replace(temporary, fasta_file)
-    source_sha256 = sha256_file(fasta_file)
-
-    # Convert to gene IDs
-    converted_fasta = stable_id_dir / f"{organism}_gene_input.fa"
-    converted_tmp = converted_fasta.with_name(converted_fasta.name + ".tmp")
-    with open(converted_tmp, "w", encoding="utf-8") as output:
-        for record in SeqIO.parse(fasta_file, "fasta"):
-            if args.use_large_model and "gene_symbol:" in record.description:
-                gene_id = record.description.split("gene_symbol:")[-1].split(" ")[0].strip()
-            else:
-                if "gene:" not in record.description:
-                    raise ValueError(
-                        f"{organism}: protein {record.id} has no gene: field; "
-                        "provide a verified protein-to-gene bridge before embedding generation"
-                    )
-                gene_id = record.description.split("gene:")[-1].split(" ")[0].strip().split(".")[0]
-            if not gene_id:
-                raise ValueError(f"{organism}: protein {record.id} has an empty gene key")
-            record.id = gene_id
-            record.name = gene_id
-            record.description = gene_id
-            SeqIO.write(record, output, "fasta")
-        output.flush()
-        os.fsync(output.fileno())
-    os.replace(converted_tmp, converted_fasta)
-
     emb_file_name = output_dir / f"{organism}_gene{suffix}.h5"
     logging.info(f"Processing {converted_fasta} for {organism}")
 
@@ -395,7 +434,8 @@ def main():
         model_name=model_name,
         model_sha256=model_sha256,
         source_sha256=source_sha256,
-        source_url=fasta_url,
+        source_url=source_url,
+        source_audit_sha256=source_audit_sha256,
         layer=layer,
     )
 
