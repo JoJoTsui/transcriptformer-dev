@@ -136,7 +136,6 @@ def summarize(args: argparse.Namespace) -> None:
     rows = []
     direct_rows = []
     reverse_rows = []
-    reverse_rows = []
     total_rows = 0
     for left, gene_left, right, gene_right in read_pairs(args.table):
         total_rows += 1
@@ -147,7 +146,6 @@ def summarize(args: argparse.Namespace) -> None:
             direct_rows.append((gene_left, gene_right))
         elif (left, right) == (species_b, species_a):
             rows.append((gene_right, gene_left))
-            reverse_rows.append((gene_left, gene_right))
             reverse_rows.append((gene_left, gene_right))
         if len(rows) > MAX_PAIRS:
             raise ValueError("Pair row cap exceeded before joining")
@@ -181,11 +179,6 @@ def summarize(args: argparse.Namespace) -> None:
     if reverse_rows and species_a != species_b:
         reverse_audit, _ = audit_pair(reverse_rows, species_b, species_a, genes_b, genes_a, mapping, ambiguous)
         if report_pairs.get(f"{species_b}__{species_a}") != reverse_audit:
-            raise ValueError("Recomputed reverse-pair audit disagrees with report")
-    reverse_report_pair = report.get("pairs", {}).get(f"{species_b}__{species_a}")
-    if reverse_report_pair is not None and species_a != species_b:
-        reverse_audit, _ = audit_pair(reverse_rows, species_b, species_a, genes_b, genes_a, mapping, ambiguous)
-        if reverse_report_pair != reverse_audit:
             raise ValueError("Recomputed reverse-pair audit disagrees with report")
 
     scores_a = score_table(args.scores_a, handoff["scores_a_sha256"], species_a)

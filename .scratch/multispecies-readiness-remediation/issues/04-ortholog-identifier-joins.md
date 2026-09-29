@@ -117,3 +117,12 @@ an exact 247-residue FBXO2 peptide match, near-identical KXD1 peptides and
 substantial SH3BP1 exon/protein continuity. The current REST records are not
 frozen release histories; possible competing genes without a GeneID xref and
 the checkpoint's exact source remain unresolved. No mapping was added.
+
+The [closure-evidence memo](../../../docs/agents/chicken-closure-gate-2026-09-29.md)
+shows why the checkpoint gene/protein content cannot distinguish GRCg6a
+releases 99/100/101/106, lists the exact producer-bound manifest fields needed
+for a source-release claim, and states the separate row-level evidence needed
+to expand the 7,267-pair bridge. It includes a ready-to-send producer request;
+no external message was sent. Ticket 04's implementation acceptance criteria
+above are met for the scoped partial bridge, while the R2 scientific and
+provenance gate remains open.

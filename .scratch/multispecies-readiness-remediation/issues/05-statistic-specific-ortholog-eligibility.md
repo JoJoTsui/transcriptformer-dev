@@ -192,3 +192,94 @@ not itself bind vocabulary file hashes. The command has 64 MiB input,
 100,000-score-row and one-million-ortholog-row caps. This remains **tooling**:
 real B3 scored tables, source verification, a frozen inference and uncertainty
 plan, and the biological result are absent, so acceptance item 5 remains open.
+
+## Closure runbook for one non-zebrafish comparison
+
+The 2026-09-29 bounded filename inventory under `runs/`,
+`logs/dataset_audit/`, `data/`, `datasets/`, `results/`, `outputs/`, and this
+ticket directory found no B3 impact-score table, null-corrected ranking, or
+frozen statistic request. The following commands are a handoff for the actual
+producer artifacts; they have **not** been run on real scores. Paths in the
+first block are placeholders for a single registered species pair and phase.
+Keep this work off the constrained WSL host if producing B3 requires a model
+run.
+
+```sh
+STATISTICS=/path/to/frozen-statistics.json
+SCORES_A=/path/to/species-a-phase-scores.tsv
+SCORES_B=/path/to/species-b-phase-scores.tsv
+METADATA_A=/path/to/species-a-phase-metadata.json
+METADATA_B=/path/to/species-b-phase-metadata.json
+SOURCE_A=/path/to/species-a-frozen-b3-source
+SOURCE_B=/path/to/species-b-frozen-b3-source
+VOCAB_A=/path/to/species-a_gene.h5
+VOCAB_B=/path/to/species-b_gene.h5
+SPECIES_A=homo_sapiens
+SPECIES_B=mus_musculus
+PHASE=gastrula
+STATISTIC=impact_top_200
+OUT=/path/to/ticket05-evidence
+```
+
+The producer must first freeze each source artifact, the complete scored TSV
+(`gene_id`, `null_corrected_z`), its sidecar, and the statistic JSON. Sidecars
+need the same run/model identity and the exact score, source, request and
+selection metadata specified above. Record actual model checkpoint, data,
+split, phase-assignment and B3 null settings in an inspectable producer
+manifest; the verifier checks byte identity and top-k arithmetic but cannot
+prove those scientific origins. Check artifact sizes against the CLI caps
+before running locally.
+
+```sh
+mkdir -p "$OUT"
+python scripts/report_ortholog_eligibility.py \
+  --table preprocess/orthologs/ortholog_pairs.tsv.gz \
+  --statistics "$STATISTICS" --vocab-dir checkpoints/tf_metazoa_finetuned/vocabs \
+  --output "$OUT/eligibility.json"
+python scripts/verify_ortholog_topk_origin.py \
+  --statistics "$STATISTICS" --species-a "$SPECIES_A" --species-b "$SPECIES_B" \
+  --phase "$PHASE" --statistic "$STATISTIC" \
+  --scores-a "$SCORES_A" --metadata-a "$METADATA_A" --b3-source-a "$SOURCE_A" \
+  --scores-b "$SCORES_B" --metadata-b "$METADATA_B" --b3-source-b "$SOURCE_B" \
+  --output "$OUT/verified-topk.json"
+python scripts/handoff_ortholog_scores.py \
+  --report "$OUT/eligibility.json" --statistics "$STATISTICS" \
+  --species-a "$SPECIES_A" --species-b "$SPECIES_B" \
+  --phase "$PHASE" --statistic "$STATISTIC" \
+  --scores-a "$SCORES_A" --metadata-a "$METADATA_A" \
+  --scores-b "$SCORES_B" --metadata-b "$METADATA_B" \
+  --topk-verification "$OUT/verified-topk.json" \
+  --output-tsv "$OUT/paired.tsv" --output-json "$OUT/paired.json"
+python scripts/summarize_ortholog_paired_scores.py \
+  --paired-tsv "$OUT/paired.tsv" --manifest "$OUT/paired.json" \
+  --output "$OUT/selected-description.json"
+python scripts/summarize_ortholog_full_universe.py \
+  --handoff "$OUT/paired.json" --report "$OUT/eligibility.json" \
+  --table preprocess/orthologs/ortholog_pairs.tsv.gz \
+  --vocab-a "$VOCAB_A" --vocab-b "$VOCAB_B" \
+  --scores-a "$SCORES_A" --scores-b "$SCORES_B" \
+  --metadata-a "$METADATA_A" --metadata-b "$METADATA_B" \
+  --output "$OUT/full-universe-description.json"
+```
+
+Use the exact vocabularies in `--vocab-dir`; add the same `--mapping` and
+`--mapping-source`, `--mapping-release`, `--mapping-assembly` values to the
+report command and `--mapping` to the full-universe command when the selected
+pair needs a verified conversion. The report must show the named statistic as
+`eligible`, both mapped fractions at least 0.60, `genome_wide_pairs` at least
+5,000, and a positive `n_comparable_pairs`. A failed floor is a single-species
+result, not a reason to weaken the floor. The two summary JSONs are descriptive
+and must not be presented as the accepted distributional comparison.
+
+To check off acceptance criterion 5, freeze a separately approved analysis
+record **before** inspecting its outcome. That record must name the primary
+comparison universe (selected paired genes or all score-available eligible
+one-to-one genes), estimand and score direction, test or descriptive-only
+method, embryo-level replication and uncertainty treatment, missing-score
+rule, multiple-comparison family, threshold and interpretation rule. Then
+publish the method implementation/version, frozen record hash, actual result,
+all input hashes, paired denominator, all exclusions and reasons, and a
+reviewed per-pair coverage supplement. If the available embryos support only
+description, record that limitation and obtain an explicit decision on
+whether a descriptive result satisfies criterion 5; the current acceptance
+text cannot be silently reclassified as complete.

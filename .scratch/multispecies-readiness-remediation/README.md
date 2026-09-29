@@ -9,20 +9,20 @@ data, chicken identifier repair and production training remain separate gates.
 
 ## Tickets and dependencies
 
-| Ticket | Review/decision coverage | Depends on |
-| --- | --- | --- |
-| [01 — Persist terminal resume state independently of selected weights](issues/01-terminal-resume-state.md) | R1; register 5.2/5.9/5.10; tracker E/F | None |
-| [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 |
-| [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None |
-| [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None |
-| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 |
-| [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 |
-| [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 |
-| [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 |
-| [09 — Mark structurally unsupported B2 metrics unevaluable](issues/09-representation-metric-eligibility.md) | R6; tracker J | None |
-| [10 — Enforce the single-cell cap when strata outnumber slots](issues/10-hard-sampling-cap.md) | Additional review edge case; sampler exposure | None |
-| [11 — Require zebrafish training participation and track additional-source intake](issues/11-zebrafish-readiness-and-intake.md) | Owner requirement; pending collaborator data | 03, 10 |
-| [12 — Reconcile progress records and validate the bounded remediation workflow](issues/12-readiness-evidence-and-ci.md) | All findings; readiness claims; WSL constraint | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 |
+| Ticket | Review/decision coverage | Depends on | Current closure limit |
+| --- | --- | --- | --- |
+| [01 — Persist terminal resume state independently of selected weights](issues/01-terminal-resume-state.md) | R1; register 5.2/5.9/5.10; tracker E/F | None | Implemented; bounded CPU evidence |
+| [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | CPU implemented; distributed runtime unverified on this host |
+| [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Tool implemented; full post-QC corpus absent |
+| [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Strict partial bridge; source release and unresolved IDs remain |
+| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Tool implemented; real B3 scores and approved comparison absent |
+| [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Tool implemented; actual post-QC cohort absent |
+| [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Tool implemented; production loss evidence absent |
+| [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Bounded workflow implemented; production run absent |
+| [09 — Mark structurally unsupported B2 metrics unevaluable](issues/09-representation-metric-eligibility.md) | R6; tracker J | None | Implemented; bounded CPU evidence |
+| [10 — Enforce the single-cell cap when strata outnumber slots](issues/10-hard-sampling-cap.md) | Additional review edge case; sampler exposure | None | Implemented; bounded CPU evidence |
+| [11 — Require zebrafish training participation and track additional-source intake](issues/11-zebrafish-readiness-and-intake.md) | Owner requirement; pending collaborator data | 03, 10 | Excluded from this continuation by owner |
+| [12 — Reconcile progress records and validate the bounded remediation workflow](issues/12-readiness-evidence-and-ci.md) | All findings; readiness claims; WSL constraint | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 | Local evidence recorded; remote CI, GPU and scientific gates open |
 
 ## Dependency order
 
@@ -61,6 +61,9 @@ sequentially on this WSL host.
   the existing evidence rule; see the
   [conflict review](../../docs/agents/chicken-conflict-review-2026-09-29.md)
   and the [three-candidate follow-up](../../docs/agents/chicken-three-candidates-2026-09-29.md).
+  The [closure-evidence memo](../../docs/agents/chicken-closure-gate-2026-09-29.md)
+  identifies the indistinguishable source-release candidates and the exact
+  producer record or row-level history needed to resolve the remaining claim.
 - **Named ortholog statistics:** ticket 05's report boundary is implemented, but
   no frozen B3 phase rankings or scored distributional comparison exist. The
   checked acceptance items cover the tooling. A bounded selected-pair
@@ -69,12 +72,17 @@ sequentially on this WSL host.
   are available. A separate [full-universe descriptive comparator](../../scripts/summarize_ortholog_full_universe.py)
   can recompute vocabulary-joined pairs and score-available denominators; the
   comparison criterion remains open until real ranked scores and a frozen
-  scientific method are available.
+  scientific method are available. The [ticket 05 closure runbook](issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison)
+  lists the required producer artifacts and commands.
 - **Still pending separately:** corpus/QC/assay/training sampling decisions, B1
   sign-off, missing probe vocabularies, complete preparation and actual-model/GPU
   evidence. The [probe vocabulary audit](../../docs/agents/b4-vocabulary-join-audit-2026-09-29.md)
   reports all six configured vocabularies absent, so actual joins remain
   unmeasured.
+- **Corpus and B1:** the [freeze packet](../../docs/agents/corpus-b1-freeze-packet-2026-09-29.md)
+  records what the 27-source rehearsal and local Nature2019 metadata establish,
+  the unsigned decisions, and the post-QC evidence chain. It does not freeze
+  the corpus or B1 endpoint.
 - **Proposed technical details:** test seams, cohort budgets and patience
   integration are implementation design, not separately approved scientific
   policy. Refer to the spec for their constraints.

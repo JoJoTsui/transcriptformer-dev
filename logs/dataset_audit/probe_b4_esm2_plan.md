@@ -198,6 +198,12 @@ Source of record (found in this repo, verified against the live bucket):
 - Candidate URL (HTTP 200 verified 2026-09-23):
   `https://czi-transcriptformer.s3.amazonaws.com/weights/all_embeddings.tar.gz`
   **Content-Length 4,771,779,019 B (4.77 GB)** — over the 500 MB download cap, **not downloaded**.
+
+2026-09-29 public-bucket listing (`aws s3 ls
+s3://czi-transcriptformer/weights/ --no-sign-request`) returned only
+`all_embeddings.tar.gz` and three multi-gigabyte checkpoint archives under
+`weights/`; no per-species pig or Xenopus embedding object is exposed there.
+The bundled archive still requires a separate transfer/resource decision.
   Last-Modified 2025-04-10. Sibling keys: `weights/tf_metazoa.tar.gz` (6,341,673,215 B),
   `weights/tf_exemplar.tar.gz` (4,102,873,511 B), `weights/tf_sapiens.tar.gz` (1,819,975,447 B).
 - Caveat: the tarball is a single 4.77 GB bundle (no per-species files in the bucket); pig/frog

@@ -20,6 +20,15 @@ partial chicken identifier bridge still requires source-release review;
 additional zebrafish delivery, actual full-corpus
 preparation, accelerator behavior and scientific sign-off remain open.
 
+The [2026-09-29 chicken closure memo](chicken-closure-gate-2026-09-29.md)
+shows that the checkpoint gene and protein content cannot distinguish four
+GRCg6a release candidates; it specifies the producer-bound build record needed
+for an exact-origin claim. The [corpus/B1 freeze packet](corpus-b1-freeze-packet-2026-09-29.md)
+shows why the 27-source bounded rehearsal and a local Nature2019 metadata check
+cannot serve as a final corpus or post-QC cohort. Ticket 05 now has a
+[producer-artifact closure runbook](../../.scratch/multispecies-readiness-remediation/issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison),
+but real B3 scores and a signed analysis method are still absent.
+
 Additional zebrafish data may be supplied by collaborators for this finetune.
 Source identity and delivery are pending. The existing Wagner dataset is already
 included; new data require overlap, metadata and post-QC split assessment before
