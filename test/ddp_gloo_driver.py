@@ -25,9 +25,7 @@ def main() -> None:
         tmp_path / "multi_embryo.h5ad",
         embryo_ids=[f"cohort_{embryo}" for embryo in ("a", "b", "c") for _ in range(4)],
     )
-    manifest["datasets"].append(
-        {"path": str(validation_source), "species": "synthetic", "dataset_type": "single_cell"}
-    )
+    manifest["datasets"].append({"path": str(validation_source), "species": "synthetic", "dataset_type": "single_cell"})
     # Exercise the public validation gate with genuine preparation evidence.
     from transcriptformer.finetune.prepare import prepare_run
 

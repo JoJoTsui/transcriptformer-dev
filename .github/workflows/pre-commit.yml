@@ -10,5 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        # The PR base or previous push commit must be available for the diff.
+        fetch-depth: 0
     - uses: actions/setup-python@v3
     - uses: pre-commit/action@v3.0.1
+      with:
+        # Include every file changed by the PR or push, rather than the
+        # repository's existing formatting debt.
+        extra_args: >-
+          --from-ref ${{ github.event.pull_request.base.sha || github.event.before }}
+          --to-ref ${{ github.sha }}

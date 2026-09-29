@@ -11,13 +11,14 @@ does not change the selected sources, QC settings, assay tokens, or B1 rule.
 | `runs/spatial_coordinate_manifest.json` | 27 selected sources across eight training species; all 27 source paths exist. It includes TOME E8.5b and neither proposed mouse prenatal atlas nor Nature2019 source. | Path existence and manifest membership do not establish source quality or final inclusion. |
 | `logs/dataset_audit/preparation_rehearsal_spatial_copies.json` | All 27 sources passed a bounded preparation rehearsal with at most 128 sampled rows per source; 3,308 sampled rows survived, including 55 final-holdout rows. | This is not full preparation; the surviving embryo/phase counts cannot freeze B1. |
 | `logs/dataset_audit/holdout_coverage.json` | Explicitly labels itself `pre_qc_metadata_projection`; only human and mouse have projected independent holdout coverage, so the historical six-of-eight B1 is unmeasurable. | No post-QC cohort or likelihood result. |
-| Local Nature2019 H5AD metadata | The source exists outside the current manifest at `/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature2019_E4.5-E7.5/小鼠_Mus_musculus__Single-cell multi-omics profiling of mouse early embryos.h5ad`. Its sparse `X` declares 2,971 × 22,084; `obs` has only `_index`, `species`, and `species_cn`. Example row labels include `E6.5_Plate1_E9`; `uns/matrix_semantics` says `raw counts where supplied by repository`. | Stage can potentially be parsed from labels, but no explicit per-cell embryo identity or QC field is present. Count suitability and independent-embryo identity require a source-level audit before inclusion or holdout assignment. |
+| Local Nature2019 H5AD and author metadata | The [bounded source audit](nature2019-source-suitability-2026-09-29.md) joined all 2,971 local cells exactly to author metadata with embryo, stage, plate and RNA-QC flags. All stored `X` values are nonnegative integers; 491 cells fail source RNA QC, and 494 passing cells have mixed embryo labels. | The H5AD lacks these joined fields. A derived source, assay-specific QC decision, source identity record and independent-embryo check are required before inclusion or holdout assignment. |
 | `docs/adr/0004-multispecies-checkpoint-selection.md` | Owner-approved validation checkpoint selection policy. | Explicitly separate from B1 final-holdout adoption and training sampling. |
 
-These observations were made by parsing small JSON metadata, checking the
-27 manifest paths, and reading HDF5 group names/shapes/attributes and eight
-row labels from the Nature2019 source. No expression values, full preparation,
-model or GPU job were opened in this audit.
+The original readiness audit parsed small JSON metadata, checked 27 manifest
+paths, and read HDF5 metadata. The subsequent Nature2019 audit read its sparse
+values sequentially in bounded chunks to check count semantics and joined
+author metadata by exact cell name. Neither audit performed full preparation,
+model or GPU work.
 
 ## Decision record to finish before preparation
 

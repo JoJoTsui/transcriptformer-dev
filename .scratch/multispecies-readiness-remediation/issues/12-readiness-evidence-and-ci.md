@@ -47,3 +47,12 @@ policy. The bounded [B4 vocabulary audit](../../../docs/agents/b4-vocabulary-joi
 found all six configured vocabularies absent and reports actual joins as
 unmeasured. `nvidia-smi` could not initialize NVML in this WSL session; no
 accelerator run or new test suite was performed in this continuation.
+
+The [2026-09-29 GitHub Actions finetune run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567304030)
+passed all 337 selected tests on Ubuntu/Python 3.11 after a bounded fixture
+repair allowed the Gloo smoke path to reach training. This is remote CPU
+integration evidence, not a real-corpus or accelerator result. The smoke case
+does not verify per-rank RNG continuity across distributed resume (ticket 02).
+The separate pre-commit workflow still ran all repository files and failed on
+untouched formatting debt; its change-scoped workflow correction requires a
+fresh CI result before that gate can be called passing.

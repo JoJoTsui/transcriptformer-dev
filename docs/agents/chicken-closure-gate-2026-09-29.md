@@ -54,6 +54,23 @@ the exclusion decision for competing genes. The existing release-107/110
 [provenance audit](chicken-identifier-provenance-2026-09-28.md) are empty and do
 not supply this export.
 
+## Generic ID history is not a cross-assembly bridge
+
+As a bounded follow-up, the official [Ensembl archive-ID API](https://rest.ensembl.org/documentation/info/archive_id_get)
+was queried for two checkpoint old-prefix IDs and one published-table
+new-prefix candidate on 2026-09-29 (JSON, no bulk query). Its response for
+`ENSGALG00000051041` was `is_current: 1`, `assembly: GRCg6a`,
+`release: 116`, `possible_replacement: []`; for
+`ENSGALG00000004965`, the same fields were `1`, `GRCg6a`, `116`, `[]`.
+The candidate `ENSGALG00010022493` was also current, but on
+`bGalGal1.mat.broiler.GRCg7b`, with no replacement. These records show
+that the old and new stable-ID namespaces can coexist as current IDs on
+different chicken assemblies. `possible_replacement: []` is therefore
+**not** evidence that the published cross-assembly correspondence is false;
+it simply supplies no row-level relationship between the assemblies.
+The generic ID-history converter cannot be treated as the missing mapping
+export on this evidence.
+
 ## Smallest producer request
 
 > For the chicken `gallus_gallus_gene.h5` shipped in the TF-Metazoa archive

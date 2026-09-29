@@ -38,3 +38,14 @@ scientific and external-data gates remain in effect.
 ## Comments
 
 Initially published as a specification-only ticket. 2026-09-28 implementation evidence: Stochastic CPU continuation is implemented and covered by the bounded 37-test resume/compatibility selection. A local Gloo runtime could not start because sockets returned EPERM; distributed behavior still needs an environment that permits it.
+
+2026-09-29 remote CI follow-up: the first GitHub Actions run failed before
+Gloo started because its smoke fixture contained only single-embryo sources,
+which preparation correctly pinned to training, leaving no validation cohort.
+The tiny fixture now includes one multi-embryo source. The subsequent
+[finetune CI run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567304030)
+passed 337 selected tests, including the two-rank CPU Gloo smoke path. This
+establishes that the launch/training path works on that runner. The smoke case
+does not compare each rank's RNG or parameters across an interrupted and
+resumed two-rank run, so acceptance criterion 4 remains open. Local WSL sockets
+remain unavailable; CUDA/kernel behavior remains unverified.

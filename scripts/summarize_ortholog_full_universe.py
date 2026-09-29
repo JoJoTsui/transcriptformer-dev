@@ -75,8 +75,17 @@ def vocab(path: Path, species: str) -> set[str]:
 
 
 def summarize(args: argparse.Namespace) -> None:
-    inputs = [args.handoff, args.report, args.table, args.vocab_a, args.vocab_b,
-              args.scores_a, args.scores_b, args.metadata_a, args.metadata_b]
+    inputs = [
+        args.handoff,
+        args.report,
+        args.table,
+        args.vocab_a,
+        args.vocab_b,
+        args.scores_a,
+        args.scores_b,
+        args.metadata_a,
+        args.metadata_b,
+    ]
     if args.mapping:
         inputs.append(args.mapping)
     if args.output.resolve() in {path.resolve() for path in inputs}:
@@ -108,12 +117,21 @@ def summarize(args: argparse.Namespace) -> None:
     species_a, species_b = handoff.get("species_a"), handoff.get("species_b")
     if not all(isinstance(species, str) and species for species in (species_a, species_b)):
         raise ValueError("Handoff species are missing")
-    matches = [item for item in report.get("statistics", []) if isinstance(item, dict) and all(
-        item.get(field) == handoff.get(field) for field in ("species_a", "species_b", "phase", "statistic", "provenance")
-    )]
-    if (len(matches) != 1 or matches[0].get("status") != "eligible"
-            or matches[0].get("floors_pass") is not True
-            or matches[0].get("comparison_supported") is not True):
+    matches = [
+        item
+        for item in report.get("statistics", [])
+        if isinstance(item, dict)
+        and all(
+            item.get(field) == handoff.get(field)
+            for field in ("species_a", "species_b", "phase", "statistic", "provenance")
+        )
+    ]
+    if (
+        len(matches) != 1
+        or matches[0].get("status") != "eligible"
+        or matches[0].get("floors_pass") is not True
+        or matches[0].get("comparison_supported") is not True
+    ):
         raise ValueError("Expected one eligible named statistic")
     selected = matches[0]
     if selected.get("n_comparable_pairs") != handoff.get("n_comparable_pairs_reported"):
@@ -124,11 +142,14 @@ def summarize(args: argparse.Namespace) -> None:
         metadata = bounded_json(metadata_path)
         if metadata != handoff.get(f"metadata_{suffix}") or metadata.get("score_definition") != "null_corrected_z":
             raise ValueError(f"Side {suffix} metadata content or score definition disagrees")
-        for field, expected in (("species", species), ("phase", handoff.get("phase")),
-                                ("statistic", handoff.get("statistic")),
-                                ("statistic_provenance", handoff.get("provenance")),
-                                ("statistics_source_sha256", handoff.get("statistics_sha256")),
-                                ("score_table_sha256", handoff.get(f"scores_{suffix}_sha256"))):
+        for field, expected in (
+            ("species", species),
+            ("phase", handoff.get("phase")),
+            ("statistic", handoff.get("statistic")),
+            ("statistic_provenance", handoff.get("provenance")),
+            ("statistics_source_sha256", handoff.get("statistics_sha256")),
+            ("score_table_sha256", handoff.get(f"scores_{suffix}_sha256")),
+        ):
             if metadata.get(field) != expected:
                 raise ValueError(f"Side {suffix} metadata {field} disagrees with handoff")
 
@@ -202,18 +223,26 @@ def summarize(args: argparse.Namespace) -> None:
         "scope": "descriptive_full_vocabulary_joined_one_to_one_universe",
         "method": "spearman_average_ties_and_paired_z_difference_b_minus_a_v1",
         "interpretation": "Descriptive score-available universe only; no p-value, uncertainty, or biological verdict",
-        "handoff_sha256": sha256(args.handoff), "report_sha256": sha256(args.report),
+        "handoff_sha256": sha256(args.handoff),
+        "report_sha256": sha256(args.report),
         "table_sha256": sha256(args.table),
         "mapping_sha256": sha256(args.mapping) if args.mapping else None,
-        "vocab_a_sha256": sha256(args.vocab_a), "vocab_b_sha256": sha256(args.vocab_b),
-        "scores_a_sha256": sha256(args.scores_a), "scores_b_sha256": sha256(args.scores_b),
-        "metadata_a_sha256": sha256(args.metadata_a), "metadata_b_sha256": sha256(args.metadata_b),
+        "vocab_a_sha256": sha256(args.vocab_a),
+        "vocab_b_sha256": sha256(args.vocab_b),
+        "scores_a_sha256": sha256(args.scores_a),
+        "scores_b_sha256": sha256(args.scores_b),
+        "metadata_a_sha256": sha256(args.metadata_a),
+        "metadata_b_sha256": sha256(args.metadata_b),
         "statistics_sha256": handoff["statistics_sha256"],
-        "species_a": species_a, "species_b": species_b, "phase": handoff["phase"],
-        "statistic": handoff["statistic"], "provenance": handoff["provenance"],
+        "species_a": species_a,
+        "species_b": species_b,
+        "phase": handoff["phase"],
+        "statistic": handoff["statistic"],
+        "provenance": handoff["provenance"],
         "score_definition": "null_corrected_z",
         "score_difference_direction": "species_b_minus_species_a",
-        "n_genome_wide_pairs": len(genome_pairs), "n_vocabulary_joined_pairs": len(joined),
+        "n_genome_wide_pairs": len(genome_pairs),
+        "n_vocabulary_joined_pairs": len(joined),
         "n_selected_comparable_pairs": len(expected_selected),
         "n_full_universe_paired_scores": len(available),
         "exclusions": {
@@ -223,7 +252,8 @@ def summarize(args: argparse.Namespace) -> None:
             "joined_pairs_missing_either_score": missing_either,
             "missing_score_reason": "gene_absent_from_supplied_finite_score_table; not biological absence",
         },
-        "n_score_rows_a": len(scores_a), "n_score_rows_b": len(scores_b),
+        "n_score_rows_a": len(scores_a),
+        "n_score_rows_b": len(scores_b),
         "n_tied_score_values_a": len(x) - len(set(x)),
         "n_tied_score_values_b": len(y) - len(set(y)),
         "spearman_rho": rho,
@@ -240,8 +270,18 @@ def summarize(args: argparse.Namespace) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ("handoff", "report", "table", "vocab-a", "vocab-b", "scores-a",
-                 "scores-b", "metadata-a", "metadata-b", "output"):
+    for name in (
+        "handoff",
+        "report",
+        "table",
+        "vocab-a",
+        "vocab-b",
+        "scores-a",
+        "scores-b",
+        "metadata-a",
+        "metadata-b",
+        "output",
+    ):
         parser.add_argument(f"--{name}", type=Path, required=True)
     parser.add_argument("--mapping", type=Path)
     summarize(parser.parse_args())

@@ -1,0 +1,90 @@
+# Nature 2019 mouse source: bounded suitability audit — 2026-09-29
+
+This is evidence for the proposed corpus decision, not approval to add the
+source. No preparation, QC filtering, manifest edit, or model run was made.
+
+## Source identity and count matrix
+
+The local 53 MB H5AD at
+`/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature2019_E4.5-E7.5/小鼠_Mus_musculus__Single-cell multi-omics profiling of mouse early embryos.h5ad`
+is named with a loose article title. The linked publication is actually
+[Argelaguet et al., *Multi-omics profiling of mouse gastrulation at
+single-cell resolution*](https://www.nature.com/articles/s41586-019-1825-8).
+[GSE133725](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE133725)
+states that its processed count matrix has **2,971 columns across two GEO
+series**, 758 cells from GSE121650 and 2,213 from GSE133725. Thus the H5AD
+must be attributed to both series, not to GSE133725 alone.
+
+The H5AD has 2,971 unique cell names, 22,084 ENSMUSG genes, and a CSR `X`
+matrix with 18,499,833 stored nonzeros. A sequential, 524,288-value chunk
+scan found every stored value finite, nonnegative, and integral (range 1 to
+61,405); five cells have no stored values. The public GEO file is labelled a
+count matrix, and the local values are consistent with counts. This does not
+prove byte-for-byte identity with the GEO matrix because no source-matrix
+checksum or row comparison was available. The H5AD `uns/matrix_semantics`
+string, “raw counts where supplied by repository,” is too generic to be the
+sole evidence.
+
+The study used scNMT-seq, with RNA captured and amplified by a
+[Smart-seq2-based protocol](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM3926002).
+It is not a UMI assay. A fallback doublet method specified for raw UMI
+matrices cannot be applied to this source without assay-specific validation.
+
+## Recoverable cell metadata and source QC
+
+The [paper authors' public analysis repository](https://github.com/rargelaguet/scnmt_gastrulation)
+publishes `sample_metadata.txt.gz` with `sample`, `embryo`, `plate`, `stage`,
+and `pass_rnaQC`. The 38 KB file downloaded from
+[`master/sample_metadata.txt.gz`](https://github.com/rargelaguet/scnmt_gastrulation/blob/master/sample_metadata.txt.gz)
+had SHA-256
+`beb17d0460ad890ec27e709aff2e0ebd47138096fa59a730c3a10b029bee6467`.
+Its 2,976 unique sample names matched **all 2,971 H5AD cell names exactly**;
+five metadata names had no H5AD row. The local H5AD currently has only
+`species` and `species_cn` in `obs`, so these source fields are not yet
+available to the preparation pipeline.
+
+| Stage | H5AD rows | Source RNA QC pass | Source RNA QC fail | Distinct recorded embryo labels | QC-pass cells with a non-mixed embryo label |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| E4.5 | 192 | 175 | 17 | 8 | 175 |
+| E5.5 | 192 | 173 | 19 | 4 | 173 |
+| E6.5 | 1,152 | 977 | 175 | 9 | 590 |
+| E7.5 | 1,435 | 1,155 | 280 | 15 | 1,048 |
+| Total | 2,971 | 2,480 | 491 | 36 | 1,986 |
+
+Three of the 36 labels contain `embryomixed`, covering 668 cells, of which
+494 pass source RNA QC. These labels are pooled or ambiguous units, not
+evidence of three independent embryos. The other 33 labels have 1,986
+QC-pass cells; source metadata makes embryo-level isolation *possible* for
+them. Independent-embryo eligibility still needs a source-method check and
+post-QC split audit before any holdout use. The five empty matrix rows all
+have `pass_rnaQC=FALSE`.
+
+The `pass_rnaQC` flag is an author-provided screening result, not a full
+reconstruction of the assay's thresholds. Its 491 failures are present in
+the local H5AD. Including this file as-is would pass known failed cells to
+the current generic preparation path. Stage parsed from cell names is
+unreliable: labels such as `E4.5-5.5_new_*` encode a collection/batch range,
+while the source metadata supplies the per-cell E4.5 or E5.5 stage.
+
+## Required before an inclusion decision becomes executable
+
+1. Record the owner/collaborator choice on this source. The documented
+   recommendation is conditional inclusion after QC; the current manifest
+   excludes it.
+2. If included, create a **derived** H5AD (or a verified row metadata join)
+   that retains the source counts and adds exact-joined `embryo_id`, `stage`,
+   `plate`, and `pass_rnaQC`. Exclude the 491 known RNA-QC failures before
+   preparation. Preserve the source and derived checksums and both GEO IDs.
+3. Register the actual assay vocabulary token for scNMT-seq/Smart-seq2 RNA,
+   and choose any additional QC rule appropriate for full-length non-UMI
+   counts. Do not substitute the UMI-specific doublet fallback.
+4. Do not assign `embryomixed` rows to an independent-embryo holdout. If any
+   individual embryo from the same collection could enter a holdout, either
+   prove the mixed cells are disjoint from it or exclude the mixed rows from
+   training as well; otherwise train/holdout leakage remains possible. Verify
+   the 33 other embryo labels and phase mapping, then rerun full post-QC
+   coverage and leakage checks on the approved final corpus.
+
+The bounded audit resolves the previous *metadata discoverability* gap.
+Scientific inclusion, exact assay handling, and final holdout eligibility
+remain open.

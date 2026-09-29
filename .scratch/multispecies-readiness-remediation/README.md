@@ -12,7 +12,7 @@ data, chicken identifier repair and production training remain separate gates.
 | Ticket | Review/decision coverage | Depends on | Current closure limit |
 | --- | --- | --- | --- |
 | [01 — Persist terminal resume state independently of selected weights](issues/01-terminal-resume-state.md) | R1; register 5.2/5.9/5.10; tracker E/F | None | Implemented; bounded CPU evidence |
-| [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | CPU implemented; distributed runtime unverified on this host |
+| [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | CPU implemented; remote two-rank smoke passed, distributed resume continuity unverified |
 | [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Tool implemented; full post-QC corpus absent |
 | [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Strict partial bridge; source release and unresolved IDs remain |
 | [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Tool implemented; real B3 scores and approved comparison absent |
@@ -22,7 +22,7 @@ data, chicken identifier repair and production training remain separate gates.
 | [09 — Mark structurally unsupported B2 metrics unevaluable](issues/09-representation-metric-eligibility.md) | R6; tracker J | None | Implemented; bounded CPU evidence |
 | [10 — Enforce the single-cell cap when strata outnumber slots](issues/10-hard-sampling-cap.md) | Additional review edge case; sampler exposure | None | Implemented; bounded CPU evidence |
 | [11 — Require zebrafish training participation and track additional-source intake](issues/11-zebrafish-readiness-and-intake.md) | Owner requirement; pending collaborator data | 03, 10 | Excluded from this continuation by owner |
-| [12 — Reconcile progress records and validate the bounded remediation workflow](issues/12-readiness-evidence-and-ci.md) | All findings; readiness claims; WSL constraint | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 | Local evidence recorded; remote CI, GPU and scientific gates open |
+| [12 — Reconcile progress records and validate the bounded remediation workflow](issues/12-readiness-evidence-and-ci.md) | All findings; readiness claims; WSL constraint | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 | Remote finetune CPU CI passed; pre-commit, GPU and scientific gates open |
 
 ## Dependency order
 
