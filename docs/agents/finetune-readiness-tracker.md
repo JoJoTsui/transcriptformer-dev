@@ -29,6 +29,14 @@ cannot serve as a final corpus or post-QC cohort. Ticket 05 now has a
 [producer-artifact closure runbook](../../.scratch/multispecies-readiness-remediation/issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison),
 but real B3 scores and a signed analysis method are still absent.
 
+The later [Nature2019 source audit](nature2019-source-suitability-2026-09-29.md)
+recovered exact cell metadata and 491 source RNA-QC failures still present in
+the local H5AD; it does not approve inclusion. On commit `fb2f648`, remote
+[finetune CPU CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896770)
+passed 337 selected tests and [change-scoped pre-commit CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896960)
+passed. Distributed launch is now smoke-checked on that runner, while per-rank
+RNG continuity across resume and real-corpus/GPU behavior remain unverified.
+
 Additional zebrafish data may be supplied by collaborators for this finetune.
 Source identity and delivery are pending. The existing Wagner dataset is already
 included; new data require overlap, metadata and post-QC split assessment before

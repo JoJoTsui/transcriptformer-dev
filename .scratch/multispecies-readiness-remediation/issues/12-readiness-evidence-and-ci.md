@@ -53,6 +53,11 @@ passed all 337 selected tests on Ubuntu/Python 3.11 after a bounded fixture
 repair allowed the Gloo smoke path to reach training. This is remote CPU
 integration evidence, not a real-corpus or accelerator result. The smoke case
 does not verify per-rank RNG continuity across distributed resume (ticket 02).
-The separate pre-commit workflow still ran all repository files and failed on
-untouched formatting debt; its change-scoped workflow correction requires a
-fresh CI result before that gate can be called passing.
+The separate pre-commit workflow initially ran all repository files and failed
+on untouched formatting debt. It now checks files changed by the push or PR;
+the [change-scoped pre-commit run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896960)
+and [finetune CPU run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896770)
+both passed on commit `fb2f648` (337 selected finetune tests). Untouched
+formatting debt is outside that change-scoped result and remains subject to
+the hooks when its files change. Real-corpus, GPU, scientific and distributed
+resume-continuity evidence remain open.
