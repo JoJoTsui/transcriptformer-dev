@@ -112,7 +112,8 @@ For scientific eligibility, pass `--statistics` with JSON shaped as:
 
 The species names, phase, statistic name and provenance label must be nonempty
 trimmed strings. The `genes_a` and `genes_b` values must be JSON arrays of
-nonempty gene-ID strings. An omitted or empty array is reported as unevaluable;
+nonempty trimmed gene-ID strings. An omitted or empty array is reported as
+unevaluable;
 a string in place of an array is rejected because treating its characters as
 separate genes would produce a false denominator. Duplicate IDs after gene-ID
 canonicalization, including stable-ID version collisions, are also rejected
@@ -174,6 +175,42 @@ The downstream analysis must verify the submitted `genes_a` and `genes_b`
 against those frozen tables, then pair scores using only this report's
 `comparable_pairs`. Its result must name the comparison method, paired-gene
 denominator, excluded genes and reasons, and the report and score-table hashes.
+
+`scripts/handoff_ortholog_scores.py` prepares the descriptive paired-score
+input for that later analysis. It requires an eligible, comparison-supported
+named statistic in the report and the original statistic-input JSON, whose hash
+must match the report. Supply one TSV per species with exactly the columns
+`gene_id` and `null_corrected_z`. IDs must already be canonical and unique;
+every selected input gene needs a finite score. Each TSV has a companion JSON
+metadata file containing nonempty `species`, `phase`, `statistic`, `run_id`,
+`model_id`, `data_id`, `split_id`, `score_definition`, `selection_rule`, and
+`tie_rule` strings, plus `statistic_provenance`,
+`statistics_source_sha256`, `selected_gene_ids` and `score_table_sha256`. The
+selected IDs must match the original statistic lists after canonicalization;
+the provenance and statistic-input hash must match the submitted request, and
+both species must share the same run ID, model ID, score definition, selection
+rule and tie rule. For example:
+
+```bash
+python scripts/handoff_ortholog_scores.py \
+  --report eligibility.json --statistics frozen-statistics.json \
+  --species-a homo_sapiens --species-b mus_musculus \
+  --phase gastrula --statistic impact_top_200 \
+  --scores-a human-scores.tsv --metadata-a human-scores.json \
+  --scores-b mouse-scores.tsv --metadata-b mouse-scores.json \
+  --output-tsv paired-scores.tsv --output-json paired-scores.json
+```
+
+The output TSV contains only the report's one-to-one `comparable_pairs` with
+both scores. Its JSON records input and output hashes, all denominators,
+selected IDs excluded from the paired set, and the report's unmapped counts.
+Its scope is `descriptive_paired_selected_genes`: independent top-ranked gene
+lists can select for high ranks in both species, so this handoff does not claim
+genome-wide divergence or choose a distributional test. The later B3 method
+must state its intended statistic universe before interpreting these pairs.
+The sidecar and list checks establish internal consistency; they cannot prove
+that the selected genes really are the top genes in the B3 ranking. Freeze and
+review the full rankings and selection procedure before a biological claim.
 The method and any inferential claim require scientific sign-off before use;
 this handoff does not select a test or turn an eligibility report into a result.
 

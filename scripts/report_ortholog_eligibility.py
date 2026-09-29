@@ -154,9 +154,9 @@ def evaluate_statistic(
     for field, genes in (("genes_a", genes_a), ("genes_b", genes_b)):
         if genes is not None and (
             not isinstance(genes, list)
-            or any(not isinstance(gene, str) or not gene.strip() for gene in genes)
+            or any(not isinstance(gene, str) or not gene or gene != gene.strip() for gene in genes)
         ):
-            raise ValueError(f"{field} must be a JSON array of nonempty gene IDs")
+            raise ValueError(f"{field} must be a JSON array of nonempty trimmed gene IDs")
         if genes:
             species = request["species_a" if field == "genes_a" else "species_b"]
             canonical = [canonical_gene_id(species, gene) for gene in genes]

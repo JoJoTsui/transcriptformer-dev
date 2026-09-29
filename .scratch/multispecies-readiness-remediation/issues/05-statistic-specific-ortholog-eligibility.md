@@ -1,7 +1,7 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
 Category: correctness and readiness
-Status: Eligibility tooling implemented; scientific inputs pending
+Status: Eligibility and paired-score handoff implemented; B3 inputs and comparison method pending
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -105,3 +105,13 @@ The report also accepts either species-pair order for a named statistic. It
 orients the finalized table and vocabulary-joined pairs to the request before
 computing the independent floors, preventing a valid reverse-order request
 from being falsely labeled ineligible because its exact table key was absent.
+
+A bounded [paired-score handoff](../../../scripts/handoff_ortholog_scores.py)
+now validates one eligible report entry against its original statistic JSON,
+frozen species/phase score tables and sidecar metadata. It rejects missing or
+nonfinite selected scores, mismatched hashes or identities, and malformed
+one-to-one pairs, then writes only the descriptive paired-score rows with a
+hash-bound manifest. The sidecar selection list must match the submitted gene
+list, but this does not prove that list's top-k ranking origin. No real B3
+score tables exist yet, and no distributional test or biological result is
+computed; the distributional-comparison criterion remains open.
