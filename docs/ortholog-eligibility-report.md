@@ -200,6 +200,7 @@ python scripts/handoff_ortholog_scores.py \
   --phase gastrula --statistic impact_top_200 \
   --scores-a human-scores.tsv --metadata-a human-scores.json \
   --scores-b mouse-scores.tsv --metadata-b mouse-scores.json \
+  --topk-verification verified-topk.json \
   --output-tsv paired-scores.tsv --output-json paired-scores.json
 ```
 
@@ -215,6 +216,26 @@ that the selected genes really are the top genes in the B3 ranking. Freeze and
 review the full rankings and selection procedure before a biological claim.
 The method and any inferential claim require scientific sign-off before use;
 this handoff does not select a test or turn an eligibility report into a result.
+
+To verify the submitted list's **arithmetic top-k origin** before the handoff,
+run `scripts/verify_ortholog_topk_origin.py` with the statistic JSON, both full
+scored TSVs, their sidecars and distinct frozen B3 source files. It accepts
+`impact_top_N` with a matching integer `top_k`, descending
+`null_corrected_z`, and either `gene_id_ascending` or `include_all_at_k` as
+the explicit boundary-tie rule. Each sidecar must also declare
+`score_universe: "all_scored_genes_for_species_phase"` and contain the actual
+`b3_source_sha256`; the verifier checks source, score-table and statistic-input
+bytes against their recorded hashes. The output records each table's scored
+denominator, selected count and cutoff score. The defaults cap each score
+table at 64 MiB and 100,000 rows and each B3 source file at 256 MiB; use its
+CLI cap arguments only after checking host resources. This verifies the
+submitted list against the supplied table. A producer declaration and byte
+hash cannot establish that the table is a complete B3 scoring universe or
+that the claimed model generated the source. For `impact_top_N`, the paired
+handoff requires `--topk-verification` and checks status, request and side
+identities, row and selected counts, score/metadata/source hashes, and ranking
+rules against its current inputs. Its manifest records the verification file's
+SHA-256. Freeze both manifests with the source artifacts.
 
 The bounded `scripts/summarize_ortholog_paired_scores.py` command can describe
 one such handoff without a p-value or population claim:

@@ -137,3 +137,42 @@ Example: `python scripts/summarize_ortholog_paired_scores.py --paired-tsv
 paired.tsv --manifest paired.json --output summary.json`. This describes the
 selected pairs only; it does not substitute for a full eligible-universe
 comparison or the still-missing real B3 scores and approved inference plan.
+
+A bounded [top-k origin verifier](../../../scripts/verify_ortholog_topk_origin.py)
+now closes the arithmetic gap in the handoff contract. Before producing the
+paired handoff, run it against the *complete submitted scored table* for each
+species/phase and a separate frozen B3 source artifact. The sidecars used by
+the handoff additionally need `top_k` (an integer matching `impact_top_N`),
+`score_universe: "all_scored_genes_for_species_phase"`,
+`selection_rule: "descending_null_corrected_z"`, a `tie_rule` of either
+`gene_id_ascending` (exactly N IDs) or `include_all_at_k` (all boundary ties),
+and `b3_source_sha256`. The existing `score_table_sha256` and
+`statistics_source_sha256` are also rechecked. Example:
+
+```sh
+python scripts/verify_ortholog_topk_origin.py \
+  --statistics frozen-statistics.json \
+  --species-a homo_sapiens --species-b mus_musculus \
+  --phase gastrula --statistic impact_top_200 \
+  --scores-a human-scores.tsv --metadata-a human-scores.json \
+  --b3-source-a human-b3-source.bin \
+  --scores-b mouse-scores.tsv --metadata-b mouse-scores.json \
+  --b3-source-b mouse-b3-source.bin \
+  --output verified-topk.json
+```
+
+The command rejects missing, duplicate, noncanonical or nonfinite score rows,
+hash mismatches, and a submitted list that differs from the declared top-k
+rule. It defaults to 64 MiB per table, 256 MiB per B3 source and 100,000 score
+rows per species, with explicit CLI caps for larger inputs. It emits source,
+table, metadata and request hashes plus counts and the boundary score. The
+`score_universe` field is a producer declaration: the verifier cannot prove
+that a table contains every gene the model scored or that the B3 source bytes
+were made by the claimed model. For `impact_top_N`, the paired-score handoff
+now requires `--topk-verification verified-topk.json`. It checks verification
+status, request hash and provenance, each side's species/phase/statistic,
+run/model/data identity, scored and selected denominators, score and metadata
+hashes, B3 source hash, top-k, selection and tie rules. The handoff manifest
+records the verification file's SHA-256. No real B3 source, full scored table
+or frozen statistic request exists yet, so this does not close the
+distributional-comparison acceptance item.

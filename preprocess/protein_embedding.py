@@ -1,9 +1,9 @@
 import argparse
 import gzip
+import hashlib
 import json
 import logging
 import os
-import pickle
 import shutil
 import urllib.request
 from pathlib import Path
@@ -21,17 +21,97 @@ STABLE_ID_DIR = PREPROCESS_DIR / "gene_protein_stable_ids"
 FASTA_MANIFEST = PREPROCESS_DIR / "fasta_manifest_pep.json"
 
 
-def save_as_hdf5(data_dict, output_path):
-    """Save dictionary as HDF5 file."""
-    with h5py.File(output_path, "w") as f:
-        # Store the keys as a dataset
-        keys = list(data_dict.keys())
-        f.create_dataset("keys", data=np.array(keys, dtype="S"))
+def sha256_file(path):
+    """Hash a source or cached model without loading it into memory."""
+    digest = hashlib.sha256()
+    with open(path, "rb") as source:
+        for block in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
-        # Create a group for the arrays
-        arrays_group = f.create_group("arrays")
-        for key, value in data_dict.items():
-            arrays_group.create_dataset(str(key), data=value)
+
+def atomic_json(path, value):
+    temporary = path.with_name(path.name + ".tmp")
+    with open(temporary, "w", encoding="utf-8") as output:
+        json.dump(value, output, sort_keys=True, indent=2)
+        output.flush()
+        os.fsync(output.fileno())
+    os.replace(temporary, path)
+
+
+def completed_chunk(path, identity, batch_idx, expected_labels):
+    """Accept only a fully published chunk belonging to this exact run."""
+    try:
+        with h5py.File(path, "r") as chunk:
+            labels = [value.decode("utf-8") for value in chunk["labels"][:]]
+            vectors = chunk["vectors"]
+            values = vectors[:]
+            digest = hashlib.sha256()
+            digest.update(json.dumps(labels, ensure_ascii=False).encode("utf-8"))
+            digest.update(values.tobytes())
+            return (
+                chunk.attrs["identity"] == identity
+                and chunk.attrs["batch_idx"] == batch_idx
+                and labels == list(expected_labels)
+                and vectors.ndim == 2
+                and vectors.shape[0] == len(labels)
+                and vectors.shape[1] > 0
+                and np.isfinite(values).all()
+                and chunk.attrs["sha256"] == digest.hexdigest()
+            )
+    except (OSError, KeyError, UnicodeDecodeError, ValueError):
+        return False
+
+
+def publish_chunk(path, identity, batch_idx, labels, vectors):
+    temporary = path.with_name(path.name + ".tmp")
+    vectors = np.asarray(vectors, dtype=np.float32)
+    if vectors.ndim != 2 or not np.isfinite(vectors).all():
+        raise ValueError(f"Nonfinite or malformed protein embeddings for batch {batch_idx}")
+    digest = hashlib.sha256()
+    digest.update(json.dumps(labels, ensure_ascii=False).encode("utf-8"))
+    digest.update(vectors.tobytes())
+    with h5py.File(temporary, "w") as chunk:
+        chunk.attrs["identity"] = identity
+        chunk.attrs["batch_idx"] = batch_idx
+        chunk.attrs["sha256"] = digest.hexdigest()
+        chunk.create_dataset("labels", data=np.asarray(labels, dtype="S"))
+        chunk.create_dataset("vectors", data=vectors)
+        chunk.flush()
+    os.replace(temporary, path)
+
+
+def publish_gene_embeddings(save_file, chunks, identity, gene_ids):
+    """Average all protein isoforms with bounded RAM; publish only when complete."""
+    output = Path(save_file)
+    aggregate_path = output.with_name(output.name + ".aggregate.tmp.h5")
+    output_tmp = output.with_name(output.name + ".tmp.h5")
+    gene_indices = {gene_id: i for i, gene_id in enumerate(gene_ids)}
+    with h5py.File(chunks[0], "r") as first_chunk:
+        dimension = first_chunk["vectors"].shape[1]
+
+    with h5py.File(aggregate_path, "w") as aggregate:
+        sums = aggregate.create_dataset("sums", (len(gene_ids), dimension), dtype="f8", fillvalue=0)
+        counts = aggregate.create_dataset("counts", (len(gene_ids),), dtype="i8", fillvalue=0)
+        for chunk_path in chunks:
+            with h5py.File(chunk_path, "r") as chunk:
+                labels = [value.decode("utf-8") for value in chunk["labels"][:]]
+                for i, gene_id in enumerate(labels):
+                    row = gene_indices[gene_id]
+                    sums[row] = sums[row] + chunk["vectors"][i]
+                    counts[row] = counts[row] + 1
+        with h5py.File(output_tmp, "w") as result:
+            result.attrs["identity"] = identity
+            result.attrs["complete"] = True
+            result.create_dataset("keys", data=np.asarray(gene_ids, dtype="S"))
+            arrays = result.create_group("arrays")
+            for row, gene_id in enumerate(gene_ids):
+                if counts[row] == 0:
+                    raise RuntimeError(f"No protein embedding for {gene_id}")
+                arrays.create_dataset(gene_id, data=(sums[row] / counts[row]).astype(np.float32))
+            result.flush()
+    os.replace(output_tmp, output)
+    aggregate_path.unlink()
 
 
 def clean_sequence(seq: str):
@@ -74,7 +154,12 @@ def generate_embeddings(
     fasta: str,
     save_file: str,
     seq_length=1022,
-    batch_size=16,
+    max_tokens=2048,
+    model_name="esm2_t36_3B_UR50D",
+    model_sha256=None,
+    source_sha256=None,
+    source_url=None,
+    layer=33,
 ):
     """
     Generates embeddings for protein sequences from a given FASTA file using a pre-trained model.
@@ -85,7 +170,7 @@ def generate_embeddings(
         fasta (str): Path to the input FASTA file containing protein sequences.
         save_file (str): Path to save the generated embeddings.
         seq_length (int, optional): Maximum sequence length for the embeddings. Defaults to 1022.
-        batch_size (int, optional): Batch size for processing. Defaults to 16.
+        max_tokens (int, optional): Maximum tokens per inference batch. Defaults to 2048.
 
     Returns
     -------
@@ -93,15 +178,19 @@ def generate_embeddings(
     """
     if not torch.cuda.is_available():
         raise RuntimeError("Protein embedding generation requires CUDA; refusing to write an empty output")
+    if max_tokens < 1:
+        raise ValueError("max_tokens must be positive")
+    if not model_sha256 or not source_sha256:
+        raise ValueError("A model checkpoint hash and source FASTA hash are required")
 
     save_dir = os.path.dirname(save_file)
     if save_dir and not os.path.exists(save_dir):
         os.makedirs(save_dir)
 
     dataset = FastaBatchedDataset.from_file(fasta)
+    dataset.sequence_strs = [clean_sequence(seq) for seq in dataset.sequence_strs]
 
-    num_tokens = 4096 * batch_size
-    batches = dataset.get_batch_indices(num_tokens, extra_toks_per_seq=1)
+    batches = dataset.get_batch_indices(max_tokens, extra_toks_per_seq=1)
 
     data_loader = torch.utils.data.DataLoader(
         dataset,
@@ -110,41 +199,76 @@ def generate_embeddings(
         num_workers=0,
     )
 
-    dataset.sequence_strs = [clean_sequence(seq) for seq in dataset.sequence_strs]
-
+    run = {
+        "format": 1,
+        "source_url": source_url,
+        "source_sha256": source_sha256,
+        "fasta_sha256": sha256_file(fasta),
+        "model_name": model_name,
+        "model_sha256": model_sha256,
+        "esm_version": getattr(esm, "__version__", "unknown"),
+        "layer": layer,
+        "seq_length": seq_length,
+        "max_tokens": max_tokens,
+        "batch_count": len(batches),
+    }
+    identity = hashlib.sha256(json.dumps(run, sort_keys=True).encode("utf-8")).hexdigest()
     if os.path.exists(save_file):
-        os.remove(save_file)
+        with h5py.File(save_file, "r") as existing:
+            if existing.attrs.get("identity") != identity or not existing.attrs.get("complete", False):
+                raise RuntimeError(f"Existing output belongs to another or incomplete run: {save_file}")
+        logging.info("Completed output already exists: %s", save_file)
+        return
 
-    embeddings = {}
+    parts_dir = Path(save_file + ".parts")
+    parts_dir.mkdir(exist_ok=True)
+    manifest = parts_dir / "manifest.json"
+    if manifest.exists():
+        with open(manifest, encoding="utf-8") as source:
+            if json.load(source) != run:
+                raise RuntimeError(f"Resume metadata differs; use a different output path: {parts_dir}")
+    elif any(path.name != "manifest.json.tmp" for path in parts_dir.iterdir()):
+        raise RuntimeError(f"Unidentified partial output exists: {parts_dir}")
+    else:
+        atomic_json(manifest, run)
+
+    gene_ids = []
+    seen_genes = set()
+    chunks = []
+    chunk_expectations = []
     num_gpus = torch.cuda.device_count()
     with torch.no_grad():
         for batch_idx, (labels, strs, toks) in enumerate(data_loader):
-            print(f"Processing batch {batch_idx + 1} of {len(batches)}")
-            if torch.cuda.is_available():
-                toks = pad_batch(toks, num_gpus).to(device="cuda", non_blocking=True)
+            chunk_path = parts_dir / f"batch_{batch_idx:08d}.h5"
+            expected_labels = [label.split()[0] for label in labels]
+            for gene_id in expected_labels:
+                if gene_id not in seen_genes:
+                    seen_genes.add(gene_id)
+                    gene_ids.append(gene_id)
+            if chunk_path.exists():
+                if not completed_chunk(chunk_path, identity, batch_idx, expected_labels):
+                    raise RuntimeError(f"Invalid completed chunk; inspect before resuming: {chunk_path}")
+                chunks.append(chunk_path)
+                chunk_expectations.append((chunk_path, batch_idx, expected_labels))
+                continue
+            logging.info("Processing batch %d of %d", batch_idx + 1, len(batches))
+            toks = pad_batch(toks, num_gpus).to(device="cuda", non_blocking=True)
+            out = model(toks, repr_layers=[layer], return_contacts=False)
+            representations = out["representations"][layer].to(device="cpu")
+            vectors = []
+            for i, sequence in enumerate(strs):
+                truncate_len = min(seq_length, len(sequence))
+                vectors.append(representations[i, 1 : truncate_len + 1].mean(0).numpy())
+            publish_chunk(chunk_path, identity, batch_idx, expected_labels, vectors)
+            chunks.append(chunk_path)
+            chunk_expectations.append((chunk_path, batch_idx, expected_labels))
 
-                out = model(toks, repr_layers=[33], return_contacts=False)
-
-                representations = {layer: t.to(device="cpu") for layer, t in out["representations"].items()}
-
-                for i, label in enumerate(labels):
-                    truncate_len = min(seq_length, len(strs[i]))
-                    embedding = representations[33][i, 1 : truncate_len + 1].mean(0).numpy()
-
-                    entry_id = label.split()[0]
-
-                    if entry_id in embeddings:
-                        embeddings[entry_id].append(embedding)
-                    else:
-                        embeddings[entry_id] = [embedding]
-
-                # Dump as we go just in case pipeline crashes
-                temp_save_file = save_file + ".tmp"
-                pickle.dump(embeddings, open(temp_save_file, "wb"))
-
-    averaged_embeddings = {k: np.mean(v, axis=0) for k, v in embeddings.items()}
-
-    save_as_hdf5(averaged_embeddings, save_file)
+    if not chunks:
+        raise RuntimeError("Input FASTA contains no protein sequences")
+    for chunk_path, batch_idx, expected_labels in chunk_expectations:
+        if not completed_chunk(chunk_path, identity, batch_idx, expected_labels):
+            raise RuntimeError(f"Chunk changed or is incomplete: {chunk_path}")
+    publish_gene_embeddings(save_file, chunks, identity, gene_ids)
 
 
 def main():
@@ -157,10 +281,7 @@ def main():
         help="Directory to save output files",
     )
     parser.add_argument(
-        "--batch_size",
-        type=int,
-        default=16,
-        help="Batch size for embedding generation",
+        "--max_tokens", type=int, default=2048, help="Maximum ESM-2 tokens per inference batch"
     )
     parser.add_argument(
         "--organism_key",
@@ -177,6 +298,8 @@ def main():
 
     if not torch.cuda.is_available():
         parser.error("Protein embedding generation requires CUDA; no output was written")
+    if args.max_tokens < 1:
+        parser.error("--max_tokens must be positive")
 
     logging.basicConfig(level=logging.INFO)
 
@@ -198,9 +321,18 @@ def main():
     if args.use_large_model:
         model, alphabet = esm.pretrained.esm2_t48_15B_UR50D()
         suffix = "_large"
+        model_name = "esm2_t48_15B_UR50D"
+        layer = 48
     else:
         model, alphabet = esm.pretrained.esm2_t36_3B_UR50D()
         suffix = ""
+        model_name = "esm2_t36_3B_UR50D"
+        layer = 33
+
+    checkpoint = Path(torch.hub.get_dir()) / "checkpoints" / f"{model_name}.pt"
+    if not checkpoint.is_file():
+        raise RuntimeError(f"Cannot fingerprint ESM-2 checkpoint: {checkpoint}")
+    model_sha256 = sha256_file(checkpoint)
 
     model.eval()  # disables dropout for deterministic results
     if torch.cuda.is_available():
@@ -215,43 +347,56 @@ def main():
     fasta_file = stable_id_dir / f"{organism}.fa"
     if not fasta_file.exists():
         logging.info(f"Downloading FASTA for {organism}")
-        # Download and decompress in one step using Python
-        with urllib.request.urlopen(fasta_url) as response:
-            if response.headers.get("Content-Encoding") == "gzip":
+        temporary = fasta_file.with_name(fasta_file.name + ".tmp")
+        with urllib.request.urlopen(fasta_url) as response, open(temporary, "wb") as out_file:
+            if fasta_url.endswith(".gz") or response.headers.get("Content-Encoding") == "gzip":
                 with gzip.GzipFile(fileobj=response) as gz_file:
-                    with open(fasta_file, "w") as out_file:
-                        shutil.copyfileobj(gz_file, out_file)
+                    shutil.copyfileobj(gz_file, out_file)
             else:
-                with open(fasta_file, "w") as out_file:
-                    shutil.copyfileobj(response, out_file)
+                shutil.copyfileobj(response, out_file)
+            out_file.flush()
+            os.fsync(out_file.fileno())
+        os.replace(temporary, fasta_file)
+    source_sha256 = sha256_file(fasta_file)
 
     # Convert to gene IDs
-    new_records = []
-    for record in SeqIO.parse(fasta_file, "fasta"):
-        if not args.use_large_model:
-            gene_id = record.description.split("gene:")[-1].split(" ")[0].strip().split(".")[0]
-        else:
-            if "gene_symbol" not in record.description:
-                gene_id = record.description.split("gene:")[-1].split(" ")[0].strip().split(".")[0]
-            else:
+    converted_fasta = stable_id_dir / f"{organism}_gene_input.fa"
+    converted_tmp = converted_fasta.with_name(converted_fasta.name + ".tmp")
+    with open(converted_tmp, "w", encoding="utf-8") as output:
+        for record in SeqIO.parse(fasta_file, "fasta"):
+            if args.use_large_model and "gene_symbol:" in record.description:
                 gene_id = record.description.split("gene_symbol:")[-1].split(" ")[0].strip()
-
-        record.id = gene_id
-        record.name = gene_id
-        new_records.append(record)
-
-    with open(fasta_file, "w") as f:
-        SeqIO.write(new_records, f, "fasta")
+            else:
+                if "gene:" not in record.description:
+                    raise ValueError(
+                        f"{organism}: protein {record.id} has no gene: field; "
+                        "provide a verified protein-to-gene bridge before embedding generation"
+                    )
+                gene_id = record.description.split("gene:")[-1].split(" ")[0].strip().split(".")[0]
+            if not gene_id:
+                raise ValueError(f"{organism}: protein {record.id} has an empty gene key")
+            record.id = gene_id
+            record.name = gene_id
+            record.description = gene_id
+            SeqIO.write(record, output, "fasta")
+        output.flush()
+        os.fsync(output.fileno())
+    os.replace(converted_tmp, converted_fasta)
 
     emb_file_name = output_dir / f"{organism}_gene{suffix}.h5"
-    logging.info(f"Processing {fasta_file} for {organism}")
+    logging.info(f"Processing {converted_fasta} for {organism}")
 
     generate_embeddings(
         model,
         alphabet,
-        str(fasta_file),
+        str(converted_fasta),
         save_file=str(emb_file_name),
-        batch_size=args.batch_size,
+        max_tokens=args.max_tokens,
+        model_name=model_name,
+        model_sha256=model_sha256,
+        source_sha256=source_sha256,
+        source_url=fasta_url,
+        layer=layer,
     )
 
 

@@ -59,12 +59,14 @@ sequentially on this WSL host.
   checkpoint genes and unknown exact source release keep R2 open. A bounded
   review of a published cross-assembly table found no additional row meeting
   the existing evidence rule; see the
-  [conflict review](../../docs/agents/chicken-conflict-review-2026-09-29.md).
+  [conflict review](../../docs/agents/chicken-conflict-review-2026-09-29.md)
+  and the [three-candidate follow-up](../../docs/agents/chicken-three-candidates-2026-09-29.md).
 - **Named ortholog statistics:** ticket 05's report boundary is implemented, but
   no frozen B3 phase rankings or scored distributional comparison exist. The
   checked acceptance items cover the tooling. A bounded selected-pair
   [descriptive comparator](../../scripts/summarize_ortholog_paired_scores.py)
-  is available; the comparison criterion remains open until ranked scores and
+  and a [top-k origin verifier](../../scripts/verify_ortholog_topk_origin.py)
+  are available; the comparison criterion remains open until ranked scores and
   a frozen scientific method are available.
 - **Still pending separately:** corpus/QC/assay/training sampling decisions, B1
   sign-off, missing probe resources, complete preparation and actual-model/GPU

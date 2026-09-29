@@ -72,15 +72,15 @@ carry assembly accessions; species identity was verified from NCBI assembly reco
 macaque_zhai_2022 keeps its "Missing species metadata: species" blocker (obs has no species
 column; README + Zhai 2022 identify M. fascicularis; not fabricatable read-only).
 
-## 3. ESM-2 generation plan (document only — do NOT run until defects below are fixed)
+## 3. ESM-2 generation plan (document only — do NOT run until data joins and dependencies are resolved)
 
 Exact commands (per deliverable; run after installing fair-esm + biopython):
 
 ```bash
-.venv/bin/python preprocess/protein_embedding.py --organism_key macaca_fascicularis   --output_dir checkpoints/tf_metazoa_finetuned/vocabs
-.venv/bin/python preprocess/protein_embedding.py --organism_key cavia_porcellus       --output_dir checkpoints/tf_metazoa_finetuned/vocabs
-.venv/bin/python preprocess/protein_embedding.py --organism_key ciona_intestinalis    --output_dir checkpoints/tf_metazoa_finetuned/vocabs
-.venv/bin/python preprocess/protein_embedding.py --organism_key branchiostoma_floridae --output_dir checkpoints/tf_metazoa_finetuned/vocabs
+.venv/bin/python preprocess/protein_embedding.py --organism_key macaca_fascicularis   --max_tokens 2048 --output_dir checkpoints/tf_metazoa_finetuned/vocabs
+.venv/bin/python preprocess/protein_embedding.py --organism_key cavia_porcellus       --max_tokens 2048 --output_dir checkpoints/tf_metazoa_finetuned/vocabs
+.venv/bin/python preprocess/protein_embedding.py --organism_key ciona_intestinalis    --max_tokens 2048 --output_dir checkpoints/tf_metazoa_finetuned/vocabs
+.venv/bin/python preprocess/protein_embedding.py --organism_key branchiostoma_floridae --max_tokens 2048 --output_dir checkpoints/tf_metazoa_finetuned/vocabs
 ```
 
 Size/time estimates (stream-counted from the verified FASTAs; esm2_t36_3B_UR50D on the single
@@ -93,14 +93,34 @@ RTX 3090 24 GB; assume 1,000-3,000 residues/s with token-budget batching):
 | ciona_intestinalis | 21,096 | 21,096* | 13.5 M | 1.2-3.8 h | ~216 MB |
 | branchiostoma_floridae | 43,041 | 43,041* | 28.3 M | 2.6-7.9 h | ~441 MB |
 
-*no `gene:` tags → one key per protein, no isoform averaging. Add ~2.5 GB one-off ESM-2 3B
+*no `gene:` tags → the current generator rejects these sources until a verified
+protein-to-gene bridge is supplied; the displayed gene/output estimates are
+historical accession-key estimates, not a runnable plan. Add ~2.5 GB one-off ESM-2 3B
 checkpoint download. Sequences longer than 1,022 residues are truncated (`seq_length=1022`).
-Whole-proteome embeddings are held in RAM and re-pickled after every batch (~0.5-1 GB/species
-duplicated); batch token budget at the default `--batch_size 16` is 65,536 tokens/batch — too
-large for 24 GB with a 3B model; use `--batch_size 1-2` (4,096-8,192 tokens) or fix chunking first.
+The generator now defaults to 2,048 tokens per inference batch; this is a starting limit,
+not a measured safe value for the RTX 3090. A single long protein can still exceed the
+budget before its input is truncated. Probe VRAM with a small job before any proteome run.
+Each completed batch is stored once in `<output>.parts/batch_*.h5`. The run manifest fixes
+the source URL and SHA-256, normalized FASTA SHA-256, model checkpoint SHA-256, ESM version,
+layer, sequence length, token budget, and batch count. Resume skips only chunks with matching
+identity, batch index, gene labels, shape and content checksum. Per-gene protein means are assembled from chunks via
+an on-disk HDF5 sum/count file; the final `keys`/`arrays` HDF5 is atomically published only
+after all genes have values. Chunk and aggregate files temporarily increase disk use; completed
+chunks are retained for inspection and reruns. Changing an input or parameter requires a new
+output path or deliberate removal of the old partial directory. No ESM job has been run.
 
-Known limits of `preprocess/protein_embedding.py` (the CPU guard and path resolution
-were repaired on 2026-09-29; chunking/resume remain open):
+Crash/replay invariant: the manifest is written before inference; each batch writes
+`batch_N.h5.tmp` and renames it to `batch_N.h5` only after its HDF5 file closes. On restart,
+the generator recomputes the source, normalized FASTA, model and parameter identity and
+rejects any manifest mismatch. It skips a batch only when the completed chunk's identity,
+index, labels, shape and SHA-256 content checksum match the freshly reconstructed batch. It validates **every** chunk
+again before aggregation. Aggregate and final temporary files can be rebuilt after a process
+crash; only a closed, complete final file is renamed to the requested `.h5`. No partial `.h5`
+is advertised as a vocab. A power failure or underlying filesystem corruption still requires
+manual inspection of the affected chunk and source cache.
+
+Known limits of `preprocess/protein_embedding.py` (CPU guard, path resolution,
+bounded batch output and resume were repaired on 2026-09-29):
 1. **`fair-esm`/`esm` is NOT installed in `.venv`** (verified `ModuleNotFoundError: No module
    named 'esm'`; `Bio`/biopython is also missing and imported at module top) — the script cannot
    even import today.
@@ -108,12 +128,16 @@ were repaired on 2026-09-29; chunking/resume remain open):
    only on the CUDA path. A CPU invocation now fails before writing an output,
    preventing the former silent empty `keys`/`arrays` HDF5 result. CPU inference
    itself has not been implemented.
-3. **No chunked-inference mode** although register 8.1 requires chunking on this memory-limited
-   host (~26 GiB RAM). There is also no resume (the `.tmp` pickle is written but never reloaded)
-   and the batch token budget above is not clamped to VRAM.
+3. **Inference still needs a measured VRAM budget.** The default is capped at 2,048 tokens,
+   but the 3B model has not been loaded on this host for this plan. HDF5 chunk publication
+   prevents a partial final vocab after a process crash and avoids the former growing pickle.
+   A machine or filesystem crash can still damage an HDF5 chunk; resume rejects it for review.
 4. **Resolved path footgun:** the FASTA manifest and stable-ID cache now resolve
    relative to `preprocess/protein_embedding.py`, independent of the invocation
-   directory. `--output_dir` still resolves from the caller's working directory.
+   directory. The downloaded source FASTA is preserved; a separate normalized gene-key
+   FASTA is generated atomically. Missing `gene:` tags now fail explicitly, so the
+   Ciona and amphioxus NCBI sources cannot silently produce protein-accession
+   vocabularies. `--output_dir` still resolves from the caller's working directory.
 5. **Protein aggregation discrepancy (code adjusted, not run):** the [TranscriptFormer author preprint,
    Methods 1.4](https://www.biorxiv.org/content/10.1101/2025.04.25.650731v1)
    describes averaging ESM-2 protein embeddings when a gene has multiple
@@ -122,7 +146,7 @@ were repaired on 2026-09-29; chunking/resume remain open):
    existing accumulation/mean step. The local script now retains all protein
    records for that step; no embedding job or runtime validation was run. The
    Ghost audit found 8,908 Ciona gene roots with multiple protein records.
-   Resolve the Ghost header-to-gene rewrite, chunk/resume behavior and assay
+   Resolve the Ghost header-to-gene rewrite, gene-namespace joins and assay
    resource plan before generating new B4 assets.
 
 ## 4. Pre-generated ESM-2 embeddings for sus_scrofa / xenopus_tropicalis — provenance

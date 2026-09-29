@@ -110,3 +110,10 @@ unique-GeneID plus same-direct-RefSeq rule. All 37 conflicting published
 targets lack a release-110 GeneID xref; the current bridge targets retain
 both independent evidence types. Three of the 28 additions share a GeneID
 but fail the RefSeq requirement. R2 remains open without a mapping change.
+
+A [three-candidate protein/exon follow-up](../../../docs/agents/chicken-three-candidates-2026-09-29.md)
+found a unique shared GeneID-linked gene per archived core for all three,
+an exact 247-residue FBXO2 peptide match, near-identical KXD1 peptides and
+substantial SH3BP1 exon/protein continuity. The current REST records are not
+frozen release histories; possible competing genes without a GeneID xref and
+the checkpoint's exact source remain unresolved. No mapping was added.

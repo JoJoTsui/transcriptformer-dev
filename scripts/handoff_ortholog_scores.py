@@ -108,8 +108,49 @@ def scored_table(path, metadata_path, species, phase, statistic, provenance, sta
     return metadata, scores, file_hash, total
 
 
+def verified_topk(path, statistics_hash, provenance, sides):
+    if path.stat().st_size > 1024 * 1024:
+        raise ValueError(f"{path}: top-k verification exceeds the 1 MiB cap")
+    verification = json.loads(path.read_text())
+    if not isinstance(verification, dict) or verification.get("schema_version") != 1:
+        raise ValueError(f"{path}: invalid top-k verification schema")
+    for field, expected in (
+        ("status", "top_k_matches_submitted_score_tables"),
+        ("statistics_source_sha256", statistics_hash),
+        ("statistic_provenance", provenance),
+    ):
+        if verification.get(field) != expected:
+            raise ValueError(f"{path}: {field} does not match this handoff")
+    verified_sides = verification.get("sides")
+    if not isinstance(verified_sides, list) or len(verified_sides) != 2:
+        raise ValueError(f"{path}: expected exactly two verified species sides")
+    for index, (verified, current) in enumerate(zip(verified_sides, sides, strict=True)):
+        if not isinstance(verified, dict):
+            raise ValueError(f"{path}: side {index} is not an object")
+        metadata, score_hash, metadata_hash, n_rows, n_selected, species, phase, statistic = current
+        expected = {
+            "species": species, "phase": phase, "statistic": statistic,
+            "run_id": metadata["run_id"], "model_id": metadata["model_id"],
+            "data_id": metadata["data_id"], "split_id": metadata["split_id"],
+            "score_table_sha256": score_hash, "metadata_sha256": metadata_hash,
+            "b3_source_sha256": metadata.get("b3_source_sha256"),
+            "n_scored_genes": n_rows, "n_selected": n_selected,
+            "top_k": metadata.get("top_k"),
+            "selection_rule": metadata["selection_rule"],
+            "tie_rule": metadata["tie_rule"],
+        }
+        if not isinstance(expected["b3_source_sha256"], str) or not expected["b3_source_sha256"]:
+            raise ValueError(f"Side {index}: missing B3 source hash in metadata")
+        for field, value in expected.items():
+            if verified.get(field) != value or (field in ("top_k", "n_scored_genes", "n_selected") and type(verified.get(field)) is not int):
+                raise ValueError(f"{path}: side {index} {field} disagrees with current handoff input")
+    return sha256(path)
+
+
 def handoff(args):
     inputs = (args.report, args.statistics, args.scores_a, args.scores_b, args.metadata_a, args.metadata_b)
+    if args.topk_verification is not None:
+        inputs += (args.topk_verification,)
     outputs = (args.output_tsv, args.output_json)
     if len({path.resolve() for path in outputs}) != len(outputs) or any(
         output.resolve() == source.resolve() for output in outputs for source in inputs
@@ -167,6 +208,19 @@ def handoff(args):
     common_fields = ("run_id", "model_id", "score_definition", "selection_rule", "tie_rule")
     if any(meta_a[field] != meta_b[field] for field in common_fields):
         raise ValueError("Scored tables must share run, model, score and selection definitions")
+    topk_hash = None
+    if args.statistic.startswith("impact_top_"):
+        if args.topk_verification is None:
+            raise ValueError("impact_top_N requires --topk-verification")
+        topk_hash = verified_topk(
+            args.topk_verification, statistics_hash, source["provenance"],
+            (
+                (meta_a, hash_a, sha256(args.metadata_a), rows_a, len(genes_a), args.species_a, args.phase, args.statistic),
+                (meta_b, hash_b, sha256(args.metadata_b), rows_b, len(genes_b), args.species_b, args.phase, args.statistic),
+            ),
+        )
+    elif args.topk_verification is not None:
+        raise ValueError("--topk-verification supports only impact_top_N statistics")
     if len(normalized_pairs) != result["n_comparable_pairs"]:
         raise ValueError("Paired score denominator changed")
     paired_a = {a for a, _ in normalized_pairs}
@@ -181,6 +235,7 @@ def handoff(args):
         "ortholog_table_sha256": report.get("source_table_sha256"),
         "ortholog_mapping": report.get("mapping"),
         "scores_a_sha256": hash_a, "scores_b_sha256": hash_b,
+        "topk_verification_sha256": topk_hash,
         "metadata_a_sha256": sha256(args.metadata_a), "metadata_b_sha256": sha256(args.metadata_b),
         "metadata_a": meta_a, "metadata_b": meta_b,
         "n_input_a": len(genes_a), "n_input_b": len(genes_b),
@@ -217,6 +272,7 @@ def main():
         parser.add_argument(f"--{name}", type=Path, required=True)
     for name in ("species-a", "species-b", "phase", "statistic"):
         parser.add_argument(f"--{name}", required=True)
+    parser.add_argument("--topk-verification", type=Path)
     handoff(parser.parse_args())
 
 
