@@ -66,11 +66,15 @@ sequentially on this WSL host.
   checked acceptance items cover the tooling. A bounded selected-pair
   [descriptive comparator](../../scripts/summarize_ortholog_paired_scores.py)
   and a [top-k origin verifier](../../scripts/verify_ortholog_topk_origin.py)
-  are available; the comparison criterion remains open until ranked scores and
-  a frozen scientific method are available.
+  are available. A separate [full-universe descriptive comparator](../../scripts/summarize_ortholog_full_universe.py)
+  can recompute vocabulary-joined pairs and score-available denominators; the
+  comparison criterion remains open until real ranked scores and a frozen
+  scientific method are available.
 - **Still pending separately:** corpus/QC/assay/training sampling decisions, B1
-  sign-off, missing probe resources, complete preparation and actual-model/GPU
-  evidence.
+  sign-off, missing probe vocabularies, complete preparation and actual-model/GPU
+  evidence. The [probe vocabulary audit](../../docs/agents/b4-vocabulary-join-audit-2026-09-29.md)
+  reports all six configured vocabularies absent, so actual joins remain
+  unmeasured.
 - **Proposed technical details:** test seams, cohort budgets and patience
   integration are implementation design, not separately approved scientific
   policy. Refer to the spec for their constraints.

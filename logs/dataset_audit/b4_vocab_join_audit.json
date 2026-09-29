@@ -1,0 +1,211 @@
+{
+  "config_sha256": "88dbe1e20560220bf4321cc4bc886b107641a975b6733c7d30f24b1f81e76f06",
+  "datasets": [
+    {
+      "actual_coverage_fraction": null,
+      "actual_vocab_joined": null,
+      "bridge_ambiguous_excluded": 0,
+      "bridge_eligible": 26676,
+      "bridge_provenance": {
+        "annotation_release": "NCBI Branchiostoma floridae Annotation Release 100",
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/preprocess/gene_mappings/amphioxus_protein_bridge.tsv.gz",
+        "protein_fasta_sha256": "de341da4441b5d120437e23242b794f46e9f4aaf49d2f1b465abcd4388aacd89",
+        "protein_fasta_url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/003/815/GCF_000003815.2_Bfl_VNyyK/GCF_000003815.2_Bfl_VNyyK_protein.faa.gz",
+        "sha256": "2695e59c5c5774db9a88ca46f9655058f0b16f8250a01a25c4be4169bc9286dd"
+      },
+      "bridge_unmapped": 3050,
+      "direct_vocab_matches": null,
+      "eligible_absent_from_vocab": null,
+      "id": "amphioxus_markos_2024",
+      "probe_genes": 29726,
+      "probe_key_sha256": "8a109b7c861066b5137f064b1c55daa4cbf3a4d168d75fa9a878815fa5b3cb38",
+      "probe_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/佛罗里达文昌鱼_Branchiostoma_floridae/佛罗里达文昌鱼_Branchiostoma_floridae__Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head.h5ad",
+      "species": "branchiostoma_floridae",
+      "status": "vocabulary_missing",
+      "var_index": "gene"
+    },
+    {
+      "actual_coverage_fraction": null,
+      "actual_vocab_joined": null,
+      "bridge_ambiguous_excluded": 0,
+      "bridge_eligible": 19025,
+      "bridge_provenance": {
+        "rule": "ENSCPOG prefix before colon"
+      },
+      "bridge_unmapped": 298,
+      "direct_vocab_matches": null,
+      "eligible_absent_from_vocab": null,
+      "id": "guinea_pig_canizo_2025",
+      "probe_genes": 19323,
+      "probe_key_sha256": "e67188da86746b7b9938bdff7575ad35c6037542857e0d700b9a79cb511255c0",
+      "probe_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/豚鼠_Cavia_porcellus/Nature_Cell_Biology_2025/豚鼠_Cavia_porcellus__The guinea pig serves as an alternative model to study human preimplantation development.h5ad",
+      "species": "cavia_porcellus",
+      "status": "vocabulary_missing",
+      "var_index": "gene_id_symbol"
+    },
+    {
+      "actual_coverage_fraction": null,
+      "actual_vocab_joined": null,
+      "bridge_ambiguous_excluded": 0,
+      "bridge_eligible": 15228,
+      "bridge_provenance": {
+        "probe_kh_sha256": "a307c7692e57bb92aa6762a6d4452c1d71181282a5a9ddcb595472e23e7920b5",
+        "rule": "pinned Ghost KH2012 protein roots",
+        "source_zip_sha256": "91ae06cfab8010664f3d6a9a9ee18dff0375eb1cd581617f0988e59002b4d22a"
+      },
+      "bridge_unmapped": 41,
+      "direct_vocab_matches": null,
+      "eligible_absent_from_vocab": null,
+      "id": "ciona_cao_2019",
+      "probe_genes": 15269,
+      "probe_key_sha256": "6953183cca0ffbe12f5f61819a1b1862bf149c8f3e9ffd69263ddeb440452aad",
+      "probe_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/海鞘_Ciona_intestinalis/海鞘_Ciona_intestinalis__Comprehensive single cell transcriptome lineages of a proto-vertebrate.h5ad",
+      "species": "ciona_intestinalis",
+      "status": "vocabulary_missing",
+      "var_index": "gene"
+    },
+    {
+      "actual_coverage_fraction": null,
+      "actual_vocab_joined": null,
+      "bridge_ambiguous_excluded": 0,
+      "bridge_eligible": 12613,
+      "bridge_provenance": {
+        "audit_sha256": "b328bbfbf4916f94c3215f5e94ae2b228d98ff740e04852f01750290824f1b44",
+        "gtf_sha256": "27144c10fa3555c357ebef8f0c2e697963cd04b47f3a04303c2967e48deadc78",
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/preprocess/gene_mappings/macaca_fascicularis_probe_symbol_to_ensmfag.json",
+        "pep_sha256": "8f7bc5ebd229d78ea0d1eb261d292f19cd5e10590ac278ea10c736b0b13fd41a",
+        "release": 110,
+        "sha256": "80e0cfecb5ff0ba5799ad1c426e2b14609b01f7d4b89c6327b653b3603dbfc3b"
+      },
+      "bridge_unmapped": 13522,
+      "direct_vocab_matches": null,
+      "eligible_absent_from_vocab": null,
+      "id": "macaque_zhai_2022",
+      "probe_genes": 26135,
+      "probe_key_sha256": "006469f9a174c9772e398cd56b6cfb93cbe87e5440c613f7148d0839e7886f65",
+      "probe_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/Nature_2022_CS8-CS11/食蟹猴_Macaca_fascicularis__Primate gastrulation and early organogenesis at single-cell resolution.h5ad",
+      "species": "macaca_fascicularis",
+      "status": "vocabulary_missing",
+      "var_index": "gene"
+    },
+    {
+      "actual_coverage_fraction": null,
+      "actual_vocab_joined": null,
+      "bridge_ambiguous_excluded": 0,
+      "bridge_eligible": 14202,
+      "bridge_provenance": {
+        "audit_sha256": "b328bbfbf4916f94c3215f5e94ae2b228d98ff740e04852f01750290824f1b44",
+        "gtf_sha256": "27144c10fa3555c357ebef8f0c2e697963cd04b47f3a04303c2967e48deadc78",
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/preprocess/gene_mappings/macaca_fascicularis_probe_symbol_to_ensmfag.json",
+        "pep_sha256": "8f7bc5ebd229d78ea0d1eb261d292f19cd5e10590ac278ea10c736b0b13fd41a",
+        "release": 110,
+        "sha256": "80e0cfecb5ff0ba5799ad1c426e2b14609b01f7d4b89c6327b653b3603dbfc3b"
+      },
+      "bridge_unmapped": 19758,
+      "direct_vocab_matches": null,
+      "eligible_absent_from_vocab": null,
+      "id": "macaque_gong_2023",
+      "probe_genes": 33960,
+      "probe_key_sha256": "2cc1e222c0a939638b8c1435d61e9dddc55b8ad4c93c872494d5f8d83283743d",
+      "probe_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/Cell_ex_utero_embryogenesis/食蟹猴_Macaca_fascicularis__Ex utero monkey embryogenesis from blastocyst to early organogenesis.h5ad",
+      "species": "macaca_fascicularis",
+      "status": "vocabulary_missing",
+      "var_index": "gene_id"
+    },
+    {
+      "actual_coverage_fraction": null,
+      "actual_vocab_joined": null,
+      "bridge_ambiguous_excluded": 0,
+      "bridge_eligible": 3263,
+      "bridge_provenance": {
+        "audit_sha256": "b328bbfbf4916f94c3215f5e94ae2b228d98ff740e04852f01750290824f1b44",
+        "gtf_sha256": "27144c10fa3555c357ebef8f0c2e697963cd04b47f3a04303c2967e48deadc78",
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/preprocess/gene_mappings/macaca_fascicularis_probe_symbol_to_ensmfag.json",
+        "pep_sha256": "8f7bc5ebd229d78ea0d1eb261d292f19cd5e10590ac278ea10c736b0b13fd41a",
+        "release": 110,
+        "sha256": "80e0cfecb5ff0ba5799ad1c426e2b14609b01f7d4b89c6327b653b3603dbfc3b"
+      },
+      "bridge_unmapped": 1400,
+      "direct_vocab_matches": null,
+      "eligible_absent_from_vocab": null,
+      "id": "macaque_spatial",
+      "probe_genes": 4663,
+      "probe_key_sha256": "bf79da7866ea72292adbc2f1e10b4116cd81c5f5dba80abb4a3a7fed3128de19",
+      "probe_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/食蟹猴_Macaca_fascicularis/空间转录组_CS9_CS10_Nature_Cell_Biology/食蟹猴_CS9_CS10__A three-dimensional spatial transcriptome atlas reconstructs early organogenesis in primate Carnegie stages 9 and 10 embryos.h5ad",
+      "species": "macaca_fascicularis",
+      "status": "vocabulary_missing",
+      "var_index": "gene_symbol"
+    },
+    {
+      "actual_coverage_fraction": null,
+      "actual_vocab_joined": null,
+      "bridge_ambiguous_excluded": 0,
+      "bridge_eligible": 19236,
+      "bridge_provenance": {
+        "rule": "exact var key"
+      },
+      "bridge_unmapped": 207,
+      "direct_vocab_matches": null,
+      "eligible_absent_from_vocab": null,
+      "id": "pig_simpson_2024",
+      "probe_genes": 19443,
+      "probe_key_sha256": "144a13d258228d9cbb2bbd03a0a1fcf0792053f06326637be48d63271c3e5d39",
+      "probe_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/猪_Sus_scrofa/猪_Sus_scrofa__A single-cell atlas of pig gastrulation as a resource for comparative embryology.h5ad",
+      "species": "sus_scrofa",
+      "status": "vocabulary_missing",
+      "var_index": "gene_id"
+    },
+    {
+      "actual_coverage_fraction": null,
+      "actual_vocab_joined": null,
+      "bridge_ambiguous_excluded": 174,
+      "bridge_eligible": 9485,
+      "bridge_provenance": {
+        "audit_sha256": "8060d5447c7b9c822d6f0584ae1176458c824bf225282dab740423d4f8cc685e",
+        "gtf_sha256": "6995905c2b97eaf0c79c58545049bd32f44d1d260812544db3777c89494dfbd9",
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/preprocess/gene_mappings/xenopus_tropicalis_probe_symbol_to_ensxetg.json",
+        "pep_sha256": "203398cc98855ddf0ddb79c2bbe1a7590849b97ada176ba951d27d4c82e8a1bd",
+        "release": 113,
+        "sha256": "7bc8ae852176a5fc3d9a8aaf86a7d12e6e6fa645116573f25017ccb07b8fe165"
+      },
+      "bridge_unmapped": 16891,
+      "direct_vocab_matches": null,
+      "eligible_absent_from_vocab": null,
+      "id": "xenopus_briggs_2018",
+      "probe_genes": 26550,
+      "probe_key_sha256": "43e10f3a4f9f68d7f52ade110b7221c5d2565ad2973f90a435930934829bdbe7",
+      "probe_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/热带爪蟾_Xenopus_tropicalis/Science_2018/热带爪蟾_Xenopus_tropicalis__The dynamics of gene expression in vertebrate embryogenesis at single-cell resolution.h5ad",
+      "species": "xenopus_tropicalis",
+      "status": "vocabulary_missing",
+      "var_index": "gene_name"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "H5AD var and HDF5 vocabulary keys/array shape only; no expression or embedding values read",
+  "vocabularies": {
+    "branchiostoma_floridae": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/branchiostoma_floridae_gene.h5",
+      "present": false
+    },
+    "cavia_porcellus": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/cavia_porcellus_gene.h5",
+      "present": false
+    },
+    "ciona_intestinalis": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/ciona_intestinalis_gene.h5",
+      "present": false
+    },
+    "macaca_fascicularis": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/macaca_fascicularis_gene.h5",
+      "present": false
+    },
+    "sus_scrofa": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/sus_scrofa_gene.h5",
+      "present": false
+    },
+    "xenopus_tropicalis": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned/vocabs/xenopus_tropicalis_gene.h5",
+      "present": false
+    }
+  }
+}

@@ -176,3 +176,19 @@ hashes, B3 source hash, top-k, selection and tie rules. The handoff manifest
 records the verification file's SHA-256. No real B3 source, full scored table
 or frozen statistic request exists yet, so this does not close the
 distributional-comparison acceptance item.
+
+A separate bounded [full-universe descriptive comparator](../../../scripts/summarize_ortholog_full_universe.py)
+can now reconstruct the vocabulary-joined one-to-one universe from the
+hash-bound report table, optional mapping and supplied model vocabularies. It
+binds the score and metadata files to the selected-pair handoff, checks that
+the report's selected intersection is a subset of the reconstructed universe,
+and reports the genome-wide, vocabulary-joined, score-available and selected
+denominators separately. Missing score rows are explicitly excluded as
+missing data, never treated as biological absence. On the full score-available
+pair universe it calculates average-tie Spearman concordance and descriptive
+paired z-score differences without a p-value or biological verdict. The
+vocabulary SHA-256 values are recorded because the eligibility reporter does
+not itself bind vocabulary file hashes. The command has 64 MiB input,
+100,000-score-row and one-million-ortholog-row caps. This remains **tooling**:
+real B3 scored tables, source verification, a frozen inference and uncertainty
+plan, and the biological result are absent, so acceptance item 5 remains open.

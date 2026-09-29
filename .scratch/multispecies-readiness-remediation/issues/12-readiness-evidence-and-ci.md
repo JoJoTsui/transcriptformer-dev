@@ -39,3 +39,11 @@ scientific and external-data gates remain in effect.
 ## Comments
 
 Initially published as a specification-only ticket. 2026-09-28 implementation evidence: The CPU CI selection includes ortholog, cohort, training selection and species readiness suites with native threads capped. The local explicit CPU suite passed 332 tests with one Gloo case deselected; the persistent-worker module stalled in this sandbox and is recorded as unverified. A later added tiny real-checkpoint export/reload test passed separately. Remote CI, GPU and full-corpus validation remain unverified.
+
+2026-09-29 continuation: the [non-zebrafish gate inventory](../../../docs/agents/non-zebrafish-gates-2026-09-29.md)
+and [decision provenance audit](../../../docs/agents/corpus-b1-decision-provenance-2026-09-29.md)
+keep corpus/QC and B1 approvals separate from accepted checkpoint-selection
+policy. The bounded [B4 vocabulary audit](../../../docs/agents/b4-vocabulary-join-audit-2026-09-29.md)
+found all six configured vocabularies absent and reports actual joins as
+unmeasured. `nvidia-smi` could not initialize NVML in this WSL session; no
+accelerator run or new test suite was performed in this continuation.

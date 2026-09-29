@@ -1,6 +1,6 @@
 # Protein Embeddings Generation
 
-This directory contains scripts for generating protein embeddings using Facebook's ESM-2 (Evolutionary Scale Modeling) models. The pipeline downloads protein sequences from Ensembl, processes them with pre-trained ESM-2 models, and outputs gene-level embeddings suitable for inputs to TranscriptFormer.
+This directory contains scripts for generating protein embeddings using ESM-2. The generator accepts protein FASTAs from its source manifest or an audited local gene-key FASTA, then averages protein embeddings per gene for TranscriptFormer. Source gene keys must match the intended vocabulary.
 
 ## Overview
 
@@ -8,7 +8,7 @@ The protein embedding pipeline consists of three main components:
 
 1. **`protein_embedding.py`** - Main script for generating protein embeddings using ESM-2 models
 2. **`get_stable_id_mapping.py`** - Utility functions for mapping between gene, transcript, and protein stable IDs
-3. **`fasta_manifest_pep.json`** - Configuration file containing download URLs for protein FASTA files from Ensembl
+3. **`fasta_manifest_pep.json`** - Download URLs for Ensembl and NCBI protein FASTAs; NCBI sources without `gene:` tags require a separate verified bridge.
 
 ## Installation
 
@@ -21,7 +21,7 @@ pip install -r requirements.txt
 pip install fair-esm
 ```
 
-For GPU acceleration (recommended):
+For the required CUDA execution path:
 ```bash
 # For CUDA-enabled PyTorch
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
@@ -43,14 +43,14 @@ source protein-embeddings/bin/activate  # On Windows: protein-embeddings\Scripts
 uv pip install -r requirements.txt
 uv pip install fair-esm
 
-# For GPU acceleration
+# For the required CUDA execution path
 uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
 
 ### System Requirements
 
-- **Memory**: At least 16GB RAM (32GB+ recommended for large models)
-- **GPU**: NVIDIA GPU with 8GB+ VRAM (optional but highly recommended)
+- **Memory**: Use a measured host budget; batching and on-disk chunks bound the growing output, while model loading still needs substantial memory.
+- **GPU**: CUDA is required by the current generator. Measure free VRAM with a small job before choosing `--max_tokens`; the default is not a verified safe budget.
 - **Storage**: Several GB for downloaded FASTA files and generated embeddings
 - **Network**: Internet connection for downloading protein sequences from Ensembl
 
@@ -70,16 +70,16 @@ python protein_embedding.py --organism_key homo_sapiens
 python protein_embedding.py \
     --organism_key mus_musculus \
     --output_dir /path/to/output \
-    --batch_size 32 \
-    --use_large_model true
+    --max_tokens 2048
 ```
 
 ### Command Line Arguments
 
 - `--organism_key`: Species to process (see [Supported Species](#supported-species))
 - `--output_dir`: Directory to save embeddings (default: current directory `./`)
-- `--batch_size`: Batch size for processing (default: 16)
-- `--use_large_model`: Use ESM-2 15B parameter model instead of 3B (default: false)
+- `--max_tokens`: Maximum ESM-2 tokens per inference batch (default: 2048; measure a safe value on the target GPU)
+- `--use_large_model`: Use ESM-2 15B instead of 3B (flag; requires a separate resource assessment)
+- `--input_gene_fasta`, `--input_gene_audit`, `--input_source_archive`: Supply all three for an audited local gene-key FASTA. The generator checks the source/archive hashes and organism before loading ESM; see the [Ciona bridge](../docs/agents/ciona-ghost-bridge-2026-09-29.md) and [amphioxus bridge](../docs/agents/amphioxus-protein-bridge-2026-09-29.md).
 
 
 ## Supported Species

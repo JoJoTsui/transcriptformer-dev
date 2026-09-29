@@ -250,9 +250,41 @@ It verifies the TSV hash and paired denominator, then reports average-tie
 Spearman rank concordance and paired score-difference summaries for the
 **selected comparable genes only**, with input hashes and exclusions. A null
 coefficient with a reason is recorded for constant ranks or fewer than two
-pairs. This is a descriptive handoff check. The proposed full-universe
-comparison and any uncertainty or multiple-comparison method still need a
-frozen scientific plan and real B3 scores.
+pairs. This is a descriptive handoff check.
+
+For a separate **full vocabulary-joined one-to-one universe** description,
+`scripts/summarize_ortholog_full_universe.py` reconstructs the report's
+ortholog join from its exact table, optional mapping, and the two supplied
+model vocabularies, then pairs all finite scores available in the frozen B3
+tables. The command checks the handoff, report, table, mapping, metadata and
+score hashes; it records the vocabulary hashes and reconciles the selected
+intersection with the report. It keeps all-universe counts separate from the
+top-k selected denominator:
+
+```bash
+python scripts/summarize_ortholog_full_universe.py \
+  --handoff paired-scores.json --report eligibility.json \
+  --table preprocess/orthologs/ortholog_pairs.tsv.gz \
+  --vocab-a checkpoints/tf_metazoa_finetuned/vocabs/homo_sapiens_gene.h5 \
+  --vocab-b checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5 \
+  --scores-a human-scores.tsv --scores-b mouse-scores.tsv \
+  --metadata-a human-scores.json --metadata-b mouse-scores.json \
+  --output full-universe-summary.json
+```
+
+Pass `--mapping bridge.tsv` when the report used a conversion. The JSON
+reports genome-wide and vocabulary-joined pair denominators, pairs missing
+scores on each side and either side, paired-score denominator, average-tie
+Spearman coefficient, and paired score differences. Missing scores are
+missing data, not biological absence. The 64 MiB table/mapping/score input,
+2 GiB per-vocabulary, 100,000 score-row and one-million ortholog-row caps bound
+local execution. The scope remains
+descriptive: the output has no p-value, confidence interval or biological
+verdict. The reporter does not bind vocabulary file hashes, so this command
+records the supplied vocabularies' hashes and checks that they reproduce the
+selected and genome-wide report relationships; retain those vocabularies with
+the comparison artifact. Real B3 inputs and a frozen inference plan remain
+necessary to complete ticket 05.
 
 A 2026-09-29 audit of ignored local artifacts found no newer score or ranking
 output: `runs/` contains probe-readiness metadata, a spatial-copy manifest,

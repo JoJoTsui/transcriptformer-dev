@@ -5,6 +5,12 @@ expression loaded, no source file modified). Companion to `preprocess/probe_stag
 (`metadata_provenance`, `fasta_provenance`) and `runs/probe_readiness.json`.
 ESM-2 was **not** run; this file is documentation only.
 
+2026-09-29 host check: `free -h` reports 31 GiB RAM and 8 GiB swap; the
+repository volume has 415 GiB free. `nvidia-smi` cannot initialize NVML
+because GPU access is blocked by the operating system in this WSL session.
+These observations are a point-in-time resource check, not an accelerator
+budget or permission to schedule embedding generation.
+
 ## 1. Per-dataset metadata resolution (see config for full citations)
 
 | dataset | cell_type | embryo_id | assay |
@@ -82,6 +88,10 @@ offer candidate joins for the three macaque probes (12,613/26,135;
 ambiguous symbols and enforce one-to-one stable-ID targets. Actual ESM/vocab
 release joins remain unverified, and the many unmatched LOC/JGI keys need a
 source-specific ruling before any B4 metric is interpreted.
+The [vocabulary-key audit](../../docs/agents/b4-vocabulary-join-audit-2026-09-29.md)
+also excludes 207 pig `GEO_GSE236766_unresolved_row_*` placeholders from its
+19,236 ENSSSCG direct-key candidates. All six configured B4 vocabularies are
+currently absent, so actual joins are unmeasured.
 
 Validator caveats (expected, captured in the report): the URL-substring check flags
 "FASTA reference does not identify ciona_intestinalis / branchiostoma_floridae" because NCBI URLs
@@ -92,13 +102,16 @@ column; README + Zhai 2022 identify M. fascicularis; not fabricatable read-only)
 
 ## 3. ESM-2 generation plan (document only — do NOT run until data joins and dependencies are resolved)
 
-Exact commands (per deliverable; run after installing fair-esm + biopython):
+The Ensembl-header commands below are candidates after installing fair-esm and
+biopython and measuring accelerator headroom. The Ciona and amphioxus NCBI
+headers lack `gene:` and cannot be passed through this direct path; use the
+audited external FASTA commands in the [Ciona](../../docs/agents/ciona-ghost-bridge-2026-09-29.md)
+and [amphioxus](../../docs/agents/amphioxus-protein-bridge-2026-09-29.md)
+bridge notes instead. No command in this section has run.
 
 ```bash
 .venv/bin/python preprocess/protein_embedding.py --organism_key macaca_fascicularis   --max_tokens 2048 --output_dir checkpoints/tf_metazoa_finetuned/vocabs
 .venv/bin/python preprocess/protein_embedding.py --organism_key cavia_porcellus       --max_tokens 2048 --output_dir checkpoints/tf_metazoa_finetuned/vocabs
-.venv/bin/python preprocess/protein_embedding.py --organism_key ciona_intestinalis    --max_tokens 2048 --output_dir checkpoints/tf_metazoa_finetuned/vocabs
-.venv/bin/python preprocess/protein_embedding.py --organism_key branchiostoma_floridae --max_tokens 2048 --output_dir checkpoints/tf_metazoa_finetuned/vocabs
 ```
 
 Size/time estimates (stream-counted from the verified FASTAs; esm2_t36_3B_UR50D on the single

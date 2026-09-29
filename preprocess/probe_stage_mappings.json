@@ -19,7 +19,7 @@
       "proteins": 49919,
       "genes_by_gene_tag": 22504,
       "header_gene_tag": "gene:ENSMFAG00000030318.2 (present; version stripped by protein_embedding.py)",
-      "var_namespace_check": "MISMATCH: the three macaque probe files index genes by symbols/LOC tags (macaque_zhai_2022 var 'gene': 16,895 symbol-like + 9,230 LOC*; macaque_gong_2023 var 'gene_id': 18,168 + 15,790; macaque_spatial var 'gene_symbol': 4,663 symbols). Parsed FASTA keys are ENSMFAG stable IDs: 0/26,135, 0/33,960 and 0/4,663 exact var matches. pep gene_symbol values overlap 12,613 / 14,202 / 3,263 var names, so joining would require a symbol->ENSMFAG map (symbol ambiguity unresolved)."
+      "var_namespace_check": "Direct var-to-ENSMFAG joins remain zero for all three macaque probes. A pinned release-110 peptide+GTF one-to-one candidate symbol map now covers 12,613/26,135 Zhai, 14,202/33,960 Gong and 3,263/4,663 spatial keys; LOC and other unmatched genes remain. See docs/agents/b4-macaque-xenopus-symbol-bridges-2026-09-29.md. Actual embedding/vocab joins remain unverified."
     },
     "cavia_porcellus": {
       "url": "https://ftp.ensembl.org/pub/release-110/fasta/cavia_porcellus/pep/Cavia_porcellus.Cavpor3.0.pep.all.fa.gz",
@@ -37,7 +37,7 @@
       "proteins": 21096,
       "genes_by_gene_tag": 0,
       "header_gene_tag": "ABSENT: headers are '>NP_001007565.1 hyaluronan-mediated motility receptor [Ciona intestinalis]'; no gene: tag, no KH2012 IDs (feature table uses LOC100xxxxxx symbols / GeneID).",
-      "var_namespace_check": "MISMATCH: var index is 'KH2012:KH.C1.xxx' (15,228/15,269; plus 39 ENSCING000000xxxxxx and 2 constructs mChSV40/CFPSV40). protein_embedding.py would key this FASTA by NP_/XP_ protein accessions. No verified FASTA exposes KH2012 gene IDs: Ensembl Metazoa (checked release-39..63) has no Ciona; the Ghost database cited by Cao et al. 2019 now publishes KY/KY21 models (e.g. 'KY.Chr1.580.v1.ND1-1'), not KH2012. GCF_000224145.3 is the exact species and the KH assembly used by Cao et al., but a KH2012<->RefSeq mapping table would be required (not built here)."
+      "var_namespace_check": "NCBI source mismatch: the listed GCF_000224145.3 FASTA lacks gene: and KH2012 tags, so the generator rejects it. A separate pinned Ghost KH2012 protein ZIP was audited on 2026-09-29; scripts/normalize_ciona_ghost_kh2012.py creates an external gene-key FASTA matching all 15,228 KH2012 probe keys, with 41 ENSCING/construct features unresolved. Use the local FASTA/audit/source-archive CLI path and see docs/agents/ciona-ghost-bridge-2026-09-29.md. No ESM embedding or actual vocab join has run."
     },
     "branchiostoma_floridae": {
       "url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/003/815/GCF_000003815.2_Bfl_VNyyK/GCF_000003815.2_Bfl_VNyyK_protein.faa.gz",
@@ -46,10 +46,10 @@
       "proteins": 43041,
       "genes_by_gene_tag": 0,
       "header_gene_tag": "ABSENT: headers are '>XP_035657338.1 uncharacterized protein LOC118403009 [Branchiostoma floridae]'; no gene: tag.",
-      "var_namespace_check": "PARTIAL MISMATCH: var index is NCBI locus tags 'LOC1184xxxxx' (29,309/29,726; rest tRNA/etc.) from the Bfl_VNyyK annotation (Markos et al. 2024 quantified against GCA_000003815.2 = GenBank counterpart of GCF_000003815.2). 6,273/29,726 var genes appear verbatim as 'LOC1184xxxxx' tokens in pep descriptions (6,274 unique), but protein_embedding.py parses only 'gene:' and would key by XP_/NP_ accessions instead of LOC gene IDs. The older GCF_000003815.1 (JGI 'Version 2') pep carries JGI protein-model IDs ('BRAFLDRAFT_111961', 0 LOC overlap) and is the wrong key namespace."
+      "var_namespace_check": "NCBI source header lacks gene: and direct generator parsing rejects it. A pinned same-assembly GCF_000003815.2 GFF3 protein_id/GeneID/gene-Name bridge and scripts/normalize_amphioxus_refseq.py now produce an external gene-key FASTA covering 26,676/29,726 Markos probe keys; 3,050 have no accepted protein input from this release. Use the local FASTA/audit/source-archive CLI path and see docs/agents/amphioxus-protein-bridge-2026-09-29.md. No ESM embedding or actual vocab join has run."
     },
-    "sus_scrofa_existing_entry": "pep keys ENSSSCG (Sscrofa11.1) match pig_simpson_2024 var 'gene_id' (ENSSSCG; Simpson et al. 2024 used Sscrofa11.1 / Ensembl v109) - compatible.",
-    "xenopus_tropicalis_existing_entry": "pep keys ENSXETG do NOT match xenopus_briggs_2018 var 'gene_name', which uses gene symbols / JGI v1 names ('arhgef26', 'Xetrov90007505m', 'LOC100485680'). Pre-generated xenopus embeddings (see logs/dataset_audit/probe_b4_esm2_plan.md) inherit the same ENSXETG keys and will not join to var_names without a symbol->ENSXETG map."
+    "sus_scrofa_existing_entry": "pep keys ENSSSCG (Sscrofa11.1) are direct-key candidates for 19,236/19,443 pig_simpson_2024 var genes; 207 GEO_GSE236766_unresolved_row_* placeholders are excluded. Simpson et al. 2024 used Sscrofa11.1 / Ensembl v109. Actual vocabulary joins remain unmeasured.",
+    "xenopus_tropicalis_existing_entry": "Direct ENSXETG-to-Xenopus Briggs var-name joins do not work. A pinned release-113 peptide+GTF one-to-one candidate symbol map covers 9,485/26,550 keys and excludes 174 ambiguous probe symbols; JGI/LOC and other keys remain. The pre-generated Xenopus embedding release is unverified, so actual vocabulary joins are still pending. See docs/agents/b4-macaque-xenopus-symbol-bridges-2026-09-29.md."
   },
   "datasets": [
     {
