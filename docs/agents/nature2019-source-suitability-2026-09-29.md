@@ -88,3 +88,32 @@ while the source metadata supplies the per-cell E4.5 or E5.5 stage.
 The bounded audit resolves the previous *metadata discoverability* gap.
 Scientific inclusion, exact assay handling, and final holdout eligibility
 remain open.
+
+## Candidate row metadata derived 2026-09-30
+
+`scripts/derive_nature2019_candidate_metadata.py` now performs the exact
+sample-name join as a repeatable, metadata-only operation. It requires explicit
+source, author metadata, and output paths, caps source/metadata file size and
+row count, rejects duplicate names or unknown RNA-QC/stage values, and refuses
+to overwrite an existing output. It writes the original author fields alongside
+zero-based H5AD row indices, candidate RNA-QC disposition, and a holdout review
+status. It does not copy the count matrix or change the active manifest.
+
+The local run produced
+[`candidate_rows.tsv`](../../logs/dataset_audit/nature2019_candidate/candidate_rows.tsv)
+and [`provenance.json`](../../logs/dataset_audit/nature2019_candidate/provenance.json).
+The H5AD SHA-256 is `788374a277000c16a27f0350ce2e7f9bd29f3a809caf06869b0cf51f66e07e65`;
+the author metadata SHA-256 matches the one recorded above. Every H5AD row
+joined once. The sidecar marks 491 rows for exclusion under author RNA QC,
+2,480 as passing that flag, and 494 of those passing rows as ineligible for an
+independent-embryo holdout because their embryo label is mixed. The remaining
+1,986 passing rows are marked **pending independence verification**, not
+approved for any holdout. The author file has five additional sample names
+absent from the local H5AD; the report lists them explicitly.
+
+This candidate sidecar is intentionally not a derived training H5AD. Inclusion
+still needs the owner/collaborator source decision, assay-specific QC and token
+choice, phase/cell-type mapping, independent-embryo check, and a verified
+row-filtered H5AD if the source is selected. The sidecar preserves `lineage10x`
+and `lineage10x_2` as author annotations without choosing which one becomes
+the training cell-type label.

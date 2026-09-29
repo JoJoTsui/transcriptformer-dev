@@ -1,7 +1,7 @@
 # 01 — Persist terminal resume state independently of selected weights
 
 Category: correctness and readiness
-Status: Implemented; bounded CPU validation passed
+Status: Closed for bounded engineering acceptance; production scientific evidence tracked separately
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: none
@@ -14,12 +14,12 @@ Extend existing training finalization and resume behavior so periodic checkpoint
 
 ## Acceptance Criteria
 
-- [ ] A run completing at step 3 with save interval 2 persists resumable step 3; a run shorter than the default interval and a run with periodic saves disabled also persist terminal state.
-- [ ] Reinvoking the public workflow with the same completed budget performs no additional training updates. Early stopping between periodic saves remains stopped after restart.
-- [ ] Explicit budget extension resumes from terminal optimizer/scaler/stream state, not from selected best-model weights; explicitly early-stopped state remains stopped.
-- [ ] Terminal writes are atomic and retention cannot delete the only valid terminal record. Incomplete writes do not masquerade as valid state.
-- [ ] Losses, validation/selection history, stopping state and selected-model identity remain continuous; legacy/incompatible terminal state fails with a clear fresh-run instruction.
-- [ ] Preserve explicit fresh-start behavior and existing compatible budget-extension semantics.
+- [x] A run completing at step 3 with save interval 2 persists resumable step 3; a run shorter than the default interval and a run with periodic saves disabled also persist terminal state.
+- [x] Reinvoking the public workflow with the same completed budget performs no additional training updates. Early stopping between periodic saves remains stopped after restart.
+- [x] Explicit budget extension resumes from terminal optimizer/scaler/stream state, not from selected best-model weights; explicitly early-stopped state remains stopped.
+- [x] Terminal writes are atomic and retention cannot delete the only valid terminal record. Incomplete writes do not masquerade as valid state.
+- [x] Losses, validation/selection history, stopping state and selected-model identity remain continuous; legacy/incompatible terminal state fails with a clear fresh-run instruction.
+- [x] Preserve explicit fresh-start behavior and existing compatible budget-extension semantics.
 
 ## Testing Seam
 

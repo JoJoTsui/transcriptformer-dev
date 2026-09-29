@@ -1,7 +1,7 @@
 # 10 — Enforce the single-cell cap when strata outnumber slots
 
 Category: correctness and readiness
-Status: Implemented; bounded CPU validation passed
+Status: Closed for bounded engineering acceptance; production scientific evidence tracked separately
 Priority: P2
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: none
@@ -14,11 +14,11 @@ Make the configured single-cell maximum a true bound and retain transparent, det
 
 ## Acceptance Criteria
 
-- [ ] Ten stage/cell-type groups with a maximum of three produce at most three selected rows, not one row for every group.
-- [ ] Selection remains deterministic for a fixed input/seed, uses valid unique source positions for the capped pool, and respects the cap across edge cases.
-- [ ] Report unrepresented groups and any species removed by capping; never silently increase the limit or imply each species is guaranteed a slot.
-- [ ] Sampler audit and actual sampler agree on the selected pool and draws. Required-species readiness can detect downstream absence.
-- [ ] Preserve existing policy behavior where the cap already accommodates groups; no new species-balancing training policy is introduced.
+- [x] Ten stage/cell-type groups with a maximum of three produce at most three selected rows, not one row for every group.
+- [x] Selection remains deterministic for a fixed input/seed, uses valid unique source positions for the capped pool, and respects the cap across edge cases.
+- [x] Report unrepresented groups and any species removed by capping; never silently increase the limit or imply each species is guaranteed a slot.
+- [x] Sampler audit and actual sampler agree on the selected pool and draws. Required-species readiness can detect downstream absence.
+- [x] Preserve existing policy behavior where the cap already accommodates groups; no new species-balancing training policy is introduced.
 
 ## Testing Seam
 

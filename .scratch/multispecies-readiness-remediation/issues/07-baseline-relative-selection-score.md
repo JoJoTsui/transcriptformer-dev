@@ -1,7 +1,7 @@
 # 07 — Compute hierarchical baseline-relative scores and eligibility
 
 Category: correctness and readiness
-Status: implemented; bounded CPU validation passed
+Status: Closed for bounded engineering acceptance; production scientific evidence tracked separately
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 06
@@ -14,13 +14,13 @@ Implement the approved score and eligibility as the validation contract consumed
 
 ## Acceptance Criteria
 
-- [ ] Baseline and candidate use identical cohort observations, comparable prediction targets and fixed loss semantics. Record preprocessing/truncation/auxiliary-conditioning assumptions.
-- [ ] Compute phase-proportion-weighted embryo losses, equal embryo means within each species, then relative improvement as baseline loss minus candidate loss divided by absolute baseline loss.
-- [ ] Average relative species improvements equally and report the absolute, embryo, phase and species evidence behind the combined score.
-- [ ] Reject any candidate with species improvement below -0.02; allow the exact -0.02 boundary. Require every frozen evaluable species to have a valid score.
-- [ ] Keep baseline at score zero. A finetuned candidate must be eligible and strictly positive to replace it; baseline wins zero ties and all-negative eligible outcomes.
-- [ ] Zero/nonfinite baseline loss or missing/nonfinite candidate evidence yields an explicit invalid evaluation without epsilon repair or denominator shrinkage.
-- [ ] Reports distinguish invalid evaluation, species-vetoed candidates, no eligible candidate and eligible-but-not-better outcomes. Do not label the score as final-holdout B1 likelihood.
+- [x] Baseline and candidate use identical cohort observations, comparable prediction targets and fixed loss semantics. Record preprocessing/truncation/auxiliary-conditioning assumptions.
+- [x] Compute phase-proportion-weighted embryo losses, equal embryo means within each species, then relative improvement as baseline loss minus candidate loss divided by absolute baseline loss.
+- [x] Average relative species improvements equally and report the absolute, embryo, phase and species evidence behind the combined score.
+- [x] Reject any candidate with species improvement below -0.02; allow the exact -0.02 boundary. Require every frozen evaluable species to have a valid score.
+- [x] Keep baseline at score zero. A finetuned candidate must be eligible and strictly positive to replace it; baseline wins zero ties and all-negative eligible outcomes.
+- [x] Zero/nonfinite baseline loss or missing/nonfinite candidate evidence yields an explicit invalid evaluation without epsilon repair or denominator shrinkage.
+- [x] Reports distinguish invalid evaluation, species-vetoed candidates, no eligible candidate and eligible-but-not-better outcomes. Do not label the score as final-holdout B1 likelihood.
 
 ## Testing Seam
 

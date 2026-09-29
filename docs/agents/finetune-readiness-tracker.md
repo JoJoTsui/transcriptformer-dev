@@ -36,6 +36,11 @@ the local H5AD; it does not approve inclusion. On commit `fb2f648`, remote
 passed 337 selected tests and [change-scoped pre-commit CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896960)
 passed. Distributed launch is now smoke-checked on that runner, while per-rank
 RNG continuity across resume and real-corpus/GPU behavior remain unverified.
+The [remediation index](../../.scratch/multispecies-readiness-remediation/README.md)
+now closes tickets 01, 03, 04, 06, 07, 09 and 10 for their bounded engineering
+acceptance. Ticket 08 remains open because its ticket-02 distributed-resume
+dependency is still unverified. These closures do not change the corpus/B1,
+chicken R2, B3 or production-readiness gates.
 
 Additional zebrafish data may be supplied by collaborators for this finetune.
 Source identity and delivery are pending. The existing Wagner dataset is already

@@ -1,6 +1,6 @@
 # Multispecies readiness remediation — ticket index
 
-Status: bounded tooling implemented; external scientific and data gates remain open
+Status: seven bounded engineering tickets closed; external scientific and data gates remain open
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 
 [Read the specification](spec.md). Implementation was authorized on 2026-09-28.
@@ -11,16 +11,16 @@ data, chicken identifier repair and production training remain separate gates.
 
 | Ticket | Review/decision coverage | Depends on | Current closure limit |
 | --- | --- | --- | --- |
-| [01 — Persist terminal resume state independently of selected weights](issues/01-terminal-resume-state.md) | R1; register 5.2/5.9/5.10; tracker E/F | None | Implemented; bounded CPU evidence |
+| [01 — Persist terminal resume state independently of selected weights](issues/01-terminal-resume-state.md) | R1; register 5.2/5.9/5.10; tracker E/F | None | Closed for bounded engineering acceptance |
 | [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | CPU implemented; remote two-rank smoke passed, distributed resume continuity unverified |
-| [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Tool implemented; full post-QC corpus absent |
-| [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Strict partial bridge; source release and unresolved IDs remain |
+| [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; full post-QC corpus absent |
+| [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Closed for bounded engineering acceptance; strict partial bridge leaves R2 open |
 | [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Tool implemented; real B3 scores and approved comparison absent |
-| [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Tool implemented; actual post-QC cohort absent |
-| [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Tool implemented; production loss evidence absent |
-| [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Bounded workflow implemented; production run absent |
-| [09 — Mark structurally unsupported B2 metrics unevaluable](issues/09-representation-metric-eligibility.md) | R6; tracker J | None | Implemented; bounded CPU evidence |
-| [10 — Enforce the single-cell cap when strata outnumber slots](issues/10-hard-sampling-cap.md) | Additional review edge case; sampler exposure | None | Implemented; bounded CPU evidence |
+| [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Closed for bounded engineering acceptance; actual post-QC cohort absent |
+| [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Closed for bounded engineering acceptance; production loss evidence absent |
+| [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Bounded workflow implemented; dependency 02 distributed continuity and production run absent |
+| [09 — Mark structurally unsupported B2 metrics unevaluable](issues/09-representation-metric-eligibility.md) | R6; tracker J | None | Closed for bounded engineering acceptance |
+| [10 — Enforce the single-cell cap when strata outnumber slots](issues/10-hard-sampling-cap.md) | Additional review edge case; sampler exposure | None | Closed for bounded engineering acceptance |
 | [11 — Require zebrafish training participation and track additional-source intake](issues/11-zebrafish-readiness-and-intake.md) | Owner requirement; pending collaborator data | 03, 10 | Excluded from this continuation by owner |
 | [12 — Reconcile progress records and validate the bounded remediation workflow](issues/12-readiness-evidence-and-ci.md) | All findings; readiness claims; WSL constraint | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 | Remote finetune CPU and change-scoped pre-commit CI passed; real-corpus, GPU and scientific gates open |
 
@@ -39,6 +39,19 @@ data, chicken identifier repair and production training remain separate gates.
 
 Independent slices can proceed concurrently; memory-heavy checks run
 sequentially on this WSL host.
+
+The seven closed engineering tickets have their acceptance boxes checked against
+the bounded command/workflow evidence already recorded in each ticket and the
+[337-test remote CPU run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896770).
+Their closure means the specified interfaces and behavior are implemented;
+it does not claim final corpus preparation, model performance, biological
+readiness or GPU behavior. Ticket 02 still lacks a two-rank interrupted/resumed
+continuity case; 08 therefore remains open on its dependency. Ticket 04's
+explicit partial-bridge acceptance is met, while R2 still requires producer
+provenance and additional verified mapping; ticket 05 needs real B3 data and
+an approved method. Ticket 12 retains unresolved
+cross-ticket scientific and production evidence. Ticket 11 remains excluded by
+the owner's current instruction.
 
 ## Scientific decisions and external gates
 
@@ -64,6 +77,8 @@ sequentially on this WSL host.
   The [closure-evidence memo](../../docs/agents/chicken-closure-gate-2026-09-29.md)
   identifies the indistinguishable source-release candidates and the exact
   producer record or row-level history needed to resolve the remaining claim.
+  A [follow-up public producer search](../../docs/agents/chicken-producer-search-2026-09-30.md)
+  found no bound build record in the quickstart, early code or example H5ADs.
 - **Named ortholog statistics:** ticket 05's report boundary is implemented, but
   no frozen B3 phase rankings or scored distributional comparison exist. The
   checked acceptance items cover the tooling. A bounded selected-pair

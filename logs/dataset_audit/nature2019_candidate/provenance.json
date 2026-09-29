@@ -1,0 +1,112 @@
+{
+  "status": "candidate_only_not_approved_for_corpus_or_holdout",
+  "source_h5ad": {
+    "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/小鼠_Mus_musculus/Nature2019_E4.5-E7.5/小鼠_Mus_musculus__Single-cell multi-omics profiling of mouse early embryos.h5ad",
+    "sha256": "788374a277000c16a27f0350ce2e7f9bd29f3a809caf06869b0cf51f66e07e65",
+    "n_rows": 2971,
+    "n_genes": 22084,
+    "obs_columns": [
+      "species",
+      "species_cn"
+    ]
+  },
+  "author_metadata": {
+    "path": "/tmp/scnmt_sample_metadata.txt.gz",
+    "sha256": "beb17d0460ad890ec27e709aff2e0ebd47138096fa59a730c3a10b029bee6467",
+    "url": "https://github.com/rargelaguet/scnmt_gastrulation/blob/master/sample_metadata.txt.gz",
+    "n_rows": 2976,
+    "unmatched_author_samples": [
+      "E7.5_Plate11_B10",
+      "E7.5_Plate11_C06",
+      "E7.5_Plate12_C12",
+      "E7.5_Plate12_D12",
+      "PS_VE_Plate3_H07"
+    ]
+  },
+  "geo_series": [
+    "GSE121650",
+    "GSE133725"
+  ],
+  "sidecar": {
+    "path": "/mnt/d/sc/transcriptformer/transcriptformer/logs/dataset_audit/nature2019_candidate/candidate_rows.tsv",
+    "sha256": "841d5d115bce077a02c05f7d2e49251d2ad3ccd0f061f8fb3613d668ba566c3a",
+    "rows": 2971,
+    "index_semantics": "zero-based source H5AD row order"
+  },
+  "counts": [
+    {
+      "stage": "E4.5",
+      "candidate_rna_qc": "exclude_source_rna_qc_fail",
+      "holdout_review": "ineligible_source_rna_qc_fail",
+      "rows": 17
+    },
+    {
+      "stage": "E4.5",
+      "candidate_rna_qc": "pass",
+      "holdout_review": "pending_independence_verification",
+      "rows": 175
+    },
+    {
+      "stage": "E5.5",
+      "candidate_rna_qc": "exclude_source_rna_qc_fail",
+      "holdout_review": "ineligible_source_rna_qc_fail",
+      "rows": 19
+    },
+    {
+      "stage": "E5.5",
+      "candidate_rna_qc": "pass",
+      "holdout_review": "pending_independence_verification",
+      "rows": 173
+    },
+    {
+      "stage": "E6.5",
+      "candidate_rna_qc": "exclude_source_rna_qc_fail",
+      "holdout_review": "ineligible_source_rna_qc_fail",
+      "rows": 175
+    },
+    {
+      "stage": "E6.5",
+      "candidate_rna_qc": "pass",
+      "holdout_review": "ineligible_mixed_embryo_label",
+      "rows": 387
+    },
+    {
+      "stage": "E6.5",
+      "candidate_rna_qc": "pass",
+      "holdout_review": "pending_independence_verification",
+      "rows": 590
+    },
+    {
+      "stage": "E7.5",
+      "candidate_rna_qc": "exclude_source_rna_qc_fail",
+      "holdout_review": "ineligible_source_rna_qc_fail",
+      "rows": 280
+    },
+    {
+      "stage": "E7.5",
+      "candidate_rna_qc": "pass",
+      "holdout_review": "ineligible_mixed_embryo_label",
+      "rows": 107
+    },
+    {
+      "stage": "E7.5",
+      "candidate_rna_qc": "pass",
+      "holdout_review": "pending_independence_verification",
+      "rows": 1048
+    }
+  ],
+  "embryo_labels": {
+    "total": 36,
+    "mixed": [
+      "E6.5_embryomixed",
+      "E6.5_late_embryomixed",
+      "embryomixed"
+    ]
+  },
+  "limitations": [
+    "Source author RNA QC is carried through but assay-specific additional QC is not chosen.",
+    "Non-mixed embryo labels still require independence and leakage verification.",
+    "Cell type, phase, assay token and source inclusion are not approved by this derivation.",
+    "No source expression values were copied or compared to GEO in this run."
+  ]
+}

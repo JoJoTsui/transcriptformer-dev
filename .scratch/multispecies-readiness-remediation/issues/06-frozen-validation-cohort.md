@@ -1,7 +1,7 @@
 # 06 — Build a bounded validation cohort with embryo and phase provenance
 
 Category: correctness and readiness
-Status: implemented; bounded CPU validation passed
+Status: Closed for bounded engineering acceptance; production scientific evidence tracked separately
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 03
@@ -14,13 +14,13 @@ Build a fixed validation-only cohort at the existing finetuning application boun
 
 ## Acceptance Criteria
 
-- [ ] Consume validated prepared validation observations only; final-holdout rows cannot enter cohort construction or checkpoint selection.
-- [ ] Identify embryos globally within species across files and retain stable observation identities, provenance, deterministic seed and fixed membership.
-- [ ] Represent each available phase within each included validation embryo. Treat missing-stage observations explicitly without inventing phases or silently changing inclusion policy.
-- [ ] Record full post-QC phase counts, sampled counts and weights. Oversampling a rare phase does not change its contribution to the embryo mean.
-- [ ] Allocation is deterministic and independent of input-file ordering when stable source identities are unchanged. A too-small configured budget fails with required minimum representation details rather than omitting groups or exceeding the bound.
-- [ ] Freeze all cohort identity/weighting inputs before candidate results. Include an arbitrary third eligible species without hard-coded human/mouse assumptions.
-- [ ] Expose one coherent cohort/report contract for training and scoring; preserve it in saved run evidence and resume compatibility.
+- [x] Consume validated prepared validation observations only; final-holdout rows cannot enter cohort construction or checkpoint selection.
+- [x] Identify embryos globally within species across files and retain stable observation identities, provenance, deterministic seed and fixed membership.
+- [x] Represent each available phase within each included validation embryo. Treat missing-stage observations explicitly without inventing phases or silently changing inclusion policy.
+- [x] Record full post-QC phase counts, sampled counts and weights. Oversampling a rare phase does not change its contribution to the embryo mean.
+- [x] Allocation is deterministic and independent of input-file ordering when stable source identities are unchanged. A too-small configured budget fails with required minimum representation details rather than omitting groups or exceeding the bound.
+- [x] Freeze all cohort identity/weighting inputs before candidate results. Include an arbitrary third eligible species without hard-coded human/mouse assumptions.
+- [x] Expose one coherent cohort/report contract for training and scoring; preserve it in saved run evidence and resume compatibility.
 
 ## Testing Seam
 

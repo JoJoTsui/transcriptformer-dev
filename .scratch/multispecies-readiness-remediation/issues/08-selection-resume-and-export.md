@@ -1,7 +1,7 @@
 # 08 — Integrate approved selection with early stopping, resume and model export
 
 Category: correctness and readiness
-Status: Implemented; bounded CPU validation passed
+Status: Implemented; bounded CPU validation passed; dependency 02 distributed continuity open
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 01, 02, 06, 07

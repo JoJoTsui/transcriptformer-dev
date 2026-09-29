@@ -1,7 +1,7 @@
 # 04 — Validate actual ortholog joins and reconcile chicken identifiers
 
 Category: correctness and readiness
-Status: Strict partial chicken bridge implemented; exact checkpoint release and full repair pending
+Status: Closed for bounded engineering acceptance; R2 asset repair and exact checkpoint release pending
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: none
@@ -126,3 +126,10 @@ to expand the 7,267-pair bridge. It includes a ready-to-send producer request;
 no external message was sent. Ticket 04's implementation acceptance criteria
 above are met for the scoped partial bridge, while the R2 scientific and
 provenance gate remains open.
+
+The [2026-09-30 producer search](../../../docs/agents/chicken-producer-search-2026-09-30.md)
+also found no source release in the producer's public quickstart, earlier code
+history, or shipped chicken example H5AD metadata. The later public ESM-2
+pipeline cannot be assigned retroactively to the April embedding file. No
+new strict bridge row was justified; the requested producer-bound build record
+or release-bound row-level export remains the closure evidence.

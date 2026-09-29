@@ -1,7 +1,7 @@
 # 03 — Report surviving holdout observations and embryos from prepared artifacts
 
 Category: correctness and readiness
-Status: Implemented; bounded CPU validation passed
+Status: Closed for bounded engineering acceptance; production scientific evidence tracked separately
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: none
@@ -14,12 +14,12 @@ Add explicit prepared-report coverage to the existing coverage tool while preser
 
 ## Acceptance Criteria
 
-- [ ] The public coverage command accepts a prepared report and validates it against the supplied manifest before producing post-QC evidence.
-- [ ] Coverage reads surviving prepared metadata and recorded splits, without rerunning split allocation or loading expression matrices unnecessarily.
-- [ ] A holdout embryo completely removed by QC contributes zero observations and zero embryos, even if it remains in the source split plan.
-- [ ] Report observation and unique species/embryo counts by phase, split and modality, plus explicit missing-stage and empty-split information. Deduplicate identities repeated across files.
-- [ ] Reports record source/preparation provenance and distinguish pre-QC projection from post-QC evidence. Stale, inconsistent or tampered prepared inputs fail.
-- [ ] The documented freeze command uses prepared coverage. Reports may expose counts needed by the B1 proposal but must not silently approve B1-A or revise the historical six-of-eight criterion.
+- [x] The public coverage command accepts a prepared report and validates it against the supplied manifest before producing post-QC evidence.
+- [x] Coverage reads surviving prepared metadata and recorded splits, without rerunning split allocation or loading expression matrices unnecessarily.
+- [x] A holdout embryo completely removed by QC contributes zero observations and zero embryos, even if it remains in the source split plan.
+- [x] Report observation and unique species/embryo counts by phase, split and modality, plus explicit missing-stage and empty-split information. Deduplicate identities repeated across files.
+- [x] Reports record source/preparation provenance and distinguish pre-QC projection from post-QC evidence. Stale, inconsistent or tampered prepared inputs fail.
+- [x] The documented freeze command uses prepared coverage. Reports may expose counts needed by the B1 proposal but must not silently approve B1-A or revise the historical six-of-eight criterion.
 
 ## Testing Seam
 
