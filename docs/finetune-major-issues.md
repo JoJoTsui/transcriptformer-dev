@@ -105,6 +105,11 @@
 
 ## 7. 下游结论的统计与科学有效性
 
+**2026-09-29 状态核对：** 下表 7.1、7.2 和 7.4 中“已冻结”的旧表述与
+`docs/perturbation-and-baseline-design.md` 的“预注册草案、阈值待签署”不一致。
+在明确签署并统一两处记录前，零模型、外部验证判定和遗忘阈值均视为
+**待科学签署**；已实现的工具或在线数据源不构成自动批准。
+
 | # | 问题 | 状态 |
 |---|---|---|
 | 7.1 | **likelihood(似然)下降影响分缺少零模型(S1)。** 删除高表达基因会移除更多 likelihood 质量 → 排名由表达量/检出率主导,而非调控重要性。 | **已设计(已冻结)** — 按物种 × 阶段分层,构建表达量与 dropout 率匹配的 10×10 分位数网格置换零模型;经验 p 值 + z 分数;每层 BH FDR q = 0.05。实现待做(训练后分析)。 |
@@ -123,7 +128,7 @@
 | 8.1 | **探测物种不在词表内。** 猕猴、猪、豚鼠、热带爪蟾、海鞘、文昌鱼均非 TF-Metazoa 词表物种 → 其基因没有可学习的 token embedding(嵌入)。 | **已设计** — 按 `preprocess/fasta_manifest_pep.json` 用 ESM2 蛋白 embedding 构建 token;猪和热带爪蟾的 embedding 可下载现成版本;**猕猴(食蟹猴 *M. fascicularis*)、豚鼠、海鞘、文昌鱼须用 `preprocess/protein_embedding.py` 本地生成**(尚未执行——本机内存受限,必须分块推理)。预生成 ESM2 embedding 仅有 *M. mulatta*(另一物种),食蟹猴 embedding 确需本地生成;且 fasta_manifest_pep.json 目前**没有**海鞘、文昌鱼、豚鼠、食蟹猴的条目——2026-09-23 已补齐并逐一验证(HTTP 200、表头核对;海鞘/文昌鱼用 NCBI 精确物种蛋白组,Ensembl/Metazoa 无此二物种)。embedding 仍未生成:`.venv` 缺 fair-esm/biopython,脚本 CPU 路径会静默写出空文件,且无分块/断点续跑模式——执行计划与已知缺陷见 `logs/dataset_audit/probe_b4_esm2_plan.md`。猪/热带爪蟾预生成 embedding 已定位(`transcriptformer download all-embeddings`,4.77 GB tarball;猪可连接,爪蟾键空间不符,见 8.4)。 |
 | 8.2 | **探测物种的基因级跨物种陈述需要同一张一对一 ortholog(直系同源)表**(见 4.3);embedding 级比较则不需要。 | **已设计** — 共用 `docs/perturbation-and-baseline-design.md` §6 的 ortholog 框架(非本清单 §6)。 |
 | 8.3 | **探测阶段映射已机器化并完成真实标签覆盖检查。** 原文档表已编码到 `preprocess/probe_stage_mappings.json`,按数据集区分 native stage。 | **已解决(映射/校验工具)** — `865bc5f`: 八文件/六物种所有观测阶段均有映射,无缺失或未知标签;12 项回归通过。`scripts/validate_probes.py` 明确列出仍缺的物种词表与未确认元数据,因此探测执行仍 blocked。2026-09-23 更新:四项 FASTA 条目已补齐验证;元数据仅按真实 obs 列解析(zhai/gong 的 embryo_id、xenopus 的 assay),文档记载的混样与平台常量记入 metadata_provenance 而不伪造列。报告不验证基因覆盖或边界敏感性。 |
-| 8.4 | **探测基因 ID 命名空间与 embedding/词表键不匹配。** 三个猕猴文件 var 为符号/LOC(与 ENSMFAG 键 0 精确匹配);海鞘 var 为 KH2012(`KH.C1.*`)而 NCBI 蛋白组按 NP/XP 加键;文昌鱼 var 为 LOC1184xxxxx 而解析出的键为 XP/NP;热带爪蟾 var 为基因符号而预生成 embedding 按 ENSXETG 加键。豚鼠(剥离 `:SYMBOL` 后)与猪可连接。 | **待决** — B4 运行前须建映射表或重写表头统一键空间;猕猴符号歧义需裁定。证据:[probe_b4_esm2_plan.md](../logs/dataset_audit/probe_b4_esm2_plan.md) §2。 |
+| 8.4 | **探测基因 ID 命名空间与 embedding/词表键不匹配。** 三个猕猴文件 var 为符号/LOC(与 ENSMFAG 键 0 精确匹配);海鞘 var 为 KH2012(`KH.C1.*`)而当前 NCBI 蛋白组按 NP/XP 加键;文昌鱼 var 为 LOC1184xxxxx 而解析出的键为 XP/NP;热带爪蟾 var 为基因符号而预生成 embedding 按 ENSXETG 加键。豚鼠(剥离 `:SYMBOL` 后)与猪可连接。 | **部分进展** — 2026-09-29 官方 Ghost KH2012 蛋白 FASTA 表头中的基因根 ID 与本地 15,228/15,228 个 KH2012 探测基因匹配;尚需确定多蛋白记录如何汇总为每基因 embedding,生成词表并审计实际连接。其余映射及猕猴符号歧义仍待解决。证据:[probe_b4_esm2_plan.md](../logs/dataset_audit/probe_b4_esm2_plan.md) §2。 |
 
 ---
 
@@ -309,6 +314,13 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 
 ## 7. Statistical and scientific validity of downstream claims
 
+**2026-09-29 status reconciliation:** The older “frozen” labels in 7.1, 7.2
+and 7.4 conflict with the “pre-registration draft; thresholds pending sign-off”
+status in `docs/perturbation-and-baseline-design.md`. Treat the null-model,
+external-verdict and forgetting thresholds as **pending scientific sign-off**
+until an explicit decision reconciles both records. Tooling and online data
+sources do not grant that approval.
+
 | # | Issue | Status |
 |---|---|---|
 | 7.1 | **No null model for likelihood-drop impact scores (S1).** Deleting a highly expressed gene removes more likelihood mass, so rankings are dominated by expression/detection rate rather than regulatory importance. | **Designed (frozen)** — expression- and dropout-matched 10×10 quantile-bin permutation null per species × phase stratum; empirical p-values + z-scores; BH FDR q = 0.05 per stratum. Implementation pending (post-training analysis). |
@@ -327,7 +339,7 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 | 8.1 | **Probe species are out-of-vocabulary.** Macaque, pig, guinea pig, Xenopus tropicalis, ciona, and amphioxus are not TF-Metazoa vocab species → their genes have no learned token embeddings. | **Designed** — tokens built from ESM2 protein embeddings per `preprocess/fasta_manifest_pep.json`; pig and X. tropicalis embeddings are downloadable pre-generated; **macaque (*Macaca fascicularis*), guinea pig, ciona, and amphioxus must be generated locally** via `preprocess/protein_embedding.py` (not yet done — generation on this host is memory-constrained and must use chunked inference). Pre-generated ESM2 embeddings exist only for *M. mulatta* (a different species), so fascicularis embeddings genuinely need local generation. The four missing FASTA manifest entries were added and verified on 2026-09-23 (HTTP 200, headers inspected; ciona and amphioxus use exact-species NCBI proteomes since Ensembl/Metazoa lacks them). Embeddings are still not generated: `.venv` lacks fair-esm/biopython, the script's CPU path silently writes an empty file, and there is no chunked or resumable mode — see `logs/dataset_audit/probe_b4_esm2_plan.md` for the plan and known defects. Pre-generated pig/X. tropicalis embeddings were located (`transcriptformer download all-embeddings`, 4.77 GB tarball; pig joins, frog's key space does not — see 8.4). |
 | 8.2 | **Gene-level cross-species statements for probes need the same 1:1 ortholog table** (see 4.3); embedding-level comparisons do not. | **Designed** — shares the orthology framework of `docs/perturbation-and-baseline-design.md` §6 (not §6 of this register). |
 | 8.3 | **Probe phase mappings are machine-readable and checked against real labels.** The documented conventions are encoded per dataset in `preprocess/probe_stage_mappings.json`. | **Resolved (mapping/checker)** — `865bc5f`: all observed stages in eight files/six species are covered, with no missing/unknown labels; 12 regressions pass. `scripts/validate_probes.py` explicitly reports missing species vocabularies and unresolved metadata, so probe execution remains blocked. 2026-09-23 update: the four FASTA manifest entries are added and verified; metadata resolves only to real obs columns (embryo_id for zhai/gong, assay for xenopus), with documented pooling and platform constants recorded in `metadata_provenance` instead of fabricated columns. Gene coverage and boundary sensitivity are not validated by this report. |
-| 8.4 | **Probe gene-ID namespaces do not match embedding/vocabulary keys.** The three macaque files index by symbols/LOC (0 exact matches against ENSMFAG keys); ciona var is KH2012 (`KH.C1.*`) while the NCBI proteome keys by NP/XP accessions; amphioxus var is LOC1184xxxxx while parsed keys are XP/NP; xenopus var is gene symbols while the pre-generated embeddings key by ENSXETG. Guinea pig (after stripping `:SYMBOL`) and pig join. | **Open** — mapping tables or header rewrites must unify the key spaces before B4 can run; macaque symbol ambiguity needs a ruling. Evidence: [probe_b4_esm2_plan.md](../logs/dataset_audit/probe_b4_esm2_plan.md) §2. |
+| 8.4 | **Probe gene-ID namespaces do not match embedding/vocabulary keys.** The three macaque files index by symbols/LOC (0 exact matches against ENSMFAG keys); Ciona var is KH2012 (`KH.C1.*`) while the current NCBI proteome keys by NP/XP accessions; amphioxus var is LOC1184xxxxx while parsed keys are XP/NP; Xenopus var is gene symbols while the pre-generated embeddings key by ENSXETG. Guinea pig (after stripping `:SYMBOL`) and pig join. | **Partial progress** — an official Ghost KH2012 protein FASTA header audit matches 15,228/15,228 local KH2012 probe genes. Per-gene protein aggregation, vocabulary generation and actual joins remain; so do the other key bridges and macaque symbol ruling. Evidence: [probe_b4_esm2_plan.md](../logs/dataset_audit/probe_b4_esm2_plan.md) §2. |
 
 ---
 

@@ -28,13 +28,40 @@ The resulting "assay lacks a verified source column" blockers are therefore expe
 |---|---|---|---|---|---|---|
 | macaca_fascicularis | Ensembl r110 `Macaca_fascicularis.Macaca_fascicularis_6.0.pep.all.fa.gz` | 10,128,609 | 49,919 | 22,504 ENSMFAG | yes | **MISMATCH** — var = symbols/LOC; 0/26,135, 0/33,960, 0/4,663 exact (symbol overlap 12,613/14,202/3,263) |
 | cavia_porcellus | Ensembl r110 `Cavia_porcellus.Cavpor3.0.pep.all.fa.gz` | 7,883,700 | 25,582 | 18,095 ENSCPOG | yes | **match at gene-ID level** — var composite `ENSCPOG…:SYMBOL`; 15,333/19,323 ENSCPOG components match (rest = non-coding); strip `:symbol` for lookup |
-| ciona_intestinalis | NCBI `GCF_000224145.3_KH_protein.faa.gz` | 6,803,777 | 21,096 | n/a | **no** | **MISMATCH** — var = `KH2012:KH.C1.*` (15,228/15,269) + 39 ENSCING + 2 constructs; NCBI keys are NP/XP accessions; no verified FASTA exposes KH2012 IDs (Metazoa r39-63 has no Ciona; Ghost now ships KY/KY21 models) |
+| ciona_intestinalis | NCBI `GCF_000224145.3_KH_protein.faa.gz` | 6,803,777 | 21,096 | n/a | **no** | **MISMATCH** for the current NCBI source: var = `KH2012:KH.C1.*` (15,228/15,269) + 39 ENSCING + 2 constructs; NCBI keys are NP/XP accessions. A separate Ghost KH2012 source has complete KH gene-root coverage, audited below. |
 | branchiostoma_floridae | NCBI `GCF_000003815.2_Bfl_VNyyK_protein.faa.gz` | 10,031,501 | 43,041 | n/a (6,274 LOC tags in descriptions) | **no** | **PARTIAL** — var = `LOC1184xxxxx` from this same assembly (Markos 2024 quantified GCA_000003815.2); 6,273/29,726 var genes appear as description tokens, but `protein_embedding.py` would key by XP/NP accessions. GCF_000003815.1 (JGI) uses `BRAFLDRAFT_*` protein-model IDs — wrong namespace. |
 
 Consequence: `record.description.split("gene:")` yields **protein accessions** (not gene IDs) for
 the two NCBI files, so even after generation the vocab keys would not join to `var_names` without
 a header rewrite or mapping table (not done). For xenopus the *existing* manifest entry has the
 same problem in reverse: pre-generated ENSXETG keys vs var gene symbols.
+
+2026-09-29 bounded Ciona follow-up: Ghost's [official download page](https://ghost.zool.kyoto-u.ac.jp/download_kh.html)
+provides `KH.KHGene.2012.Longest.protein.zip` and KH2012 GFF3. The 5,230,945-byte
+ZIP was retrieved to `/tmp` only (SHA-256
+`91ae06cfab8010664f3d6a9a9ee18dff0375eb1cd581617f0988e59002b4d22a`).
+Streaming its FASTA headers gives 54,733 protein records and 15,285 unique
+gene roots when the first three dot-delimited fields of each `KH.C1.1.v1…`
+identifier are treated as the KH gene ID. Those roots match **all 15,228 of
+15,228** local probe `KH2012:` gene keys (SHA-256 of sorted UTF-8 keys with
+one newline after each key:
+`a307c7692e57bb92aa6762a6d4452c1d71181282a5a9ddcb595472e23e7920b5`);
+the other 41 probe keys are 39
+ENSCING IDs and two constructs. This verifies a candidate identifier bridge,
+not the biological equivalence of every protein isoform or a generated vocab.
+Of the 15,285 roots, 8,908 have multiple protein records (maximum 154), so a
+deterministic, documented per-gene protein-selection/aggregation rule is needed
+before embedding generation. The current generator does not read ZIP and would
+not add the `KH2012:` prefix. Keep the raw Ghost ZIP outside the repository,
+attribute the source, and do not redistribute its files without permission
+under the page's stated terms. No expression matrix was opened.
+
+For amphioxus, the [NCBI GFF3
+specification](https://www.ncbi.nlm.nih.gov/datasets/docs/v2/reference-docs/file-formats/annotation-files/about-ncbi-gff3/)
+documents `protein_id` and parent/GeneID relationships. A same-assembly
+protein-to-gene bridge using those fields or [NCBI gene product reports](https://www.ncbi.nlm.nih.gov/datasets/docs/v2/reference-docs/data-reports/gene-product/)
+is a better candidate than parsing free-text `LOC` tokens; reject ambiguous
+relationships and audit probe joins. The amphioxus bridge is not yet validated locally.
 
 Validator caveats (expected, captured in the report): the URL-substring check flags
 "FASTA reference does not identify ciona_intestinalis / branchiostoma_floridae" because NCBI URLs
@@ -112,9 +139,11 @@ Source of record (found in this repo, verified against the live bucket):
 1. **All six species vocabularies absent** at `checkpoints/tf_metazoa_finetuned/vocabs/<key>_gene.h5`
    — i.e. §3 has not been run (blocked on defects 1-3 above).
 2. **Key-namespace mismatches** (not checked by the validator): macaque symbol/LOC var vs ENSMFAG
-   keys (all 3 macaque files), ciona KH2012 var vs NP/XP keys, amphioxus LOC var vs XP/XP keys,
-   xenopus symbol var vs ENSXETG keys (also for the pre-generated embeddings). Guinea pig matches
-   at the gene-ID level (strip `:symbol`); pig matches.
+   keys (all 3 macaque files), Ciona KH2012 var vs current NCBI NP/XP keys,
+   amphioxus LOC var vs XP/NP keys, Xenopus symbol var vs ENSXETG keys (also
+   for the pre-generated embeddings). The separately audited Ghost KH2012
+   header roots cover all KH2012 probe keys, but no compatible vocab exists.
+   Guinea pig matches at the gene-ID level (strip `:symbol`); pig matches.
 3. **macaque_zhai_2022 has no species column in obs** → "explicit source identity" blocker is
    unresolvable read-only (README/Zhai 2022 provenance recorded).
 4. **Assay blockers remain on 7/8 datasets** (all but xenopus): no obs assay column; documented
