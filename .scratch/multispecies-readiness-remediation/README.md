@@ -56,11 +56,16 @@ sequentially on this WSL host.
   ingestion before delivery.
 - **Chicken identifiers:** ticket 04 has an optional, strict partial bridge
   with inspectable gene-level evidence and positive joins. Its 9,611 unresolved
-  checkpoint genes and unknown exact source release keep R2 open.
+  checkpoint genes and unknown exact source release keep R2 open. A bounded
+  review of a published cross-assembly table found no additional row meeting
+  the existing evidence rule; see the
+  [conflict review](../../docs/agents/chicken-conflict-review-2026-09-29.md).
 - **Named ortholog statistics:** ticket 05's report boundary is implemented, but
   no frozen B3 phase rankings or scored distributional comparison exist. The
-  checked acceptance items cover the tooling; the comparison criterion remains
-  open until ranked scores and a named method are available.
+  checked acceptance items cover the tooling. A bounded selected-pair
+  [descriptive comparator](../../scripts/summarize_ortholog_paired_scores.py)
+  is available; the comparison criterion remains open until ranked scores and
+  a frozen scientific method are available.
 - **Still pending separately:** corpus/QC/assay/training sampling decisions, B1
   sign-off, missing probe resources, complete preparation and actual-model/GPU
   evidence.

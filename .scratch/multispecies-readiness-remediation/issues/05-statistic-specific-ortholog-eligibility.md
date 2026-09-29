@@ -123,3 +123,17 @@ score differences, with selected top-k overlap reported separately. This is
 a reviewable proposal, not a frozen statistic or a biological result. The
 observed B3 tables, paired-score comparability checks and project-approved
 uncertainty/multiple-comparison plan are still required.
+
+A bounded [descriptive comparator](../../../scripts/summarize_ortholog_paired_scores.py)
+now consumes the hash-bound paired-score handoff. It verifies the paired TSV
+hash, selected-pair denominator, one-to-one IDs, finite scores, exclusions and
+the `null_corrected_z` score definition,
+then writes average-tie Spearman rank concordance and the mean, median, and
+sign counts of paired `species_b - species_a` null-corrected z-score
+differences. A constant rank vector or a single pair produces a null
+coefficient with an explicit reason. The output carries the input hashes and
+provenance and reports no p-value, confidence interval, or biological verdict.
+Example: `python scripts/summarize_ortholog_paired_scores.py --paired-tsv
+paired.tsv --manifest paired.json --output summary.json`. This describes the
+selected pairs only; it does not substitute for a full eligible-universe
+comparison or the still-missing real B3 scores and approved inference plan.

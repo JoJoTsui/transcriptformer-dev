@@ -186,6 +186,8 @@ metadata file containing nonempty `species`, `phase`, `statistic`, `run_id`,
 `model_id`, `data_id`, `split_id`, `score_definition`, `selection_rule`, and
 `tie_rule` strings, plus `statistic_provenance`,
 `statistics_source_sha256`, `selected_gene_ids` and `score_table_sha256`. The
+`score_definition` value must be `null_corrected_z`; a different score scale
+cannot be silently labeled as the B3 null-corrected result. The
 selected IDs must match the original statistic lists after canonicalization;
 the provenance and statistic-input hash must match the submitted request, and
 both species must share the same run ID, model ID, score definition, selection
@@ -213,6 +215,23 @@ that the selected genes really are the top genes in the B3 ranking. Freeze and
 review the full rankings and selection procedure before a biological claim.
 The method and any inferential claim require scientific sign-off before use;
 this handoff does not select a test or turn an eligibility report into a result.
+
+The bounded `scripts/summarize_ortholog_paired_scores.py` command can describe
+one such handoff without a p-value or population claim:
+
+```bash
+python scripts/summarize_ortholog_paired_scores.py \
+  --paired-tsv paired-scores.tsv --manifest paired-scores.json \
+  --output paired-score-summary.json
+```
+
+It verifies the TSV hash and paired denominator, then reports average-tie
+Spearman rank concordance and paired score-difference summaries for the
+**selected comparable genes only**, with input hashes and exclusions. A null
+coefficient with a reason is recorded for constant ranks or fewer than two
+pairs. This is a descriptive handoff check. The proposed full-universe
+comparison and any uncertainty or multiple-comparison method still need a
+frozen scientific plan and real B3 scores.
 
 A 2026-09-29 audit of ignored local artifacts found no newer score or ranking
 output: `runs/` contains probe-readiness metadata, a spatial-copy manifest,

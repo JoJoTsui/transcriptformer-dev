@@ -303,8 +303,10 @@ mappings.
 
 A subsequent [published cross-assembly table audit](chicken-online-followup-2026-09-29.md)
 found candidate GRCg6a/GRCg7b links, but 37 of 40 rows overlapping this
-strict bridge disagree with it. The new table has not been used to change
-the accepted mapping or infer the producer's source release.
+strict bridge disagree with it. A [release-bound core review](chicken-conflict-review-2026-09-29.md)
+found no proposed row meeting the existing two-evidence mapping rule. The new
+table has not been used to change the accepted mapping or infer the producer's
+source release.
 
 ## Remaining provenance and scientific review
 

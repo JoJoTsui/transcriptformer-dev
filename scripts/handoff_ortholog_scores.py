@@ -59,6 +59,8 @@ def scored_table(path, metadata_path, species, phase, statistic, provenance, sta
         value = metadata.get(field)
         if not isinstance(value, str) or not value or value != value.strip():
             raise ValueError(f"{metadata_path}: {field} must be a nonempty trimmed string")
+    if metadata["score_definition"] != "null_corrected_z":
+        raise ValueError(f"{metadata_path}: score_definition must be null_corrected_z")
     for field, expected in (("species", species), ("phase", phase), ("statistic", statistic),
                             ("statistic_provenance", provenance),
                             ("statistics_source_sha256", statistics_hash)):

@@ -102,3 +102,11 @@ with source hashes in the [audit summary](../../../docs/chicken-published-table1
 No candidate was applied; the 7,267-pair accepted bridge and R2 state remain
 unchanged. Resolve the conflicting gene identities and producer provenance
 before accepting another mapping layer.
+
+Independent-core follow-up on 2026-09-29: the [row-level conflict review](../../../docs/agents/chicken-conflict-review-2026-09-29.md)
+checked all 37 conflicts and all 28 additional ortholog candidates against
+the archived release-106/110 Ensembl core xrefs. None meets the existing
+unique-GeneID plus same-direct-RefSeq rule. All 37 conflicting published
+targets lack a release-110 GeneID xref; the current bridge targets retain
+both independent evidence types. Three of the 28 additions share a GeneID
+but fail the RefSeq requirement. R2 remains open without a mapping change.
