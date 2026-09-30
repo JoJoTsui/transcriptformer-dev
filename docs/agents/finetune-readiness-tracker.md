@@ -2,6 +2,14 @@
 
 **Repair continuation — 2026-09-30:** The [fresh review](fresh-implementation-review-2026-09-30.md) of `543dac2` reopened 01/03/08 and identified B3 software gaps. The [verified repairs](implementation-repairs-2026-09-30.md) restore bounded engineering closure for 01/03/08 and implement the verified B3 producer, comparability, diagnostics and coordinated bootstrap. Nine bounded engineering tickets are closed. Ticket 05 awaits an actual project comparison, 12 retains external dependencies, and 11 is excluded. The older 403-test run remains historical evidence.
 
+
+2026-09-30 final verification on `9476b27`: [remote CPU CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36666782265)
+passed **479 tests** in 96.75 seconds on Ubuntu/Python 3.11;
+[change-scoped pre-commit CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36666782151) passed. This includes the public
+resume/selection, recorded coverage, bounded B3 producer and coordinated
+bootstrap suites. No real project corpus/checkpoint, GPU result or scientific
+readiness claim follows from fixture CI.
+
 **Current decision update — 2026-09-30:** The owner approved the
 [non-zebrafish corpus defaults](corpus-defaults-adoption-2026-09-30.md) and
 [B1-A](b1-owner-decision-2026-09-30.md), including its bits/cell metric and

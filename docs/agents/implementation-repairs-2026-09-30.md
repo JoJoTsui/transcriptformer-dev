@@ -98,7 +98,12 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 .venv/bin/python -m p
   test/test_ortholog_full_universe_coverage.py -q
 ```
 
-Remote full CPU CI will be recorded after publication.
+2026-09-30 final verification on `9476b27`: [remote CPU CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36666782265)
+passed **479 tests** in 96.75 seconds on Ubuntu/Python 3.11;
+[change-scoped pre-commit CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36666782151) passed. This includes the public
+resume/selection, recorded coverage, bounded B3 producer and coordinated
+bootstrap suites. No real project corpus/checkpoint, GPU result or scientific
+readiness claim follows from fixture CI.
 
 ## Closure limits
 

@@ -3,11 +3,11 @@
 **2026-09-30 superseding status:** The claim below that all collaborator-independent
 engineering is complete was invalidated by the [adversarial review](adversarial-review-2026-09-28.md).
 The owner authorized [12 remediation tickets](../../.scratch/multispecies-readiness-remediation/README.md).
-As of 2026-09-30, seven tickets are closed for bounded engineering acceptance;
-02, 05, 08 and 12 remain open, and 11 is excluded from the current continuation
+As of 2026-09-30, nine tickets are closed for bounded engineering acceptance;
+05 and 12 await actual project evidence, and 11 is excluded from this continuation
 at the owner's request. The current state and unresolved external gates are in
 the [ticket index](../../.scratch/multispecies-readiness-remediation/README.md)
-and [remediation evidence report](multispecies-remediation-evidence-2026-09-28.md).
+and [verified repair report](implementation-repairs-2026-09-30.md) (479 remote CPU tests passed on `9476b27`).
 The K–N entries below remain a historical record of their 2026-09-23 scope.
 The owner has since approved the
 [non-zebrafish corpus defaults](corpus-defaults-adoption-2026-09-30.md) and

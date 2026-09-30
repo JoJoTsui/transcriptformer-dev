@@ -1,5 +1,7 @@
 # Multispecies remediation evidence — 2026-09-28
 
+**Historical evidence:** See the [2026-09-30 repairs](implementation-repairs-2026-09-30.md) for current bounded closure and the successful 479-test remote CPU run. The socket, CI and decision limitations below describe their dated local run.
+
 This records bounded engineering checks for the [12 implementation tickets](../../.scratch/multispecies-readiness-remediation/README.md). It does not freeze the final corpus, approve B1/B2 scientific criteria, or establish model performance.
 
 ## Verified slices

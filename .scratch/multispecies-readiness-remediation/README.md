@@ -54,6 +54,14 @@ is valid historical implementation evidence. It does not cover the newly
 identified completed-export failure or establish complete B3/production
 readiness. Missing project inputs and software gaps are separate obligations.
 
+
+2026-09-30 final verification on `9476b27`: [remote CPU CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36666782265)
+passed **479 tests** in 96.75 seconds on Ubuntu/Python 3.11;
+[change-scoped pre-commit CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36666782151) passed. This includes the public
+resume/selection, recorded coverage, bounded B3 producer and coordinated
+bootstrap suites. No real project corpus/checkpoint, GPU result or scientific
+readiness claim follows from fixture CI.
+
 ## Scientific decisions and external gates
 
 - **Accepted:** equal species/equal embryo selection; baseline-relative score;
