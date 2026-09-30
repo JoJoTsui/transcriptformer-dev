@@ -8,7 +8,14 @@ import h5py
 
 from scripts.handoff_ortholog_scores import sha256
 from scripts.report_ortholog_eligibility import audit_pair
-from scripts.summarize_ortholog_full_universe import summarize
+from scripts.summarize_ortholog_full_universe import reporting_completeness, summarize
+
+
+def test_approved_reporting_floors_are_exact_and_independent():
+    assert reporting_completeness(500, 625)["status"] == "sufficient_coverage"
+    assert reporting_completeness(499, 500)["status"] == "insufficiently_covered"
+    assert reporting_completeness(500, 626)["status"] == "insufficiently_covered"
+    assert reporting_completeness(0, 625)["joined_score_fraction"] == 0
 
 
 def test_coverage_tsv_reconciles_all_exclusion_reasons(tmp_path):
@@ -127,3 +134,9 @@ def test_coverage_tsv_reconciles_all_exclusion_reasons(tmp_path):
     ]
     assert [row["selected_statistic_pair"] for row in rows] == ["true", "false", "false", "false", "false", "false"]
     assert summary["n_full_universe_paired_scores"] == 2
+    assert summary["reporting_completeness"]["status"] == "insufficiently_covered"
+    assert summary["reporting_completeness"]["joined_score_fraction"] == 0.4
+    assert summary["spearman_rho"] is None
+    assert summary["spearman_unavailable_reason"] == "insufficient_coverage"
+    assert summary["paired_difference_mean"] is None
+    assert summary["embryo_uncertainty"]["interval"] is None

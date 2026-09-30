@@ -1,7 +1,7 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
 Category: correctness and readiness
-Status: Eligibility and paired-score handoff implemented; B3 inputs and comparison method pending
+Status: Eligibility and approved comparison rule implemented; real B3 producer inputs pending
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -214,11 +214,19 @@ before generating the score and top-k artifacts below.
 The [2026-09-30 paired-comparison decision proposal](../../../docs/agents/b3-paired-comparison-decision-proposal-2026-09-30.md)
 specifies a reviewable primary universe, score comparability, descriptive
 effect, embryo-level uncertainty, multiplicity, denominator and missing-pair
-rules. It is awaiting scientific-owner approval and real B3 artifacts; it does
-not satisfy the open distributional-comparison criterion. The full-universe
+rules. The owner approved this rule on 2026-09-30, before any B3 result was
+inspected. It still lacks real B3 artifacts and cannot satisfy the open
+distributional-comparison criterion. The full-universe
 comparator can now optionally emit a hash-bound pair-level coverage TSV with
 each genome-wide pair's vocabulary/score status and selected-statistic flag,
 so future exclusions can be audited against the JSON counts.
+
+The comparator now enforces the approved 500-pair and 80%-availability
+reporting floors. Below either floor it publishes denominators and exclusions
+but withholds point effects; aggregate score tables explicitly cannot support
+the approved embryo-block bootstrap. The [producer feasibility note](../../../docs/agents/b3-producer-feasibility-2026-09-30.md)
+records the still-unfrozen deletion likelihood, absent post-QC cohort and
+absent project finetuned checkpoint. No genuine B3 score output exists yet.
 
 ```sh
 STATISTICS=/path/to/frozen-statistics.json

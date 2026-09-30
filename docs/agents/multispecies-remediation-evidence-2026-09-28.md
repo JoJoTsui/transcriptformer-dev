@@ -81,6 +81,6 @@ resume/compatibility selection passed 39/39, and the selection plus ortholog
 coverage selection passed 5/5 in 24.64 s with native threads capped. Tickets
 02 and 08 are closed for bounded CPU engineering acceptance. CUDA/kernel
 determinism and real-corpus/model outcomes are still unverified. Ticket 05's
-[comparison proposal](b3-paired-comparison-decision-proposal-2026-09-30.md)
+[owner-approved comparison rule](b3-paired-comparison-decision-proposal-2026-09-30.md)
 and row-level coverage output remain preparatory until actual B3 scores and
-scientific approval are available.
+the [producer definition](b3-producer-feasibility-2026-09-30.md) are available.

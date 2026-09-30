@@ -15,7 +15,7 @@ data, chicken identifier repair and production training remain separate gates.
 | [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | Closed for bounded CPU engineering acceptance; two-rank interrupted/resumed dropout continuity passed |
 | [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; full post-QC corpus absent |
 | [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Closed for bounded engineering acceptance; strict partial bridge leaves R2 open |
-| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Tool implemented; real B3 scores and approved comparison absent |
+| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Tool and owner-approved comparison rule implemented; real B3 scores/producer evidence absent |
 | [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Closed for bounded engineering acceptance; actual post-QC cohort absent |
 | [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Closed for bounded engineering acceptance; production loss evidence absent |
 | [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Closed for bounded CPU engineering acceptance; real production selection evidence absent |
@@ -49,8 +49,8 @@ readiness or GPU behavior. Ticket 02's two-rank interrupted/resumed CPU
 continuity case passed locally with loopback sockets permitted; ticket 08's
 bounded dependency is now met. Ticket 04's
 explicit partial-bridge acceptance is met, while R2 still requires producer
-provenance and additional verified mapping; ticket 05 needs real B3 data and
-an approved method. Ticket 12 retains unresolved
+provenance and additional verified mapping; ticket 05's comparison method is
+approved but needs real B3 data and a frozen producer definition. Ticket 12 retains unresolved
 cross-ticket scientific and production evidence. Ticket 11 remains excluded by
 the owner's current instruction.
 
@@ -80,15 +80,18 @@ the owner's current instruction.
   producer record or row-level history needed to resolve the remaining claim.
   A [follow-up public producer search](../../docs/agents/chicken-producer-search-2026-09-30.md)
   found no bound build record in the quickstart, early code or example H5ADs.
-- **Named ortholog statistics:** ticket 05's report boundary is implemented, but
-  no frozen B3 phase rankings or scored distributional comparison exist. The
+- **Named ortholog statistics:** ticket 05's report boundary and
+  [owner-approved paired comparison rule](../../docs/agents/b3-paired-comparison-decision-proposal-2026-09-30.md)
+  are implemented, but no frozen B3 phase rankings or scored distributional
+  comparison exist. The
   checked acceptance items cover the tooling. A bounded selected-pair
   [descriptive comparator](../../scripts/summarize_ortholog_paired_scores.py)
   and a [top-k origin verifier](../../scripts/verify_ortholog_topk_origin.py)
   are available. A separate [full-universe descriptive comparator](../../scripts/summarize_ortholog_full_universe.py)
   can recompute vocabulary-joined pairs and score-available denominators; the
-  comparison criterion remains open until real ranked scores and a frozen
-  scientific method are available. The [ticket 05 closure runbook](issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison)
+  comparison criterion remains open until real ranked scores and the
+  [producer method](../../docs/agents/b3-producer-feasibility-2026-09-30.md)
+  are frozen. The [ticket 05 closure runbook](issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison)
   lists the required producer artifacts and commands. The
   [B3 producer audit](../../docs/agents/b3-score-producer-audit-2026-09-30.md)
   explains why upstream `llh` and `gene_llh` cannot substitute for

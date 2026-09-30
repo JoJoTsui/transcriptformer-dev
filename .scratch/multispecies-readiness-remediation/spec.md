@@ -13,6 +13,9 @@ within the evidenced GRCg6a 99/100/101/106 class. Earlier "unsigned B1"
 wording in this specification records its original state, not the current
 decision. Post-QC cohort evidence, source-specific QC, R2 mapping repair and
 actual model results remain open.
+The owner also approved the
+[B3 paired comparison rule](../../docs/agents/b3-paired-comparison-decision-proposal-2026-09-30.md);
+the deletion score-producer definition and real B3 scores remain open.
 
 ## Problem Statement
 

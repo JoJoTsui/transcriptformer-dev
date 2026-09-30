@@ -23,6 +23,26 @@ from scripts.summarize_ortholog_paired_scores import MAX_PAIRS, average_ranks, m
 MAX_INPUT_BYTES = 64 * 1024 * 1024
 MAX_VOCAB_BYTES = 2 * 1024 * 1024 * 1024
 MAX_SCORE_ROWS = 100_000
+MIN_REPORTABLE_PAIRED_SCORES = 500
+MIN_REPORTABLE_JOINED_FRACTION = 0.8
+
+
+def reporting_completeness(n_paired: int, n_joined: int) -> dict:
+    """Apply approved B3 reporting floors after the eligibility audit."""
+    if n_joined < 1 or n_paired < 0 or n_paired > n_joined:
+        raise ValueError("Invalid joined or paired score denominator")
+    paired_floor_pass = n_paired >= MIN_REPORTABLE_PAIRED_SCORES
+    # Integer arithmetic keeps the exact 80% boundary stable.
+    availability_floor_pass = 5 * n_paired >= 4 * n_joined
+    return {
+        "status": "sufficient_coverage" if paired_floor_pass and availability_floor_pass else "insufficiently_covered",
+        "minimum_paired_scores": MIN_REPORTABLE_PAIRED_SCORES,
+        "minimum_joined_score_fraction": MIN_REPORTABLE_JOINED_FRACTION,
+        "paired_score_floor_pass": paired_floor_pass,
+        "joined_score_fraction_floor_pass": availability_floor_pass,
+        "joined_score_fraction": n_paired / n_joined,
+        "basis": "Approved B3 reporting floors; independent of registered 60% statistic-input and 5,000 genome-wide-pair eligibility floors",
+    }
 
 
 def bounded_json(path: Path) -> dict:
@@ -213,8 +233,6 @@ def summarize(args: argparse.Namespace) -> None:
     if len(scores_a) != handoff.get("n_score_rows_a") or len(scores_b) != handoff.get("n_score_rows_b"):
         raise ValueError("Score table row count disagrees with handoff")
     available = [(a, b) for a, b in sorted(joined) if a in scores_a and b in scores_b]
-    if not available:
-        raise ValueError("No full-universe pair has scores on both sides")
     x = [scores_a[a] for a, _ in available]
     y = [scores_b[b] for _, b in available]
     differences = [b - a for a, b in zip(x, y, strict=True)]
@@ -224,6 +242,8 @@ def summarize(args: argparse.Namespace) -> None:
     missing_a = sum(a not in scores_a for a, _ in joined)
     missing_b = sum(b not in scores_b for _, b in joined)
     missing_either = len(joined) - len(available)
+    completeness = reporting_completeness(len(available), len(joined))
+    reportable = completeness["status"] == "sufficient_coverage"
     summary = {
         "schema_version": 1,
         "scope": "descriptive_full_vocabulary_joined_one_to_one_universe",
@@ -251,6 +271,12 @@ def summarize(args: argparse.Namespace) -> None:
         "n_vocabulary_joined_pairs": len(joined),
         "n_selected_comparable_pairs": len(expected_selected),
         "n_full_universe_paired_scores": len(available),
+        "reporting_completeness": completeness,
+        "embryo_uncertainty": {
+            "status": "unavailable_without_per_embryo_producer_observations",
+            "interval": None,
+            "reason": "Aggregate gene-score tables cannot be resampled to recompute embryo-aggregated impacts, null bins, and z-scores",
+        },
         "exclusions": {
             "vocabulary_or_identifier_excluded_genome_pairs": len(genome_pairs - joined),
             "joined_pairs_missing_score_a": missing_a,
@@ -262,13 +288,19 @@ def summarize(args: argparse.Namespace) -> None:
         "n_score_rows_b": len(scores_b),
         "n_tied_score_values_a": len(x) - len(set(x)),
         "n_tied_score_values_b": len(y) - len(set(y)),
-        "spearman_rho": rho,
-        "spearman_unavailable_reason": None if rho is not None else "fewer_than_two_pairs_or_constant_rank_vector",
-        "paired_difference_mean": math.fsum(differences) / len(differences),
-        "paired_difference_median": median(differences),
-        "n_difference_positive": sum(value > 0 for value in differences),
-        "n_difference_negative": sum(value < 0 for value in differences),
-        "n_difference_zero": sum(value == 0 for value in differences),
+        "spearman_rho": rho if reportable else None,
+        "spearman_unavailable_reason": (
+            "insufficient_coverage"
+            if not reportable
+            else "fewer_than_two_pairs_or_constant_rank_vector"
+            if rho is None
+            else None
+        ),
+        "paired_difference_mean": math.fsum(differences) / len(differences) if reportable else None,
+        "paired_difference_median": median(differences) if reportable else None,
+        "n_difference_positive": sum(value > 0 for value in differences) if reportable else None,
+        "n_difference_negative": sum(value < 0 for value in differences) if reportable else None,
+        "n_difference_zero": sum(value == 0 for value in differences) if reportable else None,
     }
     if args.coverage_tsv:
         args.coverage_tsv.parent.mkdir(parents=True, exist_ok=True)

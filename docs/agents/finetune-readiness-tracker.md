@@ -10,6 +10,13 @@ the dated pending-decision statements below. Nature2019 source suitability,
 assay-specific QC, final corpus preparation, post-QC B1 cohort freeze, R2
 mapping repair and real-model evidence remain open.
 
+**2026-09-30 B3 method update:** The owner approved the
+[paired ortholog comparison rule](b3-paired-comparison-decision-proposal-2026-09-30.md),
+including 500-pair/80%-availability reporting floors. The comparator now
+enforces those floors and records missing pair reasons. The
+[score-producer definition](b3-producer-feasibility-2026-09-30.md), actual
+B3 scores and per-embryo observations for uncertainty remain outstanding.
+
 ## Current follow-up — 2026-09-28 review remediation
 
 The [adversarial review](adversarial-review-2026-09-28.md) reopens terminal

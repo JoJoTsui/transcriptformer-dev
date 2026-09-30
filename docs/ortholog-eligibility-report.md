@@ -282,7 +282,16 @@ genome-wide one-to-one pair, whether it belongs to the selected statistic,
 and its exact vocabulary or score-availability exclusion reason. The JSON
 records the coverage file hash and row count. The 64 MiB table/mapping/score input,
 2 GiB per-vocabulary, 100,000 score-row and one-million ortholog-row caps bound
-local execution. The scope remains
+local execution. Under the owner-approved B3 rule, a descriptive point result
+requires at least 500 paired scores and scores on at least 80% of the
+vocabulary-joined pairs. `reporting_completeness` records both floor decisions
+and the exact availability fraction. If either floor fails, the command still
+publishes the denominators, exclusions and coverage audit, but sets the
+correlation and paired difference values to null with reason
+`insufficient_coverage`. These are reporting floors separate from the
+registered statistic-input and genome-wide eligibility floors. The aggregate
+score tables do not contain the per-embryo observations needed for the approved
+embryo-block uncertainty analysis. The scope remains
 descriptive: the output has no p-value, confidence interval or biological
 verdict. The reporter does not bind vocabulary file hashes, so this command
 records the supplied vocabularies' hashes and checks that they reproduce the

@@ -65,7 +65,7 @@ resume-continuity evidence remain open.
 The seven acceptance boxes above cover ticket 12's bounded engineering and
 record-keeping contract, as evidenced by the local command record and remote
 CI. They are checked without closing the ticket's cross-ticket dependency:
-ticket 05 lacks real B3 inputs and an approved method, and the final corpus,
+ticket 05 lacks real B3 inputs and a frozen producer definition, and the final corpus,
 post-QC B1 cohort and production evidence are not frozen. Ticket 02's
 two-rank interrupted/resumed CPU proof now passes with permitted loopback
 sockets, closing its bounded engineering gate and allowing ticket 08's
@@ -80,6 +80,13 @@ interruption/resume comparison passed locally (1 test, 44.67 s, one native
 thread); 39 focused resume/compatibility checks and five selection/ortholog
 coverage checks passed. The pair-level full-universe ortholog coverage TSV
 reconciles every genome-wide pair with vocabulary and score availability;
-the [B3 comparison method proposal](../../../docs/agents/b3-paired-comparison-decision-proposal-2026-09-30.md)
-awaits scientific approval and actual B3 scores. Ticket 12 remains open on
+the [owner-approved B3 comparison rule](../../../docs/agents/b3-paired-comparison-decision-proposal-2026-09-30.md)
+awaits actual B3 scores. Ticket 12 remains open on
 those external and cross-ticket gates.
+
+The [2026-09-30 remote finetune CPU workflow](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36650423466)
+passed 338 selected tests, including the new two-rank interrupted/resumed
+case. The same commit's pre-commit workflow found pre-existing formatting drift
+in the now-touched `train.py`; the follow-up formats that file and the changed
+comparator. This formatting failure is a CI issue to resolve, not a failed
+behavioral test.

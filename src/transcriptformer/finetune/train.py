@@ -336,28 +336,43 @@ def _validation_loss(
 
 
 def _build_cohort_loader(
-    manifest: dict[str, Any], cohort: dict[str, Any], cfg: Any, gene_vocab: dict,
-    aux_vocab: dict, batch_size: int, device_type: str,
+    manifest: dict[str, Any],
+    cohort: dict[str, Any],
+    cfg: Any,
+    gene_vocab: dict,
+    aux_vocab: dict,
+    batch_size: int,
+    device_type: str,
 ) -> tuple[DataLoader, list[str]]:
     """Read only frozen validation rows, in the cohort's recorded order."""
     rows = cohort["observations"]
     paths = list(dict.fromkeys(row["prepared_path"] for row in rows))
     dataset = AnnDatasetOOM(
-        files_list=paths, gene_vocab=gene_vocab, aux_vocab=aux_vocab,
+        files_list=paths,
+        gene_vocab=gene_vocab,
+        aux_vocab=aux_vocab,
         **_dataset_kwargs(cfg),
     )
     offsets = dict(zip(paths, dataset._offsets, strict=False))
     indices = [int(offsets[row["prepared_path"]]) + int(row["prepared_row_index"]) for row in rows]
     loader = DataLoader(
-        Subset(dataset, indices), batch_size=batch_size, shuffle=False,
-        collate_fn=dataset.collate_fn, **_dataloader_kwargs(manifest, device_type),
+        Subset(dataset, indices),
+        batch_size=batch_size,
+        shuffle=False,
+        collate_fn=dataset.collate_fn,
+        **_dataloader_kwargs(manifest, device_type),
     )
     return loader, [row["id"] for row in rows]
 
 
 def _cohort_losses(
-    model, loader: DataLoader, ids: list[str], target_device: torch.device,
-    use_amp: bool, amp_dtype: torch.dtype, target_length: int,
+    model,
+    loader: DataLoader,
+    ids: list[str],
+    target_device: torch.device,
+    use_amp: bool,
+    amp_dtype: torch.dtype,
+    target_length: int,
 ) -> tuple[dict[str, float], str]:
     """Evaluate the shared causal prefix and fingerprint its actual targets."""
     model.eval()
@@ -380,7 +395,9 @@ def _cohort_losses(
                             key: (
                                 value[index : index + 1, :target_length]
                                 if isinstance(value, torch.Tensor) and value.ndim >= 2
-                                else value[index : index + 1] if isinstance(value, torch.Tensor) else value
+                                else value[index : index + 1]
+                                if isinstance(value, torch.Tensor)
+                                else value
                             )
                             for key, value in outputs.items()
                         }
@@ -405,16 +422,23 @@ def _cohort_losses(
 
 
 def _selection_loss_contract(
-    cohort: dict[str, Any], target_digest: str, cfg: Any, aux_vocab: dict | None,
-    spatial_grid_size: int | None, target_length: int,
+    cohort: dict[str, Any],
+    target_digest: str,
+    cfg: Any,
+    aux_vocab: dict | None,
+    spatial_grid_size: int | None,
+    target_length: int,
 ) -> dict[str, Any]:
     return {
         "cohort_digest": cohort["digest"],
         "objective": "shared_causal_prefix_combined_loss_per_observation_v1",
         "target_digest": target_digest,
         "preprocessing": {
-            "sort_genes": False, "randomize_order": False, "filter_to_vocab": True,
-            "normalize_to_scale": 0, "clip_counts": 30,
+            "sort_genes": False,
+            "randomize_order": False,
+            "filter_to_vocab": True,
+            "normalize_to_scale": 0,
+            "clip_counts": 30,
             "pad_zeros": bool(cfg.model.data_config.pad_zeros),
             "pad_token": str(cfg.model.data_config.gene_pad_token),
         },
@@ -427,9 +451,15 @@ def _selection_loss_contract(
 
 
 def _prepare_baseline_evidence(
-    manifest: dict[str, Any], cohort: dict[str, Any], checkpoint_path: Path,
-    output_dir: Path, resume_contract: dict[str, Any], target_device: torch.device,
-    use_amp: bool, amp_dtype: torch.dtype, batch_size: int,
+    manifest: dict[str, Any],
+    cohort: dict[str, Any],
+    checkpoint_path: Path,
+    output_dir: Path,
+    resume_contract: dict[str, Any],
+    target_device: torch.device,
+    use_amp: bool,
+    amp_dtype: torch.dtype,
+    batch_size: int,
     spatial_grid_size: int | None,
 ) -> dict[str, Any]:
     """Load or evaluate the fixed baseline before candidate optimization."""
@@ -460,21 +490,36 @@ def _prepare_baseline_evidence(
             raise ValueError("No shared gene target positions for baseline and candidate")
         try:
             baseline_losses, target_digest = _cohort_losses(
-                baseline_model, baseline_loader, baseline_ids, target_device, use_amp, amp_dtype,
+                baseline_model,
+                baseline_loader,
+                baseline_ids,
+                target_device,
+                use_amp,
+                amp_dtype,
                 target_length,
             )
         finally:
             del baseline_model, baseline_loader
             _set_rng_state(rng, target_device)
-        baseline_contract = _selection_loss_contract(
-            cohort, target_digest, baseline_cfg, base_aux, None, target_length
-        )
-        if not torch.distributed.is_available() or not torch.distributed.is_initialized() or torch.distributed.get_rank() == 0:
+        baseline_contract = _selection_loss_contract(cohort, target_digest, baseline_cfg, base_aux, None, target_length)
+        if (
+            not torch.distributed.is_available()
+            or not torch.distributed.is_initialized()
+            or torch.distributed.get_rank() == 0
+        ):
             _atomic_write(
                 cache_path,
-                lambda tmp: tmp.write_text(json.dumps({
-                    "identity": identity, "loss_contract": baseline_contract, "losses": baseline_losses,
-                }, indent=2) + "\n"),
+                lambda tmp: tmp.write_text(
+                    json.dumps(
+                        {
+                            "identity": identity,
+                            "loss_contract": baseline_contract,
+                            "losses": baseline_losses,
+                        },
+                        indent=2,
+                    )
+                    + "\n"
+                ),
             )
     evidence = {"identity": identity, "loss_contract": baseline_contract, "losses": baseline_losses}
     evidence_digest = hashlib.sha256(json.dumps(evidence, sort_keys=True).encode()).hexdigest()
@@ -509,16 +554,24 @@ def _persist_validation_cohort(output_dir: Path, cohort: dict[str, Any], resume:
 
 
 def _candidate_selection_context(
-    manifest: dict[str, Any], cohort: dict[str, Any], baseline: dict[str, Any],
-    candidate_cfg: Any, gene_vocab: dict, aux_vocab: dict, batch_size: int,
-    device_type: str, spatial_grid_size: int | None,
+    manifest: dict[str, Any],
+    cohort: dict[str, Any],
+    baseline: dict[str, Any],
+    candidate_cfg: Any,
+    gene_vocab: dict,
+    aux_vocab: dict,
+    batch_size: int,
+    device_type: str,
+    spatial_grid_size: int | None,
 ) -> dict[str, Any]:
-    loader, ids = _build_cohort_loader(
-        manifest, cohort, candidate_cfg, gene_vocab, aux_vocab, batch_size, device_type
-    )
+    loader, ids = _build_cohort_loader(manifest, cohort, candidate_cfg, gene_vocab, aux_vocab, batch_size, device_type)
     return {
-        **baseline, "cohort": cohort, "loader": loader, "ids": ids,
-        "candidate_cfg": candidate_cfg, "candidate_aux_vocab": aux_vocab,
+        **baseline,
+        "cohort": cohort,
+        "loader": loader,
+        "ids": ids,
+        "candidate_cfg": candidate_cfg,
+        "candidate_aux_vocab": aux_vocab,
         "spatial_grid_size": spatial_grid_size,
     }
 
@@ -588,9 +641,11 @@ def save_finetuned_checkpoint(
             continue
         source_names.add(vocab_file.name)
         dest = vocabs_dir / vocab_file.name
+
         def write_vocab(tmp: Path, source_file: Path = vocab_file) -> None:
             tmp.unlink(missing_ok=True)
             _link_or_copy(source_file, tmp)
+
         _atomic_write(dest, write_vocab)
     if spatial_grid_size is not None:
         content = json.dumps(build_spatial_bin_vocab(spatial_grid_size)) + "\n"
@@ -606,8 +661,11 @@ def save_finetuned_checkpoint(
 
 
 def _export_selected_checkpoint(
-    output_dir: Path, checkpoint_path: Path, summary: dict[str, Any],
-    best_state: dict[str, torch.Tensor] | None, spatial_grid_size: int | None,
+    output_dir: Path,
+    checkpoint_path: Path,
+    summary: dict[str, Any],
+    best_state: dict[str, torch.Tensor] | None,
+    spatial_grid_size: int | None,
 ) -> None:
     """Export the selected model while keeping terminal optimization state."""
     selection = summary["selection"]
@@ -775,17 +833,23 @@ def _load_latest_checkpoint(
     if expected_contract is not None:
         validate_resume_contract(state, expected_contract)
         if state.get("state_format") != 4 or not isinstance(state.get("rank_rng"), list):
-            raise ValueError("Legacy checkpoint lacks rank-local RNG evidence; use a new output directory for a fresh run")
+            raise ValueError(
+                "Legacy checkpoint lacks rank-local RNG evidence; use a new output directory for a fresh run"
+            )
         if len(state["rank_rng"]) != expected_contract["training"]["world_size"]:
             raise ValueError("Incompatible resume rank count; use a new output directory for a fresh run")
         rank_metrics = state.get("rank_loop_metrics")
         if not isinstance(rank_metrics, list) or len(rank_metrics) != expected_contract["training"]["world_size"]:
-            raise ValueError("Legacy checkpoint lacks rank-local loss history; use a new output directory for a fresh run")
+            raise ValueError(
+                "Legacy checkpoint lacks rank-local loss history; use a new output directory for a fresh run"
+            )
         if any(
             not isinstance(metrics, dict) or not {"losses", "validation_losses"} <= metrics.keys()
             for metrics in rank_metrics
         ):
-            raise ValueError("Checkpoint has incomplete rank-local loss history; use a new output directory for a fresh run")
+            raise ValueError(
+                "Checkpoint has incomplete rank-local loss history; use a new output directory for a fresh run"
+            )
         loop = state.get("loop_state") or {}
         if "micro_steps" not in loop or "pending_gradients" not in loop:
             raise ValueError("Legacy checkpoint lacks microbatch position and gradients; use a fresh output directory")
@@ -809,7 +873,11 @@ def _restore_training_state(
                 state[key] = value.to(target_device)
     scaler.load_state_dict(resume_state["scaler"])
     if "rank_rng" in resume_state:
-        rank = torch.distributed.get_rank() if torch.distributed.is_available() and torch.distributed.is_initialized() else 0
+        rank = (
+            torch.distributed.get_rank()
+            if torch.distributed.is_available() and torch.distributed.is_initialized()
+            else 0
+        )
         rng = resume_state["rank_rng"][rank]
     else:
         rng = resume_state.get("rng") or {}
@@ -970,16 +1038,22 @@ def _run_training_loop(
                 if early_stopping is not None and step % validation_interval == 0:
                     if selection_context is not None:
                         candidate_losses, target_digest = _cohort_losses(
-                            model, selection_context["loader"], selection_context["ids"],
-                            target_device, use_amp, amp_dtype,
+                            model,
+                            selection_context["loader"],
+                            selection_context["ids"],
+                            target_device,
+                            use_amp,
+                            amp_dtype,
                             selection_context["baseline_contract"]["sequence_length"],
                         )
                         result = score_validation_candidate(
-                            selection_context["cohort"], selection_context["baseline_losses"],
+                            selection_context["cohort"],
+                            selection_context["baseline_losses"],
                             candidate_losses,
                             baseline_contract=selection_context["baseline_contract"],
                             candidate_contract=_selection_loss_contract(
-                                selection_context["cohort"], target_digest,
+                                selection_context["cohort"],
+                                target_digest,
                                 selection_context["candidate_cfg"],
                                 selection_context["candidate_aux_vocab"],
                                 selection_context["spatial_grid_size"],
@@ -1002,7 +1076,11 @@ def _run_training_loop(
                             stopped_early = True
                     elif validation_loader is not None:
                         validation_loss = _validation_loss(
-                            model, validation_loader, target_device, use_amp, amp_dtype,
+                            model,
+                            validation_loader,
+                            target_device,
+                            use_amp,
+                            amp_dtype,
                             max_batches=validation_max_batches,
                         )
                         validation_losses.append(validation_loss)
@@ -1123,8 +1201,15 @@ def _ddp_worker(
 
     resume_state = _load_latest_checkpoint(output_dir, resume, expected_contract=resume_contract)
     baseline = _prepare_baseline_evidence(
-        manifest, cohort, Path(checkpoint_path), output_dir, resume_contract,
-        target_device, use_amp, amp_dtype, validation_batch_size or batch_size,
+        manifest,
+        cohort,
+        Path(checkpoint_path),
+        output_dir,
+        resume_contract,
+        target_device,
+        use_amp,
+        amp_dtype,
+        validation_batch_size or batch_size,
         spatial_grid_size,
     )
     _check_baseline_evidence(resume_state, baseline)
@@ -1140,8 +1225,15 @@ def _ddp_worker(
 
     dataset = _build_datasets(manifest, prepared_report, cfg, gene_vocab, aux_vocab)
     selection_context = _candidate_selection_context(
-        manifest, cohort, baseline, cfg, gene_vocab, aux_vocab,
-        validation_batch_size or batch_size, target_device.type, spatial_grid_size,
+        manifest,
+        cohort,
+        baseline,
+        cfg,
+        gene_vocab,
+        aux_vocab,
+        validation_batch_size or batch_size,
+        target_device.type,
+        spatial_grid_size,
     )
     early_stopping = EarlyStopping(patience=early_stopping_patience)
     sampler = DistributedSampler(
@@ -1234,7 +1326,8 @@ def train_finetune(
     _seed_process(int(manifest.get("seed", 0)))
     spatial_grid_size = spatial_grid_size_from_manifest(manifest)
     cohort = build_validation_cohort(
-        manifest, prepared_report,
+        manifest,
+        prepared_report,
         max_observations=validation_max_batches * (validation_batch_size or batch_size),
     )
     _persist_validation_cohort(output_dir, cohort, resume)
@@ -1314,8 +1407,15 @@ def train_finetune(
     logger.info("Loading checkpoint from %s", checkpoint_path)
     resume_state = _load_latest_checkpoint(output_dir, resume, expected_contract=resume_contract)
     baseline = _prepare_baseline_evidence(
-        manifest, cohort, Path(checkpoint_path), output_dir, resume_contract,
-        target_device, use_amp, amp_dtype, validation_batch_size or batch_size,
+        manifest,
+        cohort,
+        Path(checkpoint_path),
+        output_dir,
+        resume_contract,
+        target_device,
+        use_amp,
+        amp_dtype,
+        validation_batch_size or batch_size,
         spatial_grid_size,
     )
     _check_baseline_evidence(resume_state, baseline)
@@ -1341,8 +1441,15 @@ def train_finetune(
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
     initial_step = _restore_training_state(resume_state, optimizer, scaler, target_device)
     selection_context = _candidate_selection_context(
-        manifest, cohort, baseline, cfg, gene_vocab, aux_vocab,
-        validation_batch_size or batch_size, target_device.type, spatial_grid_size,
+        manifest,
+        cohort,
+        baseline,
+        cfg,
+        gene_vocab,
+        aux_vocab,
+        validation_batch_size or batch_size,
+        target_device.type,
+        spatial_grid_size,
     )
     early_stopping = EarlyStopping(patience=early_stopping_patience)
     summary, best_state = _run_training_loop(
