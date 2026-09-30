@@ -1,7 +1,7 @@
 # 11 — Require zebrafish training participation and track additional-source intake
 
 Category: correctness and readiness
-Status: Readiness tooling implemented; collaborator data pending
+Status: Excluded from current continuation; prior tooling evidence retained; ingestion and production exposure unverified
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 03, 10

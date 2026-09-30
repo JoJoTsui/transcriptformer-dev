@@ -1,7 +1,7 @@
 # 12 — Reconcile progress records and validate the bounded remediation workflow
 
 Category: correctness and readiness
-Status: Engineering acceptance evidenced; open on cross-ticket scientific and production dependencies
+Status: Open — fresh review reopened implementation dependencies; scientific and production evidence absent
 Priority: P2
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11
@@ -137,3 +137,7 @@ passed 403 selected tests and the
 [pre-commit workflow](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36661045933)
 passed. These runs establish bounded implementation behavior only; no project
 checkpoint, validated post-QC B3 corpus or real paired score result was used.
+
+Fresh review on 2026-09-30 reopened tickets 01/03/08 and identified additional ticket-05 software gaps. Tracking statements are synchronized in this review continuation, while historical CI evidence is retained. See the fresh implementation review for the current ticket matrix; this ticket remains open.
+
+[Fresh review](../../../docs/agents/fresh-implementation-review-2026-09-30.md).

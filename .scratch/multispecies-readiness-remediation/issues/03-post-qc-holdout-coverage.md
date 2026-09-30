@@ -1,7 +1,7 @@
 # 03 — Report surviving holdout observations and embryos from prepared artifacts
 
 Category: correctness and readiness
-Status: Closed for bounded engineering acceptance; production scientific evidence tracked separately
+Status: Reopened — prepared coverage validation reruns split allocation
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: none
@@ -15,7 +15,7 @@ Add explicit prepared-report coverage to the existing coverage tool while preser
 ## Acceptance Criteria
 
 - [x] The public coverage command accepts a prepared report and validates it against the supplied manifest before producing post-QC evidence.
-- [x] Coverage reads surviving prepared metadata and recorded splits, without rerunning split allocation or loading expression matrices unnecessarily.
+- [ ] Coverage reads surviving prepared metadata and recorded splits, without rerunning split allocation or loading expression matrices unnecessarily.
 - [x] A holdout embryo completely removed by QC contributes zero observations and zero embryos, even if it remains in the source split plan.
 - [x] Report observation and unique species/embryo counts by phase, split and modality, plus explicit missing-stage and empty-split information. Deduplicate identities repeated across files.
 - [x] Reports record source/preparation provenance and distinguish pre-QC projection from post-QC evidence. Stale, inconsistent or tampered prepared inputs fail.
@@ -38,3 +38,7 @@ scientific and external-data gates remain in effect.
 ## Comments
 
 Initially published as a specification-only ticket. 2026-09-28 implementation evidence: Prepared-output coverage mode is implemented; five targeted coverage tests passed. A real full-corpus post-QC freeze has not been run.
+
+Fresh review on 2026-09-30 reopened the no-reallocation criterion: prepared coverage calls the artifact validator, which calls `assign_splits` and compares the new plan to the recorded plan. This is read-only and never silently rewrites splits, but it violates the explicit no-reallocation contract and couples historical reports to the current allocator.
+
+[Fresh review](../../../docs/agents/fresh-implementation-review-2026-09-30.md).

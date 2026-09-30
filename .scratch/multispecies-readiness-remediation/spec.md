@@ -1,7 +1,7 @@
 # Multispecies embryogenesis readiness remediation
 
 Category: correctness and readiness
-Status: bounded tooling implemented; external scientific and data gates remain open
+Status: incomplete — fresh review reopened resume/coverage requirements and found additional B3 software gaps
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 
 **2026-09-30 decision update:** The owner approved the
@@ -17,6 +17,8 @@ The owner also approved the
 [B3 paired comparison rule](../../docs/agents/b3-paired-comparison-decision-proposal-2026-09-30.md);
 the [deletion score-producer definition](../../docs/agents/b3-deletion-score-decision-2026-09-30.md)
 is now recorded, while real B3 scores remain open.
+
+**Fresh review — 2026-09-30:** [Three fresh agents](../../docs/agents/fresh-implementation-review-2026-09-30.md) reopened tickets 01/03/08; ticket 05 has software gaps beyond unavailable inputs. Earlier bounded completion evidence remains historical.
 
 ## Problem Statement
 
@@ -141,12 +143,12 @@ retain the scientific and external-data gates separately from engineering work.
 - **Data/report prior art.** Existing preparation artifact, split safeguard, holdout coverage, sampler audit, offline ortholog and paired-representation tests supply the relevant small fixtures. Extend these contracts rather than reimplementing expected behavior in tests.
 - **Scientific counterexamples.** Cover a holdout embryo entirely removed by QC; zero actual joins despite matching counts; a genome-wide passing pair with an unmapped statistic; a fully mapped statistic on a low whole-vocabulary fraction; arbitrary embeddings with one phase/no shared phase; and asymmetric species losses that distinguish raw averages from relative gains.
 - **Selection boundaries.** Cover exactly 2% versus greater deterioration, zero ties, all-negative eligible scores, invalid denominators, changed cohort on resume, rare-phase oversampling weights, a third eligible species, and baseline export with candidate-only spatial conditioning present.
-- **WSL execution.** Future checks use bounded CPU data, recorded thread/memory limits and sequential heavy processes. GPU and production-corpus validation remain separately reported gaps. No tests are to be run as part of this documentation-only task.
+- **WSL execution.** Checks use bounded CPU data, recorded thread/memory limits and sequential heavy processes. GPU and production-corpus validation remain separately reported gaps. The original spec-publication task was documentation-only; subsequent implementation and review were authorized.
 - **Seam status.** These seams are proposed from existing repository prior art, not represented as separately user-approved. The owner's instruction to synthesize without another interview takes precedence over inserting a seam-confirmation question; the proposal is documented here for review without blocking ticket publication.
 
 ## Out of Scope
 
-- Implementing code, adding executable tests, running suites, launching agents to execute tickets, committing, pushing or training during this turn.
+- At initial specification publication, code, executable tests, suites, implementation agents, commits and pushes were excluded. Subsequent implementation/review authorization supersedes that publication-only restriction; production training remains outside the bounded remediation scope.
 - Approving B1-A, changing the 60%/5,000 ortholog requirements, or replacing frozen scientific acceptance criteria.
 - Deciding corpus inclusion beyond the existing zebrafish requirement, QC thresholds, assay normalization or training sampling policy.
 - Inventing independent embryos, splitting pooled embryos by cell to create validation, or using final holdout for selection.

@@ -283,10 +283,9 @@ training exposure or new-source ingestion has yet been demonstrated.
 
 ## Remaining gates
 
-- Collaborator decisions #1–#4 and assay normalization remain pending.
-- Agree on a measurable B1 criterion before observing model results; a
-  pre-registration draft ([b1-criterion-proposal.md](b1-criterion-proposal.md))
-  awaits sign-off.
+- Corpus defaults and [B1-A](agents/b1-owner-decision-2026-09-30.md) are approved. Source-specific QC/assay decisions, final preparation and the post-QC cohort freeze remain open.
+- Resolve the [fresh implementation findings](agents/fresh-implementation-review-2026-09-30.md): completed-directory resume protection, coverage validation without new split allocation, and B3 comparability/production/audit/bootstrap software.
+- Produce real baseline/finetuned results on the frozen eligible cohort before claiming B1 performance.
 - Resolve probe assets (ESM-2 embeddings/vocabularies and key-namespace
   maps) and remaining source annotations before evaluating B4.
 

@@ -1,7 +1,7 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
 Category: correctness and readiness
-Status: Eligibility and approved producer/comparison rules partly implemented; real B3 inputs pending
+Status: Partial implementation — comparability, producer integration, audits and bootstrap incomplete; real B3 inputs absent
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -345,3 +345,7 @@ reviewed per-pair coverage supplement. If the available embryos support only
 description, record that limitation and obtain an explicit decision on
 whether a descriptive result satisfies criterion 5; the current acceptance
 text cannot be silently reclassified as complete.
+
+Fresh review on 2026-09-30 confirms software gaps beyond missing inputs: the score handoff does not enforce approved producer-method comparability; coordinated embryo bootstrap is absent; prepared loader/metric derivation/artifact reading/shard reconciliation/full score publication and position/target-count audits remain incomplete. Required publication supplements are optional. Do not describe this ticket as waiting only for project files.
+
+[Fresh review](../../../docs/agents/fresh-implementation-review-2026-09-30.md).

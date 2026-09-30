@@ -1,5 +1,7 @@
 # Finetune readiness tracker
 
+**Fresh review — 2026-09-30:** [Three fresh agents](fresh-implementation-review-2026-09-30.md) reviewed `543dac2`. Tickets 01/03/08 are reopened; ticket 05 has software gaps beyond missing project data. Tickets 02/04/06/07/09/10 retain their bounded evidence (06/07 share reopened dependency 03). Ticket 12 remains open; 11 is excluded by owner. The 403-test CPU run is historical evidence, not complete spec acceptance.
+
 **Current decision update — 2026-09-30:** The owner approved the
 [non-zebrafish corpus defaults](corpus-defaults-adoption-2026-09-30.md) and
 [B1-A](b1-owner-decision-2026-09-30.md), including its bits/cell metric and
@@ -71,10 +73,11 @@ An [isolated candidate H5AD](../../logs/dataset_audit/nature2019_candidate/candi
 now contains 1,986 source-QC-passing, non-mixed cells. It is not part of the
 manifest and still lacks independent-embryo, assay, phase and cell-type approval.
 The [remediation index](../../.scratch/multispecies-readiness-remediation/README.md)
-now closes tickets 01, 02, 03, 04, 06, 07, 08, 09 and 10 for bounded engineering
-acceptance. A two-rank interrupted/resumed CPU dropout comparison now covers
-ticket 02's distributed-continuity dependency; ticket 08's bounded integration
-gate is met. These closures do not change the corpus/B1,
+previously closed tickets 01, 02, 03, 04, 06, 07, 08, 09 and 10 for bounded engineering
+acceptance; the fresh review above reopens 01/03/08. A two-rank interrupted/resumed CPU dropout comparison covers
+ticket 02's distributed-continuity behavior; ticket 08's prior evidence remains
+valid for intact resume state, while its overall resume acceptance is reopened.
+Those earlier closures did not change the corpus/B1,
 chicken R2, B3 or production-readiness gates.
 
 Additional zebrafish data may be supplied by collaborators for this finetune.
@@ -341,6 +344,8 @@ Ruff checks/formatting passed for new and changed implementation modules/tests;
 exceptions remain outside these changes. No GPU training or full real-corpus
 preparation was performed. Follow-up D subsequently added a bounded real-expression
 rehearsal; it does not replace the full-corpus gate.
+
+**Historical limitations of the original 2026-09-22 validation:** The bullets below record that run. Coordinate copies, FASTA references and owner decisions have since advanced; current gaps are stated at the top of this tracker.
 
 - Coordinate/source preservation is tested on synthetic full files and real
   full-metadata replicas; complete real matrix copies still need creation.
