@@ -34,6 +34,19 @@ excluded.
 
 ## Outcome
 
+### Prospective continuation decision
+
+The concrete [measured-zero amendment proposal](../../../docs/agents/b3-measured-zero-amendment-proposal-2026-09-30.md)
+defines a separate target convention, certificate schema, resource-bounded
+preflight and implementation dependency order. Owner authorization for this
+scientific method change is pending. It is a subtask of this open ticket;
+drafting it closes no acceptance criterion and changes no approved v1 rule.
+
+- [ ] Freeze owner-authorized amended target/support convention.
+- [ ] Implement separate versioned certificates and structural preflight.
+- [ ] Demonstrate potentially sufficient paired support on real frozen data.
+- [ ] Produce valid actual scores and observed comparison if the preflight passes.
+
 Separate descriptive genome-wide availability from eligibility for a named species-pair/developmental-phase statistic, using final validated identifiers and pairs.
 
 ## Acceptance Criteria

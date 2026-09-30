@@ -1,5 +1,12 @@
 # Finetune readiness tracker
 
+**Prospective B3 continuation — 2026-09-30:** The [concrete measured-zero
+amendment proposal](b3-measured-zero-amendment-proposal-2026-09-30.md) records
+the new target convention, evidence schema and dependency order needed to
+develop the alternative identified in the full-cohort review. Owner
+authorization for changing the approved null method is pending; v1 remains
+unchanged, ticket 05 remains open and ticket 11 remains excluded.
+
 **Repair continuation — 2026-09-30:** The [fresh review](fresh-implementation-review-2026-09-30.md) of `543dac2` reopened 01/03/08 and identified B3 software gaps. The [verified repairs](implementation-repairs-2026-09-30.md) restore bounded engineering closure for 01/03/08 and implement the verified B3 producer, comparability, diagnostics and coordinated bootstrap. Ten bounded engineering tickets are closed after the [ticket 12 scope audit](ticket12-gate-research-2026-09-30.md). Ticket 05 remains open on observed B3 evidence; validated organogenesis preparation is now available but approved full-cohort null support cannot meet the reporting floors; ticket 12 retains those gaps as documented exclusions, and 11 is excluded. The older 403-test run remains historical evidence.
 
 
