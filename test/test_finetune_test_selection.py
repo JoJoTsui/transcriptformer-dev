@@ -22,6 +22,7 @@ SUITES = (
     "orthologs",
     "ortholog_eligibility",
     "ortholog_full_universe_coverage",
+    "b3_gene_id",
     "end_to_end",
     "finetune_metadata",
     "spatial",

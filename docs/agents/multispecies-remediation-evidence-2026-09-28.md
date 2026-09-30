@@ -82,5 +82,7 @@ coverage selection passed 5/5 in 24.64 s with native threads capped. Tickets
 02 and 08 are closed for bounded CPU engineering acceptance. CUDA/kernel
 determinism and real-corpus/model outcomes are still unverified. Ticket 05's
 [owner-approved comparison rule](b3-paired-comparison-decision-proposal-2026-09-30.md)
-and row-level coverage output remain preparatory until actual B3 scores and
-the [producer definition](b3-producer-feasibility-2026-09-30.md) are available.
+and row-level coverage output remain preparatory until actual B3 scores exist.
+The owner has since adopted a
+[matched-target gene-ID producer definition](b3-deletion-score-decision-2026-09-30.md),
+but the project finetuned checkpoint and validated post-QC corpus are not ready.

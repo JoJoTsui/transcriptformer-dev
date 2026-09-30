@@ -1,7 +1,7 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
 Category: correctness and readiness
-Status: Eligibility and approved comparison rule implemented; real B3 producer inputs pending
+Status: Eligibility and approved producer/comparison rules partly implemented; real B3 inputs pending
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -221,12 +221,18 @@ comparator can now optionally emit a hash-bound pair-level coverage TSV with
 each genome-wide pair's vocabulary/score status and selected-statistic flag,
 so future exclusions can be audited against the JSON counts.
 
+The owner also adopted the reviewed
+[matched-target gene-ID deletion score](../../../docs/agents/b3-deletion-score-decision-2026-09-30.md)
+as B3's primary producer definition, explicitly amending the original vague
+full-sequence likelihood shorthand. A bounded pure scoring seam covers
+matched targets on tiny tensors; it is not a genome-wide producer run.
 The comparator now enforces the approved 500-pair and 80%-availability
 reporting floors. Below either floor it publishes denominators and exclusions
 but withholds point effects; aggregate score tables explicitly cannot support
 the approved embryo-block bootstrap. The [producer feasibility note](../../../docs/agents/b3-producer-feasibility-2026-09-30.md)
-records the still-unfrozen deletion likelihood, absent post-QC cohort and
-absent project finetuned checkpoint. No genuine B3 score output exists yet.
+records why the prior target was underdefined and why the absent post-QC
+cohort and project finetuned checkpoint prevent production. No genuine B3
+score output exists yet.
 
 ```sh
 STATISTICS=/path/to/frozen-statistics.json

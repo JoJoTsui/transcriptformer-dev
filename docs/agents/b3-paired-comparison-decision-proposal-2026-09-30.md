@@ -2,6 +2,11 @@
 
 **Status:** approved by the project owner on 2026-09-30 before any B3 result was inspected. The owner selected “Approve the documented rule” in response to the explicit comparison-method question. No real B3 score tables or frozen statistic request are present in this checkout. This decision does not change the registered 60% statistic-input or 5,000 genome-wide one-to-one-pair floors.
 
+The owner subsequently adopted the
+[matched-target gene-ID deletion score](b3-deletion-score-decision-2026-09-30.md)
+as the primary producer target for the tables compared here. Its definition
+is separate from this paired-comparison decision.
+
 ## Approved comparison rule
 
 | Decision field | Approved rule |

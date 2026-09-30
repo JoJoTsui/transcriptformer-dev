@@ -1,5 +1,12 @@
 # Ticket 05: B3 producer feasibility and frozen-method requirements — 2026-09-30
 
+**Later owner decision:** The project owner adopted a
+[matched-target gene-ID primary score](b3-deletion-score-decision-2026-09-30.md)
+after the feasibility audit below. Its explicit score target supersedes the
+open target-choice question in this original audit. The missing project
+finetuned checkpoint and validated post-QC corpus still prevent genuine B3
+score production.
+
 The owner approved the paired **comparison** rule in
 [`b3-paired-comparison-decision-proposal-2026-09-30.md`](b3-paired-comparison-decision-proposal-2026-09-30.md).
 That rule determines how genuine per-species/per-phase B3 scores will be paired;

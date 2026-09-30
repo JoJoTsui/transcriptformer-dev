@@ -12,8 +12,9 @@ the 2026-09-29 statement about remote CI being unverified is historical. A
 later bounded two-rank interrupted/resumed CPU dropout check passed with
 loopback sockets permitted, closing tickets 02 and 08 for their engineering
 criteria. The [owner-approved B3 comparison rule](b3-paired-comparison-decision-proposal-2026-09-30.md)
-and pair-level coverage report improve ticket 05's handoff but do not supply
-real B3 scores or the [producer definition](b3-producer-feasibility-2026-09-30.md).
+and pair-level coverage report improve ticket 05's handoff. The owner then
+adopted the [matched-target gene-ID producer definition](b3-deletion-score-decision-2026-09-30.md),
+but no project checkpoint, validated post-QC corpus or real B3 scores exist.
 
 Scope: the user's requested continuation excludes zebrafish-related work. This
 inventory covers the remediation specification and tickets plus the wider

@@ -15,7 +15,8 @@ decision. Post-QC cohort evidence, source-specific QC, R2 mapping repair and
 actual model results remain open.
 The owner also approved the
 [B3 paired comparison rule](../../docs/agents/b3-paired-comparison-decision-proposal-2026-09-30.md);
-the deletion score-producer definition and real B3 scores remain open.
+the [deletion score-producer definition](../../docs/agents/b3-deletion-score-decision-2026-09-30.md)
+is now recorded, while real B3 scores remain open.
 
 ## Problem Statement
 

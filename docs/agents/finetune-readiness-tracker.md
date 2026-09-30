@@ -13,9 +13,10 @@ mapping repair and real-model evidence remain open.
 **2026-09-30 B3 method update:** The owner approved the
 [paired ortholog comparison rule](b3-paired-comparison-decision-proposal-2026-09-30.md),
 including 500-pair/80%-availability reporting floors. The comparator now
-enforces those floors and records missing pair reasons. The
-[score-producer definition](b3-producer-feasibility-2026-09-30.md), actual
-B3 scores and per-embryo observations for uncertainty remain outstanding.
+enforces those floors and records missing pair reasons. The owner also
+adopted the reviewed
+[matched-target gene-ID producer definition](b3-deletion-score-decision-2026-09-30.md).
+Actual B3 scores and per-embryo observations for uncertainty remain outstanding.
 
 ## Current follow-up — 2026-09-28 review remediation
 

@@ -10,6 +10,14 @@ Glossary terms follow `CONTEXT.md` ("developmental phase", "likelihood impact sc
 
 ## 1. Null model for likelihood impact scores (S1)
 
+**2026-09-30 producer-method amendment:** The owner adopted the reviewed
+[matched-target gene-ID context impact](agents/b3-deletion-score-decision-2026-09-30.md)
+as the primary B3 score. The broad `logL(c) − logL(c \ g)` notation below is
+historical design shorthand, not an executable joint-likelihood definition.
+The 10×10 expression/dropout null and embryo-first aggregation remain the
+planned downstream analysis; position and scored-cell coverage must also be
+audited. No project B3 score table exists yet.
+
 ### 1.1 Setup
 
 For gene `g`, cell `c`: the likelihood impact score is `ΔL(c,g) = logL(c) − logL(c \ g)`, i.e. the drop in the model's sequence log-likelihood when gene `g`'s token (and count category) is removed from the cell sentence. The plan already computes this genome-wide (ADR 0002, tier 1), which makes a **self-contained permutation null** cheap: the null for `g` is the distribution of `ΔL` over *other genes matched on measurable confounders*, sampled from the already-computed genome-wide score matrix. No extra model calls.

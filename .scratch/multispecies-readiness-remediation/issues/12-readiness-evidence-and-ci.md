@@ -65,7 +65,7 @@ resume-continuity evidence remain open.
 The seven acceptance boxes above cover ticket 12's bounded engineering and
 record-keeping contract, as evidenced by the local command record and remote
 CI. They are checked without closing the ticket's cross-ticket dependency:
-ticket 05 lacks real B3 inputs and a frozen producer definition, and the final corpus,
+ticket 05 lacks real B3 inputs under the now-frozen producer definition, and the final corpus,
 post-QC B1 cohort and production evidence are not frozen. Ticket 02's
 two-rank interrupted/resumed CPU proof now passes with permitted loopback
 sockets, closing its bounded engineering gate and allowing ticket 08's
@@ -104,3 +104,11 @@ and [pre-commit run](https://github.com/JoJoTsui/transcriptformer-dev/actions/ru
 both passed on `a1d31cc`, now including the ortholog coverage test in the
 explicit CI selection. The approved reporting-floor output is versioned as
 schema 2 because below-floor point-effect fields can be null.
+
+The owner then adopted a prospective
+[matched-target gene-ID B3 score definition](../../../docs/agents/b3-deletion-score-decision-2026-09-30.md).
+A pure scoring seam and focused alignment/unit checks are included in CPU CI;
+the local score and CI-selection check passed 10/10 with native threads
+capped. This does not produce B3 scores: the project finetuned checkpoint and
+validated post-QC corpus are not ready. Ticket 05 and therefore ticket 12
+remain open on genuine producer and cross-ticket evidence.
