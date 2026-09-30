@@ -1,7 +1,7 @@
 # 08 — Integrate approved selection with early stopping, resume and model export
 
 Category: correctness and readiness
-Status: Reopened — completed-directory resume gap inherited from ticket 01
+Status: Closed for bounded engineering acceptance — fresh-review repair verified 2026-09-30
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 01, 02, 06, 07
@@ -19,7 +19,7 @@ Wire the frozen cohort and selection score into the public training workflow, pr
 - [x] Resume compatibility binds cohort, weights, species set, baseline identity and score policy. Changed selection evidence is rejected before continuing optimization.
 - [x] Persist eligibility, per-species results, best selected identity and early-stopping patience. As a documented implementation default, only improvement in the eligible selection objective resets patience.
 - [x] On completion, selected model export and terminal optimization state are separate. If baseline wins, configuration, vocabulary, weights and conditioning reproduce the baseline; candidate spatial assets cannot leak into that export.
-- [ ] Public resume retains previous best/baseline selection and patience, including no-extra-update completion, early stop and allowed budget extension.
+- [x] Public resume retains previous best/baseline selection and patience, including no-extra-update completion, early stop and allowed budget extension.
 - [x] Reports expose the human/mouse evidence limit for the current corpus without preventing a later frozen cohort containing eligible zebrafish embryos.
 
 ## Testing Seam
@@ -51,3 +51,12 @@ remain external readiness evidence, not results claimed by this closure.
 Fresh review on 2026-09-30 reopened overall resume acceptance through ticket 01: a completed export without terminal/periodic recovery state may start fresh. Previously evidenced selection, baseline export and intact-state resume behavior is retained.
 
 [Fresh review](../../../docs/agents/fresh-implementation-review-2026-09-30.md).
+
+2026-09-30 repair: completed export markers without recovery records now reject
+default resume before data/model work; empty directories and explicit fresh runs
+remain supported. Prepared validation checks recorded source/embryo assignments,
+required split isolation and indexes without calling the split allocator.
+The combined prepared-artifact, resume-contract, selection-training and holdout-
+coverage suites passed **60 tests** with all native thread pools capped at one.
+This closes the identified bounded engineering gap; real-corpus and accelerator
+evidence remain separate. See [repair record](../../../docs/agents/implementation-repairs-2026-09-30.md).

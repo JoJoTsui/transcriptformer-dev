@@ -1,7 +1,7 @@
 # Multispecies embryogenesis readiness remediation
 
 Category: correctness and readiness
-Status: incomplete — fresh review reopened resume/coverage requirements and found additional B3 software gaps
+Status: bounded software repairs verified; observed project comparison and external evidence pending; zebrafish excluded
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 
 **2026-09-30 decision update:** The owner approved the
@@ -18,7 +18,7 @@ The owner also approved the
 the [deletion score-producer definition](../../docs/agents/b3-deletion-score-decision-2026-09-30.md)
 is now recorded, while real B3 scores remain open.
 
-**Fresh review — 2026-09-30:** [Three fresh agents](../../docs/agents/fresh-implementation-review-2026-09-30.md) reopened tickets 01/03/08; ticket 05 has software gaps beyond unavailable inputs. Earlier bounded completion evidence remains historical.
+**Review and repair — 2026-09-30:** [Three fresh agents](../../docs/agents/fresh-implementation-review-2026-09-30.md) reopened 01/03/08 and identified B3 software gaps. The [repair continuation](../../docs/agents/implementation-repairs-2026-09-30.md) closes those bounded gaps and implements verified B3 production/diagnostics/bootstrap. Nine tickets are closed for bounded engineering acceptance; 05/12 still require actual project evidence, and 11 is excluded. Earlier evidence remains historical.
 
 ## Problem Statement
 

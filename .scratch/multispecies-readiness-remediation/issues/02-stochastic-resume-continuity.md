@@ -1,7 +1,7 @@
 # 02 — Preserve stochastic optimization across single-process and distributed resume
 
 Category: correctness and readiness
-Status: Own bounded CPU acceptance retained; dependency 01 reopened; CUDA/kernel determinism unverified
+Status: Closed for bounded engineering acceptance — shared repair dependencies verified; CUDA/kernel determinism unverified
 Priority: P2
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 01

@@ -9,6 +9,7 @@ import h5py
 import pytest
 
 from scripts.handoff_ortholog_scores import sha256
+from scripts.b3_score_contract import EXAMPLE_METRIC_NORMALIZATION, APPROVED_PRODUCER_METHOD, PROVENANCE_HASH_FIELDS
 from scripts.report_ortholog_eligibility import audit_pair
 from scripts.summarize_ortholog_full_universe import rank_plot_svg, reporting_completeness, summarize
 
@@ -29,7 +30,8 @@ def test_rank_plot_escapes_species_labels_and_rejects_invalid_xml():
         rank_plot_svg([1, 2], [2, 1], "bad\x00label", "other")
 
 
-def test_coverage_tsv_reconciles_all_exclusion_reasons(tmp_path):
+@pytest.mark.parametrize("missing_artifact", [None, "coverage_tsv", "rank_plot_svg"])
+def test_coverage_tsv_reconciles_all_exclusion_reasons(tmp_path, monkeypatch, missing_artifact):
     species_a, species_b = "homo_sapiens", "mus_musculus"
     pairs = [(f"a{i}", f"b{i}") for i in range(6)]
     table = tmp_path / "pairs.tsv"
@@ -57,6 +59,14 @@ def test_coverage_tsv_reconciles_all_exclusion_reasons(tmp_path):
             "score_table_sha256": sha256(path),
             "selected_gene_ids": [genes[0]],
         }
+        sidecar.update(
+            metric_normalization=dict(EXAMPLE_METRIC_NORMALIZATION),
+            producer_method=dict(APPROVED_PRODUCER_METHOD),
+            model_arm="finetuned",
+            n_scored_genes=len(genes),
+            n_embryos=3,
+        )
+        sidecar.update({field: "a" * 64 for field in PROVENANCE_HASH_FIELDS})
         metadata.append(sidecar)
         metadata_path = tmp_path / f"metadata-{suffix}.json"
         metadata_path.write_text(json.dumps(sidecar))
@@ -115,23 +125,32 @@ def test_coverage_tsv_reconciles_all_exclusion_reasons(tmp_path):
     output = tmp_path / "summary.json"
     coverage = tmp_path / "coverage.tsv"
     rank_plot = tmp_path / "ranks.svg"
-    summarize(
-        argparse.Namespace(
-            handoff=handoff_path,
-            report=report_path,
-            table=table,
-            vocab_a=vocab_paths[0],
-            vocab_b=vocab_paths[1],
-            scores_a=score_paths[0],
-            scores_b=score_paths[1],
-            metadata_a=metadata_paths[0],
-            metadata_b=metadata_paths[1],
-            mapping=None,
-            coverage_tsv=coverage,
-            rank_plot_svg=rank_plot,
-            output=output,
-        )
+    args = argparse.Namespace(
+        handoff=handoff_path,
+        report=report_path,
+        table=table,
+        vocab_a=vocab_paths[0],
+        vocab_b=vocab_paths[1],
+        scores_a=score_paths[0],
+        scores_b=score_paths[1],
+        metadata_a=metadata_paths[0],
+        metadata_b=metadata_paths[1],
+        mapping=None,
+        coverage_tsv=coverage,
+        rank_plot_svg=rank_plot,
+        output=output,
     )
+    if missing_artifact:
+        monkeypatch.setattr(
+            "scripts.summarize_ortholog_full_universe.reporting_completeness",
+            lambda *unused: {"status": "sufficient_coverage"},
+        )
+        setattr(args, missing_artifact, None)
+        with pytest.raises(ValueError, match="requires --coverage-tsv and --rank-plot-svg"):
+            summarize(args)
+        assert not output.exists()
+        return
+    summarize(args)
     summary = json.loads(output.read_text())
     assert summary["schema_version"] == 2
     with coverage.open(newline="") as handle:

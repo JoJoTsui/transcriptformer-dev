@@ -20,7 +20,6 @@ import pandas as pd
 from transcriptformer.finetune.prepare import (
     _hash_file,
     _read_split_metadata,
-    assign_splits,
     map_obs_labels,
     read_dataset_obs,
     validate_split_isolation,
@@ -51,6 +50,83 @@ def preparation_fingerprint(manifest: dict) -> str:
     return _digest({"settings": settings, "assets": assets})
 
 
+def _validate_recorded_splits(manifest: dict, plan: dict) -> dict:
+    """Validate a historical plan's constraints without allocating new splits."""
+    metadata = [_read_split_metadata(dataset) for dataset in manifest["datasets"]]
+    expected = {}
+    forced = {}
+    identities = set()
+    for entry in metadata:
+        path = str(Path(entry["path"]).resolve())
+        for embryo in entry["units"]:
+            identity = (entry["species"], str(embryo))
+            identities.add(identity)
+            expected[(path, str(embryo))] = entry
+            if entry["train_only"]:
+                forced[identity] = "train_only"
+            elif len(entry["units"]) == 1:
+                forced.setdefault(identity, "single_embryo")
+    eligible = defaultdict(set)
+    for species, embryo in identities - forced.keys():
+        eligible[species].add(embryo)
+    assignments = plan.get("assignments", [])
+    seen = set()
+    split_map = {}
+    embryo_splits = {}
+    path_splits = {}
+    for assignment in assignments:
+        key = (str(Path(assignment["path"]).resolve()), str(assignment["embryo_id"]))
+        if key in seen or key not in expected:
+            raise ValueError("Recorded split assignments have duplicate or unknown source embryos")
+        seen.add(key)
+        entry = expected[key]
+        species = entry["species"]
+        split = assignment["split"]
+        if split not in {"train", "validation", "final_holdout"}:
+            raise ValueError("Recorded split assignment has invalid split ID")
+        if assignment.get("species") != species or assignment.get("dataset_type") != entry["dataset_type"]:
+            raise ValueError("Recorded split assignment differs from source metadata")
+        if ((species, key[1]) in forced or len(eligible[species]) < 3) and split != "train":
+            raise ValueError("Recorded split violates singleton/train-only or insufficient embryo constraints")
+        reason = forced.get((species, key[1])) or (
+            "insufficient_embryos" if len(eligible[species]) < 3 else "stratified"
+        )
+        if assignment.get("reason") != reason:
+            raise ValueError("Recorded split reason differs from source constraints")
+        split_map[key] = split
+        embryo_splits[f"{assignment['path']}::{assignment['embryo_id']}"] = split
+        previous = path_splits.get(assignment["path"])
+        path_splits[assignment["path"]] = split if previous in (None, split) else "mixed"
+    if seen != set(expected):
+        raise ValueError("Recorded split assignments differ from source coverage")
+    validate_split_isolation(assignments)
+    identity_splits = {(a["species"], str(a["embryo_id"])): a["split"] for a in assignments}
+    for species, embryos in eligible.items():
+        if len(embryos) < 3:
+            continue
+        counts = {split: 0 for split in ("train", "validation", "final_holdout")}
+        for embryo in embryos:
+            counts[identity_splits[(species, embryo)]] += 1
+        n_validation = max(1, round(len(embryos) * 0.2))
+        n_holdout = max(1, round(len(embryos) * 0.1))
+        expected_counts = {
+            "train": len(embryos) - n_validation - n_holdout,
+            "validation": n_validation,
+            "final_holdout": n_holdout,
+        }
+        if counts != expected_counts:
+            raise ValueError("Recorded split eligible embryo counts differ from stratification constraints")
+    for species in {identity[0] for identity in identities}:
+        splits = {a["split"] for a in assignments if a["species"] == species}
+        if "train" not in splits or (len(eligible[species]) >= 3 and not {"validation", "final_holdout"} <= splits):
+            raise ValueError("Recorded split assignments lack required species split coverage")
+    if plan.get("seed") != int(manifest.get("seed", 0)):
+        raise ValueError("Recorded split seed differs from manifest")
+    if plan.get("embryo_splits") != embryo_splits or plan.get("splits") != path_splits:
+        raise ValueError("Recorded split indexes differ from assignments")
+    return split_map
+
+
 def validate_prepared_artifacts(manifest: dict, report: dict) -> dict:
     """Reject stale, incomplete or inconsistent prepared runs before training.
 
@@ -76,14 +152,7 @@ def validate_prepared_artifacts(manifest: dict, report: dict) -> dict:
         groups[str(Path(entry["source_path"]).resolve())].append(entry)
     if set(groups) != set(datasets):
         raise ValueError("Prepared source coverage differs from manifest")
-    expected_splits = assign_splits(
-        [_read_split_metadata(d) for d in manifest["datasets"]], seed=int(manifest.get("seed", 0))
-    )
-    if report.get("splits") != expected_splits:
-        raise ValueError("Recorded split assignments differ from source/manifest")
-    split_map = {
-        (str(Path(a["path"]).resolve()), str(a["embryo_id"])): a["split"] for a in expected_splits["assignments"]
-    }
+    split_map = _validate_recorded_splits(manifest, report.get("splits") or {})
     actual_assignments = []
     n_obs = 0
     split_counts = defaultdict(int)

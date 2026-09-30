@@ -281,10 +281,42 @@ Additional collaborator data require source identity, independent embryo IDs,
 raw-count and stage metadata before the final corpus can be frozen. No full
 training exposure or new-source ingestion has yet been demonstrated.
 
+## 12. B3 producer and coordinated bootstrap
+
+`scripts/produce_b3_scores.py --config frozen-producer.json --output b3-publication`
+reconciles frozen raw shards against the validated prepared corpus without loading
+checkpoint weights. The explicit `--score` flag runs model forwards; use the intended
+compute host for real production. It never samples a smaller corpus to satisfy a cap.
+
+The config supplies manifest, prepared report, checkpoint, species, phase, recorded
+split, model arm, full canonical gene universe, gene/aux vocabulary JSON paths,
+run identity, software commit, and bounded cell/row limits. `metric_normalization`
+explicitly records `library_size_log1p`, a positive `target_sum`, and denominator
+`all_prepared_measured_genes_before_vocab_filter_clipping`. The scale is a caller-frozen
+analysis setting, not a new owner-approved assay policy. Raw model counts stay unchanged.
+Supply `raw_shards` for reconciliation. Outputs are the complete finite `scores.tsv`,
+all-gene `audit.json` with unavailable reasons/peer support/diagnostics, and hash-bound
+`metadata.json`. Existing outputs are never overwritten.
+
+Freeze statistic-specific selection fields after producing the complete ranking;
+then follow [ticket 05's handoff runbook](../.scratch/multispecies-readiness-remediation/issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison).
+Reportable primary comparisons require both `--coverage-tsv` and `--rank-plot-svg`.
+Method definitions, normalization settings, checkpoint and model arm must match.
+
+`scripts/bootstrap_b3_family.py --input frozen-bootstrap.json --output intervals.json`
+consumes verified publications and a hash-bound family, rather than arbitrary inline
+cell scores. It revalidates prepared membership, raw shard checksums, metric summaries,
+full finite scores and comparison evidence. The approved 2,000 seeded embryo draws
+share sampling across comparisons using the same species/phase, rebuild bins/nulls,
+retain original finite pairs, and use simultaneous maximum-deviation intervals.
+At least five independent embryos per side and 95% joint valid draws are required.
+Input schema and evidence are recorded in the [repair report](agents/implementation-repairs-2026-09-30.md).
+Inferential per-gene p-values/FDR remain unevaluable.
+
 ## Remaining gates
 
 - Corpus defaults and [B1-A](agents/b1-owner-decision-2026-09-30.md) are approved. Source-specific QC/assay decisions, final preparation and the post-QC cohort freeze remain open.
-- Resolve the [fresh implementation findings](agents/fresh-implementation-review-2026-09-30.md): completed-directory resume protection, coverage validation without new split allocation, and B3 comparability/production/audit/bootstrap software.
+- The [fresh implementation findings](agents/fresh-implementation-review-2026-09-30.md) have [bounded repairs](agents/implementation-repairs-2026-09-30.md). Execute the verified B3 pipeline on the actual project checkpoint/corpus and frozen phase/family inputs before claiming an observed comparison.
 - Produce real baseline/finetuned results on the frozen eligible cohort before claiming B1 performance.
 - Resolve probe assets (ESM-2 embeddings/vocabularies and key-namespace
   maps) and remaining source annotations before evaluating B4.

@@ -1,7 +1,7 @@
 # 07 — Compute hierarchical baseline-relative scores and eligibility
 
 Category: correctness and readiness
-Status: Own bounded engineering acceptance retained; coverage dependency 03 reopened; production losses absent
+Status: Closed for bounded engineering acceptance — shared repair dependencies verified; production losses absent
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 06

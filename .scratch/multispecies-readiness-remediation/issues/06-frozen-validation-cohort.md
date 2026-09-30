@@ -1,7 +1,7 @@
 # 06 — Build a bounded validation cohort with embryo and phase provenance
 
 Category: correctness and readiness
-Status: Own bounded engineering acceptance retained; dependency 03 reopened; actual cohort absent
+Status: Closed for bounded engineering acceptance — shared repair dependencies verified; actual project cohort absent
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 03

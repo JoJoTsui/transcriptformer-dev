@@ -1,7 +1,7 @@
 # 12 — Reconcile progress records and validate the bounded remediation workflow
 
 Category: correctness and readiness
-Status: Open — fresh review reopened implementation dependencies; scientific and production evidence absent
+Status: Bounded CI and tracking reconciled — actual comparison and scientific/production dependencies remain open
 Priority: P2
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11
@@ -141,3 +141,12 @@ checkpoint, validated post-QC B3 corpus or real paired score result was used.
 Fresh review on 2026-09-30 reopened tickets 01/03/08 and identified additional ticket-05 software gaps. Tracking statements are synchronized in this review continuation, while historical CI evidence is retained. See the fresh implementation review for the current ticket matrix; this ticket remains open.
 
 [Fresh review](../../../docs/agents/fresh-implementation-review-2026-09-30.md).
+
+2026-09-30 repair continuation closes the reopened bounded acceptance of 01/03/08
+and adds score-contract, producer and bootstrap suites to explicit CPU CI and
+its selection guard. Fresh code review found additional integrity, packaging,
+provenance, normalization, resource and unavailable-family cases; these were
+repaired before final integration checks. Current index/register/guide separate
+verified tooling from absent actual project evidence. Ticket 05 remains open
+on its observed comparison criterion, and ticket 11 remains excluded by owner.
+See the [repair record](../../../docs/agents/implementation-repairs-2026-09-30.md).

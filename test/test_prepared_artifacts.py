@@ -155,3 +155,141 @@ def test_colliding_output_stems_rejected(prepared, tmp_path):
     manifest["datasets"].append({**manifest["datasets"][0], "path": str(alias)})
     with pytest.raises(ValueError, match="stems must be unique"):
         prepare_run(manifest, tmp_path / "collisions")
+
+
+def test_recorded_plan_validation_never_allocates_splits(prepared, monkeypatch):
+    from transcriptformer.finetune import coverage, prepare
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("Prepared validation reran split allocation")
+
+    monkeypatch.setattr(prepare, "assign_splits", forbidden)
+    monkeypatch.setattr(coverage, "assign_splits", forbidden)
+    manifest, report = prepared
+    assert validate_prepared_artifacts(manifest, report)["status"] == "passed"
+    assert coverage.prepared_holdout_coverage(manifest, report)["artifact_validation"]["status"] == "passed"
+
+
+@pytest.mark.parametrize("mutation", ["missing", "duplicate", "unknown", "species", "split", "indexes"])
+def test_recorded_plan_integrity(prepared, mutation):
+    manifest, report = prepared
+    plan = report["splits"]
+    assignment = plan["assignments"][0]
+    if mutation == "missing":
+        plan["assignments"].pop()
+    elif mutation == "duplicate":
+        plan["assignments"].append(copy.deepcopy(assignment))
+    elif mutation == "unknown":
+        assignment["embryo_id"] = "not-in-source"
+    elif mutation == "species":
+        assignment["species"] = "wrong"
+    elif mutation == "split":
+        assignment["split"] = "test"
+    else:
+        plan["embryo_splits"] = {}
+    with pytest.raises(ValueError, match="Recorded split"):
+        validate_prepared_artifacts(manifest, report)
+
+
+@pytest.mark.parametrize("marker", ["training_summary.json", "selected_model.json", "model_weights.pt"])
+@pytest.mark.parametrize("num_gpus", [1, 2])
+def test_completed_export_requires_recovery_before_public_workflow(prepared, tmp_path, monkeypatch, marker, num_gpus):
+    from transcriptformer.finetune import train
+
+    manifest, report = prepared
+    output = tmp_path / "completed"
+    output.mkdir()
+    (output / marker).write_bytes(b"completed")
+    for name in ("validation_cohort.json", "validation_baseline.json"):
+        (output / name).write_bytes(b"original evidence")
+    before = {p.name: p.read_bytes() for p in output.iterdir()}
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("Completed directory proceeded to cohort/assets/model loading")
+
+    for name in ("build_validation_cohort", "build_resume_contract", "_prepare_baseline_evidence", "_load_model"):
+        monkeypatch.setattr(train, name, forbidden)
+    with pytest.raises(ValueError, match="recovery checkpoint.*resume=False"):
+        train.train_finetune(
+            manifest,
+            output,
+            report,
+            checkpoint_path=tmp_path / "missing",
+            max_steps=1,
+            batch_size=1,
+            lr=0.001,
+            epochs=1,
+            device="cpu",
+            precision="32",
+            num_gpus=num_gpus,
+        )
+    assert {p.name: p.read_bytes() for p in output.iterdir()} == before
+
+
+@pytest.mark.parametrize("resume", [True, False])
+def test_checkpoint_loader_allows_empty_or_explicit_fresh_run(tmp_path, resume):
+    from transcriptformer.finetune.train import _load_latest_checkpoint
+
+    if not resume:
+        (tmp_path / "selected_model.json").write_text("{}")
+    assert _load_latest_checkpoint(tmp_path, resume) is None
+
+
+@pytest.mark.parametrize("constraint", ["train_only", "singleton", "insufficient", "isolation"])
+def test_recorded_plan_rejects_source_split_constraint_violations(monkeypatch, constraint):
+    from transcriptformer.finetune import artifacts
+    from transcriptformer.finetune.prepare import assign_splits
+
+    entries = [
+        {
+            "path": "/source",
+            "dataset_type": "single_cell",
+            "species": "fish",
+            "units": ["a", "b", "c", "d"],
+            "train_only": False,
+        }
+    ]
+    if constraint == "train_only":
+        entries[0]["train_only"] = True
+    elif constraint == "singleton":
+        entries[0]["units"] = ["a"]
+    elif constraint == "insufficient":
+        entries[0]["units"] = ["a", "b"]
+    else:
+        entries.append({**entries[0], "path": "/second"})
+    plan = assign_splits(entries)
+    first = plan["assignments"][0]
+    first["split"] = "validation" if first["split"] == "train" else "train"
+    by_path = {e["path"]: e for e in entries}
+    monkeypatch.setattr(artifacts, "_read_split_metadata", lambda dataset: by_path[dataset["path"]])
+    with pytest.raises(ValueError, match="constraints|crosses splits"):
+        artifacts._validate_recorded_splits({"datasets": entries}, plan)
+
+
+@pytest.mark.parametrize("n_eligible", [3, 10])
+def test_recorded_plan_rejects_changed_eligible_split_counts(monkeypatch, n_eligible):
+    from transcriptformer.finetune import artifacts
+    from transcriptformer.finetune.prepare import assign_splits
+
+    entries = [
+        {
+            "path": "/eligible",
+            "dataset_type": "single_cell",
+            "species": "fish",
+            "train_only": False,
+            "units": [f"embryo{i}" for i in range(n_eligible)],
+        },
+        {"path": "/forced", "dataset_type": "single_cell", "species": "fish", "train_only": False, "units": ["forced"]},
+    ]
+    plan = assign_splits(entries)
+    by_path = {e["path"]: e for e in entries}
+    monkeypatch.setattr(artifacts, "_read_split_metadata", lambda dataset: by_path[dataset["path"]])
+    manifest = {"datasets": entries}
+    assert artifacts._validate_recorded_splits(manifest, plan)
+    # Keep forced training support, isolation, provenance and both heldout splits;
+    # the recorded eligible proportions are the only changed constraint.
+    assignment = next(a for a in plan["assignments"] if a["path"] == "/eligible" and a["split"] == "train")
+    assignment["split"] = "validation"
+    plan["embryo_splits"][f"{assignment['path']}::{assignment['embryo_id']}"] = "validation"
+    with pytest.raises(ValueError, match="eligible embryo counts"):
+        artifacts._validate_recorded_splits(manifest, plan)

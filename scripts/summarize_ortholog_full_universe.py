@@ -17,6 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.build_ortholog_table import canonical_gene_id
+from scripts.b3_score_contract import validate_score_metadata, validate_shared_method
 from scripts.handoff_ortholog_scores import sha256
 from scripts.report_ortholog_eligibility import audit_pair, mapped_pairs, read_mapping, read_pairs
 from scripts.summarize_ortholog_paired_scores import MAX_PAIRS, average_ranks, median, pearson
@@ -254,6 +255,7 @@ def summarize(args: argparse.Namespace) -> None:
     if len(expected_selected) != selected["n_comparable_pairs"] or not expected_selected <= joined:
         raise ValueError("Selected pairs do not belong to recomputed full universe")
     metadata_a, metadata_b = handoff["metadata_a"], handoff["metadata_b"]
+    validate_shared_method(metadata_a, metadata_b)
     selected_a, selected_b = set(metadata_a["selected_gene_ids"]), set(metadata_b["selected_gene_ids"])
     if expected_selected != {(a, b) for a, b in joined if a in selected_a and b in selected_b}:
         raise ValueError("Recomputed selected pair intersection disagrees with report")
@@ -273,6 +275,8 @@ def summarize(args: argparse.Namespace) -> None:
     scores_b = score_table(args.scores_b, handoff["scores_b_sha256"], species_b)
     if len(scores_a) != handoff.get("n_score_rows_a") or len(scores_b) != handoff.get("n_score_rows_b"):
         raise ValueError("Score table row count disagrees with handoff")
+    validate_score_metadata(metadata_a, len(scores_a))
+    validate_score_metadata(metadata_b, len(scores_b))
     available = [(a, b) for a, b in sorted(joined) if a in scores_a and b in scores_b]
     x = [scores_a[a] for a, _ in available]
     y = [scores_b[b] for _, b in available]
@@ -286,6 +290,8 @@ def summarize(args: argparse.Namespace) -> None:
     missing_either = len(joined) - len(available)
     completeness = reporting_completeness(len(available), len(joined))
     reportable = completeness["status"] == "sufficient_coverage"
+    if reportable and (not args.coverage_tsv or not rank_plot_path):
+        raise ValueError("Reportable primary B3 result requires --coverage-tsv and --rank-plot-svg")
     plot_status = "not_requested"
     if rank_plot_path:
         plot_status = "written" if reportable else "withheld_insufficient_coverage"
@@ -311,6 +317,8 @@ def summarize(args: argparse.Namespace) -> None:
         "statistic": handoff["statistic"],
         "provenance": handoff["provenance"],
         "score_definition": "null_corrected_z",
+        "producer_method": metadata_a["producer_method"],
+        "model_arm": metadata_a["model_arm"],
         "score_difference_direction": "species_b_minus_species_a",
         "n_genome_wide_pairs": len(genome_pairs),
         "n_vocabulary_joined_pairs": len(joined),
@@ -331,6 +339,9 @@ def summarize(args: argparse.Namespace) -> None:
             "joined_pairs_missing_either_score": missing_either,
             "missing_score_reason": "gene_absent_from_supplied_finite_score_table; not biological absence",
         },
+        "n_embryos_a": metadata_a["n_embryos"],
+        "n_embryos_b": metadata_b["n_embryos"],
+        "metric_normalization": metadata_a["metric_normalization"],
         "n_score_rows_a": len(scores_a),
         "n_score_rows_b": len(scores_b),
         "n_tied_score_values_a": len(x) - len(set(x)),
@@ -405,8 +416,16 @@ def main() -> None:
     ):
         parser.add_argument(f"--{name}", type=Path, required=True)
     parser.add_argument("--mapping", type=Path)
-    parser.add_argument("--coverage-tsv", type=Path, help="Optional pair-level inclusion and exclusion audit")
-    parser.add_argument("--rank-plot-svg", type=Path, help="Optional hash-bound full-universe rank scatter")
+    parser.add_argument(
+        "--coverage-tsv",
+        type=Path,
+        help="Required for reportable primary results: pair-level inclusion and exclusion audit",
+    )
+    parser.add_argument(
+        "--rank-plot-svg",
+        type=Path,
+        help="Required for reportable primary results: hash-bound full-universe rank scatter",
+    )
     summarize(parser.parse_args())
 
 

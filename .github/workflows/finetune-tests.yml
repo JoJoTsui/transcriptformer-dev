@@ -73,6 +73,9 @@ jobs:
             test/test_b3_raw_artifact.py \
             test/test_b3_bins.py \
             test/test_b3_matched_null.py \
+            test/test_b3_score_contract.py \
+            test/test_b3_pipeline.py \
+            test/test_b3_bootstrap.py \
             test/test_end_to_end.py \
             test/test_finetune_metadata.py \
             test/test_spatial.py \

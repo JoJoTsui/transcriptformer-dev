@@ -1,6 +1,6 @@
 # Finetune readiness tracker
 
-**Fresh review — 2026-09-30:** [Three fresh agents](fresh-implementation-review-2026-09-30.md) reviewed `543dac2`. Tickets 01/03/08 are reopened; ticket 05 has software gaps beyond missing project data. Tickets 02/04/06/07/09/10 retain their bounded evidence (06/07 share reopened dependency 03). Ticket 12 remains open; 11 is excluded by owner. The 403-test CPU run is historical evidence, not complete spec acceptance.
+**Repair continuation — 2026-09-30:** The [fresh review](fresh-implementation-review-2026-09-30.md) of `543dac2` reopened 01/03/08 and identified B3 software gaps. The [verified repairs](implementation-repairs-2026-09-30.md) restore bounded engineering closure for 01/03/08 and implement the verified B3 producer, comparability, diagnostics and coordinated bootstrap. Nine bounded engineering tickets are closed. Ticket 05 awaits an actual project comparison, 12 retains external dependencies, and 11 is excluded. The older 403-test run remains historical evidence.
 
 **Current decision update — 2026-09-30:** The owner approved the
 [non-zebrafish corpus defaults](corpus-defaults-adoption-2026-09-30.md) and
@@ -74,9 +74,9 @@ now contains 1,986 source-QC-passing, non-mixed cells. It is not part of the
 manifest and still lacks independent-embryo, assay, phase and cell-type approval.
 The [remediation index](../../.scratch/multispecies-readiness-remediation/README.md)
 previously closed tickets 01, 02, 03, 04, 06, 07, 08, 09 and 10 for bounded engineering
-acceptance; the fresh review above reopens 01/03/08. A two-rank interrupted/resumed CPU dropout comparison covers
+acceptance; the fresh review temporarily reopened 01/03/08; the repair continuation above restores bounded closure. A two-rank interrupted/resumed CPU dropout comparison covers
 ticket 02's distributed-continuity behavior; ticket 08's prior evidence remains
-valid for intact resume state, while its overall resume acceptance is reopened.
+valid for intact resume state, and the missing-state path is now guarded.
 Those earlier closures did not change the corpus/B1,
 chicken R2, B3 or production-readiness gates.
 

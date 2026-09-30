@@ -1,7 +1,7 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
 Category: correctness and readiness
-Status: Partial implementation — comparability, producer integration, audits and bootstrap incomplete; real B3 inputs absent
+Status: Software implemented — observed B3 comparison remains open pending project inputs
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -321,6 +321,7 @@ python scripts/summarize_ortholog_full_universe.py \
   --scores-a "$SCORES_A" --scores-b "$SCORES_B" \
   --metadata-a "$METADATA_A" --metadata-b "$METADATA_B" \
   --coverage-tsv "$OUT/full-universe-coverage.tsv" \
+  --rank-plot-svg "$OUT/full-universe-ranks.svg" \
   --output "$OUT/full-universe-description.json"
 ```
 
@@ -349,3 +350,16 @@ text cannot be silently reclassified as complete.
 Fresh review on 2026-09-30 confirms software gaps beyond missing inputs: the score handoff does not enforce approved producer-method comparability; coordinated embryo bootstrap is absent; prepared loader/metric derivation/artifact reading/shard reconciliation/full score publication and position/target-count audits remain incomplete. Required publication supplements are optional. Do not describe this ticket as waiting only for project files.
 
 [Fresh review](../../../docs/agents/fresh-implementation-review-2026-09-30.md).
+
+2026-09-30 fresh-review repair: the bounded producer now verifies and reconciles
+raw shards against the validated prepared corpus, computes full zero-inclusive
+metrics and all-gene null/audit results, and publishes complete finite tables.
+Handoff/full-universe consumers enforce the shared producer method, checkpoint,
+model arm and explicit normalization. Reportable results require coverage TSV
+and rank SVG supplements. The coordinated bootstrap reconstructs metrics/bins/nulls
+on 2,000 seeded embryo draws, uses a fixed original finite pair universe and
+simultaneous maximum-deviation intervals, and retains unsupported planned members.
+Missing evidence is never an observed zero effect. See the
+[repair evidence and schemas](../../../docs/agents/implementation-repairs-2026-09-30.md).
+The project finetuned checkpoint and validated post-QC corpus are not ready;
+criterion 5 therefore remains unchecked. No real B3 result was produced.

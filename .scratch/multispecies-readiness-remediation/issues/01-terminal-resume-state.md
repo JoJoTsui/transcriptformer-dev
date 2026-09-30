@@ -1,7 +1,7 @@
 # 01 — Persist terminal resume state independently of selected weights
 
 Category: correctness and readiness
-Status: Reopened — completed exports without recovery state can silently restart
+Status: Closed for bounded engineering acceptance — fresh-review repair verified 2026-09-30
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: none
@@ -18,7 +18,7 @@ Extend existing training finalization and resume behavior so periodic checkpoint
 - [ ] Reinvoking the public workflow with the same completed budget performs no additional training updates. Early stopping between periodic saves remains stopped after restart.
 - [x] Explicit budget extension resumes from terminal optimizer/scaler/stream state, not from selected best-model weights; explicitly early-stopped state remains stopped.
 - [x] Terminal writes are atomic and retention cannot delete the only valid terminal record. Incomplete writes do not masquerade as valid state.
-- [ ] Losses, validation/selection history, stopping state and selected-model identity remain continuous; legacy/incompatible terminal state fails with a clear fresh-run instruction.
+- [x] Losses, validation/selection history, stopping state and selected-model identity remain continuous; legacy/incompatible terminal state fails with a clear fresh-run instruction.
 - [x] Preserve explicit fresh-start behavior and existing compatible budget-extension semantics.
 
 ## Testing Seam
@@ -42,3 +42,12 @@ Initially published as a specification-only ticket. 2026-09-28 implementation ev
 Fresh review on 2026-09-30 reopened this ticket: `_load_latest_checkpoint` returns no state when resume is requested without a checkpoint, including a directory with completed export markers. The public workflow has no completed-directory guard. Existing format-4 resume evidence is retained; it does not cover this missing-state legacy path.
 
 [Fresh review](../../../docs/agents/fresh-implementation-review-2026-09-30.md).
+
+2026-09-30 repair: completed export markers without recovery records now reject
+default resume before data/model work; empty directories and explicit fresh runs
+remain supported. Prepared validation checks recorded source/embryo assignments,
+required split isolation and indexes without calling the split allocator.
+The combined prepared-artifact, resume-contract, selection-training and holdout-
+coverage suites passed **60 tests** with all native thread pools capped at one.
+This closes the identified bounded engineering gap; real-corpus and accelerator
+evidence remain separate. See [repair record](../../../docs/agents/implementation-repairs-2026-09-30.md).

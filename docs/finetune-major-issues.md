@@ -4,7 +4,7 @@
 
 本文汇总本次微调的全部重大问题,来源包括:对抗性评审(`docs/agents/adversarial-review-2026-09-09.md`)、数据集审计(`logs/dataset_audit/`)、整改计划(ADR 0003)与验证设计文档(`docs/perturbation-and-baseline-design.md`)。本文自身亦经三方对抗性复核并据此修订(`docs/agents/register-review-2026-09-14.md`)。**计算资源类问题(显存、单轮训练时长、GPU 数量、WSL 内存)不在本文范围内**——它们单独记录于评审报告的 C 类发现与 ADR 0003 的计算部分。需要生物学合作方裁定的事项,另行汇总于文末《致合作者:待您裁定的事项》。
 
-**当前工程进度（2026-09-30）：** [三位新代理复核](agents/fresh-implementation-review-2026-09-30.md)重新打开整改票 01/03/08；05 的方法一致性、生产串联、诊断与 bootstrap 尚未实现，12 仍待完成。02/04/06/07/09/10 保留有限工程验收证据，11 按用户要求排除。B1-A 与语料默认策略已批准；QC/assay、QC 后队列、探测资源、真实模型证据与全库 prepare 仍待完成。
+**当前工程进度（2026-09-30）：** [新代理复核](agents/fresh-implementation-review-2026-09-30.md)发现的问题已按[修复记录](agents/implementation-repairs-2026-09-30.md)整改；01/03/08 恢复有限工程验收关闭，九张有限工程票已关闭。05 的生产、方法一致性、诊断与 bootstrap 软件已实现；05/12 仍待真实项目比较及外部科学/生产证据，11 按用户要求排除。B1-A 和语料默认策略已批准；QC/assay、QC 后队列、探测资源和全库 prepare 仍待完成。
 
 **2026-09-22 续审(历史记录):** 复现证据见 [续审报告](agents/continuation-review-2026-09-22.md)。3.9 的常量 section_id 方案无效,状态重新打开;新增 3.11(覆盖 section_id 会改变空间分箱)与 7.7(B1 的六物种留出标准不可达)。这些是设计缺陷,尚未实施修复。
 
@@ -73,7 +73,7 @@
 |---|---|---|
 | 4.1 | **版本号剥离破坏了非 Ensembl 标识(D3)。** 按 "." 截断毁掉了 8,693 个线虫序列名(`2L52.1`)和 2,073 个斑马鱼旁系同源符号(`acy3.1`);声称的 90% 线虫覆盖率实际只有约 47%。 | **已解决** — 剥离仅限 Ensembl/FBgn/WBGene 模式;覆盖率已按真实代码路径重算。`55225c3` |
 | 4.2 | **映射后的重复基因 ID 从未合并(P7)。** 1,107 个人类 / 2,817 个小鼠 / 2,025 个海胆词表基因对应 ≥ 2 个源列 → 构建训练数据集时崩溃,或推理时静默跳过整个文件。 | **已解决** — 重复项按计数求和合并,并在准备报告中以 `duplicate_genes_collapsed` 字段记录。`55225c3` |
-| 4.3 | **各物种映射覆盖率曾为 47–82%(整改前数字,S6)。** 覆盖率差异会制造虚假的跨物种分化:某基因若不在物种 A 的映射中,看起来就像"被沉默"。整改后经真实代码路径由校验器实测为 52.7%(Tyser CS7)– 90.2%(线虫)——线虫从修复前的 47% 升至 90.2%。 | **部分工具已实现；R2/R3 未关闭** — 六对/91 是旧描述性统计，并非实际命名统计的 60%/5,000 判定。票 04 的严格部分鸡桥接保留；来源发布与未解析标识仍待解决。票 05 的真实 B3 结果及方法一致性/生产串联/诊断/bootstrap 软件仍缺失。 |
+| 4.3 | **各物种映射覆盖率曾为 47–82%(整改前数字,S6)。** 覆盖率差异会制造虚假的跨物种分化:某基因若不在物种 A 的映射中,看起来就像"被沉默"。整改后经真实代码路径由校验器实测为 52.7%(Tyser CS7)– 90.2%(线虫)——线虫从修复前的 47% 升至 90.2%。 | **部分工具已实现；R2/R3 未关闭** — 严格部分鸡桥接保留；来源发布和未解析标识仍待解决。票 05 的生产串联、方法一致性、诊断与 bootstrap 已实现并经有限验证；真实项目 B3 比较尚缺。 |
 | 4.4 | **基因词表命名空间。** 存在分词时查错物种 embedding(嵌入)的风险。 | **已解决(已验证)** — TF-Metazoa 的 12 个词表在物种间经验证互不重叠。 |
 
 ## 5. 训练流程正确性(非计算资源)
@@ -81,15 +81,15 @@
 | # | 问题 | 状态 |
 |---|---|---|
 | 5.1 | **早停保存的是最终权重而非最佳权重(P4)。** | **已解决** — 验证集改善时快照最佳 checkpoint(检查点)。`7cb9a6c` |
-| 5.2 | **续训默认开启且实现损坏(P5)。** 未保存优化器/scaler/步数/RNG 状态;崩溃后重跑会用全新 AdamW 状态覆盖好 checkpoint。 | **重新打开（票 01/08）** — 当前格式 4 保存并恢复全状态；但完成目录缺少恢复记录时默认续训会返回“从头开始”，没有完成目录保护。旧提交与测试保留为历史证据。 |
+| 5.2 | **续训默认开启且实现损坏(P5)。** 未保存优化器/scaler/步数/RNG 状态;崩溃后重跑会用全新 AdamW 状态覆盖好 checkpoint。 | **有限工程验收已关闭（票 01/08）** — 格式 4 保存完整续训状态；完成导出但缺恢复记录时，在数据/模型操作前明确拒绝默认续训。新目录和显式从头运行仍可用。 |
 | 5.3 | **无 epoch 级打乱(P6)。** 每个 epoch 以相同顺序重放相同细胞。 | **已解决** — 由 `BalancedDataset.set_epoch()` 实现。`7cb9a6c`;持久 worker 的传播也已修复并通过 5.7 回归。 |
 | 5.4 | **checkpoint 不完整(P2 训练侧)。** 输出目录没有 config.json/词表 → 训练完成的产物不是可评估的模型。 | **已解决** — `save_finetuned_checkpoint()` 原子性地组装完整 checkpoint 目录(config + 硬链接词表 + 空间词表 + 权重)。`7cb9a6c` |
 | 5.5 | **整改后真实语料仍需完整 prepare 验证。** 划分、坐标、元数据和阶段映射工具已验证;完整表达矩阵副本与派生清单已生成并通过校验(2026-09-23),27 数据集训练准备产物尚未生成。 | **待执行 — 训练前闸门** — 坐标副本与派生清单已就绪(校验 27 PASS/1 WARN/0 FAIL;27 源有界演练通过);待语料/QC 配置定稿后对派生清单运行校验器与 `--prepare-only`。原源清单缺坐标仍会 FAIL。元数据审计/合成测试不替代完整语料运行。 |
 | 5.6 | **checkpoint 硬链接的可移植性。** save_finetuned_checkpoint 对词表文件使用硬链接;不带 -H 的普通 rsync/cp 会将其复制为独立文件(磁盘膨胀而非损坏——_link_or_copy 会回退为复制)。A40 rsync 时注意。 | **已接受** — 运维备注。 |
 | 5.7 | **persistent workers 未收到 epoch 更新。** 多进程回归证实旧实现的第二个 epoch 重放第一个 epoch。 | **已解决** — epoch 使用共享 CPU tensor; fork/spawn 持久 worker 与直接 sampler 一致,跨 epoch 恢复与连续运行的采样序列一致。不改变采样概率。 |
 | 5.8 | **训练缺少准备产物完整性门禁。** 旧报告无法证明配置、来源、QC 后成员和划分一致。 | **已解决(代码/有限表达矩阵演练)** — 新报告记录来源行号、配置/资产指纹与文件哈希;训练加载模型/DDP 前校验成员完整性和胚胎隔离。`21ef730`:真实 27 文件/八物种共 3,357 行演练保留 3,308 行;全库 prepare 仍待决策后执行。 |
-| 5.9 | **已完成训练恢复后仍多更新一步。** max_steps=2、恢复 step=2 曾产生 step=3。 | **重新打开（缺恢复状态路径）** — 完整终止状态下无额外更新已验证；仅有完成导出标记而无恢复记录的目录可重新训练。见新复核与票 01。 |
-| 5.10 | **恢复缺少配置兼容性和验证历史。** 同目录旧 checkpoint 可匹配不同采样配置,最佳权重和早停耐心会丢失。 | **部分已验证；重新打开** — 配置/历史/每 rank RNG 的完整状态恢复已有有限 CPU 证据；完成的旧目录缺少恢复状态时仍可静默从头启动。 |
+| 5.9 | **已完成训练恢复后仍多更新一步。** max_steps=2、恢复 step=2 曾产生 step=3。 | **有限工程验收已关闭** — 完整终止状态不多更新；完成导出缺恢复记录时拒绝续训，避免静默重新训练。见修复记录。 |
+| 5.10 | **恢复缺少配置兼容性和验证历史。** 同目录旧 checkpoint 可匹配不同采样配置,最佳权重和早停耐心会丢失。 | **有限 CPU 验证完成** — 配置、历史、每 rank RNG 和选择状态已有续训证据；缺恢复记录的完成目录已受保护。真实语料/GPU 证据仍待完成。 |
 
 ## 6. 评估框架的有效性
 
@@ -117,7 +117,7 @@
 
 | # | 问题 | 状态 |
 |---|---|---|
-| 7.1 | **likelihood(似然)下降影响分缺少零模型(S1)。** 删除高表达基因会移除更多 likelihood 质量 → 排名由表达量/检出率主导,而非调控重要性。 | **描述性规则已批准；有限辅助代码已实现；生产证据未完成** — 用户批准匹配目标 gene-ID bits、保持并列值的 10×10 分箱、同 dropout 内合并、严格同细胞/胚胎 peer 与样本 SD。p/FDR 不可评估，待独立校准审批；方法一致性、完整生产串联、位置诊断和 bootstrap 仍缺失。 |
+| 7.1 | **likelihood(似然)下降影响分缺少零模型(S1)。** 删除高表达基因会移除更多 likelihood 质量 → 排名由表达量/检出率主导,而非调控重要性。 | **描述性方法已实现；项目生产证据未完成** — 批准的匹配目标 bits、并列保持分箱、同 dropout 合并、同细胞/胚胎 peer 与样本 SD 已串联生产、诊断和协调 bootstrap。p/FDR 仍不可评估；实际项目输入和结果仍缺。 |
 | 7.2 | **"已知必需基因排名靠前"的验证是循环论证(S1)。** 小鼠来源的知识、小鼠占 53% 的语料、被记住的共表达。 | **已设计；科学门限待批准** — 外部证伪资源与判定草案保留，尚无真实 B3 排名/外部结果；不得把旧“已冻结”标签当作当前审批。 |
 | 7.3 | **缺少基座模型对照组(S2)。** 所有头条分析都可以先在零样本基座模型上跑;微调的边际价值原本永远不会被度量。 | **B1-A 已批准；实际 B1–B4 证据待完成** — 2026-09-30 批准 bits/cell 与 5%/2% 门限；原六物种标准保留在历史设计中。B2/B4/外部 AUROC 的门限与真实比较仍待完成。 |
 | 7.4 | **灾难性遗忘无人监控(S3)。** 胚胎留出集上的提升度量的是域适应,而非探测评估所依赖的零样本能力保持。 | **已设计；科学门限和参照集未完成** — 3%/CKA 0.90 与响应阶梯仍待科学审批；非胚胎参照集及实际模型遗忘证据尚未建立。 |
@@ -220,7 +220,7 @@
 
 Aggregated register of every significant issue raised about this finetune — from the adversarial review (`docs/agents/adversarial-review-2026-09-09.md`), the dataset audit (`logs/dataset_audit/`), the remediation program (ADR 0003), and the validation design (`docs/perturbation-and-baseline-design.md`). This register itself passed a three-way adversarial re-review (`docs/agents/register-review-2026-09-14.md`). **Compute-resource issues (VRAM, epoch time, GPU count, WSL RAM) are deliberately out of scope** — they are tracked separately in the review's C-findings and ADR 0003's compute section. Items that need a ruling from our biology collaborators are collected at the end, in *For our collaborators: decisions we need from you*.
 
-**Current engineering status — 2026-09-30:** The [fresh three-agent review](agents/fresh-implementation-review-2026-09-30.md) reopened remediation tickets 01/03/08. Ticket 05 still lacks method comparability, production integration, audits and bootstrap; ticket 12 remains open. Tickets 02/04/06/07/09/10 retain bounded engineering evidence; 11 is excluded by owner. B1-A and corpus defaults are approved. Source-specific QC/assay, the post-QC cohort, probe assets, actual model evidence and full preparation remain open.
+**Current engineering status — 2026-09-30:** The [fresh review](agents/fresh-implementation-review-2026-09-30.md) findings have [bounded repairs](agents/implementation-repairs-2026-09-30.md). Tickets 01/03/08 regain closure; nine bounded engineering tickets are closed. Ticket 05 producer, comparability, diagnostics and bootstrap software are implemented. Tickets 05/12 still require actual project comparison and external scientific/production evidence; 11 is excluded. B1-A and corpus defaults are approved. QC/assay, the post-QC cohort, probe assets and full preparation remain open.
 
 **2026-09-22 continuation (historical):** Reproduction evidence is in the [continuation review](agents/continuation-review-2026-09-22.md). Item 3.9 is reopened because the constant-section remedy is ineffective; new items 3.11 and 7.7 cover altered spatial binning and the unachievable six-species B1 gate. These are design findings; implementation fixes have not been applied.
 
@@ -289,7 +289,7 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 |---|---|---|
 | 4.1 | **Version-stripping mangled non-Ensembl IDs (D3).** Stripping at "." destroyed 8,693 worm sequence names (`2L52.1`) and 2,073 zebrafish paralog symbols (`acy3.1`); the advertised 90% worm coverage was really ~47%. | **Resolved** — stripping restricted to Ensembl/FBgn/WBGene patterns; coverage recomputed through the real code path. `55225c3` |
 | 4.2 | **Duplicate gene IDs after mapping were never collapsed (P7).** 1,107 human / 2,817 mouse / 2,025 urchin vocab genes had ≥ 2 source columns → crash at dataset build, or the whole file silently skipped at inference. | **Resolved** — duplicates collapsed by summing counts, reported as `duplicate_genes_collapsed` in the preparation report. `55225c3` |
-| 4.3 | **Mapping coverage ranged 47–82% across species pre-fix (S6).** Differential coverage manufactures false cross-species divergence: a gene absent from species A's mapping looks "silenced". Post-fix, the validator-measured range through the real code path is 52.7% (Tyser CS7) – 90.2% (worm) — worm rose from 47% pre-fix to 90.2%. | **Partial tooling; R2/R3 open** — Six-of-91 is historical descriptive availability, not the named-statistic 60%/5,000 decision. Ticket 04 retains a strict partial chicken bridge; source release/unresolved IDs remain open. Ticket 05 lacks real B3 results and comparability/integration/audit/bootstrap software. |
+| 4.3 | **Mapping coverage ranged 47–82% across species pre-fix (S6).** Differential coverage manufactures false cross-species divergence: a gene absent from species A's mapping looks "silenced". Post-fix, the validator-measured range through the real code path is 52.7% (Tyser CS7) – 90.2% (worm) — worm rose from 47% pre-fix to 90.2%. | **Partial tooling; R2/R3 open** — The strict partial chicken bridge remains; source release and unresolved identifiers remain open. Ticket 05 producer integration, comparability, audits and bootstrap are implemented and boundedly verified; actual project B3 comparison remains absent. |
 | 4.4 | **Gene-vocab namespaces.** There was a risk of wrong-species embedding lookups at tokenization. | **Resolved (verified)** — the 12 TF-Metazoa vocabs are empirically disjoint across species. |
 
 ## 5. Training-pipeline correctness (non-compute)
@@ -297,15 +297,15 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 | # | Issue | Status |
 |---|---|---|
 | 5.1 | **Early stopping saved final weights, not best (P4).** | **Resolved** — best-checkpoint snapshot on validation improvement. `7cb9a6c` |
-| 5.2 | **Resume was default-on and broken (P5).** No optimizer/scaler/step/RNG state was saved; a crashed rerun could clobber a good checkpoint with fresh-AdamW weights. | **Reopened (tickets 01/08)** — Format 4 persists full continuation state, but default resume returns “starting fresh” in a completed export directory without recovery records. No completed-directory guard exists; prior commits/tests remain historical evidence. |
+| 5.2 | **Resume was default-on and broken (P5).** No optimizer/scaler/step/RNG state was saved; a crashed rerun could clobber a good checkpoint with fresh-AdamW weights. | **Closed for bounded engineering acceptance (01/08)** — Format 4 retains full continuation state. Completed exports lacking recovery records reject default resume before data/model work; empty directories and explicit fresh starts remain supported. |
 | 5.3 | **No epoch shuffling (P6).** Every epoch replayed identical cells in identical order. | **Resolved** — via `BalancedDataset.set_epoch()`. `7cb9a6c`; persistent-worker propagation is also fixed and tested under 5.7. |
 | 5.4 | **Checkpoints were incomplete (P2, training half).** No config.json/vocabs in the output dir → a finished run was not an evaluatable model. | **Resolved** — `save_finetuned_checkpoint()` assembles a complete checkpoint dir (config + hardlinked vocabs + spatial vocab + weights) atomically. `7cb9a6c` |
 | 5.5 | **The remediated real corpus still needs a full prepare validation.** Splits, coordinate-copy tooling, metadata, and phase mapping have been checked; complete expression copies and their derived manifest now exist and validate (2026-09-23), but the final 27-dataset prepared outputs have not been generated. | **Pending — pre-training gate** — coordinate copies and the derived manifest are ready (validator 27 PASS/1 WARN/0 FAIL; bounded rehearsal passed all 27 sources); finalize corpus/QC choices, then rerun the validator and `--prepare-only` on the derived manifest. The original manifest still fails missing-coordinate checks. Metadata audits and synthetic tests are not a full-corpus run. |
 | 5.6 | **Checkpoint-hardlink portability.** save_finetuned_checkpoint hardlinks vocab files; plain rsync/cp without -H duplicates them (disk bloat, not corruption — _link_or_copy falls back to copy). A note for the A40 rsync. | **Accepted** — operational note. |
 | 5.7 | **Persistent workers missed epoch updates.** Multiprocess regressions confirmed that the old implementation replayed epoch one during epoch two. | **Resolved** — shared CPU tensor propagates epochs under fork/spawn; worker draws match the direct sampler and resume across epochs matches uninterrupted sample order. Sampling probabilities are unchanged. |
 | 5.8 | **Training lacked a prepared-artifact integrity gate.** Old reports could not establish agreement of configuration, sources, post-QC membership, and splits. | **Resolved (code/bounded expression rehearsal)** — fresh reports record source positions, configuration/asset fingerprints, and file hashes; training validates complete membership and embryo isolation before model/DDP loading. `21ef730`: all 27 sources/eight species rehearsed, with 3,357 sampled rows and 3,308 survivors; full-corpus preparation still awaits decisions. |
-| 5.9 | **Finished-run resume performed an extra update.** Resuming step=2 with max_steps=2 produced step=3. | **Reopened for missing recovery state** — No extra updates are verified with intact terminal state; completed export markers without recovery records can restart training. See the fresh review and ticket 01. |
-| 5.10 | **Resume lacked compatibility checks and validation history.** Checkpoints could resume under changed sampling settings and lose best weights/patience. | **Partly validated; reopened** — Bound contracts, histories and per-rank RNG have bounded CPU evidence. A completed legacy directory without recovery state can still restart silently. |
+| 5.9 | **Finished-run resume performed an extra update.** Resuming step=2 with max_steps=2 produced step=3. | **Closed for bounded engineering acceptance** — Intact terminal state performs no extra update; completed exports without recovery records reject resume and cannot silently restart. See repair record. |
+| 5.10 | **Resume lacked compatibility checks and validation history.** Checkpoints could resume under changed sampling settings and lose best weights/patience. | **Bounded CPU evidence complete** — Contracts, history, per-rank RNG and selection continuity are verified. Completed directories missing recovery records are guarded. Real-corpus/GPU evidence remains pending. |
 
 ## 6. Evaluation-harness validity
 
@@ -337,7 +337,7 @@ sources do not grant that approval.
 
 | # | Issue | Status |
 |---|---|---|
-| 7.1 | **No null model for likelihood-drop impact scores (S1).** Deleting a highly expressed gene removes more likelihood mass, so rankings are dominated by expression/detection rate rather than regulatory importance. | **Descriptive rule approved; bounded helpers implemented; production incomplete** — Owner approved matched-target gene-ID bits, tie-preserving 10×10 bins, fixed-dropout merges, strict matched-cell/embryo peers and sample SD. Inferential p/FDR are unevaluable pending calibration approval. Comparability, corpus integration, position audits and bootstrap remain incomplete. |
+| 7.1 | **No null model for likelihood-drop impact scores (S1).** Deleting a highly expressed gene removes more likelihood mass, so rankings are dominated by expression/detection rate rather than regulatory importance. | **Descriptive method implemented; project evidence incomplete** — Approved matched-target bits, tie-preserving bins, fixed-dropout merges, matched-cell/embryo peers and sample SD now integrate with producer, diagnostics and coordinated bootstrap. Inferential p/FDR remain unevaluable; actual project inputs/results remain absent. |
 | 7.2 | **The "known essentials rank high" validation is circular (S1).** Mouse-derived knowledge, a mouse-heavy corpus (53%), and memorized co-expression. | **Designed; scientific thresholds pending approval** — External falsification resources and draft verdict are retained; no genuine B3 rankings/external results exist. Historical “frozen” labels do not establish current approval. |
 | 7.3 | **No base-model control arm (S2).** Every headline analysis can run on the zero-shot base model, so the marginal value of finetuning was never going to be measured. | **B1-A approved; actual B1–B4 evidence pending** — Owner approved bits/cell and 5%/2% thresholds on 2026-09-30. The six-species criterion remains historical. B2/B4/external AUROC thresholds and real comparisons remain open. |
 | 7.4 | **Catastrophic forgetting is unmonitored (S3).** Improvement on the embryo holdout measures domain adaptation, not retention of the zero-shot ability the probe evaluation depends on. | **Designed; thresholds/reference corpus pending** — The 3%/CKA 0.90 rule and response ladder still require scientific approval; the non-embryo reference corpus and observed forgetting evidence are absent. |

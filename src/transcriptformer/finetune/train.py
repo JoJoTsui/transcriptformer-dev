@@ -756,6 +756,18 @@ def _discard_resume_records(output_dir: Path) -> None:
         path.unlink(missing_ok=True)
 
 
+def _guard_completed_export(output_dir: Path, resume: bool) -> None:
+    """Require recovery state before reusing a completed or exported run."""
+    if not resume or _list_checkpoints(output_dir) or (output_dir / "terminal_state.pt").is_file():
+        return
+    markers = ("training_summary.json", "selected_model.json", "model_weights.pt")
+    if any((output_dir / name).exists() for name in markers):
+        raise ValueError(
+            "Completed/exported run lacks a recovery checkpoint; use a new output directory "
+            "or explicitly set resume=False for a fresh run"
+        )
+
+
 def _rank_rng_states() -> list[dict[str, Any]]:
     """Collect each process's RNG state at the same optimizer boundary."""
     local = _capture_rng_state()
@@ -824,6 +836,7 @@ def _load_latest_checkpoint(
     """Load terminal state when present, otherwise the latest periodic state."""
     if not resume:
         return None
+    _guard_completed_export(output_dir, resume)
     checkpoint_path = _latest_checkpoint_path(output_dir)
     if checkpoint_path is None:
         logger.info("Resume requested but no checkpoint found in %s; starting fresh", output_dir)
@@ -1320,6 +1333,7 @@ def train_finetune(
     validate_prepared_artifacts(manifest, prepared_report)
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    _guard_completed_export(output_dir, resume)
     if not resume:
         _discard_resume_records(output_dir)
         (output_dir / "validation_baseline.json").unlink(missing_ok=True)

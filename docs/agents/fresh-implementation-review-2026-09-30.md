@@ -1,5 +1,7 @@
 # Fresh implementation review — 2026-09-30
 
+**Historical review of `543dac2`:** The findings below were repaired in the [implementation continuation](implementation-repairs-2026-09-30.md). That record carries current software evidence and remaining external closure gates.
+
 Reviewed revision: `543dac2`. Three fresh agents independently reviewed core
 training/coverage tickets, B3/ortholog requirements, and standards/tracking.
 Review was read-only; no checkpoint or corpus was loaded. Historical CI at
