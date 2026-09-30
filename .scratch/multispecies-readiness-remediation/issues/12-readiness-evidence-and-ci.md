@@ -112,3 +112,9 @@ are included in CPU CI; the local score and CI-selection check passed 17/17
 with native threads capped. This does not produce B3 scores: the project finetuned checkpoint and
 validated post-QC corpus are not ready. Ticket 05 and therefore ticket 12
 remain open on genuine producer and cross-ticket evidence.
+
+The final bounded [finetune CPU workflow](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36656546188)
+passed 354 selected tests on `1e12a64`, including the B3 forward seam and
+ortholog coverage checks. The corresponding
+[pre-commit workflow](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36656545994)
+passed. These are implementation checks, not observed project B3 results.
