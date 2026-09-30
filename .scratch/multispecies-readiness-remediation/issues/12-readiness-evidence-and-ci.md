@@ -90,3 +90,11 @@ case. The same commit's pre-commit workflow found pre-existing formatting drift
 in the now-touched `train.py`; the follow-up formats that file and the changed
 comparator. This formatting failure is a CI issue to resolve, not a failed
 behavioral test.
+
+The subsequent [change-scoped pre-commit run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36652141367)
+and [finetune CPU run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36652141959)
+both passed on `c36444a` (338 selected tests). The new ortholog
+full-universe coverage test was initially local-only; it is now included in
+the explicit CI list and guarded by the CI-selection test. The local selection
+plus coverage check passed 5/5 with one native thread; the next push will
+verify that addition remotely.

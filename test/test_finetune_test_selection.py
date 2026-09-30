@@ -21,6 +21,7 @@ SUITES = (
     "representation",
     "orthologs",
     "ortholog_eligibility",
+    "ortholog_full_universe_coverage",
     "end_to_end",
     "finetune_metadata",
     "spatial",
