@@ -291,7 +291,8 @@ correlation and paired difference values to null with reason
 `insufficient_coverage`. These are reporting floors separate from the
 registered statistic-input and genome-wide eligibility floors. The aggregate
 score tables do not contain the per-embryo observations needed for the approved
-embryo-block uncertainty analysis. The scope remains
+embryo-block uncertainty analysis. This approval changes the output to schema
+version 2 because below-floor point fields can now be null. The scope remains
 descriptive: the output has no p-value, confidence interval or biological
 verdict. The reporter does not bind vocabulary file hashes, so this command
 records the supplied vocabularies' hashes and checks that they reproduce the

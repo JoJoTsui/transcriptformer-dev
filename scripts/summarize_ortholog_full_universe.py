@@ -245,9 +245,9 @@ def summarize(args: argparse.Namespace) -> None:
     completeness = reporting_completeness(len(available), len(joined))
     reportable = completeness["status"] == "sufficient_coverage"
     summary = {
-        "schema_version": 1,
+        "schema_version": 2,
         "scope": "descriptive_full_vocabulary_joined_one_to_one_universe",
-        "method": "spearman_average_ties_and_paired_z_difference_b_minus_a_v1",
+        "method": "spearman_average_ties_and_paired_z_difference_b_minus_a_with_reporting_floors_v2",
         "interpretation": "Descriptive score-available universe only; no p-value, uncertainty, or biological verdict",
         "handoff_sha256": sha256(args.handoff),
         "report_sha256": sha256(args.report),

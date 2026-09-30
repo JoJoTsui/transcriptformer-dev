@@ -120,6 +120,7 @@ def test_coverage_tsv_reconciles_all_exclusion_reasons(tmp_path):
         )
     )
     summary = json.loads(output.read_text())
+    assert summary["schema_version"] == 2
     with coverage.open(newline="") as handle:
         rows = list(csv.DictReader(handle, delimiter="\t"))
     assert summary["coverage_tsv_sha256"] == sha256(coverage)

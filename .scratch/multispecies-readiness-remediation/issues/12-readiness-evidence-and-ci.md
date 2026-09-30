@@ -98,3 +98,9 @@ full-universe coverage test was initially local-only; it is now included in
 the explicit CI list and guarded by the CI-selection test. The local selection
 plus coverage check passed 5/5 with one native thread; the next push will
 verify that addition remotely.
+
+The [next finetune CPU run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36652487956)
+and [pre-commit run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36652488013)
+both passed on `a1d31cc`, now including the ortholog coverage test in the
+explicit CI selection. The approved reporting-floor output is versioned as
+schema 2 because below-floor point-effect fields can be null.
