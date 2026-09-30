@@ -156,5 +156,19 @@ and choose unused output/report paths (the script refuses overwrites):
 
 This artifact does not decide corpus inclusion or make the source fit for
 training. The 33 remaining author labels still need independence and leakage
-review. Assay-specific QC, true assay token, cell-type and phase mappings, and
+review. Assay-specific QC, adoption of a source-backed assay token, cell-type
+and phase mappings, and
 owner/collaborator source selection remain open.
+
+The [author embryo-ID follow-up](nature2019-embryo-identity-2026-09-30.md)
+establishes that the 33 retained labels are the authors' `embryo` field,
+separate from `plate`; physical specimen independence and cross-source overlap
+are still unverified. The [assay-token follow-up](nature2019-assay-token-evidence-2026-09-30.md)
+supports `Smart-seq2` (checkpoint ID 20) for the RNA matrix, while retaining
+scNMT-seq as native provenance. This is a source-backed token proposal, not a
+manifest or source-inclusion decision.
+The [selected-mouse overlap audit](nature2019-cross-source-overlap-2026-09-30.md)
+found no exact candidate cell, RNA-read or author embryo identifier in the
+metadata of the 13 currently selected mouse files, and the published source
+accessions differ. Renamed cells or shared physical specimens cannot be
+excluded without a producer crosswalk or an explicit provenance standard.
