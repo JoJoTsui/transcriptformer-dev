@@ -72,6 +72,24 @@ def validate_run_manifest(data: dict[str, Any]) -> list[str]:
                 if dataset.get(field) is not None:
                     _check_str_dict(dataset[field], f"datasets[{index}].{field}", errors)
 
+            identity = dataset.get("embryo_identity")
+            if identity is not None:
+                label = f"datasets[{index}].embryo_identity"
+                required = {"path", "sha256", "sample_column"}
+                if not isinstance(identity, dict) or set(identity) != required:
+                    errors.append(f"{label} requires exactly path, sha256, sample_column")
+                else:
+                    for key, value in identity.items():
+                        if not isinstance(value, str) or not value.strip():
+                            errors.append(f"{label}.{key} must be a non-empty string")
+                    digest = identity["sha256"]
+                    if (
+                        not isinstance(digest, str)
+                        or len(digest) != 64
+                        or any(c not in "0123456789abcdef" for c in digest)
+                    ):
+                        errors.append(f"{label}.sha256 must be lowercase SHA256 hex")
+
     dataloader = data.get("dataloader")
     if dataloader is not None:
         if not isinstance(dataloader, dict):

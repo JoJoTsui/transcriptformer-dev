@@ -1,6 +1,6 @@
 # Multispecies readiness remediation — ticket index
 
-Status: ten tickets closed for bounded engineering acceptance; 05 open on actual prepared/B3 evidence; 11 excluded
+Status: ten tickets closed for bounded engineering acceptance; 05 open because approved full-cohort B3 support cannot meet reporting floors; 11 excluded
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 
 [Read the specification](spec.md). Implementation was authorized on 2026-09-28.
@@ -13,9 +13,9 @@ data, chicken identifier repair and production training remain separate gates.
 | --- | --- | --- | --- |
 | [01 — Persist terminal resume state independently of selected weights](issues/01-terminal-resume-state.md) | R1; register 5.2/5.9/5.10; tracker E/F | None | Closed for bounded engineering acceptance; completed export without recovery state rejects resume |
 | [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | Closed for bounded CPU engineering acceptance; two-rank interrupted/resumed dropout continuity passed |
-| [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; recorded splits validated without allocation; actual corpus absent |
+| [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; recorded splits validated without allocation; six-source preparation validated; finalized multispecies corpus absent |
 | [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Closed for bounded engineering acceptance; strict partial bridge leaves R2 open |
-| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Pretrained and distinct candidate weights found; software verified; prepared/B3 evidence pending |
+| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Real six-source corpus validated; full-cohort support cannot meet 500-pair/80% reporting floors; observed B3 remains unavailable |
 | [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Closed for bounded engineering acceptance; actual frozen cohort absent |
 | [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Closed for bounded engineering acceptance; production losses absent |
 | [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Closed for bounded engineering acceptance; completed-directory gap repaired; production evidence absent |
@@ -46,7 +46,7 @@ The [repair continuation](../../docs/agents/implementation-repairs-2026-09-30.md
 closes those bounded resume/coverage gaps and implements the B3 producer,
 comparability, diagnostics and coordinated bootstrap. Tickets 01/02/03/04/06/07/08/09/10
 and 12 are closed for their bounded engineering acceptance. Ticket 04 does not close
-chicken R2 asset repair. Ticket 05 still requires actual prepared/B3 comparison evidence. The
+chicken R2 asset repair. Ticket 05 still requires observed B3 comparison evidence; the organogenesis corpus is now prepared, but its approved null support fails the reporting gate. The
 [requirements audit](../../docs/agents/ticket12-gate-research-2026-09-30.md) closes
 ticket 12’s bounded CI/documentation scope under its explicit external-evidence
 exception; it does not close ticket 05 or project readiness. Ticket 11 is excluded.
@@ -69,10 +69,30 @@ readiness claim follows from fixture CI.
 The [checkpoint inventory](../../docs/agents/ticket05-checkpoint-discovery-2026-09-30.md)
 finds the pretrained base at `../checkpoints/tf_metazoa` and distinct candidate
 weights at `checkpoints/tf_metazoa_finetuned`. Their existence is established;
-training provenance for the candidate is not. Ticket 05 needs actual validated
-prepared membership and observed B3 outputs. Ticket 12's seven own criteria
+training provenance for the candidate is not. Ticket 05 has validated organogenesis prepared membership; it still lacks observed B3 outputs and its full-cohort matched-peer support cannot meet the reporting floors. Ticket 12's seven own criteria
 are complete; broader scientific/production gates remain in the readiness
 register rather than being added to that ticket's acceptance requirements.
+
+## Real organogenesis preparation and support diagnosis — 2026-09-30
+
+The [recommendation implementation](../../docs/agents/b3-recommendation-implementation-2026-09-30.md)
+records completed, validated preparation of six real sources: **1,577,916
+post-QC observations**. Recovery establishes **61 physical mouse embryos**.
+The frozen training strata contain **123,952 human cells / five embryos** and
+**945,389 mouse cells / 43 embryos**. Human split decisions were preserved;
+mouse splits were prospectively allocated using verified physical identities.
+This prepared corpus is available for this comparison; final multispecies
+preparation and candidate training provenance remain unavailable.
+
+The [full-cohort null-support review](../../docs/agents/b3-full-cohort-null-support-review-2026-09-30.md)
+records necessary finite-score upper bounds of **1,890 human genes** and
+**two mouse genes** under the frozen same-cell peer-support rule. The completed paired audit finds **zero of 15,705 vocabulary-joined pairs**
+meeting the necessary support conditions: neither qualifying mouse gene has
+a qualifying human ortholog. This cannot satisfy the approved
+**500-pair / 80%** reporting gate. These are support bounds, not observed
+scores or a concordance result. Ticket 05 remains open; bounded ticket 12
+closure and ticket 11's exclusion remain in effect. No floor or null rule was
+changed, and no checkpoint forward was performed.
 
 ## Scientific decisions and external gates
 

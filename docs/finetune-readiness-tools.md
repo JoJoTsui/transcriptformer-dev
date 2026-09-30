@@ -313,10 +313,137 @@ At least five independent embryos per side and 95% joint valid draws are require
 Input schema and evidence are recorded in the [repair report](agents/implementation-repairs-2026-09-30.md).
 Inferential per-gene p-values/FDR remain unevaluable.
 
+## 13. Physical embryos and B3 support preflight
+
+Recover TOME E9.5–E13.5 physical embryos from the local author annotation archive
+before preparing a derived corpus. The join reads observation metadata and the
+compressed CSV through SQLite; it requires exact unique barcodes, matching stage,
+author-retained QC and complete source-row coverage.
+
+```bash
+.venv/bin/python scripts/recover_tome_embryo_ids.py \
+  --manifest conf/finetune_run_multispecies.json \
+  --metadata runs/b3_pilot/source_metadata/GSE186068_cell_annotate.csv.gz \
+  --output runs/b3_pilot/embryo_recovery_next
+```
+
+The completed recovery is recorded in
+[runs/b3_pilot/embryo_recovery_final/recovery_report.json](../runs/b3_pilot/embryo_recovery_final/recovery_report.json).
+Each dataset's `embryo_identity` object has exactly `path`, lowercase SHA-256
+`sha256`, and `sample_column` (`sample` for TOME). Its CSV has exactly
+`sample,embryo_id,embryo_sex,stage,source_row_index`, covering every source row
+in order with zero-based row positions. Barcode and native stage must match;
+physical embryo IDs and sex must be present and consistent. The same sidecar
+is applied during split metadata reads, preparation and artifact validation,
+and its bytes participate in the preparation fingerprint. Partial or stale
+sidecars fail.
+
+For a bounded descriptive pilot, select original training cells prospectively
+using the fixed seed and physical embryos:
+
+```bash
+.venv/bin/python scripts/prepare_b3_pilot.py \
+  --manifest conf/finetune_run_multispecies.json \
+  --split-evidence logs/dataset_audit/holdout_coverage.json \
+  --mouse-recovery runs/b3_pilot/embryo_recovery_final/recovery_report.json \
+  --checkpoint ../checkpoints/tf_metazoa \
+  --output runs/b3_pilot/organogenesis_next \
+  --seed 20260930 --human-cells-per-embryo 6 \
+  --mouse-cells-per-embryo 1 --mouse-embryos-per-stage 5
+```
+
+This writes persistent source copies, a derived manifest, validated prepared
+artifacts, vocabulary metadata and per-species producer configs. Selection uses
+source identity and row position before expression/QC outcomes. Gene vocabulary
+indices are reconstructed from embedding **keys**, without loading embedding
+values. Pilot splits describe the sampled training corpus and cannot replace
+original holdout evidence.
+
+Prepare the complete six-source organogenesis corpus separately:
+
+```bash
+.venv/bin/python scripts/prepare_b3_organogenesis.py \
+  --manifest conf/finetune_run_multispecies.json \
+  --split-evidence logs/dataset_audit/holdout_coverage.json \
+  --mouse-recovery runs/b3_pilot/embryo_recovery_final/recovery_report.json \
+  --output runs/b3_pilot/full_organogenesis_next --memory-limit-gib 16
+```
+
+The completed [full_organogenesis_v3 audit](../runs/b3_pilot/full_organogenesis_v3/audit.json)
+records 1,577,916 surviving observations in 16 outputs from six sources, using
+one native thread and a 16 GiB address-space cap. Its
+[manifest](../runs/b3_pilot/full_organogenesis_v3/manifest.json),
+[preparation report](../runs/b3_pilot/full_organogenesis_v3/prepared_run/preparation_report.json)
+and [post-QC coverage](../runs/b3_pilot/full_organogenesis_v3/post_qc_coverage.json)
+preserve human holdout decisions and prospectively split the recovered mouse
+embryos. This corpus inherits `min_genes=200`; final assay-specific QC and
+multispecies corpus acceptance remain separate. Source H5ADs and the original
+manifest are unchanged. Preparation reads expression; none of these commands
+finetunes a model or loads checkpoint weights.
+
+Run the small support preflight with a pilot's generated producer config:
+
+```bash
+.venv/bin/python scripts/preflight_b3_scores.py \
+  --config runs/b3_pilot/organogenesis_v3/homo_sapiens_producer.json \
+  --output runs/b3_pilot/organogenesis_v3/human_preflight_next.json
+```
+
+It obeys the producer's 10,000-cell and 100,000-attempt bounds. For complete
+cohort support, use the separately frozen full configs and fresh output paths;
+run species sequentially on WSL:
+
+```bash
+.venv/bin/python scripts/preflight_b3_full_cohort.py \
+  --config runs/b3_pilot/full_organogenesis_v3/homo_sapiens_support_config.json \
+  --output-dir runs/b3_pilot/full_organogenesis_v3/human_support_next \
+  --chunk-rows 1024 --max-support-gib 8
+.venv/bin/python scripts/preflight_b3_full_cohort.py \
+  --config runs/b3_pilot/full_organogenesis_v3/mus_musculus_support_config.json \
+  --output-dir runs/b3_pilot/full_organogenesis_v3/mouse_support_next \
+  --chunk-rows 1024 --max-support-gib 8
+```
+
+Full configs bind manifest/report/checkpoint paths, species, phase, recorded
+split, model arm, complete canonical `gene_ids`, gene/aux vocabulary JSON paths,
+and `metric_normalization`. The full diagnostic uses `library_size_log1p`,
+`target_sum=10000`, and all prepared measured genes as the library denominator.
+It requires identical vocabulary-joined gene universes across each species'
+sources. `max_cells` may be at most two million; `max_rows` is ignored only by
+this full support diagnostic. The score producer's raw-row caps are unchanged.
+
+Each full output contains `support_preflight.json` and a hash-bound `support.h5`
+with native support bitmaps and physical source-row/embryo identities. Counts,
+zero-inclusive metrics, bins and matched-peer containment are computed without
+model or embedding loads. Peers may have additional cells beyond the focal
+support; their count is capped at two because only that necessary condition is
+checked. Progress and resource usage are recorded.
+
+Check the completed full reports against the entire joined ortholog universe:
+
+```bash
+.venv/bin/python scripts/preflight_b3_pair.py \
+  --config-a runs/b3_pilot/full_organogenesis_v3/homo_sapiens_support_config.json \
+  --config-b runs/b3_pilot/full_organogenesis_v3/mus_musculus_support_config.json \
+  --preflight-a runs/b3_pilot/full_organogenesis_v3/human_support/support_preflight.json \
+  --preflight-b runs/b3_pilot/full_organogenesis_v3/mouse_support/support_preflight.json \
+  --table preprocess/orthologs/ortholog_pairs.tsv.gz \
+  --output runs/b3_pilot/full_organogenesis_v3/paired_support_next.json
+```
+
+The pair tool verifies config/input hashes, prepared-artifact evidence and the
+full support artifact's cohort identity before counting possible pairs. These
+are **upper bounds on score availability**, not score tables or observed
+correlations: likelihoods and positive null variance remain unknown. The
+registered eligibility rules and the approved 500-pair/80% reporting gate
+remain in force. A structurally insufficient upper bound is evidence to retain
+an unavailable comparison, not permission to change native order, shrink the
+gene universe or lower a threshold.
+
 ## Remaining gates
 
 - Corpus defaults and [B1-A](agents/b1-owner-decision-2026-09-30.md) are approved. Source-specific QC/assay decisions, final preparation and the post-QC cohort freeze remain open.
-- The [fresh implementation findings](agents/fresh-implementation-review-2026-09-30.md) have [bounded repairs](agents/implementation-repairs-2026-09-30.md). [Pretrained and distinct candidate weights are present](agents/ticket05-checkpoint-discovery-2026-09-30.md); candidate training provenance is unverified. Execute B3 on validated prepared cells and frozen phase/family inputs. A base-arm comparison can use `../checkpoints/tf_metazoa`; finetune benefit requires verified candidate provenance/results. Ticket 12's documentation/CI scope is closed; scientific/production gates remain below.
+- The [fresh implementation findings](agents/fresh-implementation-review-2026-09-30.md) have [bounded repairs](agents/implementation-repairs-2026-09-30.md). [Pretrained and distinct candidate weights are present](agents/ticket05-checkpoint-discovery-2026-09-30.md); candidate training provenance is unverified. The six-source organogenesis corpus is now validated, but the completed [full-cohort support audit](agents/b3-recommendation-implementation-2026-09-30.md) permits zero paired scores under the approved null. Retain B3 as unavailable and resolve the scientific method before model execution. A base-arm comparison can use `../checkpoints/tf_metazoa`; finetune benefit requires verified candidate provenance/results. Ticket 12's documentation/CI scope is closed; scientific/production gates remain below.
 - Produce real baseline/finetuned results on the frozen eligible cohort before claiming B1 performance.
 - Resolve probe assets (ESM-2 embeddings/vocabularies and key-namespace
   maps) and remaining source annotations before evaluating B4.

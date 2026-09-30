@@ -1,0 +1,414 @@
+{
+  "audit": {
+    "scope": "six-source real organogenesis preparation; not full finalized multispecies finetuning corpus",
+    "validation": {
+      "status": "passed",
+      "sources": 6,
+      "outputs": 16,
+      "observations": 1577916,
+      "split_observations": {
+        "train": 1069341,
+        "validation": 324054,
+        "final_holdout": 184521
+      },
+      "qc_validation": "trusted preparation membership and file hashes; expression QC not replayed"
+    },
+    "original_split_verification": {
+      "status": "passed",
+      "scope": "current non-zebrafish metadata and parent seed reproduce species/embryo decisions; coordinate-copy path changes allowed; no expression read",
+      "assignments": 255,
+      "projection_sha256": "b02d2bb6b2e409d2d10c67724b7c45a36e8198fd5c04cce4bd2e7021103e90b5"
+    },
+    "human_holdout_decisions_preserved": true,
+    "mouse_split_basis": "prospective allocation on recovered physical embryos; replaces stage grouping only in this derived corpus",
+    "memory_limit_gib": 16,
+    "native_threads": 1,
+    "peak_rss_bytes": 8092086272,
+    "elapsed_seconds": 460.99,
+    "script_sha256": "774345876c5942fd14d26b22e94c66e7943d2e81c693a322039caa022b60106a",
+    "parent_manifest_sha256": "651a54fa4c663a580434b40bd9e594e9a158d4890657f42c26c5ec55dff288da",
+    "split_evidence_sha256": "eb11b08f71c60ffb7f859e15351c048c3a36096d637555a44e1422004ca3fb93",
+    "mouse_recovery_sha256": "d492aba33b36b05ca929ee26f40961389fa9b44749032e39334197392c713c8c",
+    "manifest_sha256": "e3190a9e14bd0f17157891033096e5fb3bbe7585d3932d26ae2834d3633f649f",
+    "preparation_report_sha256": "8ec35395a8bc375e4cd1c0c76aedf85d87555b59a33dec109f1cbe730a6d6532",
+    "post_qc_coverage_sha256": "bdd8edbbe064204bc8a7cc8435bc8ee9fc0c9a45a76d6b086d15b173e47e4f03",
+    "model_forwards_performed": false,
+    "qc_scope": "inherited min_genes=200; final assay-specific QC acceptance remains separate"
+  },
+  "coverage": [
+    {
+      "species": "homo_sapiens",
+      "phase": "organogenesis",
+      "split": "final_holdout",
+      "dataset_type": "single_cell",
+      "n_observations": 32066,
+      "n_embryos": 1
+    },
+    {
+      "species": "homo_sapiens",
+      "phase": "organogenesis",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 123952,
+      "n_embryos": 5
+    },
+    {
+      "species": "homo_sapiens",
+      "phase": "organogenesis",
+      "split": "validation",
+      "dataset_type": "single_cell",
+      "n_observations": 29122,
+      "n_embryos": 1
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "organogenesis",
+      "split": "final_holdout",
+      "dataset_type": "single_cell",
+      "n_observations": 152455,
+      "n_embryos": 6
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "organogenesis",
+      "split": "train",
+      "dataset_type": "single_cell",
+      "n_observations": 945389,
+      "n_embryos": 43
+    },
+    {
+      "species": "mus_musculus",
+      "phase": "organogenesis",
+      "split": "validation",
+      "dataset_type": "single_cell",
+      "n_observations": 294932,
+      "n_embryos": 12
+    }
+  ],
+  "sources": [
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u4eba_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos_prepared_train.h5ad",
+      "species": "homo_sapiens",
+      "split": "train",
+      "n_obs": 123952,
+      "n_genes": 19406,
+      "embryo_ids": [
+        "emb1",
+        "emb2",
+        "emb5",
+        "emb6",
+        "emb7"
+      ],
+      "removed_obs": {
+        "below_min_genes": 0
+      },
+      "prepared_sha256": "a15915aae04f757dbb3fbee59a626e34e539aaf1178b26f1c9ba40f6dbf7422f",
+      "sha256": "abc3c118799eacdb0090dec407435863c3ed36cbd81c079767dc8089b2c0b51f",
+      "survivor_digest": "3503d69c969a047a04bc40218b627c000ea07df3d564108507072c970af4511f"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u4eba_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos_prepared_validation.h5ad",
+      "species": "homo_sapiens",
+      "split": "validation",
+      "n_obs": 29122,
+      "n_genes": 19406,
+      "embryo_ids": [
+        "emb4"
+      ],
+      "removed_obs": {
+        "below_min_genes": 0
+      },
+      "prepared_sha256": "e5a115ff0f0f758e38e63b0ea64cca0f33e68cfb09cf5dd2dd615dc5c4a62377",
+      "sha256": "abc3c118799eacdb0090dec407435863c3ed36cbd81c079767dc8089b2c0b51f",
+      "survivor_digest": "3503d69c969a047a04bc40218b627c000ea07df3d564108507072c970af4511f"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u4eba_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos_prepared_final_holdout.h5ad",
+      "species": "homo_sapiens",
+      "split": "final_holdout",
+      "n_obs": 32066,
+      "n_genes": 19406,
+      "embryo_ids": [
+        "emb3"
+      ],
+      "removed_obs": {
+        "below_min_genes": 0
+      },
+      "prepared_sha256": "fc26110478a9bb08421be63581367e791686db4ab814630ae297280d69e2260c",
+      "sha256": "abc3c118799eacdb0090dec407435863c3ed36cbd81c079767dc8089b2c0b51f",
+      "survivor_digest": "3503d69c969a047a04bc40218b627c000ea07df3d564108507072c970af4511f"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5_prepared_train.h5ad",
+      "species": "mus_musculus",
+      "split": "train",
+      "n_obs": 222337,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_24",
+        "tome_cao_embryo_25",
+        "tome_cao_embryo_26",
+        "tome_cao_embryo_4",
+        "tome_cao_embryo_46",
+        "tome_cao_embryo_5",
+        "tome_cao_embryo_59",
+        "tome_cao_embryo_6",
+        "tome_cao_embryo_60"
+      ],
+      "removed_obs": {
+        "below_min_genes": 23
+      },
+      "prepared_sha256": "ddcb4642de59049737fba3a6679f32e810c6b72b5633b61967b6ff4463cb0841",
+      "sha256": "51f66eb4d5d582bc5aad4f19fb276d8900272f42afeafb6ea10bb7423b0908d8",
+      "survivor_digest": "34e526ea65ab6a56ffc24f7a81684c9a98e90a6dd796abccb00d85a38dc67d22"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5_prepared_validation.h5ad",
+      "species": "mus_musculus",
+      "split": "validation",
+      "n_obs": 26734,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_44"
+      ],
+      "removed_obs": {
+        "below_min_genes": 23
+      },
+      "prepared_sha256": "0ebef71bb476fc72c002034ac848646cb2a1b251369c9fa519a034e8e9e43c54",
+      "sha256": "51f66eb4d5d582bc5aad4f19fb276d8900272f42afeafb6ea10bb7423b0908d8",
+      "survivor_digest": "34e526ea65ab6a56ffc24f7a81684c9a98e90a6dd796abccb00d85a38dc67d22"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5_prepared_final_holdout.h5ad",
+      "species": "mus_musculus",
+      "split": "final_holdout",
+      "n_obs": 20419,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_43"
+      ],
+      "removed_obs": {
+        "below_min_genes": 23
+      },
+      "prepared_sha256": "3d0ef71437777e9eac06de5faf53058ea2cf857fb617a589a895bccd8955656c",
+      "sha256": "51f66eb4d5d582bc5aad4f19fb276d8900272f42afeafb6ea10bb7423b0908d8",
+      "survivor_digest": "34e526ea65ab6a56ffc24f7a81684c9a98e90a6dd796abccb00d85a38dc67d22"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5_prepared_train.h5ad",
+      "species": "mus_musculus",
+      "split": "train",
+      "n_obs": 319717,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_27",
+        "tome_cao_embryo_47",
+        "tome_cao_embryo_48",
+        "tome_cao_embryo_49",
+        "tome_cao_embryo_50",
+        "tome_cao_embryo_61",
+        "tome_cao_embryo_62",
+        "tome_cao_embryo_8",
+        "tome_cao_embryo_9"
+      ],
+      "removed_obs": {
+        "below_min_genes": 182
+      },
+      "prepared_sha256": "3d4635c581fc0733f241c3ecb98ba75a3eff2d05d945f7215764fb7cf153c3b1",
+      "sha256": "5dd3e4e331d91dfcfb67541a39f76674fc476f12fa42023ad07112da5cf5b56f",
+      "survivor_digest": "76d2be07a6000a1e3783683970798a565c14b571b70bea05692058ebc637c28c"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5_prepared_validation.h5ad",
+      "species": "mus_musculus",
+      "split": "validation",
+      "n_obs": 103584,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_28",
+        "tome_cao_embryo_29",
+        "tome_cao_embryo_7"
+      ],
+      "removed_obs": {
+        "below_min_genes": 182
+      },
+      "prepared_sha256": "0c7d2f5986d6b87c8ed436de288a51cc58b662098800c860bb065e422f0762c0",
+      "sha256": "5dd3e4e331d91dfcfb67541a39f76674fc476f12fa42023ad07112da5cf5b56f",
+      "survivor_digest": "76d2be07a6000a1e3783683970798a565c14b571b70bea05692058ebc637c28c"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5_prepared_final_holdout.h5ad",
+      "species": "mus_musculus",
+      "split": "final_holdout",
+      "n_obs": 31641,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_10"
+      ],
+      "removed_obs": {
+        "below_min_genes": 182
+      },
+      "prepared_sha256": "32e77b1326147505aeccd52ddd2ac004eb9a0dc171045b3673369a3d2a83d311",
+      "sha256": "5dd3e4e331d91dfcfb67541a39f76674fc476f12fa42023ad07112da5cf5b56f",
+      "survivor_digest": "76d2be07a6000a1e3783683970798a565c14b571b70bea05692058ebc637c28c"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5_prepared_train.h5ad",
+      "species": "mus_musculus",
+      "split": "train",
+      "n_obs": 160318,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_11",
+        "tome_cao_embryo_12",
+        "tome_cao_embryo_13",
+        "tome_cao_embryo_34",
+        "tome_cao_embryo_52",
+        "tome_cao_embryo_64"
+      ],
+      "removed_obs": {
+        "below_min_genes": 262
+      },
+      "prepared_sha256": "29996c7394dd9cb81311a6561269170ce6010ac28739bab83ab89377bf9fe32a",
+      "sha256": "303343da5c9651e6afa6342bb6750aeadbd799d0c148d5000d8a86bd73cc0c12",
+      "survivor_digest": "1d2a488fc5130417c8527675a8184c0fad9e0830b75c2456724ce45b882813b9"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5_prepared_validation.h5ad",
+      "species": "mus_musculus",
+      "split": "validation",
+      "n_obs": 46133,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_14",
+        "tome_cao_embryo_51"
+      ],
+      "removed_obs": {
+        "below_min_genes": 262
+      },
+      "prepared_sha256": "8a75d854466e27c98a57c658d554ef56259db5751ff7d0d9d99db4bd24284caa",
+      "sha256": "303343da5c9651e6afa6342bb6750aeadbd799d0c148d5000d8a86bd73cc0c12",
+      "survivor_digest": "1d2a488fc5130417c8527675a8184c0fad9e0830b75c2456724ce45b882813b9"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5_prepared_final_holdout.h5ad",
+      "species": "mus_musculus",
+      "split": "final_holdout",
+      "n_obs": 86013,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_31",
+        "tome_cao_embryo_33"
+      ],
+      "removed_obs": {
+        "below_min_genes": 262
+      },
+      "prepared_sha256": "17c49527f2460d5de5423bee9c85bce083db0fc388bf32adbdeca062213b21b9",
+      "sha256": "303343da5c9651e6afa6342bb6750aeadbd799d0c148d5000d8a86bd73cc0c12",
+      "survivor_digest": "1d2a488fc5130417c8527675a8184c0fad9e0830b75c2456724ce45b882813b9"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5_prepared_train.h5ad",
+      "species": "mus_musculus",
+      "split": "train",
+      "n_obs": 146334,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_15",
+        "tome_cao_embryo_35",
+        "tome_cao_embryo_36",
+        "tome_cao_embryo_53",
+        "tome_cao_embryo_66",
+        "tome_cao_embryo_68"
+      ],
+      "removed_obs": {
+        "below_min_genes": 309
+      },
+      "prepared_sha256": "b441bc6f609890d716f9cc8742ae189c4011e0c7953b1d4585350527ede04ac6",
+      "sha256": "a32697fa60bf2cbf1860921c45cd96fdc1aeb684b8467a4300f688b8bd31d443",
+      "survivor_digest": "7135928cab5ab061096bb9f99a768b92c2c6bf55208f4dc85c8919f6de6c0d27"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5_prepared_validation.h5ad",
+      "species": "mus_musculus",
+      "split": "validation",
+      "n_obs": 118481,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_16",
+        "tome_cao_embryo_17",
+        "tome_cao_embryo_37",
+        "tome_cao_embryo_38",
+        "tome_cao_embryo_65",
+        "tome_cao_embryo_67"
+      ],
+      "removed_obs": {
+        "below_min_genes": 309
+      },
+      "prepared_sha256": "8c0be11128678d0cdf7e19ebc3442cf99685e6fd7dcf06a755d8b93a4a3d70d8",
+      "sha256": "a32697fa60bf2cbf1860921c45cd96fdc1aeb684b8467a4300f688b8bd31d443",
+      "survivor_digest": "7135928cab5ab061096bb9f99a768b92c2c6bf55208f4dc85c8919f6de6c0d27"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5_prepared_train.h5ad",
+      "species": "mus_musculus",
+      "split": "train",
+      "n_obs": 96683,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_1",
+        "tome_cao_embryo_19",
+        "tome_cao_embryo_20",
+        "tome_cao_embryo_21",
+        "tome_cao_embryo_22",
+        "tome_cao_embryo_3",
+        "tome_cao_embryo_40",
+        "tome_cao_embryo_41",
+        "tome_cao_embryo_42",
+        "tome_cao_embryo_55",
+        "tome_cao_embryo_57",
+        "tome_cao_embryo_58",
+        "tome_cao_embryo_63"
+      ],
+      "removed_obs": {
+        "below_min_genes": 13
+      },
+      "prepared_sha256": "a8bf468067de87fd7473e13f67d85b4ef78081edfbd4941db3e29fa7f1fa1c6f",
+      "sha256": "eb387ea2fb2fb5b342c5b2f0abe3809a64f8a816636118e09d1af13b59d49223",
+      "survivor_digest": "3a83d4c643ef89d25f5c9e583c77670e987b343b09f13cdd33f9d8aa599d9b34"
+    },
+    {
+      "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5.h5ad",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5_prepared_final_holdout.h5ad",
+      "species": "mus_musculus",
+      "split": "final_holdout",
+      "n_obs": 14382,
+      "n_genes": 20131,
+      "embryo_ids": [
+        "tome_cao_embryo_39",
+        "tome_cao_embryo_56"
+      ],
+      "removed_obs": {
+        "below_min_genes": 13
+      },
+      "prepared_sha256": "54ba5e6d7c6dfcb1cf00fb088690d2b51689d096cf5e2e469d6d6eb02a8cec7f",
+      "sha256": "eb387ea2fb2fb5b342c5b2f0abe3809a64f8a816636118e09d1af13b59d49223",
+      "survivor_digest": "3a83d4c643ef89d25f5c9e583c77670e987b343b09f13cdd33f9d8aa599d9b34"
+    }
+  ]
+}

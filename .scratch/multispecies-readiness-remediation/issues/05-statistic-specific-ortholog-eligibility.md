@@ -1,12 +1,36 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
 Category: correctness and readiness
-Status: Software implemented; pretrained and distinct candidate weights found — prepared/B3 comparison evidence remains open
+Status: Open — real organogenesis corpus validated; approved full-cohort peer support cannot meet B3 reporting floors
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
 Traceability: R3; stale post-filter counts; register 4.3; tracker N
 Spec: [Multispecies readiness remediation](../spec.md)
+
+## Current evidence — 2026-09-30
+
+The [recommendation implementation](../../../docs/agents/b3-recommendation-implementation-2026-09-30.md)
+completed and validated preparation of six real organogenesis sources with
+**1,577,916 post-QC observations**. Author metadata recovery establishes
+**61 physical mouse embryos**. Frozen training membership is **123,952 human
+cells / five embryos** and **945,389 mouse cells / 43 embryos**, with human
+split decisions preserved and physical mouse splits allocated prospectively.
+The earlier statements that no prepared corpus exists are superseded for this
+comparison. Finalized multispecies preparation and candidate training
+provenance remain unavailable.
+
+The [full-cohort null-support review](../../../docs/agents/b3-full-cohort-null-support-review-2026-09-30.md)
+finds necessary finite-score upper bounds of **1,890 human genes** and **two
+mouse genes** under the approved, frozen same-cell peer rule. The completed paired audit finds **zero of 15,705 joined pairs** meeting
+the necessary support conditions: neither qualifying mouse gene has a
+qualifying human ortholog. The approved **500-pair / 80%**
+reporting floors cannot be met. Actual model impacts, null-corrected scores
+and an observed comparison have not been produced; a structural support bound
+is not a score result. Acceptance criterion 5 remains unchecked. No reporting
+floor, measured-zero convention or peer-support rule is amended by this
+finding. Ticket 12 remains closed for its bounded scope; ticket 11 remains
+excluded.
 
 ## Outcome
 

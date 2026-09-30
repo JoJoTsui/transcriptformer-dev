@@ -1,6 +1,6 @@
 # Finetune readiness tracker
 
-**Repair continuation — 2026-09-30:** The [fresh review](fresh-implementation-review-2026-09-30.md) of `543dac2` reopened 01/03/08 and identified B3 software gaps. The [verified repairs](implementation-repairs-2026-09-30.md) restore bounded engineering closure for 01/03/08 and implement the verified B3 producer, comparability, diagnostics and coordinated bootstrap. Ten bounded engineering tickets are closed after the [ticket 12 scope audit](ticket12-gate-research-2026-09-30.md). Ticket 05 awaits actual prepared/B3 evidence; ticket 12 retains those gaps as documented exclusions, and 11 is excluded. The older 403-test run remains historical evidence.
+**Repair continuation — 2026-09-30:** The [fresh review](fresh-implementation-review-2026-09-30.md) of `543dac2` reopened 01/03/08 and identified B3 software gaps. The [verified repairs](implementation-repairs-2026-09-30.md) restore bounded engineering closure for 01/03/08 and implement the verified B3 producer, comparability, diagnostics and coordinated bootstrap. Ten bounded engineering tickets are closed after the [ticket 12 scope audit](ticket12-gate-research-2026-09-30.md). Ticket 05 remains open on observed B3 evidence; validated organogenesis preparation is now available but approved full-cohort null support cannot meet the reporting floors; ticket 12 retains those gaps as documented exclusions, and 11 is excluded. The older 403-test run remains historical evidence.
 
 
 2026-09-30 final verification on `9476b27`: [remote CPU CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36666782265)
@@ -36,6 +36,27 @@ implement that rule; no project score artifacts exist.
 
 **2026-09-30 data sufficiency update:** The [corpus review](b3-data-sufficiency-2026-09-30.md) finds adequate source capacity for a conditional descriptive pilot, with independent replication and actual post-QC score coverage unverified. Mouse organogenesis stage-file IDs must not count as physical embryos; upstream metadata recovery is a lead. The [online search](b3-observed-comparison-online-search-2026-09-30.md) found no matching reusable observed B3 artifact in the inspected primary resources. Ticket 05 remains open; bounded ticket 12 closure and zebrafish exclusion are unchanged.
 
+**2026-09-30 real preparation and full-cohort support update:** The
+[recommendation implementation](b3-recommendation-implementation-2026-09-30.md)
+completed validated preparation of six real organogenesis sources:
+**1,577,916 post-QC observations**, with **61 recovered physical mouse
+embryos**. Frozen training strata contain **123,952 human cells / five
+embryos** and **945,389 mouse cells / 43 embryos**. Human split decisions
+were preserved and mouse splits allocated prospectively on physical identities.
+Earlier missing-prepared-corpus statements are superseded for this comparison;
+finalized multispecies preparation and candidate training provenance remain
+unavailable.
+
+The [full-cohort null-support review](b3-full-cohort-null-support-review-2026-09-30.md)
+finds necessary finite-score upper bounds of **1,890 human genes** and **two
+mouse genes** under the frozen same-cell peer rule. The completed paired audit finds **zero of 15,705 joined ortholog pairs**
+meeting the necessary support conditions: neither qualifying mouse gene has
+a qualifying human ortholog. This cannot meet the approved
+**500-pair / 80%** reporting gate. These are structural support bounds; no
+model effects or observed concordance were measured. Ticket 05 remains open,
+ticket 12 remains closed for bounded CI/documentation acceptance, and ticket
+11 remains excluded. No scientific rule or threshold changed.
+
 ## Current follow-up — 2026-09-28 review remediation
 
 The [adversarial review](adversarial-review-2026-09-28.md) reopens terminal
@@ -66,7 +87,7 @@ cannot serve as a final corpus or post-QC cohort. Ticket 05 now has a
 [producer-artifact closure runbook](../../.scratch/multispecies-readiness-remediation/issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison),
 but real B3 scores and producer evidence are still absent. The [checkpoint discovery](ticket05-checkpoint-discovery-2026-09-30.md) establishes
 that pretrained and distinct nominal candidate weights are present. Candidate
-training provenance, actual prepared corpus and B3 outputs remain unverified.
+training provenance and B3 outputs remain unverified; the six-source organogenesis corpus is now validated as recorded above.
 The owner-approved
 paired comparison and deletion-score decisions above define the current method;
 the planned comparison family and project input identities still need freezing.

@@ -15,6 +15,8 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 
+from transcriptformer.finetune.embryo_identity import apply_embryo_identity
+
 from transcriptformer.finetune.spatial import SPATIAL_BIN_COL, assign_spatial_bins, spatial_grid_size_from_manifest
 
 SPLIT_NAMES = ("train", "validation", "final_holdout")
@@ -166,8 +168,15 @@ def _apply_qc(
     qc_config: dict[str, Any],
 ) -> tuple[Any, pd.DataFrame, dict[str, int]]:
     n_obs = obs.shape[0]
-    n_genes = _as_1d((X > 0).sum(axis=1))
-    total_counts = _as_1d(X.sum(axis=1))
+    # Sparse boolean sums can cast every nonzero to int64, allocating several
+    # GiB on large atlases. Keep those temporaries bounded to one row chunk.
+    n_genes = np.empty(n_obs, dtype=np.int64)
+    total_counts = np.empty(n_obs, dtype=np.float64)
+    for start in range(0, n_obs, 8192):
+        stop = min(n_obs, start + 8192)
+        block = X[start:stop]
+        n_genes[start:stop] = _as_1d((block > 0).sum(axis=1))
+        total_counts[start:stop] = _as_1d(block.sum(axis=1, dtype=np.float64))
 
     keep = np.ones(n_obs, dtype=bool)
     removed: dict[str, int] = {}
@@ -196,6 +205,8 @@ def _apply_qc(
         removed["above_max_counts"] = int((~mask).sum())
         keep &= mask
 
+    if keep.all():
+        return X, obs, removed
     return X[keep], obs.iloc[keep], removed
 
 
@@ -241,8 +252,12 @@ def prepare_dataset_file(
     adata = ad.read_h5ad(input_path)
     using_raw = adata.raw is not None
     X = adata.raw.X if using_raw else adata.X
-    obs = _apply_obs_columns(adata.obs, dataset.get("obs_columns"))
+    obs = apply_embryo_identity(_apply_obs_columns(adata.obs, dataset.get("obs_columns")), dataset)
     var_df = adata.raw.var if using_raw else adata.var
+    # Retain only the selected count matrix and metadata. Otherwise AnnData
+    # keeps the full original matrix/layers alive after vocabulary filtering,
+    # doubling the live matrix footprint during QC and split extraction.
+    del adata
 
     if not _is_raw_counts(X):
         raise ValueError(f"Dataset {input_path} does not contain raw integer counts")
@@ -489,7 +504,7 @@ def read_dataset_obs(dataset: dict[str, Any]) -> pd.DataFrame:
                     categories = ad.io.read_elem(handle[key])
                     categories = [v.decode() if isinstance(v, bytes) else v for v in categories]
                     obs[column] = pd.Categorical.from_codes(obs[column].to_numpy(), categories)
-    return _apply_obs_columns(obs, dataset.get("obs_columns"))
+    return apply_embryo_identity(_apply_obs_columns(obs, dataset.get("obs_columns")), dataset)
 
 
 def _read_split_metadata(dataset: dict[str, Any]) -> dict[str, Any]:

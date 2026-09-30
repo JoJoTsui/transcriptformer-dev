@@ -20,6 +20,8 @@ def main():
         reserved.update(
             Path(config[key]).resolve() for key in ("path", "gene_mapping", "vocab_path") if config.get(key)
         )
+        if config.get("embryo_identity"):
+            reserved.add(Path(config["embryo_identity"]["path"]).resolve())
     if args.output and args.output.resolve() in reserved:
         parser.error("Output report must not overwrite a manifest, source, asset or prepared artifact")
     report = validate_prepared_artifacts(manifest, prepared)

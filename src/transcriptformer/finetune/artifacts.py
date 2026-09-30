@@ -17,6 +17,7 @@ import h5py
 import numpy as np
 import pandas as pd
 
+from transcriptformer.finetune.embryo_identity import embryo_identity_digest
 from transcriptformer.finetune.prepare import (
     _hash_file,
     _read_split_metadata,
@@ -47,6 +48,11 @@ def preparation_fingerprint(manifest: dict) -> str:
                 if not path.is_file():
                     raise ValueError(f"Preparation asset missing: {path}")
                 assets[str(path.resolve())] = _hash_file(path)
+    for dataset in manifest["datasets"]:
+        identity = embryo_identity_digest(dataset)
+        if identity is not None:
+            path, digest = identity
+            assets[path] = digest
     return _digest({"settings": settings, "assets": assets})
 
 
@@ -198,7 +204,7 @@ def validate_prepared_artifacts(manifest: dict, report: dict) -> dict:
             if obs.index.astype(str).tolist() != expected.index.astype(str).tolist():
                 raise ValueError(f"Observation membership differs: {path}")
             columns = ["embryo_id", "stage", "native_stage", "cell_type", "assay"]
-            columns += [c for c in ("species", "section_id", "spatial_x", "spatial_y") if c in expected]
+            columns += [c for c in ("species", "embryo_sex", "section_id", "spatial_x", "spatial_y") if c in expected]
             for column in columns:
                 if column not in obs or not obs[column].astype("string").reset_index(drop=True).equals(
                     expected[column].astype("string").reset_index(drop=True)

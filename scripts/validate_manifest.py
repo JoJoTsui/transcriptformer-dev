@@ -33,7 +33,7 @@ import anndata as ad
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from transcriptformer.finetune.manifest import load_run_manifest
-from transcriptformer.finetune.prepare import _load_gene_ids, _load_vocab, _map_gene_ids
+from transcriptformer.finetune.prepare import _load_gene_ids, _load_vocab, _map_gene_ids, read_dataset_obs
 
 CONTRACT_COLS = ("embryo_id", "stage", "cell_type", "assay")
 SPATIAL_COLS = ("section_id", "spatial_x", "spatial_y")
@@ -111,6 +111,12 @@ def validate_dataset(index: int, dataset: dict, manifest: dict) -> DatasetReport
     adata = ad.read_h5ad(path, backed="r")
     try:
         obs_cols_map = dataset.get("obs_columns") or {}
+        if dataset.get("embryo_identity"):
+            try:
+                identified = read_dataset_obs(dataset)
+                rep.add(PASS, f"verified physical embryo sidecar: {identified['embryo_id'].nunique()} identities")
+            except (ValueError, OSError, KeyError) as exc:
+                rep.add(FAIL, f"embryo identity sidecar invalid: {exc}")
 
         # (3) obs_columns sources must exist
         for contract_col, source in obs_cols_map.items():
