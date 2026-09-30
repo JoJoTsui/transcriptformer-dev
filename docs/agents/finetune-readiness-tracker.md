@@ -34,6 +34,8 @@ advance the producer contract. The owner subsequently approved the
 for bin ties, merging and sparse support. Bounded bin and matched-peer helpers
 implement that rule; no project score artifacts exist.
 
+**2026-09-30 data sufficiency update:** The [corpus review](b3-data-sufficiency-2026-09-30.md) finds adequate source capacity for a conditional descriptive pilot, with independent replication and actual post-QC score coverage unverified. Mouse organogenesis stage-file IDs must not count as physical embryos; upstream metadata recovery is a lead. The [online search](b3-observed-comparison-online-search-2026-09-30.md) found no matching reusable observed B3 artifact in the inspected primary resources. Ticket 05 remains open; bounded ticket 12 closure and zebrafish exclusion are unchanged.
+
 ## Current follow-up — 2026-09-28 review remediation
 
 The [adversarial review](adversarial-review-2026-09-28.md) reopens terminal

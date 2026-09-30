@@ -384,3 +384,16 @@ found. The configured `runs/multispecies_v1` output is absent; current rehearsal
 reports state that temporary outputs were removed. Criterion 5 stays open on
 prepared membership, actual score production and observed comparison evidence.
 No model load/forward, data preparation or new zebrafish work was performed.
+
+## Data sufficiency and published comparison review — 2026-09-30
+
+The [data sufficiency audit](../../../docs/agents/b3-data-sufficiency-2026-09-30.md)
+finds substantial pre-QC human–mouse cell capacity and 15,705 usable ortholog
+pairs, but no validated prepared corpus or actual finite-score coverage. Human
+early phases have one recorded embryo; mouse organogenesis's five IDs are stage
+file constants, not verified biological replicates. Upstream sources describe
+61 embryos, so metadata recovery may improve replication without new collection.
+The existing final holdout has no shared mapped human–mouse phase.
+The [primary-source online search](../../../docs/agents/b3-observed-comparison-online-search-2026-09-30.md)
+found related analyses, but no reusable observed comparison matching the approved
+B3 definition in the inspected resources. Criterion 5 remains open.
