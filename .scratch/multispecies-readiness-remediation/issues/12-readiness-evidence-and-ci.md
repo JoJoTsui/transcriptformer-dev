@@ -129,3 +129,11 @@ passed 68 focused local tests with the earlier producer/comparator checks;
 real producer artifacts, cross-species comparability review and observed
 scores remain open. The new arithmetic checks do not satisfy ticket
 05's real comparison criterion or this ticket's scientific evidence gate.
+
+The owner-approved descriptive-null follow-up passed 68 focused local tests
+with native threads capped. On commit `2406d92`, the
+[finetune CPU workflow](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36661045962)
+passed 403 selected tests and the
+[pre-commit workflow](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36661045933)
+passed. These runs establish bounded implementation behavior only; no project
+checkpoint, validated post-QC B3 corpus or real paired score result was used.

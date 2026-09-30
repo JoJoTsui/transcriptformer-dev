@@ -41,8 +41,9 @@ Independent slices can proceed concurrently; memory-heavy checks run
 sequentially on this WSL host.
 
 The nine closed engineering tickets have their acceptance boxes checked against
-the bounded command/workflow evidence already recorded in each ticket and the
-[337-test remote CPU run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896770).
+the bounded command/workflow evidence already recorded in each ticket. The
+latest [403-test remote CPU run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36661045962)
+also covers the newer B3 producer and descriptive-null seams.
 Their closure means the specified interfaces and behavior are implemented;
 it does not claim final corpus preparation, model performance, biological
 readiness or GPU behavior. Ticket 02's two-rank interrupted/resumed CPU
