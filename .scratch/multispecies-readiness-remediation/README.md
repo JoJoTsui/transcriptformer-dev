@@ -96,9 +96,11 @@ the owner's current instruction.
   comparator also supports a hash-bound rank SVG. The
   comparison criterion remains open until real ranked scores under the
   [approved producer method](../../docs/agents/b3-deletion-score-decision-2026-09-30.md)
-  exist. A [null-method review](../../docs/agents/b3-null-method-review-2026-09-30.md)
-  identifies the tie, sparse-support and inference choices that still need
-  freezing before those scores are interpreted. The
+  exist. The owner approved a conservative descriptive
+  [null method](../../docs/agents/b3-null-method-review-2026-09-30.md)
+  for bin ties and sparse support, and bounded bin/matched-peer helpers now
+  implement its descriptive z-score. Inferential p-value/FDR calibration
+  remains a separate gate. The
   [ticket 05 closure runbook](issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison)
   lists the required producer artifacts and commands. The
   [B3 producer audit](../../docs/agents/b3-score-producer-audit-2026-09-30.md)

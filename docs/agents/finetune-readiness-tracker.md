@@ -19,8 +19,10 @@ adopted the reviewed
 Actual B3 scores and per-embryo observations for uncertainty remain outstanding.
 The bounded [cell audit stream](../../src/transcriptformer/finetune/b3_cell_stream.py)
 and [embryo/null arithmetic helper](../../src/transcriptformer/finetune/b3_aggregation.py)
-advance the producer contract. They do not establish the still-unfrozen null
-bin tie/merge and sparse-support choices or supply project score artifacts.
+advance the producer contract. The owner subsequently approved the
+[conservative descriptive null rule](b3-null-method-review-2026-09-30.md)
+for bin ties, merging and sparse support. Bounded bin and matched-peer helpers
+implement that rule; no project score artifacts exist.
 
 ## Current follow-up — 2026-09-28 review remediation
 

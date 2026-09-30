@@ -123,7 +123,9 @@ A later bounded continuation adds the B3 cell-audit stream, embryo-first
 aggregation and explicit-bin null arithmetic plus an optional hash-bound rank
 SVG and a bounded raw-score artifact writer. Forty-three focused local tests
 passed with OMP, OpenBLAS and MKL each
-limited to one thread. Automatic quantile tie/merge policy, sparse peer
-handling, real producer artifacts, cross-species comparability review and
-observed scores remain open; the new arithmetic checks do not satisfy ticket
+limited to one thread. The owner then approved a conservative descriptive
+null-bin and matched-support rule. Its bounded bin and matched-peer arithmetic
+passed 68 focused local tests with the earlier producer/comparator checks;
+real producer artifacts, cross-species comparability review and observed
+scores remain open. The new arithmetic checks do not satisfy ticket
 05's real comparison criterion or this ticket's scientific evidence gate.

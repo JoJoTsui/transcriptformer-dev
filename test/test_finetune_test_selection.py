@@ -26,6 +26,8 @@ SUITES = (
     "b3_cell_stream",
     "b3_aggregation",
     "b3_raw_artifact",
+    "b3_bins",
+    "b3_matched_null",
     "end_to_end",
     "finetune_metadata",
     "spatial",

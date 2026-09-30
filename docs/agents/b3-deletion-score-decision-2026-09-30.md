@@ -59,6 +59,9 @@ silently combined with the primary.
   preprocessing configuration, checkpoint, corpus/split and software commit.
 - Preserve the design's expression/dropout-matched 10×10 within-species/phase
   null and embryo-first aggregation, then compute its null-corrected z-scores.
+  The owner later approved the conservative
+  [tie, merge and matched-support rule](b3-null-method-review-2026-09-30.md)
+  for descriptive z-scores; inferential p-values and FDR remain unevaluable.
   Include token position and number of downstream targets in each gene's
   audit. Report raw-impact correlations with those quantities before and
   after the null. Native-order position effects are a limitation of this

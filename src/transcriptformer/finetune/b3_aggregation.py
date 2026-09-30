@@ -127,6 +127,8 @@ def same_cell_bin_null_observations(
     """
     if focal_gene_id not in gene_bins:
         raise ValueError("Focal gene has no frozen null-bin assignment")
+    if gene_bins[focal_gene_id] is None:
+        raise ValueError("Focal gene's frozen dropout band has an unavailable null")
     scored = _scored_rows(rows, max_rows=max_rows)
     focal_cells = {
         (identity[3], identity[4], identity[5])
@@ -143,7 +145,7 @@ def same_cell_bin_null_observations(
         gene = identity[6]
         if gene not in gene_bins:
             raise ValueError("Scored gene has no frozen null-bin assignment")
-        if gene == focal_gene_id or gene_bins[gene] != focal_bin:
+        if gene == focal_gene_id or gene_bins[gene] is None or gene_bins[gene] != focal_bin:
             continue
         cell = (identity[3], identity[4], identity[5])
         if cell in focal_cells:

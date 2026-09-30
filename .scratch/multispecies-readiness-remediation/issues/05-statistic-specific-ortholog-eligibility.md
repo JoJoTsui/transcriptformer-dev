@@ -213,6 +213,14 @@ streams bounded, hash-bound per-cell rows with typed declared/verified input
 digests and rejects duplicate identities. Its 100,000-row/64 MiB cap requires
 sharding for a production run; it does not verify a caller-declared checkpoint
 or source digest.
+The owner approved the conservative descriptive-z
+[null rule](../../../docs/agents/b3-null-method-review-2026-09-30.md) on
+2026-09-30 before any B3 results were inspected. Inferential p-values and FDR
+remain unavailable pending a separate, calibrated sample-unit decision. A
+bounded [bin builder](../../../src/transcriptformer/finetune/b3_bins.py)
+and [matched-peer z helper](../../../src/transcriptformer/finetune/b3_matched_null.py)
+now implement the approved descriptive rule, with unavailable outcomes for
+sparse bands, incomplete peer support, or zero null variance.
 These are bounded implementation seams, not a complete B3 source producer or
 an observed distributional comparison. The missing project checkpoint and
 validated post-QC corpus still prevent criterion 5 closure.
