@@ -3,12 +3,14 @@
 import argparse
 import csv
 import json
+import xml.etree.ElementTree as ET
 
 import h5py
+import pytest
 
 from scripts.handoff_ortholog_scores import sha256
 from scripts.report_ortholog_eligibility import audit_pair
-from scripts.summarize_ortholog_full_universe import reporting_completeness, summarize
+from scripts.summarize_ortholog_full_universe import rank_plot_svg, reporting_completeness, summarize
 
 
 def test_approved_reporting_floors_are_exact_and_independent():
@@ -16,6 +18,15 @@ def test_approved_reporting_floors_are_exact_and_independent():
     assert reporting_completeness(499, 500)["status"] == "insufficiently_covered"
     assert reporting_completeness(500, 626)["status"] == "insufficiently_covered"
     assert reporting_completeness(0, 625)["joined_score_fraction"] == 0
+
+
+def test_rank_plot_escapes_species_labels_and_rejects_invalid_xml():
+    svg = rank_plot_svg([1, 2], [2, 1], 'species<&"', "other")
+    root = ET.fromstring(svg)
+    assert len(root.findall("{http://www.w3.org/2000/svg}circle")) == 2
+    assert "species&lt;&amp;&quot;" in svg
+    with pytest.raises(ValueError, match="invalid XML character"):
+        rank_plot_svg([1, 2], [2, 1], "bad\x00label", "other")
 
 
 def test_coverage_tsv_reconciles_all_exclusion_reasons(tmp_path):
@@ -103,6 +114,7 @@ def test_coverage_tsv_reconciles_all_exclusion_reasons(tmp_path):
     handoff_path.write_text(json.dumps(handoff))
     output = tmp_path / "summary.json"
     coverage = tmp_path / "coverage.tsv"
+    rank_plot = tmp_path / "ranks.svg"
     summarize(
         argparse.Namespace(
             handoff=handoff_path,
@@ -116,6 +128,7 @@ def test_coverage_tsv_reconciles_all_exclusion_reasons(tmp_path):
             metadata_b=metadata_paths[1],
             mapping=None,
             coverage_tsv=coverage,
+            rank_plot_svg=rank_plot,
             output=output,
         )
     )
@@ -141,3 +154,7 @@ def test_coverage_tsv_reconciles_all_exclusion_reasons(tmp_path):
     assert summary["spearman_unavailable_reason"] == "insufficient_coverage"
     assert summary["paired_difference_mean"] is None
     assert summary["embryo_uncertainty"]["interval"] is None
+    assert summary["rank_plot_status"] == "withheld_insufficient_coverage"
+    assert summary["rank_plot_svg_sha256"] == sha256(rank_plot)
+    assert "withheld" in rank_plot.read_text()
+    assert not ET.fromstring(rank_plot.read_text()).findall("{http://www.w3.org/2000/svg}circle")

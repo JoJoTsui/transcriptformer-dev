@@ -195,6 +195,28 @@ plan, and the biological result are absent, so acceptance item 5 remains open.
 
 ## Closure runbook for one non-zebrafish comparison
 
+2026-09-30 bounded producer continuation: The approved per-cell deletion
+formula now has an [auditable cell stream](../../../src/transcriptformer/finetune/b3_cell_stream.py)
+that retains species, phase, independent embryo, source, cell, gene and token
+position, matched-target denominator, model arm, and unavailable-target reason.
+It reuses one no-grad original forward within a cell and skips deletions with
+no possible downstream matched target, reducing the tiny four-gene fixture
+from eight forwards to three without changing its score.
+The [aggregation helper](../../../src/transcriptformer/finetune/b3_aggregation.py)
+averages scored cells within embryo and embryos equally, and can extract
+same-cell peer observations from explicitly supplied bins. It does not invent
+quantile tie/merge rules or sparse-null treatment. The full-universe comparator
+can now write an optional hash-bound rank SVG with `--rank-plot-svg`; below the
+approved reporting floors it writes a withheld marker instead of a result.
+The [raw artifact writer](../../../src/transcriptformer/finetune/b3_raw_artifact.py)
+streams bounded, hash-bound per-cell rows with typed declared/verified input
+digests and rejects duplicate identities. Its 100,000-row/64 MiB cap requires
+sharding for a production run; it does not verify a caller-declared checkpoint
+or source digest.
+These are bounded implementation seams, not a complete B3 source producer or
+an observed distributional comparison. The missing project checkpoint and
+validated post-QC corpus still prevent criterion 5 closure.
+
 The 2026-09-29 bounded filename inventory under `runs/`,
 `logs/dataset_audit/`, `data/`, `datasets/`, `results/`, `outputs/`, and this
 ticket directory found no B3 impact-score table, null-corrected ranking, or

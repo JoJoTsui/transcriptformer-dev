@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import html
 import json
 import math
 import sys
@@ -23,6 +24,7 @@ from scripts.summarize_ortholog_paired_scores import MAX_PAIRS, average_ranks, m
 MAX_INPUT_BYTES = 64 * 1024 * 1024
 MAX_VOCAB_BYTES = 2 * 1024 * 1024 * 1024
 MAX_SCORE_ROWS = 100_000
+MAX_RANK_PLOT_BYTES = 16 * 1024 * 1024
 MIN_REPORTABLE_PAIRED_SCORES = 500
 MIN_REPORTABLE_JOINED_FRACTION = 0.8
 
@@ -43,6 +45,42 @@ def reporting_completeness(n_paired: int, n_joined: int) -> dict:
         "joined_score_fraction": n_paired / n_joined,
         "basis": "Approved B3 reporting floors; independent of registered 60% statistic-input and 5,000 genome-wide-pair eligibility floors",
     }
+
+
+def rank_plot_svg(ranks_a: list[float], ranks_b: list[float], species_a: str, species_b: str) -> str:
+    """Draw every paired observation in a bounded, dependency-free rank scatter."""
+    if len(ranks_a) != len(ranks_b) or len(ranks_a) < 2 or len(ranks_a) > MAX_PAIRS:
+        raise ValueError("Rank plot requires two to 100,000 paired observations")
+    for species in (species_a, species_b):
+        if any(
+            not (
+                ord(character) in (9, 10, 13)
+                or 0x20 <= ord(character) <= 0xD7FF
+                or 0xE000 <= ord(character) <= 0xFFFD
+                or 0x10000 <= ord(character) <= 0x10FFFF
+            )
+            for character in species
+        ):
+            raise ValueError("Rank plot species label contains an invalid XML character")
+    denominator = len(ranks_a) - 1
+    lines = [
+        '<svg xmlns="http://www.w3.org/2000/svg" width="960" height="960" viewBox="0 0 960 960">',
+        '<rect width="960" height="960" fill="white"/>',
+        '<path d="M70 70V870H870" fill="none" stroke="#333" stroke-width="2"/>',
+        '<path d="M70 870L870 70" fill="none" stroke="#aaa" stroke-dasharray="5 5"/>',
+        f'<text x="470" y="925" text-anchor="middle" font-size="20">{html.escape(species_a, quote=True)} rank</text>',
+        f'<text x="25" y="470" text-anchor="middle" font-size="20" transform="rotate(-90 25 470)">{html.escape(species_b, quote=True)} rank</text>',
+        f'<text x="70" y="900" font-size="14">1</text><text x="850" y="900" font-size="14">{len(ranks_a)}</text>',
+    ]
+    for rank_a, rank_b in zip(ranks_a, ranks_b, strict=True):
+        x = 70 + 800 * (rank_a - 1) / denominator
+        y = 870 - 800 * (rank_b - 1) / denominator
+        lines.append(f'<circle cx="{x:.3f}" cy="{y:.3f}" r="1.6" fill="#1769aa" fill-opacity="0.35"/>')
+    lines.append("</svg>")
+    svg = "\n".join(lines) + "\n"
+    if len(svg.encode("utf-8")) > MAX_RANK_PLOT_BYTES:
+        raise ValueError("Rank plot exceeds the 16 MiB output cap")
+    return svg
 
 
 def bounded_json(path: Path) -> dict:
@@ -111,6 +149,9 @@ def summarize(args: argparse.Namespace) -> None:
     output_paths = [args.output]
     if args.coverage_tsv:
         output_paths.append(args.coverage_tsv)
+    rank_plot_path = getattr(args, "rank_plot_svg", None)
+    if rank_plot_path:
+        output_paths.append(rank_plot_path)
     resolved_outputs = [path.resolve() for path in output_paths]
     if len(resolved_outputs) != len(set(resolved_outputs)) or set(resolved_outputs) & {
         path.resolve() for path in inputs
@@ -238,12 +279,16 @@ def summarize(args: argparse.Namespace) -> None:
     differences = [b - a for a, b in zip(x, y, strict=True)]
     if any(not math.isfinite(value) for value in differences):
         raise ValueError("Paired score difference overflows")
-    rho = pearson(average_ranks(x), average_ranks(y))
+    ranks_a, ranks_b = average_ranks(x), average_ranks(y)
+    rho = pearson(ranks_a, ranks_b)
     missing_a = sum(a not in scores_a for a, _ in joined)
     missing_b = sum(b not in scores_b for _, b in joined)
     missing_either = len(joined) - len(available)
     completeness = reporting_completeness(len(available), len(joined))
     reportable = completeness["status"] == "sufficient_coverage"
+    plot_status = "not_requested"
+    if rank_plot_path:
+        plot_status = "written" if reportable else "withheld_insufficient_coverage"
     summary = {
         "schema_version": 2,
         "scope": "descriptive_full_vocabulary_joined_one_to_one_universe",
@@ -277,6 +322,8 @@ def summarize(args: argparse.Namespace) -> None:
             "interval": None,
             "reason": "Aggregate gene-score tables cannot be resampled to recompute embryo-aggregated impacts, null bins, and z-scores",
         },
+        "rank_plot_status": plot_status,
+        "rank_plot_svg_sha256": None,
         "exclusions": {
             "vocabulary_or_identifier_excluded_genome_pairs": len(genome_pairs - joined),
             "joined_pairs_missing_score_a": missing_a,
@@ -329,6 +376,15 @@ def summarize(args: argparse.Namespace) -> None:
         summary["coverage_tsv_sha256"] = sha256(args.coverage_tsv)
         summary["coverage_tsv_rows"] = len(genome_pairs)
         summary["coverage_status_counts"] = coverage_status_counts
+    if rank_plot_path:
+        rank_plot_path.parent.mkdir(parents=True, exist_ok=True)
+        svg = (
+            rank_plot_svg(ranks_a, ranks_b, species_a, species_b)
+            if reportable
+            else '<svg xmlns="http://www.w3.org/2000/svg" width="960" height="100"><text x="20" y="55">Rank plot withheld: insufficient paired-score coverage</text></svg>\n'
+        )
+        rank_plot_path.write_text(svg, encoding="utf-8")
+        summary["rank_plot_svg_sha256"] = sha256(rank_plot_path)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(summary, indent=2, sort_keys=True, allow_nan=False) + "\n")
 
@@ -350,6 +406,7 @@ def main() -> None:
         parser.add_argument(f"--{name}", type=Path, required=True)
     parser.add_argument("--mapping", type=Path)
     parser.add_argument("--coverage-tsv", type=Path, help="Optional pair-level inclusion and exclusion audit")
+    parser.add_argument("--rank-plot-svg", type=Path, help="Optional hash-bound full-universe rank scatter")
     summarize(parser.parse_args())
 
 

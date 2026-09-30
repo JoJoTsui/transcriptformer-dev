@@ -7,7 +7,11 @@ import pytest
 import torch
 
 from transcriptformer.data.dataclasses import BatchData
-from transcriptformer.finetune.b3_gene_id import matched_gene_id_deletion_impact, model_gene_id_deletion_impact
+from transcriptformer.finetune.b3_gene_id import (
+    matched_gene_id_deletion_impact,
+    model_gene_id_deletion_impact,
+    model_gene_id_original_forward,
+)
 
 
 PAD = 0
@@ -151,6 +155,28 @@ def test_model_forward_keeps_retained_counts_and_aux_then_scores_native_targets(
     assert result.gene_ids == (4,)
     expected_bits = math.log2(8 * math.exp(2) / (math.exp(2) + 7))
     assert result.impact.item() == pytest.approx(expected_bits)
+
+
+def test_cached_original_matches_uncached_score_and_rejects_other_batch() -> None:
+    model = _TinyGeneModel().eval()
+    batch = BatchData(
+        gene_counts=torch.tensor([[10.0, 20.0, 30.0, 40.0]]),
+        gene_token_indices=torch.tensor([[2, 3, 4, 5]]),
+    )
+    uncached = model_gene_id_deletion_impact(model=model, batch=batch, deleted_position=1, excluded_gene_ids=EXCLUDED)
+    original = model_gene_id_original_forward(model=model, batch=batch, excluded_gene_ids=EXCLUDED)
+    cached = model_gene_id_deletion_impact(
+        model=model, batch=batch, deleted_position=1, excluded_gene_ids=EXCLUDED, original_forward=original
+    )
+    assert cached == uncached
+    assert len(model.calls) == 4  # Two uncached, one capture, one deleted.
+    assert all(not grad_enabled for _, _, grad_enabled in model.calls)
+    other_batch = BatchData(gene_counts=batch.gene_counts.clone(), gene_token_indices=batch.gene_token_indices.clone())
+    with pytest.raises(ValueError, match="belong to this model and cell batch"):
+        model_gene_id_deletion_impact(
+            model=model, batch=other_batch, deleted_position=1, excluded_gene_ids=EXCLUDED, original_forward=original
+        )
+    assert len(model.calls) == 4
 
 
 def test_model_forward_rejects_noncontiguous_padding_before_call() -> None:

@@ -87,11 +87,19 @@ the owner's current instruction.
   checked acceptance items cover the tooling. A bounded selected-pair
   [descriptive comparator](../../scripts/summarize_ortholog_paired_scores.py)
   and a [top-k origin verifier](../../scripts/verify_ortholog_topk_origin.py)
-  are available. A separate [full-universe descriptive comparator](../../scripts/summarize_ortholog_full_universe.py)
+  are available. An [auditable B3 cell stream](../../src/transcriptformer/finetune/b3_cell_stream.py)
+  and [bounded embryo/null arithmetic](../../src/transcriptformer/finetune/b3_aggregation.py)
+  plus a [bounded raw artifact writer](../../src/transcriptformer/finetune/b3_raw_artifact.py)
+  now cover additional producer seams without claiming a real score table.
+  A separate [full-universe descriptive comparator](../../scripts/summarize_ortholog_full_universe.py)
   can recompute vocabulary-joined pairs and score-available denominators; the
+  comparator also supports a hash-bound rank SVG. The
   comparison criterion remains open until real ranked scores under the
   [approved producer method](../../docs/agents/b3-deletion-score-decision-2026-09-30.md)
-  exist. The [ticket 05 closure runbook](issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison)
+  exist. A [null-method review](../../docs/agents/b3-null-method-review-2026-09-30.md)
+  identifies the tie, sparse-support and inference choices that still need
+  freezing before those scores are interpreted. The
+  [ticket 05 closure runbook](issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison)
   lists the required producer artifacts and commands. The
   [B3 producer audit](../../docs/agents/b3-score-producer-audit-2026-09-30.md)
   explains why upstream `llh` and `gene_llh` cannot substitute for

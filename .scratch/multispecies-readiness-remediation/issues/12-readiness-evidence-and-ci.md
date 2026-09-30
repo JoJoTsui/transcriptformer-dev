@@ -118,3 +118,12 @@ passed 354 selected tests on `1e12a64`, including the B3 forward seam and
 ortholog coverage checks. The corresponding
 [pre-commit workflow](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36656545994)
 passed. These are implementation checks, not observed project B3 results.
+
+A later bounded continuation adds the B3 cell-audit stream, embryo-first
+aggregation and explicit-bin null arithmetic plus an optional hash-bound rank
+SVG and a bounded raw-score artifact writer. Forty-three focused local tests
+passed with OMP, OpenBLAS and MKL each
+limited to one thread. Automatic quantile tie/merge policy, sparse peer
+handling, real producer artifacts, cross-species comparability review and
+observed scores remain open; the new arithmetic checks do not satisfy ticket
+05's real comparison criterion or this ticket's scientific evidence gate.

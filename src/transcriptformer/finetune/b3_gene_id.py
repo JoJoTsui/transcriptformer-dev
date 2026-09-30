@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from math import log
+from typing import Mapping
 
 import torch
 from torch import Tensor
@@ -25,20 +26,20 @@ class MatchedGeneIDImpact:
         return len(self.gene_ids)
 
 
-def model_gene_id_deletion_impact(
-    *,
-    model: torch.nn.Module,
-    batch: BatchData,
-    deleted_position: int,
-    excluded_gene_ids: frozenset[int],
-) -> MatchedGeneIDImpact:
-    """Run the native gene-ID head for one cell and one token deletion.
+@dataclass(frozen=True)
+class OriginalGeneIDForward:
+    """One cell's no-grad native forward, held only while its deletions stream."""
 
-    The deleted sentence shifts retained tokens and their original counts left,
-    then pads its tail. Auxiliary tokens and the original batch are untouched.
-    The caller must supply an evaluation-mode model with its gene-ID head and
-    criterion enabled; the score is computed from native forward targets/masks.
-    """
+    model: torch.nn.Module
+    batch: BatchData
+    gene_logits: Tensor
+    target_ids: Tensor
+    mask: Tensor
+
+
+def _validate_model_and_batch(
+    model: torch.nn.Module, batch: BatchData, excluded_gene_ids: frozenset[int]
+) -> tuple[int, int, float]:
     if model.training:
         raise ValueError("B3 gene-ID scoring requires a model in eval mode")
     criterion = getattr(model, "gene_id_criterion", None)
@@ -79,6 +80,48 @@ def model_gene_id_deletion_impact(
         raise ValueError("Active gene counts must be finite and positive")
     if not bool((counts[0, n_active:] == 0).all()):
         raise ValueError("Padded gene counts must be zero")
+    return pad_idx, n_active, float(criterion.softcap)
+
+
+def _native_forward_tensors(output: Mapping[str, Tensor]) -> tuple[Tensor, Tensor, Tensor]:
+    if not all(key in output for key in ("gene_logit", "input_gene_token_indices", "mask")):
+        raise ValueError("Model forward must return gene logits, native targets and mask")
+    logits, targets, mask = (output[key] for key in ("gene_logit", "input_gene_token_indices", "mask"))
+    if logits.ndim != 3 or logits.shape[0] != 1:
+        raise ValueError("Model gene logits must have shape [one cell, position, vocabulary]")
+    if targets.ndim != 2 or mask.ndim != 2 or targets.shape != logits.shape[:2] or mask.shape != targets.shape:
+        raise ValueError("Model native targets and mask must align with gene logits")
+    return logits, targets, mask
+
+
+def model_gene_id_original_forward(
+    *, model: torch.nn.Module, batch: BatchData, excluded_gene_ids: frozenset[int]
+) -> OriginalGeneIDForward:
+    """Capture only the three native tensors needed across one cell's deletions."""
+    _validate_model_and_batch(model, batch, excluded_gene_ids)
+    with torch.no_grad():
+        logits, targets, mask = _native_forward_tensors(model(batch=batch, embed=False))
+    return OriginalGeneIDForward(model, batch, logits, targets, mask)
+
+
+def model_gene_id_deletion_impact(
+    *,
+    model: torch.nn.Module,
+    batch: BatchData,
+    deleted_position: int,
+    excluded_gene_ids: frozenset[int],
+    original_forward: OriginalGeneIDForward | None = None,
+) -> MatchedGeneIDImpact:
+    """Run the native gene-ID head for one cell and one token deletion.
+
+    The deleted sentence shifts retained tokens and their original counts left,
+    then pads its tail. Auxiliary tokens and the original batch are untouched.
+    The caller must supply an evaluation-mode model with its gene-ID head and
+    criterion enabled; the score is computed from native forward targets/masks.
+    """
+    pad_idx, n_active, softcap = _validate_model_and_batch(model, batch, excluded_gene_ids)
+    gene_ids = batch.gene_token_indices
+    counts = batch.gene_counts
     if not 0 <= deleted_position < n_active:
         raise ValueError("Deleted position must be an unpadded gene token")
     if int(gene_ids[0, deleted_position].item()) in excluded_gene_ids:
@@ -109,27 +152,25 @@ def model_gene_id_deletion_impact(
     )
 
     with torch.no_grad():
-        original = model(batch=batch, embed=False)
-        deleted = model(batch=deleted_batch, embed=False)
-        for output in (original, deleted):
-            if not all(key in output for key in ("gene_logit", "input_gene_token_indices", "mask")):
-                raise ValueError("Model forward must return gene logits, native targets and mask")
-        if original["gene_logit"].ndim != 3 or deleted["gene_logit"].ndim != 3:
-            raise ValueError("Model gene logits must have shape [cell, position, vocabulary]")
-        if original["gene_logit"].shape[0] != 1 or deleted["gene_logit"].shape[0] != 1:
-            raise ValueError("Model forward must return exactly one cell")
+        if original_forward is None:
+            original_forward = model_gene_id_original_forward(
+                model=model, batch=batch, excluded_gene_ids=excluded_gene_ids
+            )
+        elif original_forward.model is not model or original_forward.batch is not batch:
+            raise ValueError("Cached original forward must belong to this model and cell batch")
+        deleted_logits, deleted_targets, deleted_mask = _native_forward_tensors(model(batch=deleted_batch, embed=False))
         return matched_gene_id_deletion_impact(
-            original_logits=original["gene_logit"][0],
-            deleted_logits=deleted["gene_logit"][0],
+            original_logits=original_forward.gene_logits[0],
+            deleted_logits=deleted_logits[0],
             original_gene_ids=gene_ids[0],
             deleted_gene_ids=deleted_ids[0],
-            original_target_ids=original["input_gene_token_indices"][0],
-            deleted_target_ids=deleted["input_gene_token_indices"][0],
-            original_mask=original["mask"][0],
-            deleted_mask=deleted["mask"][0],
+            original_target_ids=original_forward.target_ids[0],
+            deleted_target_ids=deleted_targets[0],
+            original_mask=original_forward.mask[0],
+            deleted_mask=deleted_mask[0],
             deleted_position=deleted_position,
             excluded_gene_ids=excluded_gene_ids,
-            softcap=float(criterion.softcap),
+            softcap=softcap,
         )
 
 

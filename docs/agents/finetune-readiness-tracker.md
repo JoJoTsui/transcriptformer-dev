@@ -17,6 +17,10 @@ enforces those floors and records missing pair reasons. The owner also
 adopted the reviewed
 [matched-target gene-ID producer definition](b3-deletion-score-decision-2026-09-30.md).
 Actual B3 scores and per-embryo observations for uncertainty remain outstanding.
+The bounded [cell audit stream](../../src/transcriptformer/finetune/b3_cell_stream.py)
+and [embryo/null arithmetic helper](../../src/transcriptformer/finetune/b3_aggregation.py)
+advance the producer contract. They do not establish the still-unfrozen null
+bin tie/merge and sparse-support choices or supply project score artifacts.
 
 ## Current follow-up — 2026-09-28 review remediation
 
@@ -46,7 +50,9 @@ for an exact-origin claim. The [corpus/B1 freeze packet](corpus-b1-freeze-packet
 shows why the 27-source bounded rehearsal and a local Nature2019 metadata check
 cannot serve as a final corpus or post-QC cohort. Ticket 05 now has a
 [producer-artifact closure runbook](../../.scratch/multispecies-readiness-remediation/issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison),
-but real B3 scores and a signed analysis method are still absent.
+but real B3 scores and producer evidence are still absent. The owner-approved
+paired comparison and deletion-score decisions above define the current method;
+the planned comparison family and project input identities still need freezing.
 The [B3 producer audit](b3-score-producer-audit-2026-09-30.md) also confirms
 that upstream inference `llh` and `gene_llh` are different from the planned
 deletion-based, null-corrected scores and cannot fill that gap.
@@ -56,8 +62,9 @@ recovered exact cell metadata and 491 source RNA-QC failures still present in
 the local H5AD; it does not approve inclusion. On commit `fb2f648`, remote
 [finetune CPU CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896770)
 passed 337 selected tests and [change-scoped pre-commit CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896960)
-passed. Distributed launch is now smoke-checked on that runner, while per-rank
-RNG continuity across resume and real-corpus/GPU behavior remain unverified.
+passed. That run smoke-checked distributed launch; a later bounded two-rank
+interrupted/resumed CPU dropout case checked per-rank RNG continuity. Real-corpus
+and GPU behavior remain unverified.
 An [isolated candidate H5AD](../../logs/dataset_audit/nature2019_candidate/candidate_h5ad_provenance.json)
 now contains 1,986 source-QC-passing, non-mixed cells. It is not part of the
 manifest and still lacks independent-embryo, assay, phase and cell-type approval.
