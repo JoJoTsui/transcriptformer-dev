@@ -107,8 +107,8 @@ schema 2 because below-floor point-effect fields can be null.
 
 The owner then adopted a prospective
 [matched-target gene-ID B3 score definition](../../../docs/agents/b3-deletion-score-decision-2026-09-30.md).
-A pure scoring seam and focused alignment/unit checks are included in CPU CI;
-the local score and CI-selection check passed 10/10 with native threads
-capped. This does not produce B3 scores: the project finetuned checkpoint and
+A bounded single-cell forward/scoring seam and focused alignment/unit checks
+are included in CPU CI; the local score and CI-selection check passed 17/17
+with native threads capped. This does not produce B3 scores: the project finetuned checkpoint and
 validated post-QC corpus are not ready. Ticket 05 and therefore ticket 12
 remain open on genuine producer and cross-ticket evidence.

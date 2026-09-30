@@ -6,6 +6,7 @@ from math import log
 import torch
 from torch import Tensor
 
+from transcriptformer.data.dataclasses import BatchData
 from transcriptformer.model.losses import logit_softcap
 
 
@@ -22,6 +23,114 @@ class MatchedGeneIDImpact:
     def n_targets(self) -> int:
         """Count of matched downstream gene targets."""
         return len(self.gene_ids)
+
+
+def model_gene_id_deletion_impact(
+    *,
+    model: torch.nn.Module,
+    batch: BatchData,
+    deleted_position: int,
+    excluded_gene_ids: frozenset[int],
+) -> MatchedGeneIDImpact:
+    """Run the native gene-ID head for one cell and one token deletion.
+
+    The deleted sentence shifts retained tokens and their original counts left,
+    then pads its tail. Auxiliary tokens and the original batch are untouched.
+    The caller must supply an evaluation-mode model with its gene-ID head and
+    criterion enabled; the score is computed from native forward targets/masks.
+    """
+    if model.training:
+        raise ValueError("B3 gene-ID scoring requires a model in eval mode")
+    criterion = getattr(model, "gene_id_criterion", None)
+    if criterion is None or not hasattr(criterion, "softcap"):
+        raise ValueError("Model must have an enabled gene-ID criterion with a softcap")
+    if getattr(criterion, "shift_right", False):
+        raise ValueError("Gene-ID criterion must use the native unshifted targets")
+    vocab = getattr(model, "gene_vocab", None)
+    if vocab is None or vocab.pad_idx is None:
+        raise ValueError("Model must provide a gene vocabulary with a pad ID")
+    pad_idx = int(vocab.pad_idx)
+    if pad_idx not in excluded_gene_ids:
+        raise ValueError("Excluded gene IDs must include the pad ID")
+    for token_name in ("end_idx", "start_idx"):
+        token_id = getattr(vocab, token_name, None)
+        if token_id is not None and int(token_id) not in excluded_gene_ids:
+            raise ValueError(f"Excluded gene IDs must include the {token_name} special token")
+
+    gene_ids = batch.gene_token_indices
+    counts = batch.gene_counts
+    if gene_ids.ndim != 2 or counts.ndim != 2 or gene_ids.shape != counts.shape or gene_ids.shape[0] != 1:
+        raise ValueError("B3 scoring requires one cell with aligned two-dimensional gene IDs and counts")
+    if gene_ids.shape[1] < 2:
+        raise ValueError("A deletion requires at least two gene positions")
+    if gene_ids.device != counts.device:
+        raise ValueError("Gene IDs and counts must share a device")
+    if batch.aux_token_indices is not None and (
+        batch.aux_token_indices.ndim != 2
+        or batch.aux_token_indices.shape[0] != 1
+        or batch.aux_token_indices.device != gene_ids.device
+    ):
+        raise ValueError("Auxiliary tokens must be one cell on the same device")
+    active = gene_ids[0] != pad_idx
+    n_active = int(active.sum().item())
+    if not bool(active[:n_active].all()) or bool(active[n_active:].any()):
+        raise ValueError("Gene padding must be a contiguous tail")
+    if not bool(torch.isfinite(counts).all()) or not bool((counts[0, :n_active] > 0).all()):
+        raise ValueError("Active gene counts must be finite and positive")
+    if not bool((counts[0, n_active:] == 0).all()):
+        raise ValueError("Padded gene counts must be zero")
+    if not 0 <= deleted_position < n_active:
+        raise ValueError("Deleted position must be an unpadded gene token")
+    if int(gene_ids[0, deleted_position].item()) in excluded_gene_ids:
+        raise ValueError("Deleted token must be a gene, not an excluded special token")
+
+    deleted_ids = torch.cat(
+        (
+            gene_ids[:, :deleted_position],
+            gene_ids[:, deleted_position + 1 : n_active],
+            gene_ids.new_full((1, gene_ids.shape[1] - n_active + 1), pad_idx),
+        ),
+        dim=1,
+    )
+    deleted_counts = torch.cat(
+        (
+            counts[:, :deleted_position],
+            counts[:, deleted_position + 1 : n_active],
+            counts.new_zeros((1, counts.shape[1] - n_active + 1)),
+        ),
+        dim=1,
+    )
+    deleted_batch = BatchData(
+        gene_counts=deleted_counts,
+        gene_token_indices=deleted_ids,
+        aux_token_indices=batch.aux_token_indices,
+        file_path=batch.file_path,
+        obs=batch.obs,
+    )
+
+    with torch.no_grad():
+        original = model(batch=batch, embed=False)
+        deleted = model(batch=deleted_batch, embed=False)
+        for output in (original, deleted):
+            if not all(key in output for key in ("gene_logit", "input_gene_token_indices", "mask")):
+                raise ValueError("Model forward must return gene logits, native targets and mask")
+        if original["gene_logit"].ndim != 3 or deleted["gene_logit"].ndim != 3:
+            raise ValueError("Model gene logits must have shape [cell, position, vocabulary]")
+        if original["gene_logit"].shape[0] != 1 or deleted["gene_logit"].shape[0] != 1:
+            raise ValueError("Model forward must return exactly one cell")
+        return matched_gene_id_deletion_impact(
+            original_logits=original["gene_logit"][0],
+            deleted_logits=deleted["gene_logit"][0],
+            original_gene_ids=gene_ids[0],
+            deleted_gene_ids=deleted_ids[0],
+            original_target_ids=original["input_gene_token_indices"][0],
+            deleted_target_ids=deleted["input_gene_token_indices"][0],
+            original_mask=original["mask"][0],
+            deleted_mask=deleted["mask"][0],
+            deleted_position=deleted_position,
+            excluded_gene_ids=excluded_gene_ids,
+            softcap=float(criterion.softcap),
+        )
 
 
 def matched_gene_id_deletion_impact(

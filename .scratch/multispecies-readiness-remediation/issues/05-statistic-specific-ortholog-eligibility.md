@@ -224,8 +224,9 @@ so future exclusions can be audited against the JSON counts.
 The owner also adopted the reviewed
 [matched-target gene-ID deletion score](../../../docs/agents/b3-deletion-score-decision-2026-09-30.md)
 as B3's primary producer definition, explicitly amending the original vague
-full-sequence likelihood shorthand. A bounded pure scoring seam covers
-matched targets on tiny tensors; it is not a genome-wide producer run.
+full-sequence likelihood shorthand. A bounded single-cell forward/scoring seam
+constructs the deletion and compares matched targets on tiny fixtures; it is
+not a genome-wide producer run.
 The comparator now enforces the approved 500-pair and 80%-availability
 reporting floors. Below either floor it publishes denominators and exclusions
 but withholds point effects; aggregate score tables explicitly cannot support

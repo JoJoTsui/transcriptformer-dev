@@ -52,9 +52,10 @@ silently combined with the primary.
 
 ## Order, null and claim checks
 
-- Use the validated prepared artifact's native gene-feature order as the
-  primary order, matching the finetune/evaluation loader's
-  `sort_genes=False` and `randomize_order=False`. Hash the ordered vocabulary,
+- Use the validated prepared artifact's deterministic **tokenized** order:
+  the loader moves positive-count genes ahead of zeros while preserving their
+  relative feature order, then pads zeros. This matches its
+  `sort_genes=False` and `randomize_order=False` settings. Hash the ordered vocabulary,
   preprocessing configuration, checkpoint, corpus/split and software commit.
 - Preserve the design's expression/dropout-matched 10×10 within-species/phase
   null and embryo-first aggregation, then compute its null-corrected z-scores.
@@ -75,9 +76,11 @@ silently combined with the primary.
 
 ## Execution boundary
 
-The bounded [matched-target arithmetic helper](../../src/transcriptformer/finetune/b3_gene_id.py)
-and synthetic alignment checks implement the per-cell formula without loading
-the model. Genuine score tables require the missing project
+The bounded [per-cell forward and matched-target scoring seam](../../src/transcriptformer/finetune/b3_gene_id.py)
+and tiny CPU checks implement the deletion and per-cell formula without
+loading the shipped checkpoint. It scores one cell/gene at a time and does
+not implement corpus-wide batching, null estimation or the embryo bootstrap.
+Genuine score tables require the missing project
 finetuned checkpoint, validated post-QC prepared corpus, frozen phase and
 embryo membership, and a measured accelerator budget. The local 4.3 GB
 shipped checkpoint is an upstream asset, not a project finetune. Ticket 05
