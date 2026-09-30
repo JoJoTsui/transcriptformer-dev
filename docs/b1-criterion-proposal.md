@@ -1,6 +1,6 @@
-# B1 判据修订(预注册草案) / B1 Criterion Revision (Pre-registration Draft)
+# B1 判据修订(预注册决定) / B1 Criterion Revision (Pre-registered Decision)
 
-**状态(Status):** 草案,待签字(draft — sign-off required)。**必须在观察到任何微调模型留出集结果之前定稿;训练开始后本判据冻结,事后任何修改使预注册失效。** 原 "≥6/8 物种" 判据保留为历史记录(登记项 7.3/7.7),本文不追溯修改它,也不把它静默替换为两物种闸门。
+**状态(Status):** 项目负责人于 2026-09-30 在对明确选项的回复中答复“all yes”,批准 B1-A、本文 §3 的 bits/cell 相对改善口径及 5% / 2% 阈值。见[决定记录](agents/b1-owner-decision-2026-09-30.md)。合格阶段/胚胎名单仍须以完整准备后的 QC 存活者冻结;尚无 B1 模型结果。**判据必须在观察到任何微调模型留出集结果之前定稿;训练开始后本判据冻结,事后任何修改使预注册失效。** 原 "≥6/8 物种" 判据保留为历史记录(登记项 7.3/7.7),本文不追溯修改它,也不把它静默替换为两物种闸门。
 
 **证据基础(Evidence):** [`logs/dataset_audit/holdout_coverage.json`](../logs/dataset_audit/holdout_coverage.json)(pre-QC 投影,seed 42);登记项 3.3、3.4、3.7、7.3、7.7;[续审 S3](agents/continuation-review-2026-09-22.md);[基线设计 §3](perturbation-and-baseline-design.md)。
 
@@ -26,9 +26,9 @@
 
 不同阶段行的胚胎计数可能重叠,**不得相加为独立供体**。小鼠无分期行为 1.15 的已知缺失,不参与阶段解析指标,但计入总体 likelihood。
 
-### 3. 修订后的 B1(B1-A,推荐方案)
+### 3. 修订后的 B1(B1-A,已批准)
 
-度量口径:留出集每细胞序列 log-likelihood(bits/cell,越高越好),记 `S`;改善率 `(S_ft − S_base) / |S_base|`。该口径把 "改善 ≥ 5%" 定义为相对基座绝对分值的 5%,对负分值亦有定义;若签字时改用其他口径(如按位元/token 的 NLL 相对下降),须在训练前写入本页。
+度量口径:留出集每细胞序列 log-likelihood(bits/cell,越高越好),记 `S`;改善率 `(S_ft − S_base) / |S_base|`。该口径把 "改善 ≥ 5%" 定义为相对基座绝对分值的 5%,对负分值亦有定义;改变口径(如按位元/token 的 NLL 相对下降)须在训练和任何模型留出结果之前另立决定记录。
 
 1. **主要终点(小鼠,多胚胎留出):** 在最终留出集上,按胚胎聚合(每胚胎均值 → 胚胎层均值,登记项 3.7 的层级)。通过条件:每个合格阶段分层(≥ 3 个留出胚胎:gastrula n=11、neurula n=4,pre-QC)均改善 ≥ 5%,且任一分层退化不超过 2%。
 2. **次要终点(人 organogenesis,单胚胎,n=1):** 描述性。通过条件:退化不超过 2%。只报告细胞层效应量与区间,明确标注"胚胎内、无胚胎层不确定性",不做推断性表述。
@@ -47,11 +47,11 @@
 
 | 项 | 选择(勾选) |
 |---|---|
-| 判据 | ☐ B1-A(推荐)☐ B1-B ☐ B1-C |
-| 度量口径 | ☐ bits/cell 相对改善(本文 §3)☐ 其他(写明:____) |
-| 阈值 | ☐ 沿用 5% / 2%(冻结设计原值)☐ 其他(写明:____) |
+| 判据 | ☒ B1-A ☐ B1-B ☐ B1-C |
+| 度量口径 | ☒ bits/cell 相对改善(本文 §3)☐ 其他 |
+| 阈值 | ☒ 沿用 5% / 2%(冻结设计原值)☐ 其他 |
 
-姓名/角色:____________　日期:____________
+批准人/角色:项目负责人(本对话明确回复“all yes”);日期:2026-09-30。QC 后合格名单和结果仍待完成。
 
 ---
 
@@ -75,9 +75,9 @@
 
 Embryo counts in different phase rows may overlap and must not be summed as independent donors. The unstaged mouse rows are the known 1.15 missingness: excluded from phase-resolved metrics, counted in overall likelihood.
 
-### 3. Revised B1 (B1-A, recommended)
+### 3. Revised B1 (B1-A, approved)
 
-Metric convention: per-cell sequence log-likelihood on the holdout (bits/cell, higher is better), `S`; improvement = `(S_ft − S_base) / |S_base|`. This makes "≥ 5% improvement" well-defined even for negative scores. Any other convention (e.g. relative NLL reduction per token) must be written into this page before training starts.
+Metric convention: per-cell sequence log-likelihood on the holdout (bits/cell, higher is better), `S`; improvement = `(S_ft − S_base) / |S_base|`. This makes "≥ 5% improvement" well-defined even for negative scores. A change of convention (e.g. relative NLL reduction per token) requires a separate decision record before training and before viewing any model holdout result.
 
 1. **Primary endpoint (mouse, multi-embryo holdout):** embryo-level aggregation (per-embryo means, then the embryo-level mean — the item 3.7 hierarchy) on final-holdout rows. Pass condition: every eligible phase stratum with ≥ 3 holdout embryos (gastrula n = 11, neurula n = 4, pre-QC) improves ≥ 5%, with no stratum degrading > 2%.
 2. **Secondary endpoint (human organogenesis, single embryo, n = 1):** descriptive. Pass condition: no degradation > 2%. Report cell-level effect size and interval, explicitly labelled "within-embryo, no embryo-level uncertainty"; no inferential wording.
@@ -96,8 +96,8 @@ Metric convention: per-cell sequence log-likelihood on the holdout (bits/cell, h
 
 | Item | Choice (tick) |
 |---|---|
-| Criterion | ☐ B1-A (recommended) ☐ B1-B ☐ B1-C |
-| Metric convention | ☐ bits/cell relative improvement (§3) ☐ other (specify: ____) |
-| Thresholds | ☐ carry over 5% / 2% (frozen design values) ☐ other (specify: ____) |
+| Criterion | ☒ B1-A ☐ B1-B ☐ B1-C |
+| Metric convention | ☒ bits/cell relative improvement (§3) ☐ other |
+| Thresholds | ☒ carry over 5% / 2% (frozen design values) ☐ other |
 
-Name / role: ____________　Date: ____________
+Approver / role: project owner (explicit "all yes" reply in this conversation); date: 2026-09-30. The post-QC eligible list and results remain pending.

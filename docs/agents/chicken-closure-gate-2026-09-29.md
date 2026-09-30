@@ -85,7 +85,16 @@ export on this evidence.
 > unknown and whether the GRCg6a 99/100/101/106 peptide-content equivalence
 > class is an acceptable provenance description.
 
-No message has been sent. Until a producer record or an explicit scientific
-decision adopts the equivalence-class description, the exact-origin claim is
-open. The already accepted partial bridge remains useful for bounded analyses
-that exclude unresolved genes and report actual joins.
+No message has been sent.
+
+## Owner decision — 2026-09-30
+
+The owner approved recording the exact checkpoint chicken annotation release
+as **unknown within the evidenced GRCg6a 99/100/101/106 equivalence class**.
+Release 106 is the reference release used for the strict bridge, **not** an
+assertion about which release produced the HDF5. The 7,267 accepted pairs
+remain a partial bridge; the other 9,611 checkpoint genes remain unresolved.
+This decision resolves how to describe the available provenance but does not
+provide a producer build record, authorize additional mapping rows, or close
+the R2 asset-repair gate. Bounded analyses may use the partial bridge when
+they exclude unresolved genes and report actual joins.

@@ -1,5 +1,15 @@
 # Finetune readiness tracker
 
+**Current decision update — 2026-09-30:** The owner approved the
+[non-zebrafish corpus defaults](corpus-defaults-adoption-2026-09-30.md) and
+[B1-A](b1-owner-decision-2026-09-30.md), including its bits/cell metric and
+5% / 2% thresholds. The exact chicken checkpoint annotation release is
+[recorded as unknown](chicken-closure-gate-2026-09-29.md#owner-decision--2026-09-30)
+within the evidenced GRCg6a 99/100/101/106 class. These decisions supersede
+the dated pending-decision statements below. Nature2019 source suitability,
+assay-specific QC, final corpus preparation, post-QC B1 cohort freeze, R2
+mapping repair and real-model evidence remain open.
+
 ## Current follow-up — 2026-09-28 review remediation
 
 The [adversarial review](adversarial-review-2026-09-28.md) reopens terminal
@@ -65,7 +75,7 @@ preparation and remain pending.
 | Task | Deliverable | Status | Evidence / commit |
 | --- | --- | --- | --- |
 | K | Complete spatial coordinate copies + derived manifest | Complete | `2ea75b3`; five files (~2.5 GB, sources unchanged); validator 27 PASS / 1 WARN / 0 FAIL on the derived manifest; all-27-source bounded rehearsal passed (3,357 → 3,308 rows) |
-| L | B1 criterion revision pre-registration draft | Complete (sign-off pending) | `ee6f934`; `docs/b1-criterion-proposal.md` (B1-A recommended; B1-B/B1-C alternatives; metric convention; freeze discipline). Collaborator #1–#3 cannot change B1 feasibility |
+| L | B1 criterion revision pre-registration draft | Complete; B1-A approved 2026-09-30 | `ee6f934`; [owner decision](b1-owner-decision-2026-09-30.md) fixes the metric and thresholds; the post-QC cohort remains to be frozen. Collaborator #1–#3 cannot change historical B1 feasibility |
 | M | Probe asset audit: FASTA entries, metadata, ESM-2 plan | Complete | `6c67547`, `4d95645`; four verified FASTA entries (exact-species NCBI proteomes for ciona/amphioxus); metadata resolved to real columns with citations; register 8.4 added (key-namespace mismatches); readiness report regenerated (exit 1 by design) |
 | N | 1:1 ortholog table + usable joins + statistic-specific coverage floors | Incomplete | Historical table: 402,495 pairs / 68 of 91 pairs; old 6/91 is descriptive. Unmapped chicken audit has zero joins; an optional strict Ensembl/NCBI/RefSeq bridge yields 6,129 usable human–chicken pairs, with 9,611 checkpoint chicken genes still unresolved. Exact checkpoint source release and named statistic inputs remain pending. See the [provenance audit](chicken-identifier-provenance-2026-09-28.md). |
 
@@ -74,8 +84,8 @@ preparation and remain pending.
 Full forward-looking context, defaults, and the ordered next-steps plan are in
 [development state and next steps](development-state-2026-09-23.md).
 
-- B1 sign-off (the draft freezes at training start; no denominator
-  changes after results are seen).
+- B1 post-QC eligible cohort freeze (the approved criterion freezes at training
+  start; no denominator changes after results are seen).
 - Ortholog release pin: release 110 (current; matches the pinned FASTAs)
   vs 116 (available; exploratory numbers closely match).
 - Coverage-floor reality check: the old 6/91 result does not evaluate the registered

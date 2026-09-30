@@ -92,15 +92,23 @@ the owner's current instruction.
   [B3 producer audit](../../docs/agents/b3-score-producer-audit-2026-09-30.md)
   explains why upstream `llh` and `gene_llh` cannot substitute for
   deletion-based, null-corrected impact scores.
-- **Still pending separately:** corpus/QC/assay/training sampling decisions, B1
-  sign-off, missing probe vocabularies, complete preparation and actual-model/GPU
+- **Owner decisions on 2026-09-30:** the [corpus defaults](../../docs/agents/corpus-defaults-adoption-2026-09-30.md)
+  retain TOME E8.5b, exclude the prenatal atlas, keep BalancedDataset and
+  unstaged training rows, and make Nature2019 conditional on suitability.
+  [B1-A](../../docs/agents/b1-owner-decision-2026-09-30.md) is approved with
+  its bits/cell metric and 5% / 2% thresholds. The exact chicken checkpoint
+  release is [recorded as unknown](../../docs/agents/chicken-closure-gate-2026-09-29.md#owner-decision--2026-09-30)
+  within the evidenced GRCg6a 99/100/101/106 class; R2 remains open.
+- **Still pending separately:** Nature2019 suitability, source-specific QC and
+  assay decisions, post-QC B1 cohort freeze, missing probe vocabularies,
+  complete preparation and actual-model/GPU
   evidence. The [probe vocabulary audit](../../docs/agents/b4-vocabulary-join-audit-2026-09-29.md)
   reports all six configured vocabularies absent, so actual joins remain
   unmeasured.
 - **Corpus and B1:** the [freeze packet](../../docs/agents/corpus-b1-freeze-packet-2026-09-29.md)
-  records what the 27-source rehearsal and local Nature2019 metadata establish,
-  the unsigned decisions, and the post-QC evidence chain. It does not freeze
-  the corpus or B1 endpoint.
+  records what the 27-source rehearsal and local Nature2019 metadata establish
+  and the post-QC evidence chain. Its previously unsigned subset is superseded
+  by the dated decisions above; the final corpus and B1 cohort are not frozen.
 - **Proposed technical details:** test seams, cohort budgets and patience
   integration are implementation design, not separately approved scientific
   policy. Refer to the spec for their constraints.

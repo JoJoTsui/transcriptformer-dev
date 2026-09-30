@@ -9,6 +9,12 @@ at the owner's request. The current state and unresolved external gates are in
 the [ticket index](../../.scratch/multispecies-readiness-remediation/README.md)
 and [remediation evidence report](multispecies-remediation-evidence-2026-09-28.md).
 The K–N entries below remain a historical record of their 2026-09-23 scope.
+The owner has since approved the
+[non-zebrafish corpus defaults](corpus-defaults-adoption-2026-09-30.md) and
+[B1-A criterion](b1-owner-decision-2026-09-30.md), and accepted the
+[chicken release provenance description](chicken-closure-gate-2026-09-29.md#owner-decision--2026-09-30).
+The older pending-decision list below remains historical; source-specific QC,
+Nature2019 suitability, the post-QC B1 cohort and R2 mapping repair remain open.
 
 Durable record for future development sessions: where the finetune-readiness
 program stands, every decision still open (with consequences and defaults), and

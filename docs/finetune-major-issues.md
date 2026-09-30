@@ -105,6 +105,11 @@
 
 ## 7. 下游结论的统计与科学有效性
 
+**2026-09-30 B1 决定：** 项目负责人已批准
+[B1-A](b1-criterion-proposal.md) 的 bits/cell 相对改善口径及 5% / 2%
+阈值。下表 7.3/7.7 的六物种旧标准与“待签字”状态保留为历史记录；
+实际合格阶段与胚胎名单仍须在完整准备和 QC 后、查看微调留出结果前冻结。
+
 **2026-09-29 状态核对：** 下表 7.1、7.2 和 7.4 中“已冻结”的旧表述与
 `docs/perturbation-and-baseline-design.md` 的“预注册草案、阈值待签署”不一致。
 在明确签署并统一两处记录前，零模型、外部验证判定和遗忘阈值均视为
@@ -313,6 +318,13 @@ Status key: **resolved** (fixed and verified, commit cited) · **designed** (fix
 | 6.7 | **Cell-type F1 crashed on small cohorts.** Six rows/three classes cannot fit the fixed 30% test split. | **Resolved** — `43a2ac9`: feasible train/test class coverage, rounding protection, missing/singleton counts and unevaluable reasons. |
 
 ## 7. Statistical and scientific validity of downstream claims
+
+**2026-09-30 B1 decision:** The owner approved
+[B1-A](b1-criterion-proposal.md) with its bits/cell relative metric and
+5% / 2% thresholds. The historical six-species criterion and pending sign-off
+language in 7.3/7.7 below remain as decision history. Actual eligible phase
+strata and embryos still require a post-QC freeze before viewing finetuned
+final-holdout results.
 
 **2026-09-29 status reconciliation:** The older “frozen” labels in 7.1, 7.2
 and 7.4 conflict with the “pre-registration draft; thresholds pending sign-off”

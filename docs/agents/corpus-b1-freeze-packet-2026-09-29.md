@@ -1,5 +1,13 @@
 # Corpus and B1 freeze packet — 2026-09-29
 
+**2026-09-30 decision update:** The owner adopted the
+[non-zebrafish corpus defaults](corpus-defaults-adoption-2026-09-30.md) and
+[B1-A metric and thresholds](b1-owner-decision-2026-09-30.md). The unsigned
+recommendations in the historical table below are superseded for those topics.
+Nature2019 remains conditional; assay-specific QC, identity/split review and
+approved labels still gate its inclusion. The final corpus and post-QC B1
+eligible cohort remain unfrozen.
+
 Scope: non-zebrafish corpus/QC and B1 decisions. This packet is a bounded
 readiness audit, not a signed corpus freeze or a post-QC holdout report. It
 does not change the selected sources, QC settings, assay tokens, or B1 rule.

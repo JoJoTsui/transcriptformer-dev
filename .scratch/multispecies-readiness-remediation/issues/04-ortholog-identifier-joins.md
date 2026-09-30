@@ -1,7 +1,7 @@
 # 04 — Validate actual ortholog joins and reconcile chicken identifiers
 
 Category: correctness and readiness
-Status: Closed for bounded engineering acceptance; R2 asset repair and exact checkpoint release pending
+Status: Closed for bounded engineering acceptance; R2 asset repair open; exact checkpoint release recorded as unknown
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: none
@@ -133,3 +133,10 @@ history, or shipped chicken example H5AD metadata. The later public ESM-2
 pipeline cannot be assigned retroactively to the April embedding file. No
 new strict bridge row was justified; the requested producer-bound build record
 or release-bound row-level export remains the closure evidence.
+
+Owner decision on 2026-09-30: record the exact checkpoint chicken annotation
+release as **unknown within the evidenced GRCg6a 99/100/101/106 equivalence
+class**. The release-106 bridge source remains a mapping reference, not a
+claim about the checkpoint's producer release. Keep the 7,267 strict pairs,
+the 9,611 unresolved checkpoint genes, and R2's asset-repair gate unchanged.
+See the [decision record](../../../docs/agents/chicken-closure-gate-2026-09-29.md#owner-decision--2026-09-30).

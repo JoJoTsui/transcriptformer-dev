@@ -297,9 +297,10 @@ explanation of the preprint's v113 statement alongside the old-ID file in the
 S3 archive version above. If the producer cannot recover this record, a
 scientific owner may explicitly adopt the evidenced **GRCg6a 99/100/101/106
 peptide-content equivalence class** and release 106 as a mapping reference,
-while recording the exact producer release as unknown. This is a proposed
-decision path, not an automatic closure of the 9,611 unresolved identifier
-mappings.
+while recording the exact producer release as unknown. The owner adopted this
+provenance description on 2026-09-30. It does not close the 9,611 unresolved
+identifier mappings or establish the producer's exact source release; see the
+[decision record](chicken-closure-gate-2026-09-29.md#owner-decision--2026-09-30).
 
 A subsequent [published cross-assembly table audit](chicken-online-followup-2026-09-29.md)
 found candidate GRCg6a/GRCg7b links, but 37 of 40 rows overlapping this

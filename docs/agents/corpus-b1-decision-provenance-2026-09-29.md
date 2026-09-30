@@ -1,5 +1,12 @@
 # Corpus, QC and B1 decision provenance — 2026-09-29
 
+**2026-09-30 update:** The owner subsequently adopted the
+[non-zebrafish corpus defaults](corpus-defaults-adoption-2026-09-30.md) and
+[B1-A metric and thresholds](b1-owner-decision-2026-09-30.md). The unsigned
+status statements below reflect the earlier audit date. Nature2019 suitability,
+source-specific QC and assay decisions, the post-QC B1 cohort and full
+preparation still need evidence; the owner's answer did not waive those gates.
+
 This audit distinguishes decisions already recorded as accepted from defaults
 that still need an explicit owner decision or the collaborator-response process.
 It excludes additional zebrafish intake. No source manifest, QC threshold or

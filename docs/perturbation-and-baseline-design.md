@@ -65,6 +65,14 @@ Pre-register the sets and statistics below **before** running finetuned-model pe
 
 ## 3. Base-model control arm (S2)
 
+**2026-09-30 B1 decision:** The owner approved
+[B1-A](b1-criterion-proposal.md) with the documented bits/cell relative
+improvement and 5% / 2% thresholds. The 2026-09-22 audit and original
+six-of-eight requirement below remain decision history. The actual eligible
+mouse phase strata and human descriptive cohort must be frozen from post-QC
+survivors before viewing finetuned final-holdout results. Other proposed
+criteria in this section are unaffected by this B1 decision.
+
 Every headline analysis runs on the **zero-shot base TF-Metazoa checkpoint first**, on identical data and identical code paths. The finetune is justified only against pre-registered deltas.
 
 | Arm | Base-model analysis | Comparison metric |
@@ -90,8 +98,8 @@ and the frozen reference corpus remain separate work. See the
 
 **B4 preparation status:** The [probe mappings](../preprocess/probe_stage_mappings.json) and [validator](../scripts/validate_probes.py) cover all documented native stages in eight files across six species. The [readiness report](../logs/dataset_audit/probe_readiness.json) still blocks evaluation on missing exact-species ESM2 vocabularies, four FASTA manifest entries, and unresolved embryo, cell-type, assay, or species metadata. Mapping coverage alone does not establish embedding quality or satisfy B4. Boundary-sensitivity analysis remains required. See the [step tracker](agents/finetune-readiness-tracker.md) and [tool guide](finetune-readiness-tools.md).
 
-**Improvement criteria (proposed defaults — sign-off required before GPU time):** the finetune is adopted only if ALL of:
-1. Mean holdout likelihood improves ≥ 5% in ≥ 6 of 8 training species, with no species degrading > 2% (B1).
+**Improvement criteria (B1 approved; other defaults require sign-off before GPU time):** the finetune is adopted only if ALL of:
+1. The [approved B1-A criterion](b1-criterion-proposal.md) passes on the post-QC frozen final holdout (B1).
 2. Holdout phase kNN-purity improves ≥ 5 points absolute over base (B2).
 3. Probe-species same-phase alignment degrades ≤ 2 points (B4).
 4. External falsification AUROCs (§2) do not drop > 0.02 vs base in any of sets 2–4 (B3).

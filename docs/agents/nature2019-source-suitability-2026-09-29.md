@@ -3,6 +3,8 @@
 This is evidence for the proposed corpus decision, not approval to add the
 source. No preparation, QC filtering, manifest edit, or model run was made.
 
+**Decision update, 2026-09-30:** The owner adopted [conditional inclusion](corpus-defaults-adoption-2026-09-30.md): this source may enter the corpus only after source QC and identity review pass. The 1,986-cell isolated candidate described below is still absent from the active manifest because assay-specific QC, physical embryo independence, approved phase/cell-type labels, and split review remain unresolved. The opening sentence describes the original audit date, before the later candidate derivation.
+
 ## Source identity and count matrix
 
 The local 53 MB H5AD at
