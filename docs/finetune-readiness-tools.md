@@ -316,7 +316,7 @@ Inferential per-gene p-values/FDR remain unevaluable.
 ## Remaining gates
 
 - Corpus defaults and [B1-A](agents/b1-owner-decision-2026-09-30.md) are approved. Source-specific QC/assay decisions, final preparation and the post-QC cohort freeze remain open.
-- The [fresh implementation findings](agents/fresh-implementation-review-2026-09-30.md) have [bounded repairs](agents/implementation-repairs-2026-09-30.md). Execute the verified B3 pipeline on the actual project checkpoint/corpus and frozen phase/family inputs before claiming an observed comparison.
+- The [fresh implementation findings](agents/fresh-implementation-review-2026-09-30.md) have [bounded repairs](agents/implementation-repairs-2026-09-30.md). [Pretrained and distinct candidate weights are present](agents/ticket05-checkpoint-discovery-2026-09-30.md); candidate training provenance is unverified. Execute B3 on validated prepared cells and frozen phase/family inputs. A base-arm comparison can use `../checkpoints/tf_metazoa`; finetune benefit requires verified candidate provenance/results. Ticket 12's documentation/CI scope is closed; scientific/production gates remain below.
 - Produce real baseline/finetuned results on the frozen eligible cohort before claiming B1 performance.
 - Resolve probe assets (ESM-2 embeddings/vocabularies and key-namespace
   maps) and remaining source annotations before evaluating B4.

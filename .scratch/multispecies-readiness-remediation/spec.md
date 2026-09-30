@@ -18,7 +18,7 @@ The owner also approved the
 the [deletion score-producer definition](../../docs/agents/b3-deletion-score-decision-2026-09-30.md)
 is now recorded, while real B3 scores remain open.
 
-**Review and repair — 2026-09-30:** [Three fresh agents](../../docs/agents/fresh-implementation-review-2026-09-30.md) reopened 01/03/08 and identified B3 software gaps. The [repair continuation](../../docs/agents/implementation-repairs-2026-09-30.md) closes those bounded gaps and implements verified B3 production/diagnostics/bootstrap. Nine tickets are closed for bounded engineering acceptance; 05/12 still require actual project evidence, and 11 is excluded. Earlier evidence remains historical.
+**Review and repair — 2026-09-30:** [Three fresh agents](../../docs/agents/fresh-implementation-review-2026-09-30.md) reopened 01/03/08 and identified B3 software gaps. The [repair continuation](../../docs/agents/implementation-repairs-2026-09-30.md) closes those bounded gaps and implements verified B3 production/diagnostics/bootstrap. Ten tickets are closed for bounded engineering acceptance after the [ticket 12 scope audit](../../docs/agents/ticket12-gate-research-2026-09-30.md); 05 still requires prepared/B3 comparison evidence, and 11 is excluded. Checkpoint weights are [present and inventoried](../../docs/agents/ticket05-checkpoint-discovery-2026-09-30.md). Earlier evidence remains historical.
 
 ## Problem Statement
 

@@ -1,0 +1,1293 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-09-30",
+  "scope": "read-only local checkpoint discovery; streamed SHA256 with8MiB buffers; ZIP directory metadata; no tensor deserialization or model load",
+  "base": {
+    "path": "../checkpoints/tf_metazoa",
+    "resolved_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa",
+    "weights_bytes": 4309413022,
+    "weights_sha256": "16eb858e39ed69d6e07d5a0a5a4edd8d885951493ffd218097fc4db0c8b29c29",
+    "config_sha256": "84042c79ba1b452bc64ad78c6a39831b60e0b533c222dad4cddf0704a4c4d80f",
+    "vocabs_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa/vocabs",
+    "vocabs_is_symlink": false,
+    "vocabulary_assets": [
+      {
+        "file": "assay_vocab.json",
+        "bytes": 922
+      },
+      {
+        "file": "caenorhabditis_elegans_gene.h5",
+        "bytes": 212696350
+      },
+      {
+        "file": "danio_rerio_gene.h5",
+        "bytes": 324231520
+      },
+      {
+        "file": "drosophila_melanogaster_gene.h5",
+        "bytes": 148914470
+      },
+      {
+        "file": "gallus_gallus_gene.h5",
+        "bytes": 180101052
+      },
+      {
+        "file": "homo_sapiens_gene.h5",
+        "bytes": 253848593
+      },
+      {
+        "file": "lytechinus_variegatus_gene.h5",
+        "bytes": 241397301
+      },
+      {
+        "file": "mus_musculus_gene.h5",
+        "bytes": 236434532
+      },
+      {
+        "file": "oryctolagus_cuniculus_gene.h5",
+        "bytes": 219788872
+      },
+      {
+        "file": "plasmodium_falciparum_gene.h5",
+        "bytes": 55976107
+      },
+      {
+        "file": "saccharomyces_cerevisiae_gene.h5",
+        "bytes": 70036928
+      },
+      {
+        "file": "spongilla_lacustris_gene.h5",
+        "bytes": 324815366
+      },
+      {
+        "file": "xenopus_laevis_gene.h5",
+        "bytes": 369537366
+      }
+    ],
+    "provenance_markers": {
+      "training_summary.json": false,
+      "run_manifest.json": false,
+      "selected_model.json": false,
+      "terminal_state.pt": false
+    },
+    "tensor_storage_records": {
+      "data/0": {
+        "bytes": 2533263360,
+        "zip_crc32": "ecf5173f"
+      },
+      "data/1": {
+        "bytes": 20971520,
+        "zip_crc32": "8e244c28"
+      },
+      "data/10": {
+        "bytes": 16777216,
+        "zip_crc32": "0eb12e3d"
+      },
+      "data/100": {
+        "bytes": 16777216,
+        "zip_crc32": "a1605bbb"
+      },
+      "data/101": {
+        "bytes": 16777216,
+        "zip_crc32": "66d5b9d8"
+      },
+      "data/102": {
+        "bytes": 16777216,
+        "zip_crc32": "42a24f2c"
+      },
+      "data/103": {
+        "bytes": 16777216,
+        "zip_crc32": "35ba1350"
+      },
+      "data/104": {
+        "bytes": 8192,
+        "zip_crc32": "0e5d4043"
+      },
+      "data/105": {
+        "bytes": 8192,
+        "zip_crc32": "48d97d0e"
+      },
+      "data/106": {
+        "bytes": 8192,
+        "zip_crc32": "c798e3d4"
+      },
+      "data/107": {
+        "bytes": 8192,
+        "zip_crc32": "ec189ba9"
+      },
+      "data/108": {
+        "bytes": 16777216,
+        "zip_crc32": "51c32003"
+      },
+      "data/109": {
+        "bytes": 16777216,
+        "zip_crc32": "b63272f5"
+      },
+      "data/11": {
+        "bytes": 16777216,
+        "zip_crc32": "de793e28"
+      },
+      "data/110": {
+        "bytes": 16777216,
+        "zip_crc32": "d3de7ed8"
+      },
+      "data/111": {
+        "bytes": 16777216,
+        "zip_crc32": "3324d343"
+      },
+      "data/112": {
+        "bytes": 16777216,
+        "zip_crc32": "900c9095"
+      },
+      "data/113": {
+        "bytes": 16777216,
+        "zip_crc32": "ac700c20"
+      },
+      "data/114": {
+        "bytes": 8192,
+        "zip_crc32": "e9e7439c"
+      },
+      "data/115": {
+        "bytes": 8192,
+        "zip_crc32": "d3017d88"
+      },
+      "data/116": {
+        "bytes": 8192,
+        "zip_crc32": "988b1671"
+      },
+      "data/117": {
+        "bytes": 8192,
+        "zip_crc32": "4af1b941"
+      },
+      "data/118": {
+        "bytes": 16777216,
+        "zip_crc32": "c4229c32"
+      },
+      "data/119": {
+        "bytes": 16777216,
+        "zip_crc32": "a699db74"
+      },
+      "data/12": {
+        "bytes": 16777216,
+        "zip_crc32": "845000d4"
+      },
+      "data/120": {
+        "bytes": 16777216,
+        "zip_crc32": "54e63153"
+      },
+      "data/121": {
+        "bytes": 16777216,
+        "zip_crc32": "b429d6dd"
+      },
+      "data/122": {
+        "bytes": 16777216,
+        "zip_crc32": "ec5990cc"
+      },
+      "data/123": {
+        "bytes": 16777216,
+        "zip_crc32": "c4827d9d"
+      },
+      "data/124": {
+        "bytes": 8192,
+        "zip_crc32": "230ed9fe"
+      },
+      "data/125": {
+        "bytes": 8192,
+        "zip_crc32": "b3a23c84"
+      },
+      "data/126": {
+        "bytes": 8192,
+        "zip_crc32": "05bfd494"
+      },
+      "data/127": {
+        "bytes": 8192,
+        "zip_crc32": "77fc5795"
+      },
+      "data/128": {
+        "bytes": 989556,
+        "zip_crc32": "90595ab3"
+      },
+      "data/129": {
+        "bytes": 16777216,
+        "zip_crc32": "deca29be"
+      },
+      "data/13": {
+        "bytes": 16777216,
+        "zip_crc32": "43aa607e"
+      },
+      "data/130": {
+        "bytes": 4096,
+        "zip_crc32": "be010353"
+      },
+      "data/131": {
+        "bytes": 4096,
+        "zip_crc32": "5aefab61"
+      },
+      "data/132": {
+        "bytes": 4096,
+        "zip_crc32": "0d4d804e"
+      },
+      "data/133": {
+        "bytes": 4096,
+        "zip_crc32": "04ad6a64"
+      },
+      "data/134": {
+        "bytes": 4,
+        "zip_crc32": "cd9ade4c"
+      },
+      "data/135": {
+        "bytes": 4194304,
+        "zip_crc32": "f329862d"
+      },
+      "data/136": {
+        "bytes": 2048,
+        "zip_crc32": "a5458037"
+      },
+      "data/137": {
+        "bytes": 2048,
+        "zip_crc32": "e96ec110"
+      },
+      "data/138": {
+        "bytes": 2048,
+        "zip_crc32": "4ffc237e"
+      },
+      "data/139": {
+        "bytes": 506652672,
+        "zip_crc32": "206788bb"
+      },
+      "data/14": {
+        "bytes": 8192,
+        "zip_crc32": "5f8b7992"
+      },
+      "data/140": {
+        "bytes": 989556,
+        "zip_crc32": "1768972b"
+      },
+      "data/15": {
+        "bytes": 8192,
+        "zip_crc32": "8cf42a69"
+      },
+      "data/16": {
+        "bytes": 8192,
+        "zip_crc32": "9e2c4457"
+      },
+      "data/17": {
+        "bytes": 8192,
+        "zip_crc32": "3f5fd290"
+      },
+      "data/18": {
+        "bytes": 16777216,
+        "zip_crc32": "ba2a7c3e"
+      },
+      "data/19": {
+        "bytes": 16777216,
+        "zip_crc32": "1098f492"
+      },
+      "data/2": {
+        "bytes": 8192,
+        "zip_crc32": "686c6c57"
+      },
+      "data/20": {
+        "bytes": 16777216,
+        "zip_crc32": "aaec82e8"
+      },
+      "data/21": {
+        "bytes": 16777216,
+        "zip_crc32": "a831dcb5"
+      },
+      "data/22": {
+        "bytes": 16777216,
+        "zip_crc32": "f8836aec"
+      },
+      "data/23": {
+        "bytes": 16777216,
+        "zip_crc32": "041a9638"
+      },
+      "data/24": {
+        "bytes": 8192,
+        "zip_crc32": "021ce14b"
+      },
+      "data/25": {
+        "bytes": 8192,
+        "zip_crc32": "5a4d5135"
+      },
+      "data/26": {
+        "bytes": 8192,
+        "zip_crc32": "88614de5"
+      },
+      "data/27": {
+        "bytes": 8192,
+        "zip_crc32": "ef0f8d5b"
+      },
+      "data/28": {
+        "bytes": 16777216,
+        "zip_crc32": "9a809155"
+      },
+      "data/29": {
+        "bytes": 16777216,
+        "zip_crc32": "27b7a665"
+      },
+      "data/3": {
+        "bytes": 8192,
+        "zip_crc32": "11620927"
+      },
+      "data/30": {
+        "bytes": 16777216,
+        "zip_crc32": "dfc9439f"
+      },
+      "data/31": {
+        "bytes": 16777216,
+        "zip_crc32": "32934963"
+      },
+      "data/32": {
+        "bytes": 16777216,
+        "zip_crc32": "26013518"
+      },
+      "data/33": {
+        "bytes": 16777216,
+        "zip_crc32": "43916744"
+      },
+      "data/34": {
+        "bytes": 8192,
+        "zip_crc32": "2016ae4e"
+      },
+      "data/35": {
+        "bytes": 8192,
+        "zip_crc32": "423de5a6"
+      },
+      "data/36": {
+        "bytes": 8192,
+        "zip_crc32": "1a0b8774"
+      },
+      "data/37": {
+        "bytes": 8192,
+        "zip_crc32": "e6639a05"
+      },
+      "data/38": {
+        "bytes": 16777216,
+        "zip_crc32": "5704c92a"
+      },
+      "data/39": {
+        "bytes": 16777216,
+        "zip_crc32": "75438b9c"
+      },
+      "data/4": {
+        "bytes": 8192,
+        "zip_crc32": "868cad51"
+      },
+      "data/40": {
+        "bytes": 16777216,
+        "zip_crc32": "b3016972"
+      },
+      "data/41": {
+        "bytes": 16777216,
+        "zip_crc32": "5b0809a1"
+      },
+      "data/42": {
+        "bytes": 16777216,
+        "zip_crc32": "87c42471"
+      },
+      "data/43": {
+        "bytes": 16777216,
+        "zip_crc32": "3c75df4c"
+      },
+      "data/44": {
+        "bytes": 8192,
+        "zip_crc32": "a54f9eb7"
+      },
+      "data/45": {
+        "bytes": 8192,
+        "zip_crc32": "3e908315"
+      },
+      "data/46": {
+        "bytes": 8192,
+        "zip_crc32": "1f471fd0"
+      },
+      "data/47": {
+        "bytes": 8192,
+        "zip_crc32": "728d421e"
+      },
+      "data/48": {
+        "bytes": 16777216,
+        "zip_crc32": "0a17dd3f"
+      },
+      "data/49": {
+        "bytes": 16777216,
+        "zip_crc32": "ccfecf52"
+      },
+      "data/5": {
+        "bytes": 16777216,
+        "zip_crc32": "5013f5f6"
+      },
+      "data/50": {
+        "bytes": 16777216,
+        "zip_crc32": "dd4e6104"
+      },
+      "data/51": {
+        "bytes": 16777216,
+        "zip_crc32": "da8ff0e9"
+      },
+      "data/52": {
+        "bytes": 16777216,
+        "zip_crc32": "2bf6f854"
+      },
+      "data/53": {
+        "bytes": 16777216,
+        "zip_crc32": "401672b4"
+      },
+      "data/54": {
+        "bytes": 8192,
+        "zip_crc32": "1993b729"
+      },
+      "data/55": {
+        "bytes": 8192,
+        "zip_crc32": "89e70227"
+      },
+      "data/56": {
+        "bytes": 8192,
+        "zip_crc32": "ce8b5238"
+      },
+      "data/57": {
+        "bytes": 8192,
+        "zip_crc32": "3c9ebf64"
+      },
+      "data/58": {
+        "bytes": 16777216,
+        "zip_crc32": "20fcc317"
+      },
+      "data/59": {
+        "bytes": 16777216,
+        "zip_crc32": "1c1ec7fd"
+      },
+      "data/6": {
+        "bytes": 8192,
+        "zip_crc32": "670771bb"
+      },
+      "data/60": {
+        "bytes": 16777216,
+        "zip_crc32": "ef121873"
+      },
+      "data/61": {
+        "bytes": 16777216,
+        "zip_crc32": "b7caaaa6"
+      },
+      "data/62": {
+        "bytes": 16777216,
+        "zip_crc32": "cbacafde"
+      },
+      "data/63": {
+        "bytes": 16777216,
+        "zip_crc32": "88f69aaa"
+      },
+      "data/64": {
+        "bytes": 8192,
+        "zip_crc32": "fe63c6d7"
+      },
+      "data/65": {
+        "bytes": 8192,
+        "zip_crc32": "7a1f4cc7"
+      },
+      "data/66": {
+        "bytes": 8192,
+        "zip_crc32": "4c344a82"
+      },
+      "data/67": {
+        "bytes": 8192,
+        "zip_crc32": "58b142a4"
+      },
+      "data/68": {
+        "bytes": 16777216,
+        "zip_crc32": "4db69237"
+      },
+      "data/69": {
+        "bytes": 16777216,
+        "zip_crc32": "f5966f8e"
+      },
+      "data/7": {
+        "bytes": 327680,
+        "zip_crc32": "ca6b14fe"
+      },
+      "data/70": {
+        "bytes": 16777216,
+        "zip_crc32": "a6da3ee0"
+      },
+      "data/71": {
+        "bytes": 16777216,
+        "zip_crc32": "bc76ae3d"
+      },
+      "data/72": {
+        "bytes": 16777216,
+        "zip_crc32": "eeaf32fe"
+      },
+      "data/73": {
+        "bytes": 16777216,
+        "zip_crc32": "ed6f9a49"
+      },
+      "data/74": {
+        "bytes": 8192,
+        "zip_crc32": "6eda5f8d"
+      },
+      "data/75": {
+        "bytes": 8192,
+        "zip_crc32": "468a149d"
+      },
+      "data/76": {
+        "bytes": 8192,
+        "zip_crc32": "acd90979"
+      },
+      "data/77": {
+        "bytes": 8192,
+        "zip_crc32": "3193c18d"
+      },
+      "data/78": {
+        "bytes": 16777216,
+        "zip_crc32": "60741b10"
+      },
+      "data/79": {
+        "bytes": 16777216,
+        "zip_crc32": "928638d6"
+      },
+      "data/8": {
+        "bytes": 16777216,
+        "zip_crc32": "7974837f"
+      },
+      "data/80": {
+        "bytes": 16777216,
+        "zip_crc32": "48b1d2c4"
+      },
+      "data/81": {
+        "bytes": 16777216,
+        "zip_crc32": "7121143b"
+      },
+      "data/82": {
+        "bytes": 16777216,
+        "zip_crc32": "99a473b4"
+      },
+      "data/83": {
+        "bytes": 16777216,
+        "zip_crc32": "fc58d4b2"
+      },
+      "data/84": {
+        "bytes": 8192,
+        "zip_crc32": "2a5e161c"
+      },
+      "data/85": {
+        "bytes": 8192,
+        "zip_crc32": "72bcbdc6"
+      },
+      "data/86": {
+        "bytes": 8192,
+        "zip_crc32": "077df7b4"
+      },
+      "data/87": {
+        "bytes": 8192,
+        "zip_crc32": "d03744f8"
+      },
+      "data/88": {
+        "bytes": 16777216,
+        "zip_crc32": "858a8629"
+      },
+      "data/89": {
+        "bytes": 16777216,
+        "zip_crc32": "d05a7c19"
+      },
+      "data/9": {
+        "bytes": 16777216,
+        "zip_crc32": "8d2aad8c"
+      },
+      "data/90": {
+        "bytes": 16777216,
+        "zip_crc32": "d75be18f"
+      },
+      "data/91": {
+        "bytes": 16777216,
+        "zip_crc32": "66af7c26"
+      },
+      "data/92": {
+        "bytes": 16777216,
+        "zip_crc32": "2d8a485a"
+      },
+      "data/93": {
+        "bytes": 16777216,
+        "zip_crc32": "ce9090e4"
+      },
+      "data/94": {
+        "bytes": 8192,
+        "zip_crc32": "ca939e48"
+      },
+      "data/95": {
+        "bytes": 8192,
+        "zip_crc32": "4dda3cc9"
+      },
+      "data/96": {
+        "bytes": 8192,
+        "zip_crc32": "6aa4b433"
+      },
+      "data/97": {
+        "bytes": 8192,
+        "zip_crc32": "fdc1b1ef"
+      },
+      "data/98": {
+        "bytes": 16777216,
+        "zip_crc32": "1a1687e8"
+      },
+      "data/99": {
+        "bytes": 16777216,
+        "zip_crc32": "d2f7694e"
+      }
+    }
+  },
+  "candidate": {
+    "path": "checkpoints/tf_metazoa_finetuned",
+    "resolved_path": "/mnt/d/sc/transcriptformer/transcriptformer/checkpoints/tf_metazoa_finetuned",
+    "weights_bytes": 4309413022,
+    "weights_sha256": "f414f222a729631e02507aa75e3a984c1205000056b6267ccd575de0bd765f59",
+    "config_sha256": "84042c79ba1b452bc64ad78c6a39831b60e0b533c222dad4cddf0704a4c4d80f",
+    "vocabs_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa/vocabs",
+    "vocabs_is_symlink": true,
+    "vocabulary_assets": [
+      {
+        "file": "assay_vocab.json",
+        "bytes": 922
+      },
+      {
+        "file": "caenorhabditis_elegans_gene.h5",
+        "bytes": 212696350
+      },
+      {
+        "file": "danio_rerio_gene.h5",
+        "bytes": 324231520
+      },
+      {
+        "file": "drosophila_melanogaster_gene.h5",
+        "bytes": 148914470
+      },
+      {
+        "file": "gallus_gallus_gene.h5",
+        "bytes": 180101052
+      },
+      {
+        "file": "homo_sapiens_gene.h5",
+        "bytes": 253848593
+      },
+      {
+        "file": "lytechinus_variegatus_gene.h5",
+        "bytes": 241397301
+      },
+      {
+        "file": "mus_musculus_gene.h5",
+        "bytes": 236434532
+      },
+      {
+        "file": "oryctolagus_cuniculus_gene.h5",
+        "bytes": 219788872
+      },
+      {
+        "file": "plasmodium_falciparum_gene.h5",
+        "bytes": 55976107
+      },
+      {
+        "file": "saccharomyces_cerevisiae_gene.h5",
+        "bytes": 70036928
+      },
+      {
+        "file": "spongilla_lacustris_gene.h5",
+        "bytes": 324815366
+      },
+      {
+        "file": "xenopus_laevis_gene.h5",
+        "bytes": 369537366
+      }
+    ],
+    "provenance_markers": {
+      "training_summary.json": false,
+      "run_manifest.json": false,
+      "selected_model.json": false,
+      "terminal_state.pt": false
+    },
+    "tensor_storage_records": {
+      "data/0": {
+        "bytes": 2533263360,
+        "zip_crc32": "ecf5173f"
+      },
+      "data/1": {
+        "bytes": 20971520,
+        "zip_crc32": "78a43367"
+      },
+      "data/10": {
+        "bytes": 16777216,
+        "zip_crc32": "8b7aa2b5"
+      },
+      "data/100": {
+        "bytes": 16777216,
+        "zip_crc32": "01b6649e"
+      },
+      "data/101": {
+        "bytes": 16777216,
+        "zip_crc32": "f481f429"
+      },
+      "data/102": {
+        "bytes": 16777216,
+        "zip_crc32": "5a1a2030"
+      },
+      "data/103": {
+        "bytes": 16777216,
+        "zip_crc32": "d128209a"
+      },
+      "data/104": {
+        "bytes": 8192,
+        "zip_crc32": "d8bdca9c"
+      },
+      "data/105": {
+        "bytes": 8192,
+        "zip_crc32": "1e03cba6"
+      },
+      "data/106": {
+        "bytes": 8192,
+        "zip_crc32": "70ab5b66"
+      },
+      "data/107": {
+        "bytes": 8192,
+        "zip_crc32": "3e91ec59"
+      },
+      "data/108": {
+        "bytes": 16777216,
+        "zip_crc32": "aa733dde"
+      },
+      "data/109": {
+        "bytes": 16777216,
+        "zip_crc32": "b519c29d"
+      },
+      "data/11": {
+        "bytes": 16777216,
+        "zip_crc32": "27fdd4d9"
+      },
+      "data/110": {
+        "bytes": 16777216,
+        "zip_crc32": "6847af8c"
+      },
+      "data/111": {
+        "bytes": 16777216,
+        "zip_crc32": "a92b09bd"
+      },
+      "data/112": {
+        "bytes": 16777216,
+        "zip_crc32": "ef21b316"
+      },
+      "data/113": {
+        "bytes": 16777216,
+        "zip_crc32": "f978c42d"
+      },
+      "data/114": {
+        "bytes": 8192,
+        "zip_crc32": "e2fc0a4c"
+      },
+      "data/115": {
+        "bytes": 8192,
+        "zip_crc32": "1bb27b5c"
+      },
+      "data/116": {
+        "bytes": 8192,
+        "zip_crc32": "d3e1cec1"
+      },
+      "data/117": {
+        "bytes": 8192,
+        "zip_crc32": "0936612b"
+      },
+      "data/118": {
+        "bytes": 16777216,
+        "zip_crc32": "5b07933b"
+      },
+      "data/119": {
+        "bytes": 16777216,
+        "zip_crc32": "2be7ced5"
+      },
+      "data/12": {
+        "bytes": 16777216,
+        "zip_crc32": "f446fbba"
+      },
+      "data/120": {
+        "bytes": 16777216,
+        "zip_crc32": "1b9a45af"
+      },
+      "data/121": {
+        "bytes": 16777216,
+        "zip_crc32": "4505e4a0"
+      },
+      "data/122": {
+        "bytes": 16777216,
+        "zip_crc32": "e4a67f4f"
+      },
+      "data/123": {
+        "bytes": 16777216,
+        "zip_crc32": "2b8b5d11"
+      },
+      "data/124": {
+        "bytes": 8192,
+        "zip_crc32": "fcd241e2"
+      },
+      "data/125": {
+        "bytes": 8192,
+        "zip_crc32": "c8cf44a5"
+      },
+      "data/126": {
+        "bytes": 8192,
+        "zip_crc32": "f504fee2"
+      },
+      "data/127": {
+        "bytes": 8192,
+        "zip_crc32": "c570d9d1"
+      },
+      "data/128": {
+        "bytes": 989556,
+        "zip_crc32": "516fa9ee"
+      },
+      "data/129": {
+        "bytes": 16777216,
+        "zip_crc32": "93bd8b14"
+      },
+      "data/13": {
+        "bytes": 16777216,
+        "zip_crc32": "efec23b6"
+      },
+      "data/130": {
+        "bytes": 4096,
+        "zip_crc32": "4ee4ec41"
+      },
+      "data/131": {
+        "bytes": 4096,
+        "zip_crc32": "2369a4d5"
+      },
+      "data/132": {
+        "bytes": 4096,
+        "zip_crc32": "1874b4f3"
+      },
+      "data/133": {
+        "bytes": 4096,
+        "zip_crc32": "af47f0de"
+      },
+      "data/134": {
+        "bytes": 4,
+        "zip_crc32": "d223965a"
+      },
+      "data/135": {
+        "bytes": 4194304,
+        "zip_crc32": "d7cf7407"
+      },
+      "data/136": {
+        "bytes": 2048,
+        "zip_crc32": "11be4757"
+      },
+      "data/137": {
+        "bytes": 2048,
+        "zip_crc32": "6a6a49d2"
+      },
+      "data/138": {
+        "bytes": 2048,
+        "zip_crc32": "dc17f395"
+      },
+      "data/139": {
+        "bytes": 506652672,
+        "zip_crc32": "0bc0f93e"
+      },
+      "data/14": {
+        "bytes": 8192,
+        "zip_crc32": "c9e09c79"
+      },
+      "data/140": {
+        "bytes": 989556,
+        "zip_crc32": "5734c8dc"
+      },
+      "data/15": {
+        "bytes": 8192,
+        "zip_crc32": "63fc4b12"
+      },
+      "data/16": {
+        "bytes": 8192,
+        "zip_crc32": "12bd6c8f"
+      },
+      "data/17": {
+        "bytes": 8192,
+        "zip_crc32": "5fd05737"
+      },
+      "data/18": {
+        "bytes": 16777216,
+        "zip_crc32": "15d3f853"
+      },
+      "data/19": {
+        "bytes": 16777216,
+        "zip_crc32": "ef12d5b1"
+      },
+      "data/2": {
+        "bytes": 8192,
+        "zip_crc32": "fcce1854"
+      },
+      "data/20": {
+        "bytes": 16777216,
+        "zip_crc32": "8724a8dd"
+      },
+      "data/21": {
+        "bytes": 16777216,
+        "zip_crc32": "2e9117cf"
+      },
+      "data/22": {
+        "bytes": 16777216,
+        "zip_crc32": "d33dca3d"
+      },
+      "data/23": {
+        "bytes": 16777216,
+        "zip_crc32": "e16f18da"
+      },
+      "data/24": {
+        "bytes": 8192,
+        "zip_crc32": "89bffc08"
+      },
+      "data/25": {
+        "bytes": 8192,
+        "zip_crc32": "d4a27aba"
+      },
+      "data/26": {
+        "bytes": 8192,
+        "zip_crc32": "f197070a"
+      },
+      "data/27": {
+        "bytes": 8192,
+        "zip_crc32": "c94a5a98"
+      },
+      "data/28": {
+        "bytes": 16777216,
+        "zip_crc32": "24da48b2"
+      },
+      "data/29": {
+        "bytes": 16777216,
+        "zip_crc32": "7d180b21"
+      },
+      "data/3": {
+        "bytes": 8192,
+        "zip_crc32": "55131088"
+      },
+      "data/30": {
+        "bytes": 16777216,
+        "zip_crc32": "fd69a3d0"
+      },
+      "data/31": {
+        "bytes": 16777216,
+        "zip_crc32": "fb43f0a2"
+      },
+      "data/32": {
+        "bytes": 16777216,
+        "zip_crc32": "a50c66ce"
+      },
+      "data/33": {
+        "bytes": 16777216,
+        "zip_crc32": "481e99e9"
+      },
+      "data/34": {
+        "bytes": 8192,
+        "zip_crc32": "6d9b7256"
+      },
+      "data/35": {
+        "bytes": 8192,
+        "zip_crc32": "132adf35"
+      },
+      "data/36": {
+        "bytes": 8192,
+        "zip_crc32": "8189f994"
+      },
+      "data/37": {
+        "bytes": 8192,
+        "zip_crc32": "6624f5b8"
+      },
+      "data/38": {
+        "bytes": 16777216,
+        "zip_crc32": "10f43a75"
+      },
+      "data/39": {
+        "bytes": 16777216,
+        "zip_crc32": "f32b17e3"
+      },
+      "data/4": {
+        "bytes": 8192,
+        "zip_crc32": "0271f268"
+      },
+      "data/40": {
+        "bytes": 16777216,
+        "zip_crc32": "c3d4cc37"
+      },
+      "data/41": {
+        "bytes": 16777216,
+        "zip_crc32": "885e1e8c"
+      },
+      "data/42": {
+        "bytes": 16777216,
+        "zip_crc32": "0009f4a6"
+      },
+      "data/43": {
+        "bytes": 16777216,
+        "zip_crc32": "001f1efc"
+      },
+      "data/44": {
+        "bytes": 8192,
+        "zip_crc32": "efb9bfe6"
+      },
+      "data/45": {
+        "bytes": 8192,
+        "zip_crc32": "81cfd018"
+      },
+      "data/46": {
+        "bytes": 8192,
+        "zip_crc32": "e874dee8"
+      },
+      "data/47": {
+        "bytes": 8192,
+        "zip_crc32": "1b4f8c19"
+      },
+      "data/48": {
+        "bytes": 16777216,
+        "zip_crc32": "5c1b621c"
+      },
+      "data/49": {
+        "bytes": 16777216,
+        "zip_crc32": "959d34fa"
+      },
+      "data/5": {
+        "bytes": 16777216,
+        "zip_crc32": "71928c1a"
+      },
+      "data/50": {
+        "bytes": 16777216,
+        "zip_crc32": "78930857"
+      },
+      "data/51": {
+        "bytes": 16777216,
+        "zip_crc32": "fea2a509"
+      },
+      "data/52": {
+        "bytes": 16777216,
+        "zip_crc32": "526c5ecc"
+      },
+      "data/53": {
+        "bytes": 16777216,
+        "zip_crc32": "042d15d9"
+      },
+      "data/54": {
+        "bytes": 8192,
+        "zip_crc32": "e7b88a64"
+      },
+      "data/55": {
+        "bytes": 8192,
+        "zip_crc32": "3fd2a35f"
+      },
+      "data/56": {
+        "bytes": 8192,
+        "zip_crc32": "7753c943"
+      },
+      "data/57": {
+        "bytes": 8192,
+        "zip_crc32": "689921ba"
+      },
+      "data/58": {
+        "bytes": 16777216,
+        "zip_crc32": "b1d5f79a"
+      },
+      "data/59": {
+        "bytes": 16777216,
+        "zip_crc32": "4678eca7"
+      },
+      "data/6": {
+        "bytes": 8192,
+        "zip_crc32": "71514f5e"
+      },
+      "data/60": {
+        "bytes": 16777216,
+        "zip_crc32": "6eff6cb1"
+      },
+      "data/61": {
+        "bytes": 16777216,
+        "zip_crc32": "4e232f98"
+      },
+      "data/62": {
+        "bytes": 16777216,
+        "zip_crc32": "90c6c9a0"
+      },
+      "data/63": {
+        "bytes": 16777216,
+        "zip_crc32": "4e2213ad"
+      },
+      "data/64": {
+        "bytes": 8192,
+        "zip_crc32": "b22fd0c9"
+      },
+      "data/65": {
+        "bytes": 8192,
+        "zip_crc32": "e090e8b9"
+      },
+      "data/66": {
+        "bytes": 8192,
+        "zip_crc32": "6675ec48"
+      },
+      "data/67": {
+        "bytes": 8192,
+        "zip_crc32": "6d033acc"
+      },
+      "data/68": {
+        "bytes": 16777216,
+        "zip_crc32": "65920634"
+      },
+      "data/69": {
+        "bytes": 16777216,
+        "zip_crc32": "db84faa1"
+      },
+      "data/7": {
+        "bytes": 327680,
+        "zip_crc32": "11eca0a0"
+      },
+      "data/70": {
+        "bytes": 16777216,
+        "zip_crc32": "033de9be"
+      },
+      "data/71": {
+        "bytes": 16777216,
+        "zip_crc32": "a0951693"
+      },
+      "data/72": {
+        "bytes": 16777216,
+        "zip_crc32": "ea4097be"
+      },
+      "data/73": {
+        "bytes": 16777216,
+        "zip_crc32": "c8558ceb"
+      },
+      "data/74": {
+        "bytes": 8192,
+        "zip_crc32": "999815b7"
+      },
+      "data/75": {
+        "bytes": 8192,
+        "zip_crc32": "acdc4561"
+      },
+      "data/76": {
+        "bytes": 8192,
+        "zip_crc32": "2c203d05"
+      },
+      "data/77": {
+        "bytes": 8192,
+        "zip_crc32": "669fab81"
+      },
+      "data/78": {
+        "bytes": 16777216,
+        "zip_crc32": "07ff06fc"
+      },
+      "data/79": {
+        "bytes": 16777216,
+        "zip_crc32": "912c71b7"
+      },
+      "data/8": {
+        "bytes": 16777216,
+        "zip_crc32": "332ab203"
+      },
+      "data/80": {
+        "bytes": 16777216,
+        "zip_crc32": "362343ac"
+      },
+      "data/81": {
+        "bytes": 16777216,
+        "zip_crc32": "12e7032e"
+      },
+      "data/82": {
+        "bytes": 16777216,
+        "zip_crc32": "4fca98ca"
+      },
+      "data/83": {
+        "bytes": 16777216,
+        "zip_crc32": "f78b0e90"
+      },
+      "data/84": {
+        "bytes": 8192,
+        "zip_crc32": "b269f5ef"
+      },
+      "data/85": {
+        "bytes": 8192,
+        "zip_crc32": "ec813918"
+      },
+      "data/86": {
+        "bytes": 8192,
+        "zip_crc32": "d02c2099"
+      },
+      "data/87": {
+        "bytes": 8192,
+        "zip_crc32": "267d2b1b"
+      },
+      "data/88": {
+        "bytes": 16777216,
+        "zip_crc32": "5803916d"
+      },
+      "data/89": {
+        "bytes": 16777216,
+        "zip_crc32": "fccd45b3"
+      },
+      "data/9": {
+        "bytes": 16777216,
+        "zip_crc32": "3c847417"
+      },
+      "data/90": {
+        "bytes": 16777216,
+        "zip_crc32": "22e7551c"
+      },
+      "data/91": {
+        "bytes": 16777216,
+        "zip_crc32": "a0249a5d"
+      },
+      "data/92": {
+        "bytes": 16777216,
+        "zip_crc32": "4d3d4c62"
+      },
+      "data/93": {
+        "bytes": 16777216,
+        "zip_crc32": "7a93bc13"
+      },
+      "data/94": {
+        "bytes": 8192,
+        "zip_crc32": "b68e1258"
+      },
+      "data/95": {
+        "bytes": 8192,
+        "zip_crc32": "5050b3bd"
+      },
+      "data/96": {
+        "bytes": 8192,
+        "zip_crc32": "cebd9507"
+      },
+      "data/97": {
+        "bytes": 8192,
+        "zip_crc32": "b3d9e860"
+      },
+      "data/98": {
+        "bytes": 16777216,
+        "zip_crc32": "c830622c"
+      },
+      "data/99": {
+        "bytes": 16777216,
+        "zip_crc32": "3caf77b8"
+      }
+    }
+  },
+  "comparison": {
+    "same_weight_bytes": false,
+    "same_config_bytes": true,
+    "shared_vocabulary_directory": true,
+    "changed_storage_records": 140,
+    "candidate_training_provenance": "not found; distinct weights do not establish training dataset or scientific readiness"
+  },
+  "corpus_evidence": {
+    "manifest": "runs/spatial_coordinate_manifest.json",
+    "configured_output": "runs/multispecies_v1",
+    "configured_output_exists": false,
+    "rehearsal_reports": [
+      "logs/dataset_audit/preparation_rehearsal.json",
+      "logs/dataset_audit/preparation_rehearsal_spatial_copies.json"
+    ],
+    "rehearsal_outputs_removed": true,
+    "b3_project_scores_found": false
+  }
+}

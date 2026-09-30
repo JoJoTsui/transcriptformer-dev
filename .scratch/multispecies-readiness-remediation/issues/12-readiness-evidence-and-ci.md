@@ -1,7 +1,7 @@
 # 12 — Reconcile progress records and validate the bounded remediation workflow
 
 Category: correctness and readiness
-Status: Bounded CI and tracking reconciled — actual comparison and scientific/production dependencies remain open
+Status: Closed for bounded engineering acceptance — unresolved ticket 05/project evidence documented; ticket 11 excluded
 Priority: P2
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11
@@ -157,3 +157,27 @@ passed **479 tests** in 96.75 seconds on Ubuntu/Python 3.11;
 resume/selection, recorded coverage, bounded B3 producer and coordinated
 bootstrap suites. No real project corpus/checkpoint, GPU result or scientific
 readiness claim follows from fixture CI.
+
+## Scoped closure after requirements audit — 2026-09-30
+
+The [repo/primary-source requirements audit](../../../docs/agents/ticket12-gate-research-2026-09-30.md)
+confirms that all seven own acceptance criteria are satisfied and this ticket
+requires no full-corpus preparation, GPU run or embedding generation. Its
+Constraints and Completion Limits explicitly permit dependency completion
+with documented unresolved external evidence where a prior ticket permits
+partial tooling delivery. Apply that documented exception to ticket 05's
+verified partial delivery and the owner-excluded ticket 11; neither is marked
+complete. The 479-test remote CPU run and synchronized tracking close ticket
+12's bounded engineering/record-keeping scope.
+
+This closure does **not** close ticket 05's observed-comparison acceptance,
+R2 chicken asset repair, final corpus/QC/cohort requirements, actual model
+results, B4 assets or production adoption. Those gates remain in the readiness
+register and research note. The previous status inflated wider scientific
+readiness into additional ticket-12 acceptance tests; this audit corrects that
+interpretation without changing acceptance boxes or scientific thresholds.
+
+The [checkpoint inventory](../../../docs/agents/ticket05-checkpoint-discovery-2026-09-30.md)
+also corrects the blanket missing-checkpoint claim: pretrained weights and a
+distinct nominal candidate are present; candidate training provenance and
+actual prepared/B3 artifacts are not established.

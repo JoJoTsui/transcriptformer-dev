@@ -1,7 +1,7 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
 Category: correctness and readiness
-Status: Software implemented — observed B3 comparison remains open pending project inputs
+Status: Software implemented; pretrained and distinct candidate weights found — prepared/B3 comparison evidence remains open
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -363,3 +363,24 @@ Missing evidence is never an observed zero effect. See the
 [repair evidence and schemas](../../../docs/agents/implementation-repairs-2026-09-30.md).
 The project finetuned checkpoint and validated post-QC corpus are not ready;
 criterion 5 therefore remains unchecked. No real B3 result was produced.
+
+## Checkpoint requirement correction — 2026-09-30
+
+Read-only search found `../checkpoints/tf_metazoa/model_weights.pt` and
+`checkpoints/tf_metazoa_finetuned/model_weights.pt`, both 4,309,413,022 bytes.
+Streaming SHA-256 and ZIP storage metadata identify distinct weights with a
+shared configuration and vocabulary directory. The
+[checkpoint inventory and byte audit](../../../docs/agents/ticket05-checkpoint-discovery-2026-09-30.md)
+record their exact paths, hashes, link targets and missing provenance markers.
+The pretrained/base asset is available; the nominal candidate has changed
+weights but no discovered training/corpus record. Do not describe these files
+as missing, or infer project training provenance from a directory name.
+
+This ticket's explicit distributional-comparison criterion can use a genuine
+base-arm comparison under the approved same-arm rule; a verified new finetune
+is required for claims about finetuning benefit, not every species-pair B3
+comparison. No validated real prepared corpus or actual B3 score tables were
+found. The configured `runs/multispecies_v1` output is absent; current rehearsal
+reports state that temporary outputs were removed. Criterion 5 stays open on
+prepared membership, actual score production and observed comparison evidence.
+No model load/forward, data preparation or new zebrafish work was performed.

@@ -1,6 +1,6 @@
 # Finetune readiness tracker
 
-**Repair continuation — 2026-09-30:** The [fresh review](fresh-implementation-review-2026-09-30.md) of `543dac2` reopened 01/03/08 and identified B3 software gaps. The [verified repairs](implementation-repairs-2026-09-30.md) restore bounded engineering closure for 01/03/08 and implement the verified B3 producer, comparability, diagnostics and coordinated bootstrap. Nine bounded engineering tickets are closed. Ticket 05 awaits an actual project comparison, 12 retains external dependencies, and 11 is excluded. The older 403-test run remains historical evidence.
+**Repair continuation — 2026-09-30:** The [fresh review](fresh-implementation-review-2026-09-30.md) of `543dac2` reopened 01/03/08 and identified B3 software gaps. The [verified repairs](implementation-repairs-2026-09-30.md) restore bounded engineering closure for 01/03/08 and implement the verified B3 producer, comparability, diagnostics and coordinated bootstrap. Ten bounded engineering tickets are closed after the [ticket 12 scope audit](ticket12-gate-research-2026-09-30.md). Ticket 05 awaits actual prepared/B3 evidence; ticket 12 retains those gaps as documented exclusions, and 11 is excluded. The older 403-test run remains historical evidence.
 
 
 2026-09-30 final verification on `9476b27`: [remote CPU CI](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36666782265)
@@ -62,7 +62,10 @@ for an exact-origin claim. The [corpus/B1 freeze packet](corpus-b1-freeze-packet
 shows why the 27-source bounded rehearsal and a local Nature2019 metadata check
 cannot serve as a final corpus or post-QC cohort. Ticket 05 now has a
 [producer-artifact closure runbook](../../.scratch/multispecies-readiness-remediation/issues/05-statistic-specific-ortholog-eligibility.md#closure-runbook-for-one-non-zebrafish-comparison),
-but real B3 scores and producer evidence are still absent. The owner-approved
+but real B3 scores and producer evidence are still absent. The [checkpoint discovery](ticket05-checkpoint-discovery-2026-09-30.md) establishes
+that pretrained and distinct nominal candidate weights are present. Candidate
+training provenance, actual prepared corpus and B3 outputs remain unverified.
+The owner-approved
 paired comparison and deletion-score decisions above define the current method;
 the planned comparison family and project input identities still need freezing.
 The [B3 producer audit](b3-score-producer-audit-2026-09-30.md) also confirms

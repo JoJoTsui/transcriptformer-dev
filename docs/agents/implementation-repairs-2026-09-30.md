@@ -1,5 +1,7 @@
 # Implementation repairs — 2026-09-30
 
+**Subsequent requirements audit:** [Checkpoint weights are present](ticket05-checkpoint-discovery-2026-09-30.md), including a distinct nominal candidate whose training provenance is unverified. [Ticket 12 closes for its own bounded scope](ticket12-gate-research-2026-09-30.md). Ticket 05 remains open on actual prepared/B3 comparison evidence; broader project readiness remains open.
+
 Continuation of the [fresh review](fresh-implementation-review-2026-09-30.md),
 with zebrafish work excluded by the owner.
 
@@ -107,8 +109,11 @@ readiness claim follows from fixture CI.
 
 ## Closure limits
 
-The project finetuned checkpoint and validated post-QC prepared corpus are not
-ready, as confirmed by the owner. Frozen species/phase membership, the actual
+The owner previously reported the project finetuned checkpoint and validated
+post-QC corpus not ready. The later discovery establishes that pretrained and
+distinct nominal candidate weight files exist; it does not establish candidate
+training provenance or actual prepared membership. Frozen species/phase membership, the actual
 comparison family and score artifacts are still needed. Ticket 05's observed
-comparison acceptance and ticket 12's dependency closure remain open. Ticket 11
+comparison acceptance remains open. Ticket 12's bounded documentation/CI scope
+is now closed under its explicit unresolved-evidence exception. Ticket 11
 is excluded. Synthetic software evidence does not establish biological results.

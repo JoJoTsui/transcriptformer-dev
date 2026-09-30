@@ -1,6 +1,6 @@
 # Multispecies readiness remediation — ticket index
 
-Status: nine tickets closed for bounded engineering acceptance; 05/12 open on actual project evidence; 11 excluded
+Status: ten tickets closed for bounded engineering acceptance; 05 open on actual prepared/B3 evidence; 11 excluded
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 
 [Read the specification](spec.md). Implementation was authorized on 2026-09-28.
@@ -15,14 +15,14 @@ data, chicken identifier repair and production training remain separate gates.
 | [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | Closed for bounded CPU engineering acceptance; two-rank interrupted/resumed dropout continuity passed |
 | [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; recorded splits validated without allocation; actual corpus absent |
 | [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Closed for bounded engineering acceptance; strict partial bridge leaves R2 open |
-| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Software implemented and bounded fixtures verified; observed B3 comparison awaits project inputs |
+| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Pretrained and distinct candidate weights found; software verified; prepared/B3 evidence pending |
 | [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Closed for bounded engineering acceptance; actual frozen cohort absent |
 | [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Closed for bounded engineering acceptance; production losses absent |
 | [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Closed for bounded engineering acceptance; completed-directory gap repaired; production evidence absent |
 | [09 — Mark structurally unsupported B2 metrics unevaluable](issues/09-representation-metric-eligibility.md) | R6; tracker J | None | Closed for bounded engineering acceptance |
 | [10 — Enforce the single-cell cap when strata outnumber slots](issues/10-hard-sampling-cap.md) | Additional review edge case; sampler exposure | None | Closed for bounded engineering acceptance |
 | [11 — Require zebrafish training participation and track additional-source intake](issues/11-zebrafish-readiness-and-intake.md) | Owner requirement; pending collaborator data | 03, 10 | Excluded from this continuation by owner |
-| [12 — Reconcile progress records and validate the bounded remediation workflow](issues/12-readiness-evidence-and-ci.md) | All findings; readiness claims; WSL constraint | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 | Bounded CI/docs reconciled; open on ticket 05 actual comparison and external scientific/production evidence |
+| [12 — Reconcile progress records and validate the bounded remediation workflow](issues/12-readiness-evidence-and-ci.md) | All findings; readiness claims; WSL constraint | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 | Closed for bounded CI/documentation acceptance; ticket 05/project evidence and ticket 11 exclusion retained |
 
 ## Dependency order
 
@@ -45,9 +45,11 @@ of `543dac2` reopened tickets 01, 03 and 08 and identified B3 software gaps.
 The [repair continuation](../../docs/agents/implementation-repairs-2026-09-30.md)
 closes those bounded resume/coverage gaps and implements the B3 producer,
 comparability, diagnostics and coordinated bootstrap. Tickets 01/02/03/04/06/07/08/09/10
-are closed for their bounded engineering acceptance. Ticket 04 does not close
-chicken R2 asset repair. Ticket 05 still requires an observed project comparison;
-ticket 12 retains that dependency and scientific/production gates. Ticket 11 is excluded.
+and 12 are closed for their bounded engineering acceptance. Ticket 04 does not close
+chicken R2 asset repair. Ticket 05 still requires actual prepared/B3 comparison evidence. The
+[requirements audit](../../docs/agents/ticket12-gate-research-2026-09-30.md) closes
+ticket 12’s bounded CI/documentation scope under its explicit external-evidence
+exception; it does not close ticket 05 or project readiness. Ticket 11 is excluded.
 
 The [403-test remote CPU run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36661045962)
 is valid historical implementation evidence. It does not cover the newly
@@ -61,6 +63,16 @@ passed **479 tests** in 96.75 seconds on Ubuntu/Python 3.11;
 resume/selection, recorded coverage, bounded B3 producer and coordinated
 bootstrap suites. No real project corpus/checkpoint, GPU result or scientific
 readiness claim follows from fixture CI.
+
+## Checkpoint and scope correction — 2026-09-30
+
+The [checkpoint inventory](../../docs/agents/ticket05-checkpoint-discovery-2026-09-30.md)
+finds the pretrained base at `../checkpoints/tf_metazoa` and distinct candidate
+weights at `checkpoints/tf_metazoa_finetuned`. Their existence is established;
+training provenance for the candidate is not. Ticket 05 needs actual validated
+prepared membership and observed B3 outputs. Ticket 12's seven own criteria
+are complete; broader scientific/production gates remain in the readiness
+register rather than being added to that ticket's acceptance requirements.
 
 ## Scientific decisions and external gates
 
