@@ -4,6 +4,16 @@ Category: correctness and readiness
 Status: bounded tooling implemented; external scientific and data gates remain open
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 
+**2026-09-30 decision update:** The owner approved the
+[non-zebrafish corpus defaults](../../docs/agents/corpus-defaults-adoption-2026-09-30.md)
+and [B1-A metric and thresholds](../../docs/agents/b1-owner-decision-2026-09-30.md).
+The exact chicken checkpoint annotation release is
+[recorded as unknown](../../docs/agents/chicken-closure-gate-2026-09-29.md#owner-decision--2026-09-30)
+within the evidenced GRCg6a 99/100/101/106 class. Earlier "unsigned B1"
+wording in this specification records its original state, not the current
+decision. Post-QC cohort evidence, source-specific QC, R2 mapping repair and
+actual model results remain open.
+
 ## Problem Statement
 
 The researcher wants to use the Metazoa checkpoint for multispecies embryogenic

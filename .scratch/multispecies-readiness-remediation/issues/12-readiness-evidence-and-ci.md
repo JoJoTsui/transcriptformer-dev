@@ -65,7 +65,21 @@ resume-continuity evidence remain open.
 The seven acceptance boxes above cover ticket 12's bounded engineering and
 record-keeping contract, as evidenced by the local command record and remote
 CI. They are checked without closing the ticket's cross-ticket dependency:
-ticket 02 still lacks a two-rank interrupted/resumed proof, ticket 05 lacks
-real B3 inputs and an approved method, and the final corpus/B1 and production
-evidence are not frozen. The current owner instruction excludes new zebrafish
-work; historical ticket-11 intake documentation is retained as prior evidence.
+ticket 05 lacks real B3 inputs and an approved method, and the final corpus,
+post-QC B1 cohort and production evidence are not frozen. Ticket 02's
+two-rank interrupted/resumed CPU proof now passes with permitted loopback
+sockets, closing its bounded engineering gate and allowing ticket 08's
+bounded closure. The owner approved B1-A and non-zebrafish corpus defaults on
+2026-09-30; these decisions do not replace missing prepared/model evidence.
+The current owner instruction excludes new zebrafish work; historical
+ticket-11 intake documentation is retained as prior evidence.
+
+2026-09-30 continuation: Checkpoint format 4 stores rank-local loss and
+validation histories alongside rank-local RNG. A focused two-rank dropout
+interruption/resume comparison passed locally (1 test, 44.67 s, one native
+thread); 39 focused resume/compatibility checks and five selection/ortholog
+coverage checks passed. The pair-level full-universe ortholog coverage TSV
+reconciles every genome-wide pair with vocabulary and score availability;
+the [B3 comparison method proposal](../../../docs/agents/b3-paired-comparison-decision-proposal-2026-09-30.md)
+awaits scientific approval and actual B3 scores. Ticket 12 remains open on
+those external and cross-ticket gates.

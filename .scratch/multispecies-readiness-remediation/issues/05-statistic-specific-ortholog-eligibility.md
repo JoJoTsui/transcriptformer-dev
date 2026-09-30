@@ -211,6 +211,15 @@ be substituted for the missing B3 tables. The producer must freeze the
 likelihood target, normalization, deletion rule and cell/embryo provenance
 before generating the score and top-k artifacts below.
 
+The [2026-09-30 paired-comparison decision proposal](../../../docs/agents/b3-paired-comparison-decision-proposal-2026-09-30.md)
+specifies a reviewable primary universe, score comparability, descriptive
+effect, embryo-level uncertainty, multiplicity, denominator and missing-pair
+rules. It is awaiting scientific-owner approval and real B3 artifacts; it does
+not satisfy the open distributional-comparison criterion. The full-universe
+comparator can now optionally emit a hash-bound pair-level coverage TSV with
+each genome-wide pair's vocabulary/score status and selected-statistic flag,
+so future exclusions can be audited against the JSON counts.
+
 ```sh
 STATISTICS=/path/to/frozen-statistics.json
 SCORES_A=/path/to/species-a-phase-scores.tsv
@@ -266,6 +275,7 @@ python scripts/summarize_ortholog_full_universe.py \
   --vocab-a "$VOCAB_A" --vocab-b "$VOCAB_B" \
   --scores-a "$SCORES_A" --scores-b "$SCORES_B" \
   --metadata-a "$METADATA_A" --metadata-b "$METADATA_B" \
+  --coverage-tsv "$OUT/full-universe-coverage.tsv" \
   --output "$OUT/full-universe-description.json"
 ```
 

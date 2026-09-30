@@ -434,6 +434,32 @@ def test_ddp_cpu_gloo_smoke(tmp_path: Path) -> None:
     assert (tmp_path / "run" / "model_weights.pt").is_file()
 
 
+def test_ddp_cpu_gloo_resume_preserves_rank_local_dropout(tmp_path: Path) -> None:
+    """Compare per-rank losses, RNG and weights across a two-rank resume."""
+    import os
+    import subprocess
+    import sys
+
+    repo_root = Path(__file__).resolve().parents[1]
+    env = {
+        **os.environ,
+        "PYTHONPATH": str(repo_root),
+        "MASTER_PORT": "29552",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+    }
+    result = subprocess.run(
+        [sys.executable, "-m", "test.ddp_resume_driver", str(tmp_path)],
+        cwd=repo_root,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=300,
+    )
+    assert result.returncode == 0, result.stderr[-4000:]
+
+
 def test_balanced_dataset_epoch_changes_order() -> None:
     """Mixing the epoch into sampling seeds must decorrelate epoch orders (P6)."""
     dataset = BalancedDataset(

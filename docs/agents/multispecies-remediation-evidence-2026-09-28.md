@@ -51,6 +51,14 @@ count as collaborator delivery or an independent validation source.
 
 ## 2026-09-30 evidence update
 
+The owner subsequently approved
+[B1-A](b1-owner-decision-2026-09-30.md) and the
+[non-zebrafish corpus defaults](corpus-defaults-adoption-2026-09-30.md), and
+accepted [unknown exact chicken release provenance](chicken-closure-gate-2026-09-29.md#owner-decision--2026-09-30).
+These decisions supersede the pending-sign-off wording in the original
+snapshot above. They do not supply a post-QC holdout cohort, real B3 scores,
+the unresolved chicken mappings or production model results.
+
 The table above is the original 2026-09-28 local snapshot. Later remote CPU
 evidence supersedes its statement that remote CI had not run: the
 [finetune workflow](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/36567896770)
@@ -63,3 +71,16 @@ record, GPU behavior or scientific sign-off. The
 [ticket index](../../.scratch/multispecies-readiness-remediation/README.md)
 is the current closure record; this dated report retains the original local
 commands and observations as historical evidence.
+
+**Later 2026-09-30 CPU continuation:** A bounded two-rank Gloo dropout case
+compared uninterrupted and interrupted/resumed runs, rank-local RNG and loss
+histories, and final parameters. The initial sandboxed attempt failed at
+loopback bind with `EPERM`; the same focused case passed in a local environment
+with sockets permitted (1 test, 44.67 s, one native CPU thread). The focused
+resume/compatibility selection passed 39/39, and the selection plus ortholog
+coverage selection passed 5/5 in 24.64 s with native threads capped. Tickets
+02 and 08 are closed for bounded CPU engineering acceptance. CUDA/kernel
+determinism and real-corpus/model outcomes are still unverified. Ticket 05's
+[comparison proposal](b3-paired-comparison-decision-proposal-2026-09-30.md)
+and row-level coverage output remain preparatory until actual B3 scores and
+scientific approval are available.

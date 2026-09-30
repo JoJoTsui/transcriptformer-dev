@@ -88,8 +88,14 @@ def summarize(args: argparse.Namespace) -> None:
     ]
     if args.mapping:
         inputs.append(args.mapping)
-    if args.output.resolve() in {path.resolve() for path in inputs}:
-        raise ValueError("Output cannot overwrite an input")
+    output_paths = [args.output]
+    if args.coverage_tsv:
+        output_paths.append(args.coverage_tsv)
+    resolved_outputs = [path.resolve() for path in output_paths]
+    if len(resolved_outputs) != len(set(resolved_outputs)) or set(resolved_outputs) & {
+        path.resolve() for path in inputs
+    }:
+        raise ValueError("Outputs must be distinct and cannot overwrite inputs")
     handoff, report = bounded_json(args.handoff), bounded_json(args.report)
     if handoff.get("schema_version") != 1 or handoff.get("scope") != "descriptive_paired_selected_genes":
         raise ValueError("Expected a version-1 selected-pair handoff")
@@ -264,6 +270,33 @@ def summarize(args: argparse.Namespace) -> None:
         "n_difference_negative": sum(value < 0 for value in differences),
         "n_difference_zero": sum(value == 0 for value in differences),
     }
+    if args.coverage_tsv:
+        args.coverage_tsv.parent.mkdir(parents=True, exist_ok=True)
+        coverage_status_counts: dict[str, int] = {}
+        with args.coverage_tsv.open("w", newline="", encoding="utf-8") as handle:
+            writer = csv.writer(handle, delimiter="\t")
+            writer.writerow(["gene_a", "gene_b", "status", "selected_statistic_pair"])
+            for pair in sorted(genome_pairs):
+                gene_a, gene_b = pair
+                if pair not in joined:
+                    status = "excluded_vocabulary_join"
+                elif gene_a not in scores_a and gene_b not in scores_b:
+                    status = "excluded_missing_both_scores"
+                elif gene_a not in scores_a:
+                    status = "excluded_missing_score_a"
+                elif gene_b not in scores_b:
+                    status = "excluded_missing_score_b"
+                else:
+                    status = "included_paired_scores"
+                writer.writerow([gene_a, gene_b, status, str(pair in expected_selected).lower()])
+                coverage_status_counts[status] = coverage_status_counts.get(status, 0) + 1
+        if coverage_status_counts.get("included_paired_scores", 0) != len(available) or sum(
+            coverage_status_counts.values()
+        ) != len(genome_pairs):
+            raise ValueError("Pair-level coverage does not reconcile with summary denominators")
+        summary["coverage_tsv_sha256"] = sha256(args.coverage_tsv)
+        summary["coverage_tsv_rows"] = len(genome_pairs)
+        summary["coverage_status_counts"] = coverage_status_counts
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(summary, indent=2, sort_keys=True, allow_nan=False) + "\n")
 
@@ -284,6 +317,7 @@ def main() -> None:
     ):
         parser.add_argument(f"--{name}", type=Path, required=True)
     parser.add_argument("--mapping", type=Path)
+    parser.add_argument("--coverage-tsv", type=Path, help="Optional pair-level inclusion and exclusion audit")
     summarize(parser.parse_args())
 
 

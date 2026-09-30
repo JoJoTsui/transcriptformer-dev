@@ -1,7 +1,7 @@
 # 08 — Integrate approved selection with early stopping, resume and model export
 
 Category: correctness and readiness
-Status: Implemented; bounded CPU validation passed; dependency 02 distributed continuity open
+Status: Closed for bounded CPU engineering acceptance; production model evidence open separately
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 01, 02, 06, 07
@@ -14,13 +14,13 @@ Wire the frozen cohort and selection score into the public training workflow, pr
 
 ## Acceptance Criteria
 
-- [ ] Training evaluates the frozen cohort instead of the first validation-file prefix; every included species and embryo contributes according to approved weights.
-- [ ] Cache or record baseline evaluation with baseline/cohort/loss provenance; reuse is invalidated by changed evidence rather than silently recomputed under a different objective.
-- [ ] Resume compatibility binds cohort, weights, species set, baseline identity and score policy. Changed selection evidence is rejected before continuing optimization.
-- [ ] Persist eligibility, per-species results, best selected identity and early-stopping patience. As a documented implementation default, only improvement in the eligible selection objective resets patience.
-- [ ] On completion, selected model export and terminal optimization state are separate. If baseline wins, configuration, vocabulary, weights and conditioning reproduce the baseline; candidate spatial assets cannot leak into that export.
-- [ ] Public resume retains previous best/baseline selection and patience, including no-extra-update completion, early stop and allowed budget extension.
-- [ ] Reports expose the human/mouse evidence limit for the current corpus without preventing a later frozen cohort containing eligible zebrafish embryos.
+- [x] Training evaluates the frozen cohort instead of the first validation-file prefix; every included species and embryo contributes according to approved weights.
+- [x] Cache or record baseline evaluation with baseline/cohort/loss provenance; reuse is invalidated by changed evidence rather than silently recomputed under a different objective.
+- [x] Resume compatibility binds cohort, weights, species set, baseline identity and score policy. Changed selection evidence is rejected before continuing optimization.
+- [x] Persist eligibility, per-species results, best selected identity and early-stopping patience. As a documented implementation default, only improvement in the eligible selection objective resets patience.
+- [x] On completion, selected model export and terminal optimization state are separate. If baseline wins, configuration, vocabulary, weights and conditioning reproduce the baseline; candidate spatial assets cannot leak into that export.
+- [x] Public resume retains previous best/baseline selection and patience, including no-extra-update completion, early stop and allowed budget extension.
+- [x] Reports expose the human/mouse evidence limit for the current corpus without preventing a later frozen cohort containing eligible zebrafish embryos.
 
 ## Testing Seam
 
@@ -39,3 +39,11 @@ scientific and external-data gates remain in effect.
 ## Comments
 
 Initially published as a specification-only ticket. 2026-09-28 implementation evidence: Training integration uses `shared_causal_prefix_combined_loss_per_observation_v1`, comparing causal gene targets shared by the native Metazoa and candidate sequences. The public bounded workflow tested three species, cohort and baseline evidence changes, selection resume history, baseline spatial export, and a tiny real-checkpoint export/reload. The validation cohort and baseline evidence are persisted separately from terminal optimization state. No production run or accelerator result has been claimed.
+
+2026-09-30 continuation: Ticket 02's two-rank interrupted/resumed CPU
+dropout check now passes, including per-rank RNG and loss histories and final
+parameters. The focused selection workflow and ortholog coverage selection
+passed locally (5 tests in 24.64 s with native threads capped). This resolves
+the ticket's remaining dependency for bounded engineering acceptance. A real
+prepared cohort, production baseline/candidate losses and accelerator behavior
+remain external readiness evidence, not results claimed by this closure.

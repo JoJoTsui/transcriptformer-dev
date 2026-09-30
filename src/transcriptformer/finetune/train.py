@@ -651,6 +651,14 @@ def _capture_rng_state() -> dict[str, Any]:
     return state
 
 
+def _seed_process(seed: int, rank: int = 0) -> None:
+    """Give each fresh training rank a reproducible, independent RNG stream."""
+    rank_seed = seed + rank
+    torch.manual_seed(rank_seed)
+    np.random.seed(rank_seed % (2**32))
+    random.seed(rank_seed)
+
+
 def _set_rng_state(rng: dict[str, Any], target_device: torch.device) -> None:
     torch.set_rng_state(rng["torch"])
     np.random.set_state(rng["numpy"])
@@ -700,6 +708,21 @@ def _rank_rng_states() -> list[dict[str, Any]]:
     return states
 
 
+def _rank_loop_metrics(loop_state: dict | None) -> list[dict[str, Any]] | None:
+    """Collect rank-local histories without duplicating large model snapshots."""
+    if loop_state is None:
+        return None
+    local = {
+        "losses": list(loop_state["losses"]),
+        "validation_losses": list(loop_state["validation_losses"]),
+    }
+    if not torch.distributed.is_available() or not torch.distributed.is_initialized():
+        return [local]
+    metrics: list[dict[str, Any]] = [{} for _ in range(torch.distributed.get_world_size())]
+    torch.distributed.all_gather_object(metrics, local)
+    return metrics
+
+
 def _save_periodic_checkpoint(
     output_dir: Path,
     model,
@@ -714,15 +737,17 @@ def _save_periodic_checkpoint(
 ) -> None:
     """Atomically save a full resume checkpoint; retain terminal state separately."""
     rank_rng = _rank_rng_states()
+    rank_metrics = _rank_loop_metrics(loop_state)
     if torch.distributed.is_available() and torch.distributed.is_initialized() and torch.distributed.get_rank() != 0:
         return
     state = {
-        "state_format": 3,
+        "state_format": 4,
         "model": _snapshot_state_dict(model),
         "optimizer": optimizer.state_dict(),
         "scaler": scaler.state_dict(),
         "step": step,
         "rank_rng": rank_rng,
+        "rank_loop_metrics": rank_metrics,
         "rng": rank_rng[0],
         "resume_contract": resume_contract,
         "loop_state": loop_state,
@@ -749,10 +774,18 @@ def _load_latest_checkpoint(
     state = torch.load(checkpoint_path, weights_only=False, map_location="cpu")
     if expected_contract is not None:
         validate_resume_contract(state, expected_contract)
-        if state.get("state_format") != 3 or not isinstance(state.get("rank_rng"), list):
+        if state.get("state_format") != 4 or not isinstance(state.get("rank_rng"), list):
             raise ValueError("Legacy checkpoint lacks rank-local RNG evidence; use a new output directory for a fresh run")
         if len(state["rank_rng"]) != expected_contract["training"]["world_size"]:
             raise ValueError("Incompatible resume rank count; use a new output directory for a fresh run")
+        rank_metrics = state.get("rank_loop_metrics")
+        if not isinstance(rank_metrics, list) or len(rank_metrics) != expected_contract["training"]["world_size"]:
+            raise ValueError("Legacy checkpoint lacks rank-local loss history; use a new output directory for a fresh run")
+        if any(
+            not isinstance(metrics, dict) or not {"losses", "validation_losses"} <= metrics.keys()
+            for metrics in rank_metrics
+        ):
+            raise ValueError("Checkpoint has incomplete rank-local loss history; use a new output directory for a fresh run")
         loop = state.get("loop_state") or {}
         if "micro_steps" not in loop or "pending_gradients" not in loop:
             raise ValueError("Legacy checkpoint lacks microbatch position and gradients; use a fresh output directory")
@@ -1129,7 +1162,15 @@ def _ddp_worker(
     trainable_params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.AdamW(trainable_params, lr=lr)
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
+    # Forked Gloo workers inherit the parent's RNG. Start distinct streams on
+    # a fresh run; a resumed run replaces these with its saved rank-local RNG.
+    _seed_process(int(manifest.get("seed", 0)), rank)
     initial_step = _restore_training_state(resume_state, optimizer, scaler, target_device)
+
+    rank_loop_state = None
+    if resume_state is not None:
+        rank_loop_state = dict(resume_state["loop_state"])
+        rank_loop_state.update(resume_state["rank_loop_metrics"][rank])
 
     summary, best_state = _run_training_loop(
         model,
@@ -1150,7 +1191,7 @@ def _ddp_worker(
         output_dir=output_dir,
         checkpoint_interval=checkpoint_interval,
         resume_contract=resume_contract,
-        resume_loop_state=resume_state.get("loop_state") if resume_state else None,
+        resume_loop_state=rank_loop_state,
     )
 
     if rank == 0:
@@ -1190,7 +1231,7 @@ def train_finetune(
     if not resume:
         _discard_resume_records(output_dir)
         (output_dir / "validation_baseline.json").unlink(missing_ok=True)
-    torch.manual_seed(int(manifest.get("seed", 0)))
+    _seed_process(int(manifest.get("seed", 0)))
     spatial_grid_size = spatial_grid_size_from_manifest(manifest)
     cohort = build_validation_cohort(
         manifest, prepared_report,

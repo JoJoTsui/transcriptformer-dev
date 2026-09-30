@@ -269,6 +269,7 @@ python scripts/summarize_ortholog_full_universe.py \
   --vocab-b checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5 \
   --scores-a human-scores.tsv --scores-b mouse-scores.tsv \
   --metadata-a human-scores.json --metadata-b mouse-scores.json \
+  --coverage-tsv full-universe-coverage.tsv \
   --output full-universe-summary.json
 ```
 
@@ -276,7 +277,10 @@ Pass `--mapping bridge.tsv` when the report used a conversion. The JSON
 reports genome-wide and vocabulary-joined pair denominators, pairs missing
 scores on each side and either side, paired-score denominator, average-tie
 Spearman coefficient, and paired score differences. Missing scores are
-missing data, not biological absence. The 64 MiB table/mapping/score input,
+missing data, not biological absence. The optional coverage TSV lists every
+genome-wide one-to-one pair, whether it belongs to the selected statistic,
+and its exact vocabulary or score-availability exclusion reason. The JSON
+records the coverage file hash and row count. The 64 MiB table/mapping/score input,
 2 GiB per-vocabulary, 100,000 score-row and one-million ortholog-row caps bound
 local execution. The scope remains
 descriptive: the output has no p-value, confidence interval or biological

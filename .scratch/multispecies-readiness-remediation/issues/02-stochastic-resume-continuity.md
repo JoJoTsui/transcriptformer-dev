@@ -1,7 +1,7 @@
 # 02 — Preserve stochastic optimization across single-process and distributed resume
 
 Category: correctness and readiness
-Status: Implemented; bounded CPU validation passed; distributed runtime unverified
+Status: Closed for bounded CPU engineering acceptance; CUDA/kernel determinism unverified
 Priority: P2
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 01
@@ -14,12 +14,12 @@ Repair RNG/iterator restoration so sample-order continuity also preserves stocha
 
 ## Acceptance Criteria
 
-- [ ] A deterministic CPU backend with a tiny dropout model produces matching parameters and losses for uninterrupted versus interrupted/resumed runs under the same contract.
-- [ ] Creating iterators and skipping historical batches does not consume model RNG intended for future updates; continuation covers mid-epoch, cross-epoch and gradient-accumulation boundaries.
-- [ ] Worker configurations supported by the existing pipeline retain deterministic observation and stochastic-transform behavior; unsupported combinations fail or state explicit limitations.
-- [ ] A bounded two-rank CPU gloo case retains each rank's RNG rather than copying rank zero's state to every rank.
-- [ ] World size, worker/data-order assumptions and state format participate in resume compatibility. Legacy records lacking required state fail clearly.
-- [ ] Document CPU evidence separately from untested CUDA/kernel determinism; do not claim hardware-independent bitwise equivalence.
+- [x] A deterministic CPU backend with a tiny dropout model produces matching parameters and losses for uninterrupted versus interrupted/resumed runs under the same contract.
+- [x] Creating iterators and skipping historical batches does not consume model RNG intended for future updates; continuation covers mid-epoch, cross-epoch and gradient-accumulation boundaries.
+- [x] Worker configurations supported by the existing pipeline retain deterministic observation and stochastic-transform behavior; unsupported combinations fail or state explicit limitations.
+- [x] A bounded two-rank CPU gloo case retains each rank's RNG rather than copying rank zero's state to every rank.
+- [x] World size, worker/data-order assumptions and state format participate in resume compatibility. Legacy records lacking required state fail clearly.
+- [x] Document CPU evidence separately from untested CUDA/kernel determinism; do not claim hardware-independent bitwise equivalence.
 
 ## Testing Seam
 
@@ -49,3 +49,14 @@ establishes that the launch/training path works on that runner. The smoke case
 does not compare each rank's RNG or parameters across an interrupted and
 resumed two-rank run, so acceptance criterion 4 remains open. Local WSL sockets
 remain unavailable; CUDA/kernel behavior remains unverified.
+
+2026-09-30 continuation: Fresh distributed ranks now seed independent
+Torch/NumPy/Python streams. Checkpoint format 4 retains compact per-rank loss
+and validation histories alongside rank-local RNG. A two-rank dropout fixture
+compares uninterrupted and interrupted/resumed losses for both ranks,
+rank-local RNG states and final model weights. The first sandboxed run failed
+at the Gloo socket bind with `EPERM`; the same bounded test passed in a local
+environment with loopback sockets permitted (1 passed, 44.67 s, one native
+CPU thread). The focused resume/compatibility selection passed 39/39. This
+closes the ticket's specified CPU engineering evidence; no CUDA or
+hardware-independent bitwise claim follows.

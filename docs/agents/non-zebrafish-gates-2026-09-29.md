@@ -1,5 +1,20 @@
 # Remaining non-zebrafish gates — 2026-09-29
 
+**2026-09-30 decision update:** The owner approved the
+[corpus defaults](corpus-defaults-adoption-2026-09-30.md) and
+[B1-A](b1-owner-decision-2026-09-30.md). The exact chicken checkpoint
+annotation release is [recorded as unknown](chicken-closure-gate-2026-09-29.md#owner-decision--2026-09-30)
+within the evidenced GRCg6a 99/100/101/106 class. Pending-decision wording
+below is a snapshot of the 2026-09-29 audit. Nature2019 suitability,
+assay-specific QC, post-QC B1 cohort freeze, R2 asset repair, B3 scores and
+production evidence remain open. Remote bounded CPU CI subsequently passed;
+the 2026-09-29 statement about remote CI being unverified is historical. A
+later bounded two-rank interrupted/resumed CPU dropout check passed with
+loopback sockets permitted, closing tickets 02 and 08 for their engineering
+criteria. The new [B3 method proposal](b3-paired-comparison-decision-proposal-2026-09-30.md)
+and pair-level coverage report improve ticket 05's handoff but do not supply
+real B3 scores or scientific approval.
+
 Scope: the user's requested continuation excludes zebrafish-related work. This
 inventory covers the remediation specification and tickets plus the wider
 finetune-readiness register. It distinguishes implemented tools from missing

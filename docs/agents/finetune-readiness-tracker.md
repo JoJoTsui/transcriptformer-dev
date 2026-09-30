@@ -54,9 +54,10 @@ An [isolated candidate H5AD](../../logs/dataset_audit/nature2019_candidate/candi
 now contains 1,986 source-QC-passing, non-mixed cells. It is not part of the
 manifest and still lacks independent-embryo, assay, phase and cell-type approval.
 The [remediation index](../../.scratch/multispecies-readiness-remediation/README.md)
-now closes tickets 01, 03, 04, 06, 07, 09 and 10 for their bounded engineering
-acceptance. Ticket 08 remains open because its ticket-02 distributed-resume
-dependency is still unverified. These closures do not change the corpus/B1,
+now closes tickets 01, 02, 03, 04, 06, 07, 08, 09 and 10 for bounded engineering
+acceptance. A two-rank interrupted/resumed CPU dropout comparison now covers
+ticket 02's distributed-continuity dependency; ticket 08's bounded integration
+gate is met. These closures do not change the corpus/B1,
 chicken R2, B3 or production-readiness gates.
 
 Additional zebrafish data may be supplied by collaborators for this finetune.
