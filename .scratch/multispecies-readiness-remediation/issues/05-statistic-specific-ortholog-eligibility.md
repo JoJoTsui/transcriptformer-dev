@@ -1,14 +1,14 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
 Category: correctness and readiness
-Status: Open — real organogenesis corpus validated; approved full-cohort peer support cannot meet B3 reporting floors
+Status: Open — v1 full-cohort support fails B3 reporting floors; amended v2 structural gate passes, actual scored comparison pending
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
 Traceability: R3; stale post-filter counts; register 4.3; tracker N
 Spec: [Multispecies readiness remediation](../spec.md)
 
-## Current evidence — 2026-09-30
+## Current evidence — 2026-09-30 v1
 
 The [recommendation implementation](../../../docs/agents/b3-recommendation-implementation-2026-09-30.md)
 completed and validated preparation of six real organogenesis sources with
@@ -36,16 +36,59 @@ excluded.
 
 ### Prospective continuation decision
 
-The concrete [measured-zero amendment proposal](../../../docs/agents/b3-measured-zero-amendment-proposal-2026-09-30.md)
-defines a separate target convention, certificate schema, resource-bounded
-preflight and implementation dependency order. Owner authorization for this
-scientific method change is pending. It is a subtask of this open ticket;
-drafting it closes no acceptance criterion and changes no approved v1 rule.
+The owner approved the concrete
+[measured-zero amendment](../../../docs/agents/b3-measured-zero-amendment-proposal-2026-09-30.md)
+on 2026-10-01 with “approved, implement and record this change.” The
+[decision record](../../../docs/agents/b3-measured-zero-owner-decision-2026-10-01.md)
+freezes a separate target convention, certificate schema, resource-bounded
+preflight and implementation order. It is a subtask of this open ticket;
+approval closes no observed-score acceptance criterion and changes no v1 rule.
 
-- [ ] Freeze owner-authorized amended target/support convention.
-- [ ] Implement separate versioned certificates and structural preflight.
-- [ ] Demonstrate potentially sufficient paired support on real frozen data.
+- [x] Freeze owner-authorized amended target/support convention.
+- [x] Implement separate versioned certificates and structural preflight.
+- [x] Demonstrate potentially sufficient paired support on real frozen data.
 - [ ] Produce valid actual scores and observed comparison if the preflight passes.
+
+The approved 500-pair/80% reporting floors and independent 60% mapping/
+5,000 genome-wide pair floors remain in force. No GPU run or real score
+evidence has been completed.
+
+**2026-10-01 amended implementation update:** The separate
+[implementation record](../../../docs/agents/b3-measured-zero-implementation-2026-10-01.md)
+describes the v2 certificate, prepared-row adapter, bounded pilot, disk-backed
+full-cohort preflights and independent paired verifier. A source-bound
+[real measured-zero certificate](../../../docs/agents/b3-measured-zero-certificate-example-2026-10-01.json)
+was archived for human `ENSG00000000005` from padded pilot cell index two,
+with 2,044 eligible native targets and three masked positions. Its structural
+contrast is zero; its model impact remains unavailable until original target
+likelihoods are verified finite during scoring.
+The v1 method and its **zero/15,705** paired structural result remain intact.
+
+The amended 30-cell human and 25-cell mouse pilots give a paired necessary
+upper bound of **5,111/15,705 (32.54%)**: above 500 pairs, below the 80%
+reporting floor. The separate full-cohort scans find **17,419 human** and
+**18,218 mouse** potentially finite gene scores. The independent full paired
+replay verifies **14,392/15,705 (91.64%)** potentially supported pairs; the
+structural 500-pair/80% reporting floors and separate 60% mapping/5,000
+genome-wide eligibility floors pass. The paired report status is
+`potential_coverage_only_unproven`. Its source, bitmap, metric, bin and cohort
+replay is archived in the
+[support evidence](../../../docs/agents/b3-measured-zero-support-evidence-2026-10-01.json),
+with full output at
+`runs/b3_pilot/full_organogenesis_v3/paired_measured_zero_support.json`.
+This necessary upper bound establishes no finite impacts, positive peer
+variance or actual score coverage. The
+[scoring and compute plan](../../../docs/agents/b3-measured-zero-scoring-plan-2026-10-01.md)
+records the implemented bounded v2 score backend and its unverified inference
+path. Its default CLI completed real human pilot preflight without loading
+weights or performing model forwards. The v2 score sidecar and bundle
+validator independently replay source rows, native attempts, bitmaps,
+resolved zero certificates, metrics and z-scores. A separate full-cohort
+backend, measured device budget, finite null variance, bootstrap and observed
+comparison remain outstanding. The full selected cohorts imply about
+**1,065,876,676 original/deleted forwards per checkpoint arm** under the
+current scoring approach; this is a workload estimate, not a measured runtime.
+Ticket 05's distributional comparison criterion remains unchecked.
 
 Separate descriptive genome-wide availability from eligibility for a named species-pair/developmental-phase statistic, using final validated identifiers and pairs.
 

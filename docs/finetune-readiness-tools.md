@@ -442,8 +442,54 @@ gene universe or lower a threshold.
 
 ## Remaining gates
 
+### Approved measured-zero B3 continuation
+
+The [2026-10-01 owner decision](agents/b3-measured-zero-owner-decision-2026-10-01.md)
+authorizes the separate `b3_measured_zero_peer_null_v2` method. Its
+[implementation note](agents/b3-measured-zero-implementation-2026-10-01.md)
+records real-data checks and the certificate format; its
+[scoring plan](agents/b3-measured-zero-scoring-plan-2026-10-01.md) distinguishes
+support diagnostics from model inference. The v1 method remains unchanged.
+
+Use `preflight_b3_measured_zero.py` for the bounded pilot and
+`preflight_b3_measured_zero_full.py` for the full prepared cohort, with the
+same frozen configs and fresh outputs as documented in that note. Verify
+the amended full reports independently:
+
+```bash
+MPLCONFIGDIR=/tmp/b3-matplotlib OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
+MKL_NUM_THREADS=1 .venv/bin/python scripts/preflight_b3_measured_zero_pair.py \
+  --config-a runs/b3_pilot/full_organogenesis_v3/homo_sapiens_support_config.json \
+  --config-b runs/b3_pilot/full_organogenesis_v3/mus_musculus_support_config.json \
+  --preflight-a runs/b3_pilot/full_organogenesis_v3/human_measured_zero_support/support_preflight.json \
+  --preflight-b runs/b3_pilot/full_organogenesis_v3/mouse_measured_zero_support/support_preflight.json \
+  --table preprocess/orthologs/ortholog_pairs.tsv.gz \
+  --output runs/b3_pilot/full_organogenesis_v3/paired_measured_zero_next.json
+```
+
+The full pair verifier replays CSR expression, raw-positive/native-scorable
+bitmaps, embryo summaries, bin construction and peer decisions. This is a
+second bounded CPU pass and should run sequentially on WSL. It rejects v1
+reports, mixed model contexts and altered data. A structural pass does not
+establish actual contrasts, null variance, Spearman correlation or valid
+bootstrap draws. The original report and score-row caps remain in force.
+
+The bounded scoring producer defaults to a weight-free structural check:
+
+```bash
+.venv/bin/python scripts/produce_b3_measured_zero_scores.py \
+  --config runs/b3_pilot/organogenesis_v3/homo_sapiens_producer.json \
+  --output runs/b3_pilot/organogenesis_v3/v2_producer_preflight_next.json
+```
+
+Model execution requires `--execute --preflight-report frozen-report.json`,
+a fresh output directory, and the existing bounded row/cell limits.
+`--device` selects the device; its default is CPU. The execution path has
+not been exercised with model weights.
+
+
 - Corpus defaults and [B1-A](agents/b1-owner-decision-2026-09-30.md) are approved. Source-specific QC/assay decisions, final preparation and the post-QC cohort freeze remain open.
-- The [fresh implementation findings](agents/fresh-implementation-review-2026-09-30.md) have [bounded repairs](agents/implementation-repairs-2026-09-30.md). [Pretrained and distinct candidate weights are present](agents/ticket05-checkpoint-discovery-2026-09-30.md); candidate training provenance is unverified. The six-source organogenesis corpus is now validated, but the completed [full-cohort support audit](agents/b3-recommendation-implementation-2026-09-30.md) permits zero paired scores under the approved null. Retain B3 as unavailable and resolve the scientific method before model execution. A base-arm comparison can use `../checkpoints/tf_metazoa`; finetune benefit requires verified candidate provenance/results. Ticket 12's documentation/CI scope is closed; scientific/production gates remain below.
+- The [fresh implementation findings](agents/fresh-implementation-review-2026-09-30.md) have [bounded repairs](agents/implementation-repairs-2026-09-30.md). [Pretrained and distinct candidate weights are present](agents/ticket05-checkpoint-discovery-2026-09-30.md); candidate training provenance is unverified. The six-source organogenesis corpus is validated. The original v1 [full-cohort support audit](agents/b3-recommendation-implementation-2026-09-30.md) permits zero paired scores. The approved v2 method independently passes the necessary paired support floor with 14,392/15,705 pairs (91.64%); actual model contrasts, finite null variance and the observed comparison remain pending. The bounded v2 scoring backend is implemented, with model execution unverified; a full-cohort scoring backend remains to be implemented. A base-arm comparison can use `../checkpoints/tf_metazoa`; finetune benefit requires verified candidate provenance/results. Ticket 12's documentation/CI scope is closed; scientific/production gates remain below.
 - Produce real baseline/finetuned results on the frozen eligible cohort before claiming B1 performance.
 - Resolve probe assets (ESM-2 embeddings/vocabularies and key-namespace
   maps) and remaining source annotations before evaluating B4.

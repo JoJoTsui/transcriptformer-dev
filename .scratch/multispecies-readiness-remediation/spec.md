@@ -20,6 +20,27 @@ is now recorded, while real B3 scores remain open.
 
 **Review and repair — 2026-09-30:** [Three fresh agents](../../docs/agents/fresh-implementation-review-2026-09-30.md) reopened 01/03/08 and identified B3 software gaps. The [repair continuation](../../docs/agents/implementation-repairs-2026-09-30.md) closes those bounded gaps and implements verified B3 production/diagnostics/bootstrap. Ten tickets are closed for bounded engineering acceptance after the [ticket 12 scope audit](../../docs/agents/ticket12-gate-research-2026-09-30.md); 05 has a validated six-source organogenesis corpus but remains open because full-cohort matched-peer support cannot meet the approved B3 reporting floors, and 11 is excluded. Checkpoint weights are [present and inventoried](../../docs/agents/ticket05-checkpoint-discovery-2026-09-30.md). Earlier evidence remains historical.
 
+**Measured-zero continuation — 2026-10-01:** The owner
+[approved a separate v2 null method](../../docs/agents/b3-measured-zero-owner-decision-2026-10-01.md).
+Its [implementation record](../../docs/agents/b3-measured-zero-implementation-2026-10-01.md)
+and [scoring plan](../../docs/agents/b3-measured-zero-scoring-plan-2026-10-01.md)
+cover source-bound certificates, bounded pilot and full-cohort structural
+preflights, and a separate paired verifier. A real human measured-zero
+certificate was archived. The small pilot's paired necessary upper bound is
+**5,111/15,705 (32.54%)**, below the unchanged 80% reporting floor. The
+independently replayed full-cohort [support evidence](../../docs/agents/b3-measured-zero-support-evidence-2026-10-01.json)
+finds **14,392/15,705 (91.64%)** potentially supported pairs, passing the
+structural 500-pair/80% and separate 60% mapping/5,000-pair eligibility
+floors. The historical v1 zero-pair result is unchanged. The v2 result is an
+upper bound, with no finite impact or positive null variance demonstrated.
+An amended bounded scoring backend, score sidecar and independent bundle
+validator are implemented. Its default human pilot CLI preflight completed
+without weights or forwards; model execution and full-cohort scoring remain
+unverified. The archived padded human certificate has 2,044 native targets,
+three masked positions and a structural zero, with model impact unavailable.
+No amended model scores, GPU run or scientific sign-off have occurred; ticket
+05 remains open and 11 remains excluded.
+
 ## Problem Statement
 
 The researcher wants to use the Metazoa checkpoint for multispecies embryogenic

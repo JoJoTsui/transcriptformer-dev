@@ -1,0 +1,844 @@
+{
+  "method": "b3_measured_zero_peer_null_v2",
+  "interpretation": "structural necessary conditions, not finite model scores",
+  "full_cohort": {
+    "human": {
+      "schema": "b3_measured_zero_full_cohort_support_preflight_v1",
+      "method": "b3_measured_zero_peer_null_v2",
+      "config_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/homo_sapiens_support_config.json",
+      "config_sha256": "2624358168ed815ec1d4d7c7589f87a31b7cf0535f7004f7136b10b156745132",
+      "input_sha256": {
+        "manifest": "e3190a9e14bd0f17157891033096e5fb3bbe7585d3932d26ae2834d3633f649f",
+        "prepared_report": "8ec35395a8bc375e4cd1c0c76aedf85d87555b59a33dec109f1cbe730a6d6532",
+        "gene_vocabulary": "47ffa0eba3f799d9e9a105f1d69a3f098785bfba007e8c41370576216882a9b2",
+        "aux_vocabulary": "398e810c8b4d592af0cd45c866923ed509b28106d35310e0406aa53db505d00a",
+        "checkpoint_config": "84042c79ba1b452bc64ad78c6a39831b60e0b533c222dad4cddf0704a4c4d80f"
+      },
+      "input_paths": {
+        "manifest": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/manifest.json",
+        "prepared_report": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/preparation_report.json",
+        "gene_vocabulary": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/gene_vocabulary.json",
+        "aux_vocabulary": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/aux_vocabulary.json"
+      },
+      "checkpoint_config_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa/config.json",
+      "species": "homo_sapiens",
+      "phase": "organogenesis",
+      "split": "train",
+      "model_arm": "base",
+      "cohort_sha256": "e2259aeb4c6e7d8560d34b95eba513e7fb508ab6297335028d9322dea6ce98c8",
+      "cohort_contract": {
+        "schema": "b3_full_cohort_membership_v1",
+        "manifest_sha256": "e3190a9e14bd0f17157891033096e5fb3bbe7585d3932d26ae2834d3633f649f",
+        "prepared_report_sha256": "8ec35395a8bc375e4cd1c0c76aedf85d87555b59a33dec109f1cbe730a6d6532",
+        "species": "homo_sapiens",
+        "phase": "organogenesis",
+        "split": "train",
+        "gene_ids_sha256": "a16e4202c4b9c7ee344cb77940c1b09db55a4d4b58ee343c0f27663aa19b1a9c",
+        "selected_membership_sha256": "58c7215913a52af9dbc515aeaa1f26731ddd726426ddc34a29dda10fe2eae8a6",
+        "n_cells": 123952,
+        "n_embryos": 5,
+        "sources": [
+          {
+            "prepared_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos_prepared_train.h5ad",
+            "prepared_sha256": "a15915aae04f757dbb3fbee59a626e34e539aaf1178b26f1c9ba40f6dbf7422f",
+            "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u4eba_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+            "source_sha256": "abc3c118799eacdb0090dec407435863c3ed36cbd81c079767dc8089b2c0b51f",
+            "survivor_digest": "3503d69c969a047a04bc40218b627c000ea07df3d564108507072c970af4511f",
+            "split": "train",
+            "n_obs": 123952
+          }
+        ]
+      },
+      "artifact_validation": {
+        "status": "passed",
+        "sources": 6,
+        "outputs": 16,
+        "observations": 1577916,
+        "split_observations": {
+          "train": 1069341,
+          "validation": 324054,
+          "final_holdout": 184521
+        },
+        "qc_validation": "trusted preparation membership and file hashes; expression QC not replayed"
+      },
+      "prepared_validation": {
+        "status": "passed",
+        "sources": 6,
+        "outputs": 16,
+        "observations": 1577916,
+        "split_observations": {
+          "train": 1069341,
+          "validation": 324054,
+          "final_holdout": 184521
+        },
+        "qc_validation": "trusted preparation membership and file hashes; expression QC not replayed"
+      },
+      "native_preprocessing": {
+        "max_len": 2047,
+        "pad_zeros": true,
+        "pad_token": "[PAD]",
+        "sort_genes": false,
+        "filter_to_vocab": true,
+        "gene_col_name": "ensembl_id",
+        "normalize_to_scale": 0,
+        "randomize_order": false,
+        "clip_counts": 30,
+        "use_raw": null,
+        "remove_duplicate_genes": false
+      },
+      "native_configuration": {
+        "_target_": "transcriptformer.model.model.Transcriptformer",
+        "data_config": {
+          "_target_": "transcriptformer.data.dataclasses.DataConfig",
+          "aux_vocab_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa/vocabs",
+          "pin_memory": true,
+          "aux_cols": "assay",
+          "gene_col_name": "ensembl_id",
+          "clip_counts": 30,
+          "filter_to_vocabs": true,
+          "filter_outliers": 0.0,
+          "pad_zeros": true,
+          "normalize_to_scale": 0,
+          "n_data_workers": 0,
+          "sort_genes": false,
+          "randomize_genes": false,
+          "min_expressed_genes": 0,
+          "gene_pad_token": "[PAD]",
+          "aux_pad_token": "unknown",
+          "esm2_mappings_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa/vocabs",
+          "esm2_mappings": [
+            "homo_sapiens_gene.h5",
+            "mus_musculus_gene.h5",
+            "danio_rerio_gene.h5",
+            "caenorhabditis_elegans_gene.h5",
+            "drosophila_melanogaster_gene.h5",
+            "xenopus_laevis_gene.h5",
+            "plasmodium_falciparum_gene.h5",
+            "oryctolagus_cuniculus_gene.h5",
+            "spongilla_lacustris_gene.h5",
+            "lytechinus_variegatus_gene.h5",
+            "saccharomyces_cerevisiae_gene.h5",
+            "gallus_gallus_gene.h5"
+          ],
+          "special_tokens": [
+            "unknown",
+            "[PAD]",
+            "[START]",
+            "[END]",
+            "[RD]",
+            "[CELL]",
+            "[MASK]"
+          ],
+          "use_raw": null,
+          "remove_duplicate_genes": false
+        },
+        "model_config": {
+          "_target_": "transcriptformer.data.dataclasses.ModelConfig",
+          "log_counts_eps": 1e-06,
+          "num_heads": 16,
+          "num_layers": 12,
+          "model_dim": 2048,
+          "embed_dim": 2048,
+          "dropout": 0.1,
+          "seq_len": 2047,
+          "aux_len": 1,
+          "block_len": 128,
+          "activation": "gelu",
+          "fw_bias": false,
+          "softcap": 10,
+          "attn_bias": false,
+          "mu_link_fn": "softmax",
+          "gene_head_hidden_dim": 512,
+          "compile_block_mask": false
+        },
+        "loss_config": {
+          "_target_": "transcriptformer.data.dataclasses.LossConfig",
+          "gene_id_loss_weight": 1.0,
+          "softplus_approx": true
+        },
+        "checkpoint_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa",
+        "model_type": "transcriptformer",
+        "inference_config": {
+          "_target_": "transcriptformer.data.dataclasses.InferenceConfig",
+          "batch_size": 8,
+          "output_keys": [
+            "embeddings"
+          ],
+          "obs_keys": [
+            "all"
+          ],
+          "data_files": [
+            "test/data/human_val.h5ad"
+          ],
+          "output_path": "./inference_results",
+          "output_filename": "embeddings.h5ad",
+          "load_checkpoint": null,
+          "pretrained_embedding": null,
+          "precision": "16-mixed",
+          "emb_type": "cell",
+          "num_gpus": 1,
+          "device": "auto",
+          "use_oom_dataloader": false
+        }
+      },
+      "metric_normalization": {
+        "method": "library_size_log1p",
+        "target_sum": 10000,
+        "denominator": "all_prepared_measured_genes_before_vocab_filter_clipping"
+      },
+      "aux_vocabulary_sha256": "398e810c8b4d592af0cd45c866923ed509b28106d35310e0406aa53db505d00a",
+      "auxiliary_fields": [
+        "assay"
+      ],
+      "n_cells": 123952,
+      "n_embryos": 5,
+      "n_frozen_genes": 19406,
+      "n_vocabulary_tokens": 247389,
+      "native_sequence_length": 2047,
+      "estimated_raw_rows": 231182546,
+      "configured_producer_row_cap_applied": false,
+      "potentially_scorable_genes": 18034,
+      "possible_finite_score_upper_bound": 17419,
+      "peer_count_capped_at": 2,
+      "potential_native_peer_on_focal_cell_required": true,
+      "support_h5": {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_measured_zero_support/support.h5",
+        "sha256": "3c98c2bf007b1f2ca8e803a2afeb1d14224414eba7a0c31c76ff836e0bf59ca9",
+        "shape": [
+          19406,
+          15494
+        ],
+        "bitorder": "little",
+        "native_dataset": "native_scorable_support",
+        "raw_positive_dataset": "raw_positive",
+        "cell_order": "sorted source/prepared paths then surviving phase rows in native row order"
+      },
+      "resources": {
+        "max_cells": 2000000,
+        "max_storage_bytes": 8589934592,
+        "estimated_two_bitmap_identity_bytes": 603336360,
+        "chunk_rows": 984,
+        "max_chunk_nnz": 8000000,
+        "native_threads": 1,
+        "max_chunk_temporary_bytes": 268435456,
+        "max_peer_temporary_bytes": 134217728,
+        "support_layout": "contiguous_gene_major_HDF5_dataset_accessed_with_memmap",
+        "mapped_write_flush_every_chunks": 128,
+        "per_embryo_metric_support_cap_bytes": 67108864,
+        "observed_peak_process_rss_bytes": 1760067584,
+        "elapsed_to_report_seconds": 174.8525952330092
+      },
+      "metric_reduction": "cell_sums_within_physical_embryo_then_sums_across_sorted_embryo_ids",
+      "interpretation": "Necessary measured-zero support upper bounds only; no likelihoods, finite scores or null variance inspected",
+      "checkpoint_tensors_loaded": false,
+      "embedding_values_loaded": false,
+      "model_forwards_performed": false,
+      "report_sha256": "03c1071f03f84b66daf93dfa9864dbdb0c1e4860be060ade02e8fec74cf043d0",
+      "failure_counts": {
+        "necessary_conditions_met": 17419,
+        "no_potentially_scorable_cells": 1372,
+        "no_native_peer_on_focal_cell": 615
+      },
+      "metrics_count": 19406,
+      "metrics_canonical_sha256": "9fc91377ba5ec62b104e197c23fb5aa42ad9f6934a85f34e2471626b9ec9e47d",
+      "gene_support_count": 19406,
+      "gene_support_canonical_sha256": "62e3952f5153b17efdbeac550b9911d30727ae828e48fa8979a044600af98eac",
+      "bins_count": 19406,
+      "bins_canonical_sha256": "9226bebd6bea1961e205f71721b8d95103103481322b5cd1df9c4d3227769b8d"
+    },
+    "mouse": {
+      "schema": "b3_measured_zero_full_cohort_support_preflight_v1",
+      "method": "b3_measured_zero_peer_null_v2",
+      "config_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mus_musculus_support_config.json",
+      "config_sha256": "2b12ba00de1173dfe2ae136125425be7f6af5025540493b26d39e06829adb055",
+      "input_sha256": {
+        "manifest": "e3190a9e14bd0f17157891033096e5fb3bbe7585d3932d26ae2834d3633f649f",
+        "prepared_report": "8ec35395a8bc375e4cd1c0c76aedf85d87555b59a33dec109f1cbe730a6d6532",
+        "gene_vocabulary": "47ffa0eba3f799d9e9a105f1d69a3f098785bfba007e8c41370576216882a9b2",
+        "aux_vocabulary": "398e810c8b4d592af0cd45c866923ed509b28106d35310e0406aa53db505d00a",
+        "checkpoint_config": "84042c79ba1b452bc64ad78c6a39831b60e0b533c222dad4cddf0704a4c4d80f"
+      },
+      "input_paths": {
+        "manifest": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/manifest.json",
+        "prepared_report": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/preparation_report.json",
+        "gene_vocabulary": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/gene_vocabulary.json",
+        "aux_vocabulary": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/aux_vocabulary.json"
+      },
+      "checkpoint_config_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa/config.json",
+      "species": "mus_musculus",
+      "phase": "organogenesis",
+      "split": "train",
+      "model_arm": "base",
+      "cohort_sha256": "cc15e2e7bd18c0b074d70925fbcef3f9a3558f3b544de257b7b5538977d56724",
+      "cohort_contract": {
+        "schema": "b3_full_cohort_membership_v1",
+        "manifest_sha256": "e3190a9e14bd0f17157891033096e5fb3bbe7585d3932d26ae2834d3633f649f",
+        "prepared_report_sha256": "8ec35395a8bc375e4cd1c0c76aedf85d87555b59a33dec109f1cbe730a6d6532",
+        "species": "mus_musculus",
+        "phase": "organogenesis",
+        "split": "train",
+        "gene_ids_sha256": "ac1813e0317420f6e66cd7507b66c056538e767ab8f53b7c1c4cae54b0dfc11a",
+        "selected_membership_sha256": "aaffd483c87fc899b67d5a82beec570ecb2e7822f8deeeb82cec63f369679c8c",
+        "n_cells": 945389,
+        "n_embryos": 43,
+        "sources": [
+          {
+            "prepared_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5_prepared_train.h5ad",
+            "prepared_sha256": "ddcb4642de59049737fba3a6679f32e810c6b72b5633b61967b6ff4463cb0841",
+            "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5.h5ad",
+            "source_sha256": "51f66eb4d5d582bc5aad4f19fb276d8900272f42afeafb6ea10bb7423b0908d8",
+            "survivor_digest": "34e526ea65ab6a56ffc24f7a81684c9a98e90a6dd796abccb00d85a38dc67d22",
+            "split": "train",
+            "n_obs": 222337
+          },
+          {
+            "prepared_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5_prepared_train.h5ad",
+            "prepared_sha256": "3d4635c581fc0733f241c3ecb98ba75a3eff2d05d945f7215764fb7cf153c3b1",
+            "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5.h5ad",
+            "source_sha256": "5dd3e4e331d91dfcfb67541a39f76674fc476f12fa42023ad07112da5cf5b56f",
+            "survivor_digest": "76d2be07a6000a1e3783683970798a565c14b571b70bea05692058ebc637c28c",
+            "split": "train",
+            "n_obs": 319717
+          },
+          {
+            "prepared_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5_prepared_train.h5ad",
+            "prepared_sha256": "29996c7394dd9cb81311a6561269170ce6010ac28739bab83ab89377bf9fe32a",
+            "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5.h5ad",
+            "source_sha256": "303343da5c9651e6afa6342bb6750aeadbd799d0c148d5000d8a86bd73cc0c12",
+            "survivor_digest": "1d2a488fc5130417c8527675a8184c0fad9e0830b75c2456724ce45b882813b9",
+            "split": "train",
+            "n_obs": 160318
+          },
+          {
+            "prepared_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5_prepared_train.h5ad",
+            "prepared_sha256": "b441bc6f609890d716f9cc8742ae189c4011e0c7953b1d4585350527ede04ac6",
+            "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5.h5ad",
+            "source_sha256": "a32697fa60bf2cbf1860921c45cd96fdc1aeb684b8467a4300f688b8bd31d443",
+            "survivor_digest": "7135928cab5ab061096bb9f99a768b92c2c6bf55208f4dc85c8919f6de6c0d27",
+            "split": "train",
+            "n_obs": 146334
+          },
+          {
+            "prepared_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5_prepared_train.h5ad",
+            "prepared_sha256": "a8bf468067de87fd7473e13f67d85b4ef78081edfbd4941db3e29fa7f1fa1c6f",
+            "source_path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5.h5ad",
+            "source_sha256": "eb387ea2fb2fb5b342c5b2f0abe3809a64f8a816636118e09d1af13b59d49223",
+            "survivor_digest": "3a83d4c643ef89d25f5c9e583c77670e987b343b09f13cdd33f9d8aa599d9b34",
+            "split": "train",
+            "n_obs": 96683
+          }
+        ]
+      },
+      "artifact_validation": {
+        "status": "passed",
+        "sources": 6,
+        "outputs": 16,
+        "observations": 1577916,
+        "split_observations": {
+          "train": 1069341,
+          "validation": 324054,
+          "final_holdout": 184521
+        },
+        "qc_validation": "trusted preparation membership and file hashes; expression QC not replayed"
+      },
+      "prepared_validation": {
+        "status": "passed",
+        "sources": 6,
+        "outputs": 16,
+        "observations": 1577916,
+        "split_observations": {
+          "train": 1069341,
+          "validation": 324054,
+          "final_holdout": 184521
+        },
+        "qc_validation": "trusted preparation membership and file hashes; expression QC not replayed"
+      },
+      "native_preprocessing": {
+        "max_len": 2047,
+        "pad_zeros": true,
+        "pad_token": "[PAD]",
+        "sort_genes": false,
+        "filter_to_vocab": true,
+        "gene_col_name": "ensembl_id",
+        "normalize_to_scale": 0,
+        "randomize_order": false,
+        "clip_counts": 30,
+        "use_raw": null,
+        "remove_duplicate_genes": false
+      },
+      "native_configuration": {
+        "_target_": "transcriptformer.model.model.Transcriptformer",
+        "data_config": {
+          "_target_": "transcriptformer.data.dataclasses.DataConfig",
+          "aux_vocab_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa/vocabs",
+          "pin_memory": true,
+          "aux_cols": "assay",
+          "gene_col_name": "ensembl_id",
+          "clip_counts": 30,
+          "filter_to_vocabs": true,
+          "filter_outliers": 0.0,
+          "pad_zeros": true,
+          "normalize_to_scale": 0,
+          "n_data_workers": 0,
+          "sort_genes": false,
+          "randomize_genes": false,
+          "min_expressed_genes": 0,
+          "gene_pad_token": "[PAD]",
+          "aux_pad_token": "unknown",
+          "esm2_mappings_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa/vocabs",
+          "esm2_mappings": [
+            "homo_sapiens_gene.h5",
+            "mus_musculus_gene.h5",
+            "danio_rerio_gene.h5",
+            "caenorhabditis_elegans_gene.h5",
+            "drosophila_melanogaster_gene.h5",
+            "xenopus_laevis_gene.h5",
+            "plasmodium_falciparum_gene.h5",
+            "oryctolagus_cuniculus_gene.h5",
+            "spongilla_lacustris_gene.h5",
+            "lytechinus_variegatus_gene.h5",
+            "saccharomyces_cerevisiae_gene.h5",
+            "gallus_gallus_gene.h5"
+          ],
+          "special_tokens": [
+            "unknown",
+            "[PAD]",
+            "[START]",
+            "[END]",
+            "[RD]",
+            "[CELL]",
+            "[MASK]"
+          ],
+          "use_raw": null,
+          "remove_duplicate_genes": false
+        },
+        "model_config": {
+          "_target_": "transcriptformer.data.dataclasses.ModelConfig",
+          "log_counts_eps": 1e-06,
+          "num_heads": 16,
+          "num_layers": 12,
+          "model_dim": 2048,
+          "embed_dim": 2048,
+          "dropout": 0.1,
+          "seq_len": 2047,
+          "aux_len": 1,
+          "block_len": 128,
+          "activation": "gelu",
+          "fw_bias": false,
+          "softcap": 10,
+          "attn_bias": false,
+          "mu_link_fn": "softmax",
+          "gene_head_hidden_dim": 512,
+          "compile_block_mask": false
+        },
+        "loss_config": {
+          "_target_": "transcriptformer.data.dataclasses.LossConfig",
+          "gene_id_loss_weight": 1.0,
+          "softplus_approx": true
+        },
+        "checkpoint_path": "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa",
+        "model_type": "transcriptformer",
+        "inference_config": {
+          "_target_": "transcriptformer.data.dataclasses.InferenceConfig",
+          "batch_size": 8,
+          "output_keys": [
+            "embeddings"
+          ],
+          "obs_keys": [
+            "all"
+          ],
+          "data_files": [
+            "test/data/human_val.h5ad"
+          ],
+          "output_path": "./inference_results",
+          "output_filename": "embeddings.h5ad",
+          "load_checkpoint": null,
+          "pretrained_embedding": null,
+          "precision": "16-mixed",
+          "emb_type": "cell",
+          "num_gpus": 1,
+          "device": "auto",
+          "use_oom_dataloader": false
+        }
+      },
+      "metric_normalization": {
+        "method": "library_size_log1p",
+        "target_sum": 10000,
+        "denominator": "all_prepared_measured_genes_before_vocab_filter_clipping"
+      },
+      "aux_vocabulary_sha256": "398e810c8b4d592af0cd45c866923ed509b28106d35310e0406aa53db505d00a",
+      "auxiliary_fields": [
+        "assay"
+      ],
+      "n_cells": 945389,
+      "n_embryos": 43,
+      "n_frozen_genes": 20131,
+      "n_vocabulary_tokens": 247389,
+      "native_sequence_length": 2047,
+      "estimated_raw_rows": 834781316,
+      "configured_producer_row_cap_applied": false,
+      "potentially_scorable_genes": 19538,
+      "possible_finite_score_upper_bound": 18218,
+      "peer_count_capped_at": 2,
+      "potential_native_peer_on_focal_cell_required": true,
+      "support_h5": {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_measured_zero_support/support.h5",
+        "sha256": "bd1bf76a7eb27876c02d2cb51df9978de7e054495890c3cc65d2f27a40275616",
+        "shape": [
+          20131,
+          118174
+        ],
+        "bitorder": "little",
+        "native_dataset": "native_scorable_support",
+        "raw_positive_dataset": "raw_positive",
+        "cell_order": "sorted source/prepared paths then surviving phase rows in native row order"
+      },
+      "resources": {
+        "max_cells": 2000000,
+        "max_storage_bytes": 8589934592,
+        "estimated_two_bitmap_identity_bytes": 4773047812,
+        "chunk_rows": 944,
+        "max_chunk_nnz": 8000000,
+        "native_threads": 1,
+        "max_chunk_temporary_bytes": 268435456,
+        "max_peer_temporary_bytes": 134217728,
+        "support_layout": "contiguous_gene_major_HDF5_dataset_accessed_with_memmap",
+        "mapped_write_flush_every_chunks": 128,
+        "per_embryo_metric_support_cap_bytes": 67108864,
+        "observed_peak_process_rss_bytes": 4341026816,
+        "elapsed_to_report_seconds": 907.9802491370065
+      },
+      "metric_reduction": "cell_sums_within_physical_embryo_then_sums_across_sorted_embryo_ids",
+      "interpretation": "Necessary measured-zero support upper bounds only; no likelihoods, finite scores or null variance inspected",
+      "checkpoint_tensors_loaded": false,
+      "embedding_values_loaded": false,
+      "model_forwards_performed": false,
+      "report_sha256": "819d751f16e6c5c63f6c0ef92a9788fe5cd890d14759b16226143891887e88ae",
+      "failure_counts": {
+        "necessary_conditions_met": 18218,
+        "no_native_peer_on_focal_cell": 1320,
+        "no_potentially_scorable_cells": 593
+      },
+      "metrics_count": 20131,
+      "metrics_canonical_sha256": "3fe61d60329bc50da08d71c5a2171ca5a4a585ed9603e1a2189dd81f8281b1e7",
+      "gene_support_count": 20131,
+      "gene_support_canonical_sha256": "f2f59d8e159bf24028e4748a7b8e2d87b765d4283a3b03344cc0a38127057987",
+      "bins_count": 20131,
+      "bins_canonical_sha256": "89ccee1e2f3d13f512005b25f3816a90edabffd41f1f8c9744843d6513fd9f5d"
+    }
+  },
+  "pilot": {
+    "human": {
+      "schema": "b3_measured_zero_support_preflight_v1",
+      "method": "b3_measured_zero_peer_null_v2",
+      "config_sha256": "ee3f628ae6cfc8108dcb19422d1a43e60b842d6dc28e1d27b5961776ba96c791",
+      "input_sha256": {
+        "manifest": "22dbafa1a639ecc998e539d8a155ba4796f4facc2f180765eed4380172946de4",
+        "prepared_report": "22d148ee8d9f00e875770be006a209d2097b93872c5ada7f90fb8d6dc8857603",
+        "gene_vocabulary": "47ffa0eba3f799d9e9a105f1d69a3f098785bfba007e8c41370576216882a9b2",
+        "aux_vocabulary": "398e810c8b4d592af0cd45c866923ed509b28106d35310e0406aa53db505d00a"
+      },
+      "checkpoint_config_sha256": "84042c79ba1b452bc64ad78c6a39831b60e0b533c222dad4cddf0704a4c4d80f",
+      "cohort_sha256": "541c13af92122cc8f46e9a49b4b42250edaa1c0fef80c654f692d79fbcc62843",
+      "species": "homo_sapiens",
+      "phase": "organogenesis",
+      "split": "train",
+      "model_arm": "base",
+      "n_cells": 30,
+      "n_embryos": 5,
+      "normalization": {
+        "method": "library_size_log1p",
+        "target_sum": 10000,
+        "denominator": "all_prepared_measured_genes_before_vocab_filter_clipping"
+      },
+      "estimated_positive_raw_rows": 54317,
+      "native_preprocessing": {
+        "max_len": 2047,
+        "pad_zeros": true,
+        "pad_token": "[PAD]",
+        "sort_genes": false,
+        "filter_to_vocab": true,
+        "gene_col_name": "ensembl_id",
+        "normalize_to_scale": 0,
+        "randomize_order": false,
+        "clip_counts": 30,
+        "use_raw": null,
+        "remove_duplicate_genes": false
+      },
+      "possible_finite_score_upper_bound": 9931,
+      "interpretation": "Structural possibility only, not certified score evidence or positive variance",
+      "model_forwards_performed": false,
+      "checkpoint_tensors_loaded": false,
+      "report_sha256": "5922568d263bf12305358551d48ad45adcee7c478761d5efbbfcf73f0c462476"
+    },
+    "mouse": {
+      "schema": "b3_measured_zero_support_preflight_v1",
+      "method": "b3_measured_zero_peer_null_v2",
+      "config_sha256": "ac47f5cb0e4950d32dc56fdff1f8a65a6c80630e617adf2f63d900171161ad94",
+      "input_sha256": {
+        "manifest": "22dbafa1a639ecc998e539d8a155ba4796f4facc2f180765eed4380172946de4",
+        "prepared_report": "22d148ee8d9f00e875770be006a209d2097b93872c5ada7f90fb8d6dc8857603",
+        "gene_vocabulary": "47ffa0eba3f799d9e9a105f1d69a3f098785bfba007e8c41370576216882a9b2",
+        "aux_vocabulary": "398e810c8b4d592af0cd45c866923ed509b28106d35310e0406aa53db505d00a"
+      },
+      "checkpoint_config_sha256": "84042c79ba1b452bc64ad78c6a39831b60e0b533c222dad4cddf0704a4c4d80f",
+      "cohort_sha256": "64f5edc965794200274a09b32258460f549619af6a405042ae71530b23f25c9b",
+      "species": "mus_musculus",
+      "phase": "organogenesis",
+      "split": "train",
+      "model_arm": "base",
+      "n_cells": 25,
+      "n_embryos": 25,
+      "normalization": {
+        "method": "library_size_log1p",
+        "target_sum": 10000,
+        "denominator": "all_prepared_measured_genes_before_vocab_filter_clipping"
+      },
+      "estimated_positive_raw_rows": 21033,
+      "native_preprocessing": {
+        "max_len": 2047,
+        "pad_zeros": true,
+        "pad_token": "[PAD]",
+        "sort_genes": false,
+        "filter_to_vocab": true,
+        "gene_col_name": "ensembl_id",
+        "normalize_to_scale": 0,
+        "randomize_order": false,
+        "clip_counts": 30,
+        "use_raw": null,
+        "remove_duplicate_genes": false
+      },
+      "possible_finite_score_upper_bound": 6933,
+      "interpretation": "Structural possibility only, not certified score evidence or positive variance",
+      "model_forwards_performed": false,
+      "checkpoint_tensors_loaded": false,
+      "report_sha256": "94d44bfd9661ae87097ee973c68734c9ae470ae178b56e53391e8277479d712e"
+    },
+    "paired": {
+      "schema": "b3_measured_zero_paired_support_preflight_v1",
+      "method": "b3_measured_zero_peer_null_v2",
+      "status": "structurally_unreportable",
+      "observed_comparison": null,
+      "interpretation": "Necessary amended support upper bound only; not finite scores, positive null variance or a B3 result",
+      "ortholog_table_sha256": "bce2e8dee39311e8c2c571660556af09f8de2c6a26c31de295bc4f3f95e06d60",
+      "join_audit": {
+        "raw_pairs": 15705,
+        "usable_pairs": 15705,
+        "usable_genes_a": 15705,
+        "usable_genes_b": 15705,
+        "gene_universe_a": 247389,
+        "gene_universe_b": 247389,
+        "usable_fraction_a": 0.06348301662563817,
+        "usable_fraction_b": 0.06348301662563817,
+        "unresolved_identifiers_a": 0,
+        "unresolved_identifiers_b": 0,
+        "excluded": {}
+      },
+      "n_vocabulary_joined_pairs": 15705,
+      "possible_finite_pair_upper_bound": 5111,
+      "upper_bound_coverage": {
+        "status": "insufficiently_covered",
+        "minimum_paired_scores": 500,
+        "minimum_joined_score_fraction": 0.8,
+        "paired_score_floor_pass": true,
+        "joined_score_fraction_floor_pass": false,
+        "joined_score_fraction": 0.325437758675581,
+        "basis": "Approved B3 reporting floors; independent of registered 60% statistic-input and 5,000 genome-wide-pair eligibility floors"
+      },
+      "pair_reason_counts": {
+        "necessary_support_failed_or_not_measured": 10594,
+        "potential_pair": 5111
+      },
+      "prospective_statistic": {
+        "species_a": "homo_sapiens",
+        "species_b": "mus_musculus",
+        "phase": "organogenesis",
+        "statistic": "B3_measured_zero_peer_null_v2_z",
+        "method": "b3_measured_zero_peer_null_v2",
+        "provenance": "prospective prepared vocabulary-joined configured cohort inputs; frozen before any model forwards",
+        "genes_a_count": 19406,
+        "genes_b_count": 20131
+      },
+      "statistic_eligibility": {
+        "species_a": "homo_sapiens",
+        "species_b": "mus_musculus",
+        "phase": "organogenesis",
+        "statistic": "B3_measured_zero_peer_null_v2_z",
+        "provenance": "prospective prepared vocabulary-joined configured cohort inputs; frozen before any model forwards",
+        "genome_wide_pairs": 15705,
+        "pass_min_pairs_floor": true,
+        "status": "eligible",
+        "floors_pass": true,
+        "pass_fraction_floor": true,
+        "n_input_a": 19406,
+        "n_input_b": 20131,
+        "n_mapped_a": 15613,
+        "n_mapped_b": 15100,
+        "mapped_fraction_a": 0.8045449860867773,
+        "mapped_fraction_b": 0.7500869306045402,
+        "n_comparable_pairs": 15033,
+        "comparison_supported": true,
+        "comparison_reason": null,
+        "n_excluded_a": 3793,
+        "n_excluded_b": 5031,
+        "comparable_pairs": {
+          "omitted_list_count": 15033,
+          "canonical_sha256": "e81b842af9035331380b55eba2baa14969d8449acde1c65bf11a9cfe58cf1896"
+        }
+      },
+      "inputs": {
+        "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/homo_sapiens_producer.json": "ee3f628ae6cfc8108dcb19422d1a43e60b842d6dc28e1d27b5961776ba96c791",
+        "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mus_musculus_producer.json": "ac47f5cb0e4950d32dc56fdff1f8a65a6c80630e617adf2f63d900171161ad94",
+        "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_final.json": "5922568d263bf12305358551d48ad45adcee7c478761d5efbbfcf73f0c462476",
+        "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_final.json": "94d44bfd9661ae87097ee973c68734c9ae470ae178b56e53391e8277479d712e"
+      },
+      "cohort_sha256": [
+        "541c13af92122cc8f46e9a49b4b42250edaa1c0fef80c654f692d79fbcc62843",
+        "64f5edc965794200274a09b32258460f549619af6a405042ae71530b23f25c9b"
+      ],
+      "model_forwards_performed": false
+    }
+  },
+  "full_count_validation": {
+    "scope": "all stored training CSR values, not sampling",
+    "chunk_values": 1000000,
+    "sources": [
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos_prepared_train.h5ad",
+        "prepared_sha256": "a15915aae04f757dbb3fbee59a626e34e539aaf1178b26f1c9ba40f6dbf7422f",
+        "values_checked": 299896844,
+        "all_finite_nonnegative_integers": true
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5_prepared_train.h5ad",
+        "prepared_sha256": "ddcb4642de59049737fba3a6679f32e810c6b72b5633b61967b6ff4463cb0841",
+        "values_checked": 206508806,
+        "all_finite_nonnegative_integers": true
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5_prepared_train.h5ad",
+        "prepared_sha256": "3d4635c581fc0733f241c3ecb98ba75a3eff2d05d945f7215764fb7cf153c3b1",
+        "values_checked": 305415319,
+        "all_finite_nonnegative_integers": true
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5_prepared_train.h5ad",
+        "prepared_sha256": "29996c7394dd9cb81311a6561269170ce6010ac28739bab83ab89377bf9fe32a",
+        "values_checked": 118289534,
+        "all_finite_nonnegative_integers": true
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5_prepared_train.h5ad",
+        "prepared_sha256": "b441bc6f609890d716f9cc8742ae189c4011e0c7953b1d4585350527ede04ac6",
+        "values_checked": 107517751,
+        "all_finite_nonnegative_integers": true
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5_prepared_train.h5ad",
+        "prepared_sha256": "a8bf468067de87fd7473e13f67d85b4ef78081edfbd4941db3e29fa7f1fa1c6f",
+        "values_checked": 98441252,
+        "all_finite_nonnegative_integers": true
+      }
+    ],
+    "elapsed_seconds": 14.881008586002281
+  },
+  "full_paired": {
+    "schema": "b3_measured_zero_paired_support_preflight_v1",
+    "method": "b3_measured_zero_peer_null_v2",
+    "status": "potential_coverage_only_unproven",
+    "observed_comparison": null,
+    "interpretation": "Necessary amended support upper bound only; not finite scores, positive null variance or a B3 result",
+    "ortholog_table_sha256": "bce2e8dee39311e8c2c571660556af09f8de2c6a26c31de295bc4f3f95e06d60",
+    "join_audit": {
+      "raw_pairs": 15705,
+      "usable_pairs": 15705,
+      "usable_genes_a": 15705,
+      "usable_genes_b": 15705,
+      "gene_universe_a": 247389,
+      "gene_universe_b": 247389,
+      "usable_fraction_a": 0.06348301662563817,
+      "usable_fraction_b": 0.06348301662563817,
+      "unresolved_identifiers_a": 0,
+      "unresolved_identifiers_b": 0,
+      "excluded": {}
+    },
+    "n_vocabulary_joined_pairs": 15705,
+    "possible_finite_pair_upper_bound": 14392,
+    "upper_bound_coverage": {
+      "status": "sufficient_coverage",
+      "minimum_paired_scores": 500,
+      "minimum_joined_score_fraction": 0.8,
+      "paired_score_floor_pass": true,
+      "joined_score_fraction_floor_pass": true,
+      "joined_score_fraction": 0.9163960522126712,
+      "basis": "Approved B3 reporting floors; independent of registered 60% statistic-input and 5,000 genome-wide-pair eligibility floors"
+    },
+    "pair_reason_counts": {
+      "potential_pair": 14392,
+      "necessary_support_failed_or_not_measured": 1313
+    },
+    "prospective_statistic": {
+      "species_a": "homo_sapiens",
+      "species_b": "mus_musculus",
+      "phase": "organogenesis",
+      "statistic": "B3_measured_zero_peer_null_v2_z",
+      "method": "b3_measured_zero_peer_null_v2",
+      "provenance": "prospective prepared vocabulary-joined configured cohort inputs; frozen before any model forwards",
+      "genes_a": {
+        "omitted_list_count": 19406,
+        "canonical_sha256": "a16e4202c4b9c7ee344cb77940c1b09db55a4d4b58ee343c0f27663aa19b1a9c"
+      },
+      "genes_b": {
+        "omitted_list_count": 20131,
+        "canonical_sha256": "ac1813e0317420f6e66cd7507b66c056538e767ab8f53b7c1c4cae54b0dfc11a"
+      }
+    },
+    "statistic_eligibility": {
+      "species_a": "homo_sapiens",
+      "species_b": "mus_musculus",
+      "phase": "organogenesis",
+      "statistic": "B3_measured_zero_peer_null_v2_z",
+      "provenance": "prospective prepared vocabulary-joined configured cohort inputs; frozen before any model forwards",
+      "genome_wide_pairs": 15705,
+      "pass_min_pairs_floor": true,
+      "status": "eligible",
+      "floors_pass": true,
+      "pass_fraction_floor": true,
+      "n_input_a": 19406,
+      "n_input_b": 20131,
+      "n_mapped_a": 15613,
+      "n_mapped_b": 15100,
+      "mapped_fraction_a": 0.8045449860867773,
+      "mapped_fraction_b": 0.7500869306045402,
+      "n_comparable_pairs": 15033,
+      "comparison_supported": true,
+      "comparison_reason": null,
+      "n_excluded_a": 3793,
+      "n_excluded_b": 5031,
+      "comparable_pairs": {
+        "omitted_list_count": 15033,
+        "canonical_sha256": "e81b842af9035331380b55eba2baa14969d8449acde1c65bf11a9cfe58cf1896"
+      }
+    },
+    "inputs": {
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/homo_sapiens_support_config.json": "2624358168ed815ec1d4d7c7589f87a31b7cf0535f7004f7136b10b156745132",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mus_musculus_support_config.json": "2b12ba00de1173dfe2ae136125425be7f6af5025540493b26d39e06829adb055",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_measured_zero_support/support_preflight.json": "03c1071f03f84b66daf93dfa9864dbdb0c1e4860be060ade02e8fec74cf043d0",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_measured_zero_support/support_preflight.json": "819d751f16e6c5c63f6c0ef92a9788fe5cd890d14759b16226143891887e88ae"
+    },
+    "cohort_sha256": [
+      "e2259aeb4c6e7d8560d34b95eba513e7fb508ab6297335028d9322dea6ce98c8",
+      "cc15e2e7bd18c0b074d70925fbcef3f9a3558f3b544de257b7b5538977d56724"
+    ],
+    "model_forwards_performed": false,
+    "report_sha256": "1f79d92fa2e63c0ee924b9b2d8e6112650801182b2fa5788560b11585972a27e"
+  },
+  "sampled_pair_process_rss_bytes": 9502937088,
+  "bounded_producer_cli": {
+    "status": "structural_preflight_only",
+    "report_sha256": "5922568d263bf12305358551d48ad45adcee7c478761d5efbbfcf73f0c462476",
+    "n_cells": 30,
+    "possible_finite_score_upper_bound": 9931,
+    "model_forwards_performed": false
+  }
+}

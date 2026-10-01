@@ -1,19 +1,23 @@
 # Prospective B3 measured-zero amendment
 
-Status: proposed; owner decision pending. Date: 2026-09-30.
+Status: owner-approved for prospective implementation on 2026-10-01; no amended
+result accepted. Proposed on 2026-09-30. The owner's instruction was
+“approved, implement and record this change.” The
+[decision record](b3-measured-zero-owner-decision-2026-10-01.md) freezes this
+amendment. Implementation, preflight and observed-score steps remain pending.
 
-## Decision to review
+## Approved development scope
 
 Develop a separate computational context-deletion method admitting certified
 measured-zero peer effects. The approved v1 method remains unchanged and its
-primary comparison remains unavailable. This proposal is not approval of a
+primary comparison remains unavailable. This approval is not acceptance of a
 reportable result, biological knockout interpretation, or a GPU run.
 
 The [completed support audit](b3-full-cohort-support-2026-09-30.json) finds
 zero potentially supported pairs out of 15,705 under v1. The [scientific
 review](b3-full-cohort-null-support-review-2026-09-30.md) explains the failure.
 
-## Proposed target and support rules
+## Approved target and support rules
 
 Keep each focal gene's original positive-token scored cells and physical
 embryos. Keep the existing native matched downstream target rule for positive
@@ -75,7 +79,8 @@ cell-by-gene JSON stream.
 
 ## Implementation dependency order
 
-1. Record owner authorization and freeze this amended target convention.
+1. Record owner authorization and freeze this amended target convention
+   (completed in the linked decision record on 2026-10-01).
 2. Implement versioned certification and rejection paths in a separate module.
 3. Extend a separate bounded structural preflight with raw-positive and
    native-scorable bitmaps. Certified zeros require measured membership;
@@ -100,7 +105,7 @@ training provenance and paired base/finetuned evidence. Zebrafish is excluded.
 
 ## Acceptance limits
 
-Owner approval authorizes method development, not threshold changes or a
+The 2026-10-01 owner approval authorizes method development, not threshold changes or a
 claim of scientific readiness. Failure of the amended structural preflight
 must retain an unavailable primary comparison. Finite, valid model contrasts of either sign,
 nonzero peer variance, valid embryo-bootstrap draws and actual report

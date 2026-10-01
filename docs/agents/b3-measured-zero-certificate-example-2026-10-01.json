@@ -1,0 +1,67 @@
+{
+  "certificate": {
+    "deleted_input_sha256": "8d96fe875e1d101e98532adf0f6c16c7a5d6139daec2744abc05c4a270d14922",
+    "eligible_target_count": 2044,
+    "gene_id": "ENSG00000000005",
+    "identity": {
+      "cell_id": "2",
+      "checkpoint_sha256": "16eb858e39ed69d6e07d5a0a5a4edd8d885951493ffd218097fc4db0c8b29c29",
+      "cohort_sha256": "541c13af92122cc8f46e9a49b4b42250edaa1c0fef80c654f692d79fbcc62843",
+      "config_sha256": "84042c79ba1b452bc64ad78c6a39831b60e0b533c222dad4cddf0704a4c4d80f",
+      "deterministic_eval": true,
+      "embryo_id": "emb2",
+      "gene_token_id": 8,
+      "model_arm": "base",
+      "ordered_vocabulary_sha256": "3c22869f924110937221b709a334b019ae74430312811da0d1ede95215ba43d2",
+      "phase": "organogenesis",
+      "software_commit": "3127a6e1af46cbbde75d04c4d78bb6aeee90c124",
+      "source_id": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/sources/00_human_cs12_16.h5ad",
+      "special_tokens_complete": true,
+      "species": "homo_sapiens",
+      "split": "train",
+      "stochastic_layers_disabled": true,
+      "vocabulary_mapping_verified": true
+    },
+    "impact_bits_per_target": null,
+    "input_serialization": "b3_native_input_canonical_json_v2",
+    "method_id": "b3_measured_zero_peer_null_v2",
+    "original_input_sha256": "8d96fe875e1d101e98532adf0f6c16c7a5d6139daec2744abc05c4a270d14922",
+    "producer_method_sha256": "923d21f84245a69bf6b5abb46f106cbbc0a3292bd4749a43538f428136b1ecb8",
+    "raw_count": 0,
+    "raw_evidence": {
+      "cell_id": "2",
+      "embryo_id": "emb2",
+      "gene_id": "ENSG00000000005",
+      "measured_feature_universe_sha256": "8c6afa95486179e2ba77cc63d54da6923c1a14ed6c6f9a2ac7f418a3faa3225d",
+      "measurement_stage": "raw_before_clipping_normalization_tokenization",
+      "prepared_source_sha256": "e9436660ce79039c55cb545fe0323a5fd378b04c14e1ddea57ec0a644c7dd987",
+      "raw_count": 0.0,
+      "source_id": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/sources/00_human_cs12_16.h5ad",
+      "source_row_index": 2,
+      "source_row_sha256": "6f4aec2537ca3ff600f8f2bf5745cbc7e2d0e5a5bf71706bca6cebdcd3e1e2da",
+      "species": "homo_sapiens",
+      "verification": "caller_verified_prepared_row"
+    },
+    "schema": "b3_measured_zero_certificate_v2",
+    "score_usability": "requires_finite_original_eligible_likelihoods_at_scoring_time",
+    "status": "certified_measured_zero_noop",
+    "structural_noop_contrast_bits_per_target": 0.0,
+    "target_descriptor_sha256": "a0f3472bec2e36aa428b40e1031cbda1abd2c4b387f24316b83201fc126749e6"
+  },
+  "native_mask_diagnostic": {
+    "cell_index": 2,
+    "n_active_gene_tokens": 2044,
+    "n_masked_loss_positions": 3,
+    "native_mask_reference": "Transcriptformer.forward result[mask] = ~_pad_mask(gene_token_indices, dtype=bool)",
+    "native_unshifted_mask_match": true
+  },
+  "prepared_report_sha256": "52f0e793dd55911519632408e85551f5607b7fd888d2a9e7fb12f45b9437f8ee",
+  "prepared_source_sha256": "e9436660ce79039c55cb545fe0323a5fd378b04c14e1ddea57ec0a644c7dd987",
+  "schema": "b3_prepared_measured_zero_binding_v2",
+  "source_sha256": "91c77f8d0c8bd9f6d3714000136304dbe04785954532e1529b29a09081bcc72a",
+  "implementation_source_sha256": {
+    "src/transcriptformer/finetune/b3_measured_zero.py": "18115a2780965c9b258ff06fa52367ad819192668b300c320feaf2bf8733484d",
+    "src/transcriptformer/finetune/b3_measured_zero_prepared.py": "537bae6885198585940cf0c9a4a8818bc6c8935f7679f87d674c4df2f45611d4"
+  },
+  "software_commit_note": "Real padded-cell certificate executed during implementation on base commit3127a6e; actual uncommitted sources bound by SHA256 values above."
+}

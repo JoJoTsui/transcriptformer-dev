@@ -1,6 +1,6 @@
 # Multispecies readiness remediation — ticket index
 
-Status: ten tickets closed for bounded engineering acceptance; 05 open because approved full-cohort B3 support cannot meet reporting floors; 11 excluded
+Status: ten tickets closed for bounded engineering acceptance; 05 open on observed B3 comparison; 11 excluded
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 
 [Read the specification](spec.md). Implementation was authorized on 2026-09-28.
@@ -15,7 +15,7 @@ data, chicken identifier repair and production training remain separate gates.
 | [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | Closed for bounded CPU engineering acceptance; two-rank interrupted/resumed dropout continuity passed |
 | [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; recorded splits validated without allocation; six-source preparation validated; finalized multispecies corpus absent |
 | [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Closed for bounded engineering acceptance; strict partial bridge leaves R2 open |
-| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Real six-source corpus validated; full-cohort support cannot meet 500-pair/80% reporting floors; observed B3 remains unavailable |
+| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | v1 full-cohort support fails; amended v2 paired necessary upper bound 14,392/15,705 (91.64%) passes structural floors, but actual scored comparison remains unavailable |
 | [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Closed for bounded engineering acceptance; actual frozen cohort absent |
 | [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Closed for bounded engineering acceptance; production losses absent |
 | [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Closed for bounded engineering acceptance; completed-directory gap repaired; production evidence absent |
@@ -46,7 +46,7 @@ The [repair continuation](../../docs/agents/implementation-repairs-2026-09-30.md
 closes those bounded resume/coverage gaps and implements the B3 producer,
 comparability, diagnostics and coordinated bootstrap. Tickets 01/02/03/04/06/07/08/09/10
 and 12 are closed for their bounded engineering acceptance. Ticket 04 does not close
-chicken R2 asset repair. Ticket 05 still requires observed B3 comparison evidence; the organogenesis corpus is now prepared, but its approved null support fails the reporting gate. The
+chicken R2 asset repair. Ticket 05 still requires observed B3 comparison evidence; the organogenesis corpus is now prepared, but its v1 null support fails the reporting gate. The
 [requirements audit](../../docs/agents/ticket12-gate-research-2026-09-30.md) closes
 ticket 12’s bounded CI/documentation scope under its explicit external-evidence
 exception; it does not close ticket 05 or project readiness. Ticket 11 is excluded.
@@ -69,7 +69,7 @@ readiness claim follows from fixture CI.
 The [checkpoint inventory](../../docs/agents/ticket05-checkpoint-discovery-2026-09-30.md)
 finds the pretrained base at `../checkpoints/tf_metazoa` and distinct candidate
 weights at `checkpoints/tf_metazoa_finetuned`. Their existence is established;
-training provenance for the candidate is not. Ticket 05 has validated organogenesis prepared membership; it still lacks observed B3 outputs and its full-cohort matched-peer support cannot meet the reporting floors. Ticket 12's seven own criteria
+training provenance for the candidate is not. Ticket 05 has validated organogenesis prepared membership; it still lacks observed B3 outputs and its v1 full-cohort matched-peer support cannot meet the reporting floors. Ticket 12's seven own criteria
 are complete; broader scientific/production gates remain in the readiness
 register rather than being added to that ticket's acceptance requirements.
 
@@ -93,6 +93,28 @@ a qualifying human ortholog. This cannot satisfy the approved
 scores or a concordance result. Ticket 05 remains open; bounded ticket 12
 closure and ticket 11's exclusion remain in effect. No floor or null rule was
 changed, and no checkpoint forward was performed.
+
+## Approved measured-zero continuation — 2026-10-01
+
+The owner-approved [v2 decision](../../docs/agents/b3-measured-zero-owner-decision-2026-10-01.md)
+is distinct from that v1 support result. Separate source-bound certification
+and bounded/full-cohort structural preflights are implemented; the
+[implementation record](../../docs/agents/b3-measured-zero-implementation-2026-10-01.md)
+includes a real human zero certificate. The small paired pilot bounds
+potential coverage at **5,111/15,705 (32.54%)**, below the unchanged 80%
+reporting floor. Full-cohort scans bound per-species potentially finite scores
+at **17,419 human** and **18,218 mouse**. Their independent paired replay
+verifies **14,392/15,705 (91.64%)** potentially supported pairs, passing the
+structural 500-pair/80% gate and independent 60% mapping/5,000 genome-wide
+eligibility floors. The [archived support evidence](../../docs/agents/b3-measured-zero-support-evidence-2026-10-01.json)
+establishes no finite score, positive null variance or observed comparison.
+The [scoring plan](../../docs/agents/b3-measured-zero-scoring-plan-2026-10-01.md)
+records an implemented bounded v2 score backend, score sidecar and bundle
+validator. Its default real human pilot CLI preflight completed with no
+weights or model forwards; the inference path has not been run. Full-cohort
+scoring still needs a separate backend and measured compute gate for an
+estimated **1,065,876,676 forwards per checkpoint arm**. No v2 scores or
+observed comparison exist; ticket 05 stays open.
 
 ## Scientific decisions and external gates
 

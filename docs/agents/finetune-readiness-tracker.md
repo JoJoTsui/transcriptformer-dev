@@ -1,11 +1,35 @@
 # Finetune readiness tracker
 
-**Prospective B3 continuation — 2026-09-30:** The [concrete measured-zero
-amendment proposal](b3-measured-zero-amendment-proposal-2026-09-30.md) records
-the new target convention, evidence schema and dependency order needed to
-develop the alternative identified in the full-cohort review. Owner
-authorization for changing the approved null method is pending; v1 remains
-unchanged, ticket 05 remains open and ticket 11 remains excluded.
+**Prospective B3 continuation — 2026-10-01:** The owner approved the
+[measured-zero amendment](b3-measured-zero-amendment-proposal-2026-09-30.md)
+with “approved, implement and record this change.” The
+[decision record](b3-measured-zero-owner-decision-2026-10-01.md) freezes its
+separate target convention, evidence schema and dependency order. Separate v2
+certification, prepared-row validation and bounded/full-cohort structural
+preflights are implemented; see the
+[implementation record](b3-measured-zero-implementation-2026-10-01.md) and
+[real certificate](b3-measured-zero-certificate-example-2026-10-01.json).
+The 30-cell human/25-cell mouse pilot's paired necessary upper bound is
+**5,111/15,705 (32.54%)**, below the 80% reporting floor. Full-cohort
+per-species necessary score bounds are **17,419 human** and **18,218 mouse**.
+The independent full paired [support replay](b3-measured-zero-support-evidence-2026-10-01.json)
+verifies **14,392/15,705 (91.64%)** potentially supported pairs. Its
+`potential_coverage_only_unproven` status passes the structural 500-pair/80%
+reporting gate and the independent 60% mapping/5,000 genome-wide eligibility
+floors; finite impacts, positive peer variance and actual coverage remain
+unmeasured. The approved v1
+method and its zero-of-15,705-pair finding remain unchanged. The
+500-pair/80% reporting floors and 60% mapping/5,000-pair eligibility floors
+remain in force. The [scoring plan](b3-measured-zero-scoring-plan-2026-10-01.md)
+records an implemented bounded v2 backend, method-specific score sidecar and
+independent bundle validator. Its default real human pilot CLI preflight
+completed without weights or model forwards; the inference path is unverified.
+The archived padded human certificate has 2,044 native targets, three masked
+positions and a structural zero, with no model impact yet. Full-cohort
+scoring still requires a separate backend and measured compute feasibility;
+the current approach implies about **1,065,876,676 forwards per checkpoint
+arm**, an unmeasured workload estimate. There is no amended score result or
+GPU authorization. Ticket 05 remains open and ticket 11 remains excluded.
 
 **Repair continuation — 2026-09-30:** The [fresh review](fresh-implementation-review-2026-09-30.md) of `543dac2` reopened 01/03/08 and identified B3 software gaps. The [verified repairs](implementation-repairs-2026-09-30.md) restore bounded engineering closure for 01/03/08 and implement the verified B3 producer, comparability, diagnostics and coordinated bootstrap. Ten bounded engineering tickets are closed after the [ticket 12 scope audit](ticket12-gate-research-2026-09-30.md). Ticket 05 remains open on observed B3 evidence; validated organogenesis preparation is now available but approved full-cohort null support cannot meet the reporting floors; ticket 12 retains those gaps as documented exclusions, and 11 is excluded. The older 403-test run remains historical evidence.
 
