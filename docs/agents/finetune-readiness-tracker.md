@@ -1,5 +1,11 @@
 # Finetune readiness tracker
 
+**Approved pilot execution — 2026-10-01:** The owner clarified approval for
+the frozen 30-cell human pilot. The [run record](b3-human-pilot-approved-run-2026-10-01.md)
+records its active execution, eight-hour producer ceiling, unchanged CPU/GPU
+caps and additional host-RAM/disk supervisor. Completion and scored coverage
+are pending; ticket 05 stays open, and ticket 11 stays excluded.
+
 **Prospective B3 continuation — 2026-10-01:** The owner approved the
 [measured-zero amendment](b3-measured-zero-amendment-proposal-2026-09-30.md)
 with “approved, implement and record this change.” The

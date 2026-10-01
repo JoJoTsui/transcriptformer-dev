@@ -1,5 +1,10 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
+The owner approved and started the frozen 30-cell human pilot on 2026-10-01;
+see the [execution record](../../../docs/agents/b3-human-pilot-approved-run-2026-10-01.md).
+The eight-hour producer budget retains memory/storage guards. Actual completion
+is pending and this pilot cannot meet the paired 80% reporting floor.
+
 Category: correctness and readiness
 Status: Open — v1 full-cohort support fails B3 reporting floors; amended v2 structural gate passes, actual scored comparison pending
 Priority: P1
