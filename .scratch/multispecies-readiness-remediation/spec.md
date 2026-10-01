@@ -63,7 +63,8 @@ those planning runs wrote no score shard and performed no model forward.
 The later [optimized two-forward diagnostic](../../docs/agents/b3-measured-zero-resource-gate-evidence-2026-10-01.md#optimized-two-forward-diagnostic)
 passed on one padded human cell. Its 6.87-hour pilot extrapolation remains
 above the one-hour budget; no complete score bundle or cohort throughput
-measurement followed.
+measurement followed. The matching producer guard also rejected its 6.87-hour
+all-attempt projection before model loading or publication.
 The hardened v2 producer freezes the paired support report and ortholog
 table before inference; the comparator requires two bundles bound to that
 same pair and derives full vocabularies and statistic inputs from their
