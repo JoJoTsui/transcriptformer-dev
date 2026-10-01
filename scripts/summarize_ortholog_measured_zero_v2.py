@@ -224,11 +224,21 @@ def summarize(bundle_a: Path, bundle_b: Path, table: Path, paired_preflight: Pat
         tracked[preflight_path] = provenance["preflight_sha256"]
     species_a, species_b, phase = side_a["species"], side_b["species"], side_a["phase"]
     for provenance in (prov_a, prov_b):
-        if (
-            Path(provenance.get("paired_preflight_path", "")).resolve() != paired_preflight.resolve()
-            or provenance.get("paired_preflight_sha256") != tracked[paired_preflight]
-            or Path(provenance.get("ortholog_table_path", "")).resolve() != table.resolve()
-            or provenance.get("ortholog_table_sha256") != tracked[table]
+        primary = {
+            "paired_preflight_path": provenance.get("paired_preflight_path"),
+            "paired_preflight_sha256": provenance.get("paired_preflight_sha256"),
+            "ortholog_table_path": provenance.get("ortholog_table_path"),
+            "ortholog_table_sha256": provenance.get("ortholog_table_sha256"),
+        }
+        candidates = [primary]
+        if provenance.get("bootstrap_family_path") is not None:
+            candidates = provenance.get("registered_paired_inputs", [])
+        if not any(
+            Path(member["paired_preflight_path"]).resolve() == paired_preflight.resolve()
+            and member["paired_preflight_sha256"] == tracked[paired_preflight]
+            and Path(member["ortholog_table_path"]).resolve() == table.resolve()
+            and member["ortholog_table_sha256"] == tracked[table]
+            for member in candidates
         ):
             raise ValueError("Both v2 bundles must bind this same frozen paired preflight and table")
     frozen_pair = bounded_json(paired_preflight)

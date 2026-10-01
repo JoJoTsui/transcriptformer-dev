@@ -65,6 +65,7 @@ def _score(
     max_seconds: float,
     paired_preflight_path: Path,
     ortholog_table: Path,
+    bootstrap_family_path: Path | None = None,
 ):
     import numpy as np
     import torch
@@ -183,6 +184,85 @@ def _score(
         or cohorts[0 if side == "a" else 1] != preflight["cohort_sha256"]
     ):
         raise ValueError("Paired support report does not bind the frozen species gene universe and cohort")
+    family_binding = {}
+    if bootstrap_family_path is not None:
+        from transcriptformer.finetune.b3_measured_zero_bootstrap import digest as family_digest, validate_family
+
+        if bootstrap_family_path.stat().st_size > 128 * 1024**2:
+            raise ValueError("Bootstrap family exceeds the bounded metadata cap")
+        family = json.loads(bootstrap_family_path.read_text())
+        family_hash = family_digest(family)
+        validate_family(family, family_hash)
+        if family["model_arm"] != config["model_arm"]:
+            raise ValueError("Prospective bootstrap family has another checkpoint arm")
+        matching = []
+        for comparison in family["comparisons"]:
+            if (
+                file_sha256(Path(comparison["table"])) != comparison["table_sha256"]
+                or file_sha256(Path(comparison["paired_preflight"])) != comparison["paired_preflight_sha256"]
+            ):
+                raise ValueError("Prospective bootstrap family paired sources changed")
+            member_side = (
+                "a"
+                if Path(comparison["bundle_a"]).resolve() == output.resolve()
+                else "b"
+                if Path(comparison["bundle_b"]).resolve() == output.resolve()
+                else None
+            )
+            if member_side is None:
+                continue
+            paired_member_path = Path(comparison["paired_preflight"])
+            member = json.loads(paired_member_path.read_text())
+            member_request = member.get("prospective_statistic", {})
+            member_inputs = member.get("inputs", {})
+            member_cohorts = member.get("cohort_sha256")
+            if (
+                member.get("schema") != "b3_measured_zero_paired_support_preflight_v1"
+                or member.get("method") != MEASURED_ZERO_METHOD_ID
+                or member.get("model_forwards_performed") is not False
+                or member.get("ortholog_table_sha256") != comparison["table_sha256"]
+                or not isinstance(member_request, dict)
+                or member_request.get("method") != MEASURED_ZERO_METHOD_ID
+                or member_request.get("statistic") != "B3_measured_zero_peer_null_v2_z"
+                or member_request.get("phase") != config["phase"]
+                or member_request.get("species_" + member_side) != config["species"]
+                or member_request.get("genes_" + member_side) != sorted(config["gene_ids"])
+                or not isinstance(member_cohorts, list)
+                or len(member_cohorts) != 2
+                or member_cohorts[0 if member_side == "a" else 1] != preflight["cohort_sha256"]
+                or not isinstance(member_inputs, dict)
+                or len(member_inputs) != 4
+                or member_inputs.get(str(config_path.resolve())) != file_sha256(config_path)
+                or member_inputs.get(str(preflight_path.resolve())) != file_sha256(preflight_path)
+                or any(file_sha256(Path(path)) != expected for path, expected in member_inputs.items())
+            ):
+                raise ValueError("Prospective family member does not bind this configured cohort and paired support")
+            matching.append(
+                {
+                    "paired_preflight_path": str(paired_member_path.resolve()),
+                    "paired_preflight_sha256": comparison["paired_preflight_sha256"],
+                    "ortholog_table_path": str(Path(comparison["table"]).resolve()),
+                    "ortholog_table_sha256": comparison["table_sha256"],
+                }
+            )
+        if not matching:
+            raise ValueError("Prospective bootstrap family does not register this output bundle")
+        primary = {
+            "paired_preflight_path": str(paired_preflight_path.resolve()),
+            "paired_preflight_sha256": file_sha256(paired_preflight_path),
+            "ortholog_table_path": str(ortholog_table.resolve()),
+            "ortholog_table_sha256": file_sha256(ortholog_table),
+        }
+        if primary not in matching:
+            raise ValueError("Producer's primary paired preflight must be a registered family member")
+        family_binding = {
+            "bootstrap_family_path": str(bootstrap_family_path.resolve()),
+            "bootstrap_family_file_sha256": file_sha256(bootstrap_family_path),
+            "bootstrap_family_sha256": family_hash,
+            "registered_paired_inputs": sorted(
+                matching, key=lambda item: (item["paired_preflight_path"], item["ortholog_table_path"])
+            ),
+        }
     if projected_seconds > max_seconds:
         raise ValueError(
             f"Measured workload estimate {projected_seconds:.1f}s exceeds execution budget {max_seconds:.1f}s"
@@ -235,6 +315,7 @@ def _score(
             software_commit=actual_commit,
         )
         frozen = {
+            **family_binding,
             "schema": "b3_measured_zero_producer_provenance_v2",
             "method": MEASURED_ZERO_METHOD_ID,
             "paired_preflight_path": str(paired_preflight_path.resolve()),
@@ -493,6 +574,17 @@ def _score(
             # during score generation. Never publish a partial directory.
             check_budget()
             if (
+                bootstrap_family_path is not None
+                and file_sha256(bootstrap_family_path) != family_binding["bootstrap_family_file_sha256"]
+            ):
+                raise ValueError("Prospective bootstrap family changed during scoring")
+            for member in family_binding.get("registered_paired_inputs", ()):
+                if (
+                    file_sha256(Path(member["paired_preflight_path"])) != member["paired_preflight_sha256"]
+                    or file_sha256(Path(member["ortholog_table_path"])) != member["ortholog_table_sha256"]
+                ):
+                    raise ValueError("Prospective family paired input changed during scoring")
+            if (
                 file_sha256(paired_preflight_path) != frozen["paired_preflight_sha256"]
                 or file_sha256(ortholog_table) != frozen["ortholog_table_sha256"]
             ):
@@ -577,6 +669,7 @@ def run(
     max_seconds: float = 3600,
     paired_preflight_path: Path | None = None,
     ortholog_table: Path | None = None,
+    bootstrap_family_path: Path | None = None,
 ):
     for variable in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
         os.environ[variable] = "1"
@@ -611,6 +704,7 @@ def run(
         max_seconds=max_seconds,
         paired_preflight_path=Path(paired_preflight_path),
         ortholog_table=Path(ortholog_table),
+        bootstrap_family_path=Path(bootstrap_family_path) if bootstrap_family_path is not None else None,
     )
 
 
@@ -626,6 +720,7 @@ def main(argv=None):
     parser.add_argument("--resource-probe", type=Path)
     parser.add_argument("--paired-preflight", type=Path)
     parser.add_argument("--ortholog-table", type=Path)
+    parser.add_argument("--bootstrap-family", type=Path)
     parser.add_argument("--max-seconds", type=float, default=3600)
     args = parser.parse_args(argv)
     print(
@@ -640,6 +735,7 @@ def main(argv=None):
                 max_seconds=args.max_seconds,
                 paired_preflight_path=args.paired_preflight,
                 ortholog_table=args.ortholog_table,
+                bootstrap_family_path=args.bootstrap_family,
             ),
             indent=2,
         )

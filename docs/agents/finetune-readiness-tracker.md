@@ -41,8 +41,33 @@ was **99.26 hours**. It passed the paired report, table, config, support,
 cohort and software checks before rejecting execution against the default
 one-hour budget, without model loading or publication. Earlier ~101-hour
 figures are historical; neither projection is validated cohort throughput.
-A v2-only comparison adapter exists without scored bundles; coordinated
-embryo bootstrap remains unavailable.
+A v2-only comparison adapter and bounded, resumable embryo bootstrap code
+exist, without scored bundles, draws or an interval. Bootstrap draws preserve
+the original finite ortholog-pair family, resample physical embryos with
+multiplicity, rebuild all-gene expression/dropout bins and mixed nulls, and
+require 2,000 coordinated draws with at least 95% jointly valid before an
+interval. Final publication replays every shard from validated sources.
+The full-cohort shard contract and weight-free planner are implemented, but
+they certify storage structure only. The full inference runner, source/native
+reconciliation and global aggregation remain absent. No complete bounded
+scorer or bootstrap run was added to the evidence. Ten of twelve bounded
+engineering tickets remain closed; ticket 05 is open and 11 excluded.
+The weight-free human and mouse full-cohort planners completed on real
+support metadata. Their [compact evidence](b3-measured-zero-full-shard-plan-evidence-2026-10-01.json)
+records **2,583 human** and **19,696 mouse** contiguous storage ranges for
+123,952/945,389 cells and 230,980,471/833,826,864 native-scorable contrasts,
+respectively. Both have `planned_storage_only` status. No shard scores or
+scientific result followed.
+An [optimized two-forward CUDA diagnostic](b3-measured-zero-resource-gate-evidence-2026-10-01.md#optimized-two-forward-diagnostic)
+then passed on the same padded human cell. Original/deletion forwards took
+1.582/0.455 seconds; the prior deletion observation was 6.578 seconds, so
+the one-cell deletion step was about 14.47 times faster. Peak RSS was
+15,756,738,560 bytes and CUDA reservation 9,877,585,920 bytes. The updated
+single-cell pilot projection is **24,716.44 seconds (6.87 hours)**, still
+above the one-hour execution budget and unvalidated as cohort throughput.
+The matching producer's conservative projection was **24,738.7 seconds
+(6.87 hours)** and its one-hour guard rejected the run before model loading
+or publication.
 There is no amended cohort score result. Ticket 05 remains open and ticket
 11 remains excluded.
 
@@ -51,7 +76,8 @@ report and ortholog table, hashing both into each score bundle before
 inference. The separate comparator requires both bundles to bind that same
 pair and derives its full vocabularies and statistic request from validated
 producer configs. It withholds rho below the scientific floors or for
-constant ranks; mixed-null embryo bootstrap remains unavailable. The
+constant ranks; a mixed-null embryo bootstrap implementation exists without
+real draw evidence or an interval. The
 pre-inference freeze checks passed on real pilot data, but no actual bundle
 has traversed the scorer, aggregation and comparator path.
 

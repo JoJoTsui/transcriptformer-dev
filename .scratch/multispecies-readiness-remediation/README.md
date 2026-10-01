@@ -126,7 +126,22 @@ producer guard projected **99.26 hours** and rejected the run before model
 loading or publication against the default one-hour limit. Earlier ~101-hour
 figures are preserved in the evidence record. Neither projection is
 validated pilot throughput. A v2-only comparison adapter exists, but it has
-no scored bundles and no coordinated embryo bootstrap. Ticket 05 stays open.
+no scored bundles, draws or bootstrap interval. The bounded v2 embryo
+bootstrap and resumable shard code are implemented, with deterministic
+final replay; the separate full-cohort shard contract and weight-free planner
+certify storage structure only. Full-cohort inference, source/native
+reconciliation and global aggregation remain absent. Ticket 05 stays open.
+The weight-free human and mouse full-cohort planners ran on real support
+metadata and produced 2,583 and 19,696 planned storage ranges, respectively,
+without score shards or model forwards. The
+[compact evidence](../../docs/agents/b3-measured-zero-full-shard-plan-evidence-2026-10-01.json)
+binds both plans to source and support hashes.
+The newer [optimized two-forward diagnostic](../../docs/agents/b3-measured-zero-resource-gate-evidence-2026-10-01.md#optimized-two-forward-diagnostic)
+reduced the observed single-cell deletion step from 6.578 to 0.455 seconds;
+its human pilot extrapolation is still 6.87 hours against the one-hour
+budget. The matching producer projected 6.87 hours from all positive
+attempts and rejected execution before model loading or publication. No
+complete pilot score run followed.
 The current v2 producer also freezes the paired support report and ortholog
 table hashes before inference. Its comparator requires both bundles to bind
 that same report/table and derives vocabularies and statistic inputs from

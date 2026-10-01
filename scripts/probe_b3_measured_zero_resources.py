@@ -347,6 +347,8 @@ def run(
                             "finite_original_targets": True,
                             "original_target_log_probs_sha256": digest,
                             "positive_deletion_matched_target_count": impact.n_targets,
+                            "positive_deletion_impact_bits_per_target": float(impact.impact.item()),
+                            "positive_deletion_matched_gene_ids_sha256": digest_json(list(impact.gene_ids)),
                             "deletion_status": "scored",
                             "peak_cuda_reserved_bytes": peak_reserved,
                             "elapsed_original_seconds": original_seconds,

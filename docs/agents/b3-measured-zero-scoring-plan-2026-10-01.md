@@ -1,6 +1,6 @@
 # Measured-zero B3 scoring and compute gate
 
-Status: bounded backend implemented; tiny CUDA two-forward resource probe passed, bounded cohort scoring unverified; full backend remains a plan, not a score result. Method:
+Status: bounded backend implemented; tiny CUDA two-forward resource probe passed, bounded cohort scoring unverified; full-cohort shard storage and weight-free planning implemented, with inference and global aggregation still absent. Method:
 `b3_measured_zero_peer_null_v2`. The [owner decision](b3-measured-zero-owner-decision-2026-10-01.md)
 authorizes the separate method. The v1 raw artifacts, score tables, bootstrap
 inputs and validators retain their existing identities and limits.
@@ -42,8 +42,9 @@ projected **364,606.4 seconds (101.28 hours)** and rejected `--execute`
 before loading the model or publishing an output bundle. The
 [resource-gate evidence](b3-measured-zero-resource-gate-evidence-2026-10-01.md)
 records the command outcome and local log hash. A v2-only paired comparison
-adapter is implemented, but it has no scored bundles to consume; coordinated
-embryo bootstrap for the amended mixed null remains unavailable.
+adapter is implemented, but it has no scored bundles to consume. Bounded
+coordinated embryo-bootstrap code exists, but there are no v2 score bundles,
+draws or uncertainty interval.
 
 The hardened `--execute` contract additionally requires the frozen amended
 paired preflight and its ortholog table. Both hashes enter the producer
@@ -54,7 +55,13 @@ vocabularies and named statistic inputs from their validated configs, then
 applies the unchanged 60%/5,000 eligibility and 500-pair/80% reporting
 floors. It withholds Spearman rho when ranks are constant or a floor fails.
 The comparator has no real v2 score bundles to process; the new freeze path
-has not been verified through a complete inference and comparison run.
+has not been verified through a complete inference and comparison run. An
+optional `--bootstrap-family` binds a prospectively frozen family path, file
+hash and canonical family hash into each producer bundle before model work.
+Multi-comparison bootstrap preflight requires the same family hash in every
+member bundle. A bundle shared across comparisons registers each associated
+paired report and table before scoring; the validator rehashes every member
+and the comparator accepts only a registered pair.
 
 The [final-code probe and paired-freeze guard](b3-measured-zero-resource-gate-evidence-2026-10-01.md#final-code-paired-freeze-continuation)
 now supersede the earlier ~101-hour projections for the current software
@@ -65,6 +72,19 @@ software, paired report, ortholog table, frozen genes and cohort before its
 conservative **99.26-hour** projection failed the default 3,600-second
 budget. No score bundle was published. The complete scorer, aggregation and
 comparison paths remain unverified.
+
+The later [optimized two-forward diagnostic](b3-measured-zero-resource-gate-evidence-2026-10-01.md#optimized-two-forward-diagnostic)
+passed on the same padded human cell after a native log-probability hot-loop
+change. The observed original/deletion forwards took 1.582/0.455 seconds;
+the prior deletion step took 6.578 seconds, about 14.47 times longer in
+these two single-cell observations. Peak RSS was 15,756,738,560 bytes and
+CUDA reservation was 9,877,585,920 bytes. Its single-cell projection is
+**24,716.44 seconds (6.87 hours)** for the frozen human pilot, still above
+the default one-hour budget. This is a resource diagnostic, not measured
+cohort throughput or a scored bundle. The corresponding producer guard
+projected **24,738.7 seconds (6.87 hours)** using all positive attempts and
+rejected execution before model loading or publication; its exact error and
+log hash are in the resource evidence.
 
 ## What the structural scans establish
 
@@ -164,10 +184,22 @@ phases, bins or thresholds after seeing effects.
 
 ## Full-cohort backend only after measured feasibility
 
-The disk-backed backend needs resumable, hash-bound cell ranges; immutable
-bounded shard sizes; atomic publication; per-shard row/cell and failure
-counts; and an independent replay that every selected prepared row is
-accounted for exactly once. Keep one native cell and one contrast on device,
+The implemented weight-free planner binds the full support bitmap, frozen
+paired report/table, source hashes and complete cell ranges. The compact
+little-endian v2 shard contract bounds positive-attempt records and proofs;
+its verifier labels completed storage `storage_complete_unreconciled`.
+The weight-free real cohort planners produced **2,583 human** and **19,696
+mouse** contiguous ranges for 123,952/945,389 cells and
+230,980,471/833,826,864 native-scorable contrasts, respectively. The
+[compact plan evidence](b3-measured-zero-full-shard-plan-evidence-2026-10-01.json)
+binds both plans to frozen support/source hashes. Both have
+`planned_storage_only` status, and no score shard exists. The planner CLI
+requires the frozen config, full support preflight, paired preflight,
+ortholog table and a fresh output path.
+The full disk-backed inference runner still needs per-shard row/cell and
+failure counts, and an independent replay that every selected prepared row
+and native attempt is accounted for exactly once. Keep one native cell and
+one contrast on device,
 with explicit peak-memory and disk-watermark aborts. A full raw score stream
 will exceed the existing 100,000-row cap by orders of magnitude. It needs a
 new storage and aggregation contract, not a larger v1 cap.
@@ -178,11 +210,22 @@ impacts; certified zeros contribute zero while retaining **all** focal
 scored cells in each embryo denominator. Fold values in stable cell/embryo
 order with bounded disk indexes or external merge passes. Check the computed
 peer sample SD rather than treating a native-overlap support flag as proof
-of variance. Shard the embryo-block bootstrap separately and estimate its
-2,000-draw cost on a real bounded slice before running it; a draw must
-rebuild bins and nulls under the frozen family and requires at least five
-independent embryos per species. Preserve null/uncertainty unavailability
-when that requirement is unmet.
+of variance. The separate bounded embryo bootstrap now implements
+physical-embryo multiplicity draws, whole-gene expression/dropout bin
+reconstruction, mixed-null recomputation and rank concordance on the
+original fixed finite-pair universe. Draws are stored in bounded resumable
+shards. Finalization requires all 2,000 coordinated draws and at least 1,900
+jointly valid draws, then independently replays every shard from validated
+sources before publishing a simultaneous interval. It requires at least five
+independent embryos per species. Its actual runtime and scientific output
+remain unverified because there are no scored v2 bundles or draws. Estimate
+draw cost on a real bounded slice before a full bootstrap run.
+The bootstrap CLI takes `--family`, `--family-sha256` and a fresh `--work-dir`
+to create a preflight-only plan. `--execute --start N --stop M` writes at most
+100 complete draws per bounded shard; `--finalize` requires all 2,000 draw
+indices and source replay before it can publish `result.json`. Both actions
+honor `--max-seconds` (default 3,600 seconds); a timeout cannot publish a
+partial interval.
 
 Only finite v2 z-scores over the full eligible one-to-one ortholog universe
 may reach the paired Spearman comparison. Its sidecars must reject v1/v2

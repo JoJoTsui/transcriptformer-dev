@@ -50,7 +50,20 @@ table, config, support, cohort and code hashes, then its conservative
 **99.26-hour** projection rejected execution before model loading or
 publication. Earlier ~101-hour figures are historical. Neither projection
 is validated cohort throughput. A v2-only comparison adapter exists without
-scored bundles; coordinated embryo bootstrap remains unavailable.
+scored bundles or bootstrap draws. A bounded v2 embryo bootstrap implementation
+now preserves physical embryo multiplicities, all-gene bin reconstruction and
+the fixed original score-pair family; it requires 2,000 coordinated draws and
+at least 95% jointly valid before an interval, with source-based final replay.
+The separate full-cohort shard contract and weight-free planner are storage
+tools only. Full-cohort inference, source/native reconciliation and global
+aggregation are absent, so ticket 05 remains open and 11 excluded.
+The weight-free planners completed 2,583 human and 19,696 mouse storage
+ranges on real [support-bound evidence](../../docs/agents/b3-measured-zero-full-shard-plan-evidence-2026-10-01.json);
+those planning runs wrote no score shard and performed no model forward.
+The later [optimized two-forward diagnostic](../../docs/agents/b3-measured-zero-resource-gate-evidence-2026-10-01.md#optimized-two-forward-diagnostic)
+passed on one padded human cell. Its 6.87-hour pilot extrapolation remains
+above the one-hour budget; no complete score bundle or cohort throughput
+measurement followed.
 The hardened v2 producer freezes the paired support report and ortholog
 table before inference; the comparator requires two bundles bound to that
 same pair and derives full vocabularies and statistic inputs from their

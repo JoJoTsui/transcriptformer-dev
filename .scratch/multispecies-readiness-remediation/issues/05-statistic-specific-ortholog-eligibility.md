@@ -84,8 +84,9 @@ path. Its default CLI completed real human pilot preflight without loading
 weights or performing model forwards. The v2 score sidecar and bundle
 validator independently replay source rows, native attempts, bitmaps,
 resolved zero certificates, metrics and z-scores. A separate full-cohort
-backend, measured device feasibility, finite null variance, bootstrap and observed
-comparison remain outstanding. The full selected cohorts imply about
+inference/aggregation backend, measured cohort feasibility, finite null
+variance, bootstrap draws/interval and observed comparison remain
+outstanding. The full selected cohorts imply about
 **1,065,876,676 original/deleted forwards per checkpoint arm** under the
 current scoring approach; this is a workload estimate, not a measured runtime.
 Bounded `--execute` now requires a successful matching resource probe:
@@ -111,7 +112,43 @@ vocabularies and statistic genes from validated configs, and withholds rho
 when a floor fails or ranks are constant. The final producer run passed
 these pre-inference scientific freeze checks before its budget rejection,
 but no scored bundle has traversed the scorer, aggregation or comparator.
-Coordinated embryo-bootstrap uncertainty remains unavailable.
+Coordinated embryo-bootstrap uncertainty remains unavailable as a **result**.
+The bounded v2 bootstrap implementation resamples physical embryos with
+multiplicity, rebuilds expression/dropout bins over all genes and mixed nulls
+for the fixed observed finite-pair family, and requires all 2,000 draws with
+at least 95% jointly valid before a simultaneous interval. It writes bounded,
+resumable shards and independently replays each draw before finalization.
+There are no actual v2 score bundles, draws or interval. The optional
+prospective family hash can be bound by the producer before inference for a
+multi-comparison family. A species bundle reused across comparisons registers
+all associated paired reports and ortholog tables, with byte hashes checked
+at production, validation and comparison. Its complete runtime is unverified.
+
+The separate full-cohort shard contract and weight-free planner fix source
+and support hashes, cell ranges, compact little-endian positive-attempt
+records and proof bytes. Storage completion is explicitly unreconciled; it
+does not establish source/native attempt equality or scientific scores. A
+full-cohort inference runner, source/native reconciliation and global null
+aggregation remain absent. The v2 normalization scratch optimization
+preserves the score arithmetic. This continuation made no new test run or
+model call for the bootstrap/shard additions; the separate two-forward
+inference diagnostic is recorded below.
+The real human and mouse full-cohort planners completed without weights or
+forwards. Their [compact evidence](../../../docs/agents/b3-measured-zero-full-shard-plan-evidence-2026-10-01.json)
+fixes **2,583 human** and **19,696 mouse** contiguous storage ranges across
+123,952/945,389 cells and 230,980,471/833,826,864 native-scorable
+contrasts, respectively. Both have `planned_storage_only` status. No score
+shard was produced.
+The later [optimized two-forward diagnostic](../../../docs/agents/b3-measured-zero-resource-gate-evidence-2026-10-01.md#optimized-two-forward-diagnostic)
+passed on the same padded human cell. Its original/deletion forwards took
+1.582/0.455 seconds, with the deletion step about 14.47 times faster than
+the prior 6.578-second one-cell observation. Peak RSS was 15,756,738,560
+bytes and CUDA reservation 9,877,585,920 bytes. The extrapolated human
+pilot time is **24,716.44 seconds (6.87 hours)**, still above the default
+3,600-second budget. The matching producer conservatively projected
+**24,738.7 seconds (6.87 hours)** and rejected execution before model loading
+or publication. This is neither validated pilot throughput nor a score
+bundle; ticket 05 remains open.
 The first CUDA probe failed at `original_forward` because deterministic
 CuBLAS lacked `CUBLAS_WORKSPACE_CONFIG=:4096:8`; the probe and producer now
 set it before Torch import. The failed run recorded 15,771,873,280 bytes

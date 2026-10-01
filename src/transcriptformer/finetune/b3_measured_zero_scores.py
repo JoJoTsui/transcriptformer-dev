@@ -89,6 +89,8 @@ def score_bounded_measured_zero(
     cell_proofs: list[dict],
     metrics: list[dict],
     gene_ids: list[str],
+    _embryo_multiplicity: dict[str, int] | None = None,
+    _focal_gene_ids: set[str] | None = None,
 ) -> dict:
     """Compute embryo-balanced v2 nulls from bounded positive rows and bits.
 
@@ -105,6 +107,30 @@ def score_bounded_measured_zero(
         raise ValueError("Measured-zero Boolean support grid exceeds the bounded cap")
     if [row["gene_id"] for row in metrics] != gene_ids:
         raise ValueError("Metric universe differs from measured gene universe")
+    if _focal_gene_ids is not None and (not _focal_gene_ids or not _focal_gene_ids <= set(gene_ids)):
+        raise ValueError("Weighted focal genes differ from the frozen gene universe")
+    if _embryo_multiplicity is not None:
+        embryos = {proof["embryo_id"] for proof in cell_proofs}
+        if (
+            set(_embryo_multiplicity) != embryos
+            or any(type(value) is not int or value < 0 for value in _embryo_multiplicity.values())
+            or sum(_embryo_multiplicity.values()) != len(embryos)
+        ):
+            raise ValueError("Embryo draw multiplicities must resample the frozen independent embryos")
+
+    def embryo_mean(values: list[tuple[str, float]]) -> float:
+        if _embryo_multiplicity is None:
+            return _embryo_mean(values)
+        by_embryo: dict[str, list[float]] = defaultdict(list)
+        for embryo, value in values:
+            by_embryo[embryo].append(value)
+        denominator = sum(_embryo_multiplicity[embryo] for embryo in by_embryo)
+        if denominator < 1:
+            raise ValueError("Weighted embryo mean has no sampled observations")
+        return fsum(
+            _embryo_multiplicity[embryo] * _mean(by_embryo[embryo]) / denominator for embryo in sorted(by_embryo)
+        )
+
     plan = build_expression_dropout_bins(metrics)
     gene_index = {gene: i for i, gene in enumerate(gene_ids)}
     n_bytes = (len(gene_ids) + 7) // 8
@@ -197,7 +223,9 @@ def score_bounded_measured_zero(
             raise ValueError("Positive score row differs from its certified cell identity")
     by_gene: dict[str, list[dict]] = defaultdict(list)
     for row in positive_rows:
-        if row["status"] == "scored":
+        if row["status"] == "scored" and (
+            _embryo_multiplicity is None or _embryo_multiplicity[cell_proofs[row["cell_index"]]["embryo_id"]] > 0
+        ):
             by_gene[row["gene_id"]].append(row)
     bins = plan.gene_bins
     by_bin: dict[object, list[str]] = defaultdict(list)
@@ -205,10 +233,20 @@ def score_bounded_measured_zero(
         if bins[gene] is not None:
             by_bin[bins[gene]].append(gene)
     results = []
-    for focal_gene in gene_ids:
+    for focal_gene in gene_ids if _focal_gene_ids is None else sorted(_focal_gene_ids):
         focal = by_gene[focal_gene]
-        n_cells = len(focal)
-        n_embryos = len({cell_proofs[row["cell_index"]]["embryo_id"] for row in focal})
+        unique_cells = len(focal)
+        focal_embryos = {cell_proofs[row["cell_index"]]["embryo_id"] for row in focal}
+        n_cells = (
+            unique_cells
+            if _embryo_multiplicity is None
+            else sum(_embryo_multiplicity[cell_proofs[row["cell_index"]]["embryo_id"]] for row in focal)
+        )
+        n_embryos = (
+            len(focal_embryos)
+            if _embryo_multiplicity is None
+            else sum(_embryo_multiplicity[embryo] for embryo in focal_embryos)
+        )
         result = {
             "gene_id": focal_gene,
             "focal_scored_cells": n_cells,
@@ -225,13 +263,13 @@ def score_bounded_measured_zero(
             "mean_n_targets": None,
         }
         if focal:
-            result["raw_impact_bits"] = _embryo_mean(
+            result["raw_impact_bits"] = embryo_mean(
                 [(cell_proofs[row["cell_index"]]["embryo_id"], float(row["impact_bits"])) for row in focal]
             )
-            result["mean_token_position"] = _embryo_mean(
+            result["mean_token_position"] = embryo_mean(
                 [(cell_proofs[row["cell_index"]]["embryo_id"], float(row["token_position"])) for row in focal]
             )
-            result["mean_n_targets"] = _embryo_mean(
+            result["mean_n_targets"] = embryo_mean(
                 [(cell_proofs[row["cell_index"]]["embryo_id"], float(row["n_targets"])) for row in focal]
             )
         if not focal:
@@ -265,9 +303,9 @@ def score_bounded_measured_zero(
                     else:
                         value = 0.0
                     observations.append((cell_proofs[cell_index]["embryo_id"], value))
-                if len(observations) != n_cells:
+                if len(observations) != unique_cells:
                     continue
-                peer_mean = _embryo_mean(observations)
+                peer_mean = embryo_mean(observations)
                 if not isfinite(peer_mean):
                     raise ValueError("Measured-zero peer aggregation is nonfinite")
                 peers.append(peer_mean)
@@ -390,6 +428,51 @@ def validate_score_bundle(path: str | Path, *, verify_input_bytes: bool = True) 
         ):
             raise ValueError("Measured-zero producer must bind its paired preflight, ortholog table and resource probe")
     if verify_input_bytes:
+        if provenance.get("bootstrap_family_path") is not None:
+            family_path = Path(provenance["bootstrap_family_path"])
+            if family_path.stat().st_size > MAX_BUNDLE_JSON_BYTES:
+                raise ValueError("Measured-zero prospective bootstrap family exceeds bounded reader size")
+            family = json.loads(family_path.read_text())
+            if _file_hash(family_path) != provenance.get("bootstrap_family_file_sha256") or _digest(
+                family
+            ) != provenance.get("bootstrap_family_sha256"):
+                raise ValueError("Measured-zero prospective bootstrap family changed")
+            from transcriptformer.finetune.b3_measured_zero_bootstrap import validate_family
+
+            validate_family(family, provenance["bootstrap_family_sha256"])
+            if family["model_arm"] != provenance["model_arm"]:
+                raise ValueError("Measured-zero prospective bootstrap family model arm differs")
+            expected_members = []
+            for comparison in family["comparisons"]:
+                if path.resolve() not in (
+                    Path(comparison["bundle_a"]).resolve(),
+                    Path(comparison["bundle_b"]).resolve(),
+                ):
+                    continue
+                expected_members.append(
+                    {
+                        "paired_preflight_path": str(Path(comparison["paired_preflight"]).resolve()),
+                        "paired_preflight_sha256": comparison["paired_preflight_sha256"],
+                        "ortholog_table_path": str(Path(comparison["table"]).resolve()),
+                        "ortholog_table_sha256": comparison["table_sha256"],
+                    }
+                )
+            expected_members.sort(key=lambda item: (item["paired_preflight_path"], item["ortholog_table_path"]))
+            registered = provenance.get("registered_paired_inputs")
+            primary = {
+                "paired_preflight_path": provenance["paired_preflight_path"],
+                "paired_preflight_sha256": provenance["paired_preflight_sha256"],
+                "ortholog_table_path": provenance["ortholog_table_path"],
+                "ortholog_table_sha256": provenance["ortholog_table_sha256"],
+            }
+            if not expected_members or registered != expected_members or primary not in expected_members:
+                raise ValueError("Measured-zero family members differ from registered paired inputs")
+            for member in expected_members:
+                if (
+                    _file_hash(Path(member["paired_preflight_path"])) != member["paired_preflight_sha256"]
+                    or _file_hash(Path(member["ortholog_table_path"])) != member["ortholog_table_sha256"]
+                ):
+                    raise ValueError("Measured-zero registered family paired input bytes changed")
         for name in ("paired_preflight", "ortholog_table", "resource_probe"):
             if _file_hash(Path(provenance[name + "_path"])) != provenance[name + "_sha256"]:
                 raise ValueError("Measured-zero frozen paired universe or resource probe bytes changed")

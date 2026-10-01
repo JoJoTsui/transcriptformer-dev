@@ -1,0 +1,69 @@
+{
+  "interpretation": "Immutable storage ranges only; no native source reconciliation, full-cohort null aggregation, or biological result",
+  "method": "b3_measured_zero_peer_null_v2",
+  "model_forwards_performed_for_planning": false,
+  "plans": [
+    {
+      "cohort_sha256": "e2259aeb4c6e7d8560d34b95eba513e7fb508ab6297335028d9322dea6ce98c8",
+      "config_sha256": "2624358168ed815ec1d4d7c7589f87a31b7cf0535f7004f7136b10b156745132",
+      "estimated_raw_positive_attempts_full_cohort": 231182546,
+      "full_preflight_sha256": "03c1071f03f84b66daf93dfa9864dbdb0c1e4860be060ade02e8fec74cf043d0",
+      "max_cells_per_shard": 48,
+      "max_positive_attempts_per_shard": 98256,
+      "model_forwards_performed": false,
+      "n_cells": 123952,
+      "n_frozen_genes": 19406,
+      "n_shards": 2583,
+      "native_scorable_contrasts_lower_count": 230980471,
+      "native_sequence_length": 2047,
+      "ortholog_table_sha256": "bce2e8dee39311e8c2c571660556af09f8de2c6a26c31de295bc4f3f95e06d60",
+      "paired_preflight_sha256": "1f79d92fa2e63c0ee924b9b2d8e6112650801182b2fa5788560b11585972a27e",
+      "plan_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_native_shard_plan.json",
+      "plan_sha256": "b06233309be599e05c8bff01c2aea2b4df276f28fd853aae786ad54bd7141fa2",
+      "plan_status": "planned_storage_only",
+      "positive_attempts_worst_case_full_cohort": 253729744,
+      "scientific_readiness": "unavailable_pending_source_native_reconciliation_and_global_null",
+      "source_input_sha256": {
+        "aux_vocabulary": "398e810c8b4d592af0cd45c866923ed509b28106d35310e0406aa53db505d00a",
+        "checkpoint_config": "84042c79ba1b452bc64ad78c6a39831b60e0b533c222dad4cddf0704a4c4d80f",
+        "gene_vocabulary": "47ffa0eba3f799d9e9a105f1d69a3f098785bfba007e8c41370576216882a9b2",
+        "manifest": "e3190a9e14bd0f17157891033096e5fb3bbe7585d3932d26ae2834d3633f649f",
+        "prepared_report": "8ec35395a8bc375e4cd1c0c76aedf85d87555b59a33dec109f1cbe730a6d6532"
+      },
+      "species": "homo_sapiens",
+      "support_h5_sha256": "3c98c2bf007b1f2ca8e803a2afeb1d14224414eba7a0c31c76ff836e0bf59ca9"
+    },
+    {
+      "cohort_sha256": "cc15e2e7bd18c0b074d70925fbcef3f9a3558f3b544de257b7b5538977d56724",
+      "config_sha256": "2b12ba00de1173dfe2ae136125425be7f6af5025540493b26d39e06829adb055",
+      "estimated_raw_positive_attempts_full_cohort": 834781316,
+      "full_preflight_sha256": "819d751f16e6c5c63f6c0ef92a9788fe5cd890d14759b16226143891887e88ae",
+      "max_cells_per_shard": 48,
+      "max_positive_attempts_per_shard": 98256,
+      "model_forwards_performed": false,
+      "n_cells": 945389,
+      "n_frozen_genes": 20131,
+      "n_shards": 19696,
+      "native_scorable_contrasts_lower_count": 833826864,
+      "native_sequence_length": 2047,
+      "ortholog_table_sha256": "bce2e8dee39311e8c2c571660556af09f8de2c6a26c31de295bc4f3f95e06d60",
+      "paired_preflight_sha256": "1f79d92fa2e63c0ee924b9b2d8e6112650801182b2fa5788560b11585972a27e",
+      "plan_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_native_shard_plan.json",
+      "plan_sha256": "559c87f71fa4ad220305a827ca11d8d1907d81c911af2926cc10473e4a888c8f",
+      "plan_status": "planned_storage_only",
+      "positive_attempts_worst_case_full_cohort": 1935211283,
+      "scientific_readiness": "unavailable_pending_source_native_reconciliation_and_global_null",
+      "source_input_sha256": {
+        "aux_vocabulary": "398e810c8b4d592af0cd45c866923ed509b28106d35310e0406aa53db505d00a",
+        "checkpoint_config": "84042c79ba1b452bc64ad78c6a39831b60e0b533c222dad4cddf0704a4c4d80f",
+        "gene_vocabulary": "47ffa0eba3f799d9e9a105f1d69a3f098785bfba007e8c41370576216882a9b2",
+        "manifest": "e3190a9e14bd0f17157891033096e5fb3bbe7585d3932d26ae2834d3633f649f",
+        "prepared_report": "8ec35395a8bc375e4cd1c0c76aedf85d87555b59a33dec109f1cbe730a6d6532"
+      },
+      "species": "mus_musculus",
+      "support_h5_sha256": "bd1bf76a7eb27876c02d2cb51df9978de7e054495890c3cc65d2f27a40275616"
+    }
+  ],
+  "schema": "b3_measured_zero_full_shard_plan_evidence_v1",
+  "scientific_readiness": "unavailable_pending_source_native_reconciliation_and_global_null"
+}

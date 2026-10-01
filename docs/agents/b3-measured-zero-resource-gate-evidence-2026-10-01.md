@@ -69,7 +69,38 @@ The requested fresh output directory
 absent. This is a successful fail-closed budget check, not a scored pilot.
 
 The earlier 101.19/101.28-hour numbers above document the pre-freeze
-software snapshot. The final-code 99.17/99.26-hour numbers supersede them
-for the current frozen pilot. Neither is validated cohort throughput.
+software snapshot. The 99.17/99.26-hour numbers superseded them for the
+paired-freeze software snapshot; the optimized probe below is newer.
+None is validated cohort throughput.
 Whole-pilot scoring, aggregation, v2 bundle comparison, coordinated embryo
 bootstrap and the full-cohort backend remain unverified or unavailable.
+
+## Optimized two-forward diagnostic
+
+The [optimized probe JSON](b3-measured-zero-resource-evidence-optimized-2026-10-01.json)
+is an exact copy of
+`runs/b3_pilot/organogenesis_v3/resource_probe_hotloop_optimized.json`;
+both have SHA-256
+`aadb1f34e3921e3937e9f18dc178a3805d9c47f2a1b52f8ea9998281bd737bac`.
+The source-hash-bound probe passed two CUDA forwards on the same padded human
+cell. It verified 2,044 finite original targets and 2,043 matched deletion
+targets; the positive deletion effect was 0.00028455359279178083 bits per
+target. Original and deletion forwards took 1.582 and 0.455 seconds. The
+deletion forward was about **14.47 times faster** than the prior 6.578-second
+single-cell observation, following the native log-probability hot-loop
+optimization. Peak process RSS was 15,756,738,560 bytes; peak CUDA allocated
+memory was 8,484,839,424 bytes and reservation was 9,877,585,920 bytes.
+
+Its single-cell extrapolation is **24,716.44 seconds (6.87 hours)** for the
+frozen human pilot. This remains above the default 3,600-second execution
+budget and is not validated pilot throughput. The matching producer run
+checked its config, checkpoint, software, paired report, table, cohort and
+source bindings, then conservatively projected all positive attempts at
+**24,738.7 seconds (6.87 hours)**. It exited 1 with `ValueError: Measured
+workload estimate 24738.7s exceeds execution budget 3600.0s` before model
+loading or publication. The ignored local log is
+`runs/b3_pilot/organogenesis_v3/v2_optimized_budget_guard.log`, SHA-256
+`896faa0265dbec1d32d6e8225c9434e5a99317593ad1c92d3afc81f9fb946944`.
+The requested `v2_optimized_budget_guard_publication` directory is absent.
+This is a successful fail-closed budget check, not a bounded score bundle,
+full-cohort score shard, embryo-bootstrap draw or scientific comparison.

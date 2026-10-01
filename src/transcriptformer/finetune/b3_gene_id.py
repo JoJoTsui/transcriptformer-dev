@@ -237,12 +237,43 @@ def matched_gene_id_deletion_impact(
             raise ValueError("Masks must be boolean, with true for excluded positions")
         if gene_ids.dtype not in (torch.int32, torch.int64) or target_ids.dtype not in (torch.int32, torch.int64):
             raise ValueError("Gene and target IDs must be integer tensors")
-    original_positions = torch.nonzero(~original_mask, as_tuple=True)[0].tolist()
-    deleted_positions = torch.nonzero(~deleted_mask, as_tuple=True)[0].tolist()
+    # The bounded normalization path handles many targets per deletion. Copy its
+    # small integer metadata once, so matching does not synchronize CUDA for
+    # every target. Keep the unchunked path's original behavior unchanged.
+    copied_metadata = None
+    if normalization_chunk_rows is None:
+        original_positions = torch.nonzero(~original_mask, as_tuple=True)[0].tolist()
+        deleted_positions = torch.nonzero(~deleted_mask, as_tuple=True)[0].tolist()
+    else:
+        metadata = (
+            original_gene_ids,
+            deleted_gene_ids,
+            original_target_ids,
+            deleted_target_ids,
+            original_mask,
+            deleted_mask,
+        )
+        if all(value.device == metadata[0].device for value in metadata):
+            lengths = [len(value) for value in metadata]
+            flattened = torch.cat([value.to(dtype=torch.int64) for value in metadata]).cpu().tolist()
+            copied_metadata = []
+            offset = 0
+            for length in lengths:
+                copied_metadata.append(flattened[offset : offset + length])
+                offset += length
+        else:
+            # The arithmetic seam also accepts metadata on separate devices.
+            copied_metadata = [value.cpu().tolist() for value in metadata]
+        original_positions = [position for position, masked in enumerate(copied_metadata[4]) if not masked]
+        deleted_positions = [position for position, masked in enumerate(copied_metadata[5]) if not masked]
     if deleted_position not in original_positions:
         raise ValueError("Deleted position must refer to an unmasked original gene token")
-    original_tokens = original_gene_ids[original_positions].tolist()
-    deleted_tokens = deleted_gene_ids[deleted_positions].tolist()
+    if copied_metadata is None:
+        original_tokens = original_gene_ids[original_positions].tolist()
+        deleted_tokens = deleted_gene_ids[deleted_positions].tolist()
+    else:
+        original_tokens = [copied_metadata[0][position] for position in original_positions]
+        deleted_tokens = [copied_metadata[1][position] for position in deleted_positions]
     if len(set(original_tokens)) != len(original_tokens) or len(set(deleted_tokens)) != len(deleted_tokens):
         raise ValueError("Unmasked gene tokens must have unique canonical IDs")
     offset = original_positions.index(deleted_position)
@@ -253,12 +284,27 @@ def matched_gene_id_deletion_impact(
 
     common: list[tuple[int, int, int]] = []
     for original_pos, deleted_pos in zip(original_positions[offset + 1 :], deleted_positions[offset:]):
-        gene_id = int(original_gene_ids[original_pos].item())
+        gene_id = (
+            int(original_gene_ids[original_pos].item()) if copied_metadata is None else copied_metadata[0][original_pos]
+        )
         if gene_id in excluded_gene_ids:
             continue
-        original_target = int(original_target_ids[original_pos].item())
-        deleted_target = int(deleted_target_ids[deleted_pos].item())
-        if original_target not in (gene_id, *excluded_gene_ids) or deleted_target not in (gene_id, *excluded_gene_ids):
+        if copied_metadata is None:
+            original_target = int(original_target_ids[original_pos].item())
+            deleted_target = int(deleted_target_ids[deleted_pos].item())
+        else:
+            original_target = copied_metadata[2][original_pos]
+            deleted_target = copied_metadata[3][deleted_pos]
+        if copied_metadata is None:
+            invalid_target = original_target not in (gene_id, *excluded_gene_ids) or deleted_target not in (
+                gene_id,
+                *excluded_gene_ids,
+            )
+        else:
+            invalid_target = (original_target != gene_id and original_target not in excluded_gene_ids) or (
+                deleted_target != gene_id and deleted_target not in excluded_gene_ids
+            )
+        if invalid_target:
             raise ValueError("Native target IDs do not match the aligned gene token")
         if original_target != gene_id:
             continue
