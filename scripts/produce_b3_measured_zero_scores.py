@@ -15,6 +15,9 @@ import os
 from pathlib import Path
 import sys
 import tempfile
+import time
+import resource
+import shutil
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -52,7 +55,17 @@ def _finite_original_targets(original, *, excluded, softcap, chunk_rows=8):
     return True, int(len(positions)), digest.hexdigest(), observed
 
 
-def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str):
+def _score(
+    config_path: Path,
+    preflight_path: Path,
+    output: Path,
+    *,
+    device: str,
+    resource_probe_path: Path,
+    max_seconds: float,
+    paired_preflight_path: Path,
+    ortholog_table: Path,
+):
     import numpy as np
     import torch
 
@@ -92,6 +105,100 @@ def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str
         raise ValueError("Measured-zero bounded preflight changed or is not the approved v2 method")
     if preflight["estimated_positive_raw_rows"] > config["max_rows"]:
         raise ValueError("Frozen positive attempts exceed the configured bounded producer row cap")
+
+    probe = json.loads(resource_probe_path.read_text())
+    if (
+        probe.get("schema") != "b3_measured_zero_resource_probe_v2"
+        or probe.get("status") != "resource_probe_passed"
+        or probe.get("method") != MEASURED_ZERO_METHOD_ID
+        or probe.get("preflight_sha256") != file_sha256(preflight_path)
+        or type(probe.get("native_sequence_length")) is not int
+        or probe["native_sequence_length"] != preflight["native_preprocessing"]["max_len"]
+        or probe.get("config_sha256") != file_sha256(config_path)
+        or probe.get("execution_device") != str(torch.device(device))
+        or probe.get("normalization_chunk_rows") != 8
+        or probe.get("finite_original_targets") is not True
+        or probe.get("deletion_status") != "scored"
+        or probe.get("checkpoint_weights_sha256") != file_sha256(Path(config["checkpoint"]) / "model_weights.pt")
+    ):
+        raise ValueError("Execution requires a successful matching native measured-zero resource probe")
+    import math
+
+    if not math.isfinite(max_seconds) or max_seconds <= 0:
+        raise ValueError("Execution time budget must be finite and positive")
+    timings = [probe.get("elapsed_original_seconds"), probe.get("elapsed_deletion_seconds")]
+    if any(type(value) not in (int, float) or not math.isfinite(value) or value <= 0 for value in timings):
+        raise ValueError("Resource probe lacks valid measured forward timings")
+    projected_seconds = preflight["estimated_positive_raw_rows"] * timings[1] + preflight["n_cells"] * timings[0]
+    root = Path(__file__).resolve().parents[1]
+    expected_software_paths = {
+        str(path.resolve())
+        for path in [*root.joinpath("src", "transcriptformer").rglob("*.py"), *root.joinpath("scripts").glob("*.py")]
+    }
+    if set(probe.get("software_file_sha256", {})) != expected_software_paths:
+        raise ValueError("Resource probe must bind the complete scoring software tree")
+    for path, expected in probe.get("software_file_sha256", {}).items():
+        if file_sha256(path) != expected:
+            raise ValueError("Resource probe software changed; repeat the tiny probe")
+    if not probe.get("software_file_sha256"):
+        raise ValueError("Resource probe must bind scoring software bytes")
+    paired = json.loads(paired_preflight_path.read_text())
+    if (
+        paired.get("schema") != "b3_measured_zero_paired_support_preflight_v1"
+        or paired.get("method") != MEASURED_ZERO_METHOD_ID
+        or paired.get("model_forwards_performed") is not False
+        or paired.get("ortholog_table_sha256") != file_sha256(ortholog_table)
+    ):
+        raise ValueError("Execution requires the frozen v2 paired support report and its unchanged ortholog table")
+    paired_inputs = paired.get("inputs", {})
+    if (
+        not isinstance(paired_inputs, dict)
+        or paired_inputs.get(str(config_path.resolve())) != file_sha256(config_path)
+        or paired_inputs.get(str(preflight_path.resolve())) != file_sha256(preflight_path)
+        or len(paired_inputs) != 4
+        or any(file_sha256(Path(path)) != expected for path, expected in paired_inputs.items())
+    ):
+        raise ValueError("Frozen paired support report inputs differ from the scoring inputs")
+    request = paired.get("prospective_statistic", {})
+    if (
+        not isinstance(request, dict)
+        or request.get("method") != MEASURED_ZERO_METHOD_ID
+        or request.get("statistic") != "B3_measured_zero_peer_null_v2_z"
+        or request.get("phase") != config["phase"]
+    ):
+        raise ValueError("Paired support report has another scientific method or phase")
+    side = (
+        "a"
+        if request.get("species_a") == config["species"]
+        else "b"
+        if request.get("species_b") == config["species"]
+        else None
+    )
+    cohorts = paired.get("cohort_sha256")
+    if (
+        not isinstance(cohorts, list)
+        or len(cohorts) != 2
+        or side is None
+        or request.get("genes_" + side) != sorted(config["gene_ids"])
+        or cohorts[0 if side == "a" else 1] != preflight["cohort_sha256"]
+    ):
+        raise ValueError("Paired support report does not bind the frozen species gene universe and cohort")
+    if projected_seconds > max_seconds:
+        raise ValueError(
+            f"Measured workload estimate {projected_seconds:.1f}s exceeds execution budget {max_seconds:.1f}s"
+        )
+    started = time.monotonic()
+
+    def check_budget():
+        if time.monotonic() - started > max_seconds:
+            raise RuntimeError("B3 execution time budget exceeded; partial output is not published")
+        if resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 > 16 * 1024**3:
+            raise RuntimeError("B3 process RSS exceeds the 16 GiB WSL budget")
+        if torch.device(device).type == "cuda" and torch.cuda.max_memory_reserved(device) > 20 * 1024**3:
+            raise RuntimeError("B3 CUDA reservation exceeds the 20 GiB budget")
+        if shutil.disk_usage(output.parent).free < 2 * 1024**3:
+            raise RuntimeError("B3 output filesystem has less than 2 GiB free")
+
     cells, cfg, gene_vocab, aux_vocab = configured_prepared_cells(config)
     try:
         if len(cells.cells) * len(cells.gene_ids) > MAX_BOOLEAN_ENTRIES:
@@ -130,6 +237,14 @@ def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str
         frozen = {
             "schema": "b3_measured_zero_producer_provenance_v2",
             "method": MEASURED_ZERO_METHOD_ID,
+            "paired_preflight_path": str(paired_preflight_path.resolve()),
+            "paired_preflight_sha256": file_sha256(paired_preflight_path),
+            "ortholog_table_path": str(ortholog_table.resolve()),
+            "ortholog_table_sha256": file_sha256(ortholog_table),
+            "resource_probe_path": str(resource_probe_path.resolve()),
+            "resource_probe_sha256": file_sha256(resource_probe_path),
+            "execution_max_seconds": max_seconds,
+            "normalization_chunk_rows": 8,
             "config_path": str(config_path.resolve()),
             "config_sha256": file_sha256(config_path),
             "preflight_path": str(preflight_path.resolve()),
@@ -159,6 +274,7 @@ def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str
             "gene_ids_sha256": digest_json(cells.gene_ids),
             "deterministic_eval": True,
             "deterministic_algorithms_required": True,
+            "cublas_workspace_config": os.environ["CUBLAS_WORKSPACE_CONFIG"],
         }
         output.parent.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(dir=output.parent, prefix=".b3-measured-zero-score-") as staging:
@@ -197,6 +313,7 @@ def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str
                         )
                     )
                     for cell_index, cpu_cell in enumerate(cells.iter_cells()):
+                        check_budget()
                         meta = cells.cells[cell_index]
                         raw = cells.dataset._X_per_file[meta["file_index"]][meta["row"]]
                         nonzero, raw_values = _raw_row_nonzeros(raw, len(adapter.feature_positions[meta["file_index"]]))
@@ -253,6 +370,7 @@ def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str
                             if positions
                             else None
                         )
+                        check_budget()
                         native_payload = adapter._native_payload(cpu_cell.batch)
                         if original is not None and (
                             original.target_ids[0].detach().cpu().tolist() != native_payload["input_gene_token_indices"]
@@ -315,6 +433,7 @@ def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str
                             if len(target_positions):
                                 last_original_target = int(target_positions[-1].item())
                         for position, gene in positions:
+                            check_budget()
                             if position >= last_original_target:
                                 impact, n_targets, status = None, 0, "no_matched_target"
                             else:
@@ -325,6 +444,7 @@ def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str
                                         deleted_position=position,
                                         excluded_gene_ids=excluded,
                                         original_forward=original,
+                                        normalization_chunk_rows=8,
                                     )
                                 except ValueError as exc:
                                     if str(exc) != "No matched downstream gene-ID target remains after deletion":
@@ -332,6 +452,7 @@ def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str
                                     impact, n_targets, status = None, 0, "no_matched_target"
                                 else:
                                     impact, n_targets, status = float(result.impact.item()), result.n_targets, "scored"
+                            check_budget()
                             row = {
                                 "species": device_cell.species,
                                 "phase": device_cell.phase,
@@ -370,6 +491,14 @@ def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str
                     raise ValueError("Actual finite v2 scores exceed the frozen structural upper bound")
             # Publication proves the prepared bytes and weights did not change
             # during score generation. Never publish a partial directory.
+            check_budget()
+            if (
+                file_sha256(paired_preflight_path) != frozen["paired_preflight_sha256"]
+                or file_sha256(ortholog_table) != frozen["ortholog_table_sha256"]
+            ):
+                raise ValueError("Frozen paired scientific universe changed during scoring")
+            if file_sha256(resource_probe_path) != frozen["resource_probe_sha256"]:
+                raise ValueError("Frozen resource probe changed during scoring")
             if file_sha256(weights_path) != checkpoint_hash:
                 raise ValueError("Checkpoint weight bytes changed during B3 scoring")
             if (
@@ -398,6 +527,13 @@ def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str
                 for row in finite:
                     stream.write(f"{row['gene_id']}\t{row['null_corrected_z']:.17g}\n")
             report.update(
+                execution_resources={
+                    "peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+                    "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved(device)
+                    if torch.device(device).type == "cuda"
+                    else 0,
+                    "elapsed_seconds": time.monotonic() - started,
+                },
                 status="available_descriptive_v2" if finite else "no_finite_null_scores",
                 metrics=summaries["metrics"],
                 gene_ids=cells.gene_ids,
@@ -430,9 +566,21 @@ def _score(config_path: Path, preflight_path: Path, output: Path, *, device: str
         cells.close()
 
 
-def run(config_path: Path, output: Path, *, preflight_path: Path | None = None, execute: bool = False, device="cpu"):
+def run(
+    config_path: Path,
+    output: Path,
+    *,
+    preflight_path: Path | None = None,
+    execute: bool = False,
+    device="cpu",
+    resource_probe_path: Path | None = None,
+    max_seconds: float = 3600,
+    paired_preflight_path: Path | None = None,
+    ortholog_table: Path | None = None,
+):
     for variable in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
         os.environ[variable] = "1"
+    os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
     import torch
 
     torch.set_num_threads(1)
@@ -450,7 +598,20 @@ def run(config_path: Path, output: Path, *, preflight_path: Path | None = None, 
         return {"status": "structural_preflight_only", "output": str(output), "model_forwards_performed": False}
     if preflight_path is None:
         raise ValueError("Explicit model execution requires a frozen measured-zero preflight report")
-    return _score(config_path, Path(preflight_path), output, device=device)
+    if resource_probe_path is None:
+        raise ValueError("Explicit execution requires --resource-probe from a matching successful tiny inference run")
+    if paired_preflight_path is None or ortholog_table is None:
+        raise ValueError("Explicit execution requires --paired-preflight and --ortholog-table frozen before scoring")
+    return _score(
+        config_path,
+        Path(preflight_path),
+        output,
+        device=device,
+        resource_probe_path=Path(resource_probe_path),
+        max_seconds=max_seconds,
+        paired_preflight_path=Path(paired_preflight_path),
+        ortholog_table=Path(ortholog_table),
+    )
 
 
 def main(argv=None):
@@ -462,11 +623,23 @@ def main(argv=None):
         "--execute", action="store_true", help="Explicitly load checkpoint weights and perform model forwards"
     )
     parser.add_argument("--device", default="cpu")
+    parser.add_argument("--resource-probe", type=Path)
+    parser.add_argument("--paired-preflight", type=Path)
+    parser.add_argument("--ortholog-table", type=Path)
+    parser.add_argument("--max-seconds", type=float, default=3600)
     args = parser.parse_args(argv)
     print(
         json.dumps(
             run(
-                args.config, args.output, preflight_path=args.preflight_report, execute=args.execute, device=args.device
+                args.config,
+                args.output,
+                preflight_path=args.preflight_report,
+                execute=args.execute,
+                device=args.device,
+                resource_probe_path=args.resource_probe,
+                max_seconds=args.max_seconds,
+                paired_preflight_path=args.paired_preflight,
+                ortholog_table=args.ortholog_table,
             ),
             indent=2,
         )

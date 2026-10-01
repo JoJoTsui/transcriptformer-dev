@@ -28,8 +28,39 @@ The archived padded human certificate has 2,044 native targets, three masked
 positions and a structural zero, with no model impact yet. Full-cohort
 scoring still requires a separate backend and measured compute feasibility;
 the current approach implies about **1,065,876,676 forwards per checkpoint
-arm**, an unmeasured workload estimate. There is no amended score result or
-GPU authorization. Ticket 05 remains open and ticket 11 remains excluded.
+arm**, an unmeasured workload estimate. Bounded `--execute` now requires a
+successful config/checkpoint/device/software-bound tiny resource probe and
+a measured projected runtime within `--max-seconds` (default 3,600 seconds).
+Runtime guards enforce 16 GiB process RSS, 20 GiB CUDA reservation and 2 GiB
+free disk; eight-row normalization chunks limit v2 scratch without changing
+v1 defaults. The [final-code CUDA probe and guard](b3-measured-zero-resource-gate-evidence-2026-10-01.md#final-code-paired-freeze-continuation)
+passed two native forwards on one padded human cell at 14.63 GiB peak RSS
+and 9.20 GiB peak CUDA reservation. Its single-cell projection was **99.17
+hours** for the frozen human pilot; the producer's all-attempt projection
+was **99.26 hours**. It passed the paired report, table, config, support,
+cohort and software checks before rejecting execution against the default
+one-hour budget, without model loading or publication. Earlier ~101-hour
+figures are historical; neither projection is validated cohort throughput.
+A v2-only comparison adapter exists without scored bundles; coordinated
+embryo bootstrap remains unavailable.
+There is no amended cohort score result. Ticket 05 remains open and ticket
+11 remains excluded.
+
+The current v2 `--execute` contract also requires the frozen paired support
+report and ortholog table, hashing both into each score bundle before
+inference. The separate comparator requires both bundles to bind that same
+pair and derives its full vocabularies and statistic request from validated
+producer configs. It withholds rho below the scientific floors or for
+constant ranks; mixed-null embryo bootstrap remains unavailable. The
+pre-inference freeze checks passed on real pilot data, but no actual bundle
+has traversed the scorer, aggregation and comparator path.
+
+The first CUDA resource probe failed at its original forward because
+deterministic CuBLAS required `CUBLAS_WORKSPACE_CONFIG=:4096:8` before Torch
+import. The probe and producer now set it; the final-code tiny probe above passed.
+The failed probe's 15.77 GB peak RSS and 4.44 GB peak CUDA reservation are
+observations without a completed contrast. The corrected result above
+supersedes that failure for the tiny resource check.
 
 **Repair continuation — 2026-09-30:** The [fresh review](fresh-implementation-review-2026-09-30.md) of `543dac2` reopened 01/03/08 and identified B3 software gaps. The [verified repairs](implementation-repairs-2026-09-30.md) restore bounded engineering closure for 01/03/08 and implement the verified B3 producer, comparability, diagnostics and coordinated bootstrap. Ten bounded engineering tickets are closed after the [ticket 12 scope audit](ticket12-gate-research-2026-09-30.md). Ticket 05 remains open on observed B3 evidence; validated organogenesis preparation is now available but approved full-cohort null support cannot meet the reporting floors; ticket 12 retains those gaps as documented exclusions, and 11 is excluded. The older 403-test run remains historical evidence.
 

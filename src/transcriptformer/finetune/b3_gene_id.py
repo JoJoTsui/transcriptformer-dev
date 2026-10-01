@@ -111,6 +111,7 @@ def model_gene_id_deletion_impact(
     deleted_position: int,
     excluded_gene_ids: frozenset[int],
     original_forward: OriginalGeneIDForward | None = None,
+    normalization_chunk_rows: int | None = None,
 ) -> MatchedGeneIDImpact:
     """Run the native gene-ID head for one cell and one token deletion.
 
@@ -118,7 +119,13 @@ def model_gene_id_deletion_impact(
     then pads its tail. Auxiliary tokens and the original batch are untouched.
     The caller must supply an evaluation-mode model with its gene-ID head and
     criterion enabled; the score is computed from native forward targets/masks.
+    ``normalization_chunk_rows`` bounds the temporary vocabulary-wide
+    normalization scratch without changing the paired target set.
     """
+    if normalization_chunk_rows is not None and (
+        type(normalization_chunk_rows) is not int or normalization_chunk_rows < 1
+    ):
+        raise ValueError("Normalization chunk rows must be a positive integer or None")
     pad_idx, n_active, softcap = _validate_model_and_batch(model, batch, excluded_gene_ids)
     gene_ids = batch.gene_token_indices
     counts = batch.gene_counts
@@ -171,6 +178,7 @@ def model_gene_id_deletion_impact(
             deleted_position=deleted_position,
             excluded_gene_ids=excluded_gene_ids,
             softcap=softcap,
+            normalization_chunk_rows=normalization_chunk_rows,
         )
 
 
@@ -187,6 +195,7 @@ def matched_gene_id_deletion_impact(
     deleted_position: int,
     excluded_gene_ids: frozenset[int],
     softcap: float,
+    normalization_chunk_rows: int | None = None,
 ) -> MatchedGeneIDImpact:
     """Score the same downstream gene IDs before and after deleting one token.
 
@@ -202,8 +211,13 @@ def matched_gene_id_deletion_impact(
     This is only the arithmetic seam. Call the model with ``embed=False`` and
     keep original counts and auxiliary tokens fixed when constructing the
     deletion. Gene-order and cell/embryo aggregation rules belong to the
-    frozen B3 producer plan.
+    frozen B3 producer plan. A positive ``normalization_chunk_rows`` keeps
+    temporary softmax tensors bounded while preserving matched-target order.
     """
+    if normalization_chunk_rows is not None and (
+        type(normalization_chunk_rows) is not int or normalization_chunk_rows < 1
+    ):
+        raise ValueError("Normalization chunk rows must be a positive integer or None")
     if original_logits.ndim != 2 or deleted_logits.ndim != 2:
         raise ValueError("Gene-ID logits must be two-dimensional [position, vocabulary]")
     if original_logits.shape[1] != deleted_logits.shape[1]:
@@ -261,16 +275,30 @@ def matched_gene_id_deletion_impact(
     deleted_indices = tuple(row[2] for row in common)
     # Select only matched rows before normalization: a whole cell can have
     # thousands of positions and a large vocabulary on memory-limited hosts.
-    original_rows = original_logits[list(original_indices)]
-    deleted_rows = deleted_logits[list(deleted_indices)]
-    original_log_probs = torch.log_softmax(logit_softcap(original_rows, softcap), dim=-1)
-    deleted_log_probs = torch.log_softmax(logit_softcap(deleted_rows, softcap), dim=-1)
-    row_indices = torch.arange(len(gene_ids), device=original_logits.device)
-    original_values = original_log_probs[row_indices, gene_ids]
-    deleted_values = deleted_log_probs[row_indices, gene_ids]
+    if normalization_chunk_rows is None:
+        original_rows = original_logits[list(original_indices)]
+        deleted_rows = deleted_logits[list(deleted_indices)]
+        original_log_probs = torch.log_softmax(logit_softcap(original_rows, softcap), dim=-1)
+        deleted_log_probs = torch.log_softmax(logit_softcap(deleted_rows, softcap), dim=-1)
+        row_indices = torch.arange(len(gene_ids), device=original_logits.device)
+        original_values = original_log_probs[row_indices, gene_ids]
+        deleted_values = deleted_log_probs[row_indices, gene_ids]
+        differences = original_values - deleted_values
+    else:
+        chunks: list[Tensor] = []
+        for start in range(0, len(gene_ids), normalization_chunk_rows):
+            stop = min(start + normalization_chunk_rows, len(gene_ids))
+            original_rows = original_logits[list(original_indices[start:stop])]
+            deleted_rows = deleted_logits[list(deleted_indices[start:stop])]
+            original_log_probs = torch.log_softmax(logit_softcap(original_rows, softcap), dim=-1)
+            deleted_log_probs = torch.log_softmax(logit_softcap(deleted_rows, softcap), dim=-1)
+            row_indices = torch.arange(stop - start, device=original_logits.device)
+            target_ids = gene_ids[start:stop]
+            chunks.append(original_log_probs[row_indices, target_ids] - deleted_log_probs[row_indices, target_ids])
+        differences = torch.cat(chunks)
     # The registered primary reports bits per matched target, while
     # torch.log_softmax returns natural-log units.
-    impact = (original_values - deleted_values).mean() / log(2)
+    impact = differences.mean() / log(2)
     if not bool(torch.isfinite(impact)):
         raise ValueError("Matched gene-ID impact must be finite")
     return MatchedGeneIDImpact(impact, gene_ids, original_indices, deleted_indices)

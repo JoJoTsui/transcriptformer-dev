@@ -111,10 +111,27 @@ establishes no finite score, positive null variance or observed comparison.
 The [scoring plan](../../docs/agents/b3-measured-zero-scoring-plan-2026-10-01.md)
 records an implemented bounded v2 score backend, score sidecar and bundle
 validator. Its default real human pilot CLI preflight completed with no
-weights or model forwards; the inference path has not been run. Full-cohort
+weights or model forwards; the bounded scorer's inference path has not been run. Full-cohort
 scoring still needs a separate backend and measured compute gate for an
 estimated **1,065,876,676 forwards per checkpoint arm**. No v2 scores or
-observed comparison exist; ticket 05 stays open.
+observed comparison exist. Bounded execution now requires a successful
+config/checkpoint/device/software-bound resource probe and a measured runtime
+projection under the default 3,600-second budget; 16 GiB RSS, 20 GiB CUDA
+reservation and 2 GiB disk guards apply. Eight-row normalization chunks
+bound v2 scratch without changing v1 defaults. The
+[final-code two-forward CUDA probe](../../docs/agents/b3-measured-zero-resource-gate-evidence-2026-10-01.md#final-code-paired-freeze-continuation)
+passed with 14.63 GiB peak RSS and 9.20 GiB peak CUDA reservation. Its
+single-cell projection was **99.17 hours** for the frozen human pilot; the
+producer guard projected **99.26 hours** and rejected the run before model
+loading or publication against the default one-hour limit. Earlier ~101-hour
+figures are preserved in the evidence record. Neither projection is
+validated pilot throughput. A v2-only comparison adapter exists, but it has
+no scored bundles and no coordinated embryo bootstrap. Ticket 05 stays open.
+The current v2 producer also freezes the paired support report and ortholog
+table hashes before inference. Its comparator requires both bundles to bind
+that same report/table and derives vocabularies and statistic inputs from
+validated configs. The final budget-guard run passed those pre-inference
+freeze checks on real pilot data; no scored-bundle run followed.
 
 ## Scientific decisions and external gates
 

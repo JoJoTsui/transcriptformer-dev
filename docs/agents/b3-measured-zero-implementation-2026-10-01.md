@@ -1,7 +1,7 @@
 # Measured-zero B3 implementation
 
 Owner approval: [recorded decision](b3-measured-zero-owner-decision-2026-10-01.md).
-Method identity: `b3_measured_zero_peer_null_v2`. Certification and structural preflights are implemented and verified on real data; the separate bounded scoring backend is implemented with its default weight-free CLI exercised. Its model-execution path remains unverified.
+Method identity: `b3_measured_zero_peer_null_v2`. Certification and structural preflights are implemented and verified on real data; the separate bounded scoring backend is implemented with its default weight-free CLI exercised. A tiny two-forward CUDA resource probe passed; the bounded cohort scoring path remains unverified.
 
 The separate certificate module validates complete native-input identity,
 deterministic evaluation attestations, raw-zero measured-feature membership,
@@ -76,6 +76,75 @@ The human scan covers 123,952 training cells/five embryos and permits 17,419 pot
 
 Model execution must verify all eligible original native target log probabilities before any zero peer becomes usable. V2 publication persists their ordered float64 little-endian vectors and hashes, one inspectable source-bound representative zero certificate per cell, compact raw-positive bits, positive contrasts, a complete audit and a method-specific score sidecar. The validator independently replays prepared rows, native attempt membership, raw bits, certificates, metrics and z-scores; it rejects v1/mixed metadata and altered inputs. File-reader limits are 128 MiB for metadata/proofs and 512 MiB for positive raw records, with cell/row limits checked while reading. Publication is atomic and rehashes weights, configuration, vocabulary, source and code snapshots.
 
-Fresh review corrected the native loss-mask distinction, unresolved certificate references, missing versioned sidecars, incomplete software snapshots and missing source/metric replay. Ruff, syntax and diff checks pass. No synthetic test suite, model weights or GPU execution was run. The default CLI check does **not** validate the inference/aggregation runtime path. A device feasibility slice and the separate full-cohort storage/aggregation backend remain required before an actual whole-universe comparison; the approved structural gate passing does not close ticket 05.
+Fresh review corrected the native loss-mask distinction, unresolved certificate references, missing versioned sidecars, incomplete software snapshots and missing source/metric replay. Ruff, syntax and diff checks pass. The default CLI check does **not** validate the inference/aggregation runtime path. A device feasibility slice and the separate full-cohort storage/aggregation backend remain required before an actual whole-universe comparison; the approved structural gate passing does not close ticket 05.
+
+The bounded producer now requires an explicit successful
+`b3_measured_zero_resource_probe_v2` report through `--resource-probe` before
+`--execute`. The probe must match the frozen config, checkpoint weights,
+device, native chunk setting and complete scoring software hashes, and must
+show finite original targets plus a scored positive deletion. It compares a
+projection from measured original/deletion timings with `--max-seconds`
+(default 3,600 seconds) before inference. During execution it checks elapsed
+time, a 16 GiB process RSS cap, 20 GiB CUDA reservation cap and at least
+2 GiB free output disk space. The v2 inference path uses eight-row
+normalization chunks to limit vocabulary-wide scratch; v1 defaults are
+unchanged. The guards alone do not establish that a cohort score run fits
+this host.
+
+The first CUDA tiny probe failed at `original_forward` before completing a
+contrast: deterministic CuBLAS required
+`CUBLAS_WORKSPACE_CONFIG=:4096:8` before importing Torch. That failed run
+recorded 15,771,873,280 bytes peak RSS and 4,437,573,632 bytes peak CUDA
+reservation; these are observations from a failed probe, not a successful
+capacity result. The probe and producer now set the required environment
+variable before Torch import, record it in provenance, and audit peak CUDA
+reservation. An earlier corrected [CUDA probe](b3-measured-zero-resource-evidence-2026-10-01.json)
+passed two forwards on a padded human cell: 2,044 finite original targets
+and 2,043 matched deletion targets. Model load took 102.02 seconds; original
+and deletion forwards took 1.864 and 6.712 seconds. Peak process RSS was
+15,707,197,440 bytes (14.63 GiB), peak CUDA allocation 8,484,839,424 bytes
+(7.90 GiB), and peak CUDA reservation 9,877,585,920 bytes (9.20 GiB). These
+one-cell peaks fit the programmed 16/20 GiB guards. The single-cell timing
+projection to the frozen human pilot is 364,277.56 seconds (101.19 hours),
+above the default 3,600-second execution budget. This extrapolation is a
+gate input, not validated pilot throughput. No pilot or full-cohort score
+run has been performed. The probe binds exact software file hashes; later
+scoring-code edits require a new matching probe before `--execute`.
+
+The corresponding earlier bounded producer default-budget attempt safely exited before
+model loading: its conservative all-positive-attempt projection was
+**364,606.4 seconds (101.28 hours)** against 3,600 seconds, and no output
+bundle was published. The [resource-gate evidence](b3-measured-zero-resource-gate-evidence-2026-10-01.md)
+archives the successful probe bytes and the failed budget-guard log hash.
+A separate v2-only paired comparison adapter exists, but no scored v2 bundles
+have reached it. Coordinated embryo bootstrap for the mixed v2 null remains
+unavailable; neither the adapter nor the tiny probe closes ticket 05.
+
+The hardened bounded producer now also requires `--paired-preflight` and
+`--ortholog-table` before `--execute`. It checks the amended paired report's
+method, statistic, table hash, both config/preflight input hashes, this
+species' frozen gene list and cohort hash, then binds report and table byte
+hashes into each score bundle before model inference. The v2 comparator must
+accept two bundles bound to the same paired report and unchanged ortholog
+table. It derives the full checkpoint vocabularies and statistic requests
+from the bundles' hash-bound configs rather than caller-supplied vocabularies
+or denominator lists. It withholds rank concordance for ineligible,
+undercovered or constant-rank inputs and records embryo bootstrap as
+unavailable. The pre-inference freeze checks were exercised on real pilot
+inputs; no score bundle has traversed the rest of this path. The earlier
+resource-probe and budget-guard observations remain historical evidence of
+their narrower software snapshot.
+
+The [final-code resource evidence](b3-measured-zero-resource-gate-evidence-2026-10-01.md#final-code-paired-freeze-continuation)
+records a fresh source/hash-matching probe and producer budget guard after
+the paired freeze landed. Two CUDA forwards passed, with 2,044 finite
+original targets and 2,043 matched deletion targets. Peak RSS was 14.63 GiB
+and peak CUDA reservation 9.20 GiB. The final probe's single-cell
+extrapolation was **99.17 hours**; the producer's conservative all-attempt
+projection was **99.26 hours**, so the default 3,600-second guard rejected
+execution before model loading or publication. The paired report, ortholog
+table, cohort and source/code hashes matched before that rejection. These
+measurements do not validate cohort throughput or the scorer/aggregator/
+comparator runtime.
 
 Full-cohort native scoring would currently require approximately **1,065,876,676 original/deleted forwards per checkpoint arm**. The [compute plan](b3-measured-zero-scoring-plan-2026-10-01.md) records this boundary rather than overriding the bounded producer caps.

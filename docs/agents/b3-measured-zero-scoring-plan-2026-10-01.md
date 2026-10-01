@@ -1,9 +1,70 @@
 # Measured-zero B3 scoring and compute gate
 
-Status: bounded backend implemented, model execution unverified; full backend remains a plan, not a score result. Method:
+Status: bounded backend implemented; tiny CUDA two-forward resource probe passed, bounded cohort scoring unverified; full backend remains a plan, not a score result. Method:
 `b3_measured_zero_peer_null_v2`. The [owner decision](b3-measured-zero-owner-decision-2026-10-01.md)
 authorizes the separate method. The v1 raw artifacts, score tables, bootstrap
 inputs and validators retain their existing identities and limits.
+
+**Resource gate implemented; tiny probe measured:**
+`scripts/probe_b3_measured_zero_resources.py` defines the tiny native
+original/deletion timing and memory probe. Explicit bounded `--execute`
+requires `--resource-probe` with a successful
+`b3_measured_zero_resource_probe_v2` report matching configuration,
+checkpoint weights, execution device, native normalization chunk setting and
+the complete scoring software tree. The producer rejects a projected pilot
+runtime above `--max-seconds` (default 3,600 seconds) and checks during the
+run for 16 GiB peak process RSS, 20 GiB CUDA reservation and 2 GiB free disk.
+Eight-row normalization chunks reduce the v2 vocabulary-wide scratch while
+preserving v1 defaults. A passing tiny probe does not establish cohort scoring
+feasibility or actual score coverage.
+
+The first CUDA probe failed at its original forward because deterministic
+CuBLAS needed `CUBLAS_WORKSPACE_CONFIG=:4096:8` before Torch import. Its
+observed peak RSS was 15,771,873,280 bytes and peak CUDA reservation was
+4,437,573,632 bytes. The probe and producer now set and record that setting;
+the CUDA guard uses peak reserved memory. The first run gives no successful
+timing or pilot feasibility claim.
+
+An earlier corrected [CUDA probe](b3-measured-zero-resource-evidence-2026-10-01.json)
+passed two forwards on a padded human pilot cell: 2,044 finite original
+targets and 2,043 matched deletion targets. Model load took 102.02 seconds;
+the original and deletion forwards took 1.864 and 6.712 seconds. Peak process
+RSS was 15,707,197,440 bytes (14.63 GiB), peak CUDA allocated memory
+8,484,839,424 bytes (7.90 GiB), and peak reserved memory 9,877,585,920
+bytes (9.20 GiB). The probe's single-cell projection for the frozen human
+pilot is **364,277.56 seconds (101.19 hours)**, above the default one-hour
+`--max-seconds` gate. It is not a validated throughput forecast. No pilot
+score run followed. The report binds software byte hashes, so subsequent
+scoring-code changes require another matching probe before execution.
+
+The corresponding earlier producer default-budget check used 54,317 positive attempts,
+projected **364,606.4 seconds (101.28 hours)** and rejected `--execute`
+before loading the model or publishing an output bundle. The
+[resource-gate evidence](b3-measured-zero-resource-gate-evidence-2026-10-01.md)
+records the command outcome and local log hash. A v2-only paired comparison
+adapter is implemented, but it has no scored bundles to consume; coordinated
+embryo bootstrap for the amended mixed null remains unavailable.
+
+The hardened `--execute` contract additionally requires the frozen amended
+paired preflight and its ortholog table. Both hashes enter the producer
+provenance before inference, alongside the report's config, support,
+cohort, statistic and vocabulary-bound join audit. The comparator takes two
+v2 bundles bound to that same paired report and table, derives full
+vocabularies and named statistic inputs from their validated configs, then
+applies the unchanged 60%/5,000 eligibility and 500-pair/80% reporting
+floors. It withholds Spearman rho when ranks are constant or a floor fails.
+The comparator has no real v2 score bundles to process; the new freeze path
+has not been verified through a complete inference and comparison run.
+
+The [final-code probe and paired-freeze guard](b3-measured-zero-resource-gate-evidence-2026-10-01.md#final-code-paired-freeze-continuation)
+now supersede the earlier ~101-hour projections for the current software
+snapshot. The fresh two-forward probe passed with 14.63 GiB peak RSS and
+9.20 GiB peak CUDA reservation; its single-cell projection was **99.17
+hours**. The producer verified the matching probe, config, checkpoint,
+software, paired report, ortholog table, frozen genes and cohort before its
+conservative **99.26-hour** projection failed the default 3,600-second
+budget. No score bundle was published. The complete scorer, aggregation and
+comparison paths remain unverified.
 
 ## What the structural scans establish
 

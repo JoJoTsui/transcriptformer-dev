@@ -50,8 +50,8 @@ approval closes no observed-score acceptance criterion and changes no v1 rule.
 - [ ] Produce valid actual scores and observed comparison if the preflight passes.
 
 The approved 500-pair/80% reporting floors and independent 60% mapping/
-5,000 genome-wide pair floors remain in force. No GPU run or real score
-evidence has been completed.
+5,000 genome-wide pair floors remain in force. No cohort GPU score run or
+real score evidence has been completed.
 
 **2026-10-01 amended implementation update:** The separate
 [implementation record](../../../docs/agents/b3-measured-zero-implementation-2026-10-01.md)
@@ -84,10 +84,39 @@ path. Its default CLI completed real human pilot preflight without loading
 weights or performing model forwards. The v2 score sidecar and bundle
 validator independently replay source rows, native attempts, bitmaps,
 resolved zero certificates, metrics and z-scores. A separate full-cohort
-backend, measured device budget, finite null variance, bootstrap and observed
+backend, measured device feasibility, finite null variance, bootstrap and observed
 comparison remain outstanding. The full selected cohorts imply about
 **1,065,876,676 original/deleted forwards per checkpoint arm** under the
 current scoring approach; this is a workload estimate, not a measured runtime.
+Bounded `--execute` now requires a successful matching resource probe:
+configuration, checkpoint weights, device, eight-row normalization setting
+and all scoring software hashes must agree. The producer rejects projected
+pilot time above `--max-seconds` (default 3,600 seconds) and guards 16 GiB
+process RSS, 20 GiB CUDA reservation and 2 GiB free disk during execution.
+The [final-code CUDA probe and budget evidence](../../../docs/agents/b3-measured-zero-resource-gate-evidence-2026-10-01.md#final-code-paired-freeze-continuation)
+record two passing forwards on a padded human cell with 2,044 finite
+original targets and 2,043 matched deletion targets. Peak RSS was 14.63 GiB
+and peak CUDA reservation 9.20 GiB. Its single-cell projection for the
+frozen human pilot was **99.17 hours**. The producer conservatively counted
+all 54,317 positive attempts, projected **99.26 hours**, and rejected the
+run against its 3,600-second limit before model loading or publication.
+This is a successful safe budget check, not measured pilot throughput or a
+score bundle. The earlier ~101-hour probe/guard snapshot is preserved in
+the evidence record. Scoring-code edits require a new matching probe.
+The hardened producer now requires the amended paired preflight and its
+ortholog table before `--execute`, freezing both hashes into each bundle
+alongside the config, support report, cohort and statistic. The comparator
+requires two bundles bound to that same report and table, derives its full
+vocabularies and statistic genes from validated configs, and withholds rho
+when a floor fails or ranks are constant. The final producer run passed
+these pre-inference scientific freeze checks before its budget rejection,
+but no scored bundle has traversed the scorer, aggregation or comparator.
+Coordinated embryo-bootstrap uncertainty remains unavailable.
+The first CUDA probe failed at `original_forward` because deterministic
+CuBLAS lacked `CUBLAS_WORKSPACE_CONFIG=:4096:8`; the probe and producer now
+set it before Torch import. The failed run recorded 15,771,873,280 bytes
+peak RSS and 4,437,573,632 bytes peak CUDA reservation, without a completed
+contrast. The final-code probe above supersedes it for the tiny resource check.
 Ticket 05's distributional comparison criterion remains unchecked.
 
 Separate descriptive genome-wide availability from eligibility for a named species-pair/developmental-phase statistic, using final validated identifiers and pairs.

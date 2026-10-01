@@ -482,14 +482,64 @@ The bounded scoring producer defaults to a weight-free structural check:
   --output runs/b3_pilot/organogenesis_v3/v2_producer_preflight_next.json
 ```
 
-Model execution requires `--execute --preflight-report frozen-report.json`,
-a fresh output directory, and the existing bounded row/cell limits.
-`--device` selects the device; its default is CPU. The execution path has
-not been exercised with model weights.
+Model execution requires `--execute`, the frozen preflight report, a fresh
+output directory, the existing bounded row/cell limits, and a successful
+matching `--resource-probe`. `--device` selects the device; its default is
+CPU. The probe must bind the same config, checkpoint weights, device,
+eight-row normalization setting and scoring software bytes. Reprobe after
+any scoring-code edit. Execution also requires `--paired-preflight` and
+`--ortholog-table`; the paired report must bind this side's config, support
+preflight, cohort, frozen statistic genes and the unchanged table. Both
+report/table hashes are frozen into the score bundle before inference.
+Example syntax for a future feasible run:
+
+```bash
+.venv/bin/python scripts/produce_b3_measured_zero_scores.py \
+  --config runs/b3_pilot/organogenesis_v3/homo_sapiens_producer.json \
+  --preflight-report runs/b3_pilot/organogenesis_v3/human_measured_zero_final.json \
+  --resource-probe PATH_TO_FRESH_MATCHING_SUCCESSFUL_PROBE.json \
+  --paired-preflight runs/b3_pilot/organogenesis_v3/paired_measured_zero_final.json \
+  --ortholog-table preprocess/orthologs/ortholog_pairs.tsv.gz \
+  --execute --device cuda:0 --max-seconds 3600 \
+  --output runs/b3_pilot/organogenesis_v3/v2_scores_fresh
+```
+
+The [final-code CUDA probe and budget check](agents/b3-measured-zero-resource-gate-evidence-2026-10-01.md#final-code-paired-freeze-continuation)
+completed two native forwards with 2,044 finite original targets and 2,043
+matched deletion targets. Its 14.63 GiB peak RSS and 9.20 GiB peak CUDA
+reservation fit the one-cell limits. Single-cell timing projected **99.17
+hours** for the frozen human pilot; the producer's conservative projection
+was **99.26 hours** and rejected execution against the default one-hour
+budget before model loading or publication. The run passed the paired
+report/table, cohort and code-hash checks first. These projections are not
+validated cohort throughput; earlier ~101-hour figures are historical.
+No bounded cohort score run or aggregation has completed. A v2-only paired
+comparison adapter exists, but no scored v2 bundles or coordinated embryo
+bootstrap results are available.
+
+The separate v2 comparator requires two validated score bundles tied to the
+same frozen paired support report and ortholog table. Its final command form
+is:
+
+```bash
+.venv/bin/python scripts/summarize_ortholog_measured_zero_v2.py \
+  --bundle-a PATH_TO_HUMAN_V2_BUNDLE \
+  --bundle-b PATH_TO_MOUSE_V2_BUNDLE \
+  --table preprocess/orthologs/ortholog_pairs.tsv.gz \
+  --paired-preflight runs/b3_pilot/organogenesis_v3/paired_measured_zero_final.json \
+  --output-dir PATH_TO_FRESH_COMPARISON_DIRECTORY
+```
+
+The comparator derives full checkpoint vocabularies and frozen statistic
+gene requests from bundle-bound inputs; caller-supplied mapping or
+denominator overrides are not part of this command. It publishes a fresh
+atomic directory with `comparison.json`, `coverage.tsv` and a rank plot only
+when reportable. Bootstrap uncertainty remains unavailable. No real v2
+bundles have been produced or compared.
 
 
 - Corpus defaults and [B1-A](agents/b1-owner-decision-2026-09-30.md) are approved. Source-specific QC/assay decisions, final preparation and the post-QC cohort freeze remain open.
-- The [fresh implementation findings](agents/fresh-implementation-review-2026-09-30.md) have [bounded repairs](agents/implementation-repairs-2026-09-30.md). [Pretrained and distinct candidate weights are present](agents/ticket05-checkpoint-discovery-2026-09-30.md); candidate training provenance is unverified. The six-source organogenesis corpus is validated. The original v1 [full-cohort support audit](agents/b3-recommendation-implementation-2026-09-30.md) permits zero paired scores. The approved v2 method independently passes the necessary paired support floor with 14,392/15,705 pairs (91.64%); actual model contrasts, finite null variance and the observed comparison remain pending. The bounded v2 scoring backend is implemented, with model execution unverified; a full-cohort scoring backend remains to be implemented. A base-arm comparison can use `../checkpoints/tf_metazoa`; finetune benefit requires verified candidate provenance/results. Ticket 12's documentation/CI scope is closed; scientific/production gates remain below.
+- The [fresh implementation findings](agents/fresh-implementation-review-2026-09-30.md) have [bounded repairs](agents/implementation-repairs-2026-09-30.md). [Pretrained and distinct candidate weights are present](agents/ticket05-checkpoint-discovery-2026-09-30.md); candidate training provenance is unverified. The six-source organogenesis corpus is validated. The original v1 [full-cohort support audit](agents/b3-recommendation-implementation-2026-09-30.md) permits zero paired scores. The approved v2 method independently passes the necessary paired support floor with 14,392/15,705 pairs (91.64%); actual cohort contrasts, finite null variance and the observed comparison remain pending. The bounded v2 scoring backend is implemented, with only a two-forward CUDA resource probe verified; a full-cohort scoring backend remains to be implemented. A base-arm comparison can use `../checkpoints/tf_metazoa`; finetune benefit requires verified candidate provenance/results. Ticket 12's documentation/CI scope is closed; scientific/production gates remain below.
 - Produce real baseline/finetuned results on the frozen eligible cohort before claiming B1 performance.
 - Resolve probe assets (ESM-2 embeddings/vocabularies and key-namespace
   maps) and remaining source annotations before evaluating B4.

@@ -379,7 +379,20 @@ def validate_score_bundle(path: str | Path, *, verify_input_bytes: bool = True) 
         or audit.get("cohort_sha256") != provenance.get("cohort_sha256")
     ):
         raise ValueError("Measured-zero sidecar, audit and producer provenance disagree")
+    for name in ("paired_preflight", "ortholog_table", "resource_probe"):
+        source_path, source_hash = provenance.get(name + "_path"), provenance.get(name + "_sha256")
+        if (
+            not isinstance(source_path, str)
+            or not source_path
+            or not isinstance(source_hash, str)
+            or len(source_hash) != 64
+            or any(char not in "0123456789abcdef" for char in source_hash)
+        ):
+            raise ValueError("Measured-zero producer must bind its paired preflight, ortholog table and resource probe")
     if verify_input_bytes:
+        for name in ("paired_preflight", "ortholog_table", "resource_probe"):
+            if _file_hash(Path(provenance[name + "_path"])) != provenance[name + "_sha256"]:
+                raise ValueError("Measured-zero frozen paired universe or resource probe bytes changed")
         checkpoint = Path(json.loads(Path(provenance["config_path"]).read_text())["checkpoint"])
         if _file_hash(checkpoint / "model_weights.pt") != provenance["checkpoint_weights_sha256"]:
             raise ValueError("Measured-zero checkpoint bytes changed")

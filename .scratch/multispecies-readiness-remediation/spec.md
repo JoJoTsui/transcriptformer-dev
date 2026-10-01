@@ -35,10 +35,28 @@ floors. The historical v1 zero-pair result is unchanged. The v2 result is an
 upper bound, with no finite impact or positive null variance demonstrated.
 An amended bounded scoring backend, score sidecar and independent bundle
 validator are implemented. Its default human pilot CLI preflight completed
-without weights or forwards; model execution and full-cohort scoring remain
+without weights or forwards; bounded scorer execution and full-cohort scoring remain
 unverified. The archived padded human certificate has 2,044 native targets,
 three masked positions and a structural zero, with model impact unavailable.
-No amended model scores, GPU run or scientific sign-off have occurred; ticket
+Bounded v2 execution now requires a matching successful resource probe and
+measured runtime projection below `--max-seconds` (default 3,600 seconds);
+16 GiB process RSS, 20 GiB CUDA reservation and 2 GiB disk guards are
+implemented. Eight-row normalization chunks reduce v2 scratch while leaving
+v1 defaults intact. The [final-code CUDA probe and guard](../../docs/agents/b3-measured-zero-resource-gate-evidence-2026-10-01.md#final-code-paired-freeze-continuation)
+passed two native forwards on one padded human cell at 14.63 GiB peak RSS
+and 9.20 GiB peak CUDA reservation. Its single-cell projection was **99.17
+hours** for the frozen human pilot. The producer verified the paired report,
+table, config, support, cohort and code hashes, then its conservative
+**99.26-hour** projection rejected execution before model loading or
+publication. Earlier ~101-hour figures are historical. Neither projection
+is validated cohort throughput. A v2-only comparison adapter exists without
+scored bundles; coordinated embryo bootstrap remains unavailable.
+The hardened v2 producer freezes the paired support report and ortholog
+table before inference; the comparator requires two bundles bound to that
+same pair and derives full vocabularies and statistic inputs from their
+validated configs. Its pre-inference freeze checks passed on real pilot
+data; no scored bundle or full comparator run followed.
+No amended cohort scores, full GPU run or scientific sign-off have occurred; ticket
 05 remains open and 11 remains excluded.
 
 ## Problem Statement
