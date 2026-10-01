@@ -1,5 +1,10 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
+The first approved pilot was interrupted by a Windows watchdog bugcheck.
+The [recovery record](../../../docs/agents/b3-human-pilot-recovery-2026-10-01.md)
+documents resumable per-cell storage, GPU pacing and temperature supervision.
+The driver-level root cause is unproven and actual completion remains pending.
+
 The owner approved and started the frozen 30-cell human pilot on 2026-10-01;
 see the [execution record](../../../docs/agents/b3-human-pilot-approved-run-2026-10-01.md).
 The eight-hour producer budget retains memory/storage guards. Actual completion

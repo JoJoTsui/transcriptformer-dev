@@ -66,6 +66,8 @@ def _score(
     paired_preflight_path: Path,
     ortholog_table: Path,
     bootstrap_family_path: Path | None = None,
+    checkpoint_dir: Path | None = None,
+    gpu_idle_seconds: float = 0,
 ):
     import numpy as np
     import torch
@@ -130,7 +132,11 @@ def _score(
     timings = [probe.get("elapsed_original_seconds"), probe.get("elapsed_deletion_seconds")]
     if any(type(value) not in (int, float) or not math.isfinite(value) or value <= 0 for value in timings):
         raise ValueError("Resource probe lacks valid measured forward timings")
-    projected_seconds = preflight["estimated_positive_raw_rows"] * timings[1] + preflight["n_cells"] * timings[0]
+    if not 0 <= gpu_idle_seconds <= 60:
+        raise ValueError("GPU idle seconds must be finite and between zero and 60")
+    projected_seconds = (
+        preflight["estimated_positive_raw_rows"] * (timings[1] + gpu_idle_seconds) + preflight["n_cells"] * timings[0]
+    )
     root = Path(__file__).resolve().parents[1]
     expected_software_paths = {
         str(path.resolve())
@@ -279,6 +285,7 @@ def _score(
         if shutil.disk_usage(output.parent).free < 2 * 1024**3:
             raise RuntimeError("B3 output filesystem has less than 2 GiB free")
 
+    checkpoints = None
     cells, cfg, gene_vocab, aux_vocab = configured_prepared_cells(config)
     try:
         if len(cells.cells) * len(cells.gene_ids) > MAX_BOOLEAN_ENTRIES:
@@ -325,6 +332,7 @@ def _score(
             "resource_probe_path": str(resource_probe_path.resolve()),
             "resource_probe_sha256": file_sha256(resource_probe_path),
             "execution_max_seconds": max_seconds,
+            "gpu_idle_seconds": gpu_idle_seconds,
             "normalization_chunk_rows": 8,
             "config_path": str(config_path.resolve()),
             "config_sha256": file_sha256(config_path),
@@ -357,6 +365,13 @@ def _score(
             "deterministic_algorithms_required": True,
             "cublas_workspace_config": os.environ["CUBLAS_WORKSPACE_CONFIG"],
         }
+        if checkpoint_dir is not None:
+            from scripts.b3_pilot_checkpoints import CellCheckpoints
+
+            checkpoints = CellCheckpoints(checkpoint_dir, frozen)
+            # Source-file hashes remain exact; tracking-only commits retain the original certificate identity.
+            frozen["software_commit_actual"] = checkpoints.original_commit
+            adapter.software_commit = checkpoints.original_commit
         output.parent.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(dir=output.parent, prefix=".b3-measured-zero-score-") as staging:
             publication = Path(staging) / "publication"
@@ -415,6 +430,8 @@ def _score(
                             [feature_index[gene] in raw_values for gene in cells.gene_ids], dtype=np.uint8
                         )
                         raw_positive_bits = np.packbits(positive_flags, bitorder="little").tobytes().hex()
+                        resumed = checkpoints.load(cell_index) if checkpoints is not None else None
+                        cell_row_start = len(positive_rows)
                         device_batch = BatchData(
                             gene_counts=cpu_cell.batch.gene_counts.to(device),
                             gene_token_indices=cpu_cell.batch.gene_token_indices.to(device),
@@ -502,6 +519,37 @@ def _score(
                             "original_target_log_probs": target_log_probs,
                             "prepared_source_sha256": cells.entries[meta["file_index"]]["prepared_sha256"],
                         }
+                        if resumed is not None:
+                            rows = resumed["rows"]
+                            if resumed["proof"] != proof:
+                                raise ValueError(
+                                    "Completed checkpoint proof differs from fresh source/native original forward"
+                                )
+                            if [(row["token_position"], row["gene_id"]) for row in rows] != positions:
+                                raise ValueError("Completed checkpoint positive attempts differ from native cell")
+                            identity_fields = {
+                                "species": cpu_cell.species,
+                                "phase": cpu_cell.phase,
+                                "model_arm": cpu_cell.model_arm,
+                                "embryo_id": cpu_cell.embryo_id,
+                                "source_id": cpu_cell.source_id,
+                                "cell_id": cpu_cell.cell_id,
+                                "cell_index": cell_index,
+                            }
+                            if any(any(row[key] != value for key, value in identity_fields.items()) for row in rows):
+                                raise ValueError("Completed checkpoint row identities differ from frozen cell")
+                            proofs.append(proof)
+                            positive_rows.extend(rows)
+                            for row in rows:
+                                payload = _json_line({"kind": "positive_impact", **row})
+                                checksum.update(payload)
+                                stream.write(payload)
+                            print(
+                                json.dumps({"event": "cell_resumed", "cell_index": cell_index, "rows": len(rows)}),
+                                flush=True,
+                            )
+                            del original, device_batch
+                            continue
                         proofs.append(proof)
                         last_original_target = -1
                         if original is not None:
@@ -533,6 +581,10 @@ def _score(
                                     impact, n_targets, status = None, 0, "no_matched_target"
                                 else:
                                     impact, n_targets, status = float(result.impact.item()), result.n_targets, "scored"
+                            if gpu_idle_seconds:
+                                if torch.device(device).type == "cuda":
+                                    torch.cuda.synchronize(device)
+                                time.sleep(gpu_idle_seconds)
                             check_budget()
                             row = {
                                 "species": device_cell.species,
@@ -552,6 +604,18 @@ def _score(
                             payload = _json_line({"kind": "positive_impact", **row})
                             checksum.update(payload)
                             stream.write(payload)
+                        if checkpoints is not None:
+                            checkpoints.save(cell_index, proof, positive_rows[cell_row_start:])
+                        print(
+                            json.dumps(
+                                {
+                                    "event": "cell_completed",
+                                    "cell_index": cell_index,
+                                    "rows": len(positive_rows) - cell_row_start,
+                                }
+                            ),
+                            flush=True,
+                        )
                         del original, device_batch
                     stream.write(
                         _json_line(
@@ -655,6 +719,8 @@ def _score(
             os.rename(publication, output)
             return {"status": report["status"], "finite_null_scores": len(finite), "output": str(output)}
     finally:
+        if checkpoints is not None:
+            checkpoints.close()
         cells.close()
 
 
@@ -670,6 +736,8 @@ def run(
     paired_preflight_path: Path | None = None,
     ortholog_table: Path | None = None,
     bootstrap_family_path: Path | None = None,
+    checkpoint_dir: Path | None = None,
+    gpu_idle_seconds: float = 0,
 ):
     for variable in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
         os.environ[variable] = "1"
@@ -705,6 +773,8 @@ def run(
         paired_preflight_path=Path(paired_preflight_path),
         ortholog_table=Path(ortholog_table),
         bootstrap_family_path=Path(bootstrap_family_path) if bootstrap_family_path is not None else None,
+        checkpoint_dir=Path(checkpoint_dir) if checkpoint_dir is not None else None,
+        gpu_idle_seconds=gpu_idle_seconds,
     )
 
 
@@ -721,6 +791,8 @@ def main(argv=None):
     parser.add_argument("--paired-preflight", type=Path)
     parser.add_argument("--ortholog-table", type=Path)
     parser.add_argument("--bootstrap-family", type=Path)
+    parser.add_argument("--checkpoint-dir", type=Path)
+    parser.add_argument("--gpu-idle-seconds", type=float, default=0)
     parser.add_argument("--max-seconds", type=float, default=3600)
     args = parser.parse_args(argv)
     print(
@@ -736,6 +808,8 @@ def main(argv=None):
                 paired_preflight_path=args.paired_preflight,
                 ortholog_table=args.ortholog_table,
                 bootstrap_family_path=args.bootstrap_family,
+                checkpoint_dir=args.checkpoint_dir,
+                gpu_idle_seconds=args.gpu_idle_seconds,
             ),
             indent=2,
         )

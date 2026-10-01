@@ -1,5 +1,13 @@
 # Finetune readiness tracker
 
+**Pilot recovery — 2026-10-01:** The approved pilot was interrupted by a
+confirmed Windows `0x133` watchdog bugcheck. The [recovery record](b3-human-pilot-recovery-2026-10-01.md)
+documents preserved orphan evidence, durable completed-cell checkpoints,
+paced GPU execution and a persistent temperature/resource supervisor.
+The specific Windows driver remains unproven. The fresh capped two-forward
+probe passed with unchanged diagnostic effect; retry is pending at this
+recording. Ticket 05 remains open.
+
 **Approved pilot execution — 2026-10-01:** The owner clarified approval for
 the frozen 30-cell human pilot. The [run record](b3-human-pilot-approved-run-2026-10-01.md)
 records its active execution, eight-hour producer ceiling, unchanged CPU/GPU

@@ -1,0 +1,24 @@
+{
+  "schema": "b3_pilot_host_interruption_evidence_v1",
+  "cause_class": "Windows bugcheck 0x133, specific driver unproven",
+  "last_heartbeat": "2026-10-01T09:21:17.567253+00:00",
+  "last_producer_rss_bytes": 3850362880,
+  "last_host_available_ram_bytes": 28169707520,
+  "last_disk_free_bytes": 412170936320,
+  "interrupted_raw_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/.b3-measured-zero-score-mzoh7rtd/publication/positive_raw.jsonl",
+  "interrupted_raw_sha256": "cf6354504662a3b9fa2e5dab21d909ca3af3cde5497596ec93a7633cd8c87acc",
+  "positive_rows": 15870,
+  "malformed_lines": 0,
+  "rows_per_cell": {
+    "0": 2047,
+    "1": 2047,
+    "2": 2044,
+    "3": 2047,
+    "4": 2047,
+    "5": 2047,
+    "6": 2047,
+    "7": 1544
+  },
+  "completion_status": "unpublished_unverified_no_saved_cell_proofs",
+  "interrupted_rows_reused": false
+}
