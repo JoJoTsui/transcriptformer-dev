@@ -36,6 +36,7 @@ from transcriptformer.finetune.b3_measured_zero_shards import (  # noqa: E402
 )
 
 NATIVE_ATOL = 1e-5
+MAX_REPLAY_BYTES = 128 * 1024**2
 
 
 def _checked_replay_subset(previous, cell_indices, proofs, records):
@@ -199,7 +200,15 @@ def run(
     if output.exists():
         raise FileExistsError(output)
     plan = _read_plan(plan_path)
-    previous = _bounded_json(native_replay_path)
+    with native_replay_path.open("rb") as replay_stream:
+        replay_bytes = replay_stream.read(MAX_REPLAY_BYTES + 1)
+    if len(replay_bytes) > MAX_REPLAY_BYTES:
+        raise ValueError("Native replay JSON exceeds 128 MiB")
+    previous = json.loads(replay_bytes)
+    if not isinstance(previous, dict):
+        raise ValueError("Native replay JSON must be an object")
+    replay_hash = sha256(replay_bytes).hexdigest()
+    del replay_bytes
     cell_indices = previous.get("cell_indices")
     if (
         previous.get("schema") != "b3_measured_zero_bounded_native_replay_v1"
@@ -240,6 +249,7 @@ def run(
             "host_ram_floor_bytes": 4 * 1024**3,
             "disk_floor_bytes": 20 * 1024**3,
             "gpu_idle_seconds_after_each_attempt": 0.25,
+            "resource_check_schedule": "Before/after each attempt; wall checks every cached normalization chunk",
         },
         "complete_whole_arm_cost_measured": False,
         "full_cohort_feasibility": "unavailable",
@@ -267,9 +277,12 @@ def run(
     output.parent.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
 
-    def guard():
+    def check_wall():
         if time.monotonic() - started > max_seconds:
             raise TimeoutError("Scalar cache study exceeded wall limit")
+
+    def guard():
+        check_wall()
         if resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 > 16 * 1024**3:
             raise RuntimeError("Scalar cache study exceeds 16 GiB RSS")
         if target_device.type == "cuda" and torch.cuda.max_memory_reserved(target_device) > 20 * 1024**3:
@@ -341,7 +354,9 @@ def run(
     for path, expected in frozen.items():
         if str(Path(path).resolve()) != path or file_hash(path) != expected:
             raise ValueError("Previously replayed input bytes changed")
-    frozen[str(native_replay_path.resolve())] = file_hash(native_replay_path)
+    if file_hash(native_replay_path) != replay_hash:
+        raise ValueError("Native replay source bytes changed after parsing")
+    frozen[str(native_replay_path.resolve())] = replay_hash
     frozen[str(Path(__file__).resolve())] = file_hash(Path(__file__))
     validation_seconds = time.monotonic() - started
     verify_shard(plan_path, 0, shard_root)
@@ -516,7 +531,7 @@ def run(
                                     )
                                 else:
                                     result = _cache_impact(
-                                        original, deleted, position, excluded, softcap, cached, guard
+                                        original, deleted, position, excluded, softcap, cached, check_wall
                                     )
                             except ValueError as error:
                                 if str(error) != "No matched downstream gene-ID target remains after deletion":

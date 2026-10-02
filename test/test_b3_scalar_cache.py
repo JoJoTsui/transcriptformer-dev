@@ -1,6 +1,7 @@
 """Public scalar-cache experiment on actual prepared rows and small Torch heads."""
 
 import json
+from pathlib import Path
 import pytest
 
 pytest_plugins = ("test.test_b3_pilot_shard_handoff",)
@@ -109,3 +110,27 @@ def test_cache_study_rejects_inconsistent_independent_replay_impacts(native_pilo
     with pytest.raises(ValueError, match="effect evidence"):
         run(*inputs, output, scored_deletions_per_cell=2, execute=True, device="cpu")
     assert not output.exists()
+
+
+def test_cache_study_rejects_replay_mutation_after_it_was_parsed(native_pilot, tmp_path, monkeypatch):
+    from scripts.study_b3_scalar_cache import run
+
+    inputs = _reconciled_replay(native_pilot, tmp_path)
+    replay_path = inputs[-1]
+    replacement = json.loads(replay_path.read_text())
+    replacement["contrasts"][0]["independent_reference_impact_bits"] = float("nan")
+    original_open = Path.open
+    changed = False
+
+    def change_replay_during_weight_hash(path, *args, **kwargs):
+        nonlocal changed
+        if not changed and path.name == "model_weights.pt" and args and args[0] == "rb":
+            changed = True
+            replay_path.write_text(json.dumps(replacement))
+        return original_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", change_replay_during_weight_hash)
+    output = tmp_path / "mutated_replay.json"
+    with pytest.raises(ValueError, match="replay.*changed"):
+        run(*inputs, output, scored_deletions_per_cell=2, execute=True, device="cpu")
+    assert changed and not output.exists()
