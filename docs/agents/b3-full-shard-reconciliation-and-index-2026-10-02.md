@@ -67,9 +67,14 @@ producer proofs do not yet exist, so neither execution path is integration
 validated. No full-cohort GPU run was launched.
 
 Remaining dependencies include the native full-cohort producer and attestation,
-exact global peer-null aggregation, observed finite paired scores and the
+validated global peer-null execution, observed finite paired scores and the
 unchanged 500-pair/80% reporting gate. Peer scores must use the focal gene's
 exact finite cell and embryo support; reusable per-gene embryo means alone are
 insufficient. Full-cohort compute feasibility remains unresolved on this host.
 The active pilot continues to validation and paired diagnostics automatically;
 its 32.54% structural ceiling prevents a reportable concordance or interval.
+
+
+The later [diagnostic global-null implementation](b3-full-global-null-diagnostic-2026-10-02.md)
+adds bounded exact-support arithmetic; full-index integration and model-effect
+attestation remain pending.

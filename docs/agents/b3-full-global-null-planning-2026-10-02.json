@@ -1,0 +1,67 @@
+{
+  "actual_sparse_index_validation": "unavailable_no_full_scored_shards",
+  "execution_scope": "weight_free_frozen_plan_only",
+  "human": {
+    "candidate_peer_comparisons": 29273,
+    "cohort_sha256": "e2259aeb4c6e7d8560d34b95eba513e7fb508ab6297335028d9322dea6ce98c8",
+    "fdr": "unavailable",
+    "full_dense_matrix_allocated": false,
+    "likelihood_effects_recomputed": false,
+    "max_focal_range_genes": 64,
+    "method": "b3_measured_zero_peer_null_v2",
+    "model_arm": "base",
+    "model_forwards_performed": false,
+    "p_values": "unavailable",
+    "phase": "organogenesis",
+    "plan_sha256": "b06233309be599e05c8bff01c2aea2b4df276f28fd853aae786ad54bd7141fa2",
+    "range": {
+      "start": 0,
+      "stop": 16
+    },
+    "schema": "b3_measured_zero_full_diagnostic_peer_null_range_v1",
+    "scientific_readiness": "unavailable_pending_native_likelihood_attestation_and_validated_global_null",
+    "species": "homo_sapiens",
+    "status": "estimate_only",
+    "verified_input_file_sha256": {
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_measured_zero_support/support_preflight.json": "03c1071f03f84b66daf93dfa9864dbdb0c1e4860be060ade02e8fec74cf043d0",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_native_shard_plan.json": "b06233309be599e05c8bff01c2aea2b4df276f28fd853aae786ad54bd7141fa2",
+      "/mnt/d/sc/transcriptformer/transcriptformer/scripts/aggregate_b3_measured_zero_full_scores.py": "a8c12b5ae41487d8ff4f1366286212da328852da82db98b799186b7c666f6b62",
+      "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/b3_bins.py": "59074199f5f74c4f34528438c9fbd281a0c14d45d03706ec654a458ae4621dca",
+      "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/b3_measured_zero_shards.py": "08ce6479fbd2658d88caad83c0bb32c3047e75b30d0248382e5d1ecfffada66e"
+    },
+    "working_array_upper_bytes": 10071416,
+    "worst_support_cell_checks": 3628446896
+  },
+  "mouse": {
+    "candidate_peer_comparisons": 29741,
+    "cohort_sha256": "cc15e2e7bd18c0b074d70925fbcef3f9a3558f3b544de257b7b5538977d56724",
+    "fdr": "unavailable",
+    "full_dense_matrix_allocated": false,
+    "likelihood_effects_recomputed": false,
+    "max_focal_range_genes": 64,
+    "method": "b3_measured_zero_peer_null_v2",
+    "model_arm": "base",
+    "model_forwards_performed": false,
+    "p_values": "unavailable",
+    "phase": "organogenesis",
+    "plan_sha256": "559c87f71fa4ad220305a827ca11d8d1907d81c911af2926cc10473e4a888c8f",
+    "range": {
+      "start": 0,
+      "stop": 16
+    },
+    "schema": "b3_measured_zero_full_diagnostic_peer_null_range_v1",
+    "scientific_readiness": "unavailable_pending_native_likelihood_attestation_and_validated_global_null",
+    "species": "mus_musculus",
+    "status": "estimate_only",
+    "verified_input_file_sha256": {
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_measured_zero_support/support_preflight.json": "819d751f16e6c5c63f6c0ef92a9788fe5cd890d14759b16226143891887e88ae",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_native_shard_plan.json": "559c87f71fa4ad220305a827ca11d8d1907d81c911af2926cc10473e4a888c8f",
+      "/mnt/d/sc/transcriptformer/transcriptformer/scripts/aggregate_b3_measured_zero_full_scores.py": "a8c12b5ae41487d8ff4f1366286212da328852da82db98b799186b7c666f6b62",
+      "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/b3_bins.py": "59074199f5f74c4f34528438c9fbd281a0c14d45d03706ec654a458ae4621dca",
+      "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/b3_measured_zero_shards.py": "08ce6479fbd2658d88caad83c0bb32c3047e75b30d0248382e5d1ecfffada66e"
+    },
+    "working_array_upper_bytes": 75792176,
+    "worst_support_cell_checks": 28116814249
+  },
+  "schema": "b3_full_global_null_default_planning_evidence_v1"
+}

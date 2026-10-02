@@ -1,6 +1,6 @@
 # Measured-zero B3 scoring and compute gate
 
-Status: bounded backend implemented; tiny CUDA two-forward resource probe passed, bounded cohort scoring unverified; full-cohort shard storage and weight-free planning implemented, with inference and global aggregation still absent. Method:
+Status (updated 2026-10-02): the human pilot is completed and source validated; the mouse pilot is actively scoring. Full-cohort shard storage, source/native reconciliation, sparse indexing and diagnostic global-null range tooling are implemented. Full native production, effect attestation and execute-path integration remain pending. Method:
 `b3_measured_zero_peer_null_v2`. The [owner decision](b3-measured-zero-owner-decision-2026-10-01.md)
 authorizes the separate method. The v1 raw artifacts, score tables, bootstrap
 inputs and validators retain their existing identities and limits.

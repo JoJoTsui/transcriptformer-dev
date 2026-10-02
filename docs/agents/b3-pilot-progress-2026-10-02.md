@@ -88,7 +88,7 @@ human scorer had not completed are historical and superseded by this result.
 
 ## Latest continuation — 2026-10-02
 
-The supervisor reports `running`, with eight of 25 durable mouse cell
+The supervisor reports `running`, with thirteen of 25 durable mouse cell
 checkpoints. At the recorded heartbeat, the GPU was 59°C, host RAM available
 was 24.63 GiB and output disk availability was 383.80 GiB. These are snapshots;
 completion and observed paired coverage are pending.
@@ -97,3 +97,12 @@ New source/native reconciliation and sparse-index scripts add two full-cohort
 backend dependencies without changing active pilot source files. See
 [bounds and remaining gates](b3-full-shard-reconciliation-and-index-2026-10-02.md).
 They do not establish native likelihood attestation or global null scores.
+
+
+### Global peer-null diagnostic implementation
+
+[Bounded diagnostic range tooling](b3-full-global-null-diagnostic-2026-10-02.md)
+now implements exact focal support and the frozen null arithmetic from the
+sparse index. Default human/mouse planning succeeded without weights or GPU work.
+Native full-cohort production and effect attestation remain absent; execution
+against actual scored full shards is unverified. Ticket 05 remains open.
