@@ -39,8 +39,10 @@ def _write(path, value):
 
 def _tiny_request(tmp_path, *, n_genes=3, n_embryos=5, sparse_human=True, exclude_last=True):
     """Nine cells test padding; sparse human gene occurs only in physical e0."""
-    genes = {s: [f"{prefix}{i:011d}" for i in range(n_genes)]
-             for s, prefix in (("homo_sapiens", "ENSG"), ("mus_musculus", "ENSMUSG"))}
+    genes = {
+        s: [f"{prefix}{i:011d}" for i in range(n_genes)]
+        for s, prefix in (("homo_sapiens", "ENSG"), ("mus_musculus", "ENSMUSG"))
+    }
     embryos = [f"e{i}" for i in range(n_embryos)]
     cell_embryos = np.array([0, 0, 1, 1, 2, 2, 3, 3, 4], dtype=np.int32)
     cell_embryos = np.minimum(cell_embryos, n_embryos - 1)
@@ -49,93 +51,188 @@ def _tiny_request(tmp_path, *, n_genes=3, n_embryos=5, sparse_human=True, exclud
     for species in genes:
         folder = tmp_path / species
         folder.mkdir()
-        source = {"prepared_path": str(folder / "unread_prepared.h5ad"),
-                  "prepared_sha256": "1" * 64, "source_path": str(folder / "unread_original.h5ad"),
-                  "source_sha256": "2" * 64, "survivor_digest": "3" * 64,
-                  "split": "train", "n_obs": 9}
+        source = {
+            "prepared_path": str(folder / "unread_prepared.h5ad"),
+            "prepared_sha256": "1" * 64,
+            "source_path": str(folder / "unread_original.h5ad"),
+            "source_sha256": "2" * 64,
+            "survivor_digest": "3" * 64,
+            "split": "train",
+            "n_obs": 9,
+        }
         native = np.ones((n_genes, 9), dtype=np.uint8)
         if species == "homo_sapiens" and sparse_human:
             native[1, 2:] = 0
-        config = _write(folder / "config.json", {"species": species, "phase": "organogenesis",
-                       "split": "train", "model_arm": "base", "gene_ids": genes[species],
-                       "prepared_report": str(prepared)})
+        config = _write(
+            folder / "config.json",
+            {
+                "species": species,
+                "phase": "organogenesis",
+                "split": "train",
+                "model_arm": "base",
+                "gene_ids": genes[species],
+                "prepared_report": str(prepared),
+            },
+        )
         configs.append(config)
         membership = sha256()
         for row, embryo in enumerate(cell_embryos):
             record = [source["source_path"], row, species, "organogenesis", embryos[embryo], "train"]
             membership.update((json.dumps(record, separators=(",", ":")) + "\n").encode())
-        contract = {"schema": "b3_full_cohort_membership_v1", "species": species,
-                    "phase": "organogenesis", "split": "train", "n_cells": 9, "n_embryos": n_embryos,
-                    "gene_ids_sha256": _digest(genes[species]),
-                    "selected_membership_sha256": membership.hexdigest(), "sources": [source]}
+        contract = {
+            "schema": "b3_full_cohort_membership_v1",
+            "species": species,
+            "phase": "organogenesis",
+            "split": "train",
+            "n_cells": 9,
+            "n_embryos": n_embryos,
+            "gene_ids_sha256": _digest(genes[species]),
+            "selected_membership_sha256": membership.hexdigest(),
+            "sources": [source],
+        }
         support = folder / "support.h5"
         with h5py.File(support, "w") as artifact:
-            artifact.attrs.update(schema="b3_measured_zero_full_support_v1",
-                                  method="b3_measured_zero_peer_null_v2", bitorder="little",
-                                  cohort_sha256=_digest(contract), cell_order="frozen test cell order")
+            artifact.attrs.update(
+                schema="b3_measured_zero_full_support_v1",
+                method="b3_measured_zero_peer_null_v2",
+                bitorder="little",
+                cohort_sha256=_digest(contract),
+                cell_order="frozen test cell order",
+            )
             artifact.create_dataset("gene_ids", data=np.array(genes[species], dtype=h5py.string_dtype()))
             artifact.create_dataset("embryo_ids", data=np.array(embryos, dtype=h5py.string_dtype()))
             artifact.create_dataset("cell_embryo_index", data=cell_embryos)
             artifact.create_dataset("cell_source_index", data=np.zeros(9, dtype=np.int32))
             artifact.create_dataset("cell_source_row_index", data=np.arange(9, dtype=np.int64))
             artifact.create_dataset("native_scorable_support", data=np.packbits(native, axis=1, bitorder="little"))
-            artifact.create_dataset("raw_positive", data=np.packbits(np.ones((n_genes, 9), dtype=np.uint8),
-                                                                      axis=1, bitorder="little"))
-        rows = [{"gene_id": gene, "raw_token_attempts": int(native[i].sum()), "raw_positive_cells": 9,
-                 "potentially_scorable_cells": int(native[i].sum()),
-                 "potentially_scorable_embryos": 1 if i == 1 and species == "homo_sapiens" and sparse_human else n_embryos,
-                 "necessary_conditions_met": i < n_genes - int(exclude_last)} for i, gene in enumerate(genes[species])]
-        report = _write(folder / "preflight.json", {
-            "schema": "b3_measured_zero_full_cohort_support_preflight_v1", "method": "b3_measured_zero_peer_null_v2",
-            "config_path": str(config), "config_sha256": _hash(config), "species": species,
-            "phase": "organogenesis", "split": "train", "model_arm": "base", "n_cells": 9,
-            "n_embryos": n_embryos, "n_frozen_genes": n_genes, "gene_support": rows,
-            "possible_finite_score_upper_bound": n_genes - int(exclude_last), "potentially_scorable_genes": n_genes,
-            "input_paths": {"prepared_report": str(prepared)}, "input_sha256": {"prepared_report": _hash(prepared)},
-            "cohort_sha256": _digest(contract), "cohort_contract": contract,
-            "support_h5": {"path": str(support), "sha256": _hash(support), "shape": [n_genes, 2],
-                           "bitorder": "little", "native_dataset": "native_scorable_support",
-                           "raw_positive_dataset": "raw_positive", "cell_order": "frozen test cell order"},
-            "model_forwards_performed": False, "checkpoint_tensors_loaded": False, "embedding_values_loaded": False,
-        })
+            artifact.create_dataset(
+                "raw_positive", data=np.packbits(np.ones((n_genes, 9), dtype=np.uint8), axis=1, bitorder="little")
+            )
+        rows = [
+            {
+                "gene_id": gene,
+                "raw_token_attempts": int(native[i].sum()),
+                "raw_positive_cells": 9,
+                "potentially_scorable_cells": int(native[i].sum()),
+                "potentially_scorable_embryos": 1
+                if i == 1 and species == "homo_sapiens" and sparse_human
+                else n_embryos,
+                "necessary_conditions_met": i < n_genes - int(exclude_last),
+            }
+            for i, gene in enumerate(genes[species])
+        ]
+        report = _write(
+            folder / "preflight.json",
+            {
+                "schema": "b3_measured_zero_full_cohort_support_preflight_v1",
+                "method": "b3_measured_zero_peer_null_v2",
+                "config_path": str(config),
+                "config_sha256": _hash(config),
+                "species": species,
+                "phase": "organogenesis",
+                "split": "train",
+                "model_arm": "base",
+                "n_cells": 9,
+                "n_embryos": n_embryos,
+                "n_frozen_genes": n_genes,
+                "gene_support": rows,
+                "possible_finite_score_upper_bound": n_genes - int(exclude_last),
+                "potentially_scorable_genes": n_genes,
+                "input_paths": {"prepared_report": str(prepared)},
+                "input_sha256": {"prepared_report": _hash(prepared)},
+                "cohort_sha256": _digest(contract),
+                "cohort_contract": contract,
+                "support_h5": {
+                    "path": str(support),
+                    "sha256": _hash(support),
+                    "shape": [n_genes, 2],
+                    "bitorder": "little",
+                    "native_dataset": "native_scorable_support",
+                    "raw_positive_dataset": "raw_positive",
+                    "cell_order": "frozen test cell order",
+                },
+                "model_forwards_performed": False,
+                "checkpoint_tensors_loaded": False,
+                "embedding_values_loaded": False,
+            },
+        )
         reports.append(report)
-        plans.append({"schema": "b3_measured_zero_full_shard_plan_v1", "method": "b3_measured_zero_peer_null_v2",
-                      "species": species, "phase": "organogenesis", "split": "train", "model_arm": "base",
-                      "cohort_sha256": _digest(contract), "config_path": str(config), "config_sha256": _hash(config),
-                      "full_preflight_path": str(report), "full_preflight_sha256": _hash(report),
-                      "support_h5_path": str(support), "support_h5_sha256": _hash(support), "n_cells": 9,
-                      "n_frozen_genes": n_genes, "native_scorable_contrasts": int(native.sum()),
-                      "estimated_raw_rows": int(native.sum()), "model_forwards_performed": False})
+        plans.append(
+            {
+                "schema": "b3_measured_zero_full_shard_plan_v1",
+                "method": "b3_measured_zero_peer_null_v2",
+                "species": species,
+                "phase": "organogenesis",
+                "split": "train",
+                "model_arm": "base",
+                "cohort_sha256": _digest(contract),
+                "config_path": str(config),
+                "config_sha256": _hash(config),
+                "full_preflight_path": str(report),
+                "full_preflight_sha256": _hash(report),
+                "support_h5_path": str(support),
+                "support_h5_sha256": _hash(support),
+                "n_cells": 9,
+                "n_frozen_genes": n_genes,
+                "native_scorable_contrasts": int(native.sum()),
+                "estimated_raw_rows": int(native.sum()),
+                "model_forwards_performed": False,
+            }
+        )
     table = tmp_path / "orthologs.tsv"
-    table.write_text("".join(f"homo_sapiens\t{a}\tmus_musculus\t{b}\n"
-                             for a, b in zip(*genes.values(), strict=True)))
-    paired = _write(tmp_path / "paired.json", {
-        "schema": "b3_measured_zero_paired_support_preflight_v1", "method": "b3_measured_zero_peer_null_v2",
-        "n_vocabulary_joined_pairs": n_genes, "possible_finite_pair_upper_bound": n_genes - int(exclude_last),
-        "ortholog_table_sha256": _hash(table),
-        "cohort_sha256": [plan["cohort_sha256"] for plan in plans],
-        "inputs": {str(p): _hash(p) for p in [*configs, *reports]},
-        "prospective_statistic": {"species_a": "homo_sapiens", "species_b": "mus_musculus",
-                                  "phase": "organogenesis", "genes_a": genes["homo_sapiens"],
-                                  "genes_b": genes["mus_musculus"]},
-        "statistic_eligibility": {"comparable_pairs": list(map(list, zip(*genes.values(), strict=True))),
-                                  "n_comparable_pairs": n_genes},
-        "upper_bound_coverage": {"minimum_paired_scores": 500, "minimum_joined_score_fraction": 0.8},
-        "model_forwards_performed": False,
-    })
+    table.write_text("".join(f"homo_sapiens\t{a}\tmus_musculus\t{b}\n" for a, b in zip(*genes.values(), strict=True)))
+    paired = _write(
+        tmp_path / "paired.json",
+        {
+            "schema": "b3_measured_zero_paired_support_preflight_v1",
+            "method": "b3_measured_zero_peer_null_v2",
+            "n_vocabulary_joined_pairs": n_genes,
+            "possible_finite_pair_upper_bound": n_genes - int(exclude_last),
+            "ortholog_table_sha256": _hash(table),
+            "cohort_sha256": [plan["cohort_sha256"] for plan in plans],
+            "inputs": {str(p): _hash(p) for p in [*configs, *reports]},
+            "prospective_statistic": {
+                "species_a": "homo_sapiens",
+                "species_b": "mus_musculus",
+                "phase": "organogenesis",
+                "genes_a": genes["homo_sapiens"],
+                "genes_b": genes["mus_musculus"],
+            },
+            "statistic_eligibility": {
+                "comparable_pairs": list(map(list, zip(*genes.values(), strict=True))),
+                "n_comparable_pairs": n_genes,
+            },
+            "upper_bound_coverage": {"minimum_paired_scores": 500, "minimum_joined_score_fraction": 0.8},
+            "model_forwards_performed": False,
+        },
+    )
     plan_refs = []
     for i, plan in enumerate(plans):
-        plan.update(paired_preflight_path=str(paired), paired_preflight_sha256=_hash(paired),
-                    ortholog_table_path=str(table), ortholog_table_sha256=_hash(table))
+        plan.update(
+            paired_preflight_path=str(paired),
+            paired_preflight_sha256=_hash(paired),
+            ortholog_table_path=str(table),
+            ortholog_table_sha256=_hash(table),
+        )
         path = _write(tmp_path / f"plan{i}.json", plan)
         plan_refs.append({"path": str(path), "sha256": _hash(path)})
     prior = _write(tmp_path / "prior.json", {"reference_only": True})
-    cost = _write(tmp_path / "cost.json", {"schema": "b3_complete_method_cost_request_v1", "plans": plan_refs,
-                                         "prior_evidence": {"path": str(prior), "sha256": _hash(prior)}})
-    return _write(tmp_path / "request.json", {
-        "schema": "b3_full_native_embryo_support_request_v1", "cost_request": {"path": str(cost), "sha256": _hash(cost)},
-        "software_file_sha256": {str(ROOT / path): _hash(ROOT / path) for path in SOFTWARE},
-    })
+    cost = _write(
+        tmp_path / "cost.json",
+        {
+            "schema": "b3_complete_method_cost_request_v1",
+            "plans": plan_refs,
+            "prior_evidence": {"path": str(prior), "sha256": _hash(prior)},
+        },
+    )
+    return _write(
+        tmp_path / "request.json",
+        {
+            "schema": "b3_full_native_embryo_support_request_v1",
+            "cost_request": {"path": str(cost), "sha256": _hash(cost)},
+            "software_file_sha256": {str(ROOT / path): _hash(ROOT / path) for path in SOFTWARE},
+        },
+    )
 
 
 def test_public_run_derives_exact_support_and_keeps_conditional_pairs_hypothetical(tmp_path):
@@ -204,18 +301,21 @@ def _mutate_rebound_human_support(request_path, dataset, index, value):
     _write(request_path, request)
 
 
-@pytest.mark.parametrize("dataset,index,value,reason", [
-    ("native_scorable_support", (0, 1), 129, "padding"),
-    ("raw_positive", (0, 1), 129, "padding"),
-    ("native_scorable_support", (0, 0), 254, "cell counts"),
-    ("native_scorable_support", (1, 0), 5, "embryo counts"),
-    ("cell_embryo_index", 0, 5, "identity indexes"),
-    ("cell_source_index", 0, 1, "identity indexes"),
-    ("cell_source_row_index", 1, 0, "duplicate or unordered"),
-    ("cell_embryo_index", 0, 1, "membership differs"),
-    ("gene_ids", 1, "ENSG99999999999", "gene identities"),
-    ("embryo_ids", 1, "e0", "embryo identities"),
-])
+@pytest.mark.parametrize(
+    "dataset,index,value,reason",
+    [
+        ("native_scorable_support", (0, 1), 129, "padding"),
+        ("raw_positive", (0, 1), 129, "padding"),
+        ("native_scorable_support", (0, 0), 254, "cell counts"),
+        ("native_scorable_support", (1, 0), 5, "embryo counts"),
+        ("cell_embryo_index", 0, 5, "identity indexes"),
+        ("cell_source_index", 0, 1, "identity indexes"),
+        ("cell_source_row_index", 1, 0, "duplicate or unordered"),
+        ("cell_embryo_index", 0, 1, "membership differs"),
+        ("gene_ids", 1, "ENSG99999999999", "gene identities"),
+        ("embryo_ids", 1, "e0", "embryo identities"),
+    ],
+)
 def test_rebound_malformed_bitmaps_or_identity_maps_are_rejected(tmp_path, dataset, index, value, reason):
     from scripts.assess_b3_full_native_embryo_support import run
 
@@ -254,8 +354,18 @@ def test_unknown_fixed_subset_is_vetoed_when_the_reporting_draw_pool_is_too_smal
 def test_cli_writes_new_source_bound_report_and_refuses_to_replace_it(tmp_path):
     request = _tiny_request(tmp_path)
     output = tmp_path / "result.json"
-    command = [sys.executable, str(ROOT / SOFTWARE[0]), "--config", str(request), "--output", str(output),
-               "--gene-chunk", "1", "--max-seconds", "900"]
+    command = [
+        sys.executable,
+        str(ROOT / SOFTWARE[0]),
+        "--config",
+        str(request),
+        "--output",
+        str(output),
+        "--gene-chunk",
+        "1",
+        "--max-seconds",
+        "900",
+    ]
     completed = subprocess.run(command, capture_output=True, text=True, check=True, timeout=30)
     assert json.loads(completed.stdout)["candidate_pair_upper_by_order"] == [1, 1]
     before = output.read_bytes()
@@ -269,8 +379,7 @@ def test_cli_writes_new_source_bound_report_and_refuses_to_replace_it(tmp_path):
     assert all(not Path(ref["path"]).exists() for ref in report["matrix_references"])
 
 
-@pytest.mark.parametrize("kwargs", [{"gene_chunk": 0}, {"gene_chunk": 129},
-                                    {"max_seconds": 0}, {"max_seconds": 901}])
+@pytest.mark.parametrize("kwargs", [{"gene_chunk": 0}, {"gene_chunk": 129}, {"max_seconds": 0}, {"max_seconds": 901}])
 def test_public_resource_caps_cannot_be_relaxed(tmp_path, kwargs):
     from scripts.assess_b3_full_native_embryo_support import run
 
