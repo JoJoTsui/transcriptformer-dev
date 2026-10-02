@@ -1,0 +1,355 @@
+{
+  "bootstrap_api_caps": {
+    "aggregate_counts": {
+      "embryo_gene_records": 962663,
+      "gene_cell_entries": 21437038471,
+      "positive_rows": 1065963862
+    },
+    "embryo_gene_cap": 1000000,
+    "gene_cell_cap": 10000000,
+    "interpretation": "Aggregate count compatibility only; source bundle, per-species and scientific limits still apply",
+    "resource_counts_fit_bounded_api": false,
+    "row_cap": 200000,
+    "scientific_eligibility": "unevaluable_without_reportable_fixed_finite_score_family"
+  },
+  "bootstrap_runtime_seconds": null,
+  "bootstrap_workload": {
+    "additional_unpriced_work": [
+      "Source/context validation and unit-multiplicity replay per invocation",
+      "All-gene metric/bin reconstruction per draw and fixed-pair ranks",
+      "Draw publication and independent source/hash verification"
+    ],
+    "budget_basis": "Current CLI default, not a maximum allowed budget or a measured runtime",
+    "default_finalization_budget_seconds": 3600,
+    "draw_score_evaluations_across_species": 8000,
+    "draw_score_evaluations_per_species": 4000,
+    "frozen_bin_null_bounds_reused_as_bootstrap_bounds": false,
+    "independent_replay_draws_per_species": 2000,
+    "maximum_coordinated_replay_draw_seconds_before_setup": 1.8,
+    "observed_fixed_finite_pair_set_available_for_full_cohort": false,
+    "production_draws_per_species": 2000
+  },
+  "checkpoint_tensors_loaded": false,
+  "checks": {
+    "full_suite_run_by_this_agent": false,
+    "mypy": "passed",
+    "ruff": "passed",
+    "targeted_public_seam_tests": 11
+  },
+  "combined_workload": {
+    "current_pacing_seconds": 266490965.5,
+    "current_pacing_years": 8.44458911640936,
+    "model_forwards_upper_bound": 1065876676,
+    "native_scorable_deletions": 1064807335,
+    "original_forwards_upper_bound": 1069341,
+    "pacing_basis": "Conditional lower bound retaining approved 0.25-second pacing for every positive attempt, including terminal attempts",
+    "positive_attempts": 1065963862
+  },
+  "heavy_work_scheduled": false,
+  "measured_bounded_stages": {
+    "backend": {
+      "peak_rss_bytes": 1053331456,
+      "timings_seconds": {
+        "human_import_seconds": 167.56279995098885,
+        "human_index_seconds": 37.03893897400121,
+        "human_null_range_seconds": 95.09362340399821,
+        "human_reconcile_seconds": 39.336834383997484,
+        "mouse_import_seconds": 141.2066114830086,
+        "mouse_index_seconds": 37.379588327996316,
+        "mouse_null_range_seconds": 72.09788660499908,
+        "mouse_reconcile_seconds": 29.1580571999948
+      }
+    },
+    "basis": "Prior bounded diagnostic stages; timings include validation/IO and are not whole-arm throughput",
+    "current_stage_timing_remeasured": false,
+    "native_subset_replay": {
+      "human": {
+        "elapsed_seconds": 196.06460560800042,
+        "execution_caps": {
+          "cuda_reserved_bytes": 21474836480,
+          "disk_floor_bytes": 21474836480,
+          "gpu_idle_seconds": 0.25,
+          "host_ram_floor_bytes": 4294967296,
+          "max_seconds": 900,
+          "rss_bytes": 17179869184
+        },
+        "model_forward_count": 9,
+        "peak_cuda_reserved_bytes": 9883877376,
+        "peak_rss_bytes": 16075575296,
+        "scope": "Small native subset with original/terminal checks and independent arithmetic; not whole-arm throughput",
+        "source": {
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/human/native_replay_final.json",
+          "sha256": "f6253172de9479295bfb284d135a2b0eec5941387dd03797d911e29364bb8b99"
+        }
+      },
+      "mouse": {
+        "elapsed_seconds": 207.01513807100127,
+        "execution_caps": {
+          "cuda_reserved_bytes": 21474836480,
+          "disk_floor_bytes": 21474836480,
+          "gpu_idle_seconds": 0.25,
+          "host_ram_floor_bytes": 4294967296,
+          "max_seconds": 900,
+          "rss_bytes": 17179869184
+        },
+        "model_forward_count": 8,
+        "peak_cuda_reserved_bytes": 9883877376,
+        "peak_rss_bytes": 15983616000,
+        "scope": "Small native subset with original/terminal checks and independent arithmetic; not whole-arm throughput",
+        "source": {
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/native_replay_final.json",
+          "sha256": "bd1871e3a63b24f94e421a89157814d39d732cb04b33846adce29bad5420b586"
+        }
+      }
+    },
+    "scientific_inputs": {
+      "peak_rss_bytes": 176562176,
+      "timings_seconds": {
+        "human_covariates_seconds": 49.61232629600272,
+        "human_embryo_metrics_seconds": 0.8064013969997177,
+        "mouse_covariates_seconds": 48.002378120989306,
+        "mouse_embryo_metrics_seconds": 1.02813572800369
+      }
+    },
+    "setup": {
+      "human_planning_seconds": 0.7917822509916732,
+      "mouse_planning_seconds": 0.7429605159995845,
+      "paired_preflight_seconds": 97.28403786799754
+    }
+  },
+  "method": "b3_measured_zero_peer_null_v2",
+  "model_forwards_performed": false,
+  "production_cohort_policy_changed": false,
+  "recorded_date": "2026-10-03",
+  "report": {
+    "bytes": 20940,
+    "path": "runs/b3_feasibility/20261003/complete_method_cost_ledger.json",
+    "sha256": "c0b747dbbf8bccf603ffb80249bc57c806577a7f8f063b1a66f6effabaa40b4a"
+  },
+  "request": {
+    "bytes": 611,
+    "path": "docs/agents/b3-complete-method-cost-request-2026-10-03.json",
+    "sha256": "eaba821eb46a5e0d687e6753243df8c143211b722e63275e4b6afb3f88693e36"
+  },
+  "resources": {
+    "deadline": "Cooperative checks; startup imports and indivisible operations are not an OS-enforced limit",
+    "elapsed_seconds": 1.0044987419969402,
+    "max_seconds": 900,
+    "minimum_disk_free_bytes": 21474836480,
+    "minimum_host_ram_bytes": 4294967296,
+    "native_threads": 1,
+    "observed_peak_process_rss_bytes": 93970432,
+    "rss_cap_bytes": 4294967296,
+    "source_matrix_materialization": false
+  },
+  "schema": "b3_complete_method_cost_evidence_v1",
+  "scientific_readiness": "unavailable_cost_plan_only",
+  "scientific_rules_changed": false,
+  "software": [
+    {
+      "bytes": 26105,
+      "path": "scripts/plan_b3_complete_method_cost.py",
+      "sha256": "bb216b4c4a7cca62a7fec2cd9b65f65a7c0f0bcef3c3f543b142529e6a272b14"
+    },
+    {
+      "bytes": 17906,
+      "path": "test/test_b3_complete_method_cost.py",
+      "sha256": "252c43eef331bc48984458630fa8269447a8e1ec3f739e1b3bdbcd9a4bbfae52"
+    }
+  ],
+  "source_binding_scope": "Byte-verified metadata/software before and after; matrices/support/weights are not reverified",
+  "source_matrices_opened": false,
+  "species": {
+    "homo_sapiens": {
+      "n_cells": 123952,
+      "n_frozen_genes": 19406,
+      "native_workload": {
+        "current_pacing_seconds": 57795636.5,
+        "model_forwards_upper_bound": 231104423,
+        "native_scorable_deletions": 230980471,
+        "original_forwards_count_status": "unavailable_from_metadata_without_per_cell_attempt_union",
+        "original_forwards_upper_bound": 123952,
+        "positive_attempts": 231182546,
+        "terminal_unavailable_attempts": 202075
+      },
+      "null_work_bounds": {
+        "basis": "Frozen observed-cohort bins; every candidate peer checked on all possible native focal cells",
+        "candidate_peer_comparisons": 34129040,
+        "interpretation": "Upper work bounds, not measured cell checks, runtimes, finite peer variance or draw-specific bins",
+        "max_64_gene_range_invocations": 304,
+        "native_support_cell_checks_upper": 422457258804,
+        "repeated_verification": "Current range executor rehashes all bound inputs and validates index/proof closure on every invocation",
+        "worst_support_cell_checks_upper": 4230362766080
+      },
+      "physical_embryos": 5,
+      "referenced_matrix_inputs": [
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u4eba_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+          "sha256": "abc3c118799eacdb0090dec407435863c3ed36cbd81c079767dc8089b2c0b51f"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos_prepared_train.h5ad",
+          "sha256": "a15915aae04f757dbb3fbee59a626e34e539aaf1178b26f1c9ba40f6dbf7422f"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_measured_zero_support/support.h5",
+          "sha256": "3c98c2bf007b1f2ca8e803a2afeb1d14224414eba7a0c31c76ff836e0bf59ca9"
+        }
+      ],
+      "storage_bounds": {
+        "embryo_metric_arrays_bytes": 1552520,
+        "finite_native_scorable_index_upper_bytes": 2771920908,
+        "original_likelihood_hex_upper_bytes": 4059675904,
+        "raw_positive_hex_bytes": 601415104,
+        "raw_record_attempt_bytes": 4854833466,
+        "raw_record_bytes_per_attempt": 21,
+        "raw_record_capacity_bytes": 5328324624,
+        "reconciliation_zero_bits_hex_bytes": 601415104,
+        "sparse_index_capacity_bytes": 3044912184,
+        "total_storage_complete": false,
+        "unpriced_storage": [
+          "JSON identities, metadata and certificate overhead",
+          "support bitmap files, source corpus and checkpoint already referenced by the plans",
+          "atomic staging, preserved artifacts and any additional inference attestation proofs"
+        ]
+      }
+    },
+    "mus_musculus": {
+      "n_cells": 945389,
+      "n_frozen_genes": 20131,
+      "native_workload": {
+        "current_pacing_seconds": 208695329.0,
+        "model_forwards_upper_bound": 834772253,
+        "native_scorable_deletions": 833826864,
+        "original_forwards_count_status": "unavailable_from_metadata_without_per_cell_attempt_union",
+        "original_forwards_upper_bound": 945389,
+        "positive_attempts": 834781316,
+        "terminal_unavailable_attempts": 954452
+      },
+      "null_work_bounds": {
+        "basis": "Frozen observed-cohort bins; every candidate peer checked on all possible native focal cells",
+        "candidate_peer_comparisons": 36639218,
+        "interpretation": "Upper work bounds, not measured cell checks, runtimes, finite peer variance or draw-specific bins",
+        "max_64_gene_range_invocations": 315,
+        "native_support_cell_checks_upper": 1504648750498,
+        "repeated_verification": "Current range executor rehashes all bound inputs and validates index/proof closure on every invocation",
+        "worst_support_cell_checks_upper": 34638313665802
+      },
+      "physical_embryos": 43,
+      "referenced_matrix_inputs": [
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5.h5ad",
+          "sha256": "51f66eb4d5d582bc5aad4f19fb276d8900272f42afeafb6ea10bb7423b0908d8"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5_prepared_train.h5ad",
+          "sha256": "ddcb4642de59049737fba3a6679f32e810c6b72b5633b61967b6ff4463cb0841"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5.h5ad",
+          "sha256": "5dd3e4e331d91dfcfb67541a39f76674fc476f12fa42023ad07112da5cf5b56f"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5_prepared_train.h5ad",
+          "sha256": "3d4635c581fc0733f241c3ecb98ba75a3eff2d05d945f7215764fb7cf153c3b1"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5.h5ad",
+          "sha256": "303343da5c9651e6afa6342bb6750aeadbd799d0c148d5000d8a86bd73cc0c12"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5_prepared_train.h5ad",
+          "sha256": "29996c7394dd9cb81311a6561269170ce6010ac28739bab83ab89377bf9fe32a"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5.h5ad",
+          "sha256": "a32697fa60bf2cbf1860921c45cd96fdc1aeb684b8467a4300f688b8bd31d443"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5_prepared_train.h5ad",
+          "sha256": "b441bc6f609890d716f9cc8742ae189c4011e0c7953b1d4585350527ede04ac6"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5.h5ad",
+          "sha256": "eb387ea2fb2fb5b342c5b2f0abe3809a64f8a816636118e09d1af13b59d49223"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5_prepared_train.h5ad",
+          "sha256": "a8bf468067de87fd7473e13f67d85b4ef78081edfbd4941db3e29fa7f1fa1c6f"
+        },
+        {
+          "binding": "frozen_preflight_reference_only_bytes_not_reverified",
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_measured_zero_support/support.h5",
+          "sha256": "bd1bf76a7eb27876c02d2cb51df9978de7e054495890c3cc65d2f27a40275616"
+        }
+      ],
+      "storage_bounds": {
+        "embryo_metric_arrays_bytes": 13850472,
+        "finite_native_scorable_index_upper_bytes": 10006083424,
+        "original_likelihood_hex_upper_bytes": 30963380528,
+        "raw_positive_hex_bytes": 4759088226,
+        "raw_record_attempt_bytes": 17530407636,
+        "raw_record_bytes_per_attempt": 21,
+        "raw_record_capacity_bytes": 40639436943,
+        "reconciliation_zero_bits_hex_bytes": 4759088226,
+        "sparse_index_capacity_bytes": 23222696452,
+        "total_storage_complete": false,
+        "unpriced_storage": [
+          "JSON identities, metadata and certificate overhead",
+          "support bitmap files, source corpus and checkpoint already referenced by the plans",
+          "atomic staging, preserved artifacts and any additional inference attestation proofs"
+        ]
+      }
+    }
+  },
+  "status": "metadata_cost_plan_complete_ticket_05_open",
+  "unavailable_stages": [
+    "whole_arm_native_scoring",
+    "complete_native_likelihood_effect_attestation",
+    "whole_arm_validated_null_aggregation",
+    "scalable_bootstrap_and_independent_final_replay"
+  ],
+  "verified_metadata_file_sha256": {
+    "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa/config.json": "84042c79ba1b452bc64ad78c6a39831b60e0b533c222dad4cddf0704a4c4d80f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/docs/agents/b3-complete-method-cost-request-2026-10-03.json": "eaba821eb46a5e0d687e6753243df8c143211b722e63275e4b6afb3f88693e36",
+    "/mnt/d/sc/transcriptformer/transcriptformer/docs/agents/b3-feasibility-milestone-evidence-2026-10-02.json": "9df22f94633de50cba6ebcdf2b9b4953bd582559a55c71c6110c537da3ea2b0f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/preprocess/orthologs/ortholog_pairs.tsv.gz": "bce2e8dee39311e8c2c571660556af09f8de2c6a26c31de295bc4f3f95e06d60",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/backend_timings.json": "325e061f1a430e69c3e0ab093f84580e63dc4a45a8a1dd5b0f800f154eedd743",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/human/native_replay_final.json": "f6253172de9479295bfb284d135a2b0eec5941387dd03797d911e29364bb8b99",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/native_replay_final.json": "bd1871e3a63b24f94e421a89157814d39d732cb04b33846adce29bad5420b586",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/scientific_input_timings.json": "52b75c7f8fc7fdfc4c98cd3e255514bed38a3be227ee604e5f5e47f58e368856",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/setup_timings_replayed.json": "e5470ce8c233bb55dae1e42a448b27f056b3b029567099875feec6697c793fe2",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/homo_sapiens_support_config.json": "2624358168ed815ec1d4d7c7589f87a31b7cf0535f7004f7136b10b156745132",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_measured_zero_support/support_preflight.json": "03c1071f03f84b66daf93dfa9864dbdb0c1e4860be060ade02e8fec74cf043d0",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_native_shard_plan.json": "b06233309be599e05c8bff01c2aea2b4df276f28fd853aae786ad54bd7141fa2",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/manifest.json": "e3190a9e14bd0f17157891033096e5fb3bbe7585d3932d26ae2834d3633f649f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_measured_zero_support/support_preflight.json": "819d751f16e6c5c63f6c0ef92a9788fe5cd890d14759b16226143891887e88ae",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_native_shard_plan.json": "559c87f71fa4ad220305a827ca11d8d1907d81c911af2926cc10473e4a888c8f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mus_musculus_support_config.json": "2b12ba00de1173dfe2ae136125425be7f6af5025540493b26d39e06829adb055",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/paired_measured_zero_support.json": "1f79d92fa2e63c0ee924b9b2d8e6112650801182b2fa5788560b11585972a27e",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/preparation_report.json": "8ec35395a8bc375e4cd1c0c76aedf85d87555b59a33dec109f1cbe730a6d6532",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/aux_vocabulary.json": "398e810c8b4d592af0cd45c866923ed509b28106d35310e0406aa53db505d00a",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/gene_vocabulary.json": "47ffa0eba3f799d9e9a105f1d69a3f098785bfba007e8c41370576216882a9b2",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/aggregate_b3_measured_zero_full_scores.py": "a8c12b5ae41487d8ff4f1366286212da328852da82db98b799186b7c666f6b62",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/bootstrap_b3_measured_zero_v2.py": "2574a09d9df28c4ecc4abd23e363d0dce2d3adb5f4f6dcc25e9dfcf227f57381",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/plan_b3_complete_method_cost.py": "bb216b4c4a7cca62a7fec2cd9b65f65a7c0f0bcef3c3f543b142529e6a272b14",
+    "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/b3_bins.py": "59074199f5f74c4f34528438c9fbd281a0c14d45d03706ec654a458ae4621dca",
+    "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/b3_measured_zero_bootstrap.py": "a3a5f740a7e3521e61f0076baca10c4256ae839c4887a5f4f50ffaafc19d2683",
+    "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/b3_measured_zero_shards.py": "08ce6479fbd2658d88caad83c0bb32c3047e75b30d0248382e5d1ecfffada66e"
+  },
+  "whole_arm_cost_requirement_complete": false,
+  "whole_arm_runtime_seconds": null
+}

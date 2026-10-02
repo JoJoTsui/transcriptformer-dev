@@ -1,0 +1,17 @@
+{
+  "plans": [
+    {
+      "path": "runs/b3_pilot/full_organogenesis_v3/human_native_shard_plan.json",
+      "sha256": "b06233309be599e05c8bff01c2aea2b4df276f28fd853aae786ad54bd7141fa2"
+    },
+    {
+      "path": "runs/b3_pilot/full_organogenesis_v3/mouse_native_shard_plan.json",
+      "sha256": "559c87f71fa4ad220305a827ca11d8d1907d81c911af2926cc10473e4a888c8f"
+    }
+  ],
+  "prior_evidence": {
+    "path": "docs/agents/b3-feasibility-milestone-evidence-2026-10-02.json",
+    "sha256": "9df22f94633de50cba6ebcdf2b9b4953bd582559a55c71c6110c537da3ea2b0f"
+  },
+  "schema": "b3_complete_method_cost_request_v1"
+}

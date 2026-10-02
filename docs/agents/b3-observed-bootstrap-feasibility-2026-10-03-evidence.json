@@ -1,0 +1,195 @@
+{
+  "actual_2000_draw_score_bootstrap_performed": false,
+  "approved_actual_fixed_bootstrap_joint_valid_draw_upper_bound": 0,
+  "artifacts": [
+    {
+      "bytes": 944,
+      "path": "docs/agents/b3-observed-bootstrap-feasibility-2026-10-03-family.json",
+      "sha256": "a2d825e06262c3315853b080ad966beda179951d924c16bdaba59d4ee3960f43"
+    },
+    {
+      "bytes": 649,
+      "path": "docs/agents/b3-observed-bootstrap-feasibility-2026-10-03-request.json",
+      "sha256": "b05a9a3ea6e3c1ac9a9228ec2fa8fc234bd36060f23b24d2bc3f582e7c74bc41"
+    },
+    {
+      "bytes": 3134264,
+      "path": "runs/b3_feasibility/20261003/observed_pilot_bootstrap_assessment.json",
+      "sha256": "f7aa106cb1ecd5b2bf93ba14007962c4f102a7bafe237f12dd432d424b39c14a"
+    },
+    {
+      "bytes": 973,
+      "path": "runs/b3_feasibility/20261003/observed_pilot_bootstrap_supervisor/state.json",
+      "sha256": "e8d5fe9abb980d8b3c69e8ed3551eb77786b4e35aab72306f96e3462c1bd9185"
+    },
+    {
+      "bytes": 1742,
+      "path": "runs/b3_feasibility/20261003/observed_bootstrap_targeted_results.xml",
+      "sha256": "7305b812a6c3b4130c5b96161edf559f34a2032f6d2d8d0a2fb8b414a338940b"
+    }
+  ],
+  "checkpoint_tensors_loaded": false,
+  "checks": {
+    "full_suite_run_by_this_agent": false,
+    "mypy": "No issues in two new Python files; follow-imports=silent, ignore-missing-imports, explicit-package-bases",
+    "ruff": "Check and format passed for two new Python files",
+    "targeted_tests": {
+      "errors": "0",
+      "failures": "0",
+      "hostname": "Conundrum",
+      "name": "pytest",
+      "skipped": "0",
+      "tests": "9",
+      "time": "47.674",
+      "timestamp": "2026-10-03T01:04:45.709521+08:00"
+    }
+  },
+  "draw_cost_diagnostic": {
+    "complete_pilot_draw_cost_measured": false,
+    "implementation": "Explicit execution only after independent embryo and 95% necessary support floors pass; at most three seeded draws and the first 64 actual fixed pairs in lexicographic order; complete all-gene embryo metrics and bins rebuilt by unchanged draw_scores.",
+    "real_pilot_status": "not_requested",
+    "validation": "A source-bound mini checkpoint fixture checks a four-pair draw-cost prefix, 52 metric/bin genes per species and the preserved reporting veto.",
+    "whole_arm_or_full_cohort_cost_measured": false
+  },
+  "fixed_gene_rule": "actual_observed_finite_paired_genes",
+  "fixed_observed_pairs": {
+    "coverage": 0.325437758675581,
+    "n_pairs": 5111,
+    "n_vocabulary_joined_pairs": 15705,
+    "pairs_sha256": "401765e9cb3d0dbab0780faccab25574ea24608b8cd820008119320bcb71da29"
+  },
+  "focal_scored_embryo_support_histograms": {
+    "homo_sapiens": {
+      "1": 1271,
+      "2": 996,
+      "3": 908,
+      "4": 835,
+      "5": 1101
+    },
+    "mus_musculus": {
+      "1": 1815,
+      "10": 67,
+      "11": 57,
+      "12": 29,
+      "13": 35,
+      "14": 16,
+      "15": 16,
+      "16": 7,
+      "17": 13,
+      "18": 4,
+      "19": 3,
+      "2": 1042,
+      "20": 1,
+      "21": 1,
+      "22": 2,
+      "3": 642,
+      "4": 427,
+      "5": 299,
+      "6": 243,
+      "7": 161,
+      "8": 129,
+      "9": 102
+    }
+  },
+  "interval": null,
+  "method": "b3_measured_zero_peer_null_v2",
+  "model_forwards_performed": false,
+  "occupancy_only_replay": {
+    "bundle_draw_order": [
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores"
+    ],
+    "draws_required": 2000,
+    "independent_embryo_floor_met": true,
+    "interpretation": "Exact necessary focal occupancy of the actual fixed observed finite pair set; metrics, bins, peer nulls, score variance and ranks were not recomputed",
+    "joint_supported_draws": 0,
+    "joint_supported_fraction": 0.0,
+    "minimum_independent_embryos": 5,
+    "necessary_95_percent_support_floor_met": false,
+    "sampling": "Python random.Random; sorted absolute bundle paths; sorted physical embryos; one slot per embryo with replacement",
+    "seed": 20260930,
+    "species_supported_draws": {
+      "homo_sapiens": 80,
+      "mus_musculus": 0
+    }
+  },
+  "original_reporting_eligible": false,
+  "owner_decision": "docs/adr/0005-b3-feasibility-before-full-cohort-expansion.md",
+  "recorded_date": "2026-10-03",
+  "remaining_requirements": [
+    "Reportable actual paired coverage of at least 80% and 500 pairs remains unmet.",
+    "The approved actual fixed finite-pair bootstrap needs at least 95% jointly valid draws; this pilot cannot meet that rule.",
+    "Complete scoring, verification, aggregation and uncertainty costs remain unmeasured.",
+    "Any scientific, cohort or inferential rule amendment requires a separate owner decision."
+  ],
+  "resources": {
+    "elapsed_seconds": 425.6181617599941,
+    "max_rss_bytes": 4294967296,
+    "max_wall_seconds": 890,
+    "minimum_free_disk_bytes": 21474836480,
+    "minimum_host_available_ram_bytes": 4294967296,
+    "native_threads": 1,
+    "peak_rss_bytes": 1383673856,
+    "wall_guard_kind": "cooperative checks; use external process supervisor for a hard deadline"
+  },
+  "schema": "b3_observed_bootstrap_feasibility_evidence_v1",
+  "scientific_readiness": "unavailable",
+  "scientific_rules_changed": false,
+  "software": [
+    {
+      "bytes": 19892,
+      "path": "scripts/assess_b3_observed_bootstrap_feasibility.py",
+      "sha256": "5e7250b53c843712223a70e578608e1970620081a7f4c00cf6f947b9fb4bbb34"
+    },
+    {
+      "bytes": 13443,
+      "path": "test/test_b3_observed_bootstrap_feasibility.py",
+      "sha256": "5c61b1695c063504e90ab783f420b8398e130f6d0d0eb85502191eabf784ab1f"
+    },
+    {
+      "bytes": 12378,
+      "path": "scripts/bootstrap_b3_measured_zero_v2.py",
+      "sha256": "2574a09d9df28c4ecc4abd23e363d0dce2d3adb5f4f6dcc25e9dfcf227f57381"
+    },
+    {
+      "bytes": 22324,
+      "path": "src/transcriptformer/finetune/b3_measured_zero_bootstrap.py",
+      "sha256": "a3a5f740a7e3521e61f0076baca10c4256ae839c4887a5f4f50ffaafc19d2683"
+    },
+    {
+      "bytes": 33899,
+      "path": "src/transcriptformer/finetune/b3_measured_zero_scores.py",
+      "sha256": "8a6f23d7b0fdc761258c0922dc0d7ba19471bc5a6696d7191ec3da04b0fd8c65"
+    }
+  ],
+  "source_validation": {
+    "inputs_checked_before_and_after": 146,
+    "observed_coverage_independently_reconstructed": true,
+    "original_pilot_software_inventory_counts": {
+      "human": 107,
+      "mouse": 109
+    },
+    "original_source_files_modified": false
+  },
+  "status": "actual_fixed_pair_necessary_support_assessed_ticket_05_open",
+  "supervisor": {
+    "disk_available_gib": 383.5176887512207,
+    "elapsed_seconds": 450.6559386569861,
+    "host_available_ram_gib": 28.085533142089844,
+    "limits": {
+      "gpu_index": 0,
+      "max_gpu_temperature_c": null,
+      "max_rss_gib": 4.0,
+      "max_wall_seconds": 900.0,
+      "min_disk_gib": 20.0,
+      "min_host_ram_gib": 4.0
+    },
+    "return_code": 0,
+    "status": "completed"
+  },
+  "timings_seconds": {
+    "occupancy": 2.13724359999469,
+    "source_validation_and_plan": 396.80691450501035
+  },
+  "upper_bound_interpretation": "Each seeded draw lacks scored focal observations for at least one actual fixed gene in mouse; shipped draw_scores cannot return all fixed scores, regardless of recomputed bins/null variance. This is necessary-support failure proof, not executed score bootstrap."
+}

@@ -1,0 +1,8 @@
+{
+  "family": "/mnt/d/sc/transcriptformer/transcriptformer/docs/agents/b3-observed-bootstrap-feasibility-2026-10-03-family.json",
+  "family_sha256": "5b2ed69bec7c56db883479341e4350f829a9b45991965c0232478644e96de2f0",
+  "fixed_gene_rule": "actual_observed_finite_paired_genes",
+  "observed_comparison": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/paired_measured_zero_observed_20261002/comparison.json",
+  "observed_coverage": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/paired_measured_zero_observed_20261002/coverage.tsv",
+  "schema": "b3_observed_bootstrap_feasibility_request_v1"
+}

@@ -1,0 +1,16 @@
+{
+  "comparisons": [
+    {
+      "bundle_a": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+      "bundle_b": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+      "comparison_id": "human_mouse_organogenesis_observed_pilot",
+      "paired_preflight": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/paired_measured_zero_final.json",
+      "paired_preflight_sha256": "75cf9846b8b2591330caac3a1b8320074d82b512c9c7c9c7188495e45c2b35a3",
+      "table": "/mnt/d/sc/transcriptformer/transcriptformer/preprocess/orthologs/ortholog_pairs.tsv.gz",
+      "table_sha256": "bce2e8dee39311e8c2c571660556af09f8de2c6a26c31de295bc4f3f95e06d60"
+    }
+  ],
+  "family_id": "observed-human-mouse-pilot-feasibility-20261003",
+  "model_arm": "base",
+  "schema": "b3_measured_zero_bootstrap_family_v1"
+}
