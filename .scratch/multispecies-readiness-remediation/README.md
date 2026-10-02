@@ -1,19 +1,19 @@
 # Multispecies readiness remediation — ticket index
 
-**Current pilot evidence — 2026-10-02:** The paced human retry completed
-30/30 frozen cells and 54,317 deletion-attempt rows; its published bundle
-reports 9,931 finite gene null scores. Recorded sidecar hashes match;
-independent source-bound replay and null recomputation passed. A fresh capped
-mouse probe passed with a 3.52-hour pacing-inclusive projection. The supervised
-25-cell mouse/comparison pipeline started at 09:47:34 Asia/Shanghai. Mouse native scoring has saved thirteen of 25 completed-cell
-checkpoints were present at the latest recorded heartbeat. Completion is
-still pending. Producer/pipeline ceilings are six/seven hours,
-with existing memory, GPU-temperature, host-RAM and disk guards retained. See the
-[progress record](../../docs/agents/b3-pilot-progress-2026-10-02.md). The pilot's paired upper bound remains
-5,111/15,705 (32.54%), below the unchanged 80% reporting floor; no observed
-paired comparison is available. Ten tickets remain closed for bounded
-engineering acceptance, 05 open and 11 excluded. Older pending human-run
-and unexecuted-scorer statements below are historical and superseded.
+**Current pilot evidence — 2026-10-02:** Both base-arm organogenesis pilots
+completed and passed source-bound validation: human **30/30 cells**, **54,317
+positive attempts**, **9,931 finite gene scores**; mouse **25/25 cells**,
+**21,033 positive attempts**, **6,933 finite gene scores**. The supervised mouse
+pipeline exited successfully at **13:01:42 Asia/Shanghai**. The paired diagnostic
+contains **5,111/15,705 scored pairs (32.54%)** and correctly withholds concordance
+and intervals below the unchanged **80%** reporting gate. Recorded bundle and
+software hashes match. See [completion evidence](../../docs/agents/b3-pilot-completion-evidence-2026-10-02.json).
+Ten tickets remain closed for bounded engineering acceptance; **05 remains open**
+and **11 remains excluded**. The owner selected **feasibility study first**;
+current pacing alone makes exhaustive scoring a multi-year workload, and
+per-gene embryo support also limits the fixed-universe bootstrap. See
+[current review](../../docs/agents/grill-with-docs-review-2026-10-02.md).
+Earlier pending-pilot and absent-comparison statements are historical.
 
 
 Status: ten tickets closed for bounded engineering acceptance; 05 open on observed B3 comparison; 11 excluded
@@ -31,7 +31,7 @@ data, chicken identifier repair and production training remain separate gates.
 | [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | Closed for bounded CPU engineering acceptance; two-rank interrupted/resumed dropout continuity passed |
 | [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; recorded splits validated without allocation; six-source preparation validated; finalized multispecies corpus absent |
 | [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Closed for bounded engineering acceptance; strict partial bridge leaves R2 open |
-| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | v1 full-cohort support fails; amended v2 paired necessary upper bound 14,392/15,705 (91.64%) passes structural floors, but actual scored comparison remains unavailable |
+| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | v1 full-cohort support fails; amended v2 paired necessary upper bound 14,392/15,705 (91.64%) passes structural floors, but the observed pilot comparison is withheld at 32.54% coverage |
 | [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Closed for bounded engineering acceptance; actual frozen cohort absent |
 | [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Closed for bounded engineering acceptance; production losses absent |
 | [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Closed for bounded engineering acceptance; completed-directory gap repaired; production evidence absent |
@@ -252,8 +252,8 @@ shards and a disk-backed gene-major raw-impact index. They retain explicit
 unavailable scientific status: native likelihood/effect attestation, the full
 inference runner and validated global peer-null execution remain pending. No full
 shards exist yet, so execution against production shards remains unverified.
-The supervised mouse pilot continues automatically through source validation
-and paired diagnostics; its structural coverage cannot meet the reporting floor.
+The supervised mouse pipeline completed production, source validation and the
+paired diagnostic; observed coverage of 32.54% fails the reporting floor.
 Ticket 05 remains open; ticket 11 remains excluded pending zebrafish files.
 
 

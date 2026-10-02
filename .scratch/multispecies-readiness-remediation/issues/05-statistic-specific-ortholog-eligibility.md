@@ -1,19 +1,19 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-**Current pilot evidence — 2026-10-02:** The paced human retry completed
-30/30 frozen cells and 54,317 deletion-attempt rows; its published bundle
-reports 9,931 finite gene null scores. Recorded sidecar hashes match;
-independent source-bound replay and null recomputation passed. A fresh capped
-mouse probe passed with a 3.52-hour pacing-inclusive projection. The supervised
-25-cell mouse/comparison pipeline started at 09:47:34 Asia/Shanghai. Mouse native scoring has saved thirteen of 25 completed-cell
-checkpoints were present at the latest recorded heartbeat. Completion is
-still pending. Producer/pipeline ceilings are six/seven hours,
-with existing memory, GPU-temperature, host-RAM and disk guards retained. See the
-[progress record](../../../docs/agents/b3-pilot-progress-2026-10-02.md). The pilot's paired upper bound remains
-5,111/15,705 (32.54%), below the unchanged 80% reporting floor; no observed
-paired comparison is available. Ten tickets remain closed for bounded
-engineering acceptance, 05 open and 11 excluded. Older pending human-run
-and unexecuted-scorer statements below are historical and superseded.
+**Current pilot evidence — 2026-10-02:** Both base-arm organogenesis pilots
+completed and passed source-bound validation: human **30/30 cells**, **54,317
+positive attempts**, **9,931 finite gene scores**; mouse **25/25 cells**,
+**21,033 positive attempts**, **6,933 finite gene scores**. The supervised mouse
+pipeline exited successfully at **13:01:42 Asia/Shanghai**. The paired diagnostic
+contains **5,111/15,705 scored pairs (32.54%)** and correctly withholds concordance
+and intervals below the unchanged **80%** reporting gate. Recorded bundle and
+software hashes match. See [completion evidence](../../../docs/agents/b3-pilot-completion-evidence-2026-10-02.json).
+Ten tickets remain closed for bounded engineering acceptance; **05 remains open**
+and **11 remains excluded**. The owner selected **feasibility study first**;
+current pacing alone makes exhaustive scoring a multi-year workload, and
+per-gene embryo support also limits the fixed-universe bootstrap. See
+[current review](../../../docs/agents/grill-with-docs-review-2026-10-02.md).
+Earlier pending-pilot and absent-comparison statements are historical.
 
 
 The first approved pilot was interrupted by a Windows watchdog bugcheck.
@@ -27,7 +27,7 @@ The eight-hour producer budget retains memory/storage guards. Actual completion
 is pending and this pilot cannot meet the paired 80% reporting floor.
 
 Category: correctness and readiness
-Status: Open — v1 full-cohort support fails B3 reporting floors; amended v2 structural gate passes, actual scored comparison pending
+Status: Open — v2 pilot completed at 32.54% paired coverage; reportable comparison and uncertainty pending frozen-rule feasibility
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -73,11 +73,12 @@ approval closes no observed-score acceptance criterion and changes no v1 rule.
 - [x] Freeze owner-authorized amended target/support convention.
 - [x] Implement separate versioned certificates and structural preflight.
 - [x] Demonstrate potentially sufficient paired support on real frozen data.
-- [ ] Produce valid actual scores and observed comparison if the preflight passes.
+- [x] Publish source-validated actual pilot scores and observed paired coverage diagnostics.
+- [ ] Produce a reportable actual comparison passing coverage and uncertainty after necessary structural preflight.
 
 The approved 500-pair/80% reporting floors and independent 60% mapping/
-5,000 genome-wide pair floors remain in force. No cohort GPU score run or
-real score evidence has been completed.
+5,000 genome-wide pair floors remain in force. Both capped GPU pilots and source validation are complete. Full-cohort
+scoring and reportable scientific comparison remain pending.
 
 **2026-10-01 amended implementation update:** The separate
 [implementation record](../../../docs/agents/b3-measured-zero-implementation-2026-10-01.md)
@@ -578,8 +579,8 @@ shards and a disk-backed gene-major raw-impact index. They retain explicit
 unavailable scientific status: native likelihood/effect attestation, the full
 inference runner and validated global peer-null execution remain pending. No full
 shards exist yet, so execution against production shards remains unverified.
-The supervised mouse pilot continues automatically through source validation
-and paired diagnostics; its structural coverage cannot meet the reporting floor.
+The supervised mouse pipeline completed production, source validation and the
+paired diagnostic; observed coverage of 32.54% fails the reporting floor.
 Ticket 05 remains open; ticket 11 remains excluded pending zebrafish files.
 
 
@@ -592,3 +593,27 @@ and retains unavailable scientific status. Actual frozen-plan estimates passed;
 full-index execution remains unverified because scored full-cohort shards do not
 exist. Native effect attestation, integration and reportable coverage remain open.
 See [method, resource bounds and limits](../../../docs/agents/b3-full-global-null-diagnostic-2026-10-02.md).
+
+
+## Owner-approved next milestone — 2026-10-02
+
+The owner selected feasibility study first and then assessment of the frozen
+score, null and bootstrap rules. See
+[ADR 0005](../../../docs/adr/0005-b3-feasibility-before-full-cohort-expansion.md)
+and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md).
+
+- [x] Reconcile completed pilot artifacts, observed 32.54% paired coverage and
+  fixed-gene embryo-support risk; archive cost/support evidence.
+- [ ] Assess a prospective bounded cohort’s gene-specific embryo support under
+  the unchanged inferential universe and bootstrap policy. Necessary full
+  support alone cannot establish finite scores or valid uncertainty.
+- [ ] Demonstrate a small actual native shard through reconciliation, sparse
+  indexing and exact-support null execution, including numerical effect checks.
+- [ ] Retain native-position/target-count covariates and validated embryo-level
+  expression/dropout summaries for scientific diagnostics and bootstrap.
+- [ ] Measure complete method-preserving scoring, verification and aggregation
+  cost within explicit WSL budgets before expanding full-cohort production.
+
+Any amendment to the cohort policy, estimand, null, inferential universe or
+bootstrap requires a separate owner decision. The 80% reporting floor and the
+unchecked scientific comparison criterion remain in effect.

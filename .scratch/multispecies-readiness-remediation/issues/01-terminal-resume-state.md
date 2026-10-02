@@ -15,7 +15,7 @@ Extend existing training finalization and resume behavior so periodic checkpoint
 ## Acceptance Criteria
 
 - [x] A run completing at step 3 with save interval 2 persists resumable step 3; a run shorter than the default interval and a run with periodic saves disabled also persist terminal state.
-- [ ] Reinvoking the public workflow with the same completed budget performs no additional training updates. Early stopping between periodic saves remains stopped after restart.
+- [x] Reinvoking the public workflow with the same completed budget performs no additional training updates. Early stopping between periodic saves remains stopped after restart.
 - [x] Explicit budget extension resumes from terminal optimizer/scaler/stream state, not from selected best-model weights; explicitly early-stopped state remains stopped.
 - [x] Terminal writes are atomic and retention cannot delete the only valid terminal record. Incomplete writes do not masquerade as valid state.
 - [x] Losses, validation/selection history, stopping state and selected-model identity remain continuous; legacy/incompatible terminal state fails with a clear fresh-run instruction.
@@ -51,3 +51,10 @@ The combined prepared-artifact, resume-contract, selection-training and holdout-
 coverage suites passed **60 tests** with all native thread pools capped at one.
 This closes the identified bounded engineering gap; real-corpus and accelerator
 evidence remain separate. See [repair record](../../../docs/agents/implementation-repairs-2026-09-30.md).
+
+
+2026-10-02 tracking reconciliation: the previously unchecked completed-budget/
+early-stop criterion is synchronized with the existing 2026-09-30 bounded closure
+evidence. `test/test_resume_contract.py` covers completed-budget no-update and
+restored stopping state; the repair record covers the public completed-export
+guard. These checks were not rerun in the current documentation review.

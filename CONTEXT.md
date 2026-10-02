@@ -5,15 +5,15 @@ Finetuning the TranscriptFormer Metazoa checkpoint on multi-species embryogenesi
 ## Language
 
 **Embryogenesis corpus**:
-The collection of developmental-stage-resolved single-cell and spatial H5AD datasets under `/mnt/d/sc/data/scRNAseq-YBY/`, spanning multiple species, from which finetuning and downstream data are drawn.
+The collection of developmental-stage-resolved single-cell and spatial datasets spanning multiple species, from which finetuning and downstream data are drawn.
 _Avoid_: the data, YBY datasets
 
 **Metazoa checkpoint**:
-The pretrained TranscriptFormer TF-Metazoa model at `/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa`, covering twelve species' gene vocabularies; the base for finetuning.
+The pretrained TranscriptFormer TF-Metazoa model, covering twelve species' gene vocabularies; the baseline for finetuning.
 _Avoid_: metazoa model, the metazoa, base checkpoint
 
 **Training species**:
-The in-vocabulary embryogenesis species used for finetuning: human, mouse, zebrafish, chicken, rabbit, fruit fly, C. elegans, and sea urchin.
+The intended in-vocabulary embryogenesis species for finetuning: human, mouse, zebrafish, chicken, rabbit, fruit fly, C. elegans, and sea urchin.
 _Avoid_: in-distribution species, finetune species
 
 **Zero-shot probe species**:
@@ -37,7 +37,7 @@ Continuing the model's original gene/count prediction objective on the embryogen
 _Avoid_: supervised finetuning, classification finetuning
 
 **Natural weighting**:
-Sampling training batches in proportion to dataset size, matching the base model's own unbalanced pretraining; per-species balancing is a documented fallback, not the default.
+Equal per-observation sampling within a measurement modality; the approved mixture of single-cell and spatial observations determines their relative exposure. This does not imply equal species exposure.
 _Avoid_: balanced sampling, equal weighting
 
 **Final holdout**:
@@ -49,13 +49,38 @@ A fixed subset of validation embryos used for early stopping and checkpoint sele
 _Avoid_: final holdout, test cohort
 
 **Single-embryo dataset**:
-A dataset measuring one embryo or spatial section (e.g. human CS7), assigned entirely to training because embryo-level splitting is impossible.
+A dataset whose observations come from one physical embryo, assigned entirely to training when embryo-level splitting is impossible. Multiple spatial sections can belong to the same embryo.
 _Avoid_: unsplittable dataset
 
-**Likelihood impact score**:
-The drop in the model's predicted transcriptome likelihood for a cell when a gene is perturbed, used to rank gene × phase impact genome-wide.
-_Avoid_: perturbation effect, gene importance
+**Gene-context impact**:
+The original-minus-deleted change in mean log probability of matched downstream gene-ID targets, in bits per target, when a gene is removed from the model context. The focal gene’s own likelihood term is excluded.
+_Avoid_: full-transcriptome likelihood drop, causal knockout effect, gene importance
 
 **Counterfactual generation**:
 Regenerating the remainder of a cell's transcriptome after perturbing a gene, used to name predicted downstream-affected genes for top-ranked perturbations.
 _Avoid_: in-silico knockout simulation, virtual perturbation
+
+
+**Physical embryo**:
+The biological specimen that defines an independent embryo observation; cells and spatial sections from that specimen share its identity.
+_Avoid_: section, file, cell as an independent embryo
+
+**B3 null-corrected score**:
+A descriptive z-score of embryo-balanced gene-context impact against complete peer genes matched by expression/dropout bins and the focal gene’s exact scored cells and embryos. Positive finite peer sample variance is required.
+_Avoid_: causal effect, calibrated significance, FDR
+
+**Observed paired coverage**:
+The fraction of the frozen vocabulary-joined one-to-one ortholog universe with finite B3 scores in both species. Missing scores remain in the denominator.
+_Avoid_: mapping coverage, percentage among scored pairs
+
+**Structural support upper bound**:
+The number of genes or ortholog pairs satisfying necessary support conditions before numerical effects and peer variance are known. It is a possibility bound, not observed paired coverage.
+_Avoid_: completed comparison, finite score count
+
+**Model arm**:
+The baseline Metazoa checkpoint or a project finetuned checkpoint used for a specified comparison. A baseline-only result does not establish a benefit from finetuning.
+_Avoid_: finetuned result when using baseline weights
+
+**Project finetuned checkpoint**:
+A checkpoint with documented embryo-corpus training provenance and checkpoint-selection evidence. Different weights or a directory label alone do not establish that provenance.
+_Avoid_: candidate weights as a verified project model

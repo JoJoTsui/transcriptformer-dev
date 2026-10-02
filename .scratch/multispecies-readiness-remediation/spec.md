@@ -1,23 +1,23 @@
 # Multispecies embryogenesis readiness remediation
 
-**Current pilot evidence — 2026-10-02:** The paced human retry completed
-30/30 frozen cells and 54,317 deletion-attempt rows; its published bundle
-reports 9,931 finite gene null scores. Recorded sidecar hashes match;
-independent source-bound replay and null recomputation passed. A fresh capped
-mouse probe passed with a 3.52-hour pacing-inclusive projection. The supervised
-25-cell mouse/comparison pipeline started at 09:47:34 Asia/Shanghai. Mouse native scoring has saved thirteen of 25 completed-cell
-checkpoints were present at the latest recorded heartbeat. Completion is
-still pending. Producer/pipeline ceilings are six/seven hours,
-with existing memory, GPU-temperature, host-RAM and disk guards retained. See the
-[progress record](../../docs/agents/b3-pilot-progress-2026-10-02.md). The pilot's paired upper bound remains
-5,111/15,705 (32.54%), below the unchanged 80% reporting floor; no observed
-paired comparison is available. Ten tickets remain closed for bounded
-engineering acceptance, 05 open and 11 excluded. Older pending human-run
-and unexecuted-scorer statements below are historical and superseded.
+**Current pilot evidence — 2026-10-02:** Both base-arm organogenesis pilots
+completed and passed source-bound validation: human **30/30 cells**, **54,317
+positive attempts**, **9,931 finite gene scores**; mouse **25/25 cells**,
+**21,033 positive attempts**, **6,933 finite gene scores**. The supervised mouse
+pipeline exited successfully at **13:01:42 Asia/Shanghai**. The paired diagnostic
+contains **5,111/15,705 scored pairs (32.54%)** and correctly withholds concordance
+and intervals below the unchanged **80%** reporting gate. Recorded bundle and
+software hashes match. See [completion evidence](../../docs/agents/b3-pilot-completion-evidence-2026-10-02.json).
+Ten tickets remain closed for bounded engineering acceptance; **05 remains open**
+and **11 remains excluded**. The owner selected **feasibility study first**;
+current pacing alone makes exhaustive scoring a multi-year workload, and
+per-gene embryo support also limits the fixed-universe bootstrap. See
+[current review](../../docs/agents/grill-with-docs-review-2026-10-02.md).
+Earlier pending-pilot and absent-comparison statements are historical.
 
 
 Category: correctness and readiness
-Status: bounded software repairs verified; observed project comparison and external evidence pending; zebrafish excluded
+Status: bounded software repairs verified; pilot diagnostic completed; reportable comparison and external evidence pending; zebrafish excluded
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 
 **2026-09-30 decision update:** The owner approved the
@@ -257,8 +257,8 @@ shards and a disk-backed gene-major raw-impact index. They retain explicit
 unavailable scientific status: native likelihood/effect attestation, the full
 inference runner and validated global peer-null execution remain pending. No full
 shards exist yet, so execution against production shards remains unverified.
-The supervised mouse pilot continues automatically through source validation
-and paired diagnostics; its structural coverage cannot meet the reporting floor.
+The supervised mouse pipeline completed production, source validation and the
+paired diagnostic; observed coverage of 32.54% fails the reporting floor.
 Ticket 05 remains open; ticket 11 remains excluded pending zebrafish files.
 
 

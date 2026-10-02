@@ -2,6 +2,14 @@
 
 **Status:** accepted (supersedes ADR 0001)
 
+**2026-10-02 clarifications:** Training sampling follows the [approved corpus
+defaults](../agents/corpus-defaults-adoption-2026-09-30.md), including the existing
+single-cell/spatial mixture; species exposure must be audited. The scoring
+quantity is the [approved gene-ID context impact](../agents/b3-deletion-score-decision-2026-09-30.md).
+The historical description of genome-wide scoring as cheap is superseded by
+[ADR 0005](0005-b3-feasibility-before-full-cohort-expansion.md), which prioritizes
+measured feasibility before further full-cohort expansion.
+
 We will finetune the TranscriptFormer TF-Metazoa checkpoint on multi-species embryogenesis data (human, mouse, zebrafish, chicken, rabbit, fruit fly, C. elegans, sea urchin) using the generative pretraining objective, natural sampling weighting, a coarse universal developmental-phase vocabulary, and per-species embryo-level splits — then use the model for phase-resolved in-silico perturbation and zero-shot cross-species comparison on species never seen in training (macaque, pig, guinea pig, Xenopus tropicalis, ciona, amphioxus).
 
 ## Considered Options

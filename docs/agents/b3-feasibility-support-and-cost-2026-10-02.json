@@ -1,0 +1,131 @@
+{
+  "bootstrap_intervals_computed": false,
+  "coverage_fraction": 0.325437758675581,
+  "exhaustive_one_arm_cost": {
+    "full_positive_attempts": 1065963862,
+    "interpretation": "Pacing lower bound if the current policy is retained; linear operational extrapolation is unmeasured and includes pilot overhead; neither estimates an accelerated future backend",
+    "linear_pilot_operational_extrapolation_years": 19.05670548964128,
+    "minimum_pacing_years_at_0_25_seconds_per_attempt": 8.44458911640936
+  },
+  "full_cohort_prospective_support": {
+    "possible_paired_upper_bound": 14392,
+    "shared_ortholog_table_sha256": "bce2e8dee39311e8c2c571660556af09f8de2c6a26c31de295bc4f3f95e06d60",
+    "species": {
+      "human": {
+        "interpretation": "Necessary native support only; neither finite contrasts nor null variance; actual fixed finite score set is unavailable",
+        "potential_paired_genes_by_native_embryo_support": {
+          "1": 19,
+          "2": 78,
+          "3": 149,
+          "4": 415,
+          "5": 13731
+        },
+        "potential_paired_single_embryo_genes": 19
+      },
+      "mouse": {
+        "interpretation": "Necessary native support only; neither finite contrasts nor null variance; actual fixed finite score set is unavailable",
+        "potential_paired_genes_by_native_embryo_support": {
+          "10": 3,
+          "11": 5,
+          "12": 7,
+          "13": 11,
+          "14": 14,
+          "15": 10,
+          "16": 11,
+          "17": 9,
+          "18": 12,
+          "19": 24,
+          "20": 16,
+          "21": 15,
+          "22": 17,
+          "23": 17,
+          "24": 16,
+          "25": 26,
+          "26": 23,
+          "27": 28,
+          "28": 26,
+          "29": 35,
+          "30": 23,
+          "31": 44,
+          "32": 35,
+          "33": 39,
+          "34": 52,
+          "35": 71,
+          "36": 61,
+          "37": 76,
+          "38": 111,
+          "39": 114,
+          "4": 1,
+          "40": 136,
+          "41": 238,
+          "42": 418,
+          "43": 12631,
+          "5": 3,
+          "6": 2,
+          "7": 4,
+          "8": 2,
+          "9": 6
+        },
+        "potential_paired_single_embryo_genes": 0
+      }
+    }
+  },
+  "input_sha256": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_measured_zero_support/support_preflight.json": "03c1071f03f84b66daf93dfa9864dbdb0c1e4860be060ade02e8fec74cf043d0",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_measured_zero_support/support_preflight.json": "819d751f16e6c5c63f6c0ef92a9788fe5cd890d14759b16226143891887e88ae",
+    "runs/b3_pilot/full_organogenesis_v3/human_native_shard_plan.json": "b06233309be599e05c8bff01c2aea2b4df276f28fd853aae786ad54bd7141fa2",
+    "runs/b3_pilot/full_organogenesis_v3/mouse_native_shard_plan.json": "559c87f71fa4ad220305a827ca11d8d1907d81c911af2926cc10473e4a888c8f",
+    "runs/b3_pilot/full_organogenesis_v3/paired_measured_zero_support.json": "1f79d92fa2e63c0ee924b9b2d8e6112650801182b2fa5788560b11585972a27e",
+    "runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores/audit.json": "f702e4b38956a524c7beed131b9ab0c38f447f40de22b607b8b0e3afdbb8e5b5",
+    "runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores/cell_proofs.jsonl": "842ffcd133620fc249417823c2f876f4d51ed95e2e6283445b1a77622701bfb8",
+    "runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores/positive_raw.jsonl": "4966aa9c40a0a31ff9ad3b734add479672bf031b12e9e25d32ac1f439a9bdf2a",
+    "runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores/audit.json": "45bebc78cc6193af6eaa3bd725d900311e5901de73d2f4ea64ed72c98ade61a8",
+    "runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores/cell_proofs.jsonl": "8fff537cde1a3f726bc64f6ef58ba566a0bb12d21cf15038a41f29c63606bf53",
+    "runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores/positive_raw.jsonl": "2882ec8d1c328c67453bdbd18715c74eac1d5ece285b23622e0c83c19f83da7c",
+    "runs/b3_pilot/organogenesis_v3/paired_measured_zero_observed_20261002/comparison.json": "26f1de4ea6e9c073cc5d0d76a648ba5630d88f4744d0065973c366653ed9e27c",
+    "runs/b3_pilot/organogenesis_v3/paired_measured_zero_observed_20261002/coverage.tsv": "b57ee57704a6c3ab26804a4d85b78dae5189edb94f15f5471c7959b3b9399a0a"
+  },
+  "model_forwards_performed": false,
+  "necessary_joint_support_probability": 6.706202858036258e-12,
+  "null_scores_recomputed": false,
+  "occupancy_only_replay": {
+    "all_embryos_preserved": {
+      "human": 80,
+      "mouse": 0
+    },
+    "bundle_order": [
+      "human",
+      "mouse"
+    ],
+    "draws": 2000,
+    "interpretation": "Necessary focal-support check only; not full null/variance/rho bootstrap",
+    "joint_all_embryos_preserved": 0,
+    "seed": 20260930
+  },
+  "paired_scores": 5111,
+  "scope": "pilot_and_full_structural_support_and_cost_diagnostic",
+  "species": {
+    "human": {
+      "embryos_with_singleton_genes": 5,
+      "full_positive_attempts": 231182546,
+      "included_genes_with_single_embryo_focal_support": 1271,
+      "necessary_all_embryos_draw_probability": 0.03840000000000004,
+      "operational_seconds_per_attempt": 0.5816544606483421,
+      "pilot_embryos": 5,
+      "pilot_positive_attempts": 54317,
+      "producer_elapsed_seconds": 31593.725339036,
+      "singleton_genes_cover_all_embryos": true
+    },
+    "mouse": {
+      "embryos_with_singleton_genes": 25,
+      "full_positive_attempts": 834781316,
+      "included_genes_with_single_embryo_focal_support": 1815,
+      "necessary_all_embryos_draw_probability": 1.7464069942802737e-10,
+      "operational_seconds_per_attempt": 0.5593267615191367,
+      "pilot_embryos": 25,
+      "pilot_positive_attempts": 21033,
+      "producer_elapsed_seconds": 11764.319775032003,
+      "singleton_genes_cover_all_embryos": true
+    }
+  }
+}

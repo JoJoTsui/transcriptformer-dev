@@ -2,107 +2,81 @@
 
 ## Current result
 
-The paced human retry completed all **30 frozen cells** and saved **54,317
-positive deletion-attempt rows**. Its published score bundle reports **9,931
-finite null scores** under `b3_measured_zero_peer_null_v2`, with
-`available_descriptive_v2` status. A finite null score is a gene-level output,
-not an eligible cross-species ortholog pair or a finetuning result.
+Both frozen base-arm organogenesis pilots have completed.
 
-The bundle is at
-`runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores/`.
-The producer log records completed cell indices 0–29 and final publication.
-[Independent validation](b3-human-pilot-validation-2026-10-02.md) passed
-with `verify_input_bytes=True`: all bundle hashes and recorded software/source
-bindings matched; prepared-row proofs were reconstructed and null scores
-recomputed. The one-thread CPU replay took 114.55 seconds with 0.914 GiB peak
-RSS. It did not rerun native model forwards or establish scientific comparison
-readiness.
+| Pilot | Cells | Positive attempts | Finite gene null scores | Independent embryos |
+| --- | ---: | ---: | ---: | ---: |
+| Human | 30/30 | 54,317 | 9,931 | 5 |
+| Mouse | 25/25 | 21,033 | 6,933 | 25 |
 
-The supervisor state has been recovered as `completed_recovered`, with the
-lost process exit code explicitly unknown. Independent input validation is
-recorded as validated. The original supervisor source bytes were preserved;
-the human bundle's frozen scoring-software hash mismatch count remains zero.
-The last original heartbeat had 26.09 GiB host RAM available, 383.83 GiB disk
-available and a 61°C GPU; these are historical observations, not current
-resource checks.
+The supervised mouse pipeline started at 09:47:34 and finished successfully at
+**13:01:42 Asia/Shanghai**, with `status=completed` and exit code **0**. Its log
+records human source validation, mouse production, mouse source validation and
+paired diagnostic completion. All 25 mouse completed-cell checkpoints are
+present. The pipeline’s recorded monotonic elapsed time is 12,300.64 seconds;
+calendar timestamps and monotonic runtime are separate observations.
 
-The separate `scripts/manage_b3_pilot.py` handles status recovery and guards
-against duplicate execution. It leaves the human run's frozen supervisor
-bytes intact.
+[Completion evidence](b3-pilot-completion-evidence-2026-10-02.json) records bundle
+and software hash checks, published counts and validation log entries. Source
+validation reconstructs prepared inputs/proofs and recomputes null arithmetic;
+it does not rerun native model likelihoods or deletion effects. Both bundles
+retain `available_descriptive_v2` status. These are baseline model results,
+not evidence of a finetuning improvement.
 
-## Active continuation
+Local artifacts under `runs/b3_pilot/organogenesis_v3/`:
 
-The frozen mouse pilot is the next scoring dependency: **25 cells**, **21,033
-positive deletion attempts**, and **25 physical embryos**. Execution requires
-a fresh matching resource probe and resource checks. Retain 0.25-second GPU
-pacing, the 80°C GPU supervisor limit, 16 GiB producer process-RAM cap and
-20 GiB CUDA-reservation cap. The fresh matching
-[mouse resource probe](b3-mouse-resource-probe-2026-10-02.json) passed with
-15,715,016,704 bytes peak process RSS and 9,881,780,224 bytes CUDA reservation.
-Original/deletion forwards took 1.594/0.350 seconds and matched 816 targets.
-Its pacing-inclusive mouse extrapolation is **12,659.83 seconds (3.52 hours)**;
-this is a single-cell projection, not measured cohort throughput.
+- Human bundle: `human_measured_zero_restart_02_scores/`.
+- Mouse bundle: `mouse_measured_zero_20261002_scores/`.
+- Supervisor state, log and checkpoints: `mouse_pilot_20261002/`.
+- Paired diagnostic: `paired_measured_zero_observed_20261002/`.
 
-The supervised pipeline started **2026-10-02 01:47:34 UTC (09:47:34
-Asia/Shanghai)** from implementation commit `02d53cf`. Its initial stage was
-`human_validation_started`; this does not establish that mouse native forwards
-had begun. The mouse producer has a **21,600-second (six-hour)** scoring ceiling;
-the complete supervised pipeline has a **25,200-second (seven-hour)** ceiling.
+## Observed paired gate
 
-Operational artifacts under `runs/b3_pilot/organogenesis_v3/`:
+The comparison contains **5,111/15,705 paired finite scores (32.54%)**. It passes
+the 500-pair count floor but fails the unchanged 80% reporting floor, yielding
+`withheld_insufficient_coverage`; Spearman concordance and intervals are null.
+Inferential p-values and FDR remain unavailable. The structural pilot upper
+bound happened to equal observed coverage; full-cohort structural coverage of
+14,392/15,705 (91.64%) remains a necessary upper bound rather than observed
+finite scores or positive peer variance.
 
-- State: `mouse_pilot_20261002/state.json`.
-- Log: `mouse_pilot_20261002/producer.log`.
-- Durable per-cell checkpoints: `mouse_pilot_20261002/checkpoints/`.
-- Planned mouse bundle: `mouse_measured_zero_20261002_scores/`.
-- Planned paired report: `paired_measured_zero_observed_20261002/`.
+The persisted comparison labels embryo uncertainty as
+`unavailable_v2_bootstrap_not_implemented`. A bounded v2 bootstrap implementation
+exists separately; comparator handoff and full-cohort uncertainty remain
+unfinished. This legacy label does not establish that no bootstrap code exists.
+Coverage already prevents running a reportable pilot bootstrap.
 
-The planned output paths are not completion evidence.
+## Resource and recovery history
 
-`scripts/run_b3_pilot_comparison.py` automates the remaining dependencies in
-order: validate the existing human bundle, run the mouse producer, validate
-the published mouse bundle, then summarize the paired comparison. The outer
-supervisor's process RSS measures the orchestrator only; it does not represent
-aggregate child-process RAM. The native producer retains its own 16 GiB RSS
-guard and 20 GiB CUDA-reservation guard. Host-RAM, disk and 80°C GPU
-supervision remain active for the pipeline, with at least 4 GiB host RAM and
-20 GiB output-disk availability required. GPU idle pacing remains 0.25 seconds.
+Mouse producer peak RSS was 16,163,495,936 bytes, peak CUDA reservation was
+9,883,877,376 bytes, and producer audit elapsed time was 11,764.32 seconds.
+The run retained 0.25-second GPU idle pacing, the 16 GiB producer RSS/20 GiB
+CUDA-reservation caps, an 80°C GPU supervisor ceiling, 4 GiB available host
+RAM floor and 20 GiB disk floor. The supervisor measures orchestrator RSS,
+while the producer guards its own memory. No host/GPU resource violation is
+recorded in this completed run.
 
-After both source-validated bundles exist, run the paired v2 adapter using
-the already frozen paired preflight and ortholog table. Report its observed
-coverage and gate reasons. The pilot's paired necessary upper bound is
-**5,111/15,705 (32.54%)**, below the unchanged **80%** reporting floor;
-neither a concordance claim nor a bootstrap interval is justified by this
-pilot. Inferential p-values and FDR remain unavailable.
+The human retry used durable checkpoints after the earlier confirmed Windows
+watchdog bugcheck. Its original supervisor exit code remains unknown;
+[independent validation](b3-human-pilot-validation-2026-10-02.md) establishes the
+published bundle’s source/null integrity. The specific Windows driver cause
+remains unproven. This completed mouse run does not resolve that diagnosis.
 
-## Closure limits
+## Implementation and next milestone
+
+Full-cohort [reconciliation and sparse indexing](b3-full-shard-reconciliation-and-index-2026-10-02.md)
+and [diagnostic null ranges](b3-full-global-null-diagnostic-2026-10-02.md)
+are implemented and statically reviewed. Actual strict full shards do not exist,
+so their execute paths remain unverified. Native production/likelihood
+attestation, scientific diagnostics and full uncertainty inputs remain open.
+
+The owner selected **feasibility study first** in
+[ADR 0005](../adr/0005-b3-feasibility-before-full-cohort-expansion.md).
+The [fresh review](grill-with-docs-review-2026-10-02.md) and
+[support/cost evidence](b3-feasibility-support-and-cost-2026-10-02.json)
+identify both computation and fixed-gene embryo-support obstacles. No scoring,
+null, uncertainty or reporting rule was amended.
 
 **Ten of twelve tickets remain closed for bounded engineering acceptance;
-ticket 05 remains open and ticket 11 remains excluded.** The full-cohort
-structural upper bound is 14,392/15,705 (91.64%), but full-cohort scoring,
-source/native reconciliation execution and global aggregation remain unfinished.
-No threshold was weakened, no candidate finetuning provenance was verified,
-and no zebrafish work was resumed. Earlier October 1 statements that the
-human scorer had not completed are historical and superseded by this result.
-
-
-## Latest continuation — 2026-10-02
-
-The supervisor reports `running`, with thirteen of 25 durable mouse cell
-checkpoints. At the recorded heartbeat, the GPU was 59°C, host RAM available
-was 24.63 GiB and output disk availability was 383.80 GiB. These are snapshots;
-completion and observed paired coverage are pending.
-
-New source/native reconciliation and sparse-index scripts add two full-cohort
-backend dependencies without changing active pilot source files. See
-[bounds and remaining gates](b3-full-shard-reconciliation-and-index-2026-10-02.md).
-They do not establish native likelihood attestation or global null scores.
-
-
-### Global peer-null diagnostic implementation
-
-[Bounded diagnostic range tooling](b3-full-global-null-diagnostic-2026-10-02.md)
-now implements exact focal support and the frozen null arithmetic from the
-sparse index. Default human/mouse planning succeeded without weights or GPU work.
-Native full-cohort production and effect attestation remain absent; execution
-against actual scored full shards is unverified. Ticket 05 remains open.
+ticket 05 remains open and ticket 11 remains excluded pending zebrafish data.**
+Project-level finetuning readiness remains a separate open gate.

@@ -4,7 +4,7 @@
 **Addresses:** findings S1–S6 of `docs/agents/adversarial-review-2026-09-09.md`
 **Scope:** statistical/validation layer for ADR 0002 (multi-species embryogenesis finetuning)
 
-Glossary terms follow `CONTEXT.md` ("developmental phase", "likelihood impact score", "zero-shot probe species", etc.).
+Glossary terms follow `CONTEXT.md` ("developmental phase", "gene-context impact", "zero-shot probe species", etc.).
 
 ---
 
@@ -16,7 +16,10 @@ as the primary B3 score. The broad `logL(c) − logL(c \ g)` notation below is
 historical design shorthand, not an executable joint-likelihood definition.
 The 10×10 expression/dropout null and embryo-first aggregation remain the
 planned downstream analysis; position and scored-cell coverage must also be
-audited. No project B3 score table exists yet.
+audited. Base-arm human/mouse pilot tables are now published and source validated
+(2026-10-02); paired coverage is 32.54%, so concordance and intervals remain
+withheld. Full-cohort scores and a provenanced finetuning comparison remain
+unavailable. [Current review](agents/grill-with-docs-review-2026-10-02.md).
 
 ### 1.1 Setup
 
