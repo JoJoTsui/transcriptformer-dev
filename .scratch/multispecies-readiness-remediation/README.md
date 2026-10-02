@@ -3,8 +3,12 @@
 **Current pilot evidence — 2026-10-02:** The paced human retry completed
 30/30 frozen cells and 54,317 deletion-attempt rows; its published bundle
 reports 9,931 finite gene null scores. Recorded sidecar hashes match;
-independent source-bound replay and null recomputation passed. The next dependency is the
-25-cell mouse pilot, which has not started in this record. See the
+independent source-bound replay and null recomputation passed. A fresh capped
+mouse probe passed with a 3.52-hour pacing-inclusive projection. The supervised
+25-cell mouse/comparison pipeline started at 09:47:34 Asia/Shanghai, initially
+revalidating the human bundle; mouse forwards and completion are not yet
+confirmed in this record. Producer/pipeline ceilings are six/seven hours,
+with existing memory, GPU-temperature, host-RAM and disk guards retained. See the
 [progress record](../../docs/agents/b3-pilot-progress-2026-10-02.md). The pilot's paired upper bound remains
 5,111/15,705 (32.54%), below the unchanged 80% reporting floor; no observed
 paired comparison is available. Ten tickets remain closed for bounded
