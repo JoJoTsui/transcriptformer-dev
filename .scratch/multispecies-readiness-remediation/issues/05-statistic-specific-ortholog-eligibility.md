@@ -5,9 +5,9 @@
 reports 9,931 finite gene null scores. Recorded sidecar hashes match;
 independent source-bound replay and null recomputation passed. A fresh capped
 mouse probe passed with a 3.52-hour pacing-inclusive projection. The supervised
-25-cell mouse/comparison pipeline started at 09:47:34 Asia/Shanghai, initially
-revalidating the human bundle; mouse forwards and completion are not yet
-confirmed in this record. Producer/pipeline ceilings are six/seven hours,
+25-cell mouse/comparison pipeline started at 09:47:34 Asia/Shanghai. Mouse native scoring has saved eight of 25 completed-cell
+checkpoints were present at the latest recorded heartbeat. Completion is
+still pending. Producer/pipeline ceilings are six/seven hours,
 with existing memory, GPU-temperature, host-RAM and disk guards retained. See the
 [progress record](../../../docs/agents/b3-pilot-progress-2026-10-02.md). The pilot's paired upper bound remains
 5,111/15,705 (32.54%), below the unchanged 80% reporting floor; no observed
@@ -569,3 +569,15 @@ The existing final holdout has no shared mapped human–mouse phase.
 The [primary-source online search](../../../docs/agents/b3-observed-comparison-online-search-2026-09-30.md)
 found related analyses, but no reusable observed comparison matching the approved
 B3 definition in the inspected resources. Criterion 5 remains open.
+
+
+## Ticket 05 continuation — 2026-10-02
+
+New scripts implement CPU source/native reconciliation for immutable full-cohort
+shards and a disk-backed gene-major raw-impact index. They retain explicit
+unavailable scientific status: native likelihood/effect attestation, the full
+inference runner and exact global peer-null aggregation remain pending. No full
+shards exist yet, so execution against production shards remains unverified.
+The supervised mouse pilot continues automatically through source validation
+and paired diagnostics; its structural coverage cannot meet the reporting floor.
+Ticket 05 remains open; ticket 11 remains excluded pending zebrafish files.

@@ -80,7 +80,20 @@ pilot. Inferential p-values and FDR remain unavailable.
 **Ten of twelve tickets remain closed for bounded engineering acceptance;
 ticket 05 remains open and ticket 11 remains excluded.** The full-cohort
 structural upper bound is 14,392/15,705 (91.64%), but full-cohort scoring,
-source/native reconciliation and global aggregation remain unfinished.
+source/native reconciliation execution and global aggregation remain unfinished.
 No threshold was weakened, no candidate finetuning provenance was verified,
 and no zebrafish work was resumed. Earlier October 1 statements that the
 human scorer had not completed are historical and superseded by this result.
+
+
+## Latest continuation — 2026-10-02
+
+The supervisor reports `running`, with eight of 25 durable mouse cell
+checkpoints. At the recorded heartbeat, the GPU was 59°C, host RAM available
+was 24.63 GiB and output disk availability was 383.80 GiB. These are snapshots;
+completion and observed paired coverage are pending.
+
+New source/native reconciliation and sparse-index scripts add two full-cohort
+backend dependencies without changing active pilot source files. See
+[bounds and remaining gates](b3-full-shard-reconciliation-and-index-2026-10-02.md).
+They do not establish native likelihood attestation or global null scores.

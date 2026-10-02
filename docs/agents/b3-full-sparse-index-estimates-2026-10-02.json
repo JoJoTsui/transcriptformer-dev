@@ -1,0 +1,29 @@
+{
+  "execution": "weight_free_estimate_only",
+  "estimates": {
+    "human": {
+      "schema": "b3_measured_zero_full_sparse_impact_index_v1",
+      "method": "b3_measured_zero_peer_null_v2",
+      "plan_sha256": "b06233309be599e05c8bff01c2aea2b4df276f28fd853aae786ad54bd7141fa2",
+      "scientific_readiness": "unavailable_pending_native_likelihood_attestation_and_global_null",
+      "model_forwards_performed": false,
+      "zero_imputation": false,
+      "max_scored_rows": 253729744,
+      "max_sparse_array_bytes": 3044912184,
+      "dense_float64_bytes": 19243300096,
+      "status": "estimate_only"
+    },
+    "mouse": {
+      "schema": "b3_measured_zero_full_sparse_impact_index_v1",
+      "method": "b3_measured_zero_peer_null_v2",
+      "plan_sha256": "559c87f71fa4ad220305a827ca11d8d1907d81c911af2926cc10473e4a888c8f",
+      "scientific_readiness": "unavailable_pending_native_likelihood_attestation_and_global_null",
+      "model_forwards_performed": false,
+      "zero_imputation": false,
+      "max_scored_rows": 1935211283,
+      "max_sparse_array_bytes": 23222696452,
+      "dense_float64_bytes": 152253007672,
+      "status": "estimate_only"
+    }
+  }
+}
