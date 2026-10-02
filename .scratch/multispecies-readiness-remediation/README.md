@@ -1,6 +1,26 @@
 # Multispecies readiness remediation — ticket index
 
-**Current feasibility implementation — 2026-10-02:** The frozen-rule assessor,
+**Current frozen-rule assessment — 2026-10-03:** The actual fixed 5,111-pair
+pilot set retains necessary focal support in **0/2,000** joint approved
+bootstrap draws (human 80, mouse 0). The bounded support assessment is complete;
+coverage remains **32.54%** and reportable uncertainty remains unavailable.
+The [source-bound cost ledger](../../docs/agents/b3-complete-method-cost-2026-10-03.md)
+accounts for **1,065,963,862 attempts**, storage, null work and independent final
+bootstrap replay. The full cohorts exceed the current bootstrap backend's row
+and Boolean-grid caps. See [observed-set evidence](../../docs/agents/b3-observed-bootstrap-feasibility-2026-10-03.md).
+**05 remains open**, **11 excluded**, and **ten tickets closed**; scientific
+rules and the original pilot software are unchanged. Both bounded scalar-cache
+probes passed with peak RSS below 15 GiB. The final full CPU suite passed
+**579 tests, five skipped**, with no failures or errors; Ruff and mypy passed
+nine changed files. See [continuation](../../docs/agents/b3-feasibility-continuation-2026-10-03.md).
+The [exact full native support assessment](../../docs/agents/b3-full-native-embryo-support-2026-10-03.md)
+completed at 0.404 GiB peak RSS: both two-bundle orders retain a necessary
+candidate upper bound of **14,295/15,705 (91.02%)**. All 2,000 draws have at
+least the 12,564 potential pairs required for 80% coverage, but actual finite
+scores and valid uncertainty remain unmeasured. The hypothetical all-structural
+set's 225/222 joint occupancy draws do not veto a smaller unknown finite set.
+
+**Previous feasibility implementation — 2026-10-02:** The frozen-rule assessor,
 pilot-to-shard importer, bounded numerical replay, embryo sufficient statistics
 and position/target-count diagnostics are implemented. Explicit diagnostic
 candidates of six and 64 cells per embryo reach necessary paired support bounds
@@ -47,7 +67,7 @@ data, chicken identifier repair and production training remain separate gates.
 | [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | Closed for bounded CPU engineering acceptance; two-rank interrupted/resumed dropout continuity passed |
 | [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; recorded splits validated without allocation; six-source preparation validated; finalized multispecies corpus absent |
 | [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Closed for bounded engineering acceptance; strict partial bridge leaves R2 open |
-| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Open; observed pilot coverage 32.54%; bounded shard handoff verified; assessed candidates remain below 80%; whole-arm cost and reportable uncertainty pending |
+| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Open; pilot coverage 32.54%; full native support bound 91.02% is necessary only; whole-arm cost, actual finite comparison and uncertainty pending |
 | [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Closed for bounded engineering acceptance; actual frozen cohort absent |
 | [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Closed for bounded engineering acceptance; production losses absent |
 | [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Closed for bounded engineering acceptance; completed-directory gap repaired; production evidence absent |

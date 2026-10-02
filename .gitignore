@@ -202,3 +202,6 @@ cache/
 
 # Reproducible candidate matrix; retain its small JSON provenance in Git
 /logs/dataset_audit/nature2019_candidate/candidate_source_qc_filtered.h5ad
+
+# Full native support diagnostic; retain its compact provenance summary in Git
+/docs/agents/b3-full-native-embryo-support-2026-10-03-evidence.json

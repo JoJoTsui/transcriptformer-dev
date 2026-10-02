@@ -1,0 +1,207 @@
+{
+  "actual_fixed_finite_gene_set_known": false,
+  "all_hashes_match": true,
+  "any_order_passes_necessary_bounds": true,
+  "archived_full_report": {
+    "byte_identical_to_original_verified": true,
+    "bytes": 28234696,
+    "exclusive_new_copy": true,
+    "path": "runs/b3_feasibility/20261003/full_native_embryo_support.json",
+    "sha256": "ebe0d650c04f5d071b7dbd8506d93438e81742c21fe60bb95eb9e2882b7f4814"
+  },
+  "evidence_bytes": 28234696,
+  "evidence_path": "docs/agents/b3-full-native-embryo-support-2026-10-03-evidence.json",
+  "evidence_sha256": "ebe0d650c04f5d071b7dbd8506d93438e81742c21fe60bb95eb9e2882b7f4814",
+  "frozen_inputs": 24,
+  "independent_embryo_floor_met": true,
+  "input_file_sha256": {
+    "/mnt/d/sc/transcriptformer/checkpoints/tf_metazoa/config.json": "84042c79ba1b452bc64ad78c6a39831b60e0b533c222dad4cddf0704a4c4d80f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/docs/agents/b3-complete-method-cost-request-2026-10-03.json": "eaba821eb46a5e0d687e6753243df8c143211b722e63275e4b6afb3f88693e36",
+    "/mnt/d/sc/transcriptformer/transcriptformer/docs/agents/b3-feasibility-milestone-evidence-2026-10-02.json": "9df22f94633de50cba6ebcdf2b9b4953bd582559a55c71c6110c537da3ea2b0f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/docs/agents/b3-full-native-embryo-support-2026-10-03-request.json": "8dae8485a6e23672e282943b72780bb2b8d78a0c9b169fba4dea905950c5d3db",
+    "/mnt/d/sc/transcriptformer/transcriptformer/preprocess/orthologs/ortholog_pairs.tsv.gz": "bce2e8dee39311e8c2c571660556af09f8de2c6a26c31de295bc4f3f95e06d60",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/homo_sapiens_support_config.json": "2624358168ed815ec1d4d7c7589f87a31b7cf0535f7004f7136b10b156745132",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_measured_zero_support/support.h5": "3c98c2bf007b1f2ca8e803a2afeb1d14224414eba7a0c31c76ff836e0bf59ca9",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_measured_zero_support/support_preflight.json": "03c1071f03f84b66daf93dfa9864dbdb0c1e4860be060ade02e8fec74cf043d0",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_native_shard_plan.json": "b06233309be599e05c8bff01c2aea2b4df276f28fd853aae786ad54bd7141fa2",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/manifest.json": "e3190a9e14bd0f17157891033096e5fb3bbe7585d3932d26ae2834d3633f649f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_measured_zero_support/support.h5": "bd1bf76a7eb27876c02d2cb51df9978de7e054495890c3cc65d2f27a40275616",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_measured_zero_support/support_preflight.json": "819d751f16e6c5c63f6c0ef92a9788fe5cd890d14759b16226143891887e88ae",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_native_shard_plan.json": "559c87f71fa4ad220305a827ca11d8d1907d81c911af2926cc10473e4a888c8f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mus_musculus_support_config.json": "2b12ba00de1173dfe2ae136125425be7f6af5025540493b26d39e06829adb055",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/paired_measured_zero_support.json": "1f79d92fa2e63c0ee924b9b2d8e6112650801182b2fa5788560b11585972a27e",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/preparation_report.json": "8ec35395a8bc375e4cd1c0c76aedf85d87555b59a33dec109f1cbe730a6d6532",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/aux_vocabulary.json": "398e810c8b4d592af0cd45c866923ed509b28106d35310e0406aa53db505d00a",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/gene_vocabulary.json": "47ffa0eba3f799d9e9a105f1d69a3f098785bfba007e8c41370576216882a9b2",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/assess_b3_full_native_embryo_support.py": "866709f80498f69dbb08a07f0b4718f8270d0e984ee8025345eab36e7cf3504e",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/plan_b3_measured_zero_shards.py": "bf65af4bd4c02010d5140c672b5cfd23b5b947c23f195599da390754d375d800",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/preflight_b3_measured_zero_full.py": "20304ceda81d53ad064d32b6ccad5b0db2c5e45728cfee9cdca3bd5d5783d901",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/preflight_b3_measured_zero_pair.py": "8897a84b605fe4e63c14f55c7da062103f1d8ee2ee148e4a5a926c7fc817be71",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/supervise_b3_pilot.py": "19ad86b77895878cf7e3d609586da61f511498506ab13f1cf800381705a02afe",
+    "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/b3_measured_zero_bootstrap.py": "a3a5f740a7e3521e61f0076baca10c4256ae839c4887a5f4f50ffaafc19d2683"
+  },
+  "interpretation": "Necessary upper bounds only under frozen strict native contract and exactly two eligible source bundles; conditional all-P occupancy is hypothetical, not actual G.",
+  "interval": null,
+  "matrix_references": [
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u4eba_Homo_sapiens/CS12_CS16_Nature_Cell_Biology_2023/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos.h5ad",
+      "sha256": "abc3c118799eacdb0090dec407435863c3ed36cbd81c079767dc8089b2c0b51f"
+    },
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u4eba_CS12-CS16__A single-cell transcriptome atlas profiles early organogenesis in human embryos_prepared_train.h5ad",
+      "sha256": "a15915aae04f757dbb3fbee59a626e34e539aaf1178b26f1c9ba40f6dbf7422f"
+    },
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5.h5ad",
+      "sha256": "51f66eb4d5d582bc5aad4f19fb276d8900272f42afeafb6ea10bb7423b0908d8"
+    },
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E10.5_prepared_train.h5ad",
+      "sha256": "ddcb4642de59049737fba3a6679f32e810c6b72b5633b61967b6ff4463cb0841"
+    },
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5.h5ad",
+      "sha256": "5dd3e4e331d91dfcfb67541a39f76674fc476f12fa42023ad07112da5cf5b56f"
+    },
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E11.5_prepared_train.h5ad",
+      "sha256": "3d4635c581fc0733f241c3ecb98ba75a3eff2d05d945f7215764fb7cf153c3b1"
+    },
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5.h5ad",
+      "sha256": "303343da5c9651e6afa6342bb6750aeadbd799d0c148d5000d8a86bd73cc0c12"
+    },
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E12.5_prepared_train.h5ad",
+      "sha256": "29996c7394dd9cb81311a6561269170ce6010ac28739bab83ab89377bf9fe32a"
+    },
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5.h5ad",
+      "sha256": "a32697fa60bf2cbf1860921c45cd96fdc1aeb684b8467a4300f688b8bd31d443"
+    },
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E13.5_prepared_train.h5ad",
+      "sha256": "b441bc6f609890d716f9cc8742ae189c4011e0c7953b1d4585350527ede04ac6"
+    },
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/data/scRNAseq-YBY/h5ad/\u5c0f\u9f20_Mus_musculus/Nature_Genetics_TOME_E3.5_E13.5/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5.h5ad",
+      "sha256": "eb387ea2fb2fb5b342c5b2f0abe3809a64f8a816636118e09d1af13b59d49223"
+    },
+    {
+      "binding": "frozen_reference_only_matrix_bytes_not_read",
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/prepared_run/prepared/\u5c0f\u9f20_Mus_musculus__Systematic reconstruction of cellular trajectories across mouse embryogenesis__E9.5_prepared_train.h5ad",
+      "sha256": "a8bf468067de87fd7473e13f67d85b4ef78081edfbd4941db3e29fa7f1fa1c6f"
+    }
+  ],
+  "operations": {
+    "actual_draw_score_replay_performed": false,
+    "all24_frozen_inputs_unchanged_after_assessment": true,
+    "gene_or_cohort_selection_proposed": false,
+    "model_forwards_performed": false,
+    "native_support_HDF5_read": true,
+    "original_or_prepared_matrix_bytes_read": false,
+    "source_or_matrix_deleted": false,
+    "weights_or_GPU_or_model_read": false
+  },
+  "orders": [
+    {
+      "candidate_count_meets_reporting_floor": true,
+      "candidate_fixed_set_necessary_upper_count": 14295,
+      "candidate_upper_fraction": 0.9102196752626552,
+      "conditional_all_structural_pairs": {
+        "actual_observed_finite_pair_set": false,
+        "hypothesis": "Every structural potential pair has finite original scores; hypothetical, not actual G",
+        "joint_supported_draws": 225,
+        "joint_supported_fraction": 0.1125,
+        "necessary_95_percent_support_floor_met": false
+      },
+      "draw_count_meets_1900_necessary_floor": true,
+      "draws_with_at_least_reporting_floor_potential_pairs": 2000,
+      "potential_pairs_per_draw_max": 14392,
+      "potential_pairs_per_draw_min": 14270,
+      "species_order": [
+        "homo_sapiens",
+        "mus_musculus"
+      ]
+    },
+    {
+      "candidate_count_meets_reporting_floor": true,
+      "candidate_fixed_set_necessary_upper_count": 14295,
+      "candidate_upper_fraction": 0.9102196752626552,
+      "conditional_all_structural_pairs": {
+        "actual_observed_finite_pair_set": false,
+        "hypothesis": "Every structural potential pair has finite original scores; hypothetical, not actual G",
+        "joint_supported_draws": 222,
+        "joint_supported_fraction": 0.111,
+        "necessary_95_percent_support_floor_met": false
+      },
+      "draw_count_meets_1900_necessary_floor": true,
+      "draws_with_at_least_reporting_floor_potential_pairs": 2000,
+      "potential_pairs_per_draw_max": 14392,
+      "potential_pairs_per_draw_min": 14110,
+      "species_order": [
+        "mus_musculus",
+        "homo_sapiens"
+      ]
+    }
+  ],
+  "original_and_archive_bytes_verified_after_copy": true,
+  "original_immutable_publication": {
+    "bytes": 28234696,
+    "path": "docs/agents/b3-full-native-embryo-support-2026-10-03-evidence.json",
+    "preserved_without_move_or_overwrite": true,
+    "sha256": "ebe0d650c04f5d071b7dbd8506d93438e81742c21fe60bb95eb9e2882b7f4814"
+  },
+  "original_prepared_matrix_bytes_reverified": false,
+  "paired_universe": {
+    "80_percent_pair_floor": 12564,
+    "effective_reporting_pair_floor": 12564,
+    "minimum_joined_score_fraction": 0.8,
+    "minimum_paired_scores": 500,
+    "n_vocabulary_joined_pairs": 15705,
+    "pairs_sha256": "8e6d697337372bcb9931b6673e76b2593b63c1fee9c1319efc9fddd3cb6273ef",
+    "structural_candidate_pairs": 14392
+  },
+  "resources": {
+    "elapsed_to_report_seconds": 144.33486656600144,
+    "gene_chunk": 128,
+    "max_rss_bytes": 4294967296,
+    "max_wall_seconds": 900,
+    "maximum_gene_chunk": 128,
+    "minimum_free_disk_bytes": 21474836480,
+    "minimum_host_available_ram_bytes": 4294967296,
+    "native_threads": 1,
+    "peak_rss_bytes": 434135040,
+    "wall_guard_kind": "cooperative; external supervisor required for hard deadline"
+  },
+  "sampler_family_assumption": "Exactly two eligible human/mouse organogenesis source bundles; both possible sorted bundle-path orders assessed; additional bundles change the random stream",
+  "schema": "b3_full_native_embryo_support_run_summary_v1",
+  "scientific_readiness": "unavailable",
+  "source_version": "d3a485d",
+  "status": "necessary_structural_support_assessed_only",
+  "strict_native_contract_assumption": "Structural P inherits the frozen strict native shard contract: every nonempty matched-target focal attempt must be finite/scored; focal cells may not be dropped. Relaxing that contract can invalidate whole-cohort peer-support exclusions.",
+  "supervisor": {
+    "final_wall_clock_span_seconds": 146.15455842018127,
+    "last_monotonic_heartbeat_seconds": 135.1364209609892,
+    "last_observed_producer_rss_gib": 0.17679214477539062,
+    "return_code": 0,
+    "state_sha256": "d387ad306b10b51565e0a3dbdfabd409d012f07be0a6877c310e5b9f12e156d8",
+    "status": "completed"
+  },
+  "ticket05_remains_open": true,
+  "timings_seconds": {
+    "necessary_occupancy_replay": 0.25476842299394775,
+    "validate_and_stream_support": 128.92240457999287
+  }
+}

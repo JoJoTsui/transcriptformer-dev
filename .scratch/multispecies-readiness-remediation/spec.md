@@ -1,6 +1,27 @@
 # Multispecies embryogenesis readiness remediation
 
-**Current feasibility implementation — 2026-10-02:** Frozen-rule prospective
+**Current frozen-rule assessment — 2026-10-03:** The completed pilot's actual
+fixed finite 5,111-pair set has necessary focal support in **0/2,000** approved
+joint bootstrap draws (human 80, mouse 0), proving failure of the unchanged
+95% uncertainty criterion on that pilot. No interval is published; the **32.54%**
+coverage veto remains. The [observed-set diagnostic](../../docs/agents/b3-observed-bootstrap-feasibility-2026-10-03.md)
+closes its bounded support assessment. The [metadata cost ledger](../../docs/agents/b3-complete-method-cost-2026-10-03.md)
+counts **1,065,963,862 attempts**, storage and null work, and includes independent
+final bootstrap replay; current row/Boolean-grid caps cannot fit the full cohort.
+Whole-arm cost remains unmeasured. **05 remains open**, **11 excluded**, and
+ten bounded engineering tickets closed. Scientific rules and original pilot
+software are preserved. Both bounded scalar-cache probes passed with peak RSS
+below 15 GiB. The final full CPU suite passed **579 tests, five skipped**, with
+no failures or errors; Ruff and mypy passed nine changed files. See
+[continuation](../../docs/agents/b3-feasibility-continuation-2026-10-03.md).
+The [exact full native support assessment](../../docs/agents/b3-full-native-embryo-support-2026-10-03.md)
+completed at 0.404 GiB peak RSS. Both two-bundle orders leave a necessary
+candidate upper bound of **14,295/15,705 (91.02%)**, with all 2,000 draws
+supporting at least 12,564 potential pairs. Actual finite scores and valid
+uncertainty remain unmeasured. The conditional all-structural set's 225/222
+joint occupancy draws do not represent the unknown actual finite set.
+
+**Previous feasibility implementation — 2026-10-02:** Frozen-rule prospective
 support assessment, a real pilot-to-shard diagnostic handoff, bounded numerical
 replay, embryo expression/dropout sufficient statistics and native covariates
 are implemented and checked. Six/64-cell-per-embryo diagnostic candidates have

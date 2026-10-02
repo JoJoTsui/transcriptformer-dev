@@ -1,0 +1,15 @@
+{
+  "cost_request": {
+    "path": "/mnt/d/sc/transcriptformer/transcriptformer/docs/agents/b3-complete-method-cost-request-2026-10-03.json",
+    "sha256": "eaba821eb46a5e0d687e6753243df8c143211b722e63275e4b6afb3f88693e36"
+  },
+  "schema": "b3_full_native_embryo_support_request_v1",
+  "software_file_sha256": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/assess_b3_full_native_embryo_support.py": "866709f80498f69dbb08a07f0b4718f8270d0e984ee8025345eab36e7cf3504e",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/plan_b3_measured_zero_shards.py": "bf65af4bd4c02010d5140c672b5cfd23b5b947c23f195599da390754d375d800",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/preflight_b3_measured_zero_full.py": "20304ceda81d53ad064d32b6ccad5b0db2c5e45728cfee9cdca3bd5d5783d901",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/preflight_b3_measured_zero_pair.py": "8897a84b605fe4e63c14f55c7da062103f1d8ee2ee148e4a5a926c7fc817be71",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/supervise_b3_pilot.py": "19ad86b77895878cf7e3d609586da61f511498506ab13f1cf800381705a02afe",
+    "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/b3_measured_zero_bootstrap.py": "a3a5f740a7e3521e61f0076baca10c4256ae839c4887a5f4f50ffaafc19d2683"
+  }
+}

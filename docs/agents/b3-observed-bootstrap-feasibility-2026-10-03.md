@@ -101,13 +101,18 @@ The real CLI ran under the existing process supervisor with one native thread,
 | Measurement | Result |
 | --- | ---: |
 | Helper elapsed | 425.62 s |
-| Supervisor elapsed | 450.66 s |
+| Supervisor last monotonic heartbeat | 450.66 s |
+| Supervised child wall-clock duration | 447.05 s |
 | Shipped source validation and plan reconstruction | 396.81 s |
 | Exact 2,000-draw occupancy replay | 2.14 s |
 | Peak process RSS | 1,383,673,856 bytes (1.29 GiB) |
 | Host RAM available at completion | 28.09 GiB |
 | Disk free at completion | 383.52 GiB |
 | Supervisor result | Completed, exit 0 |
+
+The supervisor's `elapsed_seconds` is its last heartbeat; it is not a final
+monotonic duration. Child wall-clock duration is `finished_unix - started_unix`.
+Clock differences under WSL prevent treating these fields as identical clocks.
 
 The request-to-report seam was implemented with observed RED → GREEN slices.
 The targeted file passed **nine tests**: actual observed pair reconstruction,

@@ -1,6 +1,29 @@
 # Finetune readiness tracker
 
-**Current feasibility implementation — 2026-10-02:** The frozen-rule assessor,
+**Current frozen-rule assessment — 2026-10-03:** The actual observed finite
+5,111-pair pilot set has **0/2,000** jointly supported approved bootstrap draws
+(human 80, mouse 0); the unchanged uncertainty rule is infeasible on this pilot.
+This closes the bounded support assessment, without publishing an interval or
+changing the **32.54%** coverage veto. The new metadata ledger accounts for
+**1,065,963,862 attempts**, original-forward upper bounds, storage, null work,
+and 2,000 production plus 2,000 independent replay draws per species. Full
+cohorts exceed the current bootstrap backend's row and Boolean-grid caps;
+whole-arm runtime remains unmeasured. See [observed-set assessment](b3-observed-bootstrap-feasibility-2026-10-03.md)
+and [complete-method cost ledger](b3-complete-method-cost-2026-10-03.md).
+**05 stays open**, **11 excluded**, and **ten tickets closed**. Original pilot
+software and scientific rules are preserved. Both bounded scalar-cache probes
+passed: maximum error below 1.4×10⁻⁸ bits, peak RSS below 15 GiB. After the
+cache-fixture correction, the final full CPU suite passed **579 tests, five
+skipped**, with no failures or errors; Ruff and mypy passed nine changed files.
+See [continuation](b3-feasibility-continuation-2026-10-03.md).
+The [exact full native support assessment](b3-full-native-embryo-support-2026-10-03.md)
+completed at 0.404 GiB peak RSS. Both two-bundle orders retain a necessary
+candidate upper bound of **14,295/15,705 (91.02%)** and all 2,000 draws have
+at least 12,564 potential pairs. Actual finite scores and valid uncertainty
+remain unmeasured; the conditional all-structural set passes only 225/222
+joint occupancy draws and does not represent the unknown actual finite set.
+
+**Previous feasibility implementation — 2026-10-02:** The frozen-rule assessor,
 real pilot-to-shard diagnostic handoff, bounded native replay, embryo sufficient
 statistics and position/target-count diagnostics are implemented and checked.
 Six/64-cell-per-embryo diagnostic candidates have necessary paired support bounds

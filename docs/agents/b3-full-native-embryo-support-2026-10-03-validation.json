@@ -1,0 +1,27 @@
+{
+  "existing_artifacts_edited": false,
+  "mypy": {
+    "command": "PYTHONPATH=/tmp/b3-typecheck-env .venv/bin/python -m mypy --follow-imports=silent --ignore-missing-imports --explicit-package-bases scripts/assess_b3_full_native_embryo_support.py test/test_b3_full_native_embryo_support.py",
+    "status": "passed"
+  },
+  "new_file_sha256": {
+    "docs/agents/b3-full-native-embryo-support-2026-10-03-request.json": "8dae8485a6e23672e282943b72780bb2b8d78a0c9b169fba4dea905950c5d3db",
+    "scripts/assess_b3_full_native_embryo_support.py": "866709f80498f69dbb08a07f0b4718f8270d0e984ee8025345eab36e7cf3504e",
+    "test/test_b3_full_native_embryo_support.py": "ac1ef6410ca1c20876cc84f4d669b15dbf9403a0abfb9fa4979045fa238af62b"
+  },
+  "old_python_edited": false,
+  "public_run_and_cli_tests": {
+    "command": ".venv/bin/python -m pytest -q test/test_b3_full_native_embryo_support.py",
+    "passed": 23,
+    "warnings": "Two pre-existing pytest configuration warnings (format, lint)."
+  },
+  "ruff": {
+    "command": "ruff check scripts/assess_b3_full_native_embryo_support.py test/test_b3_full_native_embryo_support.py",
+    "status": "passed"
+  },
+  "ruff_format": {
+    "command": "ruff format --check scripts/assess_b3_full_native_embryo_support.py test/test_b3_full_native_embryo_support.py",
+    "status": "passed"
+  },
+  "schema": "b3_full_native_embryo_support_validation_v1"
+}

@@ -1,6 +1,26 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-**Current feasibility implementation — 2026-10-02:** The approved assessment
+**Current frozen-rule assessment — 2026-10-03:** The completed pilot's actual
+fixed 5,111 finite pairs have necessary focal support in **0/2,000** joint
+approved bootstrap draws (human 80, mouse 0). Its unchanged 95% uncertainty
+criterion cannot pass. The [observed-set assessment](../../../docs/agents/b3-observed-bootstrap-feasibility-2026-10-03.md)
+closes this bounded diagnostic, retaining the **32.54%** coverage veto and
+unavailable intervals. The [metadata cost ledger](../../../docs/agents/b3-complete-method-cost-2026-10-03.md)
+counts **1,065,963,862 attempts**, storage/null bounds and independent final
+bootstrap replay, and identifies full-cohort row/Boolean-grid cap failure.
+Scientific reporting, complete effect attestation and whole-arm cost stay
+open. Original software and scientific rules are preserved. Both bounded scalar
+cache probes passed, with peak RSS below 15 GiB. The final full CPU suite passed
+**579 tests, five skipped**, with no failures or errors; Ruff and mypy passed
+nine changed files. See [continuation](../../../docs/agents/b3-feasibility-continuation-2026-10-03.md).
+The [exact full native support assessment](../../../docs/agents/b3-full-native-embryo-support-2026-10-03.md)
+completed at 0.404 GiB peak RSS. Both two-bundle orders retain a necessary
+candidate upper bound of **14,295/15,705 (91.02%)** and all 2,000 draws support
+at least 12,564 potential pairs. Actual finite scores and uncertainty remain
+unmeasured. Conditional all-structural occupancy of 225/222 draws does not veto
+a smaller unknown actual finite set.
+
+**Previous feasibility implementation — 2026-10-02:** The approved assessment
 and bounded diagnostic handoff are implemented. Explicit six/64-cell-per-embryo
 candidates have necessary paired support bounds of **50.72%/74.94%**, both below
 the unchanged **80%** gate. Conditional potential-gene occupancy gives
@@ -30,6 +50,9 @@ per-gene embryo support also limits the fixed-universe bootstrap. See
 Earlier pending-pilot and absent-comparison statements are historical.
 
 
+Historical startup and recovery notes (2026-10-01; both pilots completed on
+2026-10-02):
+
 The first approved pilot was interrupted by a Windows watchdog bugcheck.
 The [recovery record](../../../docs/agents/b3-human-pilot-recovery-2026-10-01.md)
 documents resumable per-cell storage, GPU pacing and temperature supervision.
@@ -41,7 +64,7 @@ The eight-hour producer budget retains memory/storage guards. Actual completion
 is pending and this pilot cannot meet the paired 80% reporting floor.
 
 Category: correctness and readiness
-Status: Open — bounded frozen-rule assessment and diagnostic handoff verified; whole-arm cost, reportable comparison and uncertainty pending
+Status: Open — observed fixed-pair bootstrap support assessment complete with a negative result; whole-arm cost, reportable comparison and uncertainty pending
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -625,16 +648,31 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   indexing and exact-support null execution, including numerical effect checks.
 - [x] Retain native-position/target-count covariates and validated embryo-level
   expression/dropout summaries for scientific diagnostics and bootstrap.
+- [x] Assess necessary support of the actual observed finite paired gene set
+  using the exact approved seeded embryo draw order. The current pilot has
+  0/2,000 joint supported draws, closing this bounded assessment negatively.
+- [x] Reconstruct exact native embryo-support identities from the frozen full
+  cohort's bitmaps and assess necessary joint occupancy under both possible
+  two-bundle orders. The 14,295-pair upper bound exceeds the reporting floor;
+  actual finite coverage and valid draw scores remain unavailable.
 - [ ] Measure complete method-preserving scoring, verification and aggregation
   cost within explicit WSL budgets before expanding full-cohort production.
   Partial: planning, import, reconciliation, indexing, 64-gene null ranges,
   embryo metrics, covariates and subset native replay have measured costs.
+  Final scalar-cache probes pass native parity on six scored positions per
+  species with peak RSS below 15 GiB. The metadata ledger accounts for
+  storage/null bounds and independent final draw replay. Full native support
+  reconstruction is measured separately without model forwards.
   Whole-arm scoring/aggregation and 2,000-draw bootstrap costs remain unmeasured.
 
-The three checked items establish the bounded feasibility evidence only. The
+The checked items establish bounded feasibility evidence only. The prospective
 assessor evaluates conditional potential-gene occupancy; the handoff checks a
-specified numerical subset and does not attest every stored effect. Neither
-candidate passes the necessary coverage bound, and neither was GPU-scored.
+specified numerical subset and does not attest every stored effect. The earlier
+six/64-cell-per-embryo candidates fail the necessary coverage bound and were
+not GPU-scored. The separate full native cohort passes its assessed necessary
+bounds, without demonstrating actual finite coverage or uncertainty.
+The separate actual observed-set assessment proves a necessary uncertainty
+failure on the completed pilot; it does not score a larger candidate cohort.
 
 Any amendment to the cohort policy, estimand, null, inferential universe or
 bootstrap requires a separate owner decision. The 80% reporting floor and the

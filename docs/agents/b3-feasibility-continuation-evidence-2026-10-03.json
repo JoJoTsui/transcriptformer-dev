@@ -1,0 +1,559 @@
+{
+  "checks": {
+    "changed_python_files": [
+      {
+        "bytes": 19892,
+        "path": "scripts/assess_b3_observed_bootstrap_feasibility.py",
+        "sha256": "5e7250b53c843712223a70e578608e1970620081a7f4c00cf6f947b9fb4bbb34"
+      },
+      {
+        "bytes": 26105,
+        "path": "scripts/plan_b3_complete_method_cost.py",
+        "sha256": "bb216b4c4a7cca62a7fec2cd9b65f65a7c0f0bcef3c3f543b142529e6a272b14"
+      },
+      {
+        "bytes": 35158,
+        "path": "scripts/study_b3_scalar_cache.py",
+        "sha256": "ff3507bf175ca9b6dd00ef497da91ad68ad5ee8be90b5047e9601a34113e95f9"
+      },
+      {
+        "bytes": 31286,
+        "path": "scripts/assess_b3_full_native_embryo_support.py",
+        "sha256": "866709f80498f69dbb08a07f0b4718f8270d0e984ee8025345eab36e7cf3504e"
+      },
+      {
+        "bytes": 13443,
+        "path": "test/test_b3_observed_bootstrap_feasibility.py",
+        "sha256": "5c61b1695c063504e90ab783f420b8398e130f6d0d0eb85502191eabf784ab1f"
+      },
+      {
+        "bytes": 17906,
+        "path": "test/test_b3_complete_method_cost.py",
+        "sha256": "252c43eef331bc48984458630fa8269447a8e1ec3f739e1b3bdbcd9a4bbfae52"
+      },
+      {
+        "bytes": 5949,
+        "path": "test/test_b3_scalar_cache.py",
+        "sha256": "88df1df6f144a258493cb50842a037e8775f93c59d61502e28eabb7e0c7fa401"
+      },
+      {
+        "bytes": 18557,
+        "path": "test/test_b3_full_native_embryo_support.py",
+        "sha256": "ac1ef6410ca1c20876cc84f4d669b15dbf9403a0abfb9fa4979045fa238af62b"
+      },
+      {
+        "bytes": 3099,
+        "path": "test/test_finetune_test_selection.py",
+        "sha256": "d8929144a9388d45137970229e00924e393a926190e0b0c42390a0f4a2029477"
+      }
+    ],
+    "ci": {
+      "bytes": 3621,
+      "path": ".github/workflows/finetune-tests.yml",
+      "sha256": "8d62e8aba4f72fdbdf1943723852a76cc48236509af61627e9cc715f20f8e879"
+    },
+    "cpu_suite_environment": {
+      "CUDA_VISIBLE_DEVICES": "",
+      "TF_RUN_REAL_MODEL_TESTS": "0",
+      "native_threads": 1
+    },
+    "first_full_run": {
+      "artifact": {
+        "bytes": 82842,
+        "path": "runs/b3_feasibility/20261003/full_suite_results.xml",
+        "sha256": "c56797deff41172e3518c725806bd5c9ed2a1525f4494415056cd0a97003c6aa"
+      },
+      "counts": {
+        "errors": 6,
+        "failures": 0,
+        "passed": 550,
+        "skipped": 5,
+        "tests": 561
+      },
+      "junit_seconds": 243.923
+    },
+    "fixture_correction_rerun": {
+      "artifact": {
+        "bytes": 2069,
+        "path": "runs/b3_feasibility/20261003/fixture_collection_rerun_results.xml",
+        "sha256": "d05a5b9dd25c37fafa9287229803fa56baef2bb769959e3a2c89b5efd86cd768"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 13,
+        "skipped": 0,
+        "tests": 13
+      },
+      "junit_seconds": 68.224
+    },
+    "full_cpu_suite": {
+      "artifact": {
+        "bytes": 75583,
+        "path": "runs/b3_feasibility/20261003/full_suite_final_results.xml",
+        "sha256": "d46460ab8e4f5904a3bffb36775f90335289a021fafbfdfa9fdb810ab3637bdf"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 579,
+        "skipped": 5,
+        "tests": 584
+      },
+      "junit_seconds": 268.031
+    },
+    "full_cpu_suite_supervisor": {
+      "artifact": {
+        "bytes": 835,
+        "path": "runs/b3_feasibility/20261003/full_suite_final_supervisor/state.json",
+        "sha256": "f0f9249a11ae28942bf68ca7ad7c332c638eb2a821b53bd4cc5e209d4867ae54"
+      },
+      "final_wall_clock_span_seconds": 271.3082084655762,
+      "last_monotonic_heartbeat_seconds": 270.302129076008,
+      "limits": {
+        "gpu_index": 0,
+        "max_gpu_temperature_c": null,
+        "max_rss_gib": 6.0,
+        "max_wall_seconds": 2400.0,
+        "min_disk_gib": 20.0,
+        "min_host_ram_gib": 4.0
+      },
+      "return_code": 0,
+      "status": "completed"
+    },
+    "mypy": {
+      "files": 9,
+      "options": [
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases"
+      ],
+      "passed": true
+    },
+    "new_public_seam_targeted_passes": {
+      "cost_ledger": 11,
+      "native_support": 23,
+      "observed_bootstrap": 9,
+      "scalar_cache": 6
+    },
+    "ruff_check": {
+      "files": 9,
+      "passed": true
+    },
+    "ruff_format_check": {
+      "files": 9,
+      "passed": true
+    }
+  },
+  "code_head": "d3a485dc3a767cdb6e642e30118291fd68591bc9",
+  "complete_method_cost": {
+    "bootstrap_api_caps": {
+      "aggregate_counts": {
+        "embryo_gene_records": 962663,
+        "gene_cell_entries": 21437038471,
+        "positive_rows": 1065963862
+      },
+      "embryo_gene_cap": 1000000,
+      "gene_cell_cap": 10000000,
+      "interpretation": "Aggregate count compatibility only; source bundle, per-species and scientific limits still apply",
+      "resource_counts_fit_bounded_api": false,
+      "row_cap": 200000,
+      "scientific_eligibility": "unevaluable_without_reportable_fixed_finite_score_family"
+    },
+    "bootstrap_workload": {
+      "additional_unpriced_work": [
+        "Source/context validation and unit-multiplicity replay per invocation",
+        "All-gene metric/bin reconstruction per draw and fixed-pair ranks",
+        "Draw publication and independent source/hash verification"
+      ],
+      "budget_basis": "Current CLI default, not a maximum allowed budget or a measured runtime",
+      "default_finalization_budget_seconds": 3600,
+      "draw_score_evaluations_across_species": 8000,
+      "draw_score_evaluations_per_species": 4000,
+      "frozen_bin_null_bounds_reused_as_bootstrap_bounds": false,
+      "independent_replay_draws_per_species": 2000,
+      "maximum_coordinated_replay_draw_seconds_before_setup": 1.8,
+      "observed_fixed_finite_pair_set_available_for_full_cohort": false,
+      "production_draws_per_species": 2000
+    },
+    "combined_workload": {
+      "current_pacing_seconds": 266490965.5,
+      "current_pacing_years": 8.44458911640936,
+      "model_forwards_upper_bound": 1065876676,
+      "native_scorable_deletions": 1064807335,
+      "original_forwards_upper_bound": 1069341,
+      "pacing_basis": "Conditional lower bound retaining approved 0.25-second pacing for every positive attempt, including terminal attempts",
+      "positive_attempts": 1065963862
+    },
+    "evidence": {
+      "bytes": 21581,
+      "path": "docs/agents/b3-complete-method-cost-evidence-2026-10-03.json",
+      "sha256": "b39af865f83d4eee7db32f2a43a42a4e54e4cc6476cd9dbc0127a8a3f56dabdb"
+    },
+    "full_report": {
+      "bytes": 20940,
+      "path": "runs/b3_feasibility/20261003/complete_method_cost_ledger.json",
+      "sha256": "c0b747dbbf8bccf603ffb80249bc57c806577a7f8f063b1a66f6effabaa40b4a"
+    },
+    "whole_arm_cost_requirement_complete": false,
+    "whole_arm_runtime_measured": false
+  },
+  "date": "2026-10-03",
+  "full_native_support": {
+    "actual_draw_score_replay_performed": false,
+    "actual_fixed_finite_gene_set_known": false,
+    "full_report": {
+      "bytes": 28234696,
+      "path": "runs/b3_feasibility/20261003/full_native_embryo_support.json",
+      "sha256": "ebe0d650c04f5d071b7dbd8506d93438e81742c21fe60bb95eb9e2882b7f4814"
+    },
+    "matrix_references_remain_references": true,
+    "necessary_bounds_pass_but_scientific_feasibility_unproven": true,
+    "orders": [
+      {
+        "candidate_count_meets_reporting_floor": true,
+        "candidate_fixed_set_necessary_upper_count": 14295,
+        "candidate_upper_fraction": 0.9102196752626552,
+        "conditional_all_structural_pairs": {
+          "actual_observed_finite_pair_set": false,
+          "hypothesis": "Every structural potential pair has finite original scores; hypothetical, not actual G",
+          "joint_supported_draws": 225,
+          "joint_supported_fraction": 0.1125,
+          "necessary_95_percent_support_floor_met": false
+        },
+        "draw_count_meets_1900_necessary_floor": true,
+        "draws_with_at_least_reporting_floor_potential_pairs": 2000,
+        "potential_pairs_per_draw_max": 14392,
+        "potential_pairs_per_draw_min": 14270,
+        "species_order": [
+          "homo_sapiens",
+          "mus_musculus"
+        ]
+      },
+      {
+        "candidate_count_meets_reporting_floor": true,
+        "candidate_fixed_set_necessary_upper_count": 14295,
+        "candidate_upper_fraction": 0.9102196752626552,
+        "conditional_all_structural_pairs": {
+          "actual_observed_finite_pair_set": false,
+          "hypothesis": "Every structural potential pair has finite original scores; hypothetical, not actual G",
+          "joint_supported_draws": 222,
+          "joint_supported_fraction": 0.111,
+          "necessary_95_percent_support_floor_met": false
+        },
+        "draw_count_meets_1900_necessary_floor": true,
+        "draws_with_at_least_reporting_floor_potential_pairs": 2000,
+        "potential_pairs_per_draw_max": 14392,
+        "potential_pairs_per_draw_min": 14110,
+        "species_order": [
+          "mus_musculus",
+          "homo_sapiens"
+        ]
+      }
+    ],
+    "original_immutable_report": {
+      "bytes": 28234696,
+      "path": "docs/agents/b3-full-native-embryo-support-2026-10-03-evidence.json",
+      "sha256": "ebe0d650c04f5d071b7dbd8506d93438e81742c21fe60bb95eb9e2882b7f4814"
+    },
+    "paired_universe": {
+      "80_percent_pair_floor": 12564,
+      "effective_reporting_pair_floor": 12564,
+      "minimum_joined_score_fraction": 0.8,
+      "minimum_paired_scores": 500,
+      "n_vocabulary_joined_pairs": 15705,
+      "pairs_sha256": "8e6d697337372bcb9931b6673e76b2593b63c1fee9c1319efc9fddd3cb6273ef",
+      "structural_candidate_pairs": 14392
+    },
+    "resources": {
+      "elapsed_to_report_seconds": 144.33486656600144,
+      "gene_chunk": 128,
+      "max_rss_bytes": 4294967296,
+      "max_wall_seconds": 900,
+      "maximum_gene_chunk": 128,
+      "minimum_free_disk_bytes": 21474836480,
+      "minimum_host_available_ram_bytes": 4294967296,
+      "native_threads": 1,
+      "peak_rss_bytes": 434135040,
+      "wall_guard_kind": "cooperative; external supervisor required for hard deadline"
+    },
+    "sampler_family_assumption": "Exactly two eligible human/mouse organogenesis source bundles; both possible sorted bundle-path orders assessed; additional bundles change the random stream",
+    "strict_native_contract_assumption": "Structural P inherits the frozen strict native shard contract: every nonempty matched-target focal attempt must be finite/scored; focal cells may not be dropped. Relaxing that contract can invalidate whole-cohort peer-support exclusions.",
+    "summary": {
+      "bytes": 14341,
+      "path": "docs/agents/b3-full-native-embryo-support-2026-10-03-summary.json",
+      "sha256": "6a3ed0eb70de354c047cd8e0554e369955471fd36d56245785217fcc20912a38"
+    },
+    "supervisor": {
+      "artifact": {
+        "bytes": 995,
+        "path": "runs/b3_pilot/full_native_embryo_support_2026-10-03/state.json",
+        "sha256": "d387ad306b10b51565e0a3dbdfabd409d012f07be0a6877c310e5b9f12e156d8"
+      },
+      "final_wall_clock_span_seconds": 146.15455842018127,
+      "last_monotonic_heartbeat_seconds": 135.1364209609892,
+      "limits": {
+        "gpu_index": 0,
+        "max_gpu_temperature_c": null,
+        "max_rss_gib": 4.0,
+        "max_wall_seconds": 950.0,
+        "min_disk_gib": 20.0,
+        "min_host_ram_gib": 4.0
+      },
+      "return_code": 0,
+      "status": "completed"
+    },
+    "verified_input_files": 24
+  },
+  "independent_review": {
+    "baseline": "67f51c5",
+    "code_head": "d3a485d",
+    "spec": {
+      "draft_ortholog_table_binding_gap_resolved": true,
+      "unresolved_findings": 0,
+      "whole_method_and_scientific_acceptance_not_claimed": true
+    },
+    "standards": {
+      "remaining_heuristic": "Duplicated Code in isolated resource/hash/publication guards; retained to preserve source-bound evidence and separate caps.",
+      "remaining_optional_heuristics": 1,
+      "resolved": [
+        "Replay read/hash race with regression",
+        "Private helper naming"
+      ],
+      "unresolved_hard_findings": 0
+    }
+  },
+  "observed_pilot_support": {
+    "actual_draw_scores_or_interval_produced": false,
+    "bounded_support_assessment_complete_negative": true,
+    "draws": 2000,
+    "evidence": {
+      "bytes": 7422,
+      "path": "docs/agents/b3-observed-bootstrap-feasibility-2026-10-03-evidence.json",
+      "sha256": "d155db04cdeca7ec67692650fa1c371092a0841bb64c8522d96d8bfb3e2216ff"
+    },
+    "fixed_observed_pairs": {
+      "coverage": 0.325437758675581,
+      "n_pairs": 5111,
+      "n_vocabulary_joined_pairs": 15705,
+      "pairs_sha256": "401765e9cb3d0dbab0780faccab25574ea24608b8cd820008119320bcb71da29"
+    },
+    "full_report": {
+      "bytes": 3134264,
+      "path": "runs/b3_feasibility/20261003/observed_pilot_bootstrap_assessment.json",
+      "sha256": "f7aa106cb1ecd5b2bf93ba14007962c4f102a7bafe237f12dd432d424b39c14a"
+    },
+    "individual_supported_draws": {
+      "human": 80,
+      "mouse": 0
+    },
+    "joint_supported_draw_upper_bound": 0
+  },
+  "remaining_ticket05_gates": [
+    "Complete method-preserving scoring, independent effect attestation and null aggregation cost within a defined execution budget",
+    "Scalable source-bound bootstrap and independent final replay",
+    "Actual finite paired scores passing 500-pair/80% coverage",
+    "Valid frozen-rule embryo uncertainty for actual fixed finite family",
+    "Verified finetuning provenance before claims of finetuning benefit"
+  ],
+  "scalar_cache": {
+    "human": {
+      "artifact": {
+        "bytes": 36889,
+        "path": "runs/b3_feasibility/20261003/scalar_cache_human_final.json",
+        "sha256": "f4db331a8bd9844fa82213b23222385853d5463c68417c06e10e222a89801ce8"
+      },
+      "cache_bytes_per_cell": [
+        8188,
+        8188
+      ],
+      "cache_dtype": "torch.float32",
+      "cells": [
+        0,
+        2
+      ],
+      "execution_caps": {
+        "cuda_reserved_bytes": 21474836480,
+        "disk_floor_bytes": 21474836480,
+        "gpu_idle_seconds_after_each_attempt": 0.25,
+        "host_ram_floor_bytes": 4294967296,
+        "max_seconds": 900,
+        "resource_check_schedule": "Before/after each attempt; wall checks every cached normalization chunk",
+        "rss_bytes": 17179869184
+      },
+      "exploratory_mean_attempt_reduction_fraction": 0.07331024447492962,
+      "helper_monotonic_seconds": 181.94015799699991,
+      "mean_scored_attempt_seconds_including_idle": {
+        "cached": 0.5127474350010743,
+        "native": 0.5533107838346041
+      },
+      "model_forward_count": 20,
+      "native_cache_max_absolute_error_bits": 1.2114469427615404e-08,
+      "native_stored_max_absolute_error_bits": 0.0,
+      "one_repeat_selected_positions_only": true,
+      "peak_cuda_reserved_bytes": 9883877376,
+      "peak_rss_bytes": 16027058176,
+      "scored_comparisons": 6,
+      "setup_timings": {
+        "final_source_verification_seconds": 12.940288859012071,
+        "initial_hash_validation_seconds": 12.537383335002232,
+        "model_load_seconds": 100.54853038598958
+      },
+      "stable_whole_arm_throughput_established": false,
+      "supervisor": {
+        "artifact": {
+          "bytes": 1520,
+          "path": "runs/b3_feasibility/20261003/scalar_cache_human_final_supervisor/state.json",
+          "sha256": "f642fde86b1f9877a2faa6700464129360ea54ae78f814f610fc2d6348de6bff"
+        },
+        "final_wall_clock_span_seconds": 205.75962138175964,
+        "last_monotonic_heartbeat_seconds": 195.7217476000078,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": 80.0,
+          "max_rss_gib": 18.0,
+          "max_wall_seconds": 1000.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "return_code": 0,
+        "status": "completed"
+      },
+      "terminal_checks": 3,
+      "verified_input_files": 133
+    },
+    "mouse": {
+      "artifact": {
+        "bytes": 37439,
+        "path": "runs/b3_feasibility/20261003/scalar_cache_mouse_final.json",
+        "sha256": "6c6ce0658af7430fe284a490cc15a205731e8a8c2556c8ee83b04c616a81bf50"
+      },
+      "cache_bytes_per_cell": [
+        8188,
+        8188
+      ],
+      "cache_dtype": "torch.float32",
+      "cells": [
+        0,
+        4
+      ],
+      "execution_caps": {
+        "cuda_reserved_bytes": 21474836480,
+        "disk_floor_bytes": 21474836480,
+        "gpu_idle_seconds_after_each_attempt": 0.25,
+        "host_ram_floor_bytes": 4294967296,
+        "max_seconds": 900,
+        "resource_check_schedule": "Before/after each attempt; wall checks every cached normalization chunk",
+        "rss_bytes": 17179869184
+      },
+      "exploratory_mean_attempt_reduction_fraction": 0.02968032171795376,
+      "helper_monotonic_seconds": 199.0853668990021,
+      "mean_scored_attempt_seconds_including_idle": {
+        "cached": 0.4861322998306908,
+        "native": 0.5010022065010465
+      },
+      "model_forward_count": 18,
+      "native_cache_max_absolute_error_bits": 1.3475073501467705e-08,
+      "native_stored_max_absolute_error_bits": 0.0,
+      "one_repeat_selected_positions_only": true,
+      "peak_cuda_reserved_bytes": 9883877376,
+      "peak_rss_bytes": 15954341888,
+      "scored_comparisons": 6,
+      "setup_timings": {
+        "final_source_verification_seconds": 12.972740200988483,
+        "initial_hash_validation_seconds": 12.781780734003405,
+        "model_load_seconds": 100.51928439601033
+      },
+      "stable_whole_arm_throughput_established": false,
+      "supervisor": {
+        "artifact": {
+          "bytes": 1521,
+          "path": "runs/b3_feasibility/20261003/scalar_cache_mouse_final_supervisor/state.json",
+          "sha256": "fefcd4963414f03a685b4244f44a753ab1c557ee2aa2f3e6d97b11f8f7d57e64"
+        },
+        "final_wall_clock_span_seconds": 223.77823686599731,
+        "last_monotonic_heartbeat_seconds": 210.74891507800203,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": 80.0,
+          "max_rss_gib": 18.0,
+          "max_wall_seconds": 1000.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "return_code": 0,
+        "status": "completed"
+      },
+      "terminal_checks": 2,
+      "verified_input_files": 143
+    }
+  },
+  "schema": "b3_feasibility_continuation_evidence_v1",
+  "scientific_protocol_amended": false,
+  "scientific_readiness": "unavailable",
+  "scope": "Owner-approved ADR0005 bounded feasibility under frozen rules; no full-cohort production or zebrafish work.",
+  "source_reconciliation": {
+    "artifact": {
+      "bytes": 36873,
+      "path": "runs/b3_feasibility/20261003/source_reconciliation_final.json",
+      "sha256": "055e2ae76257264e6e7906aaa816e00495d425913c43831ec08d84b4a7779566"
+    },
+    "elapsed_seconds": 27.806488757996703,
+    "original_pilot_software": {
+      "human": {
+        "all_software_hashes_match": true,
+        "provenance_path": "runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores/provenance.json",
+        "provenance_sha256": "01e981380435a695c13d4c40277e1e57f59769e2baf8e8cd22b58d5506c0ae30",
+        "software_files": 107
+      },
+      "mouse": {
+        "all_software_hashes_match": true,
+        "provenance_path": "runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores/provenance.json",
+        "provenance_sha256": "5ace72f6376f591632ae38e55cb96d005723a4dfa496f7418cc3d6343679733b",
+        "software_files": 109
+      }
+    },
+    "peak_rss_bytes": 180977664,
+    "scope": "Fresh byte audit of declared input bindings; frozen matrix references omitted by their diagnostic remain references.",
+    "supervisor": {
+      "artifact": {
+        "bytes": 748,
+        "path": "runs/b3_feasibility/20261003/source_reconciliation_final_supervisor/state.json",
+        "sha256": "89581b694604857098da06987ffc5b1eb8984d111aec72b7768b6d0063c86441"
+      },
+      "final_wall_clock_span_seconds": 28.040801763534546,
+      "last_monotonic_heartbeat_seconds": 15.02127590199234,
+      "limits": {
+        "gpu_index": 0,
+        "max_gpu_temperature_c": null,
+        "max_rss_gib": 1.0,
+        "max_wall_seconds": 300.0,
+        "min_disk_gib": 20.0,
+        "min_host_ram_gib": 4.0
+      },
+      "return_code": 0,
+      "status": "completed"
+    },
+    "unique_verified_source_files": 200
+  },
+  "tickets": {
+    "closed_bounded_engineering": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12
+    ],
+    "excluded": [
+      11
+    ],
+    "open": [
+      5
+    ]
+  }
+}

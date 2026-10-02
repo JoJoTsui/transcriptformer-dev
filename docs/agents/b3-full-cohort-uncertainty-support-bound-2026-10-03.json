@@ -1,0 +1,60 @@
+{
+  "schema": "b3_full_cohort_uncertainty_support_count_bound_v1",
+  "scope": "Existing full human/mouse organogenesis metadata; frozen measured-zero rules; ticket05 feasibility assessment",
+  "status": "necessary_bound_does_not_establish_impossibility_or_feasibility",
+  "ticket05_remains_open": true,
+  "gene_specific_native_support_embryo_identities_available_in_json": false,
+  "sampler": {
+    "implementation": "Python random.Random and rng.choice",
+    "seed": 20260930,
+    "draws": 2000,
+    "minimum_joint_valid_draws": 1900,
+    "physical_embryos": {"human": 5, "mouse": 43},
+    "order": "sorted absolute source bundle paths; sorted physical embryos; one slot per physical embryo with replacement",
+    "family_assumption": "Exactly the two human/mouse organogenesis eligible source bundles; additional source bundles change the random stream"
+  },
+  "two_embryo_unknown_identity_maxima": [
+    {"bundle_order": ["human", "mouse"], "human_supported_draws_max": 1858, "mouse_supported_draws_max": 1784},
+    {"bundle_order": ["mouse", "human"], "human_supported_draws_max": 1861, "mouse_supported_draws_max": 1789}
+  ],
+  "counts": {
+    "frozen_vocabulary_joined_denominator": 15705,
+    "measured_comparable_pairs_before_necessary_condition_filter": 15033,
+    "structural_candidate_pairs": 14392,
+    "candidate_pairs_human_support_count_below_three": 97,
+    "candidate_pairs_mouse_support_count_below_three": 0,
+    "candidate_pairs_both_support_counts_below_three": 0,
+    "candidate_pair_upper_bound": 14295,
+    "candidate_upper_fraction": 0.9102196752626552,
+    "minimum_fixed_finite_pairs_for_80_percent": 12564,
+    "candidate_upper_surplus_over_reporting_floor": 1731,
+    "structural_pairs_with_native_support_in_all_embryos_both_sides": 12402
+  },
+  "interpretation": "Conservative necessary candidate upper bound only; remaining candidates need not satisfy exact individual occupancy, common joint support, finite score, peer, null variance or rank conditions. Missing native-support embryo identities prevent exact per-gene draw-support calculation from the existing JSON metadata.",
+  "file_sha256": {
+    "docs/agents/b3-complete-method-cost-request-2026-10-03.json": "eaba821eb46a5e0d687e6753243df8c143211b722e63275e4b6afb3f88693e36",
+    "runs/b3_pilot/full_organogenesis_v3/human_native_shard_plan.json": "b06233309be599e05c8bff01c2aea2b4df276f28fd853aae786ad54bd7141fa2",
+    "runs/b3_pilot/full_organogenesis_v3/mouse_native_shard_plan.json": "559c87f71fa4ad220305a827ca11d8d1907d81c911af2926cc10473e4a888c8f",
+    "runs/b3_pilot/full_organogenesis_v3/human_measured_zero_support/support_preflight.json": "03c1071f03f84b66daf93dfa9864dbdb0c1e4860be060ade02e8fec74cf043d0",
+    "runs/b3_pilot/full_organogenesis_v3/mouse_measured_zero_support/support_preflight.json": "819d751f16e6c5c63f6c0ef92a9788fe5cd890d14759b16226143891887e88ae",
+    "runs/b3_pilot/full_organogenesis_v3/paired_measured_zero_support.json": "1f79d92fa2e63c0ee924b9b2d8e6112650801182b2fa5788560b11585972a27e",
+    "scripts/preflight_b3_measured_zero_full.py": "20304ceda81d53ad064d32b6ccad5b0db2c5e45728cfee9cdca3bd5d5783d901",
+    "src/transcriptformer/finetune/b3_measured_zero_bootstrap.py": "a3a5f740a7e3521e61f0076baca10c4256ae839c4887a5f4f50ffaafc19d2683"
+  },
+  "request_plan_hashes_and_plan_metadata_hashes_match": true,
+  "source_line_references": {
+    "scripts/preflight_b3_measured_zero_full.py": [195, 204, 208, 212, 287, 339, 359, 484],
+    "src/transcriptformer/finetune/b3_measured_zero_bootstrap.py": [21, 22, 23, 201, 212, 272, 273, 274, 292, 428, 477]
+  },
+  "operations": {
+    "existing_json_and_helper_source_text_read": true,
+    "matrix_or_support_bitmap_read": false,
+    "weights_or_model_read": false,
+    "model_forwards_performed": false,
+    "source_edits_or_new_jobs": false,
+    "new_artifacts": [
+      "docs/agents/b3-full-cohort-uncertainty-support-bound-2026-10-03.md",
+      "docs/agents/b3-full-cohort-uncertainty-support-bound-2026-10-03.json"
+    ]
+  }
+}
