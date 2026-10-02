@@ -3,14 +3,15 @@
 import json
 from pathlib import Path
 import pytest
+from test import test_b3_pilot_shard_handoff as boundary
 
-pytest_plugins = ("test.test_b3_pilot_shard_handoff",)
+# Bind the fixture locally: a module also collected as tests is not a global
+# fixture provider when pytest_plugins registers it during a full-suite run.
+native_pilot = boundary.native_pilot
 
 
 @pytest.fixture
 def native_float32_pilot(request, monkeypatch):
-    import test.test_b3_pilot_shard_handoff as boundary
-
     class Float32SoftcapHead(boundary.SmallGeneModel):
         def __init__(self, width):
             super().__init__(width)

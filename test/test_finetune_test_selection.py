@@ -37,6 +37,7 @@ SUITES = (
     "b3_observed_bootstrap_feasibility",
     "b3_complete_method_cost",
     "b3_scalar_cache",
+    "b3_full_native_embryo_support",
     "end_to_end",
     "finetune_metadata",
     "spatial",
