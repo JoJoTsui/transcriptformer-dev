@@ -1,5 +1,21 @@
 # Finetune readiness tracker
 
+**Current feasibility implementation — 2026-10-02:** The frozen-rule assessor,
+real pilot-to-shard diagnostic handoff, bounded native replay, embryo sufficient
+statistics and position/target-count diagnostics are implemented and checked.
+Six/64-cell-per-embryo diagnostic candidates have necessary paired support bounds
+of **50.72%/74.94%**, below the unchanged **80%** gate; both have **0/2,000**
+conditional potential-gene joint occupancy draws. Actual finite-score bootstrap
+results remain unavailable. Both pilot shards passed reconciliation/indexing;
+128 diagnostic null rows reproduce original availability and z-scores exactly.
+Small native replay checks cover scored and terminal cases without attesting
+all effects. See [implementation and separate review reports](b3-feasibility-implementation-2026-10-02.md)
+and [bound evidence](b3-feasibility-milestone-evidence-2026-10-02.json).
+Bounded handoff costs are measured; whole-arm scoring/aggregation and uncertainty
+costs remain unmeasured. **05 stays open**, **11 excluded**, and **ten tickets
+closed**. No production cohort or scientific rule changed. Earlier missing
+software and pending-pilot wording below is historical.
+
 **Current pilot evidence — 2026-10-02:** Both base-arm organogenesis pilots
 completed and passed source-bound validation: human **30/30 cells**, **54,317
 positive attempts**, **9,931 finite gene scores**; mouse **25/25 cells**,

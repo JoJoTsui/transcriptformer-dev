@@ -264,9 +264,14 @@ def test_bounded_numerical_replay_checks_original_and_independent_deletion_math(
     )
     assert report["status"] == "bounded_numerical_replay_passed"
     assert report["model_forwards_performed"] is True
-    assert report["model_forward_count"] == 3
+    assert report["model_forward_count"] == 4
     assert report["original_targets_checked"] == 52
     assert len(report["contrasts"]) == 2
+    assert report["contrasts"][0]["token_position"] == 0
+    assert report["contrasts"][1]["n_targets"] == 1
+    assert report["terminal_checks"] == [
+        {"cell_index": 0, "token_position": 51, "status": "no_matched_target", "n_targets": 0, "impact_bits": None}
+    ]
     assert report["all_shard_effects_attested"] is False
     assert report["scientific_readiness"] == "unavailable_diagnostic_subset_only"
     assert max(c["independent_reference_error_bits"] for c in report["contrasts"]) < 1e-10

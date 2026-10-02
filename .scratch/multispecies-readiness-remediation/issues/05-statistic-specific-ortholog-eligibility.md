@@ -1,5 +1,19 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
+**Current feasibility implementation — 2026-10-02:** The approved assessment
+and bounded diagnostic handoff are implemented. Explicit six/64-cell-per-embryo
+candidates have necessary paired support bounds of **50.72%/74.94%**, both below
+the unchanged **80%** gate. Conditional potential-gene occupancy gives
+**0/2,000** joint draws for each; this does not substitute for the approved
+bootstrap on the actual fixed finite-pair set. Existing pilot outputs traversed
+immutable shard import, source/native reconciliation, sparse indexing, exact
+null ranges, embryo sufficient statistics and covariate diagnostics. A small
+specified native subset passed independent numerical replay, including terminal
+unavailability. See the [implementation record](../../../docs/agents/b3-feasibility-implementation-2026-10-02.md)
+and [bound evidence](../../../docs/agents/b3-feasibility-milestone-evidence-2026-10-02.json).
+Whole-arm costs, complete effect attestation, actual reportable coverage and
+uncertainty remain pending. Earlier missing-software statements are historical.
+
 **Current pilot evidence — 2026-10-02:** Both base-arm organogenesis pilots
 completed and passed source-bound validation: human **30/30 cells**, **54,317
 positive attempts**, **9,931 finite gene scores**; mouse **25/25 cells**,
@@ -27,7 +41,7 @@ The eight-hour producer budget retains memory/storage guards. Actual completion
 is pending and this pilot cannot meet the paired 80% reporting floor.
 
 Category: correctness and readiness
-Status: Open — v2 pilot completed at 32.54% paired coverage; reportable comparison and uncertainty pending frozen-rule feasibility
+Status: Open — bounded frozen-rule assessment and diagnostic handoff verified; whole-arm cost, reportable comparison and uncertainty pending
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -604,15 +618,23 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
 
 - [x] Reconcile completed pilot artifacts, observed 32.54% paired coverage and
   fixed-gene embryo-support risk; archive cost/support evidence.
-- [ ] Assess a prospective bounded cohort’s gene-specific embryo support under
+- [x] Assess a prospective bounded cohort’s gene-specific embryo support under
   the unchanged inferential universe and bootstrap policy. Necessary full
   support alone cannot establish finite scores or valid uncertainty.
-- [ ] Demonstrate a small actual native shard through reconciliation, sparse
+- [x] Demonstrate a small actual native shard through reconciliation, sparse
   indexing and exact-support null execution, including numerical effect checks.
-- [ ] Retain native-position/target-count covariates and validated embryo-level
+- [x] Retain native-position/target-count covariates and validated embryo-level
   expression/dropout summaries for scientific diagnostics and bootstrap.
 - [ ] Measure complete method-preserving scoring, verification and aggregation
   cost within explicit WSL budgets before expanding full-cohort production.
+  Partial: planning, import, reconciliation, indexing, 64-gene null ranges,
+  embryo metrics, covariates and subset native replay have measured costs.
+  Whole-arm scoring/aggregation and 2,000-draw bootstrap costs remain unmeasured.
+
+The three checked items establish the bounded feasibility evidence only. The
+assessor evaluates conditional potential-gene occupancy; the handoff checks a
+specified numerical subset and does not attest every stored effect. Neither
+candidate passes the necessary coverage bound, and neither was GPU-scored.
 
 Any amendment to the cohort policy, estimand, null, inferential universe or
 bootstrap requires a separate owner decision. The 80% reporting floor and the

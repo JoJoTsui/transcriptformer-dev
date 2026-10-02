@@ -1,5 +1,19 @@
 # Multispecies embryogenesis readiness remediation
 
+**Current feasibility implementation — 2026-10-02:** Frozen-rule prospective
+support assessment, a real pilot-to-shard diagnostic handoff, bounded numerical
+replay, embryo expression/dropout sufficient statistics and native covariates
+are implemented and checked. Six/64-cell-per-embryo diagnostic candidates have
+necessary paired support bounds of **50.72%/74.94%**, below **80%**; neither is
+selected for GPU scoring. Conditional potential-gene occupancy is **0/2,000**
+joint draws for both, with actual finite-pair bootstrap results still unknown.
+The [implementation record](../../docs/agents/b3-feasibility-implementation-2026-10-02.md)
+and [evidence](../../docs/agents/b3-feasibility-milestone-evidence-2026-10-02.json)
+distinguish measured bounded handoff costs from unmeasured whole-arm scoring,
+aggregation and uncertainty costs. Ticket **05 remains open**, **11 excluded**,
+and ten engineering tickets closed. Scientific rules and production cohort
+policy are unchanged; older missing-software statements below are historical.
+
 **Current pilot evidence — 2026-10-02:** Both base-arm organogenesis pilots
 completed and passed source-bound validation: human **30/30 cells**, **54,317
 positive attempts**, **9,931 finite gene scores**; mouse **25/25 cells**,

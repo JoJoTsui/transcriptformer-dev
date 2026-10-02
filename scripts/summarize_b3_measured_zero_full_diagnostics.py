@@ -16,15 +16,18 @@ from math import fsum, isfinite
 import mmap
 import os
 from pathlib import Path
+import sys
 import tempfile
 import time
 from typing import Any
 
-from prepare_b3_measured_zero_embryo_metrics import FrozenMetricInputs
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import numpy as np
-from scipy.stats import rankdata
-from transcriptformer.finetune.b3_measured_zero_shards import (
+from scripts.prepare_b3_measured_zero_embryo_metrics import FrozenMetricInputs  # noqa: E402
+
+import numpy as np  # noqa: E402
+from scipy.stats import rankdata  # noqa: E402
+from transcriptformer.finetune.b3_measured_zero_shards import (  # noqa: E402
     METHOD,
     RECORD_DTYPE,
     STATUS_SCORED,

@@ -1,5 +1,21 @@
 # Multispecies readiness remediation — ticket index
 
+**Current feasibility implementation — 2026-10-02:** The frozen-rule assessor,
+pilot-to-shard importer, bounded numerical replay, embryo sufficient statistics
+and position/target-count diagnostics are implemented. Explicit diagnostic
+candidates of six and 64 cells per embryo reach necessary paired support bounds
+of **50.72%** and **74.94%**, respectively, below the unchanged **80%** gate.
+Their conditional potential-gene occupancy checks yield **0/2,000** joint draws;
+these are not actual finite-score bootstrap results. Real completed pilot
+outputs traversed strict reconciliation, sparse indexing and 64-gene null ranges
+with exact agreement to the original scores. Small native replay checks passed.
+See the [implementation and separate review reports](../../docs/agents/b3-feasibility-implementation-2026-10-02.md)
+and [bound evidence](../../docs/agents/b3-feasibility-milestone-evidence-2026-10-02.json).
+Whole-arm scoring/aggregation and 2,000-draw uncertainty costs remain unmeasured;
+**05 remains open**, **11 excluded**, and **ten tickets closed**. No production
+cohort, scientific rule or reporting floor changed. Earlier missing-software
+statements below record their dated historical state.
+
 **Current pilot evidence — 2026-10-02:** Both base-arm organogenesis pilots
 completed and passed source-bound validation: human **30/30 cells**, **54,317
 positive attempts**, **9,931 finite gene scores**; mouse **25/25 cells**,
@@ -31,7 +47,7 @@ data, chicken identifier repair and production training remain separate gates.
 | [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | Closed for bounded CPU engineering acceptance; two-rank interrupted/resumed dropout continuity passed |
 | [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; recorded splits validated without allocation; six-source preparation validated; finalized multispecies corpus absent |
 | [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Closed for bounded engineering acceptance; strict partial bridge leaves R2 open |
-| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | v1 full-cohort support fails; amended v2 paired necessary upper bound 14,392/15,705 (91.64%) passes structural floors, but the observed pilot comparison is withheld at 32.54% coverage |
+| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Open; observed pilot coverage 32.54%; bounded shard handoff verified; assessed candidates remain below 80%; whole-arm cost and reportable uncertainty pending |
 | [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Closed for bounded engineering acceptance; actual frozen cohort absent |
 | [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Closed for bounded engineering acceptance; production losses absent |
 | [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Closed for bounded engineering acceptance; completed-directory gap repaired; production evidence absent |

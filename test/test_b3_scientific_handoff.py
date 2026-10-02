@@ -342,6 +342,33 @@ def test_diagnostics_join_native_targets_and_equal_embryo_covariates(diagnostic_
     assert all(row["rho"] is None for row in report["correlations"])
 
 
+def test_diagnostic_package_command_uses_the_same_public_boundary(diagnostic_inputs, tmp_path):
+    plan, shard_root, index_root, range_report = diagnostic_inputs
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scripts.summarize_b3_measured_zero_full_diagnostics",
+            "--plan",
+            str(plan),
+            "--shard-root",
+            str(shard_root),
+            "--index-root",
+            str(index_root),
+            "--range-report",
+            str(range_report),
+            "--output",
+            str(tmp_path / "package_diagnostics.json"),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=40,
+        cwd=ROOT,
+    )
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["rows"][0]["observed_impact_bits"] == pytest.approx(5.0)
+
+
 def test_diagnostics_reject_shard_without_index_native_byte_binding(diagnostic_inputs, tmp_path):
     _, shard_root, index_root, range_path = diagnostic_inputs
     record_path = str(shard_root / "shard-000000" / "records.bin")

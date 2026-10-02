@@ -1,0 +1,1035 @@
+{
+  "checks": {
+    "affected_multiprocessing_rerun": {
+      "attributes": {
+        "errors": "0",
+        "failures": "0",
+        "hostname": "Conundrum",
+        "name": "pytest",
+        "skipped": "0",
+        "tests": "5",
+        "time": "87.074",
+        "timestamp": "2026-10-02T15:58:12.947822+08:00"
+      },
+      "junit": {
+        "bytes": 812,
+        "path": "runs/b3_pilot/feasibility_20261002/multiprocessing_test_results.xml",
+        "sha256": "a5778a292996aa613511235b75d2aa474b55d625eea3b85e9cf6b184831f0a18"
+      },
+      "local_network_and_process_access": true
+    },
+    "aggregate_test_coverage": {
+      "interpretation": "Combined full-suite attempt and affected/final-source targeted reruns; not a single uninterrupted full-suite pass",
+      "passed": 530,
+      "remaining_failures": 0,
+      "skipped": 5,
+      "unique_test_cases": 535
+    },
+    "ci_suite_registration": "Three new CPU B3 suites included in .github/workflows/finetune-tests.yml and enforced by test_finetune_test_selection.py",
+    "final_source_targeted_rerun": {
+      "attributes": {
+        "errors": "0",
+        "failures": "0",
+        "hostname": "Conundrum",
+        "name": "pytest",
+        "skipped": "0",
+        "tests": "33",
+        "time": "53.189",
+        "timestamp": "2026-10-02T16:00:52.693912+08:00"
+      },
+      "junit": {
+        "bytes": 4853,
+        "path": "runs/b3_pilot/feasibility_20261002/targeted_final_results.xml",
+        "sha256": "977fd5d87d5a55c11ef3467b88617b82ccce975bebf16b4624ca609cdbdf9fd3"
+      }
+    },
+    "full_suite_attempt": {
+      "attributes": {
+        "errors": "0",
+        "failures": "2",
+        "hostname": "Conundrum",
+        "name": "pytest",
+        "skipped": "5",
+        "tests": "532",
+        "time": "1717.310",
+        "timestamp": "2026-10-02T15:29:37.510261+08:00"
+      },
+      "completed": false,
+      "junit": {
+        "bytes": 82366,
+        "path": "runs/b3_pilot/feasibility_20261002/full_suite_results.xml",
+        "sha256": "3b25b6ff9f9e9623cc3e95c37227b7110382a392f9a273ca146423922559e85a"
+      },
+      "reason": "Two DDP checks failed with local socket bind EPERM; final DataLoader checks stalled in restricted sandbox and were interrupted",
+      "supervisor": {
+        "bytes": 835,
+        "path": "runs/b3_pilot/feasibility_20261002/full_suite_supervisor/state.json",
+        "sha256": "b0533179174bb3263e67d92fe90d7e0fd6dc85ac4d29dd6494457ab1b0bf3373"
+      }
+    },
+    "mypy": "9 changed Python files: no issues; follow-imports=silent, ignore-missing-imports, explicit-package-bases",
+    "real_model_test_suite_enabled": false,
+    "ruff": "9 changed Python files: check and format passed"
+  },
+  "cost_evidence": {
+    "artifacts": [
+      {
+        "bytes": 140,
+        "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/setup_timings_replayed.json",
+        "sha256": "e5470ce8c233bb55dae1e42a448b27f056b3b029567099875feec6697c793fe2"
+      },
+      {
+        "bytes": 410,
+        "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/backend_timings.json",
+        "sha256": "325e061f1a430e69c3e0ab093f84580e63dc4a45a8a1dd5b0f800f154eedd743"
+      },
+      {
+        "bytes": 248,
+        "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/scientific_input_timings.json",
+        "sha256": "52b75c7f8fc7fdfc4c98cd3e255514bed38a3be227ee604e5f5e47f58e368856"
+      }
+    ],
+    "backend": {
+      "peak_rss_bytes": 1053331456,
+      "timings_seconds": {
+        "human_import_seconds": 167.56279995098885,
+        "human_index_seconds": 37.03893897400121,
+        "human_null_range_seconds": 95.09362340399821,
+        "human_reconcile_seconds": 39.336834383997484,
+        "mouse_import_seconds": 141.2066114830086,
+        "mouse_index_seconds": 37.379588327996316,
+        "mouse_null_range_seconds": 72.09788660499908,
+        "mouse_reconcile_seconds": 29.1580571999948
+      }
+    },
+    "complete_whole_arm_cost_measured": false,
+    "full_2000_draw_score_bootstrap_cost_measured": false,
+    "scientific_inputs": {
+      "peak_rss_bytes": 176562176,
+      "timings_seconds": {
+        "human_covariates_seconds": 49.61232629600272,
+        "human_embryo_metrics_seconds": 0.8064013969997177,
+        "mouse_covariates_seconds": 48.002378120989306,
+        "mouse_embryo_metrics_seconds": 1.02813572800369
+      }
+    },
+    "scope": "Bounded diagnostic handoff only; not complete whole-arm scoring, aggregation or uncertainty cost",
+    "setup": {
+      "human_planning_seconds": 0.7917822509916732,
+      "mouse_planning_seconds": 0.7429605159995845,
+      "paired_preflight_seconds": 97.28403786799754
+    }
+  },
+  "full_cohort_scoring_launched": false,
+  "initial_implementation_commit": "d30a8c9",
+  "method": "b3_measured_zero_peer_null_v2",
+  "owner_decision": "docs/adr/0005-b3-feasibility-before-full-cohort-expansion.md",
+  "pilot_backend": {
+    "human": {
+      "artifacts": [
+        {
+          "bytes": 447339,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/config.json",
+          "sha256": "ee3f628ae6cfc8108dcb19422d1a43e60b842d6dc28e1d27b5961776ba96c791"
+        },
+        {
+          "bytes": 14207497,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/support/support_preflight.json",
+          "sha256": "a5a96de7bbaa2a852984b239ecf824a4eacb792cb996d3e9d7bc799527cc7fc0"
+        },
+        {
+          "bytes": 1100024,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/support/support.h5",
+          "sha256": "429cd4e9e62b3bb5ea255df8ca62d128109a24dd6485a53d752d30f9e8558fbc"
+        },
+        {
+          "bytes": 2412,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/plan.json",
+          "sha256": "8e8cd15efec35547a4e0c3004e4549db3fe25473e03407a66d3d7ffbe946331e"
+        },
+        {
+          "bytes": 18208,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/handoff/provenance.json",
+          "sha256": "3577e0be5f99a212bbb29dc389fb8c0f63a6e5bce657554e48ee4325406b77ae"
+        },
+        {
+          "bytes": 19710,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/handoff/import_report.json",
+          "sha256": "48f185c111946479b00759f59c5b00f4617f00d46a410efc6d1b4e1e4a1f01c9"
+        },
+        {
+          "bytes": 477,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/handoff/shards/shard-000000/header.json",
+          "sha256": "b7986dd14197e574c04aa040ecc86ab60ed21e98ef7f201cab8c2be5dbb8e51e"
+        },
+        {
+          "bytes": 1140657,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/handoff/shards/shard-000000/records.bin",
+          "sha256": "eacfe2ecd2eb47bd81f7884b1c69cee8a056f13181f8f05b9304fc582dca7a7e"
+        },
+        {
+          "bytes": 1048137,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/handoff/shards/shard-000000/proofs.jsonl",
+          "sha256": "c86eb83a965d4612e4b2bdc3a41111d5ed387bbb4c8d0fa8e2481ffe755c96a8"
+        },
+        {
+          "bytes": 427,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/handoff/shards/shard-000000/footer.json",
+          "sha256": "bb745b114061ca425ef373a8d17a5c2274ad9273ae32fe1f841d8068c1ac42b9"
+        },
+        {
+          "bytes": 177835,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/certificates/shard-000000.json",
+          "sha256": "7df024e4bfcff8f1bbf4de0bfce86df5b3ccc551e28dca1f40a91154f6d2100e"
+        },
+        {
+          "bytes": 21568,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/index/metadata.json",
+          "sha256": "2171266f537cd1ec71bfc2d3ce91e3dbd62f18f5d2d13abf021b0ffb2b89315a"
+        },
+        {
+          "bytes": 155256,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/index/gene_offsets.u64",
+          "sha256": "f5c1a99a996750b66fefdff683deb6c73f3d6bee113d4b49a7cce3e808da1d5b"
+        },
+        {
+          "bytes": 217072,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/index/cell_index.u32",
+          "sha256": "3b15538ecb6b0f60a9341b2cb215b80e5e5b18f023f427902f9052624ddbb608"
+        },
+        {
+          "bytes": 434144,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/index/impact_bits.f64",
+          "sha256": "40e812b4c06a33e8fc5ec52c51677c5f823243506047744648fd7fb58349fe4c"
+        },
+        {
+          "bytes": 41159,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/null_0_64.json",
+          "sha256": "3b11a08573cbd1a3c0bf2eee701e59c3378ff22efdc9eab1d84c9d913b71229b"
+        },
+        {
+          "bytes": 3917,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/embryo_metrics/metadata.json",
+          "sha256": "4d93802e747523f4a4335742519aeff83d976329b6e3f512fc72551af1de22c1"
+        },
+        {
+          "bytes": 2495808,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/embryo_metrics/metrics.h5",
+          "sha256": "19e4716c9fec2bf9c0c9ea6f7754b4c9233cedffdc05d593244349e8a0244543"
+        },
+        {
+          "bytes": 48061,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/covariates_0_64.json",
+          "sha256": "7779c7aa738ce0f6ca7e0f3f3ebe3cdfc5612b867fb2a704f5c2474a06d93197"
+        },
+        {
+          "bytes": 24057,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/human/native_replay_final.json",
+          "sha256": "f6253172de9479295bfb284d135a2b0eec5941387dd03797d911e29364bb8b99"
+        }
+      ],
+      "cells": 30,
+      "cells_with_raw_positive_genes_beyond_retained_attempts": 19,
+      "cells_with_source_bound_measured_zeros": 30,
+      "covariates": {
+        "correlations": [
+          {
+            "covariate": "focal_mean_log1p_normalized_expression",
+            "n_genes": 43,
+            "rho": -0.12316870703841828,
+            "score": "observed_impact_bits",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "cohort_mean_log1p_normalized_expression",
+            "n_genes": 43,
+            "rho": -0.051198792097378085,
+            "score": "observed_impact_bits",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "cohort_dropout",
+            "n_genes": 43,
+            "rho": 0.06821935527090783,
+            "score": "observed_impact_bits",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "mean_token_position",
+            "n_genes": 43,
+            "rho": -0.5028692237994563,
+            "score": "observed_impact_bits",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "mean_matched_targets",
+            "n_genes": 43,
+            "rho": 0.4738749622470553,
+            "score": "observed_impact_bits",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "focal_mean_log1p_normalized_expression",
+            "n_genes": 43,
+            "rho": -0.00302069177286127,
+            "score": "diagnostic_z",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "cohort_mean_log1p_normalized_expression",
+            "n_genes": 43,
+            "rho": 0.18712478881608097,
+            "score": "diagnostic_z",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "cohort_dropout",
+            "n_genes": 43,
+            "rho": -0.18394586878352012,
+            "score": "diagnostic_z",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "mean_token_position",
+            "n_genes": 43,
+            "rho": -0.3967079432195711,
+            "score": "diagnostic_z",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "mean_matched_targets",
+            "n_genes": 43,
+            "rho": 0.3586529749320447,
+            "score": "diagnostic_z",
+            "unavailable_reason": null
+          }
+        ],
+        "genes": 64,
+        "range": {
+          "start": 0,
+          "stop": 64
+        },
+        "status": "descriptive_range_complete_unattested"
+      },
+      "embryo_metrics": {
+        "elapsed_seconds": 0.7782348220061976,
+        "n_frozen_genes": 19406,
+        "observed_peak_process_rss_bytes": 143347712,
+        "status": "prospective_embryo_metrics_complete",
+        "sufficient_statistics_bytes": 1552520
+      },
+      "import_status": "pilot_outputs_imported_unattested",
+      "index_status": "raw_impact_index_complete_unattested",
+      "max_independent_reference_error_bits": 1.70985892992883e-06,
+      "max_native_effect_error_bits": 0.0,
+      "native_subset_replay": {
+        "all_shard_effects_attested": false,
+        "cell_indices": [
+          0,
+          2
+        ],
+        "contrasts": [
+          {
+            "cell_index": 0,
+            "elapsed_deletion_forward_seconds": 0.28122740099206567,
+            "gene_id": "ENSG00000187961",
+            "gene_index": 15740,
+            "independent_reference_error_bits": 2.546514460749689e-08,
+            "independent_reference_impact_bits": -0.00021123126427719302,
+            "n_targets": 2045,
+            "native_impact_bits": -0.00021120579913258553,
+            "native_replay_error_bits": 0.0,
+            "stored_impact_bits": -0.00021120579913258553,
+            "token_position": 0
+          },
+          {
+            "cell_index": 0,
+            "elapsed_deletion_forward_seconds": 0.23280753499420825,
+            "gene_id": "ENSG00000188986",
+            "gene_index": 15950,
+            "independent_reference_error_bits": 1.70985892992883e-06,
+            "independent_reference_impact_bits": 0.006680848126256648,
+            "n_targets": 1,
+            "native_impact_bits": 0.006682557985186577,
+            "native_replay_error_bits": 0.0,
+            "stored_impact_bits": 0.006682557985186577,
+            "token_position": 2044
+          },
+          {
+            "cell_index": 2,
+            "elapsed_deletion_forward_seconds": 0.2340955120016588,
+            "gene_id": "ENSG00000188976",
+            "gene_index": 15947,
+            "independent_reference_error_bits": 1.8359251923198358e-08,
+            "independent_reference_impact_bits": 0.00028457195204370403,
+            "n_targets": 2043,
+            "native_impact_bits": 0.00028455359279178083,
+            "native_replay_error_bits": 0.0,
+            "stored_impact_bits": 0.00028455359279178083,
+            "token_position": 0
+          },
+          {
+            "cell_index": 2,
+            "elapsed_deletion_forward_seconds": 0.2336051300080726,
+            "gene_id": "ENSG00000198786",
+            "gene_index": 16783,
+            "independent_reference_error_bits": 2.39100794385827e-07,
+            "independent_reference_impact_bits": 0.19372080334697206,
+            "n_targets": 1,
+            "native_impact_bits": 0.19372056424617767,
+            "native_replay_error_bits": 0.0,
+            "stored_impact_bits": 0.19372056424617767,
+            "token_position": 2042
+          }
+        ],
+        "elapsed_seconds": 196.06460560800042,
+        "execution_caps": {
+          "cuda_reserved_bytes": 21474836480,
+          "disk_floor_bytes": 21474836480,
+          "gpu_idle_seconds": 0.25,
+          "host_ram_floor_bytes": 4294967296,
+          "max_seconds": 900,
+          "rss_bytes": 17179869184
+        },
+        "independent_reference_absolute_tolerance": 3e-05,
+        "max_model_forwards": 10,
+        "model_forward_count": 9,
+        "native_absolute_tolerance": 1e-05,
+        "original_targets_checked": 4090,
+        "originals": [
+          {
+            "cell_index": 0,
+            "elapsed_original_forward_seconds": 1.6507336549984757,
+            "eligible_targets": 2046,
+            "native_absolute_error_nats": 0.0,
+            "reference_absolute_error_nats": 1.5832668029958086e-06
+          },
+          {
+            "cell_index": 2,
+            "elapsed_original_forward_seconds": 0.23425497200514656,
+            "eligible_targets": 2044,
+            "native_absolute_error_nats": 0.0,
+            "reference_absolute_error_nats": 1.5677922657886256e-06
+          }
+        ],
+        "peak_cuda_reserved_bytes": 9883877376,
+        "peak_rss_bytes": 16075575296,
+        "scored_attempt_selection": "evenly_spaced_native_positions_no_score_selection",
+        "status": "bounded_numerical_replay_passed",
+        "terminal_checks": [
+          {
+            "cell_index": 0,
+            "impact_bits": null,
+            "n_targets": 0,
+            "status": "no_matched_target",
+            "token_position": 2046
+          },
+          {
+            "cell_index": 0,
+            "impact_bits": null,
+            "n_targets": 0,
+            "status": "no_matched_target",
+            "token_position": 2045
+          },
+          {
+            "cell_index": 2,
+            "impact_bits": null,
+            "n_targets": 0,
+            "status": "no_matched_target",
+            "token_position": 2043
+          }
+        ]
+      },
+      "null_range": {
+        "availability_disagreements_with_original": 0,
+        "finite_gene_count": 43,
+        "gene_count": 64,
+        "max_absolute_z_difference_with_original": 0.0,
+        "range": {
+          "start": 0,
+          "stop": 64
+        },
+        "status": "diagnostic_range_complete_unattested"
+      },
+      "physical_embryos": 5,
+      "positive_attempts": 54317,
+      "reconciliation_status": "source_native_attempts_reconciled_likelihood_effects_unrecomputed",
+      "scored_attempts": 54268,
+      "source_audit": {
+        "bytes": 16665660,
+        "path": "runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores/audit.json",
+        "sha256": "f702e4b38956a524c7beed131b9ab0c38f447f40de22b607b8b0e3afdbb8e5b5"
+      },
+      "source_bundle": "runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+      "source_frozen_software_files_verified": 107,
+      "source_frozen_software_mismatches": [],
+      "source_provenance": {
+        "bytes": 20010,
+        "path": "runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores/provenance.json",
+        "sha256": "01e981380435a695c13d4c40277e1e57f59769e2baf8e8cd22b58d5506c0ae30"
+      },
+      "supervisor": {
+        "bytes": 1470,
+        "path": "runs/b3_pilot/feasibility_20261002/native_replay_human_final_supervisor/state.json",
+        "sha256": "b75eaed518ceea30fe792cc8a3a1862f685a1af93354651042d3d33bda65d5da"
+      },
+      "unavailable_terminal_attempts": 49,
+      "zero_imputation": false
+    },
+    "mouse": {
+      "artifacts": [
+        {
+          "bytes": 524407,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/config.json",
+          "sha256": "ac47f5cb0e4950d32dc56fdff1f8a65a6c80630e617adf2f63d900171161ad94"
+        },
+        {
+          "bytes": 14857433,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/support/support_preflight.json",
+          "sha256": "4e6aa6a00327a00a8aa486d0d8d9b0bd153bed9ee033d1c1e6dcfc006e6121d0"
+        },
+        {
+          "bytes": 1314272,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/support/support.h5",
+          "sha256": "cebfdbb43a0d7a24f621f135f72a88ff14035f036b487a4cac7ecf94bbc54860"
+        },
+        {
+          "bytes": 2412,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/plan.json",
+          "sha256": "beb3bbb17d6a58426b6264fe07bff38d6fd6785c0cde8fd314d94a6756387464"
+        },
+        {
+          "bytes": 18494,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/handoff/provenance.json",
+          "sha256": "b8eaf212591fa5329fb0d678a23ecb1330499724794f0f03c8931ecfe50eed89"
+        },
+        {
+          "bytes": 19985,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/handoff/import_report.json",
+          "sha256": "6ae1de0fd9bec0641a7024d78be3cebeb6a23f9d0e89aaf2465436fe795875de"
+        },
+        {
+          "bytes": 477,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/handoff/shards/shard-000000/header.json",
+          "sha256": "6636c0756a42f0128f8501003b248e277beefa4239aa4a7c00a858925108d379"
+        },
+        {
+          "bytes": 441693,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/handoff/shards/shard-000000/records.bin",
+          "sha256": "97c7d5fe7c9d7b407f34a1586e1b5fbfecc52e3507d7e956eeeb5d8fec2968ee"
+        },
+        {
+          "bytes": 490765,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/handoff/shards/shard-000000/proofs.jsonl",
+          "sha256": "fe527f2cd492195929d067518445fd36f08961eac467c11f4f592f67904b0772"
+        },
+        {
+          "bytes": 427,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/handoff/shards/shard-000000/footer.json",
+          "sha256": "467bb43ba790a851bea6a92592a6b1cad47f0bd67fceba9cf5033701925f0381"
+        },
+        {
+          "bytes": 158235,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/certificates/shard-000000.json",
+          "sha256": "c698de5a1b9de876e92c14eceda4da9917a7f2eb73f30790cb71c64789262c06"
+        },
+        {
+          "bytes": 23332,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/index/metadata.json",
+          "sha256": "97e1b184f006bca8bcb13fa28249e8d0aed7d84a6205570464c208768a5aa5c1"
+        },
+        {
+          "bytes": 161056,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/index/gene_offsets.u64",
+          "sha256": "ee295b8f762e9ee2c9da04975a60fe2426f4a65697f7c35e503a534e4a024de2"
+        },
+        {
+          "bytes": 84032,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/index/cell_index.u32",
+          "sha256": "0ff4ecff36e3431be01c5af2ea9cf05688fd9cdfed39b68e4232d39492cdc60c"
+        },
+        {
+          "bytes": 168064,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/index/impact_bits.f64",
+          "sha256": "5fb85b9454f872b1bfe280683df7bc87d64ced3dff683936ecc017716166b4fc"
+        },
+        {
+          "bytes": 38268,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/null_0_64.json",
+          "sha256": "076e0a313e30280e75321c4b6135067d446aea06f6a2ccb5b5e460b75b9a870a"
+        },
+        {
+          "bytes": 5919,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/embryo_metrics/metadata.json",
+          "sha256": "a95bd7fb5a70865199d02c166bfd52d755650a71372a87b8266c260908164767"
+        },
+        {
+          "bytes": 9187552,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/embryo_metrics/metrics.h5",
+          "sha256": "2c76715748e309710d55fdf4c3f5bf632d9e42e9c380d33075860e8178ab5bee"
+        },
+        {
+          "bytes": 47590,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/covariates_0_64.json",
+          "sha256": "bae806fdd51be69b9c01abe63e87e610d3865dcc94dedb15a91bd61ef20090b5"
+        },
+        {
+          "bytes": 25709,
+          "path": "runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/native_replay_final.json",
+          "sha256": "bd1871e3a63b24f94e421a89157814d39d732cb04b33846adce29bad5420b586"
+        }
+      ],
+      "cells": 25,
+      "cells_with_raw_positive_genes_beyond_retained_attempts": 0,
+      "cells_with_source_bound_measured_zeros": 25,
+      "covariates": {
+        "correlations": [
+          {
+            "covariate": "focal_mean_log1p_normalized_expression",
+            "n_genes": 19,
+            "rho": 0.014047415422789785,
+            "score": "observed_impact_bits",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "cohort_mean_log1p_normalized_expression",
+            "n_genes": 19,
+            "rho": -0.04916595397976424,
+            "score": "observed_impact_bits",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "cohort_dropout",
+            "n_genes": 19,
+            "rho": 0.06942686855178488,
+            "score": "observed_impact_bits",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "mean_token_position",
+            "n_genes": 19,
+            "rho": -0.2263157894736842,
+            "score": "observed_impact_bits",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "mean_matched_targets",
+            "n_genes": 19,
+            "rho": -0.021052631578947368,
+            "score": "observed_impact_bits",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "focal_mean_log1p_normalized_expression",
+            "n_genes": 19,
+            "rho": -0.0869183829285118,
+            "score": "diagnostic_z",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "cohort_mean_log1p_normalized_expression",
+            "n_genes": 19,
+            "rho": -0.19051807167158646,
+            "score": "diagnostic_z",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "cohort_dropout",
+            "n_genes": 19,
+            "rho": 0.18934600514123154,
+            "score": "diagnostic_z",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "mean_token_position",
+            "n_genes": 19,
+            "rho": -0.14385964912280702,
+            "score": "diagnostic_z",
+            "unavailable_reason": null
+          },
+          {
+            "covariate": "mean_matched_targets",
+            "n_genes": 19,
+            "rho": -0.07719298245614034,
+            "score": "diagnostic_z",
+            "unavailable_reason": null
+          }
+        ],
+        "genes": 64,
+        "range": {
+          "start": 0,
+          "stop": 64
+        },
+        "status": "descriptive_range_complete_unattested"
+      },
+      "embryo_metrics": {
+        "elapsed_seconds": 1.0025134750030702,
+        "n_frozen_genes": 20131,
+        "observed_peak_process_rss_bytes": 167419904,
+        "status": "prospective_embryo_metrics_complete",
+        "sufficient_statistics_bytes": 8052600
+      },
+      "import_status": "pilot_outputs_imported_unattested",
+      "index_status": "raw_impact_index_complete_unattested",
+      "max_independent_reference_error_bits": 2.489904992575287e-06,
+      "max_native_effect_error_bits": 0.0,
+      "native_subset_replay": {
+        "all_shard_effects_attested": false,
+        "cell_indices": [
+          0,
+          4
+        ],
+        "contrasts": [
+          {
+            "cell_index": 0,
+            "elapsed_deletion_forward_seconds": 0.2548725990054663,
+            "gene_id": "ENSMUSG00000104217",
+            "gene_index": 19888,
+            "independent_reference_error_bits": 1.3513505019852046e-09,
+            "independent_reference_impact_bits": 0.00818256610166426,
+            "n_targets": 816,
+            "native_impact_bits": 0.008182564750313759,
+            "native_replay_error_bits": 0.0,
+            "stored_impact_bits": 0.008182564750313759,
+            "token_position": 0
+          },
+          {
+            "cell_index": 0,
+            "elapsed_deletion_forward_seconds": 0.2155245359899709,
+            "gene_id": "ENSMUSG00000054843",
+            "gene_index": 14723,
+            "independent_reference_error_bits": 2.489904992575287e-06,
+            "independent_reference_impact_bits": -0.06783847369707346,
+            "n_targets": 1,
+            "native_impact_bits": -0.06784096360206604,
+            "native_replay_error_bits": 0.0,
+            "stored_impact_bits": -0.06784096360206604,
+            "token_position": 815
+          },
+          {
+            "cell_index": 4,
+            "elapsed_deletion_forward_seconds": 0.2126819230034016,
+            "gene_id": "ENSMUSG00000026153",
+            "gene_index": 5203,
+            "independent_reference_error_bits": 1.707250599225496e-08,
+            "independent_reference_impact_bits": 0.007797427318490785,
+            "n_targets": 508,
+            "native_impact_bits": 0.007797410245984793,
+            "native_replay_error_bits": 0.0,
+            "stored_impact_bits": 0.007797410245984793,
+            "token_position": 0
+          },
+          {
+            "cell_index": 4,
+            "elapsed_deletion_forward_seconds": 0.21698795100382995,
+            "gene_id": "ENSMUSG00000024982",
+            "gene_index": 4668,
+            "independent_reference_error_bits": 1.8177285485837524e-07,
+            "independent_reference_impact_bits": 0.0042883775410086575,
+            "n_targets": 1,
+            "native_impact_bits": 0.004288559313863516,
+            "native_replay_error_bits": 0.0,
+            "stored_impact_bits": 0.004288559313863516,
+            "token_position": 507
+          }
+        ],
+        "elapsed_seconds": 207.01513807100127,
+        "execution_caps": {
+          "cuda_reserved_bytes": 21474836480,
+          "disk_floor_bytes": 21474836480,
+          "gpu_idle_seconds": 0.25,
+          "host_ram_floor_bytes": 4294967296,
+          "max_seconds": 900,
+          "rss_bytes": 17179869184
+        },
+        "independent_reference_absolute_tolerance": 3e-05,
+        "max_model_forwards": 10,
+        "model_forward_count": 8,
+        "native_absolute_tolerance": 1e-05,
+        "original_targets_checked": 1326,
+        "originals": [
+          {
+            "cell_index": 0,
+            "elapsed_original_forward_seconds": 1.3650011489953613,
+            "eligible_targets": 817,
+            "native_absolute_error_nats": 0.0,
+            "reference_absolute_error_nats": 1.4246560020581e-06
+          },
+          {
+            "cell_index": 4,
+            "elapsed_original_forward_seconds": 0.21164878200215753,
+            "eligible_targets": 509,
+            "native_absolute_error_nats": 0.0,
+            "reference_absolute_error_nats": 1.3817793877990425e-06
+          }
+        ],
+        "peak_cuda_reserved_bytes": 9883877376,
+        "peak_rss_bytes": 15983616000,
+        "scored_attempt_selection": "evenly_spaced_native_positions_no_score_selection",
+        "status": "bounded_numerical_replay_passed",
+        "terminal_checks": [
+          {
+            "cell_index": 0,
+            "impact_bits": null,
+            "n_targets": 0,
+            "status": "no_matched_target",
+            "token_position": 816
+          },
+          {
+            "cell_index": 4,
+            "impact_bits": null,
+            "n_targets": 0,
+            "status": "no_matched_target",
+            "token_position": 508
+          }
+        ]
+      },
+      "null_range": {
+        "availability_disagreements_with_original": 0,
+        "finite_gene_count": 19,
+        "gene_count": 64,
+        "max_absolute_z_difference_with_original": 0.0,
+        "range": {
+          "start": 0,
+          "stop": 64
+        },
+        "status": "diagnostic_range_complete_unattested"
+      },
+      "physical_embryos": 25,
+      "positive_attempts": 21033,
+      "reconciliation_status": "source_native_attempts_reconciled_likelihood_effects_unrecomputed",
+      "scored_attempts": 21008,
+      "source_audit": {
+        "bytes": 17145657,
+        "path": "runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores/audit.json",
+        "sha256": "45bebc78cc6193af6eaa3bd725d900311e5901de73d2f4ea64ed72c98ade61a8"
+      },
+      "source_bundle": "runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+      "source_frozen_software_files_verified": 109,
+      "source_frozen_software_mismatches": [],
+      "source_provenance": {
+        "bytes": 21286,
+        "path": "runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores/provenance.json",
+        "sha256": "5ace72f6376f591632ae38e55cb96d005723a4dfa496f7418cc3d6343679733b"
+      },
+      "supervisor": {
+        "bytes": 1471,
+        "path": "runs/b3_pilot/feasibility_20261002/native_replay_mouse_final_supervisor/state.json",
+        "sha256": "adaf3315db2c649049dd1f34d47fee8a1e6894ff63dc626c453c7cb9e67bbbf5"
+      },
+      "unavailable_terminal_attempts": 25,
+      "zero_imputation": false
+    }
+  },
+  "preserved_initial_replay_source": {
+    "bytes": 25324,
+    "path": "runs/b3_pilot/feasibility_20261002/software_snapshots/46ed6c2a1d654b7db02dc6a7a13c1640d5a1745b8293283280b2224c66038ebe-replay.py",
+    "sha256": "46ed6c2a1d654b7db02dc6a7a13c1640d5a1745b8293283280b2224c66038ebe"
+  },
+  "production_cohort_policy_changed": false,
+  "prospective_candidates": [
+    {
+      "actual_finite_score_bootstrap_performed": false,
+      "candidate_cells_by_species": {
+        "homo_sapiens": 30,
+        "mus_musculus": 258
+      },
+      "cells_per_embryo": 6,
+      "conditional_structural_coverage": 0.5072269977714103,
+      "evidence": {
+        "bytes": 18913,
+        "path": "docs/agents/b3-prospective-candidate-6-cells-per-embryo-2026-10-02-evidence.json",
+        "sha256": "13c7fae407871c8395e5f1d8f2a670c3ad3c5a389f653be2eaaa95f1857e4522"
+      },
+      "full_vocabulary_joined_pairs": 15705,
+      "occupancy_only_replay": {
+        "actual_fixed_observed_pair_set": null,
+        "draws": 2000,
+        "fixed_gene_rule": "all_potential_paired_genes_conditional_not_observed",
+        "fixed_potential_pair_count": 7966,
+        "independent_embryo_floor_met": true,
+        "interpretation": "Focal occupancy only for the conditional structural set; no bin/null/variance/rho replay; the actual finite-score fixed set is unknown",
+        "joint_valid_draws": 0,
+        "joint_valid_fraction": 0.0,
+        "minimum_independent_embryos": 5,
+        "necessary_95_percent_support_floor_met_for_conditional_set": false,
+        "sampling": "Python random.Random; species in paired a/b order; sorted physical embryos; with replacement",
+        "score_bootstrap_performed": false,
+        "seed": 20260930,
+        "species_valid_draws": {
+          "homo_sapiens": 91,
+          "mus_musculus": 0
+        }
+      },
+      "potential_paired_genes": 7966,
+      "report": {
+        "bytes": 28047167,
+        "path": "runs/b3_feasibility/20261002/prospective_6_per_embryo_assessment_replayed.json",
+        "sha256": "7e567b5e6ec347b8fb892d6b5a8891e60aac5b21d5f9ca9e540817881e393af7"
+      },
+      "request": {
+        "bytes": 5368,
+        "path": "docs/agents/b3-prospective-candidate-6-cells-per-embryo-2026-10-02-request.json",
+        "sha256": "9b638f667bde2b23553e498680f31e9fbe2c79c67c5eb32c787eba23dc97e929"
+      },
+      "resources": {
+        "elapsed_seconds": 125.54724468299537,
+        "max_rss_bytes": 4294967296,
+        "max_selected_cells_per_species": 4096,
+        "max_wall_seconds": 900,
+        "minimum_free_disk_bytes": 21474836480,
+        "minimum_host_available_ram_bytes": 4294967296,
+        "native_threads": 1,
+        "peak_rss_bytes": 246095872,
+        "wall_guard_kind": "cooperative checks; not an operating-system deadline"
+      },
+      "selected_for_gpu_scoring": false,
+      "workload": {
+        "interpretation": "Current mandatory idle time only; excludes forwards, setup, IO, validation and aggregation; no accelerated runtime claim",
+        "minimum_pacing_hours": 19.446319444444445,
+        "minimum_pacing_seconds": 70006.75,
+        "native_deletion_forwards": 279717,
+        "original_forwards": 288,
+        "original_plus_deletion_forwards": 280005,
+        "positive_attempts": 280027
+      }
+    },
+    {
+      "actual_finite_score_bootstrap_performed": false,
+      "candidate_cells_by_species": {
+        "homo_sapiens": 320,
+        "mus_musculus": 2752
+      },
+      "cells_per_embryo": 64,
+      "conditional_structural_coverage": 0.7494428525947151,
+      "evidence": {
+        "bytes": 62597,
+        "path": "docs/agents/b3-prospective-candidate-64-cells-per-embryo-2026-10-02-evidence.json",
+        "sha256": "cbb4f43c091547f9e95f4f095e6cd53ce6e862860d41ac11969943a0ad3c8006"
+      },
+      "full_vocabulary_joined_pairs": 15705,
+      "occupancy_only_replay": {
+        "actual_fixed_observed_pair_set": null,
+        "draws": 2000,
+        "fixed_gene_rule": "all_potential_paired_genes_conditional_not_observed",
+        "fixed_potential_pair_count": 11770,
+        "independent_embryo_floor_met": true,
+        "interpretation": "Focal occupancy only for the conditional structural set; no bin/null/variance/rho replay; the actual finite-score fixed set is unknown",
+        "joint_valid_draws": 0,
+        "joint_valid_fraction": 0.0,
+        "minimum_independent_embryos": 5,
+        "necessary_95_percent_support_floor_met_for_conditional_set": false,
+        "sampling": "Python random.Random; species in paired a/b order; sorted physical embryos; with replacement",
+        "score_bootstrap_performed": false,
+        "seed": 20260930,
+        "species_valid_draws": {
+          "homo_sapiens": 91,
+          "mus_musculus": 0
+        }
+      },
+      "potential_paired_genes": 11770,
+      "report": {
+        "bytes": 28486096,
+        "path": "runs/b3_feasibility/20261002/prospective_64_per_embryo_assessment_replayed.json",
+        "sha256": "31214faa08726ded36ff45863120ea86ad952703df634dd2900b359422fd0840"
+      },
+      "request": {
+        "bytes": 48984,
+        "path": "docs/agents/b3-prospective-candidate-64-cells-per-embryo-2026-10-02-request.json",
+        "sha256": "e33a9301451c8ac5fd3d7238cf8277c50da83ea95344096f3b1ba7c7e1fad228"
+      },
+      "resources": {
+        "elapsed_seconds": 155.77464985199913,
+        "max_rss_bytes": 4294967296,
+        "max_selected_cells_per_species": 4096,
+        "max_wall_seconds": 900,
+        "minimum_free_disk_bytes": 21474836480,
+        "minimum_host_available_ram_bytes": 4294967296,
+        "native_threads": 1,
+        "peak_rss_bytes": 343883776,
+        "wall_guard_kind": "cooperative checks; not an operating-system deadline"
+      },
+      "selected_for_gpu_scoring": false,
+      "workload": {
+        "interpretation": "Current mandatory idle time only; excludes forwards, setup, IO, validation and aggregation; no accelerated runtime claim",
+        "minimum_pacing_hours": 231.44493055555554,
+        "minimum_pacing_seconds": 833201.75,
+        "native_deletion_forwards": 3329474,
+        "original_forwards": 3072,
+        "original_plus_deletion_forwards": 3332546,
+        "positive_attempts": 3332807
+      }
+    }
+  ],
+  "recorded_date": "2026-10-02",
+  "remaining_requirements": [
+    "Complete method-preserving whole-arm scoring/verification/aggregation and uncertainty cost within WSL budgets",
+    "Complete likelihood-effect attestation and validated global null, beyond these diagnostic ranges",
+    "Actual full-denominator paired coverage at least 80% and at least 500 pairs",
+    "Approved fixed observed finite-pair bootstrap with 2000 draws and at least 95% jointly valid",
+    "Verified project candidate finetuning provenance before candidate-arm scientific claims"
+  ],
+  "reporting_coverage_floor": 0.8,
+  "reporting_pair_floor": 500,
+  "review_fixed_point": "d97edbe",
+  "schema": "b3_feasibility_milestone_evidence_v1",
+  "scientific_readiness": "unavailable",
+  "scientific_rules_changed": false,
+  "software": [
+    {
+      "bytes": 34496,
+      "path": "scripts/assess_b3_measured_zero_feasibility.py",
+      "sha256": "0500d6ba0e8ce2ded89628966507016e5941df4d5d28f667c55a3e71eb96064b"
+    },
+    {
+      "bytes": 14686,
+      "path": "scripts/import_b3_measured_zero_pilot_shard.py",
+      "sha256": "b9fddac7251e219c1a27dd3c3ba5b74ff02d60d6ae70cec028b3fca58b20e482"
+    },
+    {
+      "bytes": 20300,
+      "path": "scripts/prepare_b3_measured_zero_embryo_metrics.py",
+      "sha256": "8393edd2cbe897f325a8985ac87b63c6de088a11069bafa551d08a7142c4a097"
+    },
+    {
+      "bytes": 25386,
+      "path": "scripts/replay_b3_measured_zero_native_effects.py",
+      "sha256": "19ed054613de9f122a5d5e825497105e626b5a6d3b25d1b530dfa3586921978e"
+    },
+    {
+      "bytes": 17414,
+      "path": "scripts/summarize_b3_measured_zero_full_diagnostics.py",
+      "sha256": "4c1b3a645d01dbf09b7827c237c4e4c8b90650783ba6163fed947e6d52bf4c95"
+    },
+    {
+      "bytes": 16005,
+      "path": "test/test_b3_feasibility.py",
+      "sha256": "009135078d701a5d4badc66fc656153b842e78ec2cb4361bc44744eebadda0fb"
+    },
+    {
+      "bytes": 12397,
+      "path": "test/test_b3_pilot_shard_handoff.py",
+      "sha256": "8f10a62feed565d7cd0886b091f8dd08ef4e4aa351326313c59b382ad6e3dfba"
+    },
+    {
+      "bytes": 19530,
+      "path": "test/test_b3_scientific_handoff.py",
+      "sha256": "0af7423fed7f2f01c990f20d01e8725d9c467370103bcc3051539f358ad813c8"
+    },
+    {
+      "bytes": 2967,
+      "path": "test/test_finetune_test_selection.py",
+      "sha256": "25a2657349f4026a68dbb537a707851f17bfa4058246daf56c6cc09b8d89d310"
+    }
+  ],
+  "status": "bounded_feasibility_verified_ticket_05_open",
+  "ticket_counts": {
+    "closed_bounded_engineering": 10,
+    "excluded": [
+      "11"
+    ],
+    "open": [
+      "05"
+    ]
+  }
+}

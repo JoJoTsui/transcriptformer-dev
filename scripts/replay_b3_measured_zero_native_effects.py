@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independently replay at most six diagnostic B3 deletion effects.
+"""Independently replay at most six scored B3 effects and four terminal attempts.
 
 Weight-free estimate by default. Explicit execution requires a source/native
 reconciled, at-most-48-cell shard and checks selected original likelihoods and
@@ -56,7 +56,7 @@ def run(
     device: str = "cuda:0",
     max_seconds: int = 900,
 ) -> dict[str, Any]:
-    """Replay explicitly requested cells, using earliest eligible native positions."""
+    """Replay requested cells at evenly spaced native positions and terminal cases."""
     plan_path, shard_root, provenance_path, certificate_path, output = map(
         Path, (plan_path, shard_root, provenance_path, certificate_path, output)
     )
@@ -86,7 +86,9 @@ def run(
         "all_shard_effects_attested": False,
         "cell_indices": cell_indices,
         "deletions_per_cell": deletions_per_cell,
-        "max_model_forwards": len(cell_indices) * (1 + deletions_per_cell),
+        "max_model_forwards": len(cell_indices) * (3 + deletions_per_cell),
+        "scored_attempt_selection": "evenly_spaced_native_positions_no_score_selection",
+        "terminal_attempt_cap_per_cell": 2,
         "normalization_chunk_rows": 8,
         "native_absolute_tolerance": NATIVE_ATOL,
         "independent_reference_absolute_tolerance": REFERENCE_ATOL,
@@ -195,7 +197,7 @@ def run(
         candidates.sort(order="token_position")
         if len(candidates) < deletions_per_cell:
             raise ValueError("Selected diagnostic cell lacks requested scored deletion attempts")
-        selected[cell_index] = candidates[:deletions_per_cell]
+        selected[cell_index] = candidates[np.linspace(0, len(candidates) - 1, deletions_per_cell, dtype=int)]
     cells, cfg, vocab, aux = configured_prepared_cells(config)
     try:
         if len(cells.cells) != plan["n_cells"]:
@@ -244,7 +246,7 @@ def run(
                         )
                 return np.asarray(values, dtype=np.float64)
 
-            originals, contrasts, forward_count, target_count = [], [], 0, 0
+            originals, contrasts, terminal_checks, forward_count, target_count = [], [], [], 0, 0
             for cell_index, cell in enumerate(cells.iter_cells(device=str(target_device))):
                 if cell_index not in selected:
                     continue
@@ -298,9 +300,9 @@ def run(
                 )
                 ids = payload["gene_token_indices"]
                 n_active = sum(not masked for masked in payload["loss_mask"])
-                for record in selected[cell_index]:
+
+                def deletion_forward(position):
                     guard()
-                    position = int(record["token_position"])
                     deleted_ids = torch.cat(
                         (
                             batch.gene_token_indices[:, :position],
@@ -332,22 +334,29 @@ def run(
                     )
                     if target_device.type == "cuda":
                         torch.cuda.synchronize(target_device)
-                    deletion_seconds = time.monotonic() - began
-                    forward_count += 1
-                    result = matched_gene_id_deletion_impact(
-                        original_logits=original.gene_logits[0],
+                    return deleted, deleted_ids, time.monotonic() - began
+
+                def native_impact(original_forward, deleted, deleted_ids, position):
+                    return matched_gene_id_deletion_impact(
+                        original_logits=original_forward.gene_logits[0],
                         deleted_logits=deleted.gene_logits[0],
                         original_gene_ids=batch.gene_token_indices[0],
                         deleted_gene_ids=deleted_ids[0],
-                        original_target_ids=original.target_ids[0],
+                        original_target_ids=original_forward.target_ids[0],
                         deleted_target_ids=deleted.target_ids[0],
-                        original_mask=original.mask[0],
+                        original_mask=original_forward.mask[0],
                         deleted_mask=deleted.mask[0],
                         deleted_position=position,
                         excluded_gene_ids=excluded,
                         softcap=softcap,
                         normalization_chunk_rows=8,
                     )
+
+                for record in selected[cell_index]:
+                    position = int(record["token_position"])
+                    deleted, deleted_ids, deletion_seconds = deletion_forward(position)
+                    forward_count += 1
+                    result = native_impact(original, deleted, deleted_ids, position)
                     deleted_positions = {int(g): p for p, g in enumerate(deleted_ids[0, : n_active - 1].cpu().tolist())}
                     original_targets, deleted_targets = (
                         original.target_ids[0].cpu().tolist(),
@@ -409,6 +418,34 @@ def run(
                         time.sleep(0.25)
                     del deleted, result
                     guard()
+                terminal = records[(records["cell_index"] == cell_index) & (records["status"] == 1)]
+                if len(terminal) > 2:
+                    raise ValueError("Selected native cell exceeds two expected terminal attempts")
+                for record in terminal:
+                    position = int(record["token_position"])
+                    deleted, deleted_ids, _seconds = deletion_forward(position)
+                    forward_count += 1
+                    try:
+                        native_impact(original, deleted, deleted_ids, position)
+                    except ValueError as error:
+                        if str(error) != "No matched downstream gene-ID target remains after deletion":
+                            raise
+                    else:
+                        raise ValueError("Unavailable terminal attempt unexpectedly has a finite deletion effect")
+                    terminal_checks.append(
+                        {
+                            "cell_index": cell_index,
+                            "token_position": position,
+                            "status": "no_matched_target",
+                            "n_targets": 0,
+                            "impact_bits": None,
+                        }
+                    )
+                    if target_device.type == "cuda":
+                        torch.cuda.synchronize(target_device)
+                        time.sleep(0.25)
+                    del deleted
+                    guard()
                 del original
     finally:
         cells.close()
@@ -426,6 +463,7 @@ def run(
         model_forward_count=forward_count,
         originals=originals,
         contrasts=contrasts,
+        terminal_checks=terminal_checks,
         elapsed_seconds=time.monotonic() - started,
         peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
         peak_cuda_reserved_bytes=torch.cuda.max_memory_reserved(target_device) if target_device.type == "cuda" else 0,
