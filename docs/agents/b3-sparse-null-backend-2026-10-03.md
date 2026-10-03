@@ -87,4 +87,13 @@ Corrected frozen validation bytes:
 | `test/test_b3_sparse_null.py` | `85b432b55a76ca1ab418c0834495325bb81e5f5f7c2713bbde66a9dc504a0917` |
 | `runs/b3_feasibility/20261003/sparse_null_targeted.xml` | `d02ab38351b1ded6ca4a2d2a76b0d9957d3318800cf2039285c204aeed30eaa5` |
 
-The corrected scripts and tests remain frozen for independent review and the bounded real retry. This note records engineering validation; it does not claim a completed real prefix or scientific readiness. Ticket #05 remains open.
+These corrected source/test bytes remained frozen through independent review,
+the completed real retry, public-oracle parity and the final full CPU suite.
+The real three-draw/eight-focal-per-species prefix completed in 783.98 seconds
+at 0.236 GiB peak RSS; all 48 rows match the unchanged public scorer exactly.
+The full suite passes 641 tests with five skipped, and the final audit verifies
+237 declared bindings, including all original pilot software hashes. See the
+[completed implementation and limits](b3-sparse-bootstrap-implementation-2026-10-03.md)
+and [bound evidence](b3-sparse-bootstrap-evidence-2026-10-03.json).
+This closes bounded engineering verification while retaining unavailable
+scientific reporting and open ticket #05.

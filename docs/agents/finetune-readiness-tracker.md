@@ -1,6 +1,34 @@
 # Finetune readiness tracker
 
-**Current frozen-rule assessment — 2026-10-03:** The actual observed finite
+**Current sparse bootstrap milestone — 2026-10-03:** The disk-backed weighted
+null engine and seeded diagnostic driver are implemented. A real three-draw,
+eight-focal-per-species prefix completed in **783.98 seconds** at **0.236 GiB**
+peak RSS, under the 900-second/4-GiB CPU guards; both mounted-drive caches
+published and four calls reused them. All **48 diagnostic rows** match the
+unchanged public scorer exactly, including every gene's metrics/bins, support
+counts, unavailability and finite scores; maximum observed numerical error is
+zero. This closes the bounded sparse resampled-null computation milestone.
+The [implementation record](b3-sparse-bootstrap-implementation-2026-10-03.md)
+and [WSL publication recovery](b3-sparse-publication-recovery-2026-10-03.md)
+preserve the failed request/source archive and document the repair. The 201
+retry bindings change only the two new script hashes; original pilot software
+and scientific rules remain frozen. Engine/driver/CI-selection targets pass
+**35/27/3 tests**; Ruff, formatting and mypy pass five changed Python files.
+**Final full CPU regression passed 641 tests, five skipped, with no failures
+or errors (433.50 seconds).**
+The final source audit verifies **237 declared bindings**, including all
+**107 human / 109 mouse** original pilot software hashes. The
+[bound milestone evidence](b3-sparse-bootstrap-evidence-2026-10-03.json)
+records cache/draw/parity, test and supervisor hashes.
+Separate independent reviews report Standards **zero hard/one optional** and
+Spec **zero findings**. **05 stays open**, **11 excluded**, **ten tickets
+closed**. The pilot's **32.54%** paired coverage and **0/2,000** necessary
+joint support draws still withhold scientific reporting. Full-cohort effect
+attestation, whole-method cost, complete backend acceptance and reportable
+finite comparison/uncertainty remain open; these 48 rows do not execute the
+actual fixed finite-pair bootstrap.
+
+**Previous frozen-rule assessment — 2026-10-03:** The actual observed finite
 5,111-pair pilot set has **0/2,000** jointly supported approved bootstrap draws
 (human 80, mouse 0); the unchanged uncertainty rule is infeasible on this pilot.
 This closes the bounded support assessment, without publishing an interval or
@@ -39,7 +67,7 @@ costs remain unmeasured. **05 stays open**, **11 excluded**, and **ten tickets
 closed**. No production cohort or scientific rule changed. Earlier missing
 software and pending-pilot wording below is historical.
 
-**Current pilot evidence — 2026-10-02:** Both base-arm organogenesis pilots
+**Previous pilot evidence — 2026-10-02:** Both base-arm organogenesis pilots
 completed and passed source-bound validation: human **30/30 cells**, **54,317
 positive attempts**, **9,931 finite gene scores**; mouse **25/25 cells**,
 **21,033 positive attempts**, **6,933 finite gene scores**. The supervised mouse

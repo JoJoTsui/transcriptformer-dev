@@ -142,9 +142,20 @@ Before the recovery, the respective runs passed
 Ruff check, formatting and mypy. See the [engine](b3-sparse-null-backend-2026-10-03.md) and
 [driver](b3-sparse-bootstrap-diagnostic-driver-2026-10-03.md) records.
 
-Real-data execution follows stable-source registration and independent review.
-Final suite results, source reconciliation, timings and result limitations will
-be recorded here after completion.
+The real retry and public-oracle parity completed after stable-source
+registration and independent review. The final full CPU suite passed **641
+tests, five skipped, zero failures and zero errors** in **433.50 seconds**.
+The final union source reconciliation verified **237 declared file bindings**
+in **33.04 seconds** at 49,524,736-byte peak RSS. All **107 human / 109 mouse**
+original pilot software hashes match. Ruff check, formatting and mypy pass
+the five changed Python files; `git diff --check` passes.
+The [machine-readable evidence](b3-sparse-bootstrap-evidence-2026-10-03.json)
+binds the requests, code, cache/draw reports, parity, JUnit and supervisor
+states by SHA256. References outside declared verified maps are still
+references, rather than additional attested source bytes.
+The final artifact check verifies 33 bound artifact files and both archived
+failed source copies; all 240 local Markdown links in the nine updated
+implementation/tracking documents resolve.
 The first real diagnostic failed during publication on the mounted Windows
 drive. Its request, producer log and source archive remain preserved. See the
 [root cause and repair contract](b3-sparse-publication-recovery-2026-10-03.md).
@@ -153,20 +164,75 @@ check, including existing-output preservation, in 0.046 seconds with peak RSS
 46,374,912 bytes. Its artifact is
 `runs/b3_feasibility/20261003/sparse_publication_repaired_smoke.json`.
 
+## Real bounded execution
+
+The [retry request](b3-sparse-bootstrap-diagnostic-request-retry-2026-10-03.json)
+froze 201 input bindings with SHA256
+`afde1ab9f8532d7cd3d0079226c5684f2e1ad435c4fe80adb338022e59a5659e`.
+Only the two repaired script hashes differ from the preserved failed request;
+all data and scientific request fields are identical. Request preparation
+completed under its supervisor with exit 0.
+
+The retry completed with exit 0 under the 950-second external supervisor.
+The computation's monotonic duration was **783.98 seconds**, including
+32.13 seconds of initial source validation and module loading, below its
+900-second budget. The supervisor's wall-clock start/finish difference was
+780.17 seconds; these are different clock measurements. Peak process RSS
+was **253,665,280 bytes (0.236 GiB)**. One native CPU thread, 4 GiB RSS,
+4 GiB available host RAM and 20 GiB free disk guards remained enforced.
+No model forwards or checkpoint tensor loading occurred.
+
+Both real all-peer caches published successfully on the mounted drive. Their
+physical statistics use 7,762,720 human and 40,263,600 mouse array bytes.
+Three draws × two sources × eight focals produce 48 diagnostic rows, of
+which 19 have finite diagnostic z and 29 are unavailable. All 19,406 human
+and 20,131 mouse gene metrics and bins were rebuilt for every draw: 118,611
+gene-metric records across the six source/draw calls. Four calls reused the
+immutable physical statistics caches.
+
+| Source | First call, cache built | Second call, reused | Third call, reused |
+| --- | --- | --- | --- |
+| Human | 245.58 s | 85.54 s | 83.69 s |
+| Mouse | 151.47 s | 87.21 s | 83.77 s |
+
+These public-call timings include each engine's final source/hash validation;
+the report's earlier pre-publication snapshots exclude that final work.
+This measures a declared eight-focal pilot range, not the complete finite
+paired set, complete cohort backend or whole-arm method cost. The pilot still
+has 5,111/15,705 paired scores (32.54%), 0/2,000 necessarily supported joint
+draws and unavailable scientific reporting. The diagnostic publishes no ranks,
+concordance, interval, p-values or FDR.
+
+The completed result is
+`runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01/summary.json`;
+its stable caches are at `sparse_seeded_prefix_retry01.cache/` beside it.
+Independent public-oracle parity passed all 48 rows in **257.03 seconds**
+at peak RSS **1,232,891,904 bytes**. Bins, counts and unavailable reasons
+match exactly. Maximum observed errors in every gene's expression/dropout
+metrics, raw impacts, null mean, sample SD and finite diagnostic z are all
+**zero**. This checks cached resampled arithmetic against the unchanged public
+scorer, without attesting all original model effects. The parity artifact is
+`runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01_parity.json`.
+The final full CPU suite and union source reconciliation also passed, as
+recorded above. These completed checks retain ticket 05's scientific gates
+and ticket 11's exclusion.
+
 ## Independent code review
 
 Fixed point: `ad8cd6a2f2ffb1acf874c80dde9f7320e6dcd4fd`.
 Implementation: `04796fa2c2ffebc81aeea48e3d4c789de4043ec9`.
-The nonempty review command is `git diff ad8cd6a2f2ffb1acf874c80dde9f7320e6dcd4fd...HEAD`.
+WSL repair: `2c53afa56241b1f7175005e60c735752d985c236`.
+The nonempty review command is `git diff ad8cd6a2f2ffb1acf874c80dde9f7320e6dcd4fd...2c53afa56241b1f7175005e60c735752d985c236`.
 
 ### Standards
 
 The independent reviewer found **zero hard violations and one optional
-judgement**: possible duplicated code in the new scripts' atomic publication,
-JSON validation and resource guards. A future source-bound utility could reduce
-maintenance drift. This is optional maintenance advice; the current boundaries
-pass the documented standards and hold the execution caps independently.
-Worst within Standards: duplicated boundary infrastructure.
+judgement**: possible duplicated code in the new scripts' JSON validation and
+resource guards. The shared publisher resolves the earlier duplicated
+publication wrapper. A future source-bound utility could reduce maintenance
+drift. This is optional maintenance advice; the current boundaries pass the
+documented standards and hold the execution caps independently.
+Worst within Standards: duplicated JSON/resource infrastructure.
 
 ### Spec
 
@@ -175,6 +241,13 @@ the engine, and the engine author reviewed the driver, tests and CI registration
 They checked frozen arithmetic, source and cache binding, sampler order,
 publication, resources and retained scientific gates. Neither reviewed their
 own implementation for this axis. Worst within Spec: none.
+The repaired commit's reviews confirm the same separate results: Standards
+zero hard/one optional, engine Spec zero, driver/tests/CI/docs Spec zero. The
+publisher's descriptor, inode and completion checks match the documented
+trusted local writer boundary and visibility/restart limits.
 
 Standards and Spec are reported separately. These reviews establish bounded
 implementation alignment, without closing the ticket's scientific acceptance.
+The final evidence/document review corrected one stale parity-pending sentence.
+All run figures, source/request bindings and open-ticket claims match the
+completed artifacts; no scientific readiness overclaim was found.

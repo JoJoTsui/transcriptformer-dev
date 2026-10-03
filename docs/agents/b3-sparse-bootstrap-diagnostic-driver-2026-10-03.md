@@ -178,4 +178,10 @@ mypy pass. The final source SHA256 values for this check are:
 | Engine | `d061d134908a38b90fa6d23d2ae56da2609237e4d2f5d2c62e07da60f8306dc6` |
 | Driver tests | `7a44cc77f38b274b875729678ad4db3edf559495155d64742d312587a1103878` |
 
-No real pilot diagnostic job has been run by this driver author.
+The root continuation completed a real three-draw/eight-focal-per-species
+diagnostic with both caches published and four reuses. All 48 rows match the
+unchanged public scorer exactly; the full CPU suite passes 641 tests with
+five skipped, and 237 declared source bindings match. See the
+[completed implementation and limits](b3-sparse-bootstrap-implementation-2026-10-03.md)
+and [bound evidence](b3-sparse-bootstrap-evidence-2026-10-03.json). This adds
+bounded real-data evidence while retaining unavailable scientific reporting.

@@ -1,6 +1,34 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-**Current frozen-rule assessment — 2026-10-03:** The completed pilot's actual
+**Current sparse bootstrap milestone — 2026-10-03:** The disk-backed weighted
+null engine and seeded diagnostic driver are implemented. A real three-draw,
+eight-focal-per-species prefix completed in **783.98 seconds** at **0.236 GiB**
+peak RSS, under the 900-second/4-GiB CPU guards; both mounted-drive caches
+published and four calls reused them. All **48 diagnostic rows** match the
+unchanged public scorer exactly, including every gene's metrics/bins, support
+counts, unavailability and finite scores; maximum observed numerical error is
+zero. This closes the bounded sparse resampled-null computation milestone.
+The [implementation record](../../../docs/agents/b3-sparse-bootstrap-implementation-2026-10-03.md)
+and [WSL publication recovery](../../../docs/agents/b3-sparse-publication-recovery-2026-10-03.md)
+preserve the failed request/source archive and document the repair. The 201
+retry bindings change only the two new script hashes; original pilot software
+and scientific rules remain frozen. Engine/driver/CI-selection targets pass
+**35/27/3 tests**; Ruff, formatting and mypy pass five changed Python files.
+**Final full CPU regression passed 641 tests, five skipped, with no failures
+or errors (433.50 seconds).**
+The final source audit verifies **237 declared bindings**, including all
+**107 human / 109 mouse** original pilot software hashes. The
+[bound milestone evidence](../../../docs/agents/b3-sparse-bootstrap-evidence-2026-10-03.json)
+records cache/draw/parity, test and supervisor hashes.
+Separate independent reviews report Standards **zero hard/one optional** and
+Spec **zero findings**. **05 stays open**, **11 excluded**, **ten tickets
+closed**. The pilot's **32.54%** paired coverage and **0/2,000** necessary
+joint support draws still withhold scientific reporting. Full-cohort effect
+attestation, whole-method cost, complete backend acceptance and reportable
+finite comparison/uncertainty remain open; these 48 rows do not execute the
+actual fixed finite-pair bootstrap.
+
+**Previous frozen-rule assessment — 2026-10-03:** The completed pilot's actual
 fixed 5,111 finite pairs have necessary focal support in **0/2,000** joint
 approved bootstrap draws (human 80, mouse 0). Its unchanged 95% uncertainty
 criterion cannot pass. The [observed-set assessment](../../../docs/agents/b3-observed-bootstrap-feasibility-2026-10-03.md)
@@ -34,7 +62,7 @@ and [bound evidence](../../../docs/agents/b3-feasibility-milestone-evidence-2026
 Whole-arm costs, complete effect attestation, actual reportable coverage and
 uncertainty remain pending. Earlier missing-software statements are historical.
 
-**Current pilot evidence — 2026-10-02:** Both base-arm organogenesis pilots
+**Previous pilot evidence — 2026-10-02:** Both base-arm organogenesis pilots
 completed and passed source-bound validation: human **30/30 cells**, **54,317
 positive attempts**, **9,931 finite gene scores**; mouse **25/25 cells**,
 **21,033 positive attempts**, **6,933 finite gene scores**. The supervised mouse
@@ -64,7 +92,7 @@ The eight-hour producer budget retains memory/storage guards. Actual completion
 is pending and this pilot cannot meet the paired 80% reporting floor.
 
 Category: correctness and readiness
-Status: Open — observed fixed-pair bootstrap support assessment complete with a negative result; whole-arm cost, reportable comparison and uncertainty pending
+Status: Open — bounded sparse resampled-null replay verified; complete backend/cost, reportable comparison and uncertainty pending
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -655,6 +683,13 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   cohort's bitmaps and assess necessary joint occupancy under both possible
   two-bundle orders. The 14,295-pair upper bound exceeds the reporting floor;
   actual finite coverage and valid draw scores remain unavailable.
+- [x] Implement disk-backed resampled all-gene metrics/bins and an immutable
+  all-peer physical-embryo cache; verify three approved seeded diagnostic draws
+  for eight focal indices per species against the unchanged public scorer.
+  All 48 rows match exactly, including unavailable cases, at 0.236 GiB peak
+  RSS and 783.98 seconds. The actual finite-pair family is not bootstrapped.
+  The [implementation record](../../../docs/agents/b3-sparse-bootstrap-implementation-2026-10-03.md)
+  records the source-bound mounted-drive publication repair and retained gates.
 - [ ] Measure complete method-preserving scoring, verification and aggregation
   cost within explicit WSL budgets before expanding full-cohort production.
   Partial: planning, import, reconciliation, indexing, 64-gene null ranges,
@@ -663,6 +698,9 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   species with peak RSS below 15 GiB. The metadata ledger accounts for
   storage/null bounds and independent final draw replay. Full native support
   reconstruction is measured separately without model forwards.
+  A bounded three-draw/eight-focal-per-species replay now has measured cache
+  build/reuse, source verification and public-oracle costs. This does not
+  measure the full finite family or complete production/replay bootstrap.
   Whole-arm scoring/aggregation and 2,000-draw bootstrap costs remain unmeasured.
 
 The checked items establish bounded feasibility evidence only. The prospective

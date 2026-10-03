@@ -63,10 +63,18 @@ scientific score, null, sampler, support and reporting rules stay frozen.
 
 ## Verification
 
-The filesystem reproduction is the initial failing check. Public run and
-publication regressions, a real mounted-drive smoke check, and a new
-source-bound real diagnostic will verify the repair. Their final results
-will be recorded in the [implementation record](b3-sparse-bootstrap-implementation-2026-10-03.md).
-The retry will retain one native CPU thread, a 4 GiB RSS ceiling, 4 GiB
+The filesystem reproduction is the initial failing check. The corrected
+engine/driver/CI-selection files passed 35/27/3 tests. The real mounted-drive
+and `/tmp` public smoke checks passed with collision preservation. The new
+source-bound real diagnostic completed all six source/draw computations in
+783.98 seconds at 0.236 GiB peak RSS, including both cache publications and
+four cache reuses. All 48 rows match the unchanged public scorer exactly.
+The full CPU suite passed 641 tests with five skipped and no failures/errors;
+the final audit verified 237 declared bindings, including every original
+pilot software hash. See the [implementation record](b3-sparse-bootstrap-implementation-2026-10-03.md)
+and [bound evidence](b3-sparse-bootstrap-evidence-2026-10-03.json).
+
+The retry retained one native CPU thread, a 4 GiB RSS ceiling, 4 GiB
 minimum available host RAM, 20 GiB minimum free disk and a 900-second
-cooperative deadline under the external supervisor.
+cooperative deadline under the external supervisor. The repair preserves
+the scientific reporting veto and leaves ticket 05 open.

@@ -1,0 +1,846 @@
+{
+  "bounded_engineering_tickets_closed": 10,
+  "code": [
+    {
+      "bytes": 64806,
+      "path": "scripts/replay_b3_sparse_null.py",
+      "sha256": "d061d134908a38b90fa6d23d2ae56da2609237e4d2f5d2c62e07da60f8306dc6"
+    },
+    {
+      "bytes": 32429,
+      "path": "scripts/replay_b3_sparse_bootstrap_draws.py",
+      "sha256": "28a47d2e604b3a9492f33da3fd92948dd50d56aed79736e350f2f3b1f0278842"
+    }
+  ],
+  "code_baseline": "ad8cd6a2f2ffb1acf874c80dde9f7320e6dcd4fd",
+  "date": "2026-10-03",
+  "diagnostic": {
+    "bundle_draw_order": [
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores"
+    ],
+    "caches": [
+      {
+        "array_bytes": 7762720,
+        "artifacts": [
+          {
+            "bytes": 374135,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000/metadata.json",
+            "sha256": "d42bab79a1afb42fef83ec58b18997d2ac5a6fa270ca5c5435e35beb476731db"
+          },
+          {
+            "bytes": 7770912,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000/statistics.h5",
+            "sha256": "045ec99224fd493278d4718a8e3f96e6e99cbc4b05158d7e0ad4489c025350e8"
+          }
+        ],
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "cache_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000"
+      },
+      {
+        "array_bytes": 40263600,
+        "artifacts": [
+          {
+            "bytes": 449824,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001/metadata.json",
+            "sha256": "79bc468ce1d77f463e043fc68df639f2937f49b23966fdc3f2da42b7bb56bd61"
+          },
+          {
+            "bytes": 40271792,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001/statistics.h5",
+            "sha256": "42b8b8b9da4312c766a4abb03b035275987b629d7810eddcd1844f50e1b4423b"
+          }
+        ],
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "cache_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001"
+      }
+    ],
+    "checkpoint_tensors_loaded": false,
+    "checks": [
+      {
+        "artifact": {
+          "bytes": 4612172,
+          "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01/draw-0000-source-000.json",
+          "sha256": "b553104d699a0ff107d98a9a3728283ce1ea4f387730d168f5ff9b6d2b62761a"
+        },
+        "cache_reused": false,
+        "draw_index": 0,
+        "engine_call_seconds": 245.57750951100024,
+        "finite_diagnostic_rows": 5,
+        "focal_genes": 8,
+        "resources": {
+          "disk_free_floor_bytes": 21474836480,
+          "elapsed_seconds_before_publication": 229.34975534302066,
+          "host_ram_floor_bytes": 4294967296,
+          "max_seconds": 867.8414080209914,
+          "peak_rss_bytes": 169238528,
+          "rss_cap_bytes": 4294967296,
+          "threads": 1
+        },
+        "species": "homo_sapiens",
+        "weights": {
+          "emb1": 0,
+          "emb2": 1,
+          "emb5": 1,
+          "emb6": 2,
+          "emb7": 1
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 4738117,
+          "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01/draw-0000-source-001.json",
+          "sha256": "dcd94a1fa664296373e98717695262f2122fd381b749fcffd0cae7c4ca84c2f6"
+        },
+        "cache_reused": false,
+        "draw_index": 0,
+        "engine_call_seconds": 151.46966810300364,
+        "finite_diagnostic_rows": 1,
+        "focal_genes": 8,
+        "resources": {
+          "disk_free_floor_bytes": 21474836480,
+          "elapsed_seconds_before_publication": 134.98868122298154,
+          "host_ram_floor_bytes": 4294967296,
+          "max_seconds": 622.2242244659865,
+          "peak_rss_bytes": 203534336,
+          "rss_cap_bytes": 4294967296,
+          "threads": 1
+        },
+        "species": "mus_musculus",
+        "weights": {
+          "tome_cao_embryo_11": 2,
+          "tome_cao_embryo_13": 2,
+          "tome_cao_embryo_17": 2,
+          "tome_cao_embryo_21": 0,
+          "tome_cao_embryo_22": 0,
+          "tome_cao_embryo_33": 1,
+          "tome_cao_embryo_34": 0,
+          "tome_cao_embryo_35": 0,
+          "tome_cao_embryo_4": 1,
+          "tome_cao_embryo_41": 0,
+          "tome_cao_embryo_43": 0,
+          "tome_cao_embryo_48": 1,
+          "tome_cao_embryo_5": 1,
+          "tome_cao_embryo_51": 2,
+          "tome_cao_embryo_53": 1,
+          "tome_cao_embryo_55": 1,
+          "tome_cao_embryo_58": 0,
+          "tome_cao_embryo_59": 1,
+          "tome_cao_embryo_6": 2,
+          "tome_cao_embryo_61": 1,
+          "tome_cao_embryo_62": 1,
+          "tome_cao_embryo_65": 1,
+          "tome_cao_embryo_66": 2,
+          "tome_cao_embryo_8": 1,
+          "tome_cao_embryo_9": 2
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 4619151,
+          "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01/draw-0001-source-000.json",
+          "sha256": "6e3e069141fc89738a939f6bf004f21a8e11e738d4bb807b703be4255674e5e4"
+        },
+        "cache_reused": true,
+        "draw_index": 1,
+        "engine_call_seconds": 85.54254484199919,
+        "finite_diagnostic_rows": 5,
+        "focal_genes": 8,
+        "resources": {
+          "disk_free_floor_bytes": 21474836480,
+          "elapsed_seconds_before_publication": 68.72124432801502,
+          "host_ram_floor_bytes": 4294967296,
+          "max_seconds": 470.5676756580069,
+          "peak_rss_bytes": 210989056,
+          "rss_cap_bytes": 4294967296,
+          "threads": 1
+        },
+        "species": "homo_sapiens",
+        "weights": {
+          "emb1": 2,
+          "emb2": 1,
+          "emb5": 1,
+          "emb6": 1,
+          "emb7": 0
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 4728309,
+          "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01/draw-0001-source-001.json",
+          "sha256": "c0bc28109c80db2775b74fc1cc3c88f4727490cc8bc3446168f8a4f795be19ed"
+        },
+        "cache_reused": true,
+        "draw_index": 1,
+        "engine_call_seconds": 87.21287922898773,
+        "finite_diagnostic_rows": 1,
+        "focal_genes": 8,
+        "resources": {
+          "disk_free_floor_bytes": 21474836480,
+          "elapsed_seconds_before_publication": 70.01909007501672,
+          "host_ram_floor_bytes": 4294967296,
+          "max_seconds": 384.860733264999,
+          "peak_rss_bytes": 214487040,
+          "rss_cap_bytes": 4294967296,
+          "threads": 1
+        },
+        "species": "mus_musculus",
+        "weights": {
+          "tome_cao_embryo_11": 1,
+          "tome_cao_embryo_13": 0,
+          "tome_cao_embryo_17": 0,
+          "tome_cao_embryo_21": 1,
+          "tome_cao_embryo_22": 1,
+          "tome_cao_embryo_33": 2,
+          "tome_cao_embryo_34": 1,
+          "tome_cao_embryo_35": 0,
+          "tome_cao_embryo_4": 3,
+          "tome_cao_embryo_41": 0,
+          "tome_cao_embryo_43": 0,
+          "tome_cao_embryo_48": 1,
+          "tome_cao_embryo_5": 0,
+          "tome_cao_embryo_51": 1,
+          "tome_cao_embryo_53": 1,
+          "tome_cao_embryo_55": 0,
+          "tome_cao_embryo_58": 3,
+          "tome_cao_embryo_59": 3,
+          "tome_cao_embryo_6": 0,
+          "tome_cao_embryo_61": 1,
+          "tome_cao_embryo_62": 0,
+          "tome_cao_embryo_65": 0,
+          "tome_cao_embryo_66": 0,
+          "tome_cao_embryo_8": 3,
+          "tome_cao_embryo_9": 3
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 4593766,
+          "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01/draw-0002-source-000.json",
+          "sha256": "6369e3ae63887b1cd02269bedcb2f2ac80984010873c78808e1b79216092cb27"
+        },
+        "cache_reused": true,
+        "draw_index": 2,
+        "engine_call_seconds": 83.6936846410099,
+        "finite_diagnostic_rows": 6,
+        "focal_genes": 8,
+        "resources": {
+          "disk_free_floor_bytes": 21474836480,
+          "elapsed_seconds_before_publication": 67.47498465099488,
+          "host_ram_floor_bytes": 4294967296,
+          "max_seconds": 297.49570482899435,
+          "peak_rss_bytes": 251527168,
+          "rss_cap_bytes": 4294967296,
+          "threads": 1
+        },
+        "species": "homo_sapiens",
+        "weights": {
+          "emb1": 2,
+          "emb2": 0,
+          "emb5": 0,
+          "emb6": 2,
+          "emb7": 1
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 4743719,
+          "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01/draw-0002-source-001.json",
+          "sha256": "bf73c068de66f1a0c168d924b904c7354497c91374a4eca2a50f8619180f26ec"
+        },
+        "cache_reused": true,
+        "draw_index": 2,
+        "engine_call_seconds": 83.76626467800816,
+        "finite_diagnostic_rows": 1,
+        "focal_genes": 8,
+        "resources": {
+          "disk_free_floor_bytes": 21474836480,
+          "elapsed_seconds_before_publication": 67.4142571130069,
+          "host_ram_floor_bytes": 4294967296,
+          "max_seconds": 213.6334377049934,
+          "peak_rss_bytes": 253665280,
+          "rss_cap_bytes": 4294967296,
+          "threads": 1
+        },
+        "species": "mus_musculus",
+        "weights": {
+          "tome_cao_embryo_11": 1,
+          "tome_cao_embryo_13": 0,
+          "tome_cao_embryo_17": 1,
+          "tome_cao_embryo_21": 0,
+          "tome_cao_embryo_22": 1,
+          "tome_cao_embryo_33": 1,
+          "tome_cao_embryo_34": 1,
+          "tome_cao_embryo_35": 0,
+          "tome_cao_embryo_4": 5,
+          "tome_cao_embryo_41": 0,
+          "tome_cao_embryo_43": 4,
+          "tome_cao_embryo_48": 1,
+          "tome_cao_embryo_5": 0,
+          "tome_cao_embryo_51": 1,
+          "tome_cao_embryo_53": 1,
+          "tome_cao_embryo_55": 1,
+          "tome_cao_embryo_58": 1,
+          "tome_cao_embryo_59": 1,
+          "tome_cao_embryo_6": 0,
+          "tome_cao_embryo_61": 1,
+          "tome_cao_embryo_62": 2,
+          "tome_cao_embryo_65": 0,
+          "tome_cao_embryo_66": 1,
+          "tome_cao_embryo_8": 1,
+          "tome_cao_embryo_9": 0
+        }
+      }
+    ],
+    "draw_start": 0,
+    "draw_stop": 3,
+    "full_fixed_pair_bootstrap_performed": false,
+    "model_forwards_performed": false,
+    "native_likelihood_effects_attested": false,
+    "resources": {
+      "max_rss_bytes": 4294967296,
+      "max_wall_seconds": 900.0,
+      "minimum_free_disk_bytes": 21474836480,
+      "minimum_host_available_ram_bytes": 4294967296,
+      "native_threads": 1,
+      "observed_peak_process_rss_bytes": 253665280
+    },
+    "seed": 20260930,
+    "summary": {
+      "bytes": 46670,
+      "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01/summary.json",
+      "sha256": "15ece6a231e712f7cbea1e5929cc336d30c98c71ecbcb563f01b776dfe6b0782"
+    },
+    "timings_seconds": {
+      "complete_diagnostic": 783.9760279240145,
+      "source_validation_and_module_load": 32.13070125799277
+    }
+  },
+  "filesystem_recovery": {
+    "archived_failed_source_manifest": {
+      "bytes": 621,
+      "path": "runs/b3_feasibility/20261003/sparse_backend_failed_source/manifest.json",
+      "sha256": "4b80e4caa0b5f27488b649465cf7983453374251ee6cdbd3ebd896f3b07395c2"
+    },
+    "completion_rule": "manifest plus verified payload/source hashes; trusted cooperative writers; visibility is not crash durability",
+    "initial_probe": {
+      "bytes": 1009,
+      "path": "runs/b3_feasibility/20261003/sparse_publication_filesystem_probe.json",
+      "sha256": "1f7a60836e82beae43ce32b80d45a6ccba8584a4ccffbdfb99cdc7b9eec6240c"
+    },
+    "repaired_public_smoke": {
+      "bytes": 715,
+      "path": "runs/b3_feasibility/20261003/sparse_publication_repaired_smoke.json",
+      "sha256": "ca452bcc0516282e91e9eda8c0238fa0f338addb633e9c2ca320d21db675e429"
+    },
+    "repaired_public_smoke_result": {
+      "checkpoint_tensors_loaded": false,
+      "checks": [
+        {
+          "collision_rejected": true,
+          "complete_payload_verified": true,
+          "original_payload_preserved": true,
+          "parent": "/tmp"
+        },
+        {
+          "collision_rejected": true,
+          "complete_payload_verified": true,
+          "original_payload_preserved": true,
+          "parent": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003"
+        }
+      ],
+      "elapsed_seconds": 0.0461548599996604,
+      "engine_sha256": "d061d134908a38b90fa6d23d2ae56da2609237e4d2f5d2c62e07da60f8306dc6",
+      "model_forwards_performed": false,
+      "peak_rss_bytes": 46374912,
+      "schema": "b3_public_directory_publication_repaired_smoke_v1",
+      "status": "passed"
+    }
+  },
+  "implementation_commit": "04796fa2c2ffebc81aeea48e3d4c789de4043ec9",
+  "limits": "Three draws x eight declared diagnostic focals x two pilot sources; complete frozen metrics/bins and every peer, not actual fixed finite pair inference or a whole-arm timing estimate",
+  "method_rules_changed": false,
+  "public_oracle_parity": {
+    "abs_rel_tolerances": {
+      "diagnostic_z": 1e-10,
+      "metrics": 1e-12,
+      "raw_null_mean_sd": 1e-12
+    },
+    "artifact": {
+      "bytes": 40184,
+      "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01_parity.json",
+      "sha256": "e288bbaedc9c8aa370c36506a851de7397ad304af00ba6a96e26d9f0a61d2739"
+    },
+    "checks": [
+      {
+        "draw_index": 0,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 5,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "homo_sapiens"
+      },
+      {
+        "draw_index": 1,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 5,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "homo_sapiens"
+      },
+      {
+        "draw_index": 2,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 6,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "homo_sapiens"
+      },
+      {
+        "draw_index": 0,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 1,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "mus_musculus"
+      },
+      {
+        "draw_index": 1,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 1,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "mus_musculus"
+      },
+      {
+        "draw_index": 2,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 1,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "mus_musculus"
+      }
+    ],
+    "elapsed_seconds": 257.0300527299987,
+    "peak_rss_bytes": 1232891904
+  },
+  "repaired_code_commit": "2c53afa56241b1f7175005e60c735752d985c236",
+  "requests": {
+    "failed": {
+      "bytes": 37032,
+      "path": "docs/agents/b3-sparse-bootstrap-diagnostic-request-2026-10-03.json",
+      "sha256": "b642a27f16a22893fb12f1352c50635c6be93f959393686e14022e088c5d5e00"
+    },
+    "only_changed_bindings": [
+      "/mnt/d/sc/transcriptformer/transcriptformer/scripts/replay_b3_sparse_bootstrap_draws.py",
+      "/mnt/d/sc/transcriptformer/transcriptformer/scripts/replay_b3_sparse_null.py"
+    ],
+    "retry": {
+      "bytes": 37032,
+      "path": "docs/agents/b3-sparse-bootstrap-diagnostic-request-retry-2026-10-03.json",
+      "sha256": "afde1ab9f8532d7cd3d0079226c5684f2e1ad435c4fe80adb338022e59a5659e"
+    },
+    "scientific_request_identical": true,
+    "source_bindings": 201
+  },
+  "retained_gates": {
+    "draws_required_for_inference": 2000,
+    "full_cohort_cost_measured": false,
+    "full_cohort_native_effect_attestation": false,
+    "full_cohort_production_accepted": false,
+    "interval": null,
+    "necessary_joint_supported_draws": 0,
+    "original_fixed_pair_coverage": {
+      "coverage": 0.325437758675581,
+      "n_pairs": 5111,
+      "n_vocabulary_joined_pairs": 15705
+    },
+    "original_reporting_eligible": false,
+    "paired_reporting_floor": 0.8
+  },
+  "review": {
+    "driver_spec": {
+      "findings": 0,
+      "worst": null
+    },
+    "engine_spec": {
+      "findings": 0,
+      "worst": null
+    },
+    "standards": {
+      "hard_violations": 0,
+      "optional_findings": 1,
+      "worst": "Possible duplicated JSON/resource boundary logic"
+    }
+  },
+  "schema": "b3_sparse_bootstrap_bounded_milestone_evidence_v1",
+  "scientific_readiness": "unavailable",
+  "source_reconciliation": {
+    "artifact": {
+      "bytes": 42990,
+      "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01_source_reconciliation.json",
+      "sha256": "bbf53e2ef34cb9ebc357b35d20f3b8b5a84c5feabc38b9ea3acbf00ee5921326"
+    },
+    "elapsed_seconds": 33.04382788299699,
+    "original_pilot_software": {
+      "homo_sapiens": {
+        "all_software_hashes_match": true,
+        "provenance_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores/provenance.json",
+        "provenance_sha256": "01e981380435a695c13d4c40277e1e57f59769e2baf8e8cd22b58d5506c0ae30",
+        "software_files": 107
+      },
+      "mus_musculus": {
+        "all_software_hashes_match": true,
+        "provenance_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores/provenance.json",
+        "provenance_sha256": "5ace72f6376f591632ae38e55cb96d005723a4dfa496f7418cc3d6343679733b",
+        "software_files": 109
+      }
+    },
+    "peak_rss_bytes": 49524736,
+    "verified_files": 237
+  },
+  "static_checks": {
+    "mypy": "passed",
+    "python_files": 5,
+    "ruff_check": "passed",
+    "ruff_format_check": "passed"
+  },
+  "status": "bounded_diagnostic_verified",
+  "supervisors": {
+    "failed_prefix": {
+      "artifact": {
+        "bytes": 945,
+        "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_supervisor/state.json",
+        "sha256": "511e6102d8f99c2edc473fbb645e434751cb76a576e2f58992be3b2efcb142c2"
+      },
+      "state": {
+        "boot_id": "1bbe10dc-b029-4109-bef0-2a017be3ebd5",
+        "command": [
+          ".venv/bin/python",
+          "scripts/replay_b3_sparse_bootstrap_draws.py",
+          "--request",
+          "docs/agents/b3-sparse-bootstrap-diagnostic-request-2026-10-03.json",
+          "--output",
+          "runs/b3_feasibility/20261003/sparse_seeded_prefix",
+          "--max-seconds",
+          "900"
+        ],
+        "disk_available_gib": 383.45031356811523,
+        "elapsed_seconds": 240.29754832401522,
+        "finished_unix": 1790986348.1798205,
+        "heartbeat_unix": 1790986342.1712728,
+        "host_available_ram_gib": 29.309585571289062,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 950.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "producer_pid": 3,
+        "producer_rss_gib": 0.09928131103515625,
+        "producer_start_ticks": 13327074,
+        "return_code": 1,
+        "started_unix": 1790986105.3136144,
+        "status": "stopped",
+        "supervisor_pid": 2
+      }
+    },
+    "full_suite": {
+      "artifact": {
+        "bytes": 838,
+        "path": "runs/b3_feasibility/20261003/sparse_backend_full_suite_supervisor/state.json",
+        "sha256": "49a998e3941c61e5727738a2f828669d73dd822f2dafd63f47f29b8d3cbc8c4c"
+      },
+      "state": {
+        "boot_id": "1bbe10dc-b029-4109-bef0-2a017be3ebd5",
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "--tb=short",
+          "--junitxml=runs/b3_feasibility/20261003/sparse_backend_full_suite.xml"
+        ],
+        "disk_available_gib": 383.38520431518555,
+        "elapsed_seconds": 435.50739174699993,
+        "finished_unix": 1790990146.9994743,
+        "heartbeat_unix": 1790990144.9924111,
+        "host_available_ram_gib": 28.840057373046875,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 6.0,
+          "max_wall_seconds": 2400.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "producer_pid": 162855,
+        "producer_rss_gib": 0.7695541381835938,
+        "producer_start_ticks": 13690425,
+        "return_code": 0,
+        "started_unix": 1790989711.647838,
+        "status": "completed",
+        "supervisor_pid": 162854
+      }
+    },
+    "oracle_parity": {
+      "artifact": {
+        "bytes": 920,
+        "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01_parity_supervisor/state.json",
+        "sha256": "bc47a6a88e71ed6e36f2d273a15ca78fc649f8305a22c90b31b8cbcf360c7bb2"
+      },
+      "state": {
+        "boot_id": "1bbe10dc-b029-4109-bef0-2a017be3ebd5",
+        "command": [
+          ".venv/bin/python",
+          "runs/b3_feasibility/20261003/sparse_backend_tools/b3_check_sparse_prefix.py",
+          "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01",
+          "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01_parity.json"
+        ],
+        "disk_available_gib": 383.38525390625,
+        "elapsed_seconds": 270.3207018499961,
+        "finished_unix": 1790989576.4488928,
+        "heartbeat_unix": 1790989563.8514943,
+        "host_available_ram_gib": 28.682205200195312,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 950.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "producer_pid": 3,
+        "producer_rss_gib": 0.9656219482421875,
+        "producer_start_ticks": 13648482,
+        "return_code": 0,
+        "started_unix": 1790989295.2779477,
+        "status": "completed",
+        "supervisor_pid": 2
+      }
+    },
+    "retry_prefix": {
+      "artifact": {
+        "bytes": 957,
+        "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01_supervisor/state.json",
+        "sha256": "352ff3474a706df0d339b367f82459b75b1eb3af8394fc03032ffcf08bc80f68"
+      },
+      "state": {
+        "boot_id": "1bbe10dc-b029-4109-bef0-2a017be3ebd5",
+        "command": [
+          ".venv/bin/python",
+          "scripts/replay_b3_sparse_bootstrap_draws.py",
+          "--request",
+          "docs/agents/b3-sparse-bootstrap-diagnostic-request-retry-2026-10-03.json",
+          "--output",
+          "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01",
+          "--max-seconds",
+          "900"
+        ],
+        "disk_available_gib": 383.385311126709,
+        "elapsed_seconds": 780.9099706089764,
+        "finished_unix": 1790989240.063176,
+        "heartbeat_unix": 1790989236.0534973,
+        "host_available_ram_gib": 29.227561950683594,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 950.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "producer_pid": 3,
+        "producer_rss_gib": 0.17633438110351562,
+        "producer_start_ticks": 13564403,
+        "return_code": 0,
+        "started_unix": 1790988459.8966084,
+        "status": "completed",
+        "supervisor_pid": 2
+      }
+    },
+    "retry_request": {
+      "artifact": {
+        "bytes": 860,
+        "path": "runs/b3_feasibility/20261003/sparse_retry_request_supervisor/state.json",
+        "sha256": "d37e85200b6988f4d3cacb0511e7c5f4b7dd10bdce0f6108189e2f1eb2df78df"
+      },
+      "state": {
+        "boot_id": "1bbe10dc-b029-4109-bef0-2a017be3ebd5",
+        "command": [
+          ".venv/bin/python",
+          "runs/b3_feasibility/20261003/sparse_backend_tools/b3_make_sparse_request.py",
+          "docs/agents/b3-sparse-bootstrap-diagnostic-request-retry-2026-10-03.json"
+        ],
+        "disk_available_gib": 383.4569969177246,
+        "elapsed_seconds": 15.015053198003443,
+        "finished_unix": 1790988294.5466475,
+        "heartbeat_unix": 1790988293.5399027,
+        "host_available_ram_gib": 29.324432373046875,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 1.0,
+          "max_wall_seconds": 300.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "producer_pid": 3,
+        "producer_rss_gib": 0.027130126953125,
+        "producer_start_ticks": 13546216,
+        "return_code": 0,
+        "started_unix": 1790988279.0373507,
+        "status": "completed",
+        "supervisor_pid": 2
+      }
+    },
+    "source_audit": {
+      "artifact": {
+        "bytes": 1014,
+        "path": "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01_audit_supervisor/state.json",
+        "sha256": "909f79b7d1689341aa7391ddd4fa5fe0b63005de4b3cdb87a0d3a86703ce7748"
+      },
+      "state": {
+        "boot_id": "1bbe10dc-b029-4109-bef0-2a017be3ebd5",
+        "command": [
+          ".venv/bin/python",
+          "runs/b3_feasibility/20261003/sparse_backend_tools/b3_audit_sparse_prefix.py",
+          "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01",
+          "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01_parity.json",
+          "runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01_source_reconciliation.json"
+        ],
+        "disk_available_gib": 383.3851127624512,
+        "elapsed_seconds": 30.023360818013316,
+        "finished_unix": 1790990245.483314,
+        "heartbeat_unix": 1790990241.459646,
+        "host_available_ram_gib": 29.35146713256836,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 1.0,
+          "max_wall_seconds": 300.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "producer_pid": 3,
+        "producer_rss_gib": 0.031147003173828125,
+        "producer_start_ticks": 13740765,
+        "return_code": 0,
+        "started_unix": 1790990211.9469357,
+        "status": "completed",
+        "supervisor_pid": 2
+      }
+    }
+  },
+  "tests": {
+    "driver": {
+      "artifact": {
+        "bytes": 3803,
+        "path": "runs/b3_feasibility/20261003/sparse_draws_targeted.xml",
+        "sha256": "379db04783e552ae6ba2916965ea11bf1f13118e1650feeacf34335a250ca909"
+      },
+      "errors": 0,
+      "failures": 0,
+      "passed": 27,
+      "seconds": 74.124,
+      "skipped": 0,
+      "tests": 27
+    },
+    "engine": {
+      "artifact": {
+        "bytes": 5306,
+        "path": "runs/b3_feasibility/20261003/sparse_null_targeted.xml",
+        "sha256": "d02ab38351b1ded6ca4a2d2a76b0d9957d3318800cf2039285c204aeed30eaa5"
+      },
+      "errors": 0,
+      "failures": 0,
+      "passed": 35,
+      "seconds": 127.056,
+      "skipped": 0,
+      "tests": 35
+    },
+    "full_cpu": {
+      "artifact": {
+        "bytes": 84196,
+        "path": "runs/b3_feasibility/20261003/sparse_backend_full_suite.xml",
+        "sha256": "1602e39e43a8faba259663a29a2100e3248b1ad6367dc26fe90f0fbdbc6b7c1b"
+      },
+      "errors": 0,
+      "failures": 0,
+      "passed": 641,
+      "seconds": 433.496,
+      "skipped": 5,
+      "tests": 646
+    },
+    "selection": {
+      "artifact": {
+        "bytes": 650,
+        "path": "runs/b3_feasibility/20261003/sparse_selection_targeted.xml",
+        "sha256": "f9f1aea404eb833e26dbb4cfdcf7ba44bdc7d9b9e3844295f1bc1f2009d589b3"
+      },
+      "errors": 0,
+      "failures": 0,
+      "passed": 3,
+      "seconds": 0.172,
+      "skipped": 0,
+      "tests": 3
+    }
+  },
+  "ticket_05": "open",
+  "ticket_11": "excluded",
+  "verification_helpers": [
+    {
+      "bytes": 3697,
+      "path": "runs/b3_feasibility/20261003/sparse_backend_tools/b3_make_sparse_request.py",
+      "sha256": "b9ab10cd4b22d9191e1900b72637c3be9adac4f7e8e13eb4c5d7da604a8caec1"
+    },
+    {
+      "bytes": 5694,
+      "path": "runs/b3_feasibility/20261003/sparse_backend_tools/b3_check_sparse_prefix.py",
+      "sha256": "1801770fdef302a8467cee4150c9013e155f2fe01fc6c2660fc7565c5580fa6d"
+    },
+    {
+      "bytes": 3438,
+      "path": "runs/b3_feasibility/20261003/sparse_backend_tools/b3_audit_sparse_prefix.py",
+      "sha256": "531da94e7dfa8ff6e4bd7d7d01020c6035ef8f615f56ca0c593bca6ce4b08880"
+    }
+  ]
+}
