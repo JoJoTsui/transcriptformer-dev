@@ -690,6 +690,12 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   RSS and 783.98 seconds. The actual finite-pair family is not bootstrapped.
   The [implementation record](../../../docs/agents/b3-sparse-bootstrap-implementation-2026-10-03.md)
   records the source-bound mounted-drive publication repair and retained gates.
+- [ ] Separate verified preparation from resampled metric/bin/null query cost
+  in one immutable bounded session over the completed three-draw pilot caches.
+  Preserve unit-control and parent-scorer parity, frozen software/cache lineage,
+  final byte verification and WSL limits. The
+  [prepared-session contract](../../../docs/agents/b3-prepared-sparse-session-2026-10-03.md)
+  records the agreed public seam and implementation in progress.
 - [ ] Measure complete method-preserving scoring, verification and aggregation
   cost within explicit WSL budgets before expanding full-cohort production.
   Partial: planning, import, reconciliation, indexing, 64-gene null ranges,

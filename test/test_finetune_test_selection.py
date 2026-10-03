@@ -40,6 +40,7 @@ SUITES = (
     "b3_full_native_embryo_support",
     "b3_sparse_null",
     "b3_sparse_bootstrap_draws",
+    "b3_prepared_sparse_session",
     "end_to_end",
     "finetune_metadata",
     "spatial",
