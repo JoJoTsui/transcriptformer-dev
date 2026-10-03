@@ -39,8 +39,11 @@ gene axis. These are diagnostic indices, not a newly selected finite pair family
 - Reuse an existing first-block cache only through its authenticated identity.
   Build second-block statistics with the byte-verified frozen producer logic;
   compare every physical-embryo array, gene/embryo axis and focal count against
-  the frozen producer's result. Validate all H5 hashes, shapes, dtypes, storage
-  and numeric domains; use read-only snapshots for queries.
+  the frozen producer's result. Validate consumed support, metric and cache
+  H5 hashes, shapes, dtypes, storage and numeric domains; use read-only snapshots
+  for queries. Original raw-expression sources retain their frozen byte/reference
+  and native certificate checks; this study adds no full raw-expression scan or
+  broad raw-source storage attestation.
 - Compute all-gene metrics/bins once per source/draw and reuse them across
   both focal blocks. Compare unit and seeded focal results against unchanged
   public producers/scorers. The first block must also match the completed
@@ -50,6 +53,10 @@ gene axis. These are diagnostic indices, not a newly selected finite pair family
   from actual process RSS. Require one native thread, at most 4 GiB process
   RSS, at least 4 GiB available host RAM and 20 GiB free disk, with cooperative
   checks and an external supervisor for real execution.
+  A construction adapter may check the deadline at every helper boundary and
+  perform the more expensive RAM/disk/RSS checks at a maximum 0.25-second
+  cadence, always checking allocations and stage boundaries. Record that
+  cadence explicitly; frozen public controls retain their unchanged checks.
 - Verify the full expected source/software map at entry and final sealing.
   Bind newly generated caches and output reports separately. Query arithmetic
   reads no scientific source files. A mid-run mutation or failed verification
