@@ -132,13 +132,39 @@ with distinct timer scopes, not a whole-family bootstrap runtime estimate.
 All 48 diagnostic rows match a fresh public-scorer replay with zero observed
 error; the final source audit verifies 253 bindings and original pilot software.
 
-The next unmeasured requirements are complete native scoring/effect attestation,
-whole-family cache preparation, streamed focal blocks and complete production
+The bounded adjacent-block traversal dependency is now measured in the
+[streamed study](b3-streamed-sparse-blocks-2026-10-03.md), using the same two
+pilot species, three authenticated seeded draws and predeclared `0:8`/`8:16`
+focal blocks. Six all-gene metric/bin states are computed once and reused for
+twelve block-row calculations; all **96 diagnostic rows** match a fresh
+public scorer with zero observed error. The unique metric/bin record count is
+**118,611**; twelve seeded reports persist the states twice (**237,222 metric
+records**). Unit-control records are separate. Seeded metric/bin/row time is
+**0.987028 seconds**, while the complete invocation takes
+**795.830113 seconds**. Its components include two common native
+preparations (**77.595388 seconds**), four
+unchanged public control calls (**546.670497 seconds**),
+two new second-block constructions/publications
+(**72.626647 seconds**), physical producer comparison,
+serialization and full final hashing. Control post-call binding is separate;
+public-call nested work and duplicated child metric/bin timers are not added twice.
+One block is resident at a time. The conservative numeric working upper is
+**187.78 MiB** under the 200-MiB bound, while
+peak process RSS is **0.468 GiB** under 4 GiB.
+The source audit verifies **289 unique bindings**, including every original
+pilot software hash. Parsed support/cache/metric H5 containers are validated;
+raw-expression sources retain byte/reference evidence without a new raw scan.
+
+The remaining unmeasured requirements are complete native scoring/effect
+attestation, whole-family cache preparation/traversal and complete production
 plus independent replay bootstrap. The current full cohort lacks scored shard
 inputs and an actual fixed finite pair family; a conditional whole-family
-resident cache would also exceed this WSL memory cap. Any scalable cache must
-retain exact focal cells, per-embryo completeness and draw-specific bins:
-omission of a failing embryo can make a previously incomplete peer eligible.
-Complete whole-arm cost acceptance remains unchecked until supported execution
-establishes these stages. The current pilot's coverage and uncertainty vetoes
-remain unchanged.
+resident cache would also exceed this WSL memory cap. The sixteen diagnostic
+focal indices cannot establish whole-family or full-cohort speed. Any scalable
+cache must retain exact focal cells, per-embryo completeness and draw-specific
+bins: omission of a failing embryo can make a previously incomplete peer
+eligible. Complete whole-arm cost acceptance remains unchecked until supported
+execution establishes these stages. The pilot's **32.54%** coverage and
+**0/2,000** necessary support vetoes remain unchanged. Actual finite comparison
+and uncertainty are unavailable, as is project finetuned checkpoint training
+and selection provenance; **05 stays open**, **11 excluded**.

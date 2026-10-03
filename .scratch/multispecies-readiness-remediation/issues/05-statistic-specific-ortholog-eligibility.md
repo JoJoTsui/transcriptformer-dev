@@ -1,6 +1,38 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-**Current prepared-session milestone — 2026-10-03:** Verified preparation is
+**Current streamed-block milestone — 2026-10-03:** The same authenticated two
+species and three seeded draws now traverse adjacent focal blocks `0:8` and
+`8:16`, one block resident at a time. All **96 diagnostic rows** (37
+finite, 59 unavailable) match a fresh public-scorer check with
+**zero observed error**. Six all-gene metric/bin states are computed once and
+shared across twelve block queries: **118,611 unique metric records**, persisted
+twice as **237,222 seeded child-report metric records**. Seeded metric/bin/row
+calculation totals **0.98703 seconds**; the complete invocation takes
+**795.83 seconds** at **0.468 GiB** peak process RSS.
+These are separate scopes. Two native preparations, four unchanged public
+unit controls with repeated native checks, cache construction/comparison,
+serialization and final verification are recorded separately. Selected resident
+array payload is 46.47 MiB; the conservative
+numeric working upper is 187.78 MiB, below 200 MiB.
+Neither array quantity is process RSS. Parsed support/cache/metric H5 containers
+are checked; original raw-expression sources retain byte/reference evidence
+without a new raw-expression/storage scan. Queries use read-only snapshots.
+The final audit verifies **289 unique bindings**, including all **107 human /
+109 mouse** original pilot software hashes. See the
+[implementation record](../../../docs/agents/b3-streamed-sparse-blocks-2026-10-03.md) and [bound evidence](../../../docs/agents/b3-streamed-sparse-blocks-evidence-2026-10-03.json).
+Targeted checks pass **29 tests**; Ruff check/format and mypy pass two new
+Python files. The final CPU suite passes **689 tests, 5 skipped**, with no
+failures or errors (**757.32 seconds**). Independent Standards and Spec
+reviews have zero remaining hard/spec findings. This closes the bounded
+two-block traversal dependency. **05 remains open**, **11 excluded**, **ten
+bounded engineering tickets closed**. The pilot's **32.54%** coverage and
+**0/2,000** necessary jointly supported draws still withhold reporting.
+Whole-family cache/traversal cost, full-cohort native scoring/effect attestation,
+complete production/replay bootstrap and actual finite comparison/uncertainty
+remain unmeasured; project finetuned checkpoint training and selection provenance
+remains unavailable. No scientific rule or existing source-bound Python byte changed.
+
+**Previous prepared-session milestone — 2026-10-03:** Verified preparation is
 separated from repeated resampled metric/bin/null queries. The same frozen
 two-species, three-draw, eight-focal diagnostic replays **48 rows** (19 finite,
 29 unavailable) with **zero observed error** against a fresh public-scorer
@@ -724,11 +756,14 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   unavailability; the final audit verifies 253 bindings and original software.
   See the [prepared-session record](../../../docs/agents/b3-prepared-sparse-session-2026-10-03.md).
   This is a bounded diagnostic, without a full-family bootstrap runtime claim.
-- [ ] Demonstrate bounded streamed traversal of two predeclared adjacent focal
+- [x] Demonstrate bounded streamed traversal of two predeclared adjacent focal
   blocks per species, preserving frozen native cache arrays and public score
-  parity while reusing each draw's all-gene metrics/bins. The
-  [streamed-block contract](../../../docs/agents/b3-streamed-sparse-blocks-2026-10-03.md)
-  records this next implementation dependency; it makes no full-family runtime claim.
+  parity while reusing each draw's all-gene metrics/bins. All 96 diagnostic rows
+  match the fresh public scorer; six shared metric/bin states serve twelve blocks.
+  Seeded metric/bin/row time is 0.98703 seconds; the complete invocation takes
+  795.83 seconds. Final parity, 289-binding audit and full CPU regression
+  pass. See the [streamed-block record](../../../docs/agents/b3-streamed-sparse-blocks-2026-10-03.md).
+  This closes the bounded two-block dependency, without a full-family runtime claim.
 - [ ] Measure complete method-preserving scoring, verification and aggregation
   cost within explicit WSL budgets before expanding full-cohort production.
   Partial: planning, import, reconciliation, indexing, 64-gene null ranges,
@@ -740,8 +775,12 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   A bounded three-draw/eight-focal-per-species replay now has measured cache
   build/reuse, source verification and public-oracle costs. The prepared
   session additionally separates recurring metric/bin/null calculation from
-  verified preparation and final sealing. This does not measure the full finite
-  family or complete production/replay bootstrap.
+  verified preparation and final sealing. The streamed study adds two adjacent
+  eight-focal blocks per species, with exact physical/unit/seeded parity,
+  one-block memory and shared all-gene metric/bin states (0.98703 seconds
+  of seeded calculation; 795.83 seconds for the complete invocation).
+  These sixteen diagnostic focals do not measure the whole finite family or
+  complete production/replay bootstrap.
   Whole-arm scoring/aggregation and 2,000-draw bootstrap costs remain unmeasured.
 
 The checked items establish bounded feasibility evidence only. The prospective

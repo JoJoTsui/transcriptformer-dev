@@ -1,6 +1,38 @@
 # Multispecies embryogenesis readiness remediation
 
-**Current prepared-session milestone — 2026-10-03:** Verified preparation is
+**Current streamed-block milestone — 2026-10-03:** The same authenticated two
+species and three seeded draws now traverse adjacent focal blocks `0:8` and
+`8:16`, one block resident at a time. All **96 diagnostic rows** (37
+finite, 59 unavailable) match a fresh public-scorer check with
+**zero observed error**. Six all-gene metric/bin states are computed once and
+shared across twelve block queries: **118,611 unique metric records**, persisted
+twice as **237,222 seeded child-report metric records**. Seeded metric/bin/row
+calculation totals **0.98703 seconds**; the complete invocation takes
+**795.83 seconds** at **0.468 GiB** peak process RSS.
+These are separate scopes. Two native preparations, four unchanged public
+unit controls with repeated native checks, cache construction/comparison,
+serialization and final verification are recorded separately. Selected resident
+array payload is 46.47 MiB; the conservative
+numeric working upper is 187.78 MiB, below 200 MiB.
+Neither array quantity is process RSS. Parsed support/cache/metric H5 containers
+are checked; original raw-expression sources retain byte/reference evidence
+without a new raw-expression/storage scan. Queries use read-only snapshots.
+The final audit verifies **289 unique bindings**, including all **107 human /
+109 mouse** original pilot software hashes. See the
+[implementation record](../../docs/agents/b3-streamed-sparse-blocks-2026-10-03.md) and [bound evidence](../../docs/agents/b3-streamed-sparse-blocks-evidence-2026-10-03.json).
+Targeted checks pass **29 tests**; Ruff check/format and mypy pass two new
+Python files. The final CPU suite passes **689 tests, 5 skipped**, with no
+failures or errors (**757.32 seconds**). Independent Standards and Spec
+reviews have zero remaining hard/spec findings. This closes the bounded
+two-block traversal dependency. **05 remains open**, **11 excluded**, **ten
+bounded engineering tickets closed**. The pilot's **32.54%** coverage and
+**0/2,000** necessary jointly supported draws still withhold reporting.
+Whole-family cache/traversal cost, full-cohort native scoring/effect attestation,
+complete production/replay bootstrap and actual finite comparison/uncertainty
+remain unmeasured; project finetuned checkpoint training and selection provenance
+remains unavailable. No scientific rule or existing source-bound Python byte changed.
+
+**Previous prepared-session milestone — 2026-10-03:** Verified preparation is
 separated from repeated resampled metric/bin/null queries. The same frozen
 two-species, three-draw, eight-focal diagnostic replays **48 rows** (19 finite,
 29 unavailable) with **zero observed error** against a fresh public-scorer

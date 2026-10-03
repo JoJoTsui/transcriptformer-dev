@@ -1,0 +1,1901 @@
+{
+  "bounded_engineering_tickets_closed": 10,
+  "ci_workflow": {
+    "bytes": 3823,
+    "path": ".github/workflows/finetune-tests.yml",
+    "sha256": "74c24f3922b6e74089d43dbbada8d6223fc0615c5bcc6bd0caa9c81d513d2f7c"
+  },
+  "code": {
+    "scripts/replay_b3_streamed_sparse_blocks.py": {
+      "bytes": 58805,
+      "path": "scripts/replay_b3_streamed_sparse_blocks.py",
+      "sha256": "3d29c1f49e7575c4b2201a963c050f4e758c250f6d55748b06af23589ae7a762"
+    },
+    "test/test_b3_streamed_sparse_blocks.py": {
+      "bytes": 26735,
+      "path": "test/test_b3_streamed_sparse_blocks.py",
+      "sha256": "15b45873c598a861e0495fdf1f3596771c42dfff71d8a188714ba66190016811"
+    }
+  },
+  "code_baseline": "38bf632a2fbe48b262f5dbb0173596d99af92ca2",
+  "date": "2026-10-03",
+  "diagnostic": {
+    "caches": [
+      {
+        "artifacts": [
+          {
+            "bytes": 374135,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000/metadata.json",
+            "sha256": "d42bab79a1afb42fef83ec58b18997d2ac5a6fa270ca5c5435e35beb476731db"
+          },
+          {
+            "bytes": 7770912,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000/statistics.h5",
+            "sha256": "045ec99224fd493278d4718a8e3f96e6e99cbc4b05158d7e0ad4489c025350e8"
+          }
+        ],
+        "block_index": 0,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "cache_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000",
+        "focal_range": {
+          "start": 0,
+          "stop": 8
+        },
+        "producer_cache_artifacts": [
+          {
+            "bytes": 374135,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000/metadata.json",
+            "sha256": "d42bab79a1afb42fef83ec58b18997d2ac5a6fa270ca5c5435e35beb476731db"
+          },
+          {
+            "bytes": 7770912,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000/statistics.h5",
+            "sha256": "045ec99224fd493278d4718a8e3f96e6e99cbc4b05158d7e0ad4489c025350e8"
+          }
+        ],
+        "producer_cache_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000",
+        "species": "homo_sapiens"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 374141,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-000-block-001/metadata.json",
+            "sha256": "50614defa204a98e25ac28f3987733c1dd24a0eb011b9107552d5f5e4bb51057"
+          },
+          {
+            "bytes": 7770912,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-000-block-001/statistics.h5",
+            "sha256": "9ffba54fdc1f51d4281ac71cff2069aa827aa1e224dd90c134f7fa75f179ec60"
+          }
+        ],
+        "block_index": 1,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "cache_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-000-block-001",
+        "focal_range": {
+          "start": 8,
+          "stop": 16
+        },
+        "producer_cache_artifacts": [
+          {
+            "bytes": 374141,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.producer-cache/source-000-block-001/metadata.json",
+            "sha256": "50614defa204a98e25ac28f3987733c1dd24a0eb011b9107552d5f5e4bb51057"
+          },
+          {
+            "bytes": 7770912,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.producer-cache/source-000-block-001/statistics.h5",
+            "sha256": "9ffba54fdc1f51d4281ac71cff2069aa827aa1e224dd90c134f7fa75f179ec60"
+          }
+        ],
+        "producer_cache_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.producer-cache/source-000-block-001",
+        "species": "homo_sapiens"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 449824,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001/metadata.json",
+            "sha256": "79bc468ce1d77f463e043fc68df639f2937f49b23966fdc3f2da42b7bb56bd61"
+          },
+          {
+            "bytes": 40271792,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001/statistics.h5",
+            "sha256": "42b8b8b9da4312c766a4abb03b035275987b629d7810eddcd1844f50e1b4423b"
+          }
+        ],
+        "block_index": 0,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "cache_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001",
+        "focal_range": {
+          "start": 0,
+          "stop": 8
+        },
+        "producer_cache_artifacts": [
+          {
+            "bytes": 449824,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001/metadata.json",
+            "sha256": "79bc468ce1d77f463e043fc68df639f2937f49b23966fdc3f2da42b7bb56bd61"
+          },
+          {
+            "bytes": 40271792,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001/statistics.h5",
+            "sha256": "42b8b8b9da4312c766a4abb03b035275987b629d7810eddcd1844f50e1b4423b"
+          }
+        ],
+        "producer_cache_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001",
+        "species": "mus_musculus"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 449830,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-001-block-001/metadata.json",
+            "sha256": "d10f0a1881c7d27e13fd6bc479fcb876a3d60a2fda5dff30e27973accba1ab42"
+          },
+          {
+            "bytes": 40271792,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-001-block-001/statistics.h5",
+            "sha256": "d2922fa4a523bbefb8d7585645f18eb10856e2022479cd79e0f105ea235f3155"
+          }
+        ],
+        "block_index": 1,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "cache_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-001-block-001",
+        "focal_range": {
+          "start": 8,
+          "stop": 16
+        },
+        "producer_cache_artifacts": [
+          {
+            "bytes": 449830,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.producer-cache/source-001-block-001/metadata.json",
+            "sha256": "d10f0a1881c7d27e13fd6bc479fcb876a3d60a2fda5dff30e27973accba1ab42"
+          },
+          {
+            "bytes": 40271792,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.producer-cache/source-001-block-001/statistics.h5",
+            "sha256": "d2922fa4a523bbefb8d7585645f18eb10856e2022479cd79e0f105ea235f3155"
+          }
+        ],
+        "producer_cache_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.producer-cache/source-001-block-001",
+        "species": "mus_musculus"
+      }
+    ],
+    "diagnostic_rows": 96,
+    "draws_per_species": 3,
+    "finite_rows": 37,
+    "focal_blocks": [
+      {
+        "start": 0,
+        "stop": 8
+      },
+      {
+        "start": 8,
+        "stop": 16
+      }
+    ],
+    "focal_indices_per_species": 16,
+    "interpretation": "Two predeclared adjacent eight-focal diagnostic blocks per species, same three authenticated parent draws. No actual fixed-family bootstrap, scientific acceptance or complete-cohort/whole-method extrapolation.",
+    "mean_coordinated_two_species_two_block_query_seconds": 0.32900944833333295,
+    "native_preparations": [
+      {
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "construction_resource_check_cadence_seconds": 0.25,
+        "csr_array_bytes": 806472,
+        "deadline_checked_at_every_helper_guard_call": true,
+        "native_preparation_seconds": 38.723614754000664,
+        "native_validation_calls": 1,
+        "raw_source_h5_scope": "byte-bound closure/reference evidence; no new raw-source expression or storage scan",
+        "species": "homo_sapiens",
+        "support_h5_structural_storage_validated_from_bound_bytes": true,
+        "support_snapshot_sha256": "429cd4e9e62b3bb5ea255df8ca62d128109a24dd6485a53d752d30f9e8558fbc"
+      },
+      {
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "construction_resource_check_cadence_seconds": 0.25,
+        "csr_array_bytes": 413152,
+        "deadline_checked_at_every_helper_guard_call": true,
+        "native_preparation_seconds": 38.87177337700086,
+        "native_validation_calls": 1,
+        "raw_source_h5_scope": "byte-bound closure/reference evidence; no new raw-source expression or storage scan",
+        "species": "mus_musculus",
+        "support_h5_structural_storage_validated_from_bound_bytes": true,
+        "support_snapshot_sha256": "cebfdbb43a0d7a24f621f135f72a88ff14035f036b487a4cac7ecf94bbc54860"
+      }
+    ],
+    "numeric_capacity_scope": "Conservative peak includes a single active source/block, CSR copies, physical cell/proof data, native range scratch, metric statistic copies, held unit+three draw metric/bin numeric payloads and two largest H5 byte-buffer allowances. Python JSON/bin object overhead is constrained separately by process RSS.",
+    "persisted_child_metric_and_bin_records": 237222,
+    "publication_contract": "Trusted cooperative writers under an exclusive claim; completion marker controls visibility, not crash durability. Cache directories have stable sibling paths. Failed sessions may retain valid caches or marker-free partial destinations and require a new output name; restart verifies every source/payload hash.",
+    "publication_receipt": {
+      "outer_invocation_seconds": 795.8301128999992,
+      "output": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks",
+      "publication_seconds": 0.028485040998930344,
+      "summary_sha256": "1c4eb7264311b9d032475abe667914bef656871a8498c25d6db8c6daecfd9edc"
+    },
+    "query_detail": [
+      {
+        "artifact": {
+          "bytes": 4634952,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0000-source-000-block-000.json",
+          "sha256": "a2b376c1e8a02a40d775c7821096a650a446690ee8caa97721361d5ff8024be7"
+        },
+        "block_index": 0,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "cache_reused": true,
+        "embryos": [
+          "emb1",
+          "emb2",
+          "emb5",
+          "emb6",
+          "emb7"
+        ],
+        "exact_parent_parity": true,
+        "focal_gene_ids": [
+          "ENSG00000000003",
+          "ENSG00000000005",
+          "ENSG00000000419",
+          "ENSG00000000457",
+          "ENSG00000000460",
+          "ENSG00000000938",
+          "ENSG00000000971",
+          "ENSG00000001036"
+        ],
+        "focal_range": {
+          "start": 0,
+          "stop": 8
+        },
+        "n_metric_and_bin_genes": 19406,
+        "query_timings_seconds": {
+          "rows": 0.06341562600027828
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.07984351699997205,
+          "metrics": 0.0039481009989685845
+        },
+        "species": "homo_sapiens",
+        "weights": {
+          "emb1": 0,
+          "emb2": 1,
+          "emb5": 1,
+          "emb6": 2,
+          "emb7": 1
+        },
+        "weights_sha256": "827ea7e49ca2aac0f3310eb459e03f3eeedf920a3d114639d080b40c610f9dab"
+      },
+      {
+        "artifact": {
+          "bytes": 4635727,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0000-source-000-block-001.json",
+          "sha256": "a98dc60e491d4146c1adcada241d7a0e82c06f561f2e52a4b0ecf8c72b02888f"
+        },
+        "block_index": 1,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "cache_reused": false,
+        "embryos": [
+          "emb1",
+          "emb2",
+          "emb5",
+          "emb6",
+          "emb7"
+        ],
+        "exact_parent_parity": false,
+        "focal_gene_ids": [
+          "ENSG00000001084",
+          "ENSG00000001167",
+          "ENSG00000001460",
+          "ENSG00000001461",
+          "ENSG00000001497",
+          "ENSG00000001561",
+          "ENSG00000001617",
+          "ENSG00000001626"
+        ],
+        "focal_range": {
+          "start": 8,
+          "stop": 16
+        },
+        "n_metric_and_bin_genes": 19406,
+        "query_timings_seconds": {
+          "rows": 0.04951416000039899
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.07984351699997205,
+          "metrics": 0.0039481009989685845
+        },
+        "species": "homo_sapiens",
+        "weights": {
+          "emb1": 0,
+          "emb2": 1,
+          "emb5": 1,
+          "emb6": 2,
+          "emb7": 1
+        },
+        "weights_sha256": "827ea7e49ca2aac0f3310eb459e03f3eeedf920a3d114639d080b40c610f9dab"
+      },
+      {
+        "artifact": {
+          "bytes": 4759988,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0000-source-001-block-000.json",
+          "sha256": "f96d9a688b858ab9f32412fffe296da37c2a007f87d0c395e707f7ee5ddddeb6"
+        },
+        "block_index": 0,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "cache_reused": true,
+        "embryos": [
+          "tome_cao_embryo_11",
+          "tome_cao_embryo_13",
+          "tome_cao_embryo_17",
+          "tome_cao_embryo_21",
+          "tome_cao_embryo_22",
+          "tome_cao_embryo_33",
+          "tome_cao_embryo_34",
+          "tome_cao_embryo_35",
+          "tome_cao_embryo_4",
+          "tome_cao_embryo_41",
+          "tome_cao_embryo_43",
+          "tome_cao_embryo_48",
+          "tome_cao_embryo_5",
+          "tome_cao_embryo_51",
+          "tome_cao_embryo_53",
+          "tome_cao_embryo_55",
+          "tome_cao_embryo_58",
+          "tome_cao_embryo_59",
+          "tome_cao_embryo_6",
+          "tome_cao_embryo_61",
+          "tome_cao_embryo_62",
+          "tome_cao_embryo_65",
+          "tome_cao_embryo_66",
+          "tome_cao_embryo_8",
+          "tome_cao_embryo_9"
+        ],
+        "exact_parent_parity": true,
+        "focal_gene_ids": [
+          "ENSMUSG00000000001",
+          "ENSMUSG00000000028",
+          "ENSMUSG00000000049",
+          "ENSMUSG00000000056",
+          "ENSMUSG00000000058",
+          "ENSMUSG00000000078",
+          "ENSMUSG00000000085",
+          "ENSMUSG00000000088"
+        ],
+        "focal_range": {
+          "start": 0,
+          "stop": 8
+        },
+        "n_metric_and_bin_genes": 20131,
+        "query_timings_seconds": {
+          "rows": 0.031404888000906794
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.033372361000147066,
+          "metrics": 0.005639195000185282
+        },
+        "species": "mus_musculus",
+        "weights": {
+          "tome_cao_embryo_11": 2,
+          "tome_cao_embryo_13": 2,
+          "tome_cao_embryo_17": 2,
+          "tome_cao_embryo_21": 0,
+          "tome_cao_embryo_22": 0,
+          "tome_cao_embryo_33": 1,
+          "tome_cao_embryo_34": 0,
+          "tome_cao_embryo_35": 0,
+          "tome_cao_embryo_4": 1,
+          "tome_cao_embryo_41": 0,
+          "tome_cao_embryo_43": 0,
+          "tome_cao_embryo_48": 1,
+          "tome_cao_embryo_5": 1,
+          "tome_cao_embryo_51": 2,
+          "tome_cao_embryo_53": 1,
+          "tome_cao_embryo_55": 1,
+          "tome_cao_embryo_58": 0,
+          "tome_cao_embryo_59": 1,
+          "tome_cao_embryo_6": 2,
+          "tome_cao_embryo_61": 1,
+          "tome_cao_embryo_62": 1,
+          "tome_cao_embryo_65": 1,
+          "tome_cao_embryo_66": 2,
+          "tome_cao_embryo_8": 1,
+          "tome_cao_embryo_9": 2
+        },
+        "weights_sha256": "4b5875fe2100493a6e23935b7a38c8306642c422e1101c0d64c8dea72af1732c"
+      },
+      {
+        "artifact": {
+          "bytes": 4760867,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0000-source-001-block-001.json",
+          "sha256": "edc8e001b622bb03cd0f5f09bc31f7457b73a5ac7381c96c7c284e0f8dc93e8d"
+        },
+        "block_index": 1,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "cache_reused": false,
+        "embryos": [
+          "tome_cao_embryo_11",
+          "tome_cao_embryo_13",
+          "tome_cao_embryo_17",
+          "tome_cao_embryo_21",
+          "tome_cao_embryo_22",
+          "tome_cao_embryo_33",
+          "tome_cao_embryo_34",
+          "tome_cao_embryo_35",
+          "tome_cao_embryo_4",
+          "tome_cao_embryo_41",
+          "tome_cao_embryo_43",
+          "tome_cao_embryo_48",
+          "tome_cao_embryo_5",
+          "tome_cao_embryo_51",
+          "tome_cao_embryo_53",
+          "tome_cao_embryo_55",
+          "tome_cao_embryo_58",
+          "tome_cao_embryo_59",
+          "tome_cao_embryo_6",
+          "tome_cao_embryo_61",
+          "tome_cao_embryo_62",
+          "tome_cao_embryo_65",
+          "tome_cao_embryo_66",
+          "tome_cao_embryo_8",
+          "tome_cao_embryo_9"
+        ],
+        "exact_parent_parity": false,
+        "focal_gene_ids": [
+          "ENSMUSG00000000093",
+          "ENSMUSG00000000094",
+          "ENSMUSG00000000120",
+          "ENSMUSG00000000125",
+          "ENSMUSG00000000126",
+          "ENSMUSG00000000127",
+          "ENSMUSG00000000131",
+          "ENSMUSG00000000142"
+        ],
+        "focal_range": {
+          "start": 8,
+          "stop": 16
+        },
+        "n_metric_and_bin_genes": 20131,
+        "query_timings_seconds": {
+          "rows": 0.04769565400056308
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.033372361000147066,
+          "metrics": 0.005639195000185282
+        },
+        "species": "mus_musculus",
+        "weights": {
+          "tome_cao_embryo_11": 2,
+          "tome_cao_embryo_13": 2,
+          "tome_cao_embryo_17": 2,
+          "tome_cao_embryo_21": 0,
+          "tome_cao_embryo_22": 0,
+          "tome_cao_embryo_33": 1,
+          "tome_cao_embryo_34": 0,
+          "tome_cao_embryo_35": 0,
+          "tome_cao_embryo_4": 1,
+          "tome_cao_embryo_41": 0,
+          "tome_cao_embryo_43": 0,
+          "tome_cao_embryo_48": 1,
+          "tome_cao_embryo_5": 1,
+          "tome_cao_embryo_51": 2,
+          "tome_cao_embryo_53": 1,
+          "tome_cao_embryo_55": 1,
+          "tome_cao_embryo_58": 0,
+          "tome_cao_embryo_59": 1,
+          "tome_cao_embryo_6": 2,
+          "tome_cao_embryo_61": 1,
+          "tome_cao_embryo_62": 1,
+          "tome_cao_embryo_65": 1,
+          "tome_cao_embryo_66": 2,
+          "tome_cao_embryo_8": 1,
+          "tome_cao_embryo_9": 2
+        },
+        "weights_sha256": "4b5875fe2100493a6e23935b7a38c8306642c422e1101c0d64c8dea72af1732c"
+      },
+      {
+        "artifact": {
+          "bytes": 4641931,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0001-source-000-block-000.json",
+          "sha256": "926a3f299344134558887c296464f3db1e2876abed378d0deafb939b4e3a2bd5"
+        },
+        "block_index": 0,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "cache_reused": true,
+        "embryos": [
+          "emb1",
+          "emb2",
+          "emb5",
+          "emb6",
+          "emb7"
+        ],
+        "exact_parent_parity": true,
+        "focal_gene_ids": [
+          "ENSG00000000003",
+          "ENSG00000000005",
+          "ENSG00000000419",
+          "ENSG00000000457",
+          "ENSG00000000460",
+          "ENSG00000000938",
+          "ENSG00000000971",
+          "ENSG00000001036"
+        ],
+        "focal_range": {
+          "start": 0,
+          "stop": 8
+        },
+        "n_metric_and_bin_genes": 19406,
+        "query_timings_seconds": {
+          "rows": 0.06490021699937643
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.08825979799985362,
+          "metrics": 0.005534649000765057
+        },
+        "species": "homo_sapiens",
+        "weights": {
+          "emb1": 2,
+          "emb2": 1,
+          "emb5": 1,
+          "emb6": 1,
+          "emb7": 0
+        },
+        "weights_sha256": "b515fdd5345d0dfdeb9a85aca9bcf713ff65a42dc1dbb8598e3716962db560f4"
+      },
+      {
+        "artifact": {
+          "bytes": 4642761,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0001-source-000-block-001.json",
+          "sha256": "80cbb1da0a897afbf76ccb9294f0ac992f08485a5182187ef32d4ea57b7b7920"
+        },
+        "block_index": 1,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "cache_reused": false,
+        "embryos": [
+          "emb1",
+          "emb2",
+          "emb5",
+          "emb6",
+          "emb7"
+        ],
+        "exact_parent_parity": false,
+        "focal_gene_ids": [
+          "ENSG00000001084",
+          "ENSG00000001167",
+          "ENSG00000001460",
+          "ENSG00000001461",
+          "ENSG00000001497",
+          "ENSG00000001561",
+          "ENSG00000001617",
+          "ENSG00000001626"
+        ],
+        "focal_range": {
+          "start": 8,
+          "stop": 16
+        },
+        "n_metric_and_bin_genes": 19406,
+        "query_timings_seconds": {
+          "rows": 0.06092657499902998
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.08825979799985362,
+          "metrics": 0.005534649000765057
+        },
+        "species": "homo_sapiens",
+        "weights": {
+          "emb1": 2,
+          "emb2": 1,
+          "emb5": 1,
+          "emb6": 1,
+          "emb7": 0
+        },
+        "weights_sha256": "b515fdd5345d0dfdeb9a85aca9bcf713ff65a42dc1dbb8598e3716962db560f4"
+      },
+      {
+        "artifact": {
+          "bytes": 4750181,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0001-source-001-block-000.json",
+          "sha256": "396fa525c9301bc3b7c226bdbd3d36398351f2ab9285e11b221149a6e3b4889e"
+        },
+        "block_index": 0,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "cache_reused": true,
+        "embryos": [
+          "tome_cao_embryo_11",
+          "tome_cao_embryo_13",
+          "tome_cao_embryo_17",
+          "tome_cao_embryo_21",
+          "tome_cao_embryo_22",
+          "tome_cao_embryo_33",
+          "tome_cao_embryo_34",
+          "tome_cao_embryo_35",
+          "tome_cao_embryo_4",
+          "tome_cao_embryo_41",
+          "tome_cao_embryo_43",
+          "tome_cao_embryo_48",
+          "tome_cao_embryo_5",
+          "tome_cao_embryo_51",
+          "tome_cao_embryo_53",
+          "tome_cao_embryo_55",
+          "tome_cao_embryo_58",
+          "tome_cao_embryo_59",
+          "tome_cao_embryo_6",
+          "tome_cao_embryo_61",
+          "tome_cao_embryo_62",
+          "tome_cao_embryo_65",
+          "tome_cao_embryo_66",
+          "tome_cao_embryo_8",
+          "tome_cao_embryo_9"
+        ],
+        "exact_parent_parity": true,
+        "focal_gene_ids": [
+          "ENSMUSG00000000001",
+          "ENSMUSG00000000028",
+          "ENSMUSG00000000049",
+          "ENSMUSG00000000056",
+          "ENSMUSG00000000058",
+          "ENSMUSG00000000078",
+          "ENSMUSG00000000085",
+          "ENSMUSG00000000088"
+        ],
+        "focal_range": {
+          "start": 0,
+          "stop": 8
+        },
+        "n_metric_and_bin_genes": 20131,
+        "query_timings_seconds": {
+          "rows": 0.030422481999266893
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.08882968699981575,
+          "metrics": 0.004772543999933987
+        },
+        "species": "mus_musculus",
+        "weights": {
+          "tome_cao_embryo_11": 1,
+          "tome_cao_embryo_13": 0,
+          "tome_cao_embryo_17": 0,
+          "tome_cao_embryo_21": 1,
+          "tome_cao_embryo_22": 1,
+          "tome_cao_embryo_33": 2,
+          "tome_cao_embryo_34": 1,
+          "tome_cao_embryo_35": 0,
+          "tome_cao_embryo_4": 3,
+          "tome_cao_embryo_41": 0,
+          "tome_cao_embryo_43": 0,
+          "tome_cao_embryo_48": 1,
+          "tome_cao_embryo_5": 0,
+          "tome_cao_embryo_51": 1,
+          "tome_cao_embryo_53": 1,
+          "tome_cao_embryo_55": 0,
+          "tome_cao_embryo_58": 3,
+          "tome_cao_embryo_59": 3,
+          "tome_cao_embryo_6": 0,
+          "tome_cao_embryo_61": 1,
+          "tome_cao_embryo_62": 0,
+          "tome_cao_embryo_65": 0,
+          "tome_cao_embryo_66": 0,
+          "tome_cao_embryo_8": 3,
+          "tome_cao_embryo_9": 3
+        },
+        "weights_sha256": "581186c70aa450864ced5a69e10e3e025a3329639b2715773300f46b49915cc5"
+      },
+      {
+        "artifact": {
+          "bytes": 4751059,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0001-source-001-block-001.json",
+          "sha256": "624edc8baf0214af6dc7875df793a08c5ae6359b8f63da9e18cf00f9f79f6c22"
+        },
+        "block_index": 1,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "cache_reused": false,
+        "embryos": [
+          "tome_cao_embryo_11",
+          "tome_cao_embryo_13",
+          "tome_cao_embryo_17",
+          "tome_cao_embryo_21",
+          "tome_cao_embryo_22",
+          "tome_cao_embryo_33",
+          "tome_cao_embryo_34",
+          "tome_cao_embryo_35",
+          "tome_cao_embryo_4",
+          "tome_cao_embryo_41",
+          "tome_cao_embryo_43",
+          "tome_cao_embryo_48",
+          "tome_cao_embryo_5",
+          "tome_cao_embryo_51",
+          "tome_cao_embryo_53",
+          "tome_cao_embryo_55",
+          "tome_cao_embryo_58",
+          "tome_cao_embryo_59",
+          "tome_cao_embryo_6",
+          "tome_cao_embryo_61",
+          "tome_cao_embryo_62",
+          "tome_cao_embryo_65",
+          "tome_cao_embryo_66",
+          "tome_cao_embryo_8",
+          "tome_cao_embryo_9"
+        ],
+        "exact_parent_parity": false,
+        "focal_gene_ids": [
+          "ENSMUSG00000000093",
+          "ENSMUSG00000000094",
+          "ENSMUSG00000000120",
+          "ENSMUSG00000000125",
+          "ENSMUSG00000000126",
+          "ENSMUSG00000000127",
+          "ENSMUSG00000000131",
+          "ENSMUSG00000000142"
+        ],
+        "focal_range": {
+          "start": 8,
+          "stop": 16
+        },
+        "n_metric_and_bin_genes": 20131,
+        "query_timings_seconds": {
+          "rows": 0.047349269001642824
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.08882968699981575,
+          "metrics": 0.004772543999933987
+        },
+        "species": "mus_musculus",
+        "weights": {
+          "tome_cao_embryo_11": 1,
+          "tome_cao_embryo_13": 0,
+          "tome_cao_embryo_17": 0,
+          "tome_cao_embryo_21": 1,
+          "tome_cao_embryo_22": 1,
+          "tome_cao_embryo_33": 2,
+          "tome_cao_embryo_34": 1,
+          "tome_cao_embryo_35": 0,
+          "tome_cao_embryo_4": 3,
+          "tome_cao_embryo_41": 0,
+          "tome_cao_embryo_43": 0,
+          "tome_cao_embryo_48": 1,
+          "tome_cao_embryo_5": 0,
+          "tome_cao_embryo_51": 1,
+          "tome_cao_embryo_53": 1,
+          "tome_cao_embryo_55": 0,
+          "tome_cao_embryo_58": 3,
+          "tome_cao_embryo_59": 3,
+          "tome_cao_embryo_6": 0,
+          "tome_cao_embryo_61": 1,
+          "tome_cao_embryo_62": 0,
+          "tome_cao_embryo_65": 0,
+          "tome_cao_embryo_66": 0,
+          "tome_cao_embryo_8": 3,
+          "tome_cao_embryo_9": 3
+        },
+        "weights_sha256": "581186c70aa450864ced5a69e10e3e025a3329639b2715773300f46b49915cc5"
+      },
+      {
+        "artifact": {
+          "bytes": 4616545,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0002-source-000-block-000.json",
+          "sha256": "ddf2e2e4449d3d84e73f5963a119f5235afb03d28d96549729578ce39c56042c"
+        },
+        "block_index": 0,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "cache_reused": true,
+        "embryos": [
+          "emb1",
+          "emb2",
+          "emb5",
+          "emb6",
+          "emb7"
+        ],
+        "exact_parent_parity": true,
+        "focal_gene_ids": [
+          "ENSG00000000003",
+          "ENSG00000000005",
+          "ENSG00000000419",
+          "ENSG00000000457",
+          "ENSG00000000460",
+          "ENSG00000000938",
+          "ENSG00000000971",
+          "ENSG00000001036"
+        ],
+        "focal_range": {
+          "start": 0,
+          "stop": 8
+        },
+        "n_metric_and_bin_genes": 19406,
+        "query_timings_seconds": {
+          "rows": 0.06796584999938204
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.03722183900026721,
+          "metrics": 0.005419944000095711
+        },
+        "species": "homo_sapiens",
+        "weights": {
+          "emb1": 2,
+          "emb2": 0,
+          "emb5": 0,
+          "emb6": 2,
+          "emb7": 1
+        },
+        "weights_sha256": "a9491872a27aacaf02674a60c0786d632396315c50f6e77f8b01d080f4d7eb18"
+      },
+      {
+        "artifact": {
+          "bytes": 4617167,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0002-source-000-block-001.json",
+          "sha256": "45ddf1ce2ef00f727a28417e3f965f05e4b2f1073c978cb8ae41350e0e3c7402"
+        },
+        "block_index": 1,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "cache_reused": false,
+        "embryos": [
+          "emb1",
+          "emb2",
+          "emb5",
+          "emb6",
+          "emb7"
+        ],
+        "exact_parent_parity": false,
+        "focal_gene_ids": [
+          "ENSG00000001084",
+          "ENSG00000001167",
+          "ENSG00000001460",
+          "ENSG00000001461",
+          "ENSG00000001497",
+          "ENSG00000001561",
+          "ENSG00000001617",
+          "ENSG00000001626"
+        ],
+        "focal_range": {
+          "start": 8,
+          "stop": 16
+        },
+        "n_metric_and_bin_genes": 19406,
+        "query_timings_seconds": {
+          "rows": 0.03596651699990616
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.03722183900026721,
+          "metrics": 0.005419944000095711
+        },
+        "species": "homo_sapiens",
+        "weights": {
+          "emb1": 2,
+          "emb2": 0,
+          "emb5": 0,
+          "emb6": 2,
+          "emb7": 1
+        },
+        "weights_sha256": "a9491872a27aacaf02674a60c0786d632396315c50f6e77f8b01d080f4d7eb18"
+      },
+      {
+        "artifact": {
+          "bytes": 4765590,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0002-source-001-block-000.json",
+          "sha256": "cb6a58e53e5b10357389252b02427b7dcf0c3e72cb79c8b5c79b00f289231bcb"
+        },
+        "block_index": 0,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "cache_reused": true,
+        "embryos": [
+          "tome_cao_embryo_11",
+          "tome_cao_embryo_13",
+          "tome_cao_embryo_17",
+          "tome_cao_embryo_21",
+          "tome_cao_embryo_22",
+          "tome_cao_embryo_33",
+          "tome_cao_embryo_34",
+          "tome_cao_embryo_35",
+          "tome_cao_embryo_4",
+          "tome_cao_embryo_41",
+          "tome_cao_embryo_43",
+          "tome_cao_embryo_48",
+          "tome_cao_embryo_5",
+          "tome_cao_embryo_51",
+          "tome_cao_embryo_53",
+          "tome_cao_embryo_55",
+          "tome_cao_embryo_58",
+          "tome_cao_embryo_59",
+          "tome_cao_embryo_6",
+          "tome_cao_embryo_61",
+          "tome_cao_embryo_62",
+          "tome_cao_embryo_65",
+          "tome_cao_embryo_66",
+          "tome_cao_embryo_8",
+          "tome_cao_embryo_9"
+        ],
+        "exact_parent_parity": true,
+        "focal_gene_ids": [
+          "ENSMUSG00000000001",
+          "ENSMUSG00000000028",
+          "ENSMUSG00000000049",
+          "ENSMUSG00000000056",
+          "ENSMUSG00000000058",
+          "ENSMUSG00000000078",
+          "ENSMUSG00000000085",
+          "ENSMUSG00000000088"
+        ],
+        "focal_range": {
+          "start": 0,
+          "stop": 8
+        },
+        "n_metric_and_bin_genes": 20131,
+        "query_timings_seconds": {
+          "rows": 0.03137480799887271
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.036630420001529274,
+          "metrics": 0.006548033999933978
+        },
+        "species": "mus_musculus",
+        "weights": {
+          "tome_cao_embryo_11": 1,
+          "tome_cao_embryo_13": 0,
+          "tome_cao_embryo_17": 1,
+          "tome_cao_embryo_21": 0,
+          "tome_cao_embryo_22": 1,
+          "tome_cao_embryo_33": 1,
+          "tome_cao_embryo_34": 1,
+          "tome_cao_embryo_35": 0,
+          "tome_cao_embryo_4": 5,
+          "tome_cao_embryo_41": 0,
+          "tome_cao_embryo_43": 4,
+          "tome_cao_embryo_48": 1,
+          "tome_cao_embryo_5": 0,
+          "tome_cao_embryo_51": 1,
+          "tome_cao_embryo_53": 1,
+          "tome_cao_embryo_55": 1,
+          "tome_cao_embryo_58": 1,
+          "tome_cao_embryo_59": 1,
+          "tome_cao_embryo_6": 0,
+          "tome_cao_embryo_61": 1,
+          "tome_cao_embryo_62": 2,
+          "tome_cao_embryo_65": 0,
+          "tome_cao_embryo_66": 1,
+          "tome_cao_embryo_8": 1,
+          "tome_cao_embryo_9": 0
+        },
+        "weights_sha256": "20761153500b59a29a4a88c812bab4002ae212dc2456c12fd5517632936d0e32"
+      },
+      {
+        "artifact": {
+          "bytes": 4766521,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0002-source-001-block-001.json",
+          "sha256": "a0e96a96565ca02e04e19477ef2cc3878ac8ae84641e51f723c97394560acbe4"
+        },
+        "block_index": 1,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "cache_reused": false,
+        "embryos": [
+          "tome_cao_embryo_11",
+          "tome_cao_embryo_13",
+          "tome_cao_embryo_17",
+          "tome_cao_embryo_21",
+          "tome_cao_embryo_22",
+          "tome_cao_embryo_33",
+          "tome_cao_embryo_34",
+          "tome_cao_embryo_35",
+          "tome_cao_embryo_4",
+          "tome_cao_embryo_41",
+          "tome_cao_embryo_43",
+          "tome_cao_embryo_48",
+          "tome_cao_embryo_5",
+          "tome_cao_embryo_51",
+          "tome_cao_embryo_53",
+          "tome_cao_embryo_55",
+          "tome_cao_embryo_58",
+          "tome_cao_embryo_59",
+          "tome_cao_embryo_6",
+          "tome_cao_embryo_61",
+          "tome_cao_embryo_62",
+          "tome_cao_embryo_65",
+          "tome_cao_embryo_66",
+          "tome_cao_embryo_8",
+          "tome_cao_embryo_9"
+        ],
+        "exact_parent_parity": false,
+        "focal_gene_ids": [
+          "ENSMUSG00000000093",
+          "ENSMUSG00000000094",
+          "ENSMUSG00000000120",
+          "ENSMUSG00000000125",
+          "ENSMUSG00000000126",
+          "ENSMUSG00000000127",
+          "ENSMUSG00000000131",
+          "ENSMUSG00000000142"
+        ],
+        "focal_range": {
+          "start": 8,
+          "stop": 16
+        },
+        "n_metric_and_bin_genes": 20131,
+        "query_timings_seconds": {
+          "rows": 0.060072209998907056
+        },
+        "shared_metric_bin_timings_seconds": {
+          "bins": 0.036630420001529274,
+          "metrics": 0.006548033999933978
+        },
+        "species": "mus_musculus",
+        "weights": {
+          "tome_cao_embryo_11": 1,
+          "tome_cao_embryo_13": 0,
+          "tome_cao_embryo_17": 1,
+          "tome_cao_embryo_21": 0,
+          "tome_cao_embryo_22": 1,
+          "tome_cao_embryo_33": 1,
+          "tome_cao_embryo_34": 1,
+          "tome_cao_embryo_35": 0,
+          "tome_cao_embryo_4": 5,
+          "tome_cao_embryo_41": 0,
+          "tome_cao_embryo_43": 4,
+          "tome_cao_embryo_48": 1,
+          "tome_cao_embryo_5": 0,
+          "tome_cao_embryo_51": 1,
+          "tome_cao_embryo_53": 1,
+          "tome_cao_embryo_55": 1,
+          "tome_cao_embryo_58": 1,
+          "tome_cao_embryo_59": 1,
+          "tome_cao_embryo_6": 0,
+          "tome_cao_embryo_61": 1,
+          "tome_cao_embryo_62": 2,
+          "tome_cao_embryo_65": 0,
+          "tome_cao_embryo_66": 1,
+          "tome_cao_embryo_8": 1,
+          "tome_cao_embryo_9": 0
+        },
+        "weights_sha256": "20761153500b59a29a4a88c812bab4002ae212dc2456c12fd5517632936d0e32"
+      }
+    ],
+    "receipt_log": {
+      "bytes": 405,
+      "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_supervisor/producer.log",
+      "sha256": "d348c882f9c06589b0fdb2c928f6a4890e7a1d03037a15a65f03a75c51153228"
+    },
+    "resampled_block_queries": 12,
+    "resources": {
+      "aggregate_working_array_upper_bytes": 196906001,
+      "max_rss_bytes": 4294967296,
+      "max_wall_seconds": 900.0,
+      "minimum_free_disk_bytes": 21474836480,
+      "minimum_host_available_ram_bytes": 4294967296,
+      "native_threads": 1,
+      "observed_peak_process_rss_bytes": 502571008,
+      "observed_peak_resident_numeric_array_bytes": 48729477,
+      "peak_resident_blocks": 1,
+      "per_source_preallocation_estimates": {
+        "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores": {
+          "csr_bytes": 806472,
+          "largest_h5_buffer_bytes": 8811296,
+          "native_range_scratch_bytes": 4360110,
+          "retained_metric_bin_numeric_payload_bytes": 4968096,
+          "support_snapshot_bytes": 1100024,
+          "working_upper_bytes": 51909670
+        },
+        "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores": {
+          "csr_bytes": 413152,
+          "largest_h5_buffer_bytes": 41312176,
+          "native_range_scratch_bytes": 3633425,
+          "retained_metric_bin_numeric_payload_bytes": 5154336,
+          "support_snapshot_bytes": 1314272,
+          "working_upper_bytes": 196906001
+        }
+      },
+      "working_array_cap_bytes": 209715200
+    },
+    "second_block_fresh_public_parity_confirmed": true,
+    "seeded_metric_bin_and_all_block_row_seconds": 0.9870283449999988,
+    "species": 2,
+    "summary": {
+      "bytes": 87675,
+      "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks/summary.json",
+      "sha256": "1c4eb7264311b9d032475abe667914bef656871a8498c25d6db8c6daecfd9edc"
+    },
+    "timing_scope": "Component timers do not overlap except named totals and row/unit comparisons. Public controls include unchanged internal native validation, verification, construction/loading, arithmetic and publication. Second-block construction includes its cache hashes/publication. Metrics/bins are timed once per source/draw and shared across both blocks; copied per-child references must not be added twice. Elapsed snapshot stops before summary serialization/publication. Publication/outer duration is returned only in an unpersisted receipt.",
+    "timings_seconds": {
+      "authenticated_first_block_and_metric_h5_loading": 0.43782621399986965,
+      "child_serialization_and_write": 0.6188620900011301,
+      "construction_native_preparation_and_verification": 77.59538813100153,
+      "elapsed_before_summary_serialization_and_publication": 795.772670155,
+      "entry_source_verification_and_verified_module_loading": 32.87929445900045,
+      "final_complete_source_and_generated_artifact_verification": 29.056833022999854,
+      "parent_lineage_parity_and_peak_capacity_validation": 30.794183546000568,
+      "physical_producer_array_comparison": 0.43457965400193643,
+      "public_controls_including_repeated_native_checks_and_cache_work": 546.6704968900012,
+      "second_block_construction_and_cache_publication": 72.626647047,
+      "seeded_all_gene_bins_once_per_source_draw": 0.36415762200158497,
+      "seeded_all_gene_metrics_once_per_source_draw": 0.0318624669998826,
+      "seeded_block_rows": 0.5910082559985312,
+      "unit_and_parent_exact_comparison": 0.8441449640013161
+    },
+    "unavailable_rows": 59,
+    "unique_all_gene_metric_and_bin_records": 118611,
+    "unique_metric_bin_states": 6,
+    "unit_controls": [
+      {
+        "artifact": {
+          "bytes": 4627685,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/unit-control-source-000-block-000.json",
+          "sha256": "39f4603d189868453c575f30b6c6aeaf315ed00f574c0681814ef07d38bb5ebe"
+        },
+        "block_index": 0,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "focal_gene_ids": [
+          "ENSG00000000003",
+          "ENSG00000000005",
+          "ENSG00000000419",
+          "ENSG00000000457",
+          "ENSG00000000460",
+          "ENSG00000000938",
+          "ENSG00000000971",
+          "ENSG00000001036"
+        ],
+        "focal_range": {
+          "start": 0,
+          "stop": 8
+        },
+        "physical_cache_parity": true,
+        "post_call_artifact_and_cache_binding_seconds": 0.5641155060002347,
+        "public_engine_call_seconds": 79.16664864300037,
+        "species": "homo_sapiens",
+        "streamed_unit_parity": true,
+        "weights": {
+          "emb1": 1,
+          "emb2": 1,
+          "emb5": 1,
+          "emb6": 1,
+          "emb7": 1
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 4627593,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/unit-control-source-000-block-001.json",
+          "sha256": "a19058cb3bb004b4c2ae5c63fbf42bdf3312743c5baee05c738ffcee7d49f352"
+        },
+        "block_index": 1,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "focal_gene_ids": [
+          "ENSG00000001084",
+          "ENSG00000001167",
+          "ENSG00000001460",
+          "ENSG00000001461",
+          "ENSG00000001497",
+          "ENSG00000001561",
+          "ENSG00000001617",
+          "ENSG00000001626"
+        ],
+        "focal_range": {
+          "start": 8,
+          "stop": 16
+        },
+        "physical_cache_parity": true,
+        "post_call_artifact_and_cache_binding_seconds": 0.48770006199993077,
+        "public_engine_call_seconds": 213.6396025060003,
+        "species": "homo_sapiens",
+        "streamed_unit_parity": true,
+        "weights": {
+          "emb1": 1,
+          "emb2": 1,
+          "emb5": 1,
+          "emb6": 1,
+          "emb7": 1
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 4753989,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/unit-control-source-001-block-000.json",
+          "sha256": "11317bae1c1a8755cf060959687b753b10e206799b35e098cb940fff415d334e"
+        },
+        "block_index": 0,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "focal_gene_ids": [
+          "ENSMUSG00000000001",
+          "ENSMUSG00000000028",
+          "ENSMUSG00000000049",
+          "ENSMUSG00000000056",
+          "ENSMUSG00000000058",
+          "ENSMUSG00000000078",
+          "ENSMUSG00000000085",
+          "ENSMUSG00000000088"
+        ],
+        "focal_range": {
+          "start": 0,
+          "stop": 8
+        },
+        "physical_cache_parity": true,
+        "post_call_artifact_and_cache_binding_seconds": 0.5034672350011533,
+        "public_engine_call_seconds": 82.09952996100037,
+        "species": "mus_musculus",
+        "streamed_unit_parity": true,
+        "weights": {
+          "tome_cao_embryo_11": 1,
+          "tome_cao_embryo_13": 1,
+          "tome_cao_embryo_17": 1,
+          "tome_cao_embryo_21": 1,
+          "tome_cao_embryo_22": 1,
+          "tome_cao_embryo_33": 1,
+          "tome_cao_embryo_34": 1,
+          "tome_cao_embryo_35": 1,
+          "tome_cao_embryo_4": 1,
+          "tome_cao_embryo_41": 1,
+          "tome_cao_embryo_43": 1,
+          "tome_cao_embryo_48": 1,
+          "tome_cao_embryo_5": 1,
+          "tome_cao_embryo_51": 1,
+          "tome_cao_embryo_53": 1,
+          "tome_cao_embryo_55": 1,
+          "tome_cao_embryo_58": 1,
+          "tome_cao_embryo_59": 1,
+          "tome_cao_embryo_6": 1,
+          "tome_cao_embryo_61": 1,
+          "tome_cao_embryo_62": 1,
+          "tome_cao_embryo_65": 1,
+          "tome_cao_embryo_66": 1,
+          "tome_cao_embryo_8": 1,
+          "tome_cao_embryo_9": 1
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 4753994,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/unit-control-source-001-block-001.json",
+          "sha256": "2d0516a6069e7b1e71962b3a92521d43c57953a93f2ccd8d9f5a8431a9d97719"
+        },
+        "block_index": 1,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "focal_gene_ids": [
+          "ENSMUSG00000000093",
+          "ENSMUSG00000000094",
+          "ENSMUSG00000000120",
+          "ENSMUSG00000000125",
+          "ENSMUSG00000000126",
+          "ENSMUSG00000000127",
+          "ENSMUSG00000000131",
+          "ENSMUSG00000000142"
+        ],
+        "focal_range": {
+          "start": 8,
+          "stop": 16
+        },
+        "physical_cache_parity": true,
+        "post_call_artifact_and_cache_binding_seconds": 0.5519821570014756,
+        "public_engine_call_seconds": 171.7647157800002,
+        "species": "mus_musculus",
+        "streamed_unit_parity": true,
+        "weights": {
+          "tome_cao_embryo_11": 1,
+          "tome_cao_embryo_13": 1,
+          "tome_cao_embryo_17": 1,
+          "tome_cao_embryo_21": 1,
+          "tome_cao_embryo_22": 1,
+          "tome_cao_embryo_33": 1,
+          "tome_cao_embryo_34": 1,
+          "tome_cao_embryo_35": 1,
+          "tome_cao_embryo_4": 1,
+          "tome_cao_embryo_41": 1,
+          "tome_cao_embryo_43": 1,
+          "tome_cao_embryo_48": 1,
+          "tome_cao_embryo_5": 1,
+          "tome_cao_embryo_51": 1,
+          "tome_cao_embryo_53": 1,
+          "tome_cao_embryo_55": 1,
+          "tome_cao_embryo_58": 1,
+          "tome_cao_embryo_59": 1,
+          "tome_cao_embryo_6": 1,
+          "tome_cao_embryo_61": 1,
+          "tome_cao_embryo_62": 1,
+          "tome_cao_embryo_65": 1,
+          "tome_cao_embryo_66": 1,
+          "tome_cao_embryo_8": 1,
+          "tome_cao_embryo_9": 1
+        }
+      }
+    ],
+    "unit_metric_bin_timings_seconds": [
+      {
+        "bins": 0.03517084200029785,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+        "metrics": 0.004018282001197804
+      },
+      {
+        "bins": 0.07787846199971682,
+        "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+        "metrics": 0.004650056000173208
+      }
+    ],
+    "validation": {
+      "all_blocks_exact_public_unit_parity": true,
+      "construction_native_validations": 2,
+      "first_block_exact_parent_parity": true,
+      "immutable_arrays": true,
+      "physical_cache_arrays_axes_counts_exact_producer_parity": true,
+      "public_native_unit_controls": 4,
+      "restarted_sessions_reverify_all_sources": true,
+      "scientific_source_reads_during_queries": false,
+      "second_block_seeded_public_scorer_parity": "requires_independent_postpublication_check",
+      "seeded_all_gene_bin_computations": 6,
+      "seeded_all_gene_metric_computations": 6,
+      "source_map_verification_passes": 2
+    },
+    "whole_family_or_complete_method_runtime_measured": false
+  },
+  "implementation_commit": "0b4fe6e8c4d9d912e4e97a7f7d55dc2d495d9f36",
+  "method_rules_changed": false,
+  "parent": {
+    "prepared_public_parity": {
+      "bytes": 47508,
+      "path": "runs/b3_feasibility/20261003/prepared_sparse_session_parity.json",
+      "sha256": "3e835463b68aec3b17b27f546ed064d68424726170f1116061f2d0838e28f3e9"
+    },
+    "prepared_request": {
+      "bytes": 43238,
+      "path": "docs/agents/b3-prepared-sparse-session-request-2026-10-03.json",
+      "sha256": "769b20ded987ed48f9130df2e00e33e5496fb9909b0ce646c0df2050445853ca"
+    },
+    "prepared_summary": {
+      "bytes": 60892,
+      "path": "runs/b3_feasibility/20261003/prepared_sparse_session/summary.json",
+      "sha256": "3398367b12a69725f5cdce37a68266b0491fdf6caa2cdd5f1fb99ae0c6510821"
+    },
+    "prior_source_reconciliation": {
+      "bytes": 46125,
+      "path": "runs/b3_feasibility/20261003/prepared_sparse_session_source_reconciliation.json",
+      "sha256": "b25c0827dcaa783a5b88c6f76e5ccf574b55d0b6399c4e324c1b6f21f5d4d29b"
+    }
+  },
+  "public_oracle_parity": {
+    "artifact": {
+      "bytes": 57340,
+      "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_parity.json",
+      "sha256": "60fbecd5e68f9992f92b748cf7075caa10b39f64e91d8d8289233e2890baad96"
+    },
+    "checks": [
+      {
+        "block_index": 0,
+        "draw_index": 0,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 5,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "homo_sapiens"
+      },
+      {
+        "block_index": 1,
+        "draw_index": 0,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 4,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "homo_sapiens"
+      },
+      {
+        "block_index": 0,
+        "draw_index": 1,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 5,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "homo_sapiens"
+      },
+      {
+        "block_index": 1,
+        "draw_index": 1,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 5,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "homo_sapiens"
+      },
+      {
+        "block_index": 0,
+        "draw_index": 2,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 6,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "homo_sapiens"
+      },
+      {
+        "block_index": 1,
+        "draw_index": 2,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 2,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "homo_sapiens"
+      },
+      {
+        "block_index": 0,
+        "draw_index": 0,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 1,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "mus_musculus"
+      },
+      {
+        "block_index": 1,
+        "draw_index": 0,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 2,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "mus_musculus"
+      },
+      {
+        "block_index": 0,
+        "draw_index": 1,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 1,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "mus_musculus"
+      },
+      {
+        "block_index": 1,
+        "draw_index": 1,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 2,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "mus_musculus"
+      },
+      {
+        "block_index": 0,
+        "draw_index": 2,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 1,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "mus_musculus"
+      },
+      {
+        "block_index": 1,
+        "draw_index": 2,
+        "exact_bins_counts_reasons": true,
+        "finite_diagnostic_rows": 3,
+        "focal_genes": 8,
+        "metric_max_absolute_error": 0.0,
+        "score_max_absolute_errors": {
+          "diagnostic_z": 0.0,
+          "null_mean_impact_bits": 0.0,
+          "null_sample_sd_bits": 0.0,
+          "raw_impact_bits": 0.0
+        },
+        "species": "mus_musculus"
+      }
+    ],
+    "elapsed_scope": "Helper main after public-library imports through final source verification, before report serialization; separate supervisor timestamps include startup/publication",
+    "elapsed_seconds": 291.39411578699946,
+    "exact_observed_error_zero": true,
+    "peak_rss_bytes": 1207140352,
+    "status": "passed"
+  },
+  "request": {
+    "artifact": {
+      "bytes": 47086,
+      "path": "docs/agents/b3-streamed-sparse-blocks-request-2026-10-03.json",
+      "sha256": "dfabd0d76351fbbc0c3d901f6539ad795438625506f49164a0f0aab311241aeb"
+    },
+    "input_bindings": 262
+  },
+  "retained_gates": {
+    "actual_fixed_family_bootstrap_executed": false,
+    "checkpoint_tensors_loaded": false,
+    "complete_native_likelihood_effect_attestation": false,
+    "complete_production_and_independent_replay_bootstrap_runtime_measured": false,
+    "fdr": null,
+    "full_cohort_scores_available": false,
+    "gpu_work_performed": false,
+    "model_forwards_performed": false,
+    "observed_fixed_pair_coverage": {
+      "coverage": 0.325437758675581,
+      "n_pairs": 5111,
+      "n_vocabulary_joined_pairs": 15705
+    },
+    "original_necessary_joint_support_draws": 0,
+    "original_reporting_eligible": false,
+    "original_support_draws_required": 2000,
+    "p_values": null,
+    "project_finetuned_checkpoint_training_selection_provenance_available": false,
+    "reportable_interval": null,
+    "whole_arm_scoring_and_aggregation_runtime_measured": false,
+    "whole_family_cache_and_traversal_runtime_measured": false
+  },
+  "retained_tdd_artifacts": {
+    "streamed_sparse_blocks_canonical_red.xml": {
+      "bytes": 1380,
+      "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_canonical_red.xml",
+      "sha256": "6ce5d069b01d62162ad5a200af332912447ffcde94e91ef983be7ddfa22c4602"
+    },
+    "streamed_sparse_blocks_native_green.xml": {
+      "bytes": 538,
+      "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_native_green.xml",
+      "sha256": "9408d4c720dd0d4eaa2b4f20586ea3a9dda72061a976ad01f0719fc96c04b874"
+    },
+    "streamed_sparse_blocks_native_red.xml": {
+      "bytes": 1732,
+      "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_native_red.xml",
+      "sha256": "f6a8329742062232449df4041ea1876f70e19074fb3879b73080efac8296e938"
+    },
+    "streamed_sparse_blocks_schema_green.xml": {
+      "bytes": 390,
+      "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_schema_green.xml",
+      "sha256": "13081763aad63007d471330d1468d681d16e4260b20e8a90a5bed40c118a34e7"
+    },
+    "streamed_sparse_blocks_schema_red.xml": {
+      "bytes": 1162,
+      "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_schema_red.xml",
+      "sha256": "0f09f9e0157b2449ba9567c7326140a19852533abd08908054e71ea788730fd5"
+    }
+  },
+  "review": {
+    "reviewed_commit": "0b4fe6e8c4d9d912e4e97a7f7d55dc2d495d9f36",
+    "spec": {
+      "agent": "/root/deletion_acceleration_review",
+      "remaining_findings": 0,
+      "resolved_issues": "Physical support storage rejection, canonical species identities, separated control timers, exact typed ranges and fresh oracle nonfinite rejection"
+    },
+    "standards": {
+      "agent": "/root/full_cohort_support_bound",
+      "hard_breaches": 0,
+      "optional_findings": 0
+    }
+  },
+  "schema": "b3_streamed_sparse_blocks_milestone_evidence_v1",
+  "scientific_readiness": "unavailable",
+  "source_reconciliation": {
+    "artifact": {
+      "bytes": 53355,
+      "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_source_reconciliation.json",
+      "sha256": "f7186b1314e3018cf88d5a062bcd463d28bf09a071bdecb0cdc66547e7632d14"
+    },
+    "elapsed_seconds": 30.623091104000196,
+    "original_pilot_software": {
+      "homo_sapiens": {
+        "all_software_hashes_match": true,
+        "provenance_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores/provenance.json",
+        "provenance_sha256": "01e981380435a695c13d4c40277e1e57f59769e2baf8e8cd22b58d5506c0ae30",
+        "software_files": 107
+      },
+      "mus_musculus": {
+        "all_software_hashes_match": true,
+        "provenance_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores/provenance.json",
+        "provenance_sha256": "5ace72f6376f591632ae38e55cb96d005723a4dfa496f7418cc3d6343679733b",
+        "software_files": 109
+      }
+    },
+    "peak_rss_bytes": 21692416,
+    "published_artifact_references": 32,
+    "scope": "Union of prior253 verified bindings, streamed request/session/parity maps and every declared cache/report artifact; undeclared references remain references.",
+    "unique_verified_source_files": 289
+  },
+  "static_checks": {
+    "artifact": {
+      "bytes": 550,
+      "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_static_checks.json",
+      "sha256": "9dc829e5b44498845b9bccf594ec9f82f069a4b762119d2b34ad2e19316b1135"
+    },
+    "file_sha256": {
+      "scripts/replay_b3_streamed_sparse_blocks.py": "3d29c1f49e7575c4b2201a963c050f4e758c250f6d55748b06af23589ae7a762",
+      "test/test_b3_streamed_sparse_blocks.py": "15b45873c598a861e0495fdf1f3596771c42dfff71d8a188714ba66190016811"
+    },
+    "mypy": "passed",
+    "mypy_version": "2.4.0",
+    "python_files": 2,
+    "python_version": "3.11.15",
+    "ruff_check": "passed",
+    "ruff_format_check": "passed",
+    "ruff_version": "0.15.11",
+    "tool_environment": "Existing local Ruff and offline cached mypy; no dependency install or download"
+  },
+  "status": "bounded_streamed_blocks_verified",
+  "supervisors": {
+    "final_source_audit": {
+      "artifact": {
+        "bytes": 1078,
+        "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_audit_supervisor/state.json",
+        "sha256": "501af12321efca4b08c7d1b8086393e8450b41feef3287c2093c40325a6e0fd7"
+      },
+      "producer_log": {
+        "bytes": 146,
+        "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_audit_supervisor/producer.log",
+        "sha256": "72aaa4cf557e6026b45e9b4f493aeb3bf266df5090071e736febb2b97963c8a1"
+      },
+      "state": {
+        "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+        "command": [
+          ".venv/bin/python",
+          "runs/b3_feasibility/20261003/sparse_backend_tools/b3_audit_streamed_blocks.py",
+          "docs/agents/b3-streamed-sparse-blocks-request-2026-10-03.json",
+          "runs/b3_feasibility/20261003/streamed_sparse_blocks/summary.json",
+          "runs/b3_feasibility/20261003/streamed_sparse_blocks_parity.json",
+          "runs/b3_feasibility/20261003/streamed_sparse_blocks_source_reconciliation.json"
+        ],
+        "disk_available_gib": 383.2632598876953,
+        "elapsed_seconds": 30.06821505500011,
+        "finished_unix": 1791023837.1623573,
+        "heartbeat_unix": 1791023836.14182,
+        "host_available_ram_gib": 29.63449478149414,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 900.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "producer_pid": 3,
+        "producer_rss_gib": 0.019847869873046875,
+        "producer_start_ticks": 1242742,
+        "return_code": 0,
+        "started_unix": 1791023806.6711106,
+        "status": "completed",
+        "supervisor_pid": 2
+      },
+      "state_elapsed_scope": "Resource fields and elapsed_seconds are the last monitor sample, not a final timer or peak",
+      "timestamp_elapsed_seconds": 30.491246700286865
+    },
+    "fresh_public_parity": {
+      "artifact": {
+        "bytes": 911,
+        "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_parity_supervisor/state.json",
+        "sha256": "795f419c228e966b051e99c3b914ce3669de386425c2586e61452a455e7ac25d"
+      },
+      "producer_log": {
+        "bytes": 3538,
+        "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_parity_supervisor/producer.log",
+        "sha256": "01fba319871d5a0980f27d2ad2dacea56e7d5eedc5dc86d0e447d695f5f9b55d"
+      },
+      "state": {
+        "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+        "command": [
+          ".venv/bin/python",
+          "runs/b3_feasibility/20261003/sparse_backend_tools/b3_check_streamed_blocks.py",
+          "runs/b3_feasibility/20261003/streamed_sparse_blocks",
+          "runs/b3_feasibility/20261003/streamed_sparse_blocks_parity.json"
+        ],
+        "disk_available_gib": 383.2632637023926,
+        "elapsed_seconds": 315.5397146489995,
+        "finished_unix": 1791023776.8603237,
+        "heartbeat_unix": 1791023775.8558104,
+        "host_available_ram_gib": 29.094623565673828,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 900.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "producer_pid": 3,
+        "producer_rss_gib": 0.8031997680664062,
+        "producer_start_ticks": 1207952,
+        "return_code": 0,
+        "started_unix": 1791023477.3837883,
+        "status": "completed",
+        "supervisor_pid": 2
+      },
+      "state_elapsed_scope": "Resource fields and elapsed_seconds are the last monitor sample, not a final timer or peak",
+      "timestamp_elapsed_seconds": 299.476535320282
+    },
+    "full_cpu_suite": {
+      "artifact": {
+        "bytes": 841,
+        "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_full_suite_supervisor/state.json",
+        "sha256": "e88087a8537f3a58511f13b4977ebe9b24eb7ea1d318d0cd6648c96cadc8e1c2"
+      },
+      "producer_log": {
+        "bytes": 5485,
+        "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_full_suite_supervisor/producer.log",
+        "sha256": "04e4f31a2a60212e7335bfcf2959cf5454399cc4d496731f04b236184489cb80"
+      },
+      "state": {
+        "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "--tb=short",
+          "--junitxml=runs/b3_feasibility/20261003/streamed_sparse_blocks_full_suite.xml"
+        ],
+        "disk_available_gib": 383.26319885253906,
+        "elapsed_seconds": 751.1754705140011,
+        "finished_unix": 1791024586.6226292,
+        "heartbeat_unix": 1791024578.4083166,
+        "host_available_ram_gib": 28.45117950439453,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 6.0,
+          "max_wall_seconds": 2400.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "producer_pid": 24989,
+        "producer_rss_gib": 0.7703933715820312,
+        "producer_start_ticks": 1247981,
+        "return_code": 0,
+        "started_unix": 1791023858.466246,
+        "status": "completed",
+        "supervisor_pid": 24988
+      },
+      "state_elapsed_scope": "Resource fields and elapsed_seconds are the last monitor sample, not a final timer or peak",
+      "timestamp_elapsed_seconds": 728.1563832759857
+    },
+    "streamed_session": {
+      "artifact": {
+        "bytes": 938,
+        "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_supervisor/state.json",
+        "sha256": "48a41680fafe5eb51e19a45bae86832504c2fa2caf99e9191e4edcc2d55301c1"
+      },
+      "producer_log": {
+        "bytes": 405,
+        "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_supervisor/producer.log",
+        "sha256": "d348c882f9c06589b0fdb2c928f6a4890e7a1d03037a15a65f03a75c51153228"
+      },
+      "state": {
+        "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+        "command": [
+          ".venv/bin/python",
+          "scripts/replay_b3_streamed_sparse_blocks.py",
+          "--request",
+          "docs/agents/b3-streamed-sparse-blocks-request-2026-10-03.json",
+          "--output",
+          "runs/b3_feasibility/20261003/streamed_sparse_blocks",
+          "--max-seconds",
+          "900"
+        ],
+        "disk_available_gib": 383.2611618041992,
+        "elapsed_seconds": 781.5803916469995,
+        "finished_unix": 1791023440.4931164,
+        "heartbeat_unix": 1791023425.4661617,
+        "host_available_ram_gib": 29.414596557617188,
+        "limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 950.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "producer_pid": 3,
+        "producer_rss_gib": 0.24713134765625,
+        "producer_start_ticks": 1124424,
+        "return_code": 0,
+        "started_unix": 1791022685.7071807,
+        "status": "completed",
+        "supervisor_pid": 2
+      },
+      "state_elapsed_scope": "Resource fields and elapsed_seconds are the last monitor sample, not a final timer or peak",
+      "timestamp_elapsed_seconds": 754.7859356403351
+    }
+  },
+  "tests": {
+    "cuda_visible_devices": "",
+    "external_storage_regression": {
+      "artifact": {
+        "bytes": 392,
+        "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_storage_green.xml",
+        "sha256": "2756d00b785b477fabf6227e08b23e9bdfc6669b9c011bcc8e1d9e4f66c286f0"
+      },
+      "errors": 0,
+      "failures": 0,
+      "passed": 1,
+      "seconds": 82.385,
+      "skipped": 0,
+      "tests": 1
+    },
+    "full_cpu": {
+      "artifact": {
+        "bytes": 91180,
+        "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_full_suite.xml",
+        "sha256": "2a69100cf90513e6261eb3657f4b793d88957267fb125cc2978431a9868f2498"
+      },
+      "errors": 0,
+      "failures": 0,
+      "passed": 689,
+      "seconds": 757.317,
+      "skipped": 5,
+      "tests": 694
+    },
+    "real_model_tests_enabled": false,
+    "targeted": {
+      "artifact": {
+        "bytes": 4491,
+        "path": "runs/b3_feasibility/20261003/streamed_sparse_blocks_targeted.xml",
+        "sha256": "1446b4d62c10cfa4cb2eaba13e7690a14d9b71bee1dbab1f92473379c1b0ee5f"
+      },
+      "errors": 0,
+      "failures": 0,
+      "passed": 29,
+      "seconds": 283.271,
+      "skipped": 0,
+      "tests": 29
+    }
+  },
+  "ticket_05": "open",
+  "ticket_11": "excluded",
+  "verification_helpers": {
+    "b3_audit_streamed_blocks.py": {
+      "bytes": 4277,
+      "path": "runs/b3_feasibility/20261003/sparse_backend_tools/b3_audit_streamed_blocks.py",
+      "sha256": "b81fe584a8dd06e44db273aca0fc8a65d17c863e6c9b3c8db56f14e810ee79bb"
+    },
+    "b3_check_streamed_blocks.py": {
+      "bytes": 8658,
+      "path": "runs/b3_feasibility/20261003/sparse_backend_tools/b3_check_streamed_blocks.py",
+      "sha256": "cd3c3b85e9ec87b1c6a7eee2610a44381ff0104409544775ffa228504034b96f"
+    },
+    "b3_make_streamed_request.py": {
+      "bytes": 3280,
+      "path": "runs/b3_feasibility/20261003/sparse_backend_tools/b3_make_streamed_request.py",
+      "sha256": "84fdd074ea4ef3b53e5d117e76ac8ff1cbf1b9622ac9e2f94a83dabfa8eb14c4"
+    }
+  }
+}
