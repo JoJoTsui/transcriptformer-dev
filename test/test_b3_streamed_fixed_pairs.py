@@ -331,14 +331,75 @@ def _native_handoff(observed_pair, tmp_path):
     return reduction_request, summary
 
 
-def test_public_run_rebuilds_native_statistics_and_retains_incomplete_fixed_family(request, tmp_path):
-    handed_off = os.environ.get("B3_TEST_FIXED_FAMILY_HANDOFF")
+@pytest.fixture
+def authentic_reduction_handoff(request, tmp_path):
+    # Preserve one genuine public file handoff for all native tests in this
+    # invocation. Each run still authenticates its complete byte closure.
+    handed_off = os.environ.get("B3_TEST_FIXED_FAMILY_HANDOFF") or getattr(
+        request.config, "_b3_fixed_pair_public_handoff", None
+    )
     if handed_off:
-        request = Path(handed_off)
-        parent = json.loads(Path(json.loads(request.read_text())["streamed_summary"]).read_text())
+        reduction_request = Path(handed_off)
+        parent = json.loads(Path(json.loads(reduction_request.read_text())["streamed_summary"]).read_text())
     else:
         observed = request.getfixturevalue("observed_pair")
-        request, parent = _native_handoff(observed, tmp_path)
+        reduction_request, parent = _native_handoff(observed, tmp_path)
+        setattr(request.config, "_b3_fixed_pair_public_handoff", str(reduction_request))
+    return reduction_request, parent
+
+
+def test_public_run_rejects_source_child_and_marker_mutation_during_summary_fsync(
+    authentic_reduction_handoff, tmp_path
+):
+    reduction_request, _ = authentic_reduction_handoff
+    bindings = json.loads(reduction_request.read_text())["input_file_sha256"]
+    source = next(Path(path) for path in bindings if Path(path).name == "cell_index.u32")
+    original_bytes, original_mode = source.read_bytes(), source.stat().st_mode & 0o777
+    real_fsync = os.fsync
+    escaped = []
+    for kind in ("source", "child", "marker"):
+        output = tmp_path / (kind + "_summary_fsync_output")
+        injected = False
+
+        def mutate_after_summary(descriptor):
+            nonlocal injected
+            real_fsync(descriptor)
+            current = Path(os.readlink(f"/proc/self/fd/{descriptor}"))
+            if not injected and current.name == "summary.json" and current.parent.name == "publication":
+                injected = True
+                target = {
+                    "source": source,
+                    "child": next(current.parent.glob("draw-*.json")),
+                    "marker": current,
+                }[kind]
+                if target == source:
+                    source.chmod(original_mode | 0o200)
+                with target.open("ab") as stream:
+                    stream.write(b"changed-during-summary-fsync")
+
+        try:
+            with pytest.MonkeyPatch.context() as filesystem_patch:
+                filesystem_patch.setattr(os, "fsync", mutate_after_summary)
+                try:
+                    _module().run(reduction_request, output)
+                except ValueError as error:
+                    assert "bytes changed" in str(error), str(error)
+                    assert not os.path.lexists(output)
+                else:
+                    escaped.append(kind)
+            assert injected
+        finally:
+            source.chmod(original_mode | 0o200)
+            source.write_bytes(original_bytes)
+            source.chmod(original_mode)
+        assert _hash(source) == bindings[str(source)]
+    assert not escaped, f"Summary fsync mutation escaped final seal: {escaped}"
+
+
+def test_public_run_rebuilds_native_statistics_and_retains_incomplete_fixed_family(
+    authentic_reduction_handoff, tmp_path
+):
+    request, parent = authentic_reduction_handoff
     output = tmp_path / "reduced"
     result = _module().run(request, output)
     assert result["status"] == "bounded_fixed_family_reduction_diagnostic_complete"
@@ -347,6 +408,9 @@ def test_public_run_rebuilds_native_statistics_and_retains_incomplete_fixed_fami
     assert result["validation"]["native_statistics_rebuilt_from_sources"] is True
     assert result["validation"]["all_physical_cache_arrays_exact"] is True
     assert result["validation"]["production_metrics_bins_rows_exact_replay"] is True
+    assert result["validation"]["source_map_verification_passes"] == 3
+    assert result["validation"]["summary_marker_and_artifacts_verified_after_marker_fsync"] is True
+    assert result["publication_receipt"]["post_marker_seal_verification_seconds"] > 0
     assert result["family_sha256"] == parent["family_sha256"]
     assert result["original_fixed_pair_coverage"] == parent["original_fixed_pair_coverage"]
     assert all(draw["paired_reduction"]["rho"] is None for draw in result["draws"])

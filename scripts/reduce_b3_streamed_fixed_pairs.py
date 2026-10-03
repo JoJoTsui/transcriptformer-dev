@@ -1130,7 +1130,8 @@ def run(request_path: Path, output: Path, *, max_seconds: float = 900) -> dict:
                         "public_unit_controls_rerun_in_this_session": 0,
                         "scientific_source_reads_during_queries": False,
                         "immutable_arrays": True,
-                        "source_map_verification_passes": 2,
+                        "source_map_verification_passes": 3,
+                        "summary_marker_and_artifacts_verified_after_marker_fsync": True,
                     },
                     resources={
                         "max_wall_seconds": max_seconds,
@@ -1147,12 +1148,20 @@ def run(request_path: Path, output: Path, *, max_seconds: float = 900) -> dict:
                         "observed_peak_process_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
                     },
                     timings_seconds=timers,
-                    timing_scope="Named component timers are separate; elapsed is an overlapping pre-publication snapshot. Native preparation includes frozen source checks. Physical comparison includes published cache reads/hashes. Seeded metrics/bins are timed once per source/draw and reused across both blocks. Existing producer costs are not measured here. Publication and outer duration occur only in the returned receipt.",
+                    timing_scope="Named component timers are separate; elapsed is an overlapping pre-publication snapshot. Native preparation includes frozen source checks. Physical comparison includes published cache reads/hashes. Seeded metrics/bins are timed once per source/draw and reused across both blocks. Existing producer costs are not measured here. The final named verification timer precedes summary serialization. Post-marker seal verification, publication and outer duration occur only in the returned receipt.",
                     numeric_capacity_scope="One active source/block, exactly the published and independently rebuilt statistic copies, inherited native CSR/proof/range scratch and two H5 buffer allowances, held three draw metrics/bins plus fixed-family score/rank scratch. Python object overhead is bounded separately by RSS.",
                     publication_contract="Fresh no-replace marker-last publication under a cooperative exclusive claim. Completion denotes verified visibility, not crash durability; marker-free partial destinations require a new output name and full source verification on restart.",
                     interpretation="Full frozen observed pairs retained. Native arithmetic replay and fixed-family reduction of a partial diagnostic catalog; no production bootstrap shard, interval finalization or whole-family cost extrapolation.",
                 )
                 artifact = prepared._write(staging / "summary.json", result, output / "summary.json", guard)
+                began = time.monotonic()
+                inputs.verify()
+                for path, digest in generated.items():
+                    if guard.file_hash(path) != digest:
+                        raise ValueError("Generated independent replay artifact bytes changed after summary fsync")
+                if guard.file_hash(staging / "summary.json") != artifact["sha256"]:
+                    raise ValueError("Sealed summary marker bytes changed before publication")
+                post_marker_seal_seconds = time.monotonic() - began
                 began = time.monotonic()
                 engine.publish_new_directory(staging, output, "summary.json", check=guard.check)
                 return {
@@ -1160,6 +1169,7 @@ def run(request_path: Path, output: Path, *, max_seconds: float = 900) -> dict:
                     "publication_receipt": {
                         "output": str(output),
                         "summary_sha256": artifact["sha256"],
+                        "post_marker_seal_verification_seconds": post_marker_seal_seconds,
                         "publication_seconds": time.monotonic() - began,
                         "outer_invocation_seconds": time.monotonic() - guard.began,
                     },

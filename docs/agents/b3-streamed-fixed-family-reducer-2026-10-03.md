@@ -1,6 +1,6 @@
 # Streamed fixed-family B3 reduction — 2026-10-03
 
-Status: implemented with **25 passing public checks**, Ruff check/format and
+Status: implemented with **26 passing public checks**, Ruff check/format and
 mypy. Independent committed-diff reviews, actual 5,111-pair artifact validation
 and the final combined CPU regression are pending under
 [ADR 0005](../adr/0005-b3-feasibility-before-full-cohort-expansion.md).
@@ -134,13 +134,22 @@ remain null; it never publishes a completed production bootstrap shard.
 ## Implementation record
 
 The reducer byte hash is
-`edc89bc1f7cc927c404280b804989aa00e16037c543aac8cabcd376fe3e7b038`;
+`de1223d94ee63708526aaf2584e055b3ee50a9af7141af53884b4005fd71f7f8`;
 the public test hash is
-`555a99f20c48475f105e062c54ba8ac4512af165f5456beeba902d39b10cbe46`.
+`0b742e0f98383c0eb6ae1109724294611ac2ae67c2ed77ef22e44d2a6774e4c2`.
 Targeted JUnit is
 `runs/b3_feasibility/20261003/fixed_family_reducer_targeted.xml`
-(25 passed, no failures/errors/skips, 279.92 seconds reported by pytest).
+(26 passed, no failures/errors/skips, 454.77 seconds reported by pytest).
 The native test uses the authentic pilot/import/index/metric handoff, compares
 four freshly rebuilt physical caches and 96 replayed rows, and rejects forged
 arithmetic and mutations before final publication. This small test family
 does not replace the pending actual 5,111-pair artifact validation.
+
+The independent review found a publication gap after summary flush/fsync.
+An authentic public regression first reproduced three escaping mutations in
+`fixed_family_reducer_final_seal_red.xml`. The repaired implementation verifies
+the complete source map, every generated child and the summary marker after its
+fsync, before publishing the directory. The completion records three source
+verification passes and that final marker/artifact verification; post-marker
+seal time is returned in the invocation receipt without rewriting the marker.
+All three source/child/marker mutation cases now reject completion.
