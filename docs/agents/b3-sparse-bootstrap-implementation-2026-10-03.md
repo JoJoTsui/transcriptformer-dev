@@ -85,6 +85,13 @@ from its exact hashed byte buffer. Declared source closure is verified before
 computation and publication, including matrix/checkpoint byte hashes where
 the prior index declares them. No checkpoint tensors or model are loaded.
 New reports and caches are published without replacing an existing output.
+The shared publisher uses an atomic no-replacement directory rename where
+supported. Otherwise it exclusively claims a new directory, links regular
+payload files through that directory's descriptor, and exposes the completion
+manifest last. Cache completion requires `metadata.json`; report completion
+requires `summary.json`. An incomplete directory is unavailable. After a
+restart, readers still verify all declared payload and source hashes; a
+completion marker does not promise filesystem persistence.
 The driver retains caches at the stable sibling path `<output>.cache/`;
 cache source bindings remain valid when the report directory is published.
 A failed diagnostic may leave those caches for inspection without a completed
@@ -115,8 +122,10 @@ execution:
   acceptance gap and now causes rejection.
 - Keep a CLI weights request in the per-draw input bindings while excluding
   that request from the weight-independent statistics cache key.
-- Use atomic no-replacement publication and reject preexisting dangling output
-  symlinks before resolving paths.
+- Publish without replacement and reject preexisting dangling output symlinks
+  before resolving paths. The mounted drive's unsupported rename flag is
+  handled by the shared completion-marker fallback, with claimed-directory
+  identity checks preventing path replacement from redirecting file links.
 
 The cache tests include replay after repeating or omitting physical embryos.
 Numerical reference checks use the unchanged public bounded scorer and
@@ -125,12 +134,47 @@ means and sample SD use a 1e-12 tolerance and diagnostic z uses 1e-10.
 
 ## Verification status
 
-The engine's 16 collected public tests passed in 103.95 seconds. The driver's
-27 tests passed in 52.72 seconds on the same frozen engine. Three CI-selection
-tests also passed. All five changed Python files pass Ruff check, formatting
-and mypy. See the [engine](b3-sparse-null-backend-2026-10-03.md) and
+After the filesystem recovery, the engine's **35 public tests passed in
+127.06 seconds** and the driver's **27 tests passed in 74.13 seconds** on
+the same frozen engine. The three CI-selection checks passed in 0.18 seconds.
+Before the recovery, the respective runs passed
+16/27 tests in 103.95/52.72 seconds. All five changed Python files pass
+Ruff check, formatting and mypy. See the [engine](b3-sparse-null-backend-2026-10-03.md) and
 [driver](b3-sparse-bootstrap-diagnostic-driver-2026-10-03.md) records.
 
 Real-data execution follows stable-source registration and independent review.
 Final suite results, source reconciliation, timings and result limitations will
 be recorded here after completion.
+The first real diagnostic failed during publication on the mounted Windows
+drive. Its request, producer log and source archive remain preserved. See the
+[root cause and repair contract](b3-sparse-publication-recovery-2026-10-03.md).
+The repaired public helper passed a direct mounted-drive and `/tmp` smoke
+check, including existing-output preservation, in 0.046 seconds with peak RSS
+46,374,912 bytes. Its artifact is
+`runs/b3_feasibility/20261003/sparse_publication_repaired_smoke.json`.
+
+## Independent code review
+
+Fixed point: `ad8cd6a2f2ffb1acf874c80dde9f7320e6dcd4fd`.
+Implementation: `04796fa2c2ffebc81aeea48e3d4c789de4043ec9`.
+The nonempty review command is `git diff ad8cd6a2f2ffb1acf874c80dde9f7320e6dcd4fd...HEAD`.
+
+### Standards
+
+The independent reviewer found **zero hard violations and one optional
+judgement**: possible duplicated code in the new scripts' atomic publication,
+JSON validation and resource guards. A future source-bound utility could reduce
+maintenance drift. This is optional maintenance advice; the current boundaries
+pass the documented standards and hold the execution caps independently.
+Worst within Standards: duplicated boundary infrastructure.
+
+### Spec
+
+Two independent cross-reviews found **zero findings**: the driver author reviewed
+the engine, and the engine author reviewed the driver, tests and CI registration.
+They checked frozen arithmetic, source and cache binding, sampler order,
+publication, resources and retained scientific gates. Neither reviewed their
+own implementation for this axis. Worst within Spec: none.
+
+Standards and Spec are reported separately. These reviews establish bounded
+implementation alignment, without closing the ticket's scientific acceptance.

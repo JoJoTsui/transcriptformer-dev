@@ -94,9 +94,22 @@ native likelihood attestation or whole-method cost.
 
 ## Publication and resource contract
 
-The result directory is published atomically with Linux `renameat2`'s
-no-replacement flag. It contains the immutable child draw JSON files and a
-summary naming their final paths and byte hashes. The cache root is the
+The driver uses the verified engine's public `publish_new_directory` helper.
+It first tries Linux `renameat2` with its no-replacement flag. Filesystems that
+reject that flag with `EINVAL`, `ENOSYS` or `EOPNOTSUPP` use an exclusively
+created destination and hard links that never replace an existing file. The
+completion marker `summary.json` is linked last. This fallback exposes a
+partial directory during publication; its presence alone does not establish
+completion. The helper captures the directory's inode after creation, compares
+its opened no-follow fd and current path before any link, and checks identity
+around linking the marker. The existing exclusive `.claim` files coordinate
+trusted local writers. These checks do not promise protection from arbitrary
+same-user mutations before the first identity capture or after validation.
+The marker controls completion visibility; it makes no unconditional filesystem
+durability claim. Other syscall errors remain failures.
+
+The result contains immutable child draw JSON files and a summary naming their
+final paths and byte hashes. The cache root is the
 exclusively new sibling `output_directory.cache`, with stable source
 subdirectories. Cache metadata and HDF5 are never moved or rewritten; later
 draws require the trusted first-draw metadata hash. Before trusting either
@@ -104,9 +117,11 @@ fresh cache file, the driver compares its current bytes with the hashes returned
 by the engine's completed publication. This preserves the absolute
 cache input bindings inside the child reports after result publication.
 
-A failed prefix publishes no complete result directory. Its stable diagnostic
-cache root may remain, including a valid completed source cache or partial
-construction. It is not a completed family result. A subsequent invocation
+A failed prefix publishes no completed summary. During fallback publication,
+its output directory may remain with some child files and no `summary.json`.
+Its stable diagnostic cache root may also remain, including a valid completed
+source cache or partial construction without its `metadata.json` completion
+marker. These are not completed family results. A subsequent invocation
 must choose a new output/cache name; automatic reuse of a preexisting cache
 root is rejected. Source inputs and earlier outputs are retained.
 
@@ -130,15 +145,37 @@ cache reuse and frozen scalar parity.
 
 A subsequent filesystem race reproduced acceptance of changed fresh cache
 metadata after engine publication. The driver now compares both fresh cache
-files with the engine's publication hashes. A dangling output symlink case also failed
-before the lexical existence check and passed afterward; the driver preserves
+files with the engine's publication hashes. A dangling output symlink case also
+failed before the lexical existence check and passed afterward; the driver preserves
 the caller's existing output entry before resolving paths. Ruff check/format
 and mypy pass.
 
-All **27 public-seam tests passed in 52.72 seconds** with both new scripts
-frozen. This includes the extended native integration and first-cache
-publication race rejection. The driver source SHA256 is
-`7e2e751043543a525d8ea06aa43707185af62cdbd0360fcf93838fd62bb9d158`;
-the engine source SHA256 is
-`c31f1dd5a04a737f6e80336343148c7a30e2592272965463d999cccfc1338b18`.
+Before the filesystem fallback, all **27 public-seam tests passed in 52.72
+seconds** with both new scripts frozen. This includes the extended native integration and first-cache
+publication race rejection. Those historical source SHA256 values are
+`7e2e751043543a525d8ea06aa43707185af62cdbd0360fcf93838fd62bb9d158`
+for the driver and
+`c31f1dd5a04a737f6e80336343148c7a30e2592272965463d999cccfc1338b18`
+for the engine.
+
+The first supervised real prefix then failed with `EINVAL` after 242.9 seconds
+when the mounted drive rejected the no-replacement rename flag. No completed
+output was published. The failed run and exact source copies are retained in
+`runs/b3_feasibility/20261003/sparse_backend_failed_source/`. This public-run
+failure provides the RED evidence for the filesystem correction. The extended
+public integration now models the unsupported flag at the filesystem syscall
+boundary and checks summary-last publication, a concurrent destination, and
+a payload-link failure that leaves no completion marker.
+
+The corrected driver passed all **27 public-seam tests in 74.13 seconds** after
+the shared source freeze. JUnit is preserved at
+`runs/b3_feasibility/20261003/sparse_draws_targeted.xml`. Ruff check/format and
+mypy pass. The final source SHA256 values for this check are:
+
+| File | SHA256 |
+| --- | --- |
+| Driver | `28a47d2e604b3a9492f33da3fd92948dd50d56aed79736e350f2f3b1f0278842` |
+| Engine | `d061d134908a38b90fa6d23d2ae56da2609237e4d2f5d2c62e07da60f8306dc6` |
+| Driver tests | `7a44cc77f38b274b875729678ad4db3edf559495155d64742d312587a1103878` |
+
 No real pilot diagnostic job has been run by this driver author.

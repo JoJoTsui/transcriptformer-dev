@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
-import ctypes
 from hashlib import sha256
 import json
 from math import isfinite
@@ -417,17 +416,6 @@ def _assessment(request: dict, family: dict, inputs: _Inputs, contexts: dict[str
     return observed
 
 
-def _rename_new(source: Path, target: Path) -> None:
-    """Use Linux's atomic no-replace directory publication primitive."""
-    libc = ctypes.CDLL(None, use_errno=True)
-    rename = libc.renameat2
-    rename.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
-    rename.restype = ctypes.c_int
-    if rename(-100, os.fsencode(source), -100, os.fsencode(target), 1):
-        error = ctypes.get_errno()
-        raise OSError(error, os.strerror(error), target)
-
-
 def _artifact(path: Path, published_path: Path, guard: _Guard) -> dict:
     return {"path": str(published_path), "bytes": path.stat().st_size, "sha256": guard.file_hash(path)}
 
@@ -664,7 +652,7 @@ def run(request_path: Path, output: Path, *, max_seconds: float = 900) -> dict:
                     stream.flush()
                     os.fsync(stream.fileno())
                 guard.check()
-                _rename_new(staging, output)
+                engine.publish_new_directory(staging, output, "summary.json", check=guard.check)
                 return result
         finally:
             claim.unlink()

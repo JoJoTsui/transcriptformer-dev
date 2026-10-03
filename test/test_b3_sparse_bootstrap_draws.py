@@ -1,8 +1,11 @@
 """Seeded sparse-null diagnostics through the public frozen-request seam."""
 
+import ctypes
+import errno
 import importlib.util
 from hashlib import sha256
 import json
+import os
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -241,6 +244,28 @@ def _run(request, output, **kwargs):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.run(request, output, **kwargs)
+
+
+def _unsupported_publication(patch):
+    """Model the mounted filesystem's unsupported flag at the syscall boundary."""
+    calls = []
+
+    def unsupported(*arguments):
+        calls.append(arguments[4])
+        ctypes.set_errno(errno.EINVAL)
+        return -1
+
+    patch.setattr(ctypes, "CDLL", lambda *args, **kwargs: SimpleNamespace(renameat2=unsupported))
+    return calls
+
+
+def _link_destination(target, kwargs):
+    """Resolve a basename link destination through its real filesystem fd."""
+    target = Path(target)
+    descriptor = kwargs.get("dst_dir_fd")
+    if descriptor is not None and not target.is_absolute():
+        target = Path(os.readlink(f"/proc/self/fd/{descriptor}")) / target
+    return target
 
 
 @pytest.mark.parametrize("seconds", [0, -1, 901, True, float("nan")])
@@ -530,7 +555,24 @@ def test_seeded_public_run_reuses_stable_caches_and_matches_literal_and_native_o
 
     request, reference = _native_request(observed_pair, tmp_path)
     output = tmp_path / "diagnostic"
-    result = _run(request, output)
+    real_link = os.link
+    published = []
+
+    def record_publication(source, target, *args, **kwargs):
+        result = real_link(source, target, *args, **kwargs)
+        target = _link_destination(target, kwargs)
+        if target.parent == output:
+            published.append(target.name)
+            if target.name != "summary.json":
+                assert not (output / "summary.json").exists()
+        return result
+
+    with monkeypatch.context() as patch:
+        unsupported = _unsupported_publication(patch)
+        patch.setattr(os, "link", record_publication)
+        result = _run(request, output)
+    assert len(unsupported) >= 3 and set(unsupported) == {1}
+    assert published[-1] == "summary.json"
     assert result["bundle_draw_order"] == sorted(reference)
     # Literal worked stream: a_mouse's five slots precede z_human's five.
     first = {source["species"]: list(source["weights"].values()) for source in result["draws"][0]["sources"]}
@@ -581,6 +623,56 @@ def test_seeded_public_run_reuses_stable_caches_and_matches_literal_and_native_o
                 assert actual["diagnostic_z"] == pytest.approx(expected["null_corrected_z"], abs=1e-10, rel=1e-10)
     assert json.loads((output / "summary.json").read_text()) == result
     assert not output.with_name(output.name + ".claim").exists()
+
+    # Repeat only the first draw for publication faults, preserving the frozen
+    # native handoff and exercising the public request boundary again.
+    publication_request = json.loads(request.read_text())
+    publication_request["draw_stop"] = 1
+    publication_request_path = _write(tmp_path / "publication_request.json", publication_request)
+    race_output = tmp_path / "racing_publication"
+    real_mkdir = os.mkdir
+    raced = []
+
+    def concurrent_directory(path, *args, **kwargs):
+        if Path(path) == race_output and not raced:
+            real_mkdir(path, *args, **kwargs)
+            (race_output / "keep.txt").write_bytes(b"concurrent immutable output")
+            raced.append(race_output)
+        return real_mkdir(path, *args, **kwargs)
+
+    with monkeypatch.context() as patch:
+        _unsupported_publication(patch)
+        patch.setattr(os, "mkdir", concurrent_directory)
+        with pytest.raises(FileExistsError):
+            _run(publication_request_path, race_output)
+    assert raced and (race_output / "keep.txt").read_bytes() == b"concurrent immutable output"
+    assert not (race_output / "summary.json").exists()
+    assert not race_output.with_name(race_output.name + ".claim").exists()
+
+    partial_output = tmp_path / "partial_publication"
+    linked = []
+
+    def fail_second_payload(source, target, *args, **kwargs):
+        destination = _link_destination(target, kwargs)
+        if destination.parent == partial_output and linked:
+            raise OSError(errno.EIO, "injected payload link failure")
+        result = real_link(source, target, *args, **kwargs)
+        if destination.parent == partial_output:
+            linked.append(destination)
+        return result
+
+    with monkeypatch.context() as patch:
+        _unsupported_publication(patch)
+        patch.setattr(os, "link", fail_second_payload)
+        with pytest.raises(OSError, match="injected payload link failure"):
+            _run(publication_request_path, partial_output)
+    assert len(linked) == 1 and linked[0].is_file()
+    partial_hash = _hash(linked[0])
+    assert not (partial_output / "summary.json").exists()
+    assert not partial_output.with_name(partial_output.name + ".claim").exists()
+    with pytest.raises(FileExistsError):
+        _run(publication_request_path, partial_output)
+    assert _hash(linked[0]) == partial_hash
 
     # Mutate the file boundary after a fresh engine publication but before the
     # wrapper's first artifact capture. No engine function is substituted.

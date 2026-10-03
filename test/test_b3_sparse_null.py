@@ -754,3 +754,341 @@ def test_cli_freezes_weight_request_and_reuses_cache_with_new_weights(native_pil
     rejected = subprocess.run(command, check=False, capture_output=True, text=True, timeout=120)
     assert rejected.returncode != 0
     assert "request bytes differ" in rejected.stderr
+
+
+def _unsupported_directory_rename(monkeypatch, error, before=None):
+    import ctypes
+    from types import SimpleNamespace
+    from scripts import replay_b3_sparse_null as replay
+
+    calls = []
+
+    class UnsupportedRename:
+        def __call__(self, *arguments):
+            calls.append(arguments)
+            if before is not None:
+                before()
+            ctypes.set_errno(error)
+            return -1
+
+    monkeypatch.setattr(replay.ctypes, "CDLL", lambda *a, **kw: SimpleNamespace(renameat2=UnsupportedRename()))
+    return calls
+
+
+def _linked_destination(destination, kwargs):
+    import os
+
+    directory_fd = kwargs.get("dst_dir_fd")
+    if directory_fd is not None:
+        return Path(os.readlink(f"/proc/self/fd/{directory_fd}")) / destination
+    return Path(destination)
+
+
+def test_public_run_publishes_and_reuses_cache_when_mount_rejects_no_replace_rename(
+    native_pilot, tmp_path, monkeypatch
+):
+    import errno
+    import os
+    from scripts.replay_b3_sparse_null import run
+
+    plan, index, metrics, frozen, context = _sparse_inputs(native_pilot, tmp_path)
+    cache = tmp_path / "wsl-cache"
+    calls = _unsupported_directory_rename(monkeypatch, errno.EINVAL)
+    original_link = os.link
+    publication_order = []
+
+    def observe_link(source, target, *arguments, **kwargs):
+        destination = _linked_destination(target, kwargs)
+        if destination.parent == cache:
+            assert not (cache / "metadata.json").exists()
+            if destination.name == "metadata.json":
+                assert (cache / "statistics.h5").is_file()
+            publication_order.append(destination.name)
+        return original_link(source, target, *arguments, **kwargs)
+
+    monkeypatch.setattr(os, "link", observe_link)
+    first_weights = {"emb1": 1, "emb2": 1}
+    first = run(
+        plan,
+        index,
+        metrics,
+        tmp_path / "wsl-first.json",
+        first_weights,
+        inputs_sha256=frozen,
+        start=0,
+        stop=3,
+        cache_root=cache,
+    )
+    _assert_oracle(first, context, first_weights, context["gene_ids"][:3])
+    assert publication_order == ["statistics.h5", "metadata.json"]
+    assert len(calls) == 1 and calls[0][-1] == 1
+    metadata_hash, statistics_hash = _hash(cache / "metadata.json"), _hash(cache / "statistics.h5")
+    repeated_weights = {"emb1": 2, "emb2": 0}
+    repeated = run(
+        plan,
+        index,
+        metrics,
+        tmp_path / "wsl-repeated.json",
+        repeated_weights,
+        inputs_sha256={**frozen, "cache_metadata": metadata_hash},
+        start=0,
+        stop=3,
+        cache_root=cache,
+    )
+    _assert_oracle(repeated, context, repeated_weights, context["gene_ids"][:3])
+    assert first["cache"]["mode"] == "built" and repeated["cache"]["mode"] == "reused"
+    assert len(calls) == 1
+    assert _hash(cache / "metadata.json") == metadata_hash
+    assert _hash(cache / "statistics.h5") == statistics_hash
+
+    partial_cache, partial_output = tmp_path / "partial-cache", tmp_path / "partial-draw.json"
+
+    def interrupt_completion(source, target, *arguments, **kwargs):
+        if _linked_destination(target, kwargs) == partial_cache / "metadata.json":
+            raise OSError(errno.EIO, "interrupted completion marker")
+        return original_link(source, target, *arguments, **kwargs)
+
+    monkeypatch.setattr(os, "link", interrupt_completion)
+    with pytest.raises(OSError, match="interrupted completion marker"):
+        run(
+            plan,
+            index,
+            metrics,
+            partial_output,
+            first_weights,
+            inputs_sha256=frozen,
+            start=0,
+            stop=3,
+            cache_root=partial_cache,
+        )
+    assert (partial_cache / "statistics.h5").is_file()
+    assert not (partial_cache / "metadata.json").exists()
+    assert not partial_output.exists()
+    assert not partial_cache.with_name(partial_cache.name + ".claim").exists()
+    with pytest.raises(ValueError, match="missing or extra files"):
+        run(
+            plan,
+            index,
+            metrics,
+            tmp_path / "partial-reuse.json",
+            first_weights,
+            inputs_sha256={**frozen, "cache_metadata": metadata_hash},
+            start=0,
+            stop=3,
+            cache_root=partial_cache,
+        )
+    assert not (tmp_path / "partial-reuse.json").exists()
+
+
+@pytest.mark.parametrize("error_name", ["EINVAL", "ENOSYS", "EOPNOTSUPP"])
+def test_public_directory_publication_falls_back_only_for_unsupported_rename(tmp_path, monkeypatch, error_name):
+    import errno
+    import os
+    from scripts.replay_b3_sparse_null import publish_new_directory
+
+    staging, target = tmp_path / "staging", tmp_path / "published"
+    staging.mkdir()
+    payload = b"source-bound payload\n"
+    (staging / "payload.json").write_bytes(payload)
+    (staging / "summary.json").write_bytes(b'{"complete":true}\n')
+    calls = _unsupported_directory_rename(monkeypatch, getattr(errno, error_name))
+    original_link = os.link
+    order, checks = [], []
+
+    def observe_link(source, destination, *arguments, **kwargs):
+        assert not (target / "summary.json").exists()
+        order.append(Path(destination).name)
+        return original_link(source, destination, *arguments, **kwargs)
+
+    def check():
+        checks.append((target / "summary.json").exists())
+
+    monkeypatch.setattr(os, "link", observe_link)
+    publish_new_directory(staging, target, "summary.json", check=check)
+    assert len(calls) == 1 and calls[0][-1] == 1
+    assert order == ["payload.json", "summary.json"]
+    assert checks and not any(checks)
+    assert (target / "payload.json").read_bytes() == payload
+    assert (target / "summary.json").read_bytes() == (staging / "summary.json").read_bytes()
+
+
+@pytest.mark.parametrize("error_name", ["EACCES", "EEXIST", "EXDEV"])
+def test_public_directory_publication_does_not_fall_back_for_other_errors(tmp_path, monkeypatch, error_name):
+    import errno
+    from scripts.replay_b3_sparse_null import publish_new_directory
+
+    staging, target = tmp_path / "staging", tmp_path / "published"
+    staging.mkdir()
+    (staging / "summary.json").write_bytes(b"{}\n")
+    error = getattr(errno, error_name)
+    _unsupported_directory_rename(monkeypatch, error)
+    with pytest.raises(OSError) as failure:
+        publish_new_directory(staging, target, "summary.json")
+    assert failure.value.errno == error
+    assert not target.exists()
+    assert (staging / "summary.json").read_bytes() == b"{}\n"
+
+
+@pytest.mark.parametrize("target_kind", ["directory", "file", "dangling_symlink"])
+def test_public_directory_fallback_preserves_a_concurrent_target(tmp_path, monkeypatch, target_kind):
+    import errno
+    import os
+    from scripts.replay_b3_sparse_null import publish_new_directory
+
+    staging, target = tmp_path / "staging", tmp_path / "published"
+    staging.mkdir()
+    (staging / "summary.json").write_bytes(b"{}\n")
+
+    def create_target():
+        if target_kind == "directory":
+            target.mkdir()
+            (target / "sentinel").write_bytes(b"preserve\n")
+        elif target_kind == "file":
+            target.write_bytes(b"preserve\n")
+        else:
+            target.symlink_to(tmp_path / "absent")
+
+    _unsupported_directory_rename(monkeypatch, errno.EINVAL, before=create_target)
+    with pytest.raises(FileExistsError):
+        publish_new_directory(staging, target, "summary.json")
+    assert os.path.lexists(target)
+    if target_kind == "directory":
+        assert {path.name for path in target.iterdir()} == {"sentinel"}
+        assert (target / "sentinel").read_bytes() == b"preserve\n"
+    elif target_kind == "file":
+        assert target.read_bytes() == b"preserve\n"
+    else:
+        assert target.is_symlink() and target.readlink() == tmp_path / "absent"
+
+
+def test_public_directory_fallback_checks_budget_before_completion(tmp_path, monkeypatch):
+    import errno
+    from scripts.replay_b3_sparse_null import publish_new_directory
+
+    staging, target = tmp_path / "staging", tmp_path / "published"
+    staging.mkdir()
+    (staging / "payload.json").write_bytes(b"payload\n")
+    (staging / "summary.json").write_bytes(b"{}\n")
+    _unsupported_directory_rename(monkeypatch, errno.EINVAL)
+
+    def check():
+        if (target / "payload.json").exists():
+            raise TimeoutError("publication budget expired")
+
+    with pytest.raises(TimeoutError, match="publication budget expired"):
+        publish_new_directory(staging, target, "summary.json", check=check)
+    assert (target / "payload.json").read_bytes() == b"payload\n"
+    assert not (target / "summary.json").exists()
+
+
+@pytest.mark.parametrize("replacement_kind", ["directory", "symlink"])
+@pytest.mark.parametrize("replacement_after", ["payload-first.json", "summary.json"])
+def test_public_directory_fallback_rejects_replaced_claimed_directory(
+    tmp_path, monkeypatch, replacement_kind, replacement_after
+):
+    import errno
+    import os
+    from scripts.replay_b3_sparse_null import publish_new_directory
+
+    staging, target, detached = tmp_path / "staging", tmp_path / "published", tmp_path / "detached"
+    staging.mkdir()
+    for name in ("payload-first.json", "payload-second.json", "summary.json"):
+        (staging / name).write_bytes(name.encode() + b"\n")
+    replacement = tmp_path / "replacement"
+    replacement.mkdir()
+    (replacement / "sentinel").write_bytes(b"preserve\n")
+    _unsupported_directory_rename(monkeypatch, errno.EINVAL)
+    original_link = os.link
+    descriptors = []
+
+    def replace_after_link(source, destination, *arguments, **kwargs):
+        descriptors.append(kwargs["dst_dir_fd"])
+        result = original_link(source, destination, *arguments, **kwargs)
+        if destination == replacement_after:
+            target.rename(detached)
+            if replacement_kind == "symlink":
+                target.symlink_to(replacement, target_is_directory=True)
+            else:
+                target.mkdir()
+                (target / "sentinel").write_bytes(b"preserve\n")
+        return result
+
+    monkeypatch.setattr(os, "link", replace_after_link)
+    with pytest.raises(RuntimeError, match="exclusively claimed directory"):
+        publish_new_directory(staging, target, "summary.json")
+    assert descriptors and len(set(descriptors)) == 1
+    with pytest.raises(OSError) as failure:
+        os.fstat(descriptors[0])
+    assert failure.value.errno == errno.EBADF
+    assert {path.name for path in replacement.iterdir()} == {"sentinel"}
+    assert (replacement / "sentinel").read_bytes() == b"preserve\n"
+    assert {path.name for path in target.iterdir()} == {"sentinel"}
+    assert not (target / "summary.json").exists()
+    if replacement_kind == "symlink":
+        assert target.is_symlink() and target.readlink() == replacement
+    else:
+        assert not target.is_symlink()
+    if replacement_after == "payload-first.json":
+        assert not (detached / "summary.json").exists()
+    assert (detached / "payload-first.json").read_bytes() == b"payload-first.json\n"
+
+
+def test_public_directory_fallback_rejects_foreign_directory_at_open_boundary(tmp_path, monkeypatch):
+    import errno
+    import os
+    from scripts.replay_b3_sparse_null import publish_new_directory
+
+    staging, target, detached = tmp_path / "staging", tmp_path / "published", tmp_path / "detached"
+    staging.mkdir()
+    (staging / "payload.json").write_bytes(b"payload\n")
+    (staging / "summary.json").write_bytes(b"{}\n")
+    foreign = tmp_path / "foreign"
+    foreign.mkdir()
+    (foreign / "sentinel").write_bytes(b"preserve\n")
+    _unsupported_directory_rename(monkeypatch, errno.EINVAL)
+    original_open, original_link = os.open, os.link
+    descriptors, links = [], []
+
+    def replace_before_open(path, *arguments, **kwargs):
+        if Path(path) == target:
+            target.rename(detached)
+            foreign.rename(target)
+            descriptor = original_open(path, *arguments, **kwargs)
+            descriptors.append(descriptor)
+            return descriptor
+        return original_open(path, *arguments, **kwargs)
+
+    def observe_link(*arguments, **kwargs):
+        links.append(arguments)
+        return original_link(*arguments, **kwargs)
+
+    monkeypatch.setattr(os, "open", replace_before_open)
+    monkeypatch.setattr(os, "link", observe_link)
+    with pytest.raises(RuntimeError, match="exclusively claimed directory"):
+        publish_new_directory(staging, target, "summary.json")
+    assert links == []
+    assert {path.name for path in target.iterdir()} == {"sentinel"}
+    assert (target / "sentinel").read_bytes() == b"preserve\n"
+    assert not (target / "summary.json").exists()
+    assert list(detached.iterdir()) == []
+    assert len(descriptors) == 1
+    with pytest.raises(OSError) as failure:
+        os.fstat(descriptors[0])
+    assert failure.value.errno == errno.EBADF
+
+
+@pytest.mark.parametrize("malformation", ["missing_marker", "directory", "symlink"])
+def test_public_directory_publication_rejects_incomplete_or_nonflat_staging(tmp_path, malformation):
+    from scripts.replay_b3_sparse_null import publish_new_directory
+
+    staging, target = tmp_path / "staging", tmp_path / "published"
+    staging.mkdir()
+    if malformation != "missing_marker":
+        (staging / "summary.json").write_bytes(b"{}\n")
+    if malformation == "directory":
+        (staging / "nested").mkdir()
+    elif malformation == "symlink":
+        (staging / "link").symlink_to(staging / "summary.json")
+    with pytest.raises(ValueError, match="flat regular files|completion marker"):
+        publish_new_directory(staging, target, "summary.json")
+    assert not target.exists()

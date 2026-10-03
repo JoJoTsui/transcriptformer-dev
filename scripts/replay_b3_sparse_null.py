@@ -8,7 +8,9 @@ at most eight focals. It contains no resampled bins, null scores, or inference.
 from __future__ import annotations
 
 import argparse
+from collections.abc import Callable
 import ctypes
+import errno
 from hashlib import sha256
 import json
 from math import fsum, isfinite, sqrt
@@ -17,6 +19,7 @@ import os
 from pathlib import Path
 import resource
 import shutil
+import stat
 import tempfile
 import time
 from typing import Any, cast
@@ -81,12 +84,91 @@ def _json(data: bytes) -> dict:
 def _rename_new(source: Path, target: Path) -> None:
     """Linux atomic no-replace directory publication, including empty targets."""
     libc = ctypes.CDLL(None, use_errno=True)
-    rename = libc.renameat2
+    try:
+        rename = libc.renameat2
+    except AttributeError as exc:
+        raise OSError(errno.ENOSYS, "renameat2 is unavailable", target) from exc
     rename.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
     rename.restype = ctypes.c_int
     if rename(-100, os.fsencode(source), -100, os.fsencode(target), 1):
         error = ctypes.get_errno()
         raise OSError(error, os.strerror(error), target)
+
+
+def publish_new_directory(
+    staging: Path,
+    target: Path,
+    completion_filename: str,
+    check: Callable[[], None] | None = None,
+) -> None:
+    """Publish flat immutable files without replacement; readers require the final marker.
+
+    Unsupported no-replace directory renames use an exclusive destination mkdir
+    and no-replace hard links, with the completion file linked last. A failed
+    fallback may retain an incomplete destination without that completion file.
+    Callers hold their exclusive sibling claim file: mkdir through the first
+    inode capture trusts that local writer lock. Markers describe visibility,
+    not crash durability; restarted consumers verify all payload/source hashes.
+    """
+    staging, target = Path(staging), Path(target)
+    if (
+        not isinstance(completion_filename, str)
+        or completion_filename in {"", ".", ".."}
+        or Path(completion_filename).name != completion_filename
+    ):
+        raise ValueError("Require a flat completion marker filename")
+    if check is not None:
+        check()
+    if not stat.S_ISDIR(staging.lstat().st_mode):
+        raise ValueError("Publication staging must contain flat regular files")
+    files = sorted(staging.iterdir(), key=lambda path: path.name)
+    if any(not stat.S_ISREG(path.lstat().st_mode) for path in files):
+        raise ValueError("Publication staging must contain flat regular files")
+    marker = staging / completion_filename
+    if marker not in files:
+        raise ValueError("Publication staging is missing its completion marker")
+    if check is not None:
+        check()
+    try:
+        _rename_new(staging, target)
+        return
+    except OSError as exc:
+        if exc.errno not in {errno.EINVAL, errno.ENOSYS, errno.EOPNOTSUPP}:
+            raise
+    if check is not None:
+        check()
+    target.mkdir()
+    claimed = target.lstat()
+    directory_fd = os.open(target, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        opened = os.fstat(directory_fd)
+        if not stat.S_ISDIR(claimed.st_mode) or (opened.st_dev, opened.st_ino) != (
+            claimed.st_dev,
+            claimed.st_ino,
+        ):
+            raise RuntimeError("Publication destination no longer matches exclusively claimed directory")
+
+        def verify_claimed_directory() -> None:
+            try:
+                occupying = target.lstat()
+            except OSError as exc:
+                raise RuntimeError("Publication destination no longer matches exclusively claimed directory") from exc
+            if not stat.S_ISDIR(occupying.st_mode) or (occupying.st_dev, occupying.st_ino) != (
+                claimed.st_dev,
+                claimed.st_ino,
+            ):
+                raise RuntimeError("Publication destination no longer matches exclusively claimed directory")
+
+        verify_claimed_directory()
+        for source in [path for path in files if path != marker] + [marker]:
+            if check is not None:
+                check()
+            if source == marker:
+                verify_claimed_directory()
+            os.link(source, source.name, dst_dir_fd=directory_fd, follow_symlinks=False)
+        verify_claimed_directory()
+    finally:
+        os.close(directory_fd)
 
 
 class _Inputs:
@@ -976,7 +1058,7 @@ def _statistics_cache(
                 guard.check(cache_bytes)
                 if os.path.lexists(cache_root):
                     raise FileExistsError(cache_root)
-                _rename_new(staging, cache_root)
+                publish_new_directory(staging, cache_root, "metadata.json", check=guard.check)
         finally:
             claim.unlink()
         guard.bind(cache_root / "statistics.h5", h5_hash)

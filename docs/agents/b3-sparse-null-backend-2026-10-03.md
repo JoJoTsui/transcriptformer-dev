@@ -8,12 +8,21 @@ This new backend advances ticket #05 under ADR0005 through a bounded CPU diagnos
 
 ```python
 run(plan_path, index_root, embryo_metrics_root, output, weights,
-    *, inputs_sha256, start=0, stop=None, cache_root=None, max_seconds=900)
+    *, inputs_sha256, start=0, stop=None, cache_root=None, max_seconds=900,
+    weights_request_path=None)
 ```
 
 The expected SHA256 roles `plan`, `index_metadata`, and `embryo_metrics_metadata` are required. Reusing an existing cache additionally requires its frozen `cache_metadata` SHA256. Every consumed JSON or JSONL buffer is hashed and parsed from the same bytes. Declared source closures, sparse arrays, source support, metrics, strict certificates, native proof vectors and software are bound before computation and rehashed before publication. Original/prepared matrices and checkpoint weights are hashed as source bytes; this engine does not parse matrices or load tensors.
 
+The optional CLI weights request uses schema `b3_sparse_null_diagnostic_weights_request_v1`, with `weights` and `inputs_sha256`. `--weights-request-sha256` is required; reads are bounded to 1 MiB + one sentinel byte. Its exact bytes remain bound and reverified through `weights_request_path`; that weight-dependent request alone is excluded from the physical-statistics cache key.
+
 The immutable cache contains `metadata.json` and `statistics.h5`. Its axes are requested focal indices × **every frozen peer gene, including the focal** × sorted physical embryo IDs. It stores physical embryo means, completeness, positive contrast presence and physical focal cell counts, irrespective of original bins or original focal availability. It is independent of draw weights. Metadata binds its arrays, H5 bytes, source/software closure, focal range, gene order and embryo order.
+
+The shared public helper is `publish_new_directory(staging, target, completion_filename, check=None)`. It accepts a flat directory of regular files with its completion marker present, attempts Linux `renameat2(RENAME_NOREPLACE)`, and checks the cooperative budget before publication steps. Only `EINVAL`, `ENOSYS`, or `EOPNOTSUPP` permit its filesystem fallback: an atomic exclusive destination `mkdir`, followed by hard links that cannot replace an existing file, with the completion marker linked last. The created inode is captured immediately after `mkdir` and compared with an `O_DIRECTORY | O_NOFOLLOW` descriptor and current no-follow target identity before any payload link. Links use that descriptor and basenames; the target identity is checked again immediately before and after the completion link, and the descriptor is always closed. Existing files, directories and dangling symlinks remain errors; other rename errors propagate.
+
+The engine and driver hold their existing exclusive sibling `.claim` writer locks throughout publication. This contract coordinates trusted local writers; `mkdir` cannot return an inode atomically, so the interval from `mkdir` to its first `lstat` relies on that cooperative ownership. The helper does not claim protection from arbitrary same-user filesystem mutation during that interval.
+
+Readers require the completion marker before treating a directory as complete: `metadata.json` for a cache and `summary.json` for a driver result. A failed fallback can leave a partial new directory without that marker. The partial directory is retained for inspection, cannot be overwritten or accepted as a reusable cache, and a retry uses a new output name. The supported-filesystem path remains an atomic directory publication; the mounted-drive fallback exposes completion through its last marker. That marker describes visibility and publication order, not crash durability. Restarted consumers must verify the marker and every declared payload and source hash before accepting the bytes.
 
 ## Frozen arithmetic
 
@@ -37,4 +46,45 @@ The bounded source closure currently admits at most 20,000 file bindings per dec
 
 ## Validation
 
-Validation is in progress in `test/test_b3_sparse_null.py` through the public `run`/CLI seam, actual tiny native producer fixtures, immutable cache reloads and the unchanged `weighted_metrics`, `draw_scores`, and `score_bounded_measured_zero` oracles. Final command results and source hashes will be recorded after the source window closes. No real data diagnostic is authorized for execution before registration and review.
+Before the WSL publication correction, `test/test_b3_sparse_null.py` passed **16 public tests in 103.95 seconds** with both new scripts frozen. Actual tiny native producer fixtures traverse the unchanged importer, strict reconciliation, sparse index and embryo-metric tools before public replay. Oracle comparisons use unchanged `weighted_metrics`, `draw_scores`, and `score_bounded_measured_zero`: exact metric/bin assignments, peer counts and reasons; raw/null means and sample SD within absolute/relative `1e-12`; finite z values within absolute/relative `1e-10`.
+
+The real three-cell fixture has physical embryo sizes one and two. Its peer is terminal in embryo A, raw zero on the focal cell in embryo B, and positive on another B cell. Dropping A rescues exactly one matched peer while positive contrast counts remain unchanged. Separate focal rows check certified-zero peer variance and empty native support. Cache reload includes originally sparse focal bins, repeated embryos and distinct CLI request files. Failure cases check malformed weights/ranges, absent mandatory child hashes, changed sources/cache bytes, original finite-vector/target-count corruption, existing/dangling outputs, a cache directory created after the final existence check, RSS/host/disk caps and cooperative timeout.
+
+Commands completed successfully:
+
+```sh
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 CUDA_VISIBLE_DEVICES='' MPLCONFIGDIR=/tmp/b3-sparse-null-mpl .venv/bin/python -m pytest -q test/test_b3_sparse_null.py
+ruff check scripts/replay_b3_sparse_null.py test/test_b3_sparse_null.py
+ruff format scripts/replay_b3_sparse_null.py test/test_b3_sparse_null.py
+PYTHONPATH=/tmp/b3-typecheck-env .venv/bin/python -m mypy --follow-imports=silent --ignore-missing-imports --explicit-package-bases scripts/replay_b3_sparse_null.py test/test_b3_sparse_null.py
+```
+
+Pre-correction frozen file SHA256 values (the scripts were archived before correction):
+
+| File | SHA256 |
+| --- | --- |
+| `scripts/replay_b3_sparse_null.py` | `c31f1dd5a04a737f6e80336343148c7a30e2592272965463d999cccfc1338b18` |
+| `test/test_b3_sparse_null.py` | `55f8acdd69b7ea961b5b3b5e72ed542a2e61da80a6c7095d2456f3ca4ac7bf4c` |
+
+The seeded driver's 27 public tests also passed against those pre-correction bytes, and the root's five-Python-file Ruff check/format/mypy checks passed. The first real prefix reached cache publication and failed on mounted-drive `EINVAL`; it produced no completed diagnostic. A tiny direct reproduction of the exact old helper succeeded twice on `/tmp` and failed twice with errno 22 on `/mnt/d`, with no target created (0.42 seconds total). The existing request and failed source bytes remain archived. The correction changes publication mechanics only; arithmetic, identities and scientific status remain frozen.
+
+Correction regressions cover public replay and different-weight cache reload under an OS-level rejected no-replace rename, immutable payload hashes and last-marker ordering, interruption before completion and rejected partial-cache reuse, unsupported versus other errno values, a concurrent destination file/directory/dangling symlink, replacement of the claimed directory by a symlink or different directory during payload or completion links, a foreign directory substituted at the `os.open` boundary before any payload link, reliable descriptor closure, cooperative budget expiry, and malformed nonflat staging.
+
+After the corrected engine and driver sources were frozen, **35 engine public tests passed in 127.06 seconds**, with zero failures, errors or skips. The 11 warnings were existing pytest configuration and anndata index warnings. Ruff check, Ruff format check and mypy passed for the engine and its test file. A direct check of the final descriptor-based helper succeeded on both `/tmp` and `/mnt/d` (0.55 seconds total). The mounted-drive fallback preserves the numerical oracle comparisons and weight-independent cache bytes. The new run used:
+
+```sh
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 CUDA_VISIBLE_DEVICES='' TF_RUN_REAL_MODEL_TESTS=0 MPLCONFIGDIR=/tmp/b3-sparse-null-mpl .venv/bin/python -m pytest -q test/test_b3_sparse_null.py --junitxml=runs/b3_feasibility/20261003/sparse_null_targeted.xml
+ruff check scripts/replay_b3_sparse_null.py test/test_b3_sparse_null.py
+ruff format --check scripts/replay_b3_sparse_null.py test/test_b3_sparse_null.py
+PYTHONPATH=/tmp/b3-typecheck-env .venv/bin/python -m mypy --follow-imports=silent --ignore-missing-imports --explicit-package-bases scripts/replay_b3_sparse_null.py test/test_b3_sparse_null.py
+```
+
+Corrected frozen validation bytes:
+
+| File | SHA256 |
+| --- | --- |
+| `scripts/replay_b3_sparse_null.py` | `d061d134908a38b90fa6d23d2ae56da2609237e4d2f5d2c62e07da60f8306dc6` |
+| `test/test_b3_sparse_null.py` | `85b432b55a76ca1ab418c0834495325bb81e5f5f7c2713bbde66a9dc504a0917` |
+| `runs/b3_feasibility/20261003/sparse_null_targeted.xml` | `d02ab38351b1ded6ca4a2d2a76b0d9957d3318800cf2039285c204aeed30eaa5` |
+
+The corrected scripts and tests remain frozen for independent review and the bounded real retry. This note records engineering validation; it does not claim a completed real prefix or scientific readiness. Ticket #05 remains open.
