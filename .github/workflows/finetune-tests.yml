@@ -87,6 +87,8 @@ jobs:
             test/test_b3_sparse_bootstrap_draws.py \
             test/test_b3_prepared_sparse_session.py \
             test/test_b3_streamed_sparse_blocks.py \
+            test/test_b3_streamed_draw_schedule.py \
+            test/test_b3_streamed_fixed_pairs.py \
             test/test_end_to_end.py \
             test/test_finetune_metadata.py \
             test/test_spatial.py \

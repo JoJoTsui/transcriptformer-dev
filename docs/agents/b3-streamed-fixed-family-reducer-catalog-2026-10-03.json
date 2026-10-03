@@ -1,0 +1,150 @@
+{
+  "blocks": [
+    {
+      "block_index": 0,
+      "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+      "cache_metadata": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000/metadata.json",
+      "focal_range": {
+        "start": 0,
+        "stop": 8
+      },
+      "reports": [
+        {
+          "artifact": {
+            "bytes": 4634952,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0000-source-000-block-000.json",
+            "sha256": "a2b376c1e8a02a40d775c7821096a650a446690ee8caa97721361d5ff8024be7"
+          },
+          "draw_index": 0
+        },
+        {
+          "artifact": {
+            "bytes": 4641931,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0001-source-000-block-000.json",
+            "sha256": "926a3f299344134558887c296464f3db1e2876abed378d0deafb939b4e3a2bd5"
+          },
+          "draw_index": 1
+        },
+        {
+          "artifact": {
+            "bytes": 4616545,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0002-source-000-block-000.json",
+            "sha256": "ddf2e2e4449d3d84e73f5963a119f5235afb03d28d96549729578ce39c56042c"
+          },
+          "draw_index": 2
+        }
+      ],
+      "statistics_h5": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000/statistics.h5"
+    },
+    {
+      "block_index": 1,
+      "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+      "cache_metadata": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-000-block-001/metadata.json",
+      "focal_range": {
+        "start": 8,
+        "stop": 16
+      },
+      "reports": [
+        {
+          "artifact": {
+            "bytes": 4635727,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0000-source-000-block-001.json",
+            "sha256": "a98dc60e491d4146c1adcada241d7a0e82c06f561f2e52a4b0ecf8c72b02888f"
+          },
+          "draw_index": 0
+        },
+        {
+          "artifact": {
+            "bytes": 4642761,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0001-source-000-block-001.json",
+            "sha256": "80cbb1da0a897afbf76ccb9294f0ac992f08485a5182187ef32d4ea57b7b7920"
+          },
+          "draw_index": 1
+        },
+        {
+          "artifact": {
+            "bytes": 4617167,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0002-source-000-block-001.json",
+            "sha256": "45ddf1ce2ef00f727a28417e3f965f05e4b2f1073c978cb8ae41350e0e3c7402"
+          },
+          "draw_index": 2
+        }
+      ],
+      "statistics_h5": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-000-block-001/statistics.h5"
+    },
+    {
+      "block_index": 0,
+      "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+      "cache_metadata": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001/metadata.json",
+      "focal_range": {
+        "start": 0,
+        "stop": 8
+      },
+      "reports": [
+        {
+          "artifact": {
+            "bytes": 4759988,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0000-source-001-block-000.json",
+            "sha256": "f96d9a688b858ab9f32412fffe296da37c2a007f87d0c395e707f7ee5ddddeb6"
+          },
+          "draw_index": 0
+        },
+        {
+          "artifact": {
+            "bytes": 4750181,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0001-source-001-block-000.json",
+            "sha256": "396fa525c9301bc3b7c226bdbd3d36398351f2ab9285e11b221149a6e3b4889e"
+          },
+          "draw_index": 1
+        },
+        {
+          "artifact": {
+            "bytes": 4765590,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0002-source-001-block-000.json",
+            "sha256": "cb6a58e53e5b10357389252b02427b7dcf0c3e72cb79c8b5c79b00f289231bcb"
+          },
+          "draw_index": 2
+        }
+      ],
+      "statistics_h5": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001/statistics.h5"
+    },
+    {
+      "block_index": 1,
+      "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+      "cache_metadata": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-001-block-001/metadata.json",
+      "focal_range": {
+        "start": 8,
+        "stop": 16
+      },
+      "reports": [
+        {
+          "artifact": {
+            "bytes": 4760867,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0000-source-001-block-001.json",
+            "sha256": "edc8e001b622bb03cd0f5f09bc31f7457b73a5ac7381c96c7c284e0f8dc93e8d"
+          },
+          "draw_index": 0
+        },
+        {
+          "artifact": {
+            "bytes": 4751059,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0001-source-001-block-001.json",
+            "sha256": "624edc8baf0214af6dc7875df793a08c5ae6359b8f63da9e18cf00f9f79f6c22"
+          },
+          "draw_index": 1
+        },
+        {
+          "artifact": {
+            "bytes": 4766521,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks/draw-0002-source-001-block-001.json",
+            "sha256": "a0e96a96565ca02e04e19477ef2cc3878ac8ae84641e51f723c97394560acbe4"
+          },
+          "draw_index": 2
+        }
+      ],
+      "statistics_h5": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-001-block-001/statistics.h5"
+    }
+  ],
+  "schema": "b3_streamed_fixed_pair_block_catalog_v1",
+  "streamed_summary_sha256": "1c4eb7264311b9d032475abe667914bef656871a8498c25d6db8c6daecfd9edc"
+}
