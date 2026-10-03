@@ -112,6 +112,21 @@ and `native_arithmetic_replay_verified` from
 remaining scientific gate. Worked interval arithmetic is exposed only at the
 mathematical seam, without an effect or source-attestation claim.
 
+`native_arithmetic_replay_verified` requires a prepared eligible complete
+catalog, all 2,000 complete production records matching independent replay,
+and native producer lineage throughout. Native source-byte verification or
+native preparation lineage alone cannot set it. An originally unavailable
+zero-draw family retains verified source bytes and its original native backend
+lineage, with arithmetic replay false. The mathematical seam emits no native
+arithmetic replay claim. Relabeled worked files exercise the expected-handoff
+flag logic only; they are not evidence that native computation occurred.
+
+In a mixed family with an incomplete cache catalog, each originally unavailable
+comparison retains `unavailable_original_coverage_or_embryos`. Only otherwise
+eligible comparisons receive `unavailable_incomplete_fixed_family_catalog`.
+No cache omission changes original scientific eligibility or selects a smaller
+fixed family.
+
 Preparation follows the frozen original bootstrap's eligibility order. It
 first reruns the unchanged public observed comparator and validates source and
 cache metadata. An originally unavailable family records zero native cache
@@ -248,7 +263,7 @@ The complete owned targeted file subsequently passed **19 checks in 150.60
 seconds**, with no failures, errors or skips, at
 `runs/b3_feasibility/20261003/streamed_bootstrap_targeted.xml`. Its supervisor
 completed under the same limits. Ruff check/format and mypy on the three owned
-Python files passed. The final source hashes are:
+Python files passed. The source hashes for that pre-review run are:
 
 - `bootstrap_b3_streamed.py`:
   `5ddb4073f1754fba3a3b2f0103b28121783af6ad4ccd1da6bd4d02dddd6e4020`.
@@ -260,3 +275,36 @@ Python files passed. The final source hashes are:
 These are source and protocol evidence. The worked complete-family fixtures
 do not establish actual full-native draw execution, project finetuned benefit,
 the real pilot's scientific eligibility or complete-method feasibility.
+
+## Review repairs and affected regression
+
+Independent Spec review found two finalization evidence defects. The authentic
+default-native zero-draw test failed with an incorrect true arithmetic-replay
+flag (**1 failure, 52.79 seconds**,
+`streamed_bootstrap_arithmetic_flag_red.xml`). A public mixed eligible/originally
+unavailable family with an incomplete catalog failed because the original
+unavailable status was overwritten (**1 failure, 27.64 seconds**,
+`streamed_bootstrap_original_veto_red2.xml`). The earlier mixed-fixture attempt
+hit the frozen duplicate-input validator and is not counted as a genuine SUT
+failure.
+
+After the two repairs, **5 affected checks passed in 123.71 seconds**, with no
+failures/errors/skips, at
+`runs/b3_feasibility/20261003/streamed_bootstrap_review_repairs_green.xml`.
+The checks cover authentic zero-draw native finalization and CLI, preservation
+of individual original vetoes, inherited injection flags, complete worked-file
+flag handling and the mathematical seam's absence of native verification claims.
+The worked files remain arithmetic fixtures rather than proof of native execution.
+All scientific intervals and native likelihood-effect attestation remain
+withheld. The supervisor completed with return code zero under 300 seconds,
+4 GiB RSS, 4 GiB host RAM, 20 GiB free disk and one CPU thread; its last observed
+RSS was about 0.71 GiB. Ruff check/format and mypy on the three owned files passed.
+
+Final repaired source hashes:
+
+- `bootstrap_b3_streamed.py`:
+  `b701ddb466029efe557a3b55808ff71f81dbd6f5d31906ddd18ff82e8f0cd213`.
+- `b3_streamed_bootstrap.py` remains byte unchanged:
+  `44ca30c4622e567b2cf374156377198387e3d5df247a86c92abcd910aa96e404`.
+- `test_b3_streamed_bootstrap.py`:
+  `c52ff0fb23d1d4640967448ba6fd9ba1c90094aada75c37ecc533670d6bef306`.

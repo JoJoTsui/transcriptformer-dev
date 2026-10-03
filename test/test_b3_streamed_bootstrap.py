@@ -118,6 +118,8 @@ def test_independently_replayed_family_uses_frozen_nearest_rank_and_clipped_inte
     assert result["simultaneous_interval_halfwidth"] == 0.3
     assert result["comparisons"][0]["interval"] == pytest.approx([0.6, 1.0])
     assert result["comparisons"][1]["interval"] == pytest.approx([-1.0, -0.5])
+    assert result["source_attestation_performed"] is False
+    assert "native_arithmetic_replay_verified" not in result
 
 
 def test_matching_duplicate_draws_do_not_substitute_for_complete_replay_coverage():
@@ -517,6 +519,85 @@ def test_finalize_refuses_a_replayed_prefix_instead_of_publishing_an_interval(tm
     assert not (tmp_path / "final").exists()
 
 
+def test_incomplete_catalog_finalization_preserves_each_original_comparison_veto(tmp_path):
+    """Unattested family-status fixture; it does not establish native strata."""
+    from scripts.bootstrap_b3_streamed import prepare, finalize
+
+    request_path = _worked_prepare_request(tmp_path)
+    request = json.loads(request_path.read_text())
+    family_path, observed_path = Path(request["family"]), Path(request["observed_catalog"])
+    family, observations = json.loads(family_path.read_text()), json.loads(observed_path.read_text())
+    member = family["comparisons"][0]
+    family["comparisons"].append(
+        {
+            **member,
+            "comparison_id": "originally_unavailable",
+            "bundle_a": member["bundle_b"],
+            "bundle_b": member["bundle_a"],
+        }
+    )
+    original = json.loads(Path(observations["comparisons"][0]["comparison"]).read_text())
+    unavailable = _write(
+        tmp_path / "originally-unavailable.json",
+        {
+            **original,
+            "species_a": original["species_b"],
+            "species_b": original["species_a"],
+            "n_fixed_pairs": 1,
+            "fixed_pairs": [original["fixed_pairs"][0][::-1]],
+            "status": "unavailable_original_coverage_or_embryos",
+        },
+    )
+    observations["comparisons"].append(
+        {
+            **observations["comparisons"][0],
+            "comparison_id": "originally_unavailable",
+            "comparison": str(unavailable),
+        }
+    )
+    block_path = Path(request["block_catalog"])
+    catalog = json.loads(block_path.read_text())
+    catalog["blocks"] = catalog["blocks"][1:]
+    _write(family_path, family)
+    _write(observed_path, observations)
+    _write(block_path, catalog)
+    request["family_sha256"] = _digest(family)
+    for path in (family_path, observed_path, block_path, unavailable):
+        request["input_file_sha256"][str(path)] = _hash(path)
+    _write(request_path, request)
+    prepared = tmp_path / "mixed-prepared"
+    summary = prepare(request_path, prepared, native_backend=WorkedNativeBoundary())
+    assert summary["status"] == "unavailable_incomplete_fixed_family_catalog"
+    plan_path = prepared / "plan.json"
+    plan = json.loads(plan_path.read_text())
+    empty = _write(
+        tmp_path / "empty-mixed-artifacts.json", {"schema": "b3_streamed_bootstrap_artifacts_v1", "artifacts": []}
+    )
+    final_request = _write(
+        tmp_path / "mixed-finalize-request.json",
+        {
+            "schema": "b3_streamed_bootstrap_finalize_request_v1",
+            "plan": str(plan_path),
+            "production_catalog": str(empty),
+            "replay_catalog": str(empty),
+            "input_file_sha256": {
+                **plan["input_file_sha256"],
+                str(plan_path): _hash(plan_path),
+                str(prepared / "summary.json"): _hash(prepared / "summary.json"),
+                str(empty): _hash(empty),
+            },
+        },
+    )
+    result = finalize(final_request, tmp_path / "mixed-final")
+    statuses = {row["comparison_id"]: row["status"] for row in result["comparisons"]}
+    assert statuses == {
+        "worked": "unavailable_incomplete_fixed_family_catalog",
+        "originally_unavailable": "unavailable_original_coverage_or_embryos",
+    }
+    assert result["native_arithmetic_replay_verified"] is False
+    assert all(row["interval"] is None for row in result["comparisons"])
+
+
 def test_default_native_prepare_rejects_worked_files_as_authentic_source_lineage(tmp_path):
     from scripts.bootstrap_b3_streamed import prepare
 
@@ -574,8 +655,8 @@ def test_complete_file_finalization_withholds_effects_without_native_attestation
     plan_path = tmp_path / "prepared/plan.json"
     plan = json.loads(plan_path.read_text())
     if native_claim:
-        # A new third-party statement can declare native arithmetic. It still
-        # carries no independently validated likelihood-effect attestation.
+        # Explicitly relabeled, expected-byte-bound files test flag handling.
+        # They are not evidence of native execution or effect attestation.
         claimed = tmp_path / "declared-native-preparation"
         plan["origin_native_verified"] = True
         plan_path = _write(claimed / "plan.json", plan)
@@ -694,6 +775,7 @@ def test_complete_file_finalization_withholds_effects_without_native_attestation
     )
     assert result["source_attestation_performed"] is False
     assert result["native_source_bytes_verified"] is True
+    assert result["native_arithmetic_replay_verified"] is native_claim
     assert result["native_likelihood_effects_attested"] is False
     assert result["simultaneous_interval_halfwidth"] is None
     assert all(row["interval"] is None for row in result["comparisons"])
@@ -908,6 +990,9 @@ def test_default_prepare_and_cli_keep_original_native_reporting_veto(observed_pa
     sealed = finalize(final_request, tmp_path / "native-final")
     assert sealed["status"] == "unavailable_original_coverage_or_embryos"
     assert sealed["joint_valid_draws"] == 0
+    assert sealed["native_source_bytes_verified"] is True
+    assert sealed["native_backend_verified"] is True
+    assert sealed["native_arithmetic_replay_verified"] is False
     assert sealed["native_likelihood_effects_attested"] is False
     assert sealed["source_attestation_performed"] is False
     assert sealed["simultaneous_interval_halfwidth"] is None

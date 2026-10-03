@@ -740,7 +740,11 @@ def finalize(request_path: Path, output: Path, *, max_seconds: float = 900) -> d
                                 "n_fixed_pairs",
                             )
                         },
-                        "status": "unavailable_incomplete_fixed_family_catalog",
+                        "status": (
+                            "unavailable_incomplete_fixed_family_catalog"
+                            if comparison["status"] == "bootstrap_eligible"
+                            else comparison["status"]
+                        ),
                         "interval": None,
                     }
                     for comparison in plan["scientific_plan"]["comparisons"]
@@ -759,7 +763,13 @@ def finalize(request_path: Path, output: Path, *, max_seconds: float = 900) -> d
             native_backend_verified=native_verified,
             source_attestation_performed=False,
             native_source_bytes_verified=True,
-            native_arithmetic_replay_verified=native_verified,
+            native_arithmetic_replay_verified=(
+                native_verified
+                and plan["status"] == "prepared_complete_fixed_family_catalog"
+                and any(c["status"] == "bootstrap_eligible" for c in plan["scientific_plan"]["comparisons"])
+                and len(compact) == 2000
+                and result["draw_records_equal"] is True
+            ),
             native_likelihood_effects_attested=False,
             interpretation="Bounded frozen-family arithmetic; native likelihood effects remain unattested; no p-values",
             production_catalog_sha256=inputs.require(_path(request["production_catalog"])),
