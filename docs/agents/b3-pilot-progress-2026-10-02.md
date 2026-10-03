@@ -1,5 +1,36 @@
 # Ticket 05 pilot progress — 2026-10-02
 
+**Current streamed pipeline milestone — 2026-10-04:** Three bounded dependencies
+are validated: fixed-family reduction with incomplete-input refusal; general
+prepare/execute/replay/finalize orchestration; and private windowed native
+snapshots with H5 allocation admission. All 96 saved diagnostic rows and three
+5,111-pair reductions match fresh public oracles with zero observed error.
+Each draw lacks 5,106 fixed genes per side, so no paired ranks or rho are
+computed. The default real-pilot CLI preserves the original reporting veto,
+rejects production without output and seals zero-draw finalization with
+arithmetic replay/effect attestation false and intervals null.
+
+The final complete repository CPU regression passes **823 tests, 5 skipped**,
+with no failures/errors (**1390.04 seconds**, summed across two
+disjoint sequential partitions). Ruff check/format and
+mypy pass all 12 new Python files. Independent committed reviews have zero
+remaining hard findings; two finalization defects were repaired through
+genuine public failing/passing regressions. The final source audit verifies
+**340 bindings**, all **107 human / 109 mouse** original pilot software
+hashes and all **58 native modules**. All **208 preexisting Python files** retain
+their original bytes and Git index modes. See the
+[validation record](b3-streamed-pipeline-validation-2026-10-04.md) and
+[bound evidence](b3-streamed-pipeline-evidence-2026-10-04.json).
+
+**05 remains open, 11 excluded, ten bounded engineering tickets closed.** The
+pilot's **32.54%** coverage and **0/2,000** necessary jointly supported draws
+still withhold reporting. Full-context authentication and certificate/catalog
+paging remain unimplemented engineering work; full-cohort scored inputs,
+complete effect attestation, whole-family/complete-method cost and reportable
+comparison/uncertainty remain unresolved. Project finetuned checkpoint
+training/selection provenance remains unavailable. Frozen scientific rules and
+existing source-bound Python are unchanged.
+
 ## Current result
 
 Both frozen base-arm organogenesis pilots have completed.

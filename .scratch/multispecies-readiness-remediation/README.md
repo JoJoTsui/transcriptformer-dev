@@ -1,6 +1,37 @@
 # Multispecies readiness remediation — ticket index
 
-**Current streamed-block milestone — 2026-10-03:** The same authenticated two
+**Current streamed pipeline milestone — 2026-10-04:** Three bounded dependencies
+are validated: fixed-family reduction with incomplete-input refusal; general
+prepare/execute/replay/finalize orchestration; and private windowed native
+snapshots with H5 allocation admission. All 96 saved diagnostic rows and three
+5,111-pair reductions match fresh public oracles with zero observed error.
+Each draw lacks 5,106 fixed genes per side, so no paired ranks or rho are
+computed. The default real-pilot CLI preserves the original reporting veto,
+rejects production without output and seals zero-draw finalization with
+arithmetic replay/effect attestation false and intervals null.
+
+The final complete repository CPU regression passes **823 tests, 5 skipped**,
+with no failures/errors (**1390.04 seconds**, summed across two
+disjoint sequential partitions). Ruff check/format and
+mypy pass all 12 new Python files. Independent committed reviews have zero
+remaining hard findings; two finalization defects were repaired through
+genuine public failing/passing regressions. The final source audit verifies
+**340 bindings**, all **107 human / 109 mouse** original pilot software
+hashes and all **58 native modules**. All **208 preexisting Python files** retain
+their original bytes and Git index modes. See the
+[validation record](../../docs/agents/b3-streamed-pipeline-validation-2026-10-04.md) and
+[bound evidence](../../docs/agents/b3-streamed-pipeline-evidence-2026-10-04.json).
+
+**05 remains open, 11 excluded, ten bounded engineering tickets closed.** The
+pilot's **32.54%** coverage and **0/2,000** necessary jointly supported draws
+still withhold reporting. Full-context authentication and certificate/catalog
+paging remain unimplemented engineering work; full-cohort scored inputs,
+complete effect attestation, whole-family/complete-method cost and reportable
+comparison/uncertainty remain unresolved. Project finetuned checkpoint
+training/selection provenance remains unavailable. Frozen scientific rules and
+existing source-bound Python are unchanged.
+
+**Previous streamed-block milestone — 2026-10-03:** The same authenticated two
 species and three seeded draws now traverse adjacent focal blocks `0:8` and
 `8:16`, one block resident at a time. All **96 diagnostic rows** (37
 finite, 59 unavailable) match a fresh public-scorer check with
@@ -153,7 +184,7 @@ data, chicken identifier repair and production training remain separate gates.
 | [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | Closed for bounded CPU engineering acceptance; two-rank interrupted/resumed dropout continuity passed |
 | [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; recorded splits validated without allocation; six-source preparation validated; finalized multispecies corpus absent |
 | [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Closed for bounded engineering acceptance; strict partial bridge leaves R2 open |
-| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Open; pilot coverage 32.54%; full native support bound 91.02% is necessary only; whole-arm cost, actual finite comparison and uncertainty pending |
+| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Open; bounded streamed pipeline verified; pilot coverage 32.54%; full-context/paging, complete effects/cost and reportable comparison/uncertainty pending |
 | [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Closed for bounded engineering acceptance; actual frozen cohort absent |
 | [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Closed for bounded engineering acceptance; production losses absent |
 | [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Closed for bounded engineering acceptance; completed-directory gap repaired; production evidence absent |

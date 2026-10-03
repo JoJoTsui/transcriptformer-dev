@@ -2,18 +2,22 @@
 
 Status: implemented with **26 passing public checks**, Ruff check/format and
 mypy. Independent committed-diff reviews, actual 5,111-pair artifact validation
-and the final combined CPU regression are pending under
+and the final complete CPU regression pass under
 [ADR 0005](../adr/0005-b3-feasibility-before-full-cohort-expansion.md).
 Ticket **05 remains open**; zebrafish work remains excluded.
 
-## Next required dependency
+## Required integration
 
 The completed [two-block study](b3-streamed-sparse-blocks-2026-10-03.md)
 establishes exact bounded traversal. Its 16 focal genes per species do not
-cover the frozen 5,111 observed pairs. The next dependency is executable
-fixed-family paired reduction, with independently rebuilt score arithmetic.
-General cache scheduling and complete production/final replay orchestration
-remain subsequent dependencies of the unchecked complete-method criterion.
+cover the frozen 5,111 observed pairs. Executable fixed-family paired reduction
+with independently rebuilt score arithmetic is now implemented and verified
+against those saved artifacts. General cache scheduling and production/final
+replay orchestration are implemented in the
+[separate protocol](b3-streamed-bootstrap-orchestration-2026-10-03.md);
+bounded combined acceptance is recorded in the
+[final validation](b3-streamed-pipeline-validation-2026-10-04.md).
+Complete method cost remains unresolved.
 
 ## Agreed seams and acceptance
 
@@ -142,8 +146,8 @@ Targeted JUnit is
 (26 passed, no failures/errors/skips, 454.77 seconds reported by pytest).
 The native test uses the authentic pilot/import/index/metric handoff, compares
 four freshly rebuilt physical caches and 96 replayed rows, and rejects forged
-arithmetic and mutations before final publication. This small test family
-does not replace the pending actual 5,111-pair artifact validation.
+arithmetic and mutations before final publication. The separate actual
+5,111-pair artifact validation is recorded below.
 
 The independent review found a publication gap after summary flush/fsync.
 An authentic public regression first reproduced three escaping mutations in
@@ -153,3 +157,33 @@ fsync, before publishing the directory. The completion records three source
 verification passes and that final marker/artifact verification; post-marker
 seal time is returned in the invocation receipt without rewriting the marker.
 All three source/child/marker mutation cases now reject completion.
+
+## Actual observed-family validation — 2026-10-04
+
+The [frozen request](b3-streamed-fixed-family-reducer-request-2026-10-03.json)
+binds 299 files and the actual 5,111 observed pairs. The supervised invocation
+publishes `runs/b3_feasibility/20261003/fixed_family_reducer/summary.json` in
+334.66 seconds, with 0.381 GiB peak process RSS. Its conservative numeric bound
+is 192.91 MiB; observed numeric payload is 84.87 MiB. This partial catalog
+contains five fixed-family genes per side and leaves 5,106 missing per side in
+every draw. Zero fixed pairs have both members available in the catalog.
+All three reductions correctly return `incomplete_fixed_family_input`, null
+rho and no scientific interval or rank computation. Missing input is preserved separately from
+explicit unavailable scores.
+
+The fresh unchanged public scorer independently reconstructs all-gene
+metrics/bins and all 96 focal rows across twelve source/block/draw checks,
+then reconstructs all three 5,111-pair reductions. Every score/metric error is
+zero and every missing/unavailable classification agrees. Parity calculation
+takes 294.08 seconds, with 1.165 GiB peak RSS; its supervisor includes startup.
+The final source audit verifies 314 unique bindings in 34.35 seconds, including
+all original human 107/mouse 109 pilot software files and the original 58 native
+modules. No model forwards or checkpoint loads occur.
+
+Production scoring/query is a separate scope: all-gene metrics, bins and rebuilt
+rows total 0.90141 seconds; full fixed-family reduction/exact replay adds
+0.03676 seconds. Physical-statistic reconstruction takes 98.95 seconds and
+native preparation/verification 80.27 seconds. The persisted timing ends before
+summary publication; the receipt separately records 31.38 seconds of post-marker
+seal verification and 0.03060 seconds of publication. These partial handoff
+measurements do not establish whole-family or complete 2,000-draw runtime.

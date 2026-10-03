@@ -1,0 +1,10 @@
+{
+  "comparisons": [
+    {
+      "comparison": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/paired_measured_zero_observed_20261002/comparison.json",
+      "comparison_id": "human_mouse_organogenesis_observed_pilot",
+      "coverage": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/paired_measured_zero_observed_20261002/coverage.tsv"
+    }
+  ],
+  "schema": "b3_streamed_bootstrap_observed_v1"
+}

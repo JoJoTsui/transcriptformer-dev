@@ -1,6 +1,37 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-**Current streamed-block milestone — 2026-10-03:** The same authenticated two
+**Current streamed pipeline milestone — 2026-10-04:** Three bounded dependencies
+are validated: fixed-family reduction with incomplete-input refusal; general
+prepare/execute/replay/finalize orchestration; and private windowed native
+snapshots with H5 allocation admission. All 96 saved diagnostic rows and three
+5,111-pair reductions match fresh public oracles with zero observed error.
+Each draw lacks 5,106 fixed genes per side, so no paired ranks or rho are
+computed. The default real-pilot CLI preserves the original reporting veto,
+rejects production without output and seals zero-draw finalization with
+arithmetic replay/effect attestation false and intervals null.
+
+The final complete repository CPU regression passes **823 tests, 5 skipped**,
+with no failures/errors (**1390.04 seconds**, summed across two
+disjoint sequential partitions). Ruff check/format and
+mypy pass all 12 new Python files. Independent committed reviews have zero
+remaining hard findings; two finalization defects were repaired through
+genuine public failing/passing regressions. The final source audit verifies
+**340 bindings**, all **107 human / 109 mouse** original pilot software
+hashes and all **58 native modules**. All **208 preexisting Python files** retain
+their original bytes and Git index modes. See the
+[validation record](../../../docs/agents/b3-streamed-pipeline-validation-2026-10-04.md) and
+[bound evidence](../../../docs/agents/b3-streamed-pipeline-evidence-2026-10-04.json).
+
+**05 remains open, 11 excluded, ten bounded engineering tickets closed.** The
+pilot's **32.54%** coverage and **0/2,000** necessary jointly supported draws
+still withhold reporting. Full-context authentication and certificate/catalog
+paging remain unimplemented engineering work; full-cohort scored inputs,
+complete effect attestation, whole-family/complete-method cost and reportable
+comparison/uncertainty remain unresolved. Project finetuned checkpoint
+training/selection provenance remains unavailable. Frozen scientific rules and
+existing source-bound Python are unchanged.
+
+**Previous streamed-block milestone — 2026-10-03:** The same authenticated two
 species and three seeded draws now traverse adjacent focal blocks `0:8` and
 `8:16`, one block resident at a time. All **96 diagnostic rows** (37
 finite, 59 unavailable) match a fresh public-scorer check with
@@ -150,7 +181,7 @@ The eight-hour producer budget retains memory/storage guards. Actual completion
 is pending and this pilot cannot meet the paired 80% reporting floor.
 
 Category: correctness and readiness
-Status: Open — bounded sparse resampled-null replay verified; complete backend/cost, reportable comparison and uncertainty pending
+Status: Open — bounded streamed pipeline verified; full-context/paging, complete effects/cost, reportable comparison and uncertainty pending
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -764,6 +795,31 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   795.83 seconds. Final parity, 289-binding audit and full CPU regression
   pass. See the [streamed-block record](../../../docs/agents/b3-streamed-sparse-blocks-2026-10-03.md).
   This closes the bounded two-block dependency, without a full-family runtime claim.
+- [x] Implement streamed reduction over the complete frozen observed pair family,
+  with independent native-statistic/score reconstruction, exact tied-rank
+  arithmetic, immutable handoffs and explicit incomplete-family refusal.
+  The [fixed-family reducer contract](../../../docs/agents/b3-streamed-fixed-family-reducer-2026-10-03.md)
+  records its actual 96-row/5,111-pair replay, fresh public parity and immutable
+  incomplete-family refusal. General orchestration is separately validated;
+  complete method cost remains unfinished.
+- [x] Integrate general streamed preparation, bounded production draw shards,
+  independent native score replay and complete-family finalization.
+  The [orchestration contract](../../../docs/agents/b3-streamed-bootstrap-orchestration-2026-10-03.md)
+  preserves the existing 2,000/1,900 draw and interval rules. The current pilot
+  rejects production and zero-draw finalization withholds arithmetic replay and
+  intervals. Independent reviews, static checks and final CPU regression pass;
+  protocol fixtures cannot establish full-cohort cost or effect attestation.
+- [x] Replace eager array/support snapshots in authenticated bounded contexts
+  with private file snapshots and windowed native reads. The 51 targeted
+  checks verify native physical/weighted parity, H5 admission, live allocation
+  reservations, source mutation refusal and cleanup. Existing reader caps
+  remain enforced; full-context authentication and paging stay separate below.
+- [ ] Implement a separately versioned bounded full-context authenticator and
+  hash-bound catalog/certificate paging protocol for actual full-cohort inputs.
+  The general backend still inherits a 48-cell whole-context limit. At least
+  12,915 human and 98,480 mouse per-range bindings exceed the new frontend's
+  8,192 cap; mouse also exceeds the frozen native 20,000-binding cap.
+  The bounded window adapter does not close this distinct engineering gate.
 - [ ] Measure complete method-preserving scoring, verification and aggregation
   cost within explicit WSL budgets before expanding full-cohort production.
   Partial: planning, import, reconciliation, indexing, 64-gene null ranges,

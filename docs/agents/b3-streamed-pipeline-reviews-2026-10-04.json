@@ -1,0 +1,80 @@
+{
+  "schema": "b3_streamed_pipeline_committed_reviews_v1",
+  "date": "2026-10-04",
+  "scope": "Independent Standards and Spec reviews of fixed nonempty committed diffs; this record summarizes agent review reports and is not scientific attestation.",
+  "remaining_hard_findings": 0,
+  "all_12_baseline_smells_considered_on_standards_axis": true,
+  "reviews": [
+    {
+      "slice": "Fixed-family completion seal repair",
+      "base": "3bd6f98",
+      "head": "18ebe6e",
+      "standards_reviewer": "/root/full_cohort_support_bound",
+      "spec_reviewer": "/root/deletion_acceleration_review",
+      "standards_hard_findings": 0,
+      "standards_optional_findings": 0,
+      "spec_hard_findings": 0,
+      "spec_optional_findings": 0,
+      "result": "Source, generated children and summary bytes are verified after summary fsync and before exclusive publication."
+    },
+    {
+      "slice": "Windowed snapshots and allocation admission",
+      "base": "18ebe6e",
+      "head": "4637b4ecc2b4822a920d746a08f2af9b95db7ce2",
+      "standards_reviewer": "/root/full_cohort_support_bound",
+      "spec_reviewer": "/root/deletion_acceleration_review",
+      "standards_hard_findings": 0,
+      "standards_optional_findings": 1,
+      "spec_hard_findings": 0,
+      "spec_optional_findings": 0,
+      "optional": "Minor duplicated bounded stream-hash shape; no refactor required for acceptance.",
+      "result": "Canonical H5 admission and complete live reservations precede payload/allocation; source identities and cleanup remain intact."
+    },
+    {
+      "slice": "General streamed orchestration initial review",
+      "base": "4637b4e",
+      "head": "bc45db6111c743cb59231140b43f34e8f74a242b",
+      "standards_reviewer": "/root/feasibility_spec_review",
+      "spec_reviewer": "/root/deletion_acceleration_review",
+      "standards_hard_findings": 0,
+      "standards_optional_findings": 1,
+      "spec_hard_findings": 2,
+      "spec_optional_findings": 0,
+      "optional": "Duplicated execute/replay shard envelope construction, unchanged and nonblocking.",
+      "hard_findings": [
+        "Zero-draw finalization inferred executed native arithmetic replay from backend lineage.",
+        "Mixed incomplete-catalog finalization overwrote an original reporting/embryo veto."
+      ],
+      "resolved_by": "519c8e494c5c1555bffe32d3d4b999f16776dca9"
+    },
+    {
+      "slice": "General streamed orchestration repair follow-up",
+      "base": "bc45db6",
+      "head": "519c8e494c5c1555bffe32d3d4b999f16776dca9",
+      "standards_reviewer": "/root/feasibility_spec_review",
+      "spec_reviewer": "/root/deletion_acceleration_review",
+      "standards_new_hard_findings": 0,
+      "standards_new_optional_findings": 0,
+      "spec_remaining_hard_findings": 0,
+      "spec_optional_findings": 0,
+      "result": "Native arithmetic verification requires complete eligible matched 2,000-draw native lineage; zero-draw and injected paths remain false. Original per-comparison vetoes survive incomplete catalogs. Frozen math and effect withholding remain unchanged.",
+      "source_sha256": {
+        "scripts/bootstrap_b3_streamed.py": "b701ddb466029efe557a3b55808ff71f81dbd6f5d31906ddd18ff82e8f0cd213",
+        "scripts/b3_streamed_bootstrap.py": "44ca30c4622e567b2cf374156377198387e3d5df247a86c92abcd910aa96e404",
+        "test/test_b3_streamed_bootstrap.py": "c52ff0fb23d1d4640967448ba6fd9ba1c90094aada75c37ecc533670d6bef306"
+      }
+    }
+  ],
+  "remaining_gate_audit": {
+    "reviewer": "/root/feasibility_spec_review",
+    "whole_source_context_cell_cap": 48,
+    "certificate_range_cell_cap": 48,
+    "frontend_binding_cap": 8192,
+    "frozen_native_closure_cap": 20000,
+    "human_range_count": 2583,
+    "mouse_range_count": 19696,
+    "minimum_human_range_bindings": 12915,
+    "minimum_mouse_range_bindings": 98480,
+    "result": "Full-context authentication and certificate/catalog paging are distinct unimplemented engineering requirements, alongside actual full-cohort scores, effect attestation and complete-method cost. The three bounded dependencies do not close ticket 05."
+  }
+}

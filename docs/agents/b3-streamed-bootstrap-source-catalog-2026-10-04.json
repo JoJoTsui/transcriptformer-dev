@@ -1,0 +1,19 @@
+{
+  "schema": "b3_streamed_bootstrap_sources_v1",
+  "sources": [
+    {
+      "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+      "embryo_metrics_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/human/embryo_metrics",
+      "import_provenance": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/human/handoff/provenance.json",
+      "index_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/human/index",
+      "plan": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/human/plan.json"
+    },
+    {
+      "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+      "embryo_metrics_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/embryo_metrics",
+      "import_provenance": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/handoff/provenance.json",
+      "index_root": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/index",
+      "plan": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/feasibility_20261002/pilot_backend/mouse/plan.json"
+    }
+  ]
+}

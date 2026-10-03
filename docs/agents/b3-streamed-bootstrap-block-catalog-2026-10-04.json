@@ -1,0 +1,33 @@
+{
+  "blocks": [
+    {
+      "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+      "cache_metadata": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000/metadata.json",
+      "start": 0,
+      "statistics_h5": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-000/statistics.h5",
+      "stop": 8
+    },
+    {
+      "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+      "cache_metadata": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-000-block-001/metadata.json",
+      "start": 8,
+      "statistics_h5": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-000-block-001/statistics.h5",
+      "stop": 16
+    },
+    {
+      "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+      "cache_metadata": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001/metadata.json",
+      "start": 0,
+      "statistics_h5": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/sparse_seeded_prefix_retry01.cache/source-001/statistics.h5",
+      "stop": 8
+    },
+    {
+      "bundle": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+      "cache_metadata": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-001-block-001/metadata.json",
+      "start": 8,
+      "statistics_h5": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/streamed_sparse_blocks.cache/source-001-block-001/statistics.h5",
+      "stop": 16
+    }
+  ],
+  "schema": "b3_streamed_bootstrap_blocks_v1"
+}

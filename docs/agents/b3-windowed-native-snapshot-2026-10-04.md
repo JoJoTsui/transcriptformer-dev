@@ -1,8 +1,12 @@
 # Windowed native B3 snapshots — 2026-10-04
 
 Status: implemented with **51 passing targeted checks**, Ruff check/format and
-mypy on five new Python files. Independent committed review and final combined
-CPU regression are pending. This is a required backend dependency of
+mypy on five new Python files. Independent committed Standards and Spec reviews
+have no remaining hard findings; the final complete CPU regression passes
+823 tests with five skips and no failures/errors. The
+[final validation](b3-streamed-pipeline-validation-2026-10-04.md) also records
+the 340-binding source audit and unchanged preexisting Python.
+This is a required backend dependency of
 ticket 05's streamed orchestration under
 [ADR 0005](../adr/0005-b3-feasibility-before-full-cohort-expansion.md).
 
@@ -129,9 +133,18 @@ before string payload reads; native shape/dtype checks run before numeric reads.
 
 ## Remaining full-cohort gates
 
-The frozen certificate reader's 20,000-binding cap remains enforced. Larger
-closures require a separate bounded catalog-page protocol; this adapter cannot
-certify those inputs. Full-cohort scored shards and an actual finite family
+The general backend still uses the frozen driver's admission of at most
+48 cells for a whole source context. The underlying engine separately permits
+at most 48 cells per certificate range; these are distinct limits.
+The general request reader admits at most 8,192 expected file bindings, and the
+frozen native engine admits at most 20,000 per supplied closure. The actual full
+plans have 2,583 human and 19,696 mouse ranges. Four shard files plus one
+certificate per range require at least 12,915 and 98,480 bindings before common
+sources. Both exceed the frontend limit; mouse also exceeds the native limit.
+
+A bounded full-context authenticator and hash-bound catalog/certificate paging
+protocol remain separate unimplemented engineering dependencies. This adapter
+cannot certify those larger inputs. Full-cohort scored shards and an actual finite family
 remain unavailable, and whole-method cost and complete native likelihood-effect
 attestation remain unmeasured. The pilot's 32.54% coverage and 0/2,000 necessary
 joint support vetoes remain unchanged. Ticket 05 stays open; zebrafish is excluded.
@@ -140,8 +153,8 @@ joint support vetoes remain unchanged. Ticket 05 stays open; zebrafish is exclud
 
 `runs/b3_feasibility/20261003/windowed_native_final_targeted.xml` records
 51 passes, no failures/errors/skips, in 48.96 seconds. Its external supervisor
-completed within300 seconds with roughly0.68 GiB observed RSS and the4 GiB
-RSS/RAM and20 GiB disk guards. The authentic native fixture reconstructs the
+completed within 300 seconds with roughly 0.68 GiB observed RSS and the 4 GiB
+RSS/RAM and 20 GiB disk guards. The authentic native fixture reconstructs the
 same complete physical arrays as the frozen kernel, proves focal partition
 invariance, verifies all-gene metrics/bins and rows for three weight maps, and
 checks original/private mutation refusal, resource refusal and cleanup.

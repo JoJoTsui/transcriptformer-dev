@@ -8,6 +8,54 @@ cohort-selection policy, fixed finite-pair universe or 500-pair/80% reporting
 floor. Zebrafish work remains excluded. This implements a bounded planning
 dependency under [ADR 0005](../adr/0005-b3-feasibility-before-full-cohort-expansion.md).
 
+## Bounded fixed-family handoff cost — 2026-10-04
+
+The new [fixed-family reducer](b3-streamed-fixed-family-reducer-2026-10-03.md)
+authenticates the actual 5,111-pair family and independently rebuilds the
+completed four-cache/96-row pilot handoff. The catalog contains only five
+fixed-family genes per species; 5,106 per side remain missing in each of
+three draws, so no paired rank, rho or interval is computed.
+
+| Measured phase | Seconds | Scope |
+| --- | ---: | --- |
+| Complete reducer invocation | 334.66 | Receipt includes final seal and publication |
+| Native preparation/verification | 80.27 | Two original source contexts |
+| Independent physical-statistic reconstruction | 98.95 | Four complete cache arrays |
+| Resampled metrics/bins/rows | 0.90141 | Six all-gene states, twelve block queries |
+| Fixed-family reduction/exact comparison | 0.03676 | Three incomplete 5,111-pair records; no ranks |
+| Post-marker source/child/marker seal | 31.38 | Receipt only; after marker fsync |
+| Fresh public scorer and reduction parity | 294.08 | Separate oracle; excludes startup imports |
+| Final source reconciliation | 34.35 | Separate audit; 314 unique bindings |
+
+The reducer's peak RSS is 0.381 GiB, observed numeric payload 84.87 MiB and
+conservative numeric upper 192.91 MiB. The public oracle peaks at 1.165 GiB.
+Both supervised jobs retain the 4 GiB RSS/available-RAM and 20 GiB disk gates;
+the reducer's cooperative wall cap is 900 seconds. No model forwards or
+checkpoint loads occur. Each scope is measured separately and must not be
+summed into a whole-arm production estimate. The first oracle launch omitted
+required positional arguments and returned 1 without a scientific artifact;
+the preserved second supervised invocation completed successfully.
+
+Whole-family finite score/rank traversal, full-cohort native likelihood-effect
+attestation and all 2,000 production plus 2,000 independent replay draw costs
+remain unmeasured. The general streamed protocol is now implemented for bounded
+authenticated contexts; its fixtures cannot supply missing full-cohort inputs
+or whole-method timings. Full-context authentication and catalog/certificate
+paging remain distinct engineering dependencies.
+
+The [validated general protocol](b3-streamed-pipeline-validation-2026-10-04.md)
+also measures default real-pilot preparation (248.53 seconds final Unix child
+wall), production refusal without output (32.17 seconds) and zero-draw
+original-veto finalization (60.63 seconds). Preparation performs four cache
+metadata checks, zero native block reconstructions, zero unit-score replays
+and zero model forwards. Its guarded preparation scope is 187.21 seconds,
+including the original public comparator's 179.72 seconds; these overlap the
+child wall and must not be added. The preparation's last monotonic heartbeat
+is a separate 270.71-second observation. These timings establish veto handling,
+not full-family production/replay throughput. Final regression passes 823 tests
+with five skips and no failures/errors; the new 340-binding source audit
+preserves all 208 preexisting Python files.
+
 ## Public contract and source scope
 
 [plan_b3_complete_method_cost.py](../../scripts/plan_b3_complete_method_cost.py)
@@ -108,8 +156,15 @@ The existing bounded bootstrap's aggregate row and Boolean-grid caps fail:
 **1,065,963,862 rows** exceed 200,000; **21,437,038,471 gene×cell entries** exceed
 10,000,000. Its **962,663 embryo×gene records** fit the 1,000,000 cap. Aggregate
 count compatibility would still leave per-species, bundle and scientific gates.
-A new scalable backend and the full cohort's actual fixed finite-pair family
-are unavailable. No bootstrap or uncertainty result was produced here.
+The bounded streamed reducer, general orchestration and windowed snapshots
+are now implemented. Full-cohort ingestion is still unavailable: the general
+backend inherits the pilot's 48-cell whole-context admission and expected-file
+maps cannot contain the full plans' minimum 12,915 human / 98,480 mouse range
+bindings within their 8,192 frontend / 20,000 native limits. A separately
+versioned bounded full-context and catalog/certificate paging protocol remains
+an engineering requirement. Actual full scored inputs, the full cohort's finite
+family and complete effect attestation are also unavailable. No reportable
+bootstrap or uncertainty result was produced here.
 
 ## Checks and next dependency
 

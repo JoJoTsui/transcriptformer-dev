@@ -1,9 +1,12 @@
 # Streamed B3 bootstrap orchestration — 2026-10-03
 
-Status: implemented with **19 passing targeted checks**; independent reviews and
-the final combined CPU regression are pending under
+Status: implemented and independently reviewed, with **20 passing module checks**
+in the final complete CPU regression under
 [ADR 0005](../adr/0005-b3-feasibility-before-full-cohort-expansion.md).
 Ticket **05 remains open**; zebrafish work remains excluded.
+The [final validation](b3-streamed-pipeline-validation-2026-10-04.md) binds
+823 repository passes/five skips, static checks, real original-veto CLI
+handoffs and the 340-binding fresh source audit.
 
 ## Required integration
 
@@ -12,7 +15,8 @@ coordinated draws and simultaneous intervals. Its dense source loader exceeds
 the full cohort's memory bounds. The completed streamed study and initial
 [fixed-family reducer](b3-streamed-fixed-family-reducer-2026-10-03.md) handle
 two pilot blocks and three completed diagnostic draws. General execution is
-a separate required dependency; it must preserve the scientific method.
+implemented below as a separate bounded dependency preserving the scientific
+method.
 
 ## Agreed public seams
 
@@ -56,9 +60,15 @@ coordination arithmetic, but cannot establish native scientific attestation.
 
 ## Execution limits
 
-The underlying bounded native reader's existing caps remain enforced. Passing
-the orchestration protocol cannot certify full-cohort native ingestion or
-effect attestation. Production execution still needs real full-cohort scored
+The underlying bounded native reader's existing caps remain enforced. Its
+general authentication still uses the pilot driver's 48-cell whole-source
+context, distinct from the engine's 48-cell certificate ranges. The request
+reader's 8,192 expected-binding cap and the engine's 20,000 closure cap cannot
+admit the full plans' minimum 12,915 human / 98,480 mouse range bindings before
+common sources. A separately versioned bounded full-context authenticator and
+certificate/catalog paging protocol remain unimplemented engineering work.
+Passing this orchestration protocol cannot certify full-cohort native ingestion
+or effect attestation. Production execution still needs real full-cohort scored
 shards and the actual finite family, which are unavailable. General protocol
 fixtures and diagnostic pilot execution do not establish whole-method cost.
 
