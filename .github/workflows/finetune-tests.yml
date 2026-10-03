@@ -83,6 +83,8 @@ jobs:
             test/test_b3_complete_method_cost.py \
             test/test_b3_scalar_cache.py \
             test/test_b3_full_native_embryo_support.py \
+            test/test_b3_sparse_null.py \
+            test/test_b3_sparse_bootstrap_draws.py \
             test/test_end_to_end.py \
             test/test_finetune_metadata.py \
             test/test_spatial.py \

@@ -38,6 +38,8 @@ SUITES = (
     "b3_complete_method_cost",
     "b3_scalar_cache",
     "b3_full_native_embryo_support",
+    "b3_sparse_null",
+    "b3_sparse_bootstrap_draws",
     "end_to_end",
     "finetune_metadata",
     "spatial",
