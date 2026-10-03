@@ -1,6 +1,32 @@
 # Finetune readiness tracker
 
-**Current sparse bootstrap milestone — 2026-10-03:** The disk-backed weighted
+**Current prepared-session milestone — 2026-10-03:** Verified preparation is
+separated from repeated resampled metric/bin/null queries. The same frozen
+two-species, three-draw, eight-focal diagnostic replays **48 rows** (19 finite,
+29 unavailable) with **zero observed error** against a fresh public-scorer
+check. Its six seeded queries take **0.61499 seconds** after
+preparation; the complete application takes **278.32 seconds** at
+**0.457 GiB** peak process RSS. The complete invocation includes two unchanged native
+unit controls and three complete source-verification passes. Numeric snapshots
+are read-only and queries read no scientific source files. These are distinct
+timing scopes; eight focals cannot establish full-family or whole-method speed.
+The final source audit verifies **253 bindings**, including all **107 human /
+109 mouse** original pilot software hashes. See the
+[implementation record](b3-prepared-sparse-session-2026-10-03.md) and
+[bound evidence](b3-prepared-sparse-session-evidence-2026-10-03.json). Session/CLI and CI-selection checks pass **22 tests**;
+Ruff check/format and mypy pass three changed Python files. The final full CPU
+suite passes **660 tests, 5 skipped**, with no failures or errors
+(**508.49 seconds**). Independent reviews report Standards **zero hard /
+one optional duplication finding** and Spec **zero remaining findings**.
+This closes the bounded preparation/query cost-separation milestone.
+**05 remains open**, **11 excluded**, **ten bounded engineering tickets closed**.
+The pilot's **32.54%** coverage and **0/2,000** necessary joint support draws
+still withhold reporting. Full-cohort native scoring/effect attestation,
+whole-family streamed execution, complete production/replay bootstrap cost,
+actual finite comparison/uncertainty and project finetuned checkpoint provenance
+remain unresolved. No scientific rule or original producer Python byte changed.
+
+**Previous sparse bootstrap milestone — 2026-10-03:** The disk-backed weighted
 null engine and seeded diagnostic driver are implemented. A real three-draw,
 eight-focal-per-species prefix completed in **783.98 seconds** at **0.236 GiB**
 peak RSS, under the 900-second/4-GiB CPU guards; both mounted-drive caches

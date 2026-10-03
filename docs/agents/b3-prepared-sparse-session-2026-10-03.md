@@ -1,6 +1,9 @@
 # Prepared sparse B3 session — 2026-10-03
 
-Status: implementation in progress under [ADR 0005](../adr/0005-b3-feasibility-before-full-cohort-expansion.md).
+Status: bounded implementation, real replay, public parity and source audit
+complete under [ADR 0005](../adr/0005-b3-feasibility-before-full-cohort-expansion.md).
+The final full CPU regression passes **660 tests, 5 skipped**,
+with no failures or errors (**508.49 seconds**).
 Ticket **05 remains open**. Zebrafish work remains excluded.
 
 ## Purpose and agreed public seam
@@ -105,6 +108,99 @@ bounded source-map limit. This session cannot accept those cohorts.
 
 ## Evidence
 
-Pending implementation, targeted checks, independent review and bounded real
-execution. Results and the five progress documents will be synchronized only
-after those checks complete.
+The real prepared session replays exactly the previous ordered two sources,
+three seeded draws and eight focal indices per species. Its **48 diagnostic
+rows** comprise **19 finite / 29 unavailable** results; every draw rebuilds all
+gene metrics and bins, for **118,611 metric/bin records**. Two unchanged public
+unit controls validate preparation before the seeded queries. A fresh,
+independent public-scorer replay checks every metric, bin, support count,
+unavailable reason and finite score: **six checks pass, all observed numerical
+errors are zero**. This check takes **283.37 seconds** at **1.155 GiB** peak RSS.
+
+### Measured scopes
+
+| Stage | Seconds | Scope |
+| --- | ---: | --- |
+| Entry source verification | 39.0563 | Complete declared byte map |
+| Lineage, software validation and capacity preflight | 15.8095 | Authenticated parent contexts and array budget |
+| Public unit controls | 162.0113 | Two calls, including each call's native checks, arithmetic and publication |
+| H5 loading and array validation | 0.3920 | Hash-verified read-only snapshots |
+| Prepared unit queries and exact comparison | 0.4128 | Includes their nested metric/bin/row timers |
+| Verification after preparation | 29.6195 | Complete declared byte map |
+| Six seeded metric calculations | 0.0253 | All-gene weighted metrics |
+| Six seeded bin calculations | 0.3154 | Draw-specific all-gene bins and records |
+| Six seeded focal-row calculations | 0.2743 | Eight focal indices per species and draw |
+| Exact seeded parent comparison | 0.3450 | All metrics, bins and focal rows |
+| Seeded serialization and writes | 0.3317 | Six immutable child reports |
+| Final source/artifact verification | 28.7680 | Source map and staged output bytes |
+| Elapsed before summary serialization/publication | 278.2710 | Immutable summary snapshot |
+| Publication | 0.0193 | Separate postpublication receipt |
+| Application invocation | 278.3168 | Separate postpublication receipt |
+
+The six seeded metric/bin/row calculations sum to **0.61499 seconds**, averaging
+**0.10250 seconds per species query** or **0.20500 seconds per coordinated
+two-species draw**. These times include cooperative resource checks and exclude
+preparation, source verification, comparison, IO and publication. The complete
+application still takes **4.64 minutes**. Previous 83.69–87.21-second cache-reuse
+calls include their source/native validation and IO; they are observations with
+different timer scopes. No full-family speed or 2,000-draw throughput is inferred.
+
+The resident numeric arrays occupy **57,631,440 bytes / 54.96 MiB**; the
+conservative working-array upper bound is **200,477,056 bytes / 191.19 MiB**.
+The application observes **490,635,264 bytes / 0.457 GiB** peak process RSS,
+below the 4 GiB guard. The request binds **242 files**; the final union audit
+verifies **253 files**, including every **107 human / 109 mouse** original
+pilot software binding. That independent audit takes **30.26 seconds** at
+**21,434,368 bytes** peak RSS. Existing producer, public scorer, cache and native
+replay Python bytes remain unchanged. The new session script is committed in
+`e9296fbfcc0eb526779e7fcbe679a51ea3ce41a6` and separately byte-bound.
+
+Completed supervisor `elapsed_seconds` and resource values are the last
+monitor samples, not a final application timer or memory peak. The immutable
+summary, postpublication receipt and checker/audit reports supply the measured
+scopes above. The producer log binds the receipt; completed summaries are never
+rewritten. All three real jobs exit successfully under one native thread,
+4 GiB RSS, 4 GiB available host RAM and 20 GiB free disk floors, with no GPU work,
+checkpoint tensor loading or model forwards.
+
+### Checks and review
+
+The public session/CLI and CI-selection checks pass **22 tests** in
+**106.94 seconds**. They cover authentic source/cache handoffs, exact parent
+and public-unit parity, immutable outputs on the mounted-drive fallback,
+missing or altered bindings, resource ceilings/floors, aggregate allocation
+preflight, rejected Boolean/float range values and a cache-byte mutation after
+the first seeded child write. The mutation test rejects publication at the final
+seal; query calculation itself reads no scientific source files.
+Ruff check/format and mypy pass all three changed Python files. The final full
+CPU suite passes **660 tests, 5 skipped**, with no failures or errors
+(**508.49 seconds**). It runs once at the end with GPU tests disabled
+and one native thread under a 2,400-second/6-GiB supervisor, retaining the
+4-GiB host RAM and 20-GiB free disk floors.
+
+Independent reviews of the nonempty committed diff report Standards **zero
+hard breaches / one optional duplication finding** and Spec **zero remaining
+findings**. The repeated boundary scaffolding preserves compatibility with
+the frozen producer. The Spec review's Boolean/integral-float range gap was
+reproduced through authentic rebound public handoffs and fixed before this run.
+
+The [frozen request](b3-prepared-sparse-session-request-2026-10-03.json) names the
+parent request, summary, public parity and byte map. The ignored artifacts are
+preserved under `runs/b3_feasibility/20261003/` as `prepared_sparse_session/`,
+`prepared_sparse_session_parity.json` and
+`prepared_sparse_session_source_reconciliation.json`, with separate supervisor
+directories and test reports. The [compact bound evidence](b3-prepared-sparse-session-evidence-2026-10-03.json)
+records their hashes, timing scopes, checks and reviewer findings. All five
+tracking documents now reflect these completed bounded results.
+
+### Remaining dependency
+
+This closes verified preparation/query cost separation for this bounded batch.
+Whole-family cache construction, streamed focal-block processing, all-effect
+native attestation, complete scoring/aggregation and independent bootstrap replay
+costs remain unmeasured. The full cohort has no scored shard inputs for those
+stages, and its actual fixed finite pair family is unknown. The resident layout
+above also exceeds the WSL memory cap. These prerequisites keep the complete
+method-cost acceptance unchecked and ticket **05 open**; the observed **32.54%**
+coverage and **0/2,000** necessary joint support draws retain their original
+scientific veto. No concordance, interval, p-value or FDR result is published.

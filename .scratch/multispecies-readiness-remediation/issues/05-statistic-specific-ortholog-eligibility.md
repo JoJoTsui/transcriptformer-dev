@@ -1,6 +1,32 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-**Current sparse bootstrap milestone — 2026-10-03:** The disk-backed weighted
+**Current prepared-session milestone — 2026-10-03:** Verified preparation is
+separated from repeated resampled metric/bin/null queries. The same frozen
+two-species, three-draw, eight-focal diagnostic replays **48 rows** (19 finite,
+29 unavailable) with **zero observed error** against a fresh public-scorer
+check. Its six seeded queries take **0.61499 seconds** after
+preparation; the complete application takes **278.32 seconds** at
+**0.457 GiB** peak process RSS. The complete invocation includes two unchanged native
+unit controls and three complete source-verification passes. Numeric snapshots
+are read-only and queries read no scientific source files. These are distinct
+timing scopes; eight focals cannot establish full-family or whole-method speed.
+The final source audit verifies **253 bindings**, including all **107 human /
+109 mouse** original pilot software hashes. See the
+[implementation record](../../../docs/agents/b3-prepared-sparse-session-2026-10-03.md) and
+[bound evidence](../../../docs/agents/b3-prepared-sparse-session-evidence-2026-10-03.json). Session/CLI and CI-selection checks pass **22 tests**;
+Ruff check/format and mypy pass three changed Python files. The final full CPU
+suite passes **660 tests, 5 skipped**, with no failures or errors
+(**508.49 seconds**). Independent reviews report Standards **zero hard /
+one optional duplication finding** and Spec **zero remaining findings**.
+This closes the bounded preparation/query cost-separation milestone.
+**05 remains open**, **11 excluded**, **ten bounded engineering tickets closed**.
+The pilot's **32.54%** coverage and **0/2,000** necessary joint support draws
+still withhold reporting. Full-cohort native scoring/effect attestation,
+whole-family streamed execution, complete production/replay bootstrap cost,
+actual finite comparison/uncertainty and project finetuned checkpoint provenance
+remain unresolved. No scientific rule or original producer Python byte changed.
+
+**Previous sparse bootstrap milestone — 2026-10-03:** The disk-backed weighted
 null engine and seeded diagnostic driver are implemented. A real three-draw,
 eight-focal-per-species prefix completed in **783.98 seconds** at **0.236 GiB**
 peak RSS, under the 900-second/4-GiB CPU guards; both mounted-drive caches
@@ -690,12 +716,19 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   RSS and 783.98 seconds. The actual finite-pair family is not bootstrapped.
   The [implementation record](../../../docs/agents/b3-sparse-bootstrap-implementation-2026-10-03.md)
   records the source-bound mounted-drive publication repair and retained gates.
-- [ ] Separate verified preparation from resampled metric/bin/null query cost
+- [x] Separate verified preparation from resampled metric/bin/null query cost
   in one immutable bounded session over the completed three-draw pilot caches.
-  Preserve unit-control and parent-scorer parity, frozen software/cache lineage,
-  final byte verification and WSL limits. The
-  [prepared-session contract](../../../docs/agents/b3-prepared-sparse-session-2026-10-03.md)
-  records the agreed public seam and implementation in progress.
+  Six seeded queries take 0.61499 seconds; the complete invocation takes
+  278.32 seconds at 0.457 GiB peak RSS. Unit controls, parent replay and
+  fresh public-scorer checks preserve exact metrics/bins/rows and original
+  unavailability; the final audit verifies 253 bindings and original software.
+  See the [prepared-session record](../../../docs/agents/b3-prepared-sparse-session-2026-10-03.md).
+  This is a bounded diagnostic, without a full-family bootstrap runtime claim.
+- [ ] Demonstrate bounded streamed traversal of two predeclared adjacent focal
+  blocks per species, preserving frozen native cache arrays and public score
+  parity while reusing each draw's all-gene metrics/bins. The
+  [streamed-block contract](../../../docs/agents/b3-streamed-sparse-blocks-2026-10-03.md)
+  records this next implementation dependency; it makes no full-family runtime claim.
 - [ ] Measure complete method-preserving scoring, verification and aggregation
   cost within explicit WSL budgets before expanding full-cohort production.
   Partial: planning, import, reconciliation, indexing, 64-gene null ranges,
@@ -705,8 +738,10 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   storage/null bounds and independent final draw replay. Full native support
   reconstruction is measured separately without model forwards.
   A bounded three-draw/eight-focal-per-species replay now has measured cache
-  build/reuse, source verification and public-oracle costs. This does not
-  measure the full finite family or complete production/replay bootstrap.
+  build/reuse, source verification and public-oracle costs. The prepared
+  session additionally separates recurring metric/bin/null calculation from
+  verified preparation and final sealing. This does not measure the full finite
+  family or complete production/replay bootstrap.
   Whole-arm scoring/aggregation and 2,000-draw bootstrap costs remain unmeasured.
 
 The checked items establish bounded feasibility evidence only. The prospective

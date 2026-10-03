@@ -122,9 +122,23 @@ check/format and mypy pass for the two new Python files. This agent ran no
 full suite, model call, GPU job, download or commit. Existing frozen Python
 bytes were not edited.
 
-The next measured dependency is bounded resampled-null timing and separation
-of verification from query costs. Any reusable cache must retain exact focal
-cells, per-embryo completeness and draw-specific bins: omission of a failing
-embryo can make a previously incomplete peer eligible. Complete whole-arm
-cost acceptance remains unchecked until actual supported execution establishes
-the missing stages.
+The bounded resampled-null computation is complete, followed by
+[verified preparation/query cost separation](b3-prepared-sparse-session-2026-10-03.md).
+The prepared session's six seeded metric/bin/row calculations take 0.61499
+seconds for the same three draws and eight focal indices per species. Its
+complete invocation takes 278.3168 seconds, including two native unit controls
+and three complete source-verification passes. These are bounded observations
+with distinct timer scopes, not a whole-family bootstrap runtime estimate.
+All 48 diagnostic rows match a fresh public-scorer replay with zero observed
+error; the final source audit verifies 253 bindings and original pilot software.
+
+The next unmeasured requirements are complete native scoring/effect attestation,
+whole-family cache preparation, streamed focal blocks and complete production
+plus independent replay bootstrap. The current full cohort lacks scored shard
+inputs and an actual fixed finite pair family; a conditional whole-family
+resident cache would also exceed this WSL memory cap. Any scalable cache must
+retain exact focal cells, per-embryo completeness and draw-specific bins:
+omission of a failing embryo can make a previously incomplete peer eligible.
+Complete whole-arm cost acceptance remains unchecked until supported execution
+establishes these stages. The current pilot's coverage and uncertainty vetoes
+remain unchanged.
