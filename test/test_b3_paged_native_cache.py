@@ -1,6 +1,7 @@
 """Public stored-native-evidence and cache file seam; no model forwards."""
 
 from hashlib import sha256
+import io
 import json
 import mmap
 import os
@@ -865,3 +866,86 @@ def test_public_run_refuses_host_caps_before_request_read(tmp_path, monkeypatch,
     with pytest.raises(exception, match=message):
         run(tmp_path / "unused-request.json", tmp_path / "cache", max_seconds=1e-12 if resource == "wall" else 900)
     assert not (tmp_path / "cache").exists()
+
+
+def test_public_run_rejects_a_different_initial_catalog_buffer_before_compilation(tmp_path, monkeypatch):
+    from scripts.prepare_b3_paged_native_cache import run
+
+    request_path, _request, _entries, _full = fixture(tmp_path / "input", n_cells=2)
+    catalog_path = ROOT / "scripts/b3_native_catalog_pages.py"
+    original_open = Path.open
+    supplied = []
+
+    def different_initial_buffer(path, mode="r", *args, **kwargs):
+        if path == catalog_path and mode == "rb" and not supplied:
+            with original_open(path, mode, *args, **kwargs) as stream:
+                original = stream.read()
+                altered = original.replace(b"#!/usr/bin/env python", b"#!/usr/bin/env pythom", 1)
+            assert altered != original and len(altered) == len(original)
+            supplied.append(altered)
+            return io.BytesIO(altered)
+        return original_open(path, mode, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", different_initial_buffer)
+    with pytest.raises(ValueError, match="Frozen consumer/native source bytes changed"):
+        run(request_path, tmp_path / "cache")
+    assert supplied
+    assert not (tmp_path / "cache").exists()
+
+
+def test_public_run_checks_host_disk_before_reading_bootstrap_helper(tmp_path, monkeypatch):
+    from scripts.prepare_b3_paged_native_cache import run
+
+    original_open = Path.open
+    measured = shutil.disk_usage(tmp_path)
+    monkeypatch.setattr(
+        shutil, "disk_usage", lambda _path: type(measured)(measured.total, measured.used, 20 * 1024**3 - 1)
+    )
+
+    def no_helper_read(path, *args, **kwargs):
+        if path == ROOT / "scripts/b3_native_catalog_pages.py":
+            raise AssertionError("Host guard must run before helper source reads")
+        return original_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", no_helper_read)
+    with pytest.raises(RuntimeError, match="requires 20 GiB free disk"):
+        run(tmp_path / "unused-request.json", tmp_path / "cache")
+    assert not (tmp_path / "cache").exists()
+
+
+def test_public_run_reads_bootstrap_helper_only_in_bounded_chunks(tmp_path, monkeypatch):
+    from scripts.prepare_b3_paged_native_cache import run
+
+    request_path, _request, _entries, _full = fixture(tmp_path / "input", n_cells=2)
+    catalog_path = ROOT / "scripts/b3_native_catalog_pages.py"
+    original_open = Path.open
+    observed = []
+    intercepted = []
+
+    class BoundedReader:
+        def __init__(self, stream):
+            self.stream = stream
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            self.stream.close()
+
+        def read(self, size=-1):
+            if not 0 < size <= 1024**2:
+                raise AssertionError("Bootstrap helper must use reads of at most 1 MiB")
+            observed.append(size)
+            return self.stream.read(size)
+
+    def bounded_initial_read(path, mode="r", *args, **kwargs):
+        stream = original_open(path, mode, *args, **kwargs)
+        if path == catalog_path and mode == "rb" and not intercepted:
+            intercepted.append(path)
+            return BoundedReader(stream)
+        return stream
+
+    monkeypatch.setattr(Path, "open", bounded_initial_read)
+    result = run(request_path, tmp_path / "cache")
+    assert result["native_structure_verified"] is True
+    assert observed

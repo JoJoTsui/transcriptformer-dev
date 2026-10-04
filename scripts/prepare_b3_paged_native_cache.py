@@ -7,8 +7,12 @@ import argparse
 from contextlib import contextmanager
 from hashlib import sha256
 import json
+from math import isfinite
 import os
 from pathlib import Path
+import resource
+import shutil
+import stat
 import sys
 import tempfile
 import time
@@ -53,6 +57,108 @@ SOFTWARE = (
     ),
     *sorted((ROOT / "src/transcriptformer").rglob("*.py")),
 )
+
+
+class _BootstrapBudget:
+    """Narrow stdlib admission until the source-bound catalog guard can execute."""
+
+    def __init__(self, parent: Path, seconds: float):
+        if type(seconds) not in (int, float) or not isfinite(seconds) or not 0 < seconds <= 900:
+            raise ValueError("Wall cap must be positive and at most 900 seconds")
+        self.parent, self.began, self.seconds = parent, time.monotonic(), seconds
+        self.last_check = float("-inf")
+        self.check()
+
+    def check(self) -> None:
+        now = time.monotonic()
+        if now - self.began >= self.seconds:
+            raise TimeoutError("Native cache bootstrap wall cap exceeded")
+        if now - self.last_check < 0.1:
+            return
+        if resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 > 4 * 1024**3:
+            raise RuntimeError("Native cache bootstrap exceeds 4 GiB RSS")
+        available = next(
+            (
+                int(line.split()[1]) * 1024
+                for line in Path("/proc/meminfo").read_text().splitlines()
+                if line.startswith("MemAvailable:")
+            ),
+            0,
+        )
+        if available < 4 * 1024**3:
+            raise RuntimeError("Native cache bootstrap requires 4 GiB available host RAM")
+        if shutil.disk_usage(self.parent).free < 20 * 1024**3:
+            raise RuntimeError("Native cache bootstrap requires 20 GiB free disk after allocation")
+        self.last_check = now
+
+
+def _bootstrap_buffer(path: Path, cap: int, budget: _BootstrapBudget) -> tuple[dict, bytes]:
+    budget.check()
+    before = path.lstat()
+    if not stat.S_ISREG(before.st_mode) or not 0 <= before.st_size <= cap:
+        raise ValueError("Bootstrap input requires a bounded regular file")
+    chunks, count = [], 0
+    with path.open("rb") as stream:
+        while block := stream.read(MIB):
+            budget.check()
+            count += len(block)
+            if count > cap or count > before.st_size:
+                raise ValueError("Bootstrap input bytes exceed admitted size")
+            chunks.append(block)
+    budget.check()
+    after = path.lstat()
+    if (
+        count != before.st_size
+        or after.st_size != count
+        or not stat.S_ISREG(after.st_mode)
+        or (before.st_dev, before.st_ino) != (after.st_dev, after.st_ino)
+    ):
+        raise ValueError("Bootstrap input storage changed during reading")
+    data = b"".join(chunks)
+    return {"path": str(path), "sha256": sha256(data).hexdigest(), "bytes": count}, data
+
+
+def _bootstrap_request(data: bytes) -> dict:
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("Duplicate JSON key")
+            result[key] = value
+        return result
+
+    def invalid(value):
+        raise ValueError("Nonfinite JSON constant: " + value)
+
+    try:
+        request = json.loads(data, object_pairs_hook=unique, parse_constant=invalid)
+    except (RecursionError, UnicodeError, json.JSONDecodeError) as error:
+        raise ValueError("Malformed bounded JSON") from error
+    if not isinstance(request, dict) or set(request) != FIELDS or request.get("schema") != SCHEMA:
+        raise ValueError("Invalid closed paged native cache request")
+    return request
+
+
+def _bootstrap_catalog(request: dict, budget: _BootstrapBudget) -> tuple[Path, bytes]:
+    consumers = request["consumer_file_sha256"]
+    if not isinstance(consumers, dict) or set(consumers) != {str(path.resolve()) for path in SOFTWARE}:
+        raise ValueError("Consumer closure must include exactly the original native modules and required helpers")
+    if any(
+        not isinstance(digest, str) or len(digest) != 64 or any(c not in "0123456789abcdef" for c in digest)
+        for digest in consumers.values()
+    ):
+        raise ValueError("Require explicit lowercase SHA256")
+    catalog_path = ROOT / "scripts/b3_native_catalog_pages.py"
+    catalog_bytes = b""
+    # The guard itself is a consumer: duplicate only its initial stdlib admission
+    # here so every expected source is verified before any helper can execute.
+    for path in SOFTWARE:
+        ref, data = _bootstrap_buffer(path.resolve(), 4 * MIB, budget)
+        if ref["sha256"] != consumers[ref["path"]]:
+            raise ValueError("Frozen consumer/native source bytes changed")
+        if path == catalog_path:
+            catalog_bytes = data
+    return catalog_path, catalog_bytes
 
 
 def _canonical(value: Any) -> bytes:
@@ -444,15 +550,18 @@ def run(request_path: Path, output: Path, *, max_seconds: float = 900) -> dict:
     if os.path.lexists(output):
         raise FileExistsError(output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    # The first imported helper is stdlib-only. Bind it before any native imports.
-    catalog_path = ROOT / "scripts/b3_native_catalog_pages.py"
-    catalog = _load(catalog_path, catalog_path.read_bytes(), "_paged_native_cache_catalog")
+    bootstrap = _BootstrapBudget(output.parent, max_seconds)
+    request_ref, data = _bootstrap_buffer(Path(request_path).resolve(), MIB, bootstrap)
+    request = _bootstrap_request(data)
+    catalog_path, catalog_bytes = _bootstrap_catalog(request, bootstrap)
+    bootstrap.check()
+    catalog = _load(catalog_path, catalog_bytes, "_paged_native_cache_catalog")
+    bootstrap.check()
     budget = catalog._Budget(output.parent, max_seconds)
-    request_ref, data = catalog._actual(Path(request_path).resolve(), MIB, budget)
-    request = catalog._json(data)
-    if set(request) != FIELDS or request.get("schema") != SCHEMA:
-        raise ValueError("Invalid closed paged native cache request")
-    timings = {}
+    budget.began, budget.last_check = bootstrap.began, float("-inf")
+    budget.check()
+    del data, catalog_bytes
+    timings = {"bootstrap_admission": time.monotonic() - bootstrap.began}
     began = time.monotonic()
     consumers = _read_consumers(request, catalog, budget)
     timings["consumer_verification"] = time.monotonic() - began
