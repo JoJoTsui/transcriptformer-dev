@@ -10,7 +10,6 @@ it never attests model likelihood effects or scientific reporting.
 from __future__ import annotations
 
 import argparse
-import builtins
 from contextlib import contextmanager
 from hashlib import sha256
 import json
@@ -216,7 +215,8 @@ ORIGINAL_SOFTWARE = (
     ),
     *sorted((ROOT / "src/transcriptformer").rglob("*.py")),
 )
-SOFTWARE = (Path(__file__).resolve(), *ORIGINAL_SOFTWARE)
+HELPER_SOURCE = ROOT / "scripts/b3_authenticated_helpers.py"
+SOFTWARE = (Path(__file__).resolve(), *ORIGINAL_SOFTWARE, HELPER_SOURCE)
 
 
 def _canonical(value: Any) -> bytes:
@@ -366,7 +366,11 @@ def _load(path: Path, data: bytes, name: str) -> ModuleType:
     module = ModuleType(name)
     module.__file__, module.__package__ = str(path), "scripts"
     sys.modules[name] = module
-    exec(compile(data, str(path), "exec"), module.__dict__)
+    try:
+        exec(compile(data, str(path), "exec"), module.__dict__)
+    except BaseException:
+        sys.modules.pop(name, None)
+        raise
     return module
 
 
@@ -375,65 +379,49 @@ def _bootstrap(request: dict, budget: _Budget) -> tuple[dict, dict, dict]:
     wanted = {str(path.resolve()) for path in SOFTWARE}
     if not isinstance(values, dict) or set(values) != wanted or not 1 <= len(values) <= 8192:
         raise ValueError("Require the exact separately versioned common-source consumer closure")
-    buffers: dict[str, bytes] = {}
-    load_names = {
-        "b3_native_catalog_pages.py",
-        "prepare_b3_paged_native_cache.py",
-        "prepare_b3_paged_native_context.py",
-        "replay_b3_sparse_null.py",
-        "b3_windowed_native.py",
-        "replay_b3_prepared_sparse_session.py",
-        "b3_h5_attribute_admission.py",
-    }
+    buffers: dict[Path, bytes] = {}
     for path in SOFTWARE:
         ref, data = budget.actual(path.resolve(), 4 * MIB)
         if ref["sha256"] != _sha(values[ref["path"]]):
             raise ValueError("Frozen consumer/native source bytes changed")
-        if path.name in load_names:
-            if data is None:
-                raise ValueError("Bound helper source buffer is unavailable")
-            buffers[path.name] = data
+        if data is None:
+            raise ValueError("Bound helper source buffer is unavailable")
+        buffers[path] = data
     # No helper is executed until every expected source passed same-buffer byte
     # admission.  The retained buffers, rather than second pathname reads, compile.
-    catalog_path = ROOT / "scripts/b3_native_catalog_pages.py"
-    catalog = _load(catalog_path, buffers.pop(catalog_path.name), "_b3_common_catalog")
-    producer_path = ROOT / "scripts/prepare_b3_paged_native_cache.py"
-    producer = _load(producer_path, buffers.pop(producer_path.name), "_b3_common_original_producer")
-    original = {str(path.resolve()): values[str(path.resolve())] for path in ORIGINAL_SOFTWARE}
-    if {str(path.resolve()) for path in producer.SOFTWARE} != set(original):
-        raise ValueError("Original producer's exact consumer membership changed")
-    producer._read_consumers({"consumer_file_sha256": original}, catalog, budget)
-    modules = {"catalog": catalog, "producer": producer}
-    for name, filename in (
-        ("context", "prepare_b3_paged_native_context.py"),
-        ("engine", "replay_b3_sparse_null.py"),
-        ("window", "b3_windowed_native.py"),
-        ("prepared", "replay_b3_prepared_sparse_session.py"),
-    ):
-        budget.check()
-        path = ROOT / "scripts" / filename
-        modules[name] = _load(path, buffers.pop(filename), "_b3_common_" + name)
-    # The unchanged window consumer loads its attribute parser when admitting
-    # each H5.  Bind its compile boundary to the already verified source buffer;
-    # an intervening pathname reread cannot execute a different parser.
-    attribute_path = str(ROOT / "scripts/b3_h5_attribute_admission.py")
-    if attribute_path not in values:
-        raise ValueError("Declared attribute helper path differs from the admitted consumer closure")
-    attribute_bytes = buffers.pop("b3_h5_attribute_admission.py")
-
-    def bound_compile(source, filename, mode, *args, **kwargs):
-        if Path(str(filename)).name == "b3_h5_attribute_admission.py" and (
-            str(filename) != attribute_path
-            or type(source) is not bytes
-            or source != attribute_bytes
-            or sha256(source).hexdigest() != values[attribute_path]
+    helpers = _load(HELPER_SOURCE, buffers[HELPER_SOURCE], f"_b3_common_authenticated_{id(buffers)}")
+    registry = helpers.AuthenticatedHelpers(ROOT, buffers, budget)
+    registry.module_names.append(helpers.__name__)
+    try:
+        catalog = registry.load(ROOT / "scripts/b3_native_catalog_pages.py")
+        producer = registry.load(ROOT / "scripts/prepare_b3_paged_native_cache.py")
+        original = {str(path.resolve()): values[str(path.resolve())] for path in ORIGINAL_SOFTWARE}
+        if {str(path.resolve()) for path in producer.SOFTWARE} != set(original):
+            raise ValueError("Original producer's exact consumer membership changed")
+        producer._read_consumers({"consumer_file_sha256": original}, catalog, budget)
+        modules = {"catalog": catalog, "producer": producer, "authenticated_helpers": registry}
+        for name, filename in (
+            ("context", "prepare_b3_paged_native_context.py"),
+            ("engine", "replay_b3_sparse_null.py"),
+            ("window", "b3_windowed_native.py"),
+            ("prepared", "replay_b3_prepared_sparse_session.py"),
         ):
-            raise ValueError("Attribute helper compile buffer differs from admitted source")
-        return builtins.compile(source, filename, mode, *args, **kwargs)
+            budget.check()
+            modules[name] = registry.load(ROOT / "scripts" / filename)
+        budget.check()
+        return modules, values, original
+    except BaseException:
+        registry.close()
+        raise
 
-    modules["window"].__dict__["compile"] = bound_compile
-    budget.check()
-    return modules, values, original
+
+@contextmanager
+def _managed_modules(modules: dict):
+    try:
+        yield
+    finally:
+        modules["authenticated_helpers"].close()
+        modules.clear()
 
 
 def _write(path: Path, value: dict, cap: int, budget: _Budget) -> dict:
@@ -1298,7 +1286,7 @@ def run(request_path: Path, output: Path, *, max_seconds: float = 900) -> dict:
     phase_started = time.monotonic()
     modules, consumers, original = _bootstrap(request, budget)
     timings = {"source_imports": time.monotonic() - phase_started}
-    with _publication(output) as (workspace, staging):
+    with _managed_modules(modules), _publication(output) as (workspace, staging):
         phase_started = time.monotonic()
         source = _source_admission(request, modules, consumers, original, workspace, output, budget)
         source["request"] = request

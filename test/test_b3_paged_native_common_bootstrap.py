@@ -12,6 +12,7 @@ import sys
 import pytest
 
 from test.test_b3_paged_native_bootstrap import (
+    observed_pair as observed_pair,
     paged_sources as paged_sources,
     prepared_application as prepared_application,
 )
@@ -99,7 +100,7 @@ def test_common_prepare_preserves_original_facts_and_separate_batch_identity(com
     assert plan["build_batches"] == batches
     assert sorted(plan["source_axes"]) == [source["source_key"] for source in sources]
     assert [plan["source_axes"][source["source_key"]]["n_cells"] for source in sources] == [129, 129]
-    assert len(plan["consumer_file_sha256"]) == 76
+    assert len(plan["consumer_file_sha256"]) == 82
     assert len(old_plan["consumer_file_sha256"]) == 74
     assert json.loads(Path(legacy["plan"]["path"]).read_bytes()) == old_plan
 
@@ -341,6 +342,174 @@ def test_common_arithmetic_adapter_retains_frozen_intervals_without_source_attes
     assert result["comparisons"][1]["interval"] == pytest.approx([-1.0, -0.5])
     assert result["source_attestation_performed"] is False
     assert "native_arithmetic_replay_verified" not in result
+
+
+def test_authenticated_helper_imports_ignore_canonical_cache_and_protect_nested_execution(tmp_path, monkeypatch):
+    import builtins
+    from types import ModuleType, SimpleNamespace
+
+    from scripts.b3_authenticated_helpers import AuthenticatedHelpers
+
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    scheduler = scripts / "deferred_scheduler.py"
+    validator = scripts / "private_validator.py"
+    nested = scripts / "nested_helper.py"
+    sources = {
+        scheduler: b"VALUE = 7\n",
+        validator: (b"def validate():\n    from scripts.deferred_scheduler import VALUE\n    return VALUE\n"),
+        nested: (b"from scripts.deferred_scheduler import VALUE\nRESULT = VALUE + 1\n"),
+    }
+    for path, data in sources.items():
+        path.write_bytes(data)
+    foreign = ModuleType("scripts.deferred_scheduler")
+    foreign.VALUE = -100
+    monkeypatch.setitem(sys.modules, foreign.__name__, foreign)
+    original_import = builtins.__import__
+    ordinary = []
+
+    def trap(name, *args, **kwargs):
+        if name == "scripts.deferred_scheduler":
+            ordinary.append(name)
+            raise AssertionError("Authenticated helpers must not use the ordinary module cache")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", trap)
+    registry = AuthenticatedHelpers(tmp_path, sources, SimpleNamespace(check=lambda: None))
+    try:
+        module = registry.load(validator)
+        assert module.validate() == 7
+        namespace = {}
+        module.__dict__["__builtins__"]["exec"](
+            module.__dict__["__builtins__"]["compile"](sources[nested], str(nested), "exec"), namespace
+        )
+        assert namespace["RESULT"] == 8
+        namespace["VALUE"] = 1000
+        independent = {}
+        module.__dict__["__builtins__"]["exec"](
+            module.__dict__["__builtins__"]["compile"](sources[nested], str(nested), "exec"), independent
+        )
+        assert independent["VALUE"] == 7 and independent["RESULT"] == 8
+        assert namespace["VALUE"] == 1000
+        assert ordinary == []
+        assert sys.modules[foreign.__name__] is foreign
+        assert builtins.__import__ is trap
+        names = list(registry.module_names)
+    finally:
+        registry.close()
+    assert all(name not in sys.modules for name in names)
+
+
+def test_authenticated_helper_rejects_late_compile_bytes_and_unbound_repository_imports(tmp_path):
+    from types import SimpleNamespace
+
+    from scripts.b3_authenticated_helpers import AuthenticatedHelpers
+
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    source = scripts / "bound.py"
+    original = b"VALUE = 7\n"
+    source.write_bytes(original)
+    registry = AuthenticatedHelpers(tmp_path, {source: original}, SimpleNamespace(check=lambda: None))
+    try:
+        module = registry.load(source)
+        guarded = module.__dict__["__builtins__"]
+        with pytest.raises(ValueError, match="authenticated|buffer"):
+            guarded["compile"](b"VALUE = 9\n", str(source), "exec")
+        with pytest.raises(ValueError, match="bound|closure"):
+            guarded["__import__"]("scripts.unbound", fromlist=("VALUE",))
+        with pytest.raises(ValueError, match="authenticated"):
+            guarded["exec"](compile(b"VALUE = 9\n", str(source), "exec"), {})
+        assert module.VALUE == 7
+    finally:
+        registry.close()
+
+
+def test_authenticated_helper_failure_removes_owned_modules_and_keeps_canonical_cache(tmp_path, monkeypatch):
+    from types import ModuleType, SimpleNamespace
+
+    from scripts.b3_authenticated_helpers import AuthenticatedHelpers
+
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    source = scripts / "failing.py"
+    original = b"from scripts.unbound import VALUE\n"
+    source.write_bytes(original)
+    foreign = ModuleType("scripts.unbound")
+    foreign.VALUE = 9
+    monkeypatch.setitem(sys.modules, foreign.__name__, foreign)
+    registry = AuthenticatedHelpers(tmp_path, {source: original}, SimpleNamespace(check=lambda: None))
+    try:
+        with pytest.raises(ValueError, match="closure"):
+            registry.load(source)
+        with pytest.raises(ValueError, match="previously failed"):
+            registry.load(source)
+        names = list(registry.module_names)
+        assert names and all(name in sys.modules for name in names)
+    finally:
+        registry.close()
+    assert all(name not in sys.modules for name in names)
+    assert sys.modules[foreign.__name__] is foreign
+
+
+def test_private_receipt_adaptation_uses_verified_math_validator_and_retains_original_veto(
+    observed_pair, tmp_path, monkeypatch
+):
+    import builtins
+
+    import scripts.bootstrap_b3_paged_native_common_source as application
+    from scripts.bootstrap_b3_paged_native import prepare as legacy_prepare
+    from test.test_b3_paged_native_bootstrap import _observed_native_catalogs, _prepare_request
+
+    folder = tmp_path / "authentic-capped"
+    folder.mkdir()
+    declared = _observed_native_catalogs(observed_pair, folder)
+    legacy = legacy_prepare(Path(_prepare_request(folder, declared)["path"]), folder / "legacy-prepared")
+    assert legacy["status"] == "unavailable_original_coverage_or_embryos"
+    request_ref = _action(
+        folder,
+        "prepare",
+        legacy_plan=legacy["plan"],
+        legacy_preparation=_ref(Path(legacy["plan"]["path"]).parent / "summary.json"),
+        build_batches={},
+    )
+    request = json.loads(Path(request_ref["path"]).read_bytes())
+    ordinary_import = builtins.__import__
+    forbidden = []
+
+    def trap(name, *args, **kwargs):
+        if name in {
+            "scripts.b3_streamed_bootstrap",
+            "scripts.b3_streamed_draw_schedule",
+            "scripts.reduce_b3_streamed_fixed_pairs",
+        }:
+            forbidden.append(name)
+            raise AssertionError("Protected finalization must use authenticated private helper bytes")
+        return ordinary_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", trap)
+    session = application._Session(request, application._Budget(folder, 900), request_ref)
+    try:
+        _old_plan, admitted = application._legacy_facts(session, request, folder / "workspace")
+        science = admitted["scientific_plan"]
+        assert science["comparisons"][0]["status"] == "unavailable_original_coverage_or_embryos"
+        private = session.modules["math"].validate_scientific_plan
+        calls = []
+
+        def recorded_validator(value):
+            calls.append(value)
+            private(value)
+
+        assert (
+            application._adapt_common_draw_receipts(science, [], phase="production", validator=recorded_validator) == []
+        )
+        result = session.modules["math"].finalize_replayed_draws(science, [], [])
+        assert calls == [science] and forbidden == []
+        assert result["draws"] == 0 and result["source_attestation_performed"] is False
+        assert result["comparisons"][0]["status"] == "unavailable_original_coverage_or_embryos"
+        assert result["comparisons"][0]["interval"] is None
+    finally:
+        session.close()
 
 
 def test_common_wrong_consumer_bytes_refuse_before_executing_any_helper(tmp_path, monkeypatch):

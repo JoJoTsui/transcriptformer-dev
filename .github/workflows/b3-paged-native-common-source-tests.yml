@@ -6,6 +6,12 @@ on:
     paths: &common-source-paths
       - "scripts/prepare_b3_paged_native_common_source.py"
       - "scripts/bootstrap_b3_paged_native_common_source.py"
+      - "scripts/b3_authenticated_helpers.py"
+      - "scripts/build_ortholog_table.py"
+      - "scripts/handoff_ortholog_scores.py"
+      - "scripts/report_ortholog_eligibility.py"
+      - "scripts/summarize_ortholog_full_universe.py"
+      - "scripts/b3_score_contract.py"
       - "scripts/prepare_b3_paged_native_cache.py"
       - "scripts/bootstrap_b3_paged_native.py"
       - "scripts/prepare_b3_paged_native_context.py"

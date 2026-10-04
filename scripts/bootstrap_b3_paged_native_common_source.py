@@ -22,6 +22,7 @@ import sys
 import time
 from types import ModuleType, SimpleNamespace
 from typing import Any
+from collections.abc import Callable
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -50,6 +51,7 @@ QUERY_TIMING_KEYS = {
 BATCH_SOURCE = ROOT / "scripts/prepare_b3_paged_native_common_source.py"
 LEGACY_SOURCE = ROOT / "scripts/bootstrap_b3_paged_native.py"
 ATTRIBUTE_SOURCE = ROOT / "scripts/b3_h5_attribute_admission.py"
+HELPER_SOURCE = ROOT / "scripts/b3_authenticated_helpers.py"
 LEGACY_SOFTWARE = (
     LEGACY_SOURCE,
     *(
@@ -74,7 +76,32 @@ LEGACY_SOFTWARE = (
     ),
     *sorted((ROOT / "src/transcriptformer").rglob("*.py")),
 )
-SOFTWARE = (*LEGACY_SOFTWARE, BATCH_SOURCE, Path(__file__).resolve())
+ADDITIONAL_HELPERS = tuple(
+    ROOT / "scripts" / name
+    for name in (
+        "build_ortholog_table.py",
+        "handoff_ortholog_scores.py",
+        "report_ortholog_eligibility.py",
+        "summarize_ortholog_full_universe.py",
+        "b3_score_contract.py",
+    )
+)
+SOFTWARE = (*LEGACY_SOFTWARE, BATCH_SOURCE, Path(__file__).resolve(), HELPER_SOURCE, *ADDITIONAL_HELPERS)
+LEGACY_ROLES = {
+    "catalog": "b3_native_catalog_pages.py",
+    "producer": "prepare_b3_paged_native_cache.py",
+    "context": "prepare_b3_paged_native_context.py",
+    "engine": "replay_b3_sparse_null.py",
+    "window": "b3_windowed_native.py",
+    "prepared": "replay_b3_prepared_sparse_session.py",
+    "driver": "replay_b3_sparse_bootstrap_draws.py",
+    "general": "bootstrap_b3_streamed.py",
+    "math": "b3_streamed_bootstrap.py",
+    "scheduler": "b3_streamed_draw_schedule.py",
+    "reducer": "reduce_b3_streamed_fixed_pairs.py",
+    "comparator": "summarize_ortholog_measured_zero_v2.py",
+    "streamed": "replay_b3_streamed_sparse_blocks.py",
+}
 REQUEST_FIELDS = {
     "prepare": {"legacy_plan", "legacy_preparation", "build_batches"},
     "execute": {"plan", "start", "stop"},
@@ -376,6 +403,7 @@ class _Session:
         self.budget = guard
         self.references = {request_ref["path"]: _ref(request_ref)}
         self.module_names: list[str] = []
+        self.helper_registry: Any = None
         self.legacy_session: Any = None
         self.admitted: dict | None = None
         consumers = request["consumer_file_sha256"]
@@ -393,18 +421,22 @@ class _Session:
             if ref["sha256"] != consumers[str(path)]:
                 raise ValueError("Frozen application/helper source bytes changed")
             self.bind(ref)
-            if path in (LEGACY_SOURCE, BATCH_SOURCE, ATTRIBUTE_SOURCE):
-                retained[path] = data
+            retained[path] = data
         self.attribute_source_bytes = retained[ATTRIBUTE_SOURCE]
         if len(self.attribute_source_bytes) > MIB:
             raise ValueError("Attribute consumer exceeds its unchanged source byte cap")
         try:
-            self.legacy = self._load(LEGACY_SOURCE, retained[LEGACY_SOURCE], "legacy")
-            self.batch = self._load(BATCH_SOURCE, retained[BATCH_SOURCE], "batch")
+            helpers = self._load(HELPER_SOURCE, retained[HELPER_SOURCE], "authenticated_helpers")
+            self.helper_registry = helpers.AuthenticatedHelpers(ROOT, retained, guard)
+            self.legacy = self.helper_registry.load(LEGACY_SOURCE)
+            self.batch = self.helper_registry.load(BATCH_SOURCE)
+            self.legacy.__dict__["ModuleType"] = self.helper_registry.role_factory(
+                {role: ROOT / "scripts" / filename for role, filename in LEGACY_ROLES.items()}
+            )
             if {str(path) for path in self.legacy.SOFTWARE} != {str(path) for path in LEGACY_SOFTWARE}:
                 raise ValueError("Legacy application closure differs from its fixed source universe")
             self.legacy_consumers = {str(path): consumers[str(path)] for path in LEGACY_SOFTWARE}
-            # The batch must expose its own original 67 and new 68 software maps.
+            # The batch exposes unchanged original 67 and its own new 69 map.
             if not {str(path) for path in self.batch.SOFTWARE}.issubset(set(consumers)):
                 raise ValueError("Native batch has an unbound consumer source")
             self.batch_consumers = {str(path): consumers[str(path)] for path in self.batch.SOFTWARE}
@@ -430,6 +462,10 @@ class _Session:
     def close(self):
         if self.legacy_session is not None:
             self.legacy_session.close()
+            self.legacy_session.modules.clear()
+            self.legacy_session = None
+        if self.helper_registry is not None:
+            self.helper_registry.close()
         for name in self.module_names:
             sys.modules.pop(name, None)
 
@@ -569,8 +605,8 @@ def _legacy_facts(session: _Session, request: dict, workspace: Path):
     session.legacy_session = session.legacy._Session(original, session.budget, completion["request"])
     session.guard_attribute_compile()
     native_paths = {str(path) for path in session.modules["producer"].SOFTWARE}
-    if set(session.batch_consumers) != native_paths | {str(BATCH_SOURCE)}:
-        raise ValueError("New batch closure must preserve the exact native 67 plus its actual producer")
+    if set(session.batch_consumers) != native_paths | {str(BATCH_SOURCE), str(HELPER_SOURCE)}:
+        raise ValueError("New batch closure must preserve exact native 67 plus its producer and authenticated loader")
     legacy_plan, admitted = session.legacy._prepared(
         session.legacy_session, {"plan": plan_ref}, workspace / "legacy-origin"
     )
@@ -2179,11 +2215,18 @@ def adapt_common_draw_receipts(scientific_plan: dict, receipts: list[dict], *, p
     The compact mathematical dictionaries are not original producer receipts.
     Their syntax is consumed only by the frozen finalization arithmetic.
     """
-    if phase not in {"production", "replay"} or not isinstance(receipts, list) or len(receipts) > 2000:
-        raise ValueError("Pure adaptation requires bounded production or replay declarations")
     from scripts.b3_streamed_bootstrap import validate_scientific_plan
 
-    validate_scientific_plan(scientific_plan)
+    return _adapt_common_draw_receipts(scientific_plan, receipts, phase=phase, validator=validate_scientific_plan)
+
+
+def _adapt_common_draw_receipts(
+    scientific_plan: dict, receipts: list[dict], *, phase: str, validator: Callable[[dict], None]
+) -> list[dict]:
+    """Share arithmetic adaptation with the caller's authenticated validator."""
+    if phase not in {"production", "replay"} or not isinstance(receipts, list) or len(receipts) > 2000:
+        raise ValueError("Pure adaptation requires bounded production or replay declarations")
+    validator(scientific_plan)
     output = []
     for receipt in receipts:
         if not isinstance(receipt, dict):
@@ -2240,8 +2283,15 @@ def finalize(request_path: Path, output: Path, *, max_seconds: float = 900) -> d
                     raise ValueError("Incomplete or unbridged eligible fixed family cannot finalize")
                 calculated = session.modules["math"].finalize_replayed_draws(
                     scientific,
-                    adapt_common_draw_receipts(scientific, production, phase="production"),
-                    adapt_common_draw_receipts(scientific, repeated, phase="replay"),
+                    _adapt_common_draw_receipts(
+                        scientific,
+                        production,
+                        phase="production",
+                        validator=session.modules["math"].validate_scientific_plan,
+                    ),
+                    _adapt_common_draw_receipts(
+                        scientific, repeated, phase="replay", validator=session.modules["math"].validate_scientific_plan
+                    ),
                 )
                 arithmetic = admitted["bridged"] and calculated["draws"] == 2000
             elif scientific is not None:

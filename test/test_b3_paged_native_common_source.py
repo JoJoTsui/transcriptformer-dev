@@ -70,7 +70,7 @@ def make_common_source_request(
     an ordered sequence of ``(start, stop)`` pairs. Replay takes a strict ref to
     the completed build summary as ``execution_catalog``. The returned path
     names the new nine-key request; original 67 consumers remain separate from
-    the new 68-consumer batch identity.
+    the new 69-consumer batch identity.
     """
     native_request = json.loads(Path(native_request_path).read_bytes())
     directory = Path(directory).resolve()
@@ -124,6 +124,8 @@ def make_common_source_request(
         raise ValueError("Original producer request must name its one 67-consumer producer")
     public_source = producer_paths[0].parent / PUBLIC_FILENAME
     consumers[str(public_source.resolve())] = reference(public_source)["sha256"]
+    helper_source = producer_paths[0].parent / "b3_authenticated_helpers.py"
+    consumers[str(helper_source.resolve())] = reference(helper_source)["sha256"]
     request = {
         "schema": "b3_paged_native_common_source_request_v1",
         "catalog": native_request["catalog"],
@@ -313,7 +315,7 @@ def test_build_uses_two_native_pages_and_variable_widths_without_scientific_prom
     assert common["common_source_sha256"] == sha256(canonical(commitment)).hexdigest()
     assert common["common_source_sha256"] == root["common_source_sha256"] == summary["common_source_sha256"]
     assert len(commitment["original_consumer_file_sha256"]) == 67
-    assert len(commitment["consumer_file_sha256"]) == 68
+    assert len(commitment["consumer_file_sha256"]) == 69
     assert set(commitment["original_consumer_file_sha256"]) < set(commitment["consumer_file_sha256"])
     assert commitment["gene_ids"] == [f"ENSG{i:011d}" for i in range(1, 5)]
     assert commitment["embryo_ids"] == ["emb0", "emb1"]

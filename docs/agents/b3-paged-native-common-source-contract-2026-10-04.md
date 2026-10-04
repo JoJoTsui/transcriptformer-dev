@@ -22,7 +22,7 @@ scientific rules keep their original meanings.
 | `focal_catalog` | Paged ordered, disjoint original-axis focal ranges. |
 | `phase` | `build` or `replay`. |
 | `execution_catalog` | Null for build; exact completed build summary reference for replay. |
-| `consumer_file_sha256` | Exact new 68-file closure, including the unchanged original 67-file closure. |
+| `consumer_file_sha256` | Exact new 69-file closure: unchanged original 67, this producer, and the authenticated helper loader. |
 
 All references have exactly `path`, `sha256`, `bytes`: canonical absolute
 paths, lowercase byte SHA-256 and strict nonnegative integer byte counts.
@@ -64,7 +64,7 @@ readiness is unavailable and intervals are null.
 `prepare`, `execute`, `replay`, `finalize`, `diagnostic`, each with
 `(request_path, output, *, max_seconds=900)`. Its CLI takes the action and
 `--request --output --max-seconds`. Every closed request includes `schema`
-and its exact 76-file `consumer_file_sha256` map, followed by:
+and its exact 82-file `consumer_file_sha256` map, followed by:
 
 | Action | Additional fields |
 | --- | --- |
@@ -75,9 +75,11 @@ and its exact 76-file `consumer_file_sha256` map, followed by:
 | diagnostic | `plan`, `start`, `stop`, `phase`, `execution_catalog` |
 
 Request schemas are
-`b3_paged_native_common_bootstrap_<action>_request_v3`. The 76-file closure
+`b3_paged_native_common_bootstrap_<action>_request_v3`. The 82-file closure
 contains the unchanged v2 application's exact 74-file closure, the new batch
-producer and this new adapter. The native batch's own 68-file closure is
+producer, this adapter, the authenticated loader, and five comparator dependencies:
+`build_ortholog_table`, `handoff_ortholog_scores`, `report_ortholog_eligibility`,
+`summarize_ortholog_full_universe`, and `b3_score_contract`. The native batch's own 69-file closure is
 authenticated separately.
 
 Preparation authenticates the genuine completed v2 plan and original source,
@@ -138,12 +140,19 @@ caller lifetimes are admitted before payload allocation. Full-mouse width 7/8
 already exceed optimistic numeric bounds. A narrower range must pass actual
 admission.
 
-Every helper executes from authenticated software bytes. The frozen window
-reader's later attribute-helper compile boundary is additionally guarded in
-each new consumer's private namespace: a reread that differs from the retained
-verified buffer is rejected before execution. A final source seal alone cannot
-establish this property. The earlier producers keep their original bytes and
-are not retroactively claimed to have this additional guard.
+Repository helpers execute from retained authenticated software buffers using
+the shared `b3_authenticated_helpers` loader. Private package proxies resolve
+repository imports without consulting canonical module caches. Copied builtins
+guard deferred imports, nested compilation and execution; uncovered repository
+imports and changed reread buffers are rejected before execution. The frozen
+publisher's AST selection retains its separate fixed engine hash admission.
+The original role loop reuses private imported modules; intentional numeric
+engine clones retain independent globals. Private module registrations are
+removed on success and failure, while canonical caches and interpreter builtins
+remain intact. Public finalization passes its verified private math validator
+to shared receipt adaptation, including the deferred scheduler import.
+A final source seal alone cannot establish these properties. Earlier producers
+keep their original bytes and are not retroactively claimed to have this guard.
 
 Output targets are never replaced, including dangling symlinks. Private flat
 staging and the existing no-replace publisher place the completion summary
