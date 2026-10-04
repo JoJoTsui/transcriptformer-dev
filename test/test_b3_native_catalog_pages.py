@@ -548,3 +548,55 @@ def test_public_imported_pilot_root_verifies_sixfile_lineage_absent_from_origina
     with pytest.raises(ValueError, match="bytes|size"):
         run(verify, tmp_path / "refused-lineage")
     assert not (tmp_path / "refused-lineage").exists()
+
+
+@pytest.mark.parametrize("changed", ["root_consumer", "marker_consumer", "marker_catalog", "publication_request"])
+def test_public_verification_refuses_equal_float_nested_reference_identity(tmp_path, changed):
+    from scripts.b3_native_catalog_pages import run
+
+    verify, _request, _entries, catalog = _published_fixture(tmp_path)
+    marker_path = catalog / "summary.json"
+    marker = json.loads(marker_path.read_bytes())
+    catalog_path = catalog / "catalog.json"
+    root = json.loads(catalog_path.read_bytes())
+    if changed == "root_consumer":
+        root["consumer_files"][0]["bytes"] = float(root["consumer_files"][0]["bytes"])
+        marker["catalog"] = _file(catalog_path, _json_bytes(root))
+    elif changed == "marker_consumer":
+        marker["consumer_files"][0]["bytes"] = float(marker["consumer_files"][0]["bytes"])
+    elif changed == "marker_catalog":
+        marker["catalog"]["bytes"] = float(marker["catalog"]["bytes"])
+    else:
+        publication_path = Path(marker["request"]["path"])
+        publication = json.loads(publication_path.read_bytes())
+        publication["plan"]["bytes"] = float(publication["plan"]["bytes"])
+        marker["request"] = _file(publication_path, _json_bytes(publication))
+    _file(marker_path, _json_bytes(marker))
+    verify_value = json.loads(verify.read_bytes())
+    data = catalog_path.read_bytes()
+    verify_value["catalog"] = {"path": str(catalog_path), "sha256": sha256(data).hexdigest(), "bytes": len(data)}
+    _file(verify, _json_bytes(verify_value))
+    with pytest.raises(ValueError, match="integer|identity|commitments"):
+        run(verify, tmp_path / "refused")
+    assert not (tmp_path / "refused").exists()
+
+
+@pytest.mark.parametrize("species", [" ZEBRAFISH ", " DANIO_RERIO ", " Danio Rerio "])
+def test_public_catalog_excludes_normalized_zebrafish_aliases(tmp_path, species):
+    from scripts.b3_native_catalog_pages import run
+
+    request_path, request, _entries, _payloads = _fixture(tmp_path / "source")
+    plan_path = Path(request["plan"]["path"])
+    plan = json.loads(plan_path.read_bytes())
+    plan["species"] = species
+    request["plan"] = _file(plan_path, _json_bytes(plan))
+    provenance_path = Path(request["producer_provenance"]["path"])
+    provenance = json.loads(provenance_path.read_bytes())
+    provenance["plan_sha256"] = request["plan"]["sha256"]
+    request["producer_provenance"] = _file(provenance_path, _json_bytes(provenance))
+    changed = {ref["path"]: ref for ref in (request["plan"], request["producer_provenance"])}
+    request["common_files"] = [changed.get(ref["path"], ref) for ref in request["common_files"]]
+    _file(request_path, _json_bytes(request))
+    with pytest.raises(ValueError, match="Zebrafish"):
+        run(request_path, tmp_path / "refused")
+    assert not (tmp_path / "refused").exists()

@@ -140,6 +140,15 @@ def _ref(value: Any) -> dict:
     return value
 
 
+def _validate_consumer_files(value: Any, expected: list[dict]) -> None:
+    if not isinstance(value, list) or len(value) != len(expected):
+        raise ValueError("Consumer reference identity differs")
+    for ref in value:
+        _ref(ref)
+    if _canonical(value) != _canonical(expected):
+        raise ValueError("Consumer source identity differs")
+
+
 class _Budget:
     def __init__(self, parent: Path, seconds: float):
         if type(seconds) not in (int, float) or not isfinite(seconds) or not 0 < seconds <= 900:
@@ -275,7 +284,7 @@ def _identity(root: dict, budget: _Budget, functions: dict) -> tuple[dict, dict,
     ):
         raise ValueError("Original range identities require strict integers")
     functions["_validate_plan"](plan)
-    if str(plan.get("species", "")).lower() in {"zebrafish", "danio_rerio", "danio rerio"}:
+    if str(plan.get("species", "")).strip().lower() in {"zebrafish", "danio_rerio", "danio rerio"}:
         raise ValueError("Zebrafish is excluded")
     producer = _json(budget.buffer(provenance_ref, 64 * MIB))
     if (
@@ -576,11 +585,13 @@ def _certificate(entry: dict, root: dict, plan: dict, common: dict, certificate_
 def _publication_marker(catalog: dict, root: dict, consumers: list[dict], budget: _Budget) -> dict:
     marker_ref, data = _actual(_path(catalog["path"]).parent / "summary.json", MIB, budget)
     marker = _json(data)
+    _ref(marker.get("catalog"))
+    _validate_consumer_files(marker.get("consumer_files"), consumers)
     if (
         set(marker) != RECEIPT_FIELDS
         or marker.get("schema") != "b3_native_certificate_catalog_publication_v1"
         or marker.get("status") != "catalog_declared_unverified"
-        or marker.get("catalog") != catalog
+        or _canonical(marker.get("catalog")) != _canonical(catalog)
         or type(marker.get("range_count")) is not int
         or marker["range_count"] != root["range_count"]
         or type(marker.get("page_count")) is not int
@@ -590,17 +601,28 @@ def _publication_marker(catalog: dict, root: dict, consumers: list[dict], budget
         or marker.get("native_likelihood_effects_attested") is not False
         or marker.get("scientific_readiness") != "unavailable"
         or marker.get("interval") is not None
-        or marker.get("consumer_files") != consumers
         or type(marker.get("elapsed_seconds")) not in (int, float)
         or not isfinite(marker["elapsed_seconds"])
         or not 0 <= marker["elapsed_seconds"] <= 900
     ):
         raise ValueError("Catalog lacks its exact unavailable publication completion marker")
     original_request = _json(budget.buffer(_ref(marker.get("request")), MIB))
+    if set(original_request) != PUBLISH_FIELDS:
+        raise ValueError("Publication request and catalog commitments differ")
+    _common(
+        original_request["common_files"],
+        _ref(original_request["plan"]),
+        _ref(original_request["producer_provenance"]),
+        _path(original_request["certificate_namespace"]),
+        _path(original_request["shard_namespace"]),
+    )
+    _ref(original_request["entries_manifest"])
     if (
-        set(original_request) != PUBLISH_FIELDS
-        or original_request.get("schema") != "b3_native_certificate_catalog_publish_request_v1"
-        or any(original_request.get(key) != root[key] for key in PUBLISH_FIELDS - {"schema", "consumer_sha256"})
+        original_request.get("schema") != "b3_native_certificate_catalog_publish_request_v1"
+        or any(
+            _canonical(original_request.get(key)) != _canonical(root[key])
+            for key in PUBLISH_FIELDS - {"schema", "consumer_sha256"}
+        )
         or original_request.get("consumer_sha256")
         != next(ref["sha256"] for ref in consumers if ref["path"] == str(Path(__file__).resolve()))
     ):
@@ -612,6 +634,7 @@ def _verify_sources(catalog: dict, budget: _Budget, consumers: list[dict], funct
     catalog = _ref(catalog)
     catalog_path = _path(catalog["path"])
     root = _json(budget.buffer(catalog, 16 * MIB))
+    _validate_consumer_files(root.get("consumer_files"), consumers)
     if (
         catalog_path.name != "catalog.json"
         or set(root) != ROOT_FIELDS
@@ -619,7 +642,6 @@ def _verify_sources(catalog: dict, budget: _Budget, consumers: list[dict], funct
         or root.get("method") != METHOD
         or type(root.get("page_size")) is not int
         or root["page_size"] != PAGE_SIZE
-        or root.get("consumer_files") != consumers
     ):
         raise ValueError("Closed catalog identity or consumer source bytes differ")
     cert_root, shard_root = _path(root["certificate_namespace"]), _path(root["shard_namespace"])
@@ -675,7 +697,7 @@ def _verify_sources(catalog: dict, budget: _Budget, consumers: list[dict], funct
         for ordinal, value in enumerate(page["entries"], start):
             budget.check()
             entry = _entry(value, ordinal, cert_root, shard_root)
-            if entry != next(manifest, None):
+            if _canonical(entry) != _canonical(next(manifest, None)):
                 raise ValueError("Catalog entry differs from original pinned manifest")
             _certificate(entry, root, plan, common, certificate_common, budget)
         del page

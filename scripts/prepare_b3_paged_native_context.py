@@ -123,7 +123,7 @@ def _context(reference: dict, inputs: _Inputs, engine: Any) -> tuple[dict, dict]
         ):
             raise ValueError("Original range identities require exact integer fields")
     engine._validate_plan(plan)
-    if plan.get("species") == "danio_rerio":
+    if str(plan.get("species", "")).strip().lower() in {"danio_rerio", "danio rerio", "zebrafish"}:
         raise ValueError("Zebrafish contexts are excluded pending collaborator data")
     report_path = _path(plan["full_preflight_path"])
     config_path = _path(plan["config_path"])

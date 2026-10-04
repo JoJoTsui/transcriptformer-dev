@@ -396,8 +396,9 @@ def test_public_run_rejects_duplicate_plan_strata(tmp_path):
     assert not output.exists()
 
 
-def test_public_run_refuses_excluded_zebrafish_context(tmp_path):
-    request = request_fixture(tmp_path, species="danio_rerio")
+@pytest.mark.parametrize("species", ["danio_rerio", "zebrafish", "danio rerio", "DANIO_RERIO", " Danio Rerio "])
+def test_public_run_refuses_excluded_zebrafish_context(tmp_path, species):
+    request = request_fixture(tmp_path, species=species)
     output = tmp_path / "rejected"
     with pytest.raises(ValueError, match="Zebrafish"):
         run(request, output)

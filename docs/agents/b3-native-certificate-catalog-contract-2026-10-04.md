@@ -15,6 +15,12 @@ canonical absolute path; SHA-256 is 64 lowercase hexadecimal characters;
 keys or nonfinite constants. All consumed JSON is parsed and hashed from the
 same bounded buffer. A request is at most 1 MiB.
 
+The same closed reference validator applies to nested catalog and completion
+marker references, including every consumer reference. Structured commitments
+are compared through canonical JSON, preserving strict integer identities.
+Zebrafish aliases `zebrafish`, `danio_rerio` and `danio rerio` are excluded after
+stripping surrounding whitespace and converting case.
+
 Publication schema `b3_native_certificate_catalog_publish_request_v1` has
 exactly these additional keys:
 
@@ -196,3 +202,27 @@ test SHA-256 is
 `bf49f0b777cb69dfd35b0a63e9d39cfc4302e33f6c6656f68f15151dcab3d928`.
 Earlier hashes and 32-case results above record the preceding implementation.
 No actual verifier, model, checkpoint or matrix read was run for this repair.
+
+### Strict nested-reference and species repair
+
+Independent review found ordinary equality accepting float byte counts in
+nested consumer and catalog references. Four public cases exposed that
+acceptance with otherwise hash-consistent root, marker and request bytes.
+Every nested artifact reference now passes the closed strict reference
+validator; structured frozen commitments compare through canonical JSON.
+Three padded/case-varied zebrafish aliases likewise failed refusal tests,
+then passed after consistent whitespace/case normalization.
+
+Final repair result: **40 passed, 0 failed**, 6.52 seconds; Ruff check, Ruff
+format check and mypy pass. JUnit is
+`runs/b3_feasibility/20261004/native_catalog_strict_targeted.xml`, SHA-256
+`16131e3aad6715d6459321802752b7e10b135aeae73fc6afc04e2cd86fd652ec`.
+Current source SHA-256 is
+`c5eb352512b4b2aa6627424c4268a6c4c32c518042bf1978e62f5a497e87336d`;
+test SHA-256 is
+`badff62681da4e79a66105c9754f716228c3fc972daba439fcfb65d5cddfc6b8`.
+The prior source/test/contract snapshot is preserved under
+`runs/b3_feasibility/20261004/native_catalog_requests/source_retry00/`.
+Prior requests and declaration outputs remain unchanged; retry01 requests
+use fresh output names. This repair used only tiny fixtures and source/metadata
+reads, with no actual verifier or matrix/model bytes read in this agent's lane.
