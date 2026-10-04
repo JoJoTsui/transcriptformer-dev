@@ -244,6 +244,9 @@ def test_common_private_query_bytes_remain_sealed_through_outer_publication(
         source_workspace = path.parent.parent / "query-source-000"
         target = source_workspace / ("statistics-000000.h5" if boundary == "statistics_after_load" else "metrics.h5")
         assert target.is_file(), "The observer must target a consumed private query artifact"
+        # The owner can enable writes on these read-only private snapshots.
+        # Exercise the byte seal after a real mutation, including as non-root.
+        target.chmod(target.stat().st_mode | 0o200)
         if boundary == "metrics_after_load":
             import h5py
 
