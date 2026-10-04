@@ -1,6 +1,72 @@
 # Ticket 05 pilot progress — 2026-10-02
 
-**Current paged admission milestone — 2026-10-04:** Structural metadata admission
+**Current paged native application and feasibility milestone — 2026-10-04:**
+The separately versioned native cache producer and bootstrap application pass
+bounded engineering acceptance: **49 cache and 49 application targeted checks**,
+Ruff check/format/mypy and independent committed reviews with zero remaining
+hard findings. The cache producer verifies stored original proof/CSR/support
+consistency across pages; the application preserves original source/RNG
+identities, the exact imported-effect bridge and independent physical replay.
+
+Actual human and mouse pilot caches complete in **88.54 / 63.68 seconds** at
+**181.20 / 204.87 MiB** peak process RSS. All **14,407,560** physical scalar
+values match original caches bit for bit. An authentic **129-cell / two-page**
+native fixture also matches the unchanged public engine. The producer's source
+audit preserves **224 preexisting Python / 98 JSON / 2 JSONL** files,
+**58 native modules** and original **107 human / 109 mouse** software hashes.
+See the [cache validation](b3-paged-native-cache-validation-2026-10-04.md)
+and [allocation ledger](b3-paged-native-cache-allocation-ledger-2026-10-04.json).
+
+The application completes **five genuine original-pilot actions**, including
+the expected production refusal and zero-draw finalization. Fresh native prefix
+execution/replay matches **96 rows / 237,222 all-gene metric records** with
+maximum observed error **0**. The historical public oracle was not rerun;
+fresh native physical reconstruction is separate evidence. The original pilot
+retains **5,111/15,705 finite pairs (32.54%)**, **0/2,000** necessary jointly
+supported draws, its reporting veto and null intervals. Stored likelihood
+effects remain unattested. See the
+[application validation](b3-paged-native-bootstrap-validation-2026-10-04.md).
+
+The accepted **C03 synthetic study** performs **5,014 tiny CPU model forwards**;
+the unchanged public comparator measures **500/502 finite pairs**, five
+physical embryos per species and Spearman **1.0**. These are synthetic fixture
+results. The **H02 follow-on completes all 12 stages** and closes the bounded
+cost assessment negatively: complete-call forecasts are **2008.58914 seconds**
+for build, **2090.87981 seconds** for execution and **2098.60836 seconds** for
+independent replay before headroom, each above the **900-second** limit.
+These are projections from measured complete public calls, not complete-family
+runtimes. **No full 126-block build or eligible full-family production/replay
+was attempted.** See the
+[eligible-prefix validation](b3-eligible-paged-prefix-validation-2026-10-04.md)
+and [bound evidence](b3-eligible-paged-prefix-evidence-2026-10-04.json).
+
+- [ ] Implement a common-source native build/replay batch, then a separately
+  versioned application adapter. Both remain unimplemented; see the
+  [proposal](b3-paged-native-common-source-proposal-2026-10-04.md).
+
+One CPU thread, 200 MiB numeric working memory, 4 GiB RSS, 4 GiB available host
+RAM, 20 GiB free disk and a 900-second invocation limit remain enforced.
+Full-mouse focal widths seven/eight exceed the numeric limit even before actual
+proof/axis costs; narrower widths require fresh admission.
+
+**Final 69-module repository CPU regression: passed** at `49e007e`: **1,017
+passed, 5 skipped**, no failures/errors, with stable source bytes, in
+**4356.24 seconds** (runner monotonic scope). The final audit preserves all
+224 preexisting Python / 98 JSON / 2 JSONL files and Git modes, 58 native
+modules, original 107 human / 109 mouse pilot software hashes, and current
+67 cache / 74 application bindings. See the dated cache/application evidence.
+The earlier 919-test admission run predates the cache/application files.
+
+**05 remains open, 11 excluded, ten bounded engineering tickets closed.**
+The bounded paged producer/application child is accepted; the actual
+full-cohort parent remains open. Common-source batching, the new application
+adapter, eligible fixed-family 2,000-draw production and fresh 2,000-draw replay,
+complete method cost, actual full-cohort scored inputs and native effect
+attestation remain unfinished. Reportable project comparison/uncertainty is
+unavailable. Finetuning claims also require project finetuned checkpoint
+provenance; a base-arm comparison does not require that provenance.
+
+**Previous paged admission milestone — 2026-10-04:** Structural metadata admission
 validates **123,952 human / 945,389 mouse cells**, preserving all **22,279**
 original ranges across **175** bounded pages. Actual original pilot certificate
 catalogs pass fresh byte verification with **131 human / 141 mouse common
@@ -98,9 +164,11 @@ finite scores or positive peer variance.
 
 The persisted comparison labels embryo uncertainty as
 `unavailable_v2_bootstrap_not_implemented`. A bounded v2 bootstrap implementation
-exists separately; comparator handoff and full-cohort uncertainty remain
-unfinished. This legacy label does not establish that no bootstrap code exists.
-Coverage already prevents running a reportable pilot bootstrap.
+and paged application now have bounded acceptance separately. This historical
+label does not establish that no bootstrap code or comparator bridge exists.
+The application preserves the original coverage veto; eligible full-family
+execution and full-cohort uncertainty remain unvalidated. Coverage already
+prevents running a reportable original-pilot bootstrap.
 
 ## Resource and recovery history
 
@@ -125,6 +193,14 @@ and [diagnostic null ranges](b3-full-global-null-diagnostic-2026-10-02.md)
 are implemented and statically reviewed. Actual strict full shards do not exist,
 so their execute paths remain unverified. Native production/likelihood
 attestation, scientific diagnostics and full uncertainty inputs remain open.
+
+The paged producer/application now closes its bounded integration dependency.
+The accepted synthetic study gives a negative complete-call cost forecast,
+preventing a full 126-block attempt under the current 900-second limit. A
+[common-source native build/replay batch and subsequent new application adapter](b3-paged-native-common-source-proposal-2026-10-04.md)
+remain unimplemented. This engineering work, eligible end-to-end execution,
+complete method cost and actual full-cohort source/effect evidence remain
+required; ticket 05 is not only waiting for files.
 
 The owner selected **feasibility study first** in
 [ADR 0005](../adr/0005-b3-feasibility-before-full-cohort-expansion.md).

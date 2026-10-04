@@ -1,0 +1,17 @@
+{
+  "n_blocks": 2,
+  "page_size": 128,
+  "pages": [
+    {
+      "file": {
+        "bytes": 2668,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/block-page-000000.json",
+        "sha256": "b81941b8651c7943f50ca0fac00d56868ef678d88c1ee485a0e0080bec830a7c"
+      },
+      "index": 0,
+      "start": 0,
+      "stop": 2
+    }
+  ],
+  "schema": "b3_paged_native_bootstrap_blocks_v2"
+}

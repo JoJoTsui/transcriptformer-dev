@@ -1,6 +1,72 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-**Current paged admission milestone — 2026-10-04:** Structural metadata admission
+**Current paged native application and feasibility milestone — 2026-10-04:**
+The separately versioned native cache producer and bootstrap application pass
+bounded engineering acceptance: **49 cache and 49 application targeted checks**,
+Ruff check/format/mypy and independent committed reviews with zero remaining
+hard findings. The cache producer verifies stored original proof/CSR/support
+consistency across pages; the application preserves original source/RNG
+identities, the exact imported-effect bridge and independent physical replay.
+
+Actual human and mouse pilot caches complete in **88.54 / 63.68 seconds** at
+**181.20 / 204.87 MiB** peak process RSS. All **14,407,560** physical scalar
+values match original caches bit for bit. An authentic **129-cell / two-page**
+native fixture also matches the unchanged public engine. The producer's source
+audit preserves **224 preexisting Python / 98 JSON / 2 JSONL** files,
+**58 native modules** and original **107 human / 109 mouse** software hashes.
+See the [cache validation](../../../docs/agents/b3-paged-native-cache-validation-2026-10-04.md)
+and [allocation ledger](../../../docs/agents/b3-paged-native-cache-allocation-ledger-2026-10-04.json).
+
+The application completes **five genuine original-pilot actions**, including
+the expected production refusal and zero-draw finalization. Fresh native prefix
+execution/replay matches **96 rows / 237,222 all-gene metric records** with
+maximum observed error **0**. The historical public oracle was not rerun;
+fresh native physical reconstruction is separate evidence. The original pilot
+retains **5,111/15,705 finite pairs (32.54%)**, **0/2,000** necessary jointly
+supported draws, its reporting veto and null intervals. Stored likelihood
+effects remain unattested. See the
+[application validation](../../../docs/agents/b3-paged-native-bootstrap-validation-2026-10-04.md).
+
+The accepted **C03 synthetic study** performs **5,014 tiny CPU model forwards**;
+the unchanged public comparator measures **500/502 finite pairs**, five
+physical embryos per species and Spearman **1.0**. These are synthetic fixture
+results. The **H02 follow-on completes all 12 stages** and closes the bounded
+cost assessment negatively: complete-call forecasts are **2008.58914 seconds**
+for build, **2090.87981 seconds** for execution and **2098.60836 seconds** for
+independent replay before headroom, each above the **900-second** limit.
+These are projections from measured complete public calls, not complete-family
+runtimes. **No full 126-block build or eligible full-family production/replay
+was attempted.** See the
+[eligible-prefix validation](../../../docs/agents/b3-eligible-paged-prefix-validation-2026-10-04.md)
+and [bound evidence](../../../docs/agents/b3-eligible-paged-prefix-evidence-2026-10-04.json).
+
+- [ ] Implement a common-source native build/replay batch, then a separately
+  versioned application adapter. Both remain unimplemented; see the
+  [proposal](../../../docs/agents/b3-paged-native-common-source-proposal-2026-10-04.md).
+
+One CPU thread, 200 MiB numeric working memory, 4 GiB RSS, 4 GiB available host
+RAM, 20 GiB free disk and a 900-second invocation limit remain enforced.
+Full-mouse focal widths seven/eight exceed the numeric limit even before actual
+proof/axis costs; narrower widths require fresh admission.
+
+**Final 69-module repository CPU regression: passed** at `49e007e`: **1,017
+passed, 5 skipped**, no failures/errors, with stable source bytes, in
+**4356.24 seconds** (runner monotonic scope). The final audit preserves all
+224 preexisting Python / 98 JSON / 2 JSONL files and Git modes, 58 native
+modules, original 107 human / 109 mouse pilot software hashes, and current
+67 cache / 74 application bindings. See the dated cache/application evidence.
+The earlier 919-test admission run predates the cache/application files.
+
+**05 remains open, 11 excluded, ten bounded engineering tickets closed.**
+The bounded paged producer/application child is accepted; the actual
+full-cohort parent remains open. Common-source batching, the new application
+adapter, eligible fixed-family 2,000-draw production and fresh 2,000-draw replay,
+complete method cost, actual full-cohort scored inputs and native effect
+attestation remain unfinished. Reportable project comparison/uncertainty is
+unavailable. Finetuning claims also require project finetuned checkpoint
+provenance; a base-arm comparison does not require that provenance.
+
+**Previous paged admission milestone — 2026-10-04:** Structural metadata admission
 validates **123,952 human / 945,389 mouse cells**, preserving all **22,279**
 original ranges across **175** bounded pages. Actual original pilot certificate
 catalogs pass fresh byte verification with **131 human / 141 mouse common
@@ -206,7 +272,7 @@ The eight-hour producer budget retains memory/storage guards. Actual completion
 is pending and this pilot cannot meet the paired 80% reporting floor.
 
 Category: correctness and readiness
-Status: Open — structural metadata and catalog bytes verified; paged native integration, scored inputs, complete effects/cost, reportable comparison and uncertainty pending
+Status: Open — bounded paged producer/application accepted; synthetic cost gate negative; common-source batch/new adapter, actual full-cohort scored inputs, complete effects/cost, reportable comparison and uncertainty pending; final 69-module regression passed (1,017 tests, 5 skipped)
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -841,17 +907,40 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   remain enforced; full-context authentication and paging stay separate below.
 - [ ] Complete separately versioned full-context native authentication and
   integrate paged original proof/CSR/support verification with native cache
-  source commitments. The general backend still inherits the 48-cell
-  whole-context and flat closure contracts; their caps remain unchanged.
+  source commitments on actual full-cohort scored inputs. Bounded producer and
+  application integration is accepted below; actual full-cohort scored shards
+  are absent. The frozen general frontend retains its 48-cell whole-context
+  and flat closure contracts; the paged application preserves original reader
+  caps and admits an original-observed bridge only for at most 48 cells.
   - [x] Admit actual full-cohort metadata without the pilot whole-context limit:
     all 22,279 original ranges across 175 bounded pages, with native readiness false.
   - [x] Publish and freshly verify original certificate/four-shard byte catalogs
     without flattening aggregate bindings. A 1,700-range fixture covers 14 pages
     and 8,511 bindings; both actual pilot certificates pass byte-only verification.
-  - [ ] Carry global coverage/source-row state across pages, preserve every
+  - [x] Carry global coverage/source-row state across pages, preserve every
     original native proof/CSR/support invariant, and integrate a versioned
-    native cache/source commitment. Actual full-cohort scored shards are absent.
-  The bounded metadata/byte receipt does not close this native engineering gate.
+    native cache/source commitment. The 49 public checks, 129-cell/two-page
+    native fixture and actual pilot physical-array parity validate this producer.
+    Actual full-cohort scored shards are absent; effect attestation remains false.
+  - [x] Integrate the separate paged bootstrap application with original
+    source/RNG identities, observed-source bridge, independent physical
+    reconstruction and frozen finalization rules. All 49 application targeted
+    checks and static checks pass; five genuine original-pilot actions preserve
+    the production veto and null intervals. Fresh native execution/replay
+    matches 96 rows and 237,222 all-gene metric records with zero error; the
+    historical public oracle was not rerun. The final 69-module repository
+    regression passes 1,017 tests, 5 skipped, without failures/errors. See the
+    [application validation](../../../docs/agents/b3-paged-native-bootstrap-validation-2026-10-04.md).
+  The bounded producer/application children close their engineering
+  dependencies; the actual full-cohort parent and scientific/data gates remain
+  open.
+- [ ] Implement a common-source native build/replay batch and then a separately
+  versioned application adapter, preserving fresh independent reconstruction,
+  exact source/RNG identities, all allocation limits and final seals. The
+  [common-source proposal](../../../docs/agents/b3-paged-native-common-source-proposal-2026-10-04.md)
+  is unimplemented; the frozen application cannot consume the proposed new
+  cache versions. Complete batch and application costs must be measured before
+  eligible full-family production/replay is admitted.
 - [ ] Measure complete method-preserving scoring, verification and aggregation
   cost within explicit WSL budgets before expanding full-cohort production.
   Partial: planning, import, reconciliation, indexing, 64-gene null ranges,
@@ -869,7 +958,18 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   of seeded calculation; 795.83 seconds for the complete invocation).
   These sixteen diagnostic focals do not measure the whole finite family or
   complete production/replay bootstrap.
-  Whole-arm scoring/aggregation and 2,000-draw bootstrap costs remain unmeasured.
+  The accepted C03 synthetic study performs 5,014 tiny CPU model forwards and
+  measures 500/502 paired finite scores, five embryos per species and Spearman
+  1.0 through the unchanged public comparator. The H02 follow-on completes all
+  12 stages; complete-call build/execution/replay forecasts of 2008.58914 /
+  2090.87981 / 2098.60836 seconds before headroom exceed the 900-second limit.
+  No full 126-block attempt is made. These projections close a bounded
+  feasibility assessment negatively; they do not establish complete-family
+  runtime, native effect attestation or a reportable project comparison. See
+  [eligible-prefix validation](../../../docs/agents/b3-eligible-paged-prefix-validation-2026-10-04.md)
+  and [bound evidence](../../../docs/agents/b3-eligible-paged-prefix-evidence-2026-10-04.json).
+  Eligible end-to-end complete-family scoring/aggregation and production plus
+  fresh 2,000-draw replay costs remain unmeasured.
 
 The checked items establish bounded feasibility evidence only. The prospective
 assessor evaluates conditional potential-gene occupancy; the handoff checks a

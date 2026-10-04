@@ -1,0 +1,422 @@
+#!/usr/bin/env python
+"""Prepare and run sequential owned study stages after independent review.
+
+This ignored driver is a distinct artifact producer. It launches no work merely
+by being read or imported. Each child uses the frozen supervisor, GNU time -v,
+900 seconds inside / 950 seconds outside, RSS4GiB, host RAM4GiB, disk20GiB,
+one CPU thread and CUDA hidden. It never launches a full attempt after a
+negative cost gate. It does not attest effects, final inference or whole-method
+cost. Its optional process-group observation is restricted to the live producer
+declared by its own live supervisor and reports sampled RSS, not an unseen peak.
+
+Example (replace inputs with actual original completed stage directories):
+  .venv/bin/python runs/b3_feasibility/20261004/eligible_paged_prefix_tools/\
+run_eligible_prefix_acceptance.py --output NEW_DRIVER_ATTEMPT \
+    --expected-app-sha256 REVIEWED_APP_SHA --c-freeze-dir C_FREEZE \
+    --material-dir MATERIAL --compare-dir COMPARISON \
+    --mouse-score-dir MOUSE_SCORE --mouse-support-dir MOUSE_SUPPORT \
+    --full-pair-dir FULL_PAIR --human-native-dir HUMAN_NATIVE \
+    --human-catalog-dir HUMAN_CATALOG --human-cold-dir HUMAN_COLD \
+    --human-warm-dir HUMAN_WARM
+
+The source, input binding and independent observer review must be frozen before
+root executes this command. Every attempt uses a fresh directory. The original
+C helper and reviewed follow-on files remain immutable.
+"""
+
+from __future__ import annotations
+
+import argparse
+from hashlib import sha256
+import json
+from math import isfinite
+import os
+from pathlib import Path
+import resource
+import shutil
+import signal
+import stat
+import subprocess
+import sys
+import time
+
+ROOT = Path(__file__).resolve().parents[4]
+OWN = Path(__file__).resolve()
+TOOLS = OWN.parent
+C = TOOLS / "study_eligible_paged_prefix.py"
+H = TOOLS / "continue_eligible_paged_prefix.py"
+C_README, H_README = TOOLS / "README.md", TOOLS / "FOLLOWON.md"
+PINNED = {
+    str(C): "9c459d1eadc865fd91ff74e92b15c828a0905ae6afe6a1797ff99b4d469b290d",
+    str(C_README): "29aa0f18f5a578d6bf1ba15d3989da71a80c3e1765729efe4653ab17ac40e2b9",
+    str(H): "52bc934a2a4fad81331a18f8f80c4e5689cfda35245b359471a787d3c6e117eb",
+    str(H_README): "94e588bf276f79be9b1e21d2f59cd5341ce1c051375038e9aeac3b5943bcfacc",
+}
+SCHEMA = "b3_eligible_paged_prefix_sequential_driver_v1"
+C_SCHEMA = "b3_eligible_paged_prefix_study_stage_v1"
+H_SCHEMA = "b3_eligible_paged_prefix_acceptance_stage_v1"
+MIB, GIB = 1024**2, 1024**3
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+
+
+def host_check(parent):
+    if resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 > 4 * GIB:
+        raise RuntimeError("Driver metadata process exceeds4GiB RSS")
+    available = next((int(line.split()[1]) * 1024 for line in Path("/proc/meminfo").read_text().splitlines()
+                      if line.startswith("MemAvailable:")), 0)
+    if available < 4 * GIB or shutil.disk_usage(parent).free < 20 * GIB:
+        raise RuntimeError("Driver requires4GiB available host RAM and20GiB free disk")
+
+
+def source_ref(path, parent, *, buffer=False):
+    host_check(parent)
+    path = Path(path).resolve()
+    before = path.lstat()
+    if not stat.S_ISREG(before.st_mode) or (buffer and before.st_size > 32 * MIB):
+        raise ValueError("Driver requires a regular bounded metadata file")
+    digest, count, pieces = sha256(), 0, []
+    with path.open("rb") as stream:
+        opened = os.fstat(stream.fileno())
+        if (opened.st_dev, opened.st_ino) != (before.st_dev, before.st_ino):
+            raise ValueError("Driver source changed before open")
+        while data := stream.read(MIB):
+            host_check(parent)
+            count += len(data)
+            if buffer and count > 32 * MIB:
+                raise ValueError("Driver metadata grew beyond32MiB")
+            digest.update(data)
+            if buffer:
+                pieces.append(data)
+    after = path.lstat()
+    if (before.st_dev, before.st_ino, before.st_size) != (after.st_dev, after.st_ino, after.st_size) or count != before.st_size:
+        raise ValueError("Driver source changed while reading")
+    return {"path": str(path), "sha256": digest.hexdigest(), "bytes": count}, b"".join(pieces) if buffer else None
+
+
+def read_json(path, parent):
+    ref, data = source_ref(path, parent, buffer=True)
+
+    def unique(pairs):
+        value = {}
+        for name, item in pairs:
+            if name in value:
+                raise ValueError("Duplicate driver JSON key")
+            value[name] = item
+        return value
+
+    def invalid(value):
+        raise ValueError("Nonfinite driver JSON constant:" + value)
+
+    value = json.loads(data, object_pairs_hook=unique, parse_constant=invalid)
+    if not isinstance(value, dict):
+        raise ValueError("Driver metadata requires an object")
+    return ref, value
+
+
+def write_json(path, value):
+    data = canonical(value) + b"\n"
+    if len(data) > 32 * MIB:
+        raise ValueError("Driver output metadata exceeds32MiB")
+    with Path(path).open("xb") as stream:
+        stream.write(data)
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+def proc_info(pid):
+    if type(pid) is not int or pid <= 0:
+        raise ValueError("Owned process identity requires a positive strict PID")
+    fields = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()
+    return {"pid": pid, "ppid": int(fields[1]), "pgrp": int(fields[2]), "session": int(fields[3]),
+            "start_ticks": int(fields[19]), "rss_bytes": int(fields[21]) * os.sysconf("SC_PAGE_SIZE")}
+
+
+def owned_group(state, controller, controller_identity, expected_command, boot_id):
+    """Admit only the live GNU-time group spawned by this exact supervisor."""
+    if (state.get("supervisor_pid") != controller.pid or type(state.get("supervisor_pid")) is not int
+            or state.get("boot_id") != boot_id or canonical(state.get("command")) != canonical(expected_command)):
+        raise ValueError("Observer refuses an unrelated supervisor declaration")
+    active_controller = proc_info(controller.pid)
+    if (active_controller["start_ticks"] != controller_identity["start_ticks"]
+            or active_controller["pgrp"] != controller.pid or controller.poll() is not None):
+        raise ValueError("Owned supervisor process identity changed")
+    pid, ticks = state.get("producer_pid"), state.get("producer_start_ticks")
+    if type(pid) is not int or pid <= 0 or type(ticks) is not int or ticks < 1:
+        raise ValueError("Observer requires the supervisor's explicit producer PID/start ticks")
+    producer = proc_info(pid)
+    if (producer["start_ticks"] != ticks or producer["ppid"] != controller.pid
+            or producer["pgrp"] != pid or producer["session"] != pid):
+        raise ValueError("Observer refuses a stale or unowned producer group")
+    return producer
+
+
+def group_rss(producer, controller):
+    total, members = 0, []
+    for entry in Path("/proc").iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            info = proc_info(int(entry.name))
+        except (FileNotFoundError, ProcessLookupError):
+            continue
+        if info["pgrp"] == producer["pid"] and info["session"] == producer["pid"]:
+            total += info["rss_bytes"]
+            members.append(info["pid"])
+    # Refuse reuse/replacement while enumerating. The driver never signals this
+    # group directly; its live supervisor owns producer termination/cleanup.
+    after = proc_info(producer["pid"])
+    if (after["start_ticks"], after["ppid"], after["pgrp"], after["session"]) != (
+            producer["start_ticks"], controller.pid, producer["pid"], producer["pid"]):
+        raise ValueError("Owned producer changed during RSS observation")
+    return total, members
+
+
+def stop_owned_controller(controller, identity):
+    if controller.poll() is not None:
+        return
+    try:
+        live = proc_info(controller.pid)
+    except FileNotFoundError:
+        controller.wait(timeout=5)
+        return
+    if live["start_ticks"] != identity["start_ticks"] or live["pgrp"] != controller.pid:
+        raise RuntimeError("Refuse to signal an unowned or reused supervisor PID")
+    # The frozen supervisor receives SIGTERM and terminates its own separately
+    # declared producer group. Never guess/kill other process groups from here.
+    os.kill(controller.pid, signal.SIGTERM)
+    try:
+        controller.wait(timeout=25)
+    except subprocess.TimeoutExpired as error:
+        raise RuntimeError("Owned supervisor did not confirm cleanup within25seconds; no new stage is launched") from error
+
+
+class Driver:
+    def __init__(self, args):
+        self.args, self.output = args, Path(args.output).resolve()
+        if os.path.lexists(self.output):
+            raise FileExistsError(self.output)
+        self.output.parent.mkdir(parents=True, exist_ok=True)
+        host_check(self.output.parent)
+        self.inputs, self.jobs = {}, []
+        self.began, self.boot_id = time.monotonic(), Path("/proc/sys/kernel/random/boot_id").read_text().strip()
+        self.freeze_ref, self.freeze = read_json(Path(args.c_freeze_dir).resolve() / "binding.json", self.output.parent)
+        self.inputs[self.freeze_ref["path"]] = self.freeze_ref
+        if (self.freeze.get("schema") != "b3_eligible_paged_prefix_software_freeze_v1"
+                or self.freeze.get("synthetic_fixture_only") is not True):
+            raise ValueError("Driver requires the original reviewed C software freeze")
+        app = (ROOT / "scripts/bootstrap_b3_paged_native.py").resolve()
+        if self.freeze["reviewed_application"]["sha256"] != args.expected_app_sha256 or self.freeze["reviewed_application"]["path"] != str(app):
+            raise ValueError("Driver expected application does not match the original reviewed freeze")
+        for path, digest in PINNED.items():
+            ref, _ = source_ref(path, self.output.parent)
+            if ref["sha256"] != digest:
+                raise ValueError("A separately reviewed ignored helper/instruction changed")
+            self.inputs[path] = ref
+        own_ref, _ = source_ref(OWN, self.output.parent)
+        self.inputs[str(OWN)] = own_ref
+        source_map = self.freeze["repo_source_file_sha256"]
+        actual = {str(path.resolve()) for path in [*(ROOT / "src/transcriptformer").rglob("*.py"), *(ROOT / "scripts").glob("*.py")]}
+        if set(source_map) != actual:
+            raise ValueError("Driver refuses changed original source membership")
+        for path, digest in source_map.items():
+            ref, _ = source_ref(path, self.output.parent)
+            if ref["sha256"] != digest:
+                raise ValueError("Original frozen source bytes changed")
+            self.inputs[path] = ref
+        self.python = ROOT / ".venv/bin/python"
+        self.supervisor = ROOT / "scripts/supervise_b3_pilot.py"
+        if str(self.supervisor) not in source_map:
+            raise ValueError("Frozen source map omits the supervisor")
+        self.output.mkdir()
+        (self.output / "stages").mkdir()
+        (self.output / "supervisors").mkdir()
+        (self.output / "controllers").mkdir()
+        write_json(self.output / "binding.json", {
+            "schema": SCHEMA, "driver_source": own_ref, "original_software_freeze": self.freeze_ref,
+            "pinned_consumers": list(self.inputs.values()), "expected_app_sha256": args.expected_app_sha256,
+            "synthetic_fixture_only": True, "scoped_process_group_observer": args.observe_owned_group,
+            "observer_scope": "Only live producer PID/start ticks/parent/group/session declared by this driver's own live supervisor; sampled RSS, not complete aggregate peak proof",
+        })
+
+    def verify(self):
+        for expected in self.inputs.values():
+            actual, _ = source_ref(expected["path"], self.output)
+            if canonical(actual) != canonical(expected):
+                raise ValueError("Driver source/freeze bytes changed")
+
+    def run_stage(self, name, helper, action, fields, schema):
+        self.verify()
+        output, supervised = self.output / "stages" / name, self.output / "supervisors" / name
+        if os.path.lexists(output) or os.path.lexists(supervised):
+            raise FileExistsError("Driver never reuses a stage/supervisor directory")
+        child = ["/usr/bin/time", "-v", "-o", str(supervised / "gnu-time.txt"),
+                 str(self.python), str(helper), action, "--output", str(output), "--max-seconds", "900", *fields]
+        command = [str(self.python), str(self.supervisor), "--run-dir", str(supervised),
+                   "--max-wall-seconds", "950", "--max-rss-gib", "4", "--min-host-ram-gib", "4",
+                   "--min-disk-gib", "20", "--", *child]
+        env = dict(os.environ)
+        for variable in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+            env[variable] = "1"
+        env["CUDA_VISIBLE_DEVICES"] = ""
+        began, observed_peak, observations = time.monotonic(), 0, 0
+        with (self.output / "controllers" / (name + ".log")).open("xb") as log:
+            controller = subprocess.Popen(command, cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+            identity = proc_info(controller.pid)
+            try:
+                while controller.poll() is None:
+                    host_check(self.output)
+                    if time.monotonic() - began > 955:
+                        raise TimeoutError("Owned stage supervisor exceeded its950second cap plus5second reporting allowance")
+                    state_path = supervised / "state.json"
+                    if self.args.observe_owned_group and state_path.exists():
+                        _, state = read_json(state_path, self.output)
+                        if state.get("status") == "running":
+                            try:
+                                producer = owned_group(state, controller, identity, child, self.boot_id)
+                                observed, _ = group_rss(producer, controller)
+                            except (FileNotFoundError, ProcessLookupError):
+                                # The producer may finish between stat reads;
+                                # final supervisor state decides success.
+                                observed = 0
+                            observed_peak = max(observed_peak, observed)
+                            observations += 1
+                            if observed >= 4 * GIB:
+                                raise RuntimeError("Owned producer process group observed at or above4GiB RSS")
+                    time.sleep(0.5)
+            except BaseException:
+                stop_owned_controller(controller, identity)
+                raise
+        seconds = time.monotonic() - began
+        self.verify()
+        state_ref, state = read_json(supervised / "state.json", self.output)
+        gnu_ref, _ = source_ref(supervised / "gnu-time.txt", self.output)
+        record = {"name": name, "command": command, "controller_return_code": controller.returncode,
+                  "complete_supervised_invocation_monotonic_seconds": seconds,
+                  "gnu_complete_child_cost": gnu_ref, "supervisor_state": state_ref,
+                  "observer_enabled": self.args.observe_owned_group,
+                  "observed_owned_group_rss_peak_bytes": observed_peak if self.args.observe_owned_group else None,
+                  "owned_group_rss_samples": observations,
+                  "observer_scope": "Sampled own declared live group only; scientific per-process guards/GNU costs remain separate",
+                  "stage_output": str(output)}
+        self.jobs.append(record)
+        write_json(self.output / "controllers" / (name + "-receipt.json"), record)
+        if controller.returncode != 0 or state.get("status") != "completed" or state.get("return_code") != 0:
+            raise RuntimeError("Owned stage failed; no next stage launched: " + name)
+        summary_ref, summary = read_json(output / "summary.json", self.output)
+        if summary.get("schema") != schema or summary.get("status") != "complete" or summary.get("action") != action:
+            raise ValueError("Child did not publish a completed stage of the declared action")
+        record["summary"] = summary_ref
+        return output, summary
+
+    def finish(self, status, gate_ref=None):
+        self.verify()
+        if gate_ref is not None:
+            actual, _ = source_ref(gate_ref["path"], self.output)
+            if canonical(actual) != canonical(gate_ref):
+                raise ValueError("Consumed measured cost gate changed before driver completion")
+            self.inputs[gate_ref["path"]] = gate_ref
+        summary = {"schema": SCHEMA, "status": status, "driver_source": self.inputs[str(OWN)],
+                   "original_software_freeze": self.freeze_ref, "jobs": self.jobs, "cost_gate": gate_ref,
+                   "actual_pipeline_monotonic_seconds_before_final_seal": time.monotonic() - self.began,
+                   "sum_complete_supervised_invocation_seconds": sum(job["complete_supervised_invocation_monotonic_seconds"] for job in self.jobs),
+                   "synthetic_fixture_only": True, "model_forwards_performed": False, "checkpoint_tensors_loaded": False,
+                   "native_arithmetic_replay_verified": False, "native_likelihood_effects_attested": False,
+                   "scientific_readiness": "unavailable", "interval": None, "full_2000_draws_completed": False,
+                   "whole_method_fit_established": False}
+        marker = self.output / "summary.json"
+        intended = canonical(summary) + b"\n"
+        marker_ref = {"path": str(marker), "sha256": sha256(intended).hexdigest(), "bytes": len(intended)}
+        try:
+            write_json(marker, summary)
+            self.verify()
+            for job in self.jobs:
+                for key in ("summary", "gnu_complete_child_cost", "supervisor_state"):
+                    if key in job:
+                        actual, _ = source_ref(job[key]["path"], self.output)
+                        if canonical(actual) != canonical(job[key]):
+                            raise ValueError("Driver completed child artifacts changed at final seal")
+            actual_marker, _ = source_ref(marker, self.output)
+            if canonical(actual_marker) != canonical(marker_ref):
+                raise ValueError("Driver completion marker differs from its intended canonical bytes")
+            host_check(self.output)
+        except BaseException:
+            if marker.exists():
+                marker.rename(self.output / "invalid-summary.json")
+            raise
+        return summary
+
+
+def pipeline(driver):
+    args = driver.args
+    c_fields = ["--freeze-dir", str(Path(args.c_freeze_dir).resolve())]
+    def flags(**values):
+        return [item for name, value in values.items() for item in ("--" + name.replace("_", "-"), str(Path(value).resolve()))]
+    mouse_native, _ = driver.run_stage("00-mouse-native", C, "native-import", c_fields + ["--species", "mouse"] + flags(
+        material_dir=args.material_dir, score_dir=args.mouse_score_dir, support_dir=args.mouse_support_dir,
+        full_pair_dir=args.full_pair_dir, compare_dir=args.compare_dir), C_SCHEMA)
+    mouse_catalog, _ = driver.run_stage("01-mouse-catalog", C, "native-catalog", c_fields + flags(native_import_dir=mouse_native), C_SCHEMA)
+    mouse_cold, _ = driver.run_stage("02-mouse-cold", C, "cache-measure", c_fields + flags(native_catalog_dir=mouse_catalog), C_SCHEMA)
+    mouse_warm, _ = driver.run_stage("03-mouse-warm", C, "cache-measure", c_fields + flags(native_catalog_dir=mouse_catalog, prior_cache_measurement_dir=mouse_cold), C_SCHEMA)
+    frozen, _ = driver.run_stage("04-acceptance-freeze", H, "freeze", flags(
+        c_freeze_dir=args.c_freeze_dir, material_dir=args.material_dir, compare_dir=args.compare_dir,
+        human_native_dir=args.human_native_dir, mouse_native_dir=mouse_native,
+        human_catalog_dir=args.human_catalog_dir, mouse_catalog_dir=mouse_catalog,
+        human_cold_dir=args.human_cold_dir, human_warm_dir=args.human_warm_dir,
+        mouse_cold_dir=mouse_cold, mouse_warm_dir=mouse_warm), H_SCHEMA)
+    h_fields = flags(acceptance_freeze_dir=frozen)
+    catalog, _ = driver.run_stage("05-partial-catalog", H, "partial-catalog", h_fields, H_SCHEMA)
+    prepared, _ = driver.run_stage("06-prefix-prepare", H, "prepare", h_fields + flags(catalog_dir=catalog), H_SCHEMA)
+    execution, _ = driver.run_stage("07-prefix-execution", H, "diagnostic-execution", h_fields + flags(prepare_dir=prepared), H_SCHEMA)
+    replayed, _ = driver.run_stage("08-prefix-replay", H, "diagnostic-replay", h_fields + flags(prepare_dir=prepared, execution_dir=execution), H_SCHEMA)
+    human_unit, _ = driver.run_stage("09-unit-human", H, "unit-control", h_fields + ["--species", "human"], H_SCHEMA)
+    mouse_unit, _ = driver.run_stage("10-unit-mouse", H, "unit-control", h_fields + ["--species", "mouse"], H_SCHEMA)
+    qualified, receipt = driver.run_stage("11-qualify", H, "qualify", h_fields + flags(
+        prefix_prepare_dir=prepared, prefix_execution_dir=execution, prefix_replay_dir=replayed,
+        human_unit_dir=human_unit, mouse_unit_dir=mouse_unit), H_SCHEMA)
+    gate_ref = receipt["outputs"]["cost_gate"]
+    actual_ref, gate = read_json(gate_ref["path"], driver.output)
+    if canonical(actual_ref) != canonical(gate_ref) or gate.get("schema") != "b3_eligible_paged_prefix_acceptance_cost_gate_v1" or gate.get("fit_proven") is not False:
+        raise ValueError("Driver refuses an altered/noncanonical measured cost decision")
+    if gate.get("bounded_attempt_permitted") is False:
+        return driver.finish("stopped_after_complete_negative_cost_gate", gate_ref)
+    if gate.get("bounded_attempt_permitted") is not True:
+        raise ValueError("Driver requires an explicit boolean measured gate decision")
+    full, _ = driver.run_stage("12-build-full", H, "build-full", h_fields + flags(qualify_dir=qualified), H_SCHEMA)
+    full_catalog, _ = driver.run_stage("13-full-catalog", H, "full-catalog", h_fields + flags(block_dir=full), H_SCHEMA)
+    full_prepare, _ = driver.run_stage("14-full-prepare", H, "prepare", h_fields + flags(catalog_dir=full_catalog, qualify_dir=qualified), H_SCHEMA)
+    produced, _ = driver.run_stage("15-execute-one", H, "execute", h_fields + flags(prepare_dir=full_prepare, qualify_dir=qualified), H_SCHEMA)
+    driver.run_stage("16-replay-one", H, "replay", h_fields + flags(prepare_dir=full_prepare, execution_dir=produced, qualify_dir=qualified), H_SCHEMA)
+    return driver.finish("completed_one_draw_eligible_toy_prefix", gate_ref)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--expected-app-sha256", required=True)
+    parser.add_argument("--observe-owned-group", action="store_true", help="Enable only after separate PID/ownership/signal review; default uses existing child RSS guards and GNU per-process costs")
+    for name in ("c-freeze", "material", "compare", "mouse-score", "mouse-support", "full-pair", "human-native", "human-catalog", "human-cold", "human-warm"):
+        parser.add_argument("--" + name + "-dir", type=Path, required=True)
+    args = parser.parse_args()
+    driver = None
+    try:
+        driver = Driver(args)
+        summary = pipeline(driver)
+        print(canonical({"status": summary["status"], "summary": str(driver.output / "summary.json")}).decode())
+    except BaseException as error:
+        if driver is not None:
+            marker = driver.output / "summary.json"
+            if marker.exists():
+                marker.rename(driver.output / "invalid-summary.json")
+            write_json(driver.output / "failure.json", {"schema": SCHEMA, "status": "failed",
+                       "exception_type": type(error).__name__, "message": str(error), "jobs": driver.jobs,
+                       "synthetic_fixture_only": True, "whole_method_fit_established": False,
+                       "native_arithmetic_replay_verified": False, "native_likelihood_effects_attested": False,
+                       "scientific_readiness": "unavailable"})
+        raise
+
+
+if __name__ == "__main__":
+    main()

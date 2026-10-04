@@ -1,0 +1,238 @@
+# Cost-gated acceptance of the eligible toy prefix
+
+`continue_eligible_paged_prefix.py` is an ignored study helper. Root executes it
+only after reviewing the frozen application and these instructions, after the
+original study produces a genuinely eligible observed comparison, and after
+the sole heavy-job lane is released. This file and the helper must remain
+unchanged once their separate acceptance freeze is published. No stage in this
+follow-on plan has been executed or bound at preparation time.
+
+The original fixture is 502 measured and checkpoint genes, five cells and five
+complete physical embryos per species, native sequence length512, and a real
+deterministic toy state dictionary at the external model-loader boundary. The
+synthetic mapping has5,000 unique pairs, including4,498 background pairs absent
+from both checkpoint vocabularies and both measured sets. The frozen5,000
+mapping floor is retained. Actual public comparison must independently derive
+at least500 finite pairs among the502 joined pairs, at least80% coverage, and at
+least five physical embryos. No biological orthology or project checkpoint is
+claimed. Original model-forward receipts remain separate from this follow-on,
+which performs no model forwards or checkpoint tensor loads.
+
+## Required original receipts
+
+Complete the unchanged `study_eligible_paged_prefix.py` stages described in
+`README.md`. It must remain SHA256
+`9c459d1eadc865fd91ff74e92b15c828a0905ae6afe6a1797ff99b4d469b290d`.
+The four cache measurements below all execute the original public native
+producer to completion, each into a new immutable directory. They establish
+complete cold/warm public-call costs; neither pair claims a cold OS page cache.
+
+| Role | Original action and necessary output |
+| --- | --- |
+| material | Original material, frozen family and source paths |
+| compare | Genuine observed `comparison.json` and `coverage.tsv` |
+| human-native / mouse-native | Genuine `native-import`, original plan, import provenance, v1 index metadata, CSR arrays and embryo metrics |
+| human-catalog / mouse-catalog | Genuine `native-catalog`, original structural context request and 0:8 native-cache request |
+| human-cold / human-warm | Two completed `cache-measure` stages using the identical human request |
+| mouse-cold / mouse-warm | Two completed `cache-measure` stages using the identical mouse request |
+
+For mouse, use the actual original public stages, including `--species mouse`:
+`native-import`, then `native-catalog`, then `cache-measure` twice. The original
+`03-score-mouse/bundle` path stays the family source key. `native-import` receives
+the real mouse score/support receipts, real two-source full pair receipt and
+the real observed comparison receipt. Warm measurement additionally receives
+`--prior-cache-measurement-dir` pointing to the mouse cold receipt. The
+follow-on helper cannot emit receipts pretending that these actions were
+performed by the original helper.
+
+The original dependency map includes the generated `metrics.h5` payload from
+each genuine embryo-metric producer, bound to its separately committed
+`metrics_h5_sha256`. The metadata's input closure alone does not contain that
+generated file. The helper streams and verifies the actual sibling payload
+before the legacy public context bridge consumes it.
+
+## Resource and publication contract
+
+Every action uses a fresh output directory. The inner cap is900 seconds,
+supervisor cap950 seconds, process RSS4GiB, available host RAM floor4GiB and
+free disk floor20GiB. Scientific/native numeric working arrays retain their
+200MiB cap. CPU threads remain1 and CUDA is hidden. There is one heavy process
+at a time. No stage raises a cap, removes a scientific gate or invents a
+legacy pilot origin. The actual five-cell native importer remains within its
+original48-cell interface.
+
+The helper admits wall/RAM/disk/RSS before reading or compiling a dependency.
+It executes the original study helper from the exact already-hash-verified
+buffer and separately binds its own source and these instructions. Before
+scientific imports and at final seal it validates the complete original frozen
+script/native source membership and byte map. Adding a tracked script later
+requires a new original study attempt; old receipts are preserved. File hashes
+stream in chunks at most1MiB. Metadata reads have a32MiB limit and reject
+duplicate JSON keys and nonfinite constants. Consumed references use strict
+integer byte counts and canonical absolute paths.
+
+A follow-on `summary.json` is valid only after marker fsync and final checks of
+all consumed/generated/source bytes. Creation, fsync and these checks share
+the failure boundary. A failed stage preserves its generated public outputs,
+invalidates any top completion marker as `invalid-summary*.json`, writes and
+fsyncs `failure.json`, and exits unsuccessfully. Consumers require the top
+completed stage with the identical follow-on freeze. This is a cooperative
+local-writer contract, not a claim of crash durability or protection against
+arbitrary same-user mutations outside the before/after attestation boundary.
+
+## Execute each stage under the unchanged supervisor
+
+Choose new paths for every attempt. These variables are placeholders; bind
+actual paths only after the final source/reviews freeze. `D` is the original
+study root containing `03-score-human` and `03-score-mouse`; `A` is a fresh
+follow-on root. `C` and `H` are the two separately source-bound ignored helpers.
+
+```bash
+D=runs/b3_feasibility/20261004/eligible_paged_prefix_attempt01
+A=runs/b3_feasibility/20261004/eligible_paged_prefix_acceptance01
+C=runs/b3_feasibility/20261004/eligible_paged_prefix_tools/study_eligible_paged_prefix.py
+H=runs/b3_feasibility/20261004/eligible_paged_prefix_tools/continue_eligible_paged_prefix.py
+```
+
+Wrap **every** original or follow-on action separately. The supervisor creates
+its new run directory before GNU time opens its receipt. For example:
+
+```bash
+.venv/bin/python scripts/supervise_b3_pilot.py \
+  --run-dir "$A/supervise-00-freeze" \
+  --max-wall-seconds 950 --max-rss-gib 4 \
+  --min-host-ram-gib 4 --min-disk-gib 20 \
+  -- /usr/bin/time -v -o "$A/supervise-00-freeze/gnu-time.txt" \
+  .venv/bin/python "$H" freeze --output "$A/00-freeze" \
+  --max-seconds 900 --c-freeze-dir "$D/00-freeze" \
+  --material-dir "$D/01-material" --compare-dir "$D/04-compare" \
+  --human-native-dir "$D/07-native-human" --mouse-native-dir "$D/07-native-mouse" \
+  --human-catalog-dir "$D/08-native-catalog-human" --mouse-catalog-dir "$D/08-native-catalog-mouse" \
+  --human-cold-dir "$D/09-cache-human-cold" --human-warm-dir "$D/10-cache-human-warm" \
+  --mouse-cold-dir "$D/09-cache-mouse-cold" --mouse-warm-dir "$D/10-cache-mouse-warm"
+```
+
+Use the same wrapper for each action below, replacing both supervisor/output
+directories with new names. All follow-on actions after freeze receive
+`--acceptance-freeze-dir "$A/00-freeze" --max-seconds 900`.
+
+| Stage | Action and additional arguments |
+| --- | --- |
+| `01-partial-catalog` | `partial-catalog` |
+| `02-prefix-prepare` | `prepare --catalog-dir "$A/01-partial-catalog"` |
+| `03-prefix-execution` | `diagnostic-execution --prepare-dir "$A/02-prefix-prepare"` |
+| `04-prefix-replay` | `diagnostic-replay --prepare-dir "$A/02-prefix-prepare" --execution-dir "$A/03-prefix-execution"` |
+| `05-unit-human` | `unit-control --species human` |
+| `06-unit-mouse` | `unit-control --species mouse` |
+| `07-qualify` | `qualify --prefix-prepare-dir "$A/02-prefix-prepare" --prefix-execution-dir "$A/03-prefix-execution" --prefix-replay-dir "$A/04-prefix-replay" --human-unit-dir "$A/05-unit-human" --mouse-unit-dir "$A/06-unit-mouse"` |
+
+The genuine partial catalog contains only the original0:8 cache from each
+source. The public prepare result must be
+`unavailable_incomplete_fixed_family_catalog`, while the original observed
+comparison and fixed family remain verified. Diagnostic execution and replay
+request exactly draw0:1. Replay freshly rebuilds the two native blocks and
+compares physical/query witnesses. The missing fixed genes withhold rho and
+inference; the diagnostic does not permit production on a selected subset.
+
+`unit-control` uses the unchanged public `replay_b3_sparse_null.run` with
+source-bound unit weights, the genuine original v1 index/metrics and all five
+physical embryos. It queries eight focal genes while retaining all502 genes
+and peer metrics. In a source-pinned private module namespace, timing wrappers
+call the original metric, bin and weighted-row functions with their arguments
+and returns unchanged. This instrumentation is declared by this helper's own
+source binding. It does not alter an original source byte or shared module.
+The frozen native run invokes the metric kernel twice: first to reconcile
+unit metrics with the preflight, then for the requested query. Both calls are
+measured separately, with their distinct scopes and exact invocation counts.
+Fresh original `load_bundle`/`weighted_metrics`/`score_bounded_measured_zero`
+replay verifies the eight rows: metrics/bins/counts/reasons exact, impact/null
+terms within absolute1e-12 and score within1e-10, with finite numeric checks.
+These16 rows establish legitimate prefix unit parity and observed query costs;
+they do not claim the application's full fixed-family unit control.
+
+## Measured cost qualification
+
+`cost-gate.json` separately records actual complete public-return measurements
+and projections. It multiplies the larger human cold/warm complete cost and
+the larger mouse cold/warm complete cost by63. Complete per-block public
+native calls include proof/catalog/CSR/support admission, arithmetic, source
+hashes, cache serialization, final source checks and publication. No partial
+statistics timer substitutes for that measurement.
+
+For queries, shared plan/source admission, metric loading, metric calculation
+and bin construction stay once. Measured physical admission, cache loading,
+weighted rows, serialization and replay physical comparison scale63. The
+measured unit metric reconciliation and requested metric/bin kernels each stay
+once; unit row kernels and an
+additional cache/serialization allowance scale63. Prefix final-seal residual
+stays once. Full prepare uses observed prefix prepare plus a conservative
+physical-admission proxy for its additional blocks. Each projected action
+reserves at least60 seconds or25% of that projection, whichever is larger.
+These are engineering headroom choices and do not change scientific rules.
+
+The forecast can permit a **bounded attempt only**. Focal-specific query work,
+fullcatalog admission, source/control overhead and final-seal scaling remain
+unmeasured until actual complete public returns. An action also refuses when
+its recorded estimate exceeds the current stage's remaining900-second budget.
+`whole_method_fit_established` remains false even if every prefix action fits.
+If any estimate including headroom exceeds900 seconds, `qualify` records the
+refusal; no full-native or production action is launched. The next dependency
+is a separately versioned common-source native preparation/replay session,
+with a new producer/cache contract and genuine independent reconstruction.
+
+If qualification permits an attempt, execute these **separate** supervised
+stages. No action is successful until the public calls return and the helper's
+final seal succeeds.
+
+| Stage | Action and additional arguments |
+| --- | --- |
+| `08-build-full` | `build-full --qualify-dir "$A/07-qualify"` |
+| `09-full-catalog` | `full-catalog --block-dir "$A/08-build-full"` |
+| `10-full-prepare` | `prepare --catalog-dir "$A/09-full-catalog" --qualify-dir "$A/07-qualify"` |
+| `11-execute-one` | `execute --prepare-dir "$A/10-full-prepare" --qualify-dir "$A/07-qualify"` |
+| `12-replay-one` | `replay --prepare-dir "$A/10-full-prepare" --execution-dir "$A/11-execute-one" --qualify-dir "$A/07-qualify"` |
+
+`build-full` performs all126 original independent public producer calls in one
+900-second stage. Each source has63 width-at-most8 blocks spanning all502
+genes; the final block is496:502. It creates genuine original three-file cache
+outputs and immutable requests, changing only focal start/stop. No completed
+marker is published for a partial build. The full block catalog requires all
+126 unique disjoint partitions and retains exact original source/import/index
+meanings. Genuine public full prepare must independently establish
+`prepared_complete_fixed_family_catalog` from the fresh original comparison;
+its status is never hand-written.
+
+Public `execute` requests one genuine eligible draw0:1, full fixed-family unit
+control and fresh126-block native reconstruction. Public `replay` consumes the
+actual execution receipt and independently performs another126 native physical
+rebuilds before query/draw parity. No original execution cache can substitute
+for independent replay. Both retain literal seed20260930, source order,
+physical embryo sampling and all frozen score/null/bin rules. A completed
+one-draw prefix is not2000-draw production, the required1900-valid inference,
+likelihood-effect attestation, project checkpoint validation or full-cohort
+scientific readiness. No finalizer is called for this prefix.
+
+## Cost and artifact interpretation
+
+The follow-on public-call timer starts immediately before the public function
+and stops after it returns, including that function's publication and source
+seals. Module imports and the study's own input admission/seal are additional
+costs recorded by the external GNU time `-v` receipt. The helper's
+`elapsed_before_final_seal_seconds` excludes its final marker/byte checks.
+Supervisor `elapsed_seconds` can be a last heartbeat, so it must not stand in
+for completed child wall cost. Every attempt keeps its separate GNU receipt,
+supervisor state, stdout/stderr and failed/complete top-level study receipt.
+
+New handoffs use these helper-owned schemas:
+`b3_eligible_paged_prefix_acceptance_freeze_v1`,
+`b3_eligible_paged_prefix_acceptance_stage_v1`, and
+`b3_eligible_paged_prefix_acceptance_cost_gate_v1`. They bind the original C
+receipt files and this distinct helper rather than claiming original C or
+original scientific producers emitted these study envelopes. Public nested
+outputs keep their real producer schemas.
+
+Ticket05's whole-method cost, full-context source/application bridge, complete
+production and independent final replay, effect attestation and scientific
+reporting gates remain open. Zebrafish remains excluded. A failure or projected
+refusal names the next bounded engineering dependency and preserves all
+original inputs and attempts.

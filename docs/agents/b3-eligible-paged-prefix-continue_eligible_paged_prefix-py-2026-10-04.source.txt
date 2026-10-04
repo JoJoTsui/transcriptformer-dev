@@ -1,0 +1,877 @@
+#!/usr/bin/env python
+"""Ignored, cost-gated public acceptance stages for the declared toy fixture."""
+
+from __future__ import annotations
+
+import argparse
+from datetime import datetime, timezone
+from hashlib import sha256
+import json
+from math import isclose, isfinite
+import os
+from pathlib import Path
+import resource
+import shutil
+import stat
+import sys
+import time
+from types import ModuleType
+
+for _variable in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+    os.environ[_variable] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+
+ROOT = Path(__file__).resolve().parents[4]
+OWN = Path(__file__).resolve()
+README = OWN.with_name("FOLLOWON.md")
+ORIGINAL = OWN.with_name("study_eligible_paged_prefix.py")
+ORIGINAL_SHA256 = "9c459d1eadc865fd91ff74e92b15c828a0905ae6afe6a1797ff99b4d469b290d"
+APP = ROOT / "scripts/bootstrap_b3_paged_native.py"
+MIB, GIB = 1024**2, 1024**3
+GENES, CELLS, EMBRYOS, WIDTH, BLOCKS_PER_SOURCE = 502, 5, 5, 8, 63
+FREEZE_SCHEMA = "b3_eligible_paged_prefix_acceptance_freeze_v1"
+STAGE_SCHEMA = "b3_eligible_paged_prefix_acceptance_stage_v1"
+GATE_SCHEMA = "b3_eligible_paged_prefix_acceptance_cost_gate_v1"
+NEXT_DEPENDENCY = (
+    "Separately versioned common-source native preparation and independent replay sessions; "
+    "keep the original producer/cache meanings, source seals, numerical rules and resource caps."
+)
+ROLE_ACTIONS = {
+    "material": "material", "compare": "compare",
+    "human_native": "native-import", "mouse_native": "native-import",
+    "human_catalog": "native-catalog", "mouse_catalog": "native-catalog",
+    "human_cold": "cache-measure", "human_warm": "cache-measure",
+    "mouse_cold": "cache-measure", "mouse_warm": "cache-measure",
+}
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+
+
+def strict_json(data):
+    def unique(pairs):
+        result = {}
+        for key, item in pairs:
+            if key in result:
+                raise ValueError("Duplicate acceptance JSON key")
+            result[key] = item
+        return result
+
+    def invalid(value):
+        raise ValueError("Nonfinite acceptance JSON constant: " + value)
+
+    value = json.loads(data, object_pairs_hook=unique, parse_constant=invalid)
+    if not isinstance(value, dict):
+        raise ValueError("Acceptance JSON requires an object")
+    return value
+
+
+def checked_ref(value):
+    if (
+        not isinstance(value, dict) or set(value) != {"path", "sha256", "bytes"}
+        or type(value.get("bytes")) is not int or not 0 <= value["bytes"] < 2**63
+        or not isinstance(value.get("sha256"), str) or len(value["sha256"]) != 64
+        or any(c not in "0123456789abcdef" for c in value["sha256"])
+        or not isinstance(value.get("path"), str) or not value["path"]
+        or len(value["path"]) > 4096 or value["path"] != value["path"].strip()
+        or any(c in value["path"] for c in "\x00\r\n")
+        or not Path(value["path"]).is_absolute()
+        or str(Path(value["path"]).resolve()) != value["path"]
+    ):
+        raise ValueError("Require a canonical closed path/SHA256/strict byte reference")
+    return value
+
+
+class Budget:
+    """Local stdlib admission precedes executing either source-bound helper."""
+
+    def __init__(self, parent, seconds):
+        if type(seconds) not in (int, float) or not isfinite(seconds) or not 0 < seconds <= 900:
+            raise ValueError("Acceptance stage wall cap must be positive and at most 900 seconds")
+        self.parent, self.seconds, self.began = Path(parent), seconds, time.monotonic()
+        self.last_check = float("-inf")
+        self.check()
+
+    def check(self):
+        now = time.monotonic()
+        if now - self.began >= self.seconds:
+            raise TimeoutError("Acceptance stage wall cap exceeded")
+        if now - self.last_check < 0.1:
+            return
+        if resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 > 4 * GIB:
+            raise RuntimeError("Acceptance stage exceeds 4 GiB process RSS")
+        available = next((int(line.split()[1]) * 1024 for line in Path("/proc/meminfo").read_text().splitlines()
+                          if line.startswith("MemAvailable:")), 0)
+        if available < 4 * GIB:
+            raise RuntimeError("Acceptance stage requires 4 GiB available host RAM")
+        if shutil.disk_usage(self.parent).free < 20 * GIB:
+            raise RuntimeError("Acceptance stage requires 20 GiB free disk")
+        self.last_check = now
+
+    def remaining(self):
+        self.check()
+        return self.seconds - (time.monotonic() - self.began)
+
+
+def read_bytes(path, budget, *, limit=None, expected=None, retain=False):
+    path = Path(path).resolve()
+    budget.check()
+    before = path.lstat()
+    if not stat.S_ISREG(before.st_mode) or (limit is not None and before.st_size > limit):
+        raise ValueError("Acceptance source is not a regular bounded file")
+    digest, count, pieces = sha256(), 0, []
+    with path.open("rb") as stream:
+        opened = os.fstat(stream.fileno())
+        if (opened.st_dev, opened.st_ino) != (before.st_dev, before.st_ino):
+            raise ValueError("Acceptance source changed before opening")
+        while block := stream.read(MIB):
+            budget.check()
+            count += len(block)
+            if limit is not None and count > limit:
+                raise ValueError("Acceptance source grew beyond its metadata cap")
+            digest.update(block)
+            if retain:
+                pieces.append(block)
+    after = path.lstat()
+    if (before.st_dev, before.st_ino, before.st_size) != (after.st_dev, after.st_ino, after.st_size) or count != before.st_size:
+        raise ValueError("Acceptance source changed while reading")
+    ref = {"path": str(path), "sha256": digest.hexdigest(), "bytes": count}
+    if expected is not None and canonical(ref) != canonical(checked_ref(expected)):
+        raise ValueError("Acceptance source differs from its bound bytes")
+    return ref, b"".join(pieces) if retain else None
+
+
+def reference(path, budget):
+    return read_bytes(path, budget)[0]
+
+
+def load_pinned(path, budget, expected=None):
+    ref, data = read_bytes(path, budget, limit=32 * MIB, expected=expected, retain=True)
+    return ref, strict_json(data)
+
+
+def compile_pinned(path, expected, budget, name):
+    ref, source = read_bytes(path, budget, limit=2 * MIB, expected=expected, retain=True)
+    module = ModuleType(name)
+    module.__file__ = ref["path"]
+    sys.modules[name] = module
+    exec(compile(source, ref["path"], "exec"), module.__dict__)
+    return module
+
+
+def numeric(value, label):
+    if type(value) not in (int, float) or not isfinite(value) or value < 0:
+        raise ValueError("Require a finite nonnegative measured " + label)
+    return float(value)
+
+
+class Stage:
+    def __init__(self, args):
+        self.args = args
+        self.output = Path(args.output).resolve()
+        if os.path.lexists(self.output):
+            raise FileExistsError(self.output)
+        self.output.parent.mkdir(parents=True, exist_ok=True)
+        self.budget = Budget(self.output.parent, args.max_seconds)
+        self.inputs, self.outputs, self.details = {}, {}, {}
+        self.binding, self.prerequisites, self.c_freeze = None, {}, None
+        original_ref = reference(ORIGINAL, self.budget)
+        if original_ref["sha256"] != ORIGINAL_SHA256:
+            raise ValueError("The original ignored fixture producer changed")
+        self.original = compile_pinned(ORIGINAL, original_ref, self.budget, "_eligible_prefix_original")
+        self.inputs[original_ref["path"]] = original_ref
+        self.output.mkdir()
+
+    def bind(self, ref):
+        checked_ref(ref)
+        previous = self.inputs.get(ref["path"])
+        if previous is not None:
+            if canonical(previous) != canonical(ref):
+                raise ValueError("Acceptance input has conflicting byte identities")
+            return ref
+        read_bytes(ref["path"], self.budget, expected=ref)
+        self.inputs[ref["path"]] = ref
+        return ref
+
+    def read(self, ref):
+        checked_ref(ref)
+        actual, value = load_pinned(ref["path"], self.budget, ref)
+        self.bind(actual)
+        return value
+
+    def write(self, name, value):
+        data = canonical(value) + b"\n"
+        if len(data) > 32 * MIB:
+            raise ValueError("Acceptance output metadata exceeds 32 MiB")
+        path = self.output / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("xb") as stream:
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        self.budget.check()
+        return reference(path, self.budget)
+
+    def c_stage(self, summary_ref, action):
+        receipt = self.read(summary_ref)
+        if (
+            receipt.get("schema") != self.original.STAGE_SCHEMA or receipt.get("status") != "complete"
+            or receipt.get("action") != action or receipt.get("synthetic_fixture_only") is not True
+            or canonical(receipt.get("freeze")) != canonical(self.c_freeze_ref)
+        ):
+            raise ValueError("Require a genuine completed original stage with the same C software freeze")
+        for ref in receipt["generated_files"]:
+            self.bind(ref)
+        for ref in receipt["inputs"]:
+            self.bind(ref)
+        return receipt
+
+    def initialize(self):
+        directory = Path(self.args.acceptance_freeze_dir).resolve()
+        summary_ref = reference(directory / "summary.json", self.budget)
+        receipt = self.read(summary_ref)
+        if receipt.get("schema") != STAGE_SCHEMA or receipt.get("action") != "freeze" or receipt.get("status") != "complete":
+            raise ValueError("Require a completed follow-on acceptance freeze")
+        binding_ref = reference(directory / "binding.json", self.budget)
+        if canonical(receipt["outputs"]["binding"]) != canonical(binding_ref):
+            raise ValueError("Follow-on freeze does not bind its actual binding file")
+        self.binding_ref = self.bind(binding_ref)
+        self.binding = self.read(binding_ref)
+        if self.binding.get("schema") != FREEZE_SCHEMA or self.binding.get("synthetic_fixture_only") is not True:
+            raise ValueError("Require the declared synthetic acceptance binding")
+        self.bind(self.binding["acceptance_helper_source"])
+        self.bind(self.binding["acceptance_instructions"])
+        if self.binding["acceptance_helper_source"]["path"] != str(OWN) or self.binding["acceptance_instructions"]["path"] != str(README):
+            raise ValueError("Follow-on source binding refers to a different helper")
+        self.c_freeze_ref = self.bind(self.binding["original_software_freeze"])
+        self.c_freeze = self.read(self.c_freeze_ref)
+        self.original.verify_freeze(self.c_freeze, self.budget)
+        if self.c_freeze["external_model_fixture_source"]["sha256"] != ORIGINAL_SHA256:
+            raise ValueError("Acceptance cannot substitute another original fixture source")
+        if set(self.binding["prerequisites"]) != set(ROLE_ACTIONS):
+            raise ValueError("Follow-on acceptance prerequisites are incomplete")
+        self.prerequisites = {
+            role: self.c_stage(ref, ROLE_ACTIONS[role]) for role, ref in self.binding["prerequisites"].items()
+        }
+        validate_fixture(self)
+
+    def previous(self, directory, actions):
+        ref = reference(Path(directory).resolve() / "summary.json", self.budget)
+        receipt = self.read(ref)
+        if (
+            receipt.get("schema") != STAGE_SCHEMA or receipt.get("status") != "complete"
+            or receipt.get("action") not in actions
+            or canonical(receipt.get("acceptance_freeze")) != canonical(self.binding_ref)
+        ):
+            raise ValueError("Require a completed follow-on stage with the same acceptance binding")
+        for item in [*receipt["inputs"], *receipt["generated_files"]]:
+            self.bind(item)
+        return ref, receipt
+
+    def consumer_map(self, software):
+        expected = self.c_freeze["repo_source_file_sha256"]
+        return {str(path.resolve()): expected[str(path.resolve())] for path in software}
+
+    def module(self, relative, name):
+        path = (ROOT / relative).resolve()
+        digest = self.c_freeze["repo_source_file_sha256"][str(path)]
+        ref = {"path": str(path), "sha256": digest, "bytes": path.stat().st_size}
+        self.bind(ref)
+        self.original.verify_freeze(self.c_freeze, self.budget)
+        return compile_pinned(path, ref, self.budget, name)
+
+    def public_app(self, action, fields):
+        module = self.module("scripts/bootstrap_b3_paged_native.py", "_eligible_prefix_application")
+        request = self.write("request.json", {
+            "schema": f"b3_paged_native_bootstrap_{action}_request_v2",
+            "consumer_file_sha256": self.consumer_map(module.SOFTWARE), **fields,
+        })
+        self.bind(request)
+        began = time.monotonic()
+        result = getattr(module, action)(Path(request["path"]), self.output / "application", max_seconds=self.budget.remaining())
+        elapsed = time.monotonic() - began
+        self.budget.check()
+        if (
+            result.get("native_arithmetic_replay_verified") is not False
+            or result.get("native_likelihood_effects_attested") is not False
+            or result.get("scientific_readiness") != "unavailable" or result.get("interval") is not None
+            or result.get("model_forwards_performed") is not False or result.get("checkpoint_tensors_loaded") is not False
+        ):
+            raise ValueError("A bounded toy prefix must retain the whole-method and scientific vetoes")
+        self.outputs.update(request=request, public_summary=reference(self.output / "application/summary.json", self.budget))
+        self.details.update(public_run_complete_seconds=elapsed, public_run_timing_scope=(
+            "Immediately before the unchanged public function through return after publication and final source seals; "
+            "the external GNU receipt additionally includes this helper's admission, imports and final seal."),
+            public_result=result)
+        return result
+
+    def invalidate(self):
+        marker = self.output / "summary.json"
+        if os.path.lexists(marker):
+            destination = self.output / "invalid-summary.json"
+            number = 1
+            while os.path.lexists(destination):
+                destination = self.output / f"invalid-summary-{number}.json"
+                number += 1
+            marker.rename(destination)
+
+    def verify(self):
+        if self.c_freeze is not None:
+            self.original.verify_freeze(self.c_freeze, self.budget)
+        for ref in self.inputs.values():
+            read_bytes(ref["path"], self.budget, expected=ref)
+
+    def seal(self):
+        self.verify()
+        generated = [reference(path, self.budget) for path in sorted(self.output.rglob("*")) if path.is_file()]
+        value = {
+            "schema": STAGE_SCHEMA, "action": self.args.action, "status": "complete",
+            "acceptance_freeze": None if self.args.action == "freeze" else self.binding_ref,
+            "acceptance_helper_source": reference(OWN, self.budget),
+            "original_fixture_producer": reference(ORIGINAL, self.budget),
+            "inputs": list(self.inputs.values()), "generated_files": generated,
+            "outputs": self.outputs, "details": self.details,
+            "synthetic_fixture_only": True, "project_checkpoint_used": False,
+            "model_forwards_performed": False, "checkpoint_tensors_loaded": False,
+            "biological_orthology_claim": False, "native_likelihood_effects_attested": False,
+            "native_arithmetic_replay_verified": False, "scientific_readiness": "unavailable", "interval": None,
+            "whole_method_fit_established": False, "production_draws_requested": 1 if self.args.action in {"execute", "replay"} else 0,
+            "elapsed_before_final_seal_seconds": time.monotonic() - self.budget.began,
+            "peak_process_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+            "created_utc": datetime.now(timezone.utc).isoformat(),
+        }
+        try:
+            marker_ref = self.write("summary.json", value)
+            self.verify()
+            for ref in [*generated, marker_ref]:
+                read_bytes(ref["path"], self.budget, expected=ref)
+            self.budget.check()
+        except BaseException:
+            self.invalidate()
+            raise
+        return value
+
+
+def validate_fixture(stage):
+    material = stage.prerequisites["material"]["outputs"]
+    family = stage.read(material["family"])
+    comparison = stage.read(stage.prerequisites["compare"]["outputs"]["comparison"])
+    profile = stage.c_freeze["fixture"]
+    if (
+        profile.get("genes_per_species") != GENES or type(profile.get("genes_per_species")) is not int
+        or profile.get("cells_per_species") != CELLS or type(profile.get("cells_per_species")) is not int
+        or profile.get("physical_embryos_per_species") != EMBRYOS or type(profile.get("physical_embryos_per_species")) is not int
+        or profile.get("genome_wide_unique_synthetic_pairs") != 5000 or type(profile.get("genome_wide_unique_synthetic_pairs")) is not int
+        or profile.get("unmeasured_out_of_vocabulary_background_pairs") != 4498 or type(profile.get("unmeasured_out_of_vocabulary_background_pairs")) is not int
+        or profile.get("biological_orthology_claim") is not False
+        or len(family["comparisons"]) != 1
+        or {family["comparisons"][0]["bundle_a"], family["comparisons"][0]["bundle_b"]} != set(material["bundles"].values())
+        or comparison.get("status") != "reportable_descriptive"
+        or any(type(comparison.get(k)) is not int for k in ("n_full_universe_paired_scores", "n_vocabulary_joined_pairs", "n_embryos_a", "n_embryos_b"))
+        or not 500 <= comparison["n_full_universe_paired_scores"] <= GENES
+        or comparison["n_vocabulary_joined_pairs"] != GENES
+        or comparison["n_full_universe_paired_scores"] / GENES < 0.8
+        or min(comparison["n_embryos_a"], comparison["n_embryos_b"]) < EMBRYOS
+    ):
+        raise ValueError("The actual original comparator did not establish the declared eligible toy family")
+    for species in ("human", "mouse"):
+        native = stage.prerequisites[species + "_native"]["outputs"]
+        catalog = stage.prerequisites[species + "_catalog"]["outputs"]
+        plan = stage.read(native["plan"])
+        if (
+            native["bundle"] != material["bundles"][species] or catalog["original_bundle"] != native["bundle"]
+            or plan.get("n_cells") != CELLS or type(plan.get("n_cells")) is not int
+            or plan.get("n_frozen_genes") != GENES or type(plan.get("n_frozen_genes")) is not int
+            or canonical(catalog["original_imported_provenance"]) != canonical(native["imported_provenance"])
+        ):
+            raise ValueError("Original source key or genuine five-cell native handoff differs")
+        cache_metadata = []
+        for temperature in ("cold", "warm"):
+            receipt = stage.prerequisites[species + "_" + temperature]
+            outputs = receipt["outputs"]
+            if canonical(outputs["native_cache_request"]) != canonical(catalog["native_cache_request"]):
+                raise ValueError("Cold/warm cache measurements require the exact original request")
+            numeric(receipt["details"]["public_run_complete_seconds"], "native public return cost")
+            request = stage.read(outputs["native_cache_request"])
+            if any(type(request.get(k)) is not int for k in ("focal_start", "focal_stop")) or (request["focal_start"], request["focal_stop"]) != (0, WIDTH):
+                raise ValueError("Representative measurements must be the genuine 0:8 requests")
+            cache_metadata.append(stage.read(outputs["metadata"]))
+        if (cache_metadata[0]["cache_key_sha256"] != cache_metadata[1]["cache_key_sha256"]
+                or canonical(cache_metadata[0]["arrays"]) != canonical(cache_metadata[1]["arrays"])):
+            raise ValueError("Cold/warm physical array manifests differ")
+    stage.details.update(actual_finite_pairs=comparison["n_full_universe_paired_scores"], joined_pairs=GENES,
+                         physical_embryos=[comparison["n_embryos_a"], comparison["n_embryos_b"]],
+                         fixture_scope="502 measured/checkpoint genes, 5000 synthetic mappings including 4498 absent background pairs; five complete physical embryos; toy checkpoint only")
+
+
+def freeze(stage):
+    directory = Path(stage.args.c_freeze_dir).resolve()
+    receipt_ref = reference(directory / "summary.json", stage.budget)
+    receipt = stage.read(receipt_ref)
+    if receipt.get("schema") != stage.original.STAGE_SCHEMA or receipt.get("status") != "complete" or receipt.get("action") != "freeze":
+        raise ValueError("Require the completed final reviewed original C freeze")
+    stage.c_freeze_ref = stage.bind(receipt["outputs"]["binding"])
+    if stage.c_freeze_ref["path"] != str(directory / "binding.json"):
+        raise ValueError("C software binding must be its actual original sibling")
+    stage.c_freeze = stage.read(stage.c_freeze_ref)
+    stage.original.verify_freeze(stage.c_freeze, stage.budget)
+    prerefs = {}
+    for role, action in ROLE_ACTIONS.items():
+        directory = getattr(stage.args, role + "_dir")
+        if directory is None:
+            raise ValueError("Missing measured original prerequisite: " + role)
+        ref = reference(Path(directory).resolve() / "summary.json", stage.budget)
+        prerefs[role] = stage.bind(ref)
+        stage.prerequisites[role] = stage.c_stage(ref, action)
+    validate_fixture(stage)
+    binding = {
+        "schema": FREEZE_SCHEMA, "synthetic_fixture_only": True,
+        "acceptance_helper_source": reference(OWN, stage.budget),
+        "acceptance_instructions": reference(README, stage.budget),
+        "original_fixture_producer": reference(ORIGINAL, stage.budget),
+        "original_software_freeze": stage.c_freeze_ref,
+        "reviewed_application": stage.c_freeze["reviewed_application"], "prerequisites": prerefs,
+        "cost_rule": "Actual source-bound complete costs, then conservative extrapolation/headroom permits only a bounded attempt; only completed public returns establish fit.",
+        "max_inner_stage_seconds": 900, "max_outer_supervisor_seconds": 950,
+        "numeric_working_cap_bytes": 200 * MIB, "rss_cap_bytes": 4 * GIB,
+        "host_ram_floor_bytes": 4 * GIB, "disk_free_floor_bytes": 20 * GIB,
+    }
+    stage.bind(binding["acceptance_helper_source"])
+    stage.bind(binding["acceptance_instructions"])
+    stage.outputs["binding"] = stage.write("binding.json", binding)
+
+
+def source_and_observed(stage):
+    material = stage.prerequisites["material"]["outputs"]
+    family = stage.read(material["family"])
+    rows = []
+    for species in ("human", "mouse"):
+        native = stage.prerequisites[species + "_native"]["outputs"]
+        catalog = stage.prerequisites[species + "_catalog"]["outputs"]
+        imported = stage.read(native["imported_provenance"])
+        dependencies = {}
+
+        def merge(mapping):
+            if not isinstance(mapping, dict) or len(mapping) > 8192:
+                raise ValueError("Original dependency closure is not bounded")
+            for path, digest in mapping.items():
+                ref = {"path": path, "sha256": digest, "bytes": Path(path).stat().st_size}
+                stage.bind(ref)
+                if path in dependencies and dependencies[path] != digest:
+                    raise ValueError("Original dependency closures conflict")
+                dependencies[path] = digest
+
+        index = stage.read(native["index_metadata"])
+        metrics = stage.read(native["embryo_metrics_metadata"])
+        merge(index["verified_input_file_sha256"])
+        merge(metrics["verified_input_file_sha256"])
+        # The v1 metric closure records producer inputs. Its generated payload
+        # has a separate committed hash and must also be available to the
+        # original capped bridge's public context reader.
+        merge({str((Path(native["embryo_metrics_metadata"]["path"]).parent / "metrics.h5").resolve()): metrics["metrics_h5_sha256"]})
+        merge(imported["software_file_sha256"])
+        # The original capped bridge requires the actual v1 index metadata,
+        # independently of the new producer's direct-array source contract.
+        merge({ref["path"]: ref["sha256"] for ref in (native["index_metadata"], native["embryo_metrics_metadata"], native["imported_provenance"])})
+        bundle = Path(native["bundle"])
+        provenance_ref = reference(bundle / "provenance.json", stage.budget)
+        provenance = stage.read(provenance_ref)
+        merge(provenance["software_file_sha256"])
+        merge({provenance[key + "_path"]: provenance[key + "_sha256"]
+               for key in ("config", "preflight", "paired_preflight", "ortholog_table", "resource_probe")})
+        merge({provenance["bootstrap_family_path"]: provenance["bootstrap_family_file_sha256"]})
+        merge({row["path"]: row["sha256"] for row in provenance["prepared_sources"]})
+        config = stage.read({"path": provenance["config_path"], "sha256": provenance["config_sha256"],
+                             "bytes": Path(provenance["config_path"]).stat().st_size})
+        merge({str(Path(config[key]).resolve()): provenance[key + "_sha256"]
+               for key in ("manifest", "prepared_report", "gene_vocabulary", "aux_vocabulary")})
+        merge({str(Path(config["checkpoint"]).resolve() / name): provenance[field]
+               for name, field in (("config.json", "checkpoint_config_sha256"), ("model_weights.pt", "checkpoint_weights_sha256"))})
+        if len(dependencies) > 8192:
+            raise ValueError("Combined original dependency closure exceeds 8192 entries")
+        rows.append({
+            "source_key": native["bundle"], "native_request": catalog["native_cache_request"],
+            "original_bundle_file_sha256": imported["pilot_bundle_file_sha256"],
+            "original_dependency_file_sha256": dict(sorted(dependencies.items())),
+            "pilot_import_bridge": native["imported_provenance"],
+        })
+    rows.sort(key=lambda row: row["source_key"])
+    observed = stage.prerequisites["compare"]["outputs"]
+    return {
+        "family": material["family"], "family_sha256": sha256(canonical(family)).hexdigest(),
+        "source_catalog": stage.write("sources.json", {"schema": "b3_paged_native_bootstrap_sources_v2", "sources": rows}),
+        "observed_catalog": stage.write("observed.json", {
+            "schema": "b3_paged_native_bootstrap_observed_v2",
+            "comparisons": [{"comparison_id": family["comparisons"][0]["comparison_id"],
+                             "comparison": observed["comparison"], "coverage": observed["coverage"]}],
+        }),
+    }
+
+
+def write_blocks(stage, blocks):
+    blocks.sort(key=lambda row: (row["source_key"], row["start"]))
+    pages = []
+    for index, first in enumerate(range(0, len(blocks), 128)):
+        stop = min(len(blocks), first + 128)
+        ref = stage.write(f"block-page-{index:06d}.json", {
+            "schema": "b3_paged_native_bootstrap_block_page_v2", "index": index,
+            "start": first, "stop": stop, "blocks": blocks[first:stop],
+        })
+        pages.append({"index": index, "start": first, "stop": stop, "file": ref})
+    return stage.write("blocks.json", {
+        "schema": "b3_paged_native_bootstrap_blocks_v2", "n_blocks": len(blocks), "page_size": 128, "pages": pages,
+    })
+
+
+def partial_catalog(stage):
+    blocks = []
+    for species in ("human", "mouse"):
+        cache = stage.prerequisites[species + "_cold"]["outputs"]
+        key = stage.prerequisites[species + "_native"]["outputs"]["bundle"]
+        blocks.append({"source_key": key, "start": 0, "stop": WIDTH,
+                       "request": cache["native_cache_request"], "summary": cache["cache_summary"],
+                       "metadata": cache["metadata"], "statistics": cache["statistics"]})
+    stage.outputs.update(source_and_observed(stage), block_catalog=write_blocks(stage, blocks), complete_frozen_axis=False)
+
+
+def prepare(stage):
+    _, previous = stage.previous(stage.args.catalog_dir, {"partial-catalog", "full-catalog"})
+    if previous["action"] == "full-catalog":
+        require_gate(stage, "prepare_full")
+    fields = {key: previous["outputs"][key] for key in ("family", "family_sha256", "source_catalog", "observed_catalog", "block_catalog")}
+    result = stage.public_app("prepare", fields)
+    complete = previous["action"] == "full-catalog"
+    expected = "prepared_complete_fixed_family_catalog" if complete else "unavailable_incomplete_fixed_family_catalog"
+    if result["status"] != expected:
+        raise ValueError("The actual public preparation did not establish the expected catalog scope")
+    plan = stage.read(result["plan"])
+    if any(row["status"] != "bootstrap_eligible" or row["n_fixed_pairs"] < 500 for row in plan["scientific_plan"]["comparisons"]):
+        raise ValueError("The freshly prepared original observed family is not eligible")
+    stage.outputs.update(plan=result["plan"], complete_frozen_axis=complete)
+    stage.details.update(production_allowed=complete, full_2000_draws_completed=False)
+
+
+def artifact_catalog(stage, summary):
+    return stage.write("execution-catalog.json", {"schema": "b3_paged_native_bootstrap_artifacts_v2", "artifacts": [{"file": summary}]})
+
+
+def diagnostic(stage):
+    _, prepared = stage.previous(stage.args.prepare_dir, {"prepare"})
+    if prepared["outputs"]["complete_frozen_axis"] is not False:
+        raise ValueError("Cost-prefix diagnostic requires the genuinely incomplete 0:8 plan")
+    phase = "replay" if stage.args.action == "diagnostic-replay" else "execution"
+    execution_catalog = None
+    if phase == "replay":
+        _, execution = stage.previous(stage.args.execution_dir, {"diagnostic-execution"})
+        if canonical(execution["outputs"]["plan"]) != canonical(prepared["outputs"]["plan"]):
+            raise ValueError("Diagnostic execution/replay plans differ")
+        execution_catalog = artifact_catalog(stage, execution["outputs"]["public_summary"])
+    result = stage.public_app("diagnostic", {
+        "plan": prepared["outputs"]["plan"], "start": 0, "stop": 1,
+        "phase": phase, "execution_catalog": execution_catalog,
+    })
+    if (result["status"] != "unavailable_incomplete_fixed_family_catalog" or len(result["draws"]) != 1
+            or result["validation"]["score_blocks"] != 2):
+        raise ValueError("Diagnostic prefix output scope changed")
+    for reduction in result["draws"][0]["paired_reductions"].values():
+        if reduction.get("rho") is not None:
+            raise ValueError("Incomplete fixed-family prefix must not emit a selected-subset rho")
+    if phase == "replay" and (result["native_prefix_reconstruction_verified"] is not True or result["prefix_query_replay_verified"] is not True):
+        raise ValueError("Fresh public diagnostic reconstruction/query parity did not pass")
+    stage.outputs.update(plan=prepared["outputs"]["plan"], complete_frozen_axis=False)
+
+
+def unit_control(stage):
+    species = stage.args.species
+    native = stage.prerequisites[species + "_native"]["outputs"]
+    plan = stage.read(native["plan"])
+    if plan["n_cells"] > 48:
+        raise ValueError("The unchanged unit scorer's pilot seam cannot admit this source")
+    metrics_metadata = stage.read(native["embryo_metrics_metadata"])
+    embryos = metrics_metadata["embryo_ids"]
+    if len(embryos) != EMBRYOS or len(set(embryos)) != EMBRYOS:
+        raise ValueError("Unit control requires the declared five original physical embryos")
+    weights = {embryo: 1 for embryo in embryos}
+    engine = stage.module("scripts/replay_b3_sparse_null.py", "_eligible_prefix_unit_engine")
+    timers = {name: 0.0 for name in ("metrics", "bins", "weighted_rows")}
+    calls = {name: 0 for name in timers}
+    metric_call_seconds = []
+    for attribute, label in (("_weighted_metrics", "metrics"), ("build_expression_dropout_bins", "bins"), ("_weighted_rows", "weighted_rows")):
+        original = getattr(engine, attribute)
+
+        def measured(*args, _original=original, _label=label, **kwargs):
+            began = time.monotonic()
+            try:
+                return _original(*args, **kwargs)
+            finally:
+                seconds = time.monotonic() - began
+                timers[_label] += seconds
+                calls[_label] += 1
+                if _label == "metrics":
+                    metric_call_seconds.append(seconds)
+
+        setattr(engine, attribute, measured)
+    inputs = {"plan": native["plan"]["sha256"], "index_metadata": native["index_metadata"]["sha256"],
+              "embryo_metrics_metadata": native["embryo_metrics_metadata"]["sha256"]}
+    weights_request = stage.write("unit-weights.json", {"schema": engine.WEIGHTS_SCHEMA, "weights": weights, "inputs_sha256": inputs})
+    began = time.monotonic()
+    result = engine.run(
+        Path(native["plan"]["path"]), Path(native["index_metadata"]["path"]).parent,
+        Path(native["embryo_metrics_metadata"]["path"]).parent, stage.output / "native-unit.json", weights,
+        inputs_sha256={**inputs, "weights_request": weights_request["sha256"]}, start=0, stop=WIDTH,
+        max_seconds=stage.budget.remaining(), weights_request_path=Path(weights_request["path"]),
+    )
+    complete_seconds = time.monotonic() - began
+    if calls != {"metrics": 2, "bins": 1, "weighted_rows": 1} or len(metric_call_seconds) != 2:
+        raise ValueError("Unexpected native unit query invocation count")
+    # This source-bound private namespace adds timing wrappers only. The public
+    # run and all native/weighted arithmetic execute the original functions.
+    from transcriptformer.finetune.b3_measured_zero_bootstrap import load_bundle, weighted_metrics
+    from transcriptformer.finetune.b3_measured_zero_scores import score_bounded_measured_zero
+    stage.budget.check()
+    began = time.monotonic()
+    original_bundle = load_bundle(Path(native["bundle"]))
+    metrics = weighted_metrics(original_bundle, weights)
+    oracle = score_bounded_measured_zero(
+        positive_rows=original_bundle["rows"], cell_proofs=original_bundle["proofs"], metrics=metrics,
+        gene_ids=original_bundle["gene_ids"], _embryo_multiplicity=weights,
+        _focal_gene_ids=set(original_bundle["gene_ids"][:WIDTH]),
+    )
+    oracle_seconds = time.monotonic() - began
+    if canonical(metrics) != canonical(result["metrics"]) or canonical(oracle["bins"]) != canonical(result["bins"]):
+        raise ValueError("Complete peer metrics or original tie-preserving bins differ")
+    errors = {"metric_bits": 0.0, "score": 0.0}
+    exact = ("gene_id", "focal_scored_cells", "focal_scored_embryos", "candidate_peers", "matched_peers", "positive_contrast_peers", "unavailable_reason")
+    if len(result["rows"]) != WIDTH or len(oracle["gene_results"]) != WIDTH:
+        raise ValueError("Unit control must compare exactly eight focal rows")
+    for actual, expected in zip(result["rows"], oracle["gene_results"], strict=True):
+        if any(canonical(actual[key]) != canonical(expected[key]) for key in exact):
+            raise ValueError("Original unit row support/count/reason differs")
+        for key, other, tolerance, category in (
+            ("raw_impact_bits", "raw_impact_bits", 1e-12, "metric_bits"),
+            ("null_mean_impact_bits", "null_mean_impact_bits", 1e-12, "metric_bits"),
+            ("null_sample_sd_bits", "null_sample_sd_bits", 1e-12, "metric_bits"),
+            ("diagnostic_z", "null_corrected_z", 1e-10, "score"),
+        ):
+            a, b = actual[key], expected[other]
+            if (a is None) != (b is None):
+                raise ValueError("Original unit finite/unavailable state differs")
+            if a is not None:
+                if type(a) not in (int, float) or type(b) not in (int, float) or not isfinite(a) or not isfinite(b) or not isclose(a, b, rel_tol=0, abs_tol=tolerance):
+                    raise ValueError("Original unit numeric row parity failed")
+                errors[category] = max(errors[category], abs(a - b))
+    stage.outputs.update(native_unit=reference(stage.output / "native-unit.json", stage.budget),
+                         unit_weights=weights_request, original_oracle=stage.write("original-unit-oracle.json", oracle))
+    stage.details.update(species=species, unit_rows_compared=WIDTH, actual_public_native_unit_complete_seconds=complete_seconds,
+                         independent_original_oracle_complete_seconds=oracle_seconds,
+                         unit_metric_reconciliation_seconds=metric_call_seconds[0],
+                         query_kernel_seconds={**timers, "metrics": metric_call_seconds[1]},
+                         measured_kernel_calls=calls, max_observed_absolute_error=errors,
+                         kernel_timing_scope="Timing-only wrappers in a source-pinned private engine namespace; original argument/return values unchanged; not a transformed producer or new score definition",
+                         metric_call_scope="Frozen run first computes unit metrics in _read_metrics for preflight reconciliation, then computes requested query metrics; each shared cost measured and labelled separately",
+                         unit_scope="Eight focal rows, all502 peer metrics/genes, all five original physical embryos with unit weights; no full fixed-family unit-control claim")
+
+
+def qualify(stage):
+    refs = {}
+    receipts = {}
+    for name, directory, actions in (
+        ("prepare", stage.args.prefix_prepare_dir, {"prepare"}),
+        ("execution", stage.args.prefix_execution_dir, {"diagnostic-execution"}),
+        ("replay", stage.args.prefix_replay_dir, {"diagnostic-replay"}),
+        ("human_unit", stage.args.human_unit_dir, {"unit-control"}),
+        ("mouse_unit", stage.args.mouse_unit_dir, {"unit-control"}),
+    ):
+        refs[name], receipts[name] = stage.previous(directory, actions)
+    plan = receipts["prepare"]["outputs"]["plan"]
+    if receipts["prepare"]["outputs"]["complete_frozen_axis"] is not False or any(canonical(receipts[name]["outputs"]["plan"]) != canonical(plan) for name in ("execution", "replay")):
+        raise ValueError("Cost measurements must share the genuinely incomplete original prefix plan")
+    maxima = {species: max(numeric(stage.prerequisites[species + "_" + temperature]["details"]["public_run_complete_seconds"], "complete cache producer seconds")
+                           for temperature in ("cold", "warm")) for species in ("human", "mouse")}
+    reconstruction = BLOCKS_PER_SOURCE * sum(maxima.values())
+    unit_shared, unit_rows = 0.0, 0.0
+    for species in ("human", "mouse"):
+        details = receipts[species + "_unit"]["details"]
+        if details["species"] != species or details["unit_rows_compared"] != WIDTH:
+            raise ValueError("Unit timing source identity or legitimate prefix scope differs")
+        unit_shared += sum(numeric(details["query_kernel_seconds"][name], "unit kernel seconds") for name in ("metrics", "bins"))
+        unit_shared += numeric(details["unit_metric_reconciliation_seconds"], "unit metric reconciliation seconds")
+        unit_rows += numeric(details["query_kernel_seconds"]["weighted_rows"], "unit row seconds")
+
+    def extrapolate(name):
+        details = receipts[name]["details"]
+        total = numeric(details["public_run_complete_seconds"], "complete public prefix seconds")
+        timings = {key: numeric(value, "public component seconds") for key, value in details["public_result"]["timings_seconds"].items()}
+        residual = max(0.0, total - sum(timings.values()))
+        shared = sum(timings[key] for key in ("plan_source_admission", "metric_load", "metrics", "bins"))
+        per_block = sum(timings[key] for key in ("physical_admission", "cache_load", "weighted_rows", "serialization", "physical_comparison"))
+        unit = unit_shared + BLOCKS_PER_SOURCE * (unit_rows + timings["cache_load"] + timings["serialization"]) + timings["metric_load"]
+        return reconstruction + shared + BLOCKS_PER_SOURCE * per_block + unit + residual, timings
+
+    execute_estimate, execution_timers = extrapolate("execution")
+    replay_estimate, replay_timers = extrapolate("replay")
+    prefix_prepare = numeric(receipts["prepare"]["details"]["public_run_complete_seconds"], "complete public prepare seconds")
+    base = {
+        "build_full": reconstruction,
+        "prepare_full": prefix_prepare + BLOCKS_PER_SOURCE * execution_timers["physical_admission"],
+        "execute": execute_estimate, "replay": replay_estimate,
+    }
+    estimates = {name: {"base_projection_seconds": value, "reserved_headroom_seconds": max(60.0, value * 0.25),
+                        "projection_with_headroom_seconds": value + max(60.0, value * 0.25)} for name, value in base.items()}
+    permitted = all(value["projection_with_headroom_seconds"] < 900 for value in estimates.values())
+    gate = {
+        "schema": GATE_SCHEMA, "measurement_receipts": refs, "cache_public_complete_max_seconds": maxima,
+        "native_reconstruction_projection_seconds": reconstruction, "prefix_blocks_per_source": 1,
+        "full_blocks_per_source": BLOCKS_PER_SOURCE, "total_full_blocks": 2 * BLOCKS_PER_SOURCE,
+        "estimates": estimates, "bounded_attempt_permitted": permitted,
+        "fit_proven": False, "whole_method_fit_established": False,
+        "headroom_rule": "At least60seconds or25percent of each projection, whichever is larger; engineering attempt admission only.",
+        "projection_scope": (
+            "Source-bound measured maxima of complete0:8 cache returns are multiplied by63. "
+            "Shared prefix admission/metrics/bin timers stay once; block timers scale63. "
+            "Both actual unit metric reconciliation and requested query kernels, plus cache/serialization allowances, are added once. "
+            "Prefix final-seal residual stays once; full prepare uses a physical-admission proxy. "
+            "Focal-specific workloads, fullcatalog validation and finalseals remain unmeasured until completed bounded public returns."
+        ),
+        "next_dependency_if_refused": NEXT_DEPENDENCY,
+        "replay_prefix_actual_native_reconstruction_seconds": replay_timers["native_reconstruction"],
+    }
+    stage.outputs["cost_gate"] = stage.write("cost-gate.json", gate)
+    stage.details.update(bounded_attempt_permitted=permitted, decision="permit_bounded_attempt_only" if permitted else "refuse_until_common_source_preparation_dependency")
+
+
+def require_gate(stage, name):
+    _, receipt = stage.previous(stage.args.qualify_dir, {"qualify"})
+    gate = stage.read(receipt["outputs"]["cost_gate"])
+    if gate.get("schema") != GATE_SCHEMA or gate.get("bounded_attempt_permitted") is not True or gate.get("fit_proven") is not False:
+        raise RuntimeError("Complete measured-cost gate refuses this attempt: " + NEXT_DEPENDENCY)
+    estimate = numeric(gate["estimates"][name]["projection_with_headroom_seconds"], "projected attempt seconds")
+    if estimate >= stage.budget.remaining():
+        stage.write("cost-refusal.json", {"schema": GATE_SCHEMA, "action": stage.args.action,
+                                          "projected_with_headroom_seconds": estimate,
+                                          "remaining_actual_stage_seconds": stage.budget.remaining(),
+                                          "fit_proven": False, "next_dependency": NEXT_DEPENDENCY})
+        raise RuntimeError("Measured-cost projection exceeds this stage's remaining unchanged budget")
+    stage.details.update(cost_gate=receipt["outputs"]["cost_gate"], projected_with_headroom_seconds=estimate,
+                         forecast_scope="Permits a bounded attempt; no claim of actual completed fit")
+
+
+def build_full(stage):
+    require_gate(stage, "build_full")
+    producer = stage.module("scripts/prepare_b3_paged_native_cache.py", "_eligible_prefix_native_producer")
+    blocks, costs = [], []
+    for species in ("human", "mouse"):
+        catalog = stage.prerequisites[species + "_catalog"]["outputs"]
+        source = stage.prerequisites[species + "_native"]["outputs"]["bundle"]
+        original_request = stage.read(catalog["native_cache_request"])
+        for index in range(BLOCKS_PER_SOURCE):
+            stage.budget.check()
+            start, stop = index * WIDTH, min(GENES, (index + 1) * WIDTH)
+            directory = Path(species) / f"block-{index:03d}"
+            request = stage.write(str(directory / "request.json"), {**original_request, "focal_start": start, "focal_stop": stop})
+            began = time.monotonic()
+            result = producer.run(Path(request["path"]), stage.output / directory / "cache", max_seconds=stage.budget.remaining())
+            seconds = time.monotonic() - began
+            if result.get("native_structure_verified") is not True or result.get("native_likelihood_effects_attested") is not False:
+                raise ValueError("Individual original cache producer scope differs")
+            blocks.append({"source_key": source, "start": start, "stop": stop, "request": request,
+                           "summary": reference(stage.output / directory / "cache/summary.json", stage.budget),
+                           "metadata": result["metadata"], "statistics": result["statistics"]})
+            costs.append({"species": species, "start": start, "stop": stop, "public_run_complete_seconds": seconds})
+    stage.outputs["blocks"] = blocks
+    stage.details.update(public_cache_returns=len(blocks), individual_public_complete_seconds=costs,
+                         total_individual_public_complete_seconds=sum(row["public_run_complete_seconds"] for row in costs),
+                         preparation_scope="All126 independent original public producer calls in this single900-second stage; complete GNU child receipt includes helper admission/imports/finalseal.")
+
+
+def full_catalog(stage):
+    _, built = stage.previous(stage.args.block_dir, {"build-full"})
+    blocks = built["outputs"]["blocks"]
+    if len(blocks) != 2 * BLOCKS_PER_SOURCE:
+        raise ValueError("Full catalog must contain all126 completed immutable public cache blocks")
+    material = stage.prerequisites["material"]["outputs"]
+    expected = {(material["bundles"][species], index * WIDTH, min(GENES, (index + 1) * WIDTH))
+                for species in ("human", "mouse") for index in range(BLOCKS_PER_SOURCE)}
+    actual = []
+    for block in blocks:
+        if type(block.get("start")) is not int or type(block.get("stop")) is not int:
+            raise ValueError("Full block ranges require strict integers")
+        actual.append((block["source_key"], block["start"], block["stop"]))
+    if len(set(actual)) != len(actual) or set(actual) != expected:
+        raise ValueError("Full original502-gene/source coverage has duplicates or omissions")
+    stage.outputs.update(source_and_observed(stage), block_catalog=write_blocks(stage, blocks), complete_frozen_axis=True)
+
+
+def production(stage):
+    require_gate(stage, stage.args.action)
+    _, prepared = stage.previous(stage.args.prepare_dir, {"prepare"})
+    if prepared["outputs"]["complete_frozen_axis"] is not True:
+        raise ValueError("Production prefix requires actual complete fixed-family preparation")
+    fields = {"plan": prepared["outputs"]["plan"], "start": 0, "stop": 1}
+    if stage.args.action == "replay":
+        _, executed = stage.previous(stage.args.execution_dir, {"execute"})
+        if canonical(executed["outputs"]["plan"]) != canonical(fields["plan"]):
+            raise ValueError("Full execution/replay plan identities differ")
+        fields["production_catalog"] = artifact_catalog(stage, executed["outputs"]["public_summary"])
+    result = stage.public_app(stage.args.action, fields)
+    if result["status"] != "prepared_complete_fixed_family_catalog" or len(result["draws"]) != 1 or result["start"] != 0 or result["stop_completed"] != 1:
+        raise ValueError("Actual public production did not complete the declared one-draw prefix")
+    if stage.args.action == "replay" and (result["native_prefix_reconstruction_verified"] is not True or result["prefix_query_replay_verified"] is not True):
+        raise ValueError("Independent public physical/query prefix reconstruction failed")
+    stage.outputs.update(plan=fields["plan"], complete_frozen_axis=True)
+    stage.details.update(full_2000_draws_completed=False, prefix_scope="One genuinely eligible production draw and, for replay, a fresh126-block native physical reconstruction; no final inference/effect/project checkpoint claim")
+
+
+ACTIONS = {
+    "freeze": freeze, "partial-catalog": partial_catalog, "prepare": prepare,
+    "diagnostic-execution": diagnostic, "diagnostic-replay": diagnostic, "unit-control": unit_control,
+    "qualify": qualify, "build-full": build_full, "full-catalog": full_catalog,
+    "execute": production, "replay": production,
+}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("action", choices=ACTIONS)
+    parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--max-seconds", type=float, default=900)
+    parser.add_argument("--acceptance-freeze-dir", type=Path)
+    parser.add_argument("--c-freeze-dir", type=Path)
+    parser.add_argument("--species", choices=("human", "mouse"))
+    for name in ROLE_ACTIONS:
+        parser.add_argument("--" + name.replace("_", "-") + "-dir", type=Path)
+    for name in ("catalog", "prepare", "execution", "prefix-prepare", "prefix-execution", "prefix-replay", "human-unit", "mouse-unit", "qualify", "block"):
+        parser.add_argument("--" + name + "-dir", type=Path)
+    args = parser.parse_args()
+    if args.action != "freeze" and args.acceptance_freeze_dir is None:
+        parser.error("Executing follow-on stages require --acceptance-freeze-dir")
+    if args.action == "freeze" and args.c_freeze_dir is None:
+        parser.error("Freeze requires the completed --c-freeze-dir")
+    if args.action == "unit-control" and args.species is None:
+        parser.error("Unit control requires --species")
+    stage = None
+    try:
+        stage = Stage(args)
+        if args.action != "freeze":
+            stage.initialize()
+        ACTIONS[args.action](stage)
+        result = stage.seal()
+        print(canonical({"action": args.action, "status": result["status"], "summary": str(stage.output / "summary.json")}).decode())
+    except BaseException as error:
+        if stage is not None and stage.output.is_dir():
+            stage.invalidate()
+            failure = {"schema": STAGE_SCHEMA, "action": args.action, "status": "failed",
+                       "exception_type": type(error).__name__, "message": str(error),
+                       "synthetic_fixture_only": True, "native_arithmetic_replay_verified": False,
+                       "native_likelihood_effects_attested": False, "scientific_readiness": "unavailable"}
+            with (stage.output / "failure.json").open("x") as stream:
+                json.dump(failure, stream, indent=2, allow_nan=False)
+                stream.write("\n")
+                stream.flush()
+                os.fsync(stream.fileno())
+        raise
+
+
+if __name__ == "__main__":
+    main()

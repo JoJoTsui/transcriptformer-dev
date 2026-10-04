@@ -1,0 +1,708 @@
+#!/usr/bin/env python
+"""Ignored synthetic study stages; public native seams, never project scoring."""
+
+from __future__ import annotations
+
+import argparse
+from contextlib import contextmanager
+from datetime import datetime, timezone
+from hashlib import sha256
+import json
+from math import floor, isfinite
+import os
+from pathlib import Path
+import resource
+import shutil
+import subprocess
+import sys
+import time
+from types import SimpleNamespace
+
+for variable in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+    os.environ[variable] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
+
+ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT))
+OWN = Path(__file__).resolve()
+APP = ROOT / "scripts/bootstrap_b3_paged_native.py"
+MIB = 1024**2
+GIB = 1024**3
+FREEZE_SCHEMA = "b3_eligible_paged_prefix_software_freeze_v1"
+STAGE_SCHEMA = "b3_eligible_paged_prefix_study_stage_v1"
+GENE_COUNT, CELL_COUNT, EMBRYO_COUNT, SEQUENCE_LENGTH = 502, 5, 5, 512
+GENOME_WIDE_PAIR_COUNT = 5000
+BACKGROUND_PAIR_COUNT = GENOME_WIDE_PAIR_COUNT - GENE_COUNT
+BUNDLE_NAMES = {"human": "03-score-human", "mouse": "03-score-mouse"}
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+
+
+def load_json(path):
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("Duplicate study JSON key")
+            result[key] = value
+        return result
+
+    def invalid(value):
+        raise ValueError("Nonfinite study JSON: " + value)
+
+    path = Path(path).resolve()
+    if path.stat().st_size > 32 * MIB:
+        raise ValueError("Study metadata exceeds 32 MiB")
+    with path.open("rb") as stream:
+        data = stream.read(32 * MIB + 1)
+    if len(data) > 32 * MIB:
+        raise ValueError("Study metadata exceeds 32 MiB")
+    value = json.loads(data, object_pairs_hook=unique, parse_constant=invalid)
+    if not isinstance(value, dict):
+        raise ValueError("Study metadata requires an object")
+    return value
+
+
+class Budget:
+    def __init__(self, parent, seconds):
+        if type(seconds) not in (int, float) or not isfinite(seconds) or not 0 < seconds <= 900:
+            raise ValueError("Study wall cap must be positive and at most 900 seconds")
+        self.parent, self.seconds, self.began = Path(parent), seconds, time.monotonic()
+        self.last_check = float("-inf")
+        self.check()
+
+    def remaining(self):
+        self.check()
+        return self.seconds - (time.monotonic() - self.began)
+
+    def integer_remaining(self):
+        result = floor(self.remaining())
+        if result < 1:
+            raise TimeoutError("No whole second remains in study stage")
+        return result
+
+    def check(self):
+        now = time.monotonic()
+        if now - self.began >= self.seconds:
+            raise TimeoutError("Synthetic study stage wall cap exceeded")
+        if now - self.last_check < 0.1:
+            return
+        if resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 > 4 * GIB:
+            raise RuntimeError("Synthetic study stage exceeds 4 GiB RSS")
+        available = next(
+            (int(line.split()[1]) * 1024 for line in Path("/proc/meminfo").read_text().splitlines()
+             if line.startswith("MemAvailable:")),
+            0,
+        )
+        if available < 4 * GIB:
+            raise RuntimeError("Synthetic study stage requires 4 GiB available host RAM")
+        if shutil.disk_usage(self.parent).free < 20 * GIB:
+            raise RuntimeError("Synthetic study stage requires 20 GiB free disk")
+        self.last_check = now
+
+
+def reference(path, budget):
+    path = Path(path).resolve()
+    before = path.stat()
+    if not path.is_file():
+        raise ValueError("Study reference requires a regular file")
+    digest, count = sha256(), 0
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(MIB), b""):
+            budget.check()
+            count += len(block)
+            digest.update(block)
+    if count != before.st_size or path.stat().st_size != count:
+        raise ValueError("Study reference changed size while hashing")
+    return {"path": str(path), "sha256": digest.hexdigest(), "bytes": count}
+
+
+def write_json(path, value, budget):
+    data = canonical(value) + b"\n"
+    if len(data) > 32 * MIB:
+        raise ValueError("Study output metadata exceeds 32 MiB")
+    path = Path(path)
+    with path.open("xb") as stream:
+        stream.write(data)
+        stream.flush()
+        os.fsync(stream.fileno())
+    budget.check()
+    return reference(path, budget)
+
+
+def repo_sources():
+    return sorted([*(ROOT / "src/transcriptformer").rglob("*.py"), *(ROOT / "scripts").glob("*.py")])
+
+
+def verify_freeze(value, budget):
+    if value.get("schema") != FREEZE_SCHEMA or value.get("synthetic_fixture_only") is not True:
+        raise ValueError("Require an explicit reviewed synthetic study freeze")
+    expected = value["repo_source_file_sha256"]
+    if set(expected) != {str(path.resolve()) for path in repo_sources()}:
+        raise ValueError("Frozen source tree membership changed")
+    for path, digest in expected.items():
+        if reference(path, budget)["sha256"] != digest:
+            raise ValueError("Source bytes changed after final application freeze")
+    if reference(OWN, budget) != value["external_model_fixture_source"]:
+        raise ValueError("External synthetic model fixture code changed")
+    if reference(APP, budget) != value["reviewed_application"]:
+        raise ValueError("Reviewed application bytes changed")
+
+
+class Stage:
+    def __init__(self, args):
+        self.args = args
+        self.output = Path(args.output).resolve()
+        if os.path.lexists(self.output):
+            raise FileExistsError(self.output)
+        self.output.parent.mkdir(parents=True, exist_ok=True)
+        self.budget = Budget(self.output.parent, args.max_seconds)
+        self.inputs = {}
+        self.outputs = {}
+        self.details = {}
+        self.freeze = None
+        if args.action != "freeze":
+            freeze_dir = Path(args.freeze_dir).resolve()
+            freeze_receipt = load_json(freeze_dir / "summary.json")
+            if (freeze_receipt.get("schema") != STAGE_SCHEMA or freeze_receipt.get("status") != "complete"
+                    or freeze_receipt.get("action") != "freeze"):
+                raise ValueError("Require the completed final reviewed software freeze stage")
+            self.bind(reference(freeze_dir / "summary.json", self.budget))
+            freeze_path = freeze_dir / "binding.json"
+            self.bind(reference(freeze_path, self.budget))
+            self.freeze = load_json(freeze_path)
+            verify_freeze(self.freeze, self.budget)
+        self.output.mkdir()
+
+    def bind(self, ref):
+        if reference(ref["path"], self.budget) != ref:
+            raise ValueError("Consumed immutable study artifact changed")
+        previous = self.inputs.get(ref["path"])
+        if previous is not None and previous != ref:
+            raise ValueError("Study input has conflicting byte identities")
+        self.inputs[ref["path"]] = ref
+        return ref
+
+    def previous(self, directory, action):
+        path = Path(directory).resolve() / "summary.json"
+        self.bind(reference(path, self.budget))
+        receipt = load_json(path)
+        if (receipt.get("schema") != STAGE_SCHEMA or receipt.get("status") != "complete"
+                or receipt.get("action") != action or receipt.get("synthetic_fixture_only") is not True):
+            raise ValueError("Require a completed immutable stage of the declared kind")
+        if receipt.get("freeze") != self.inputs[str(Path(self.args.freeze_dir).resolve() / "binding.json")]:
+            raise ValueError("Study stages must share the exact final reviewed software freeze")
+        for ref in receipt["generated_files"]:
+            self.bind(ref)
+        return receipt["outputs"]
+
+    def invalidate_marker(self):
+        marker = self.output / "summary.json"
+        if not os.path.lexists(marker):
+            return
+        invalid = self.output / "invalid-summary.json"
+        suffix = 1
+        while os.path.lexists(invalid):
+            invalid = self.output / f"invalid-summary-{suffix}.json"
+            suffix += 1
+        marker.rename(invalid)
+
+    def seal(self):
+        seal_freeze = self.freeze
+        if self.args.action == "freeze":
+            seal_freeze = load_json(self.output / "binding.json")
+        if seal_freeze is not None:
+            verify_freeze(seal_freeze, self.budget)
+        for ref in self.inputs.values():
+            if reference(ref["path"], self.budget) != ref:
+                raise ValueError("Study source bytes changed during stage")
+        generated = [reference(path, self.budget) for path in sorted(self.output.rglob("*")) if path.is_file()]
+        value = {
+            "schema": STAGE_SCHEMA,
+            "action": self.args.action,
+            "status": "complete",
+            "synthetic_fixture_only": True,
+            "project_checkpoint_used": False,
+            "model_forwards_performed": self.args.action in {"probe", "score"},
+            "model_forward_scope": "Only the source-bound deterministic toy checkpoint; no project model" if self.args.action in {"probe", "score"} else "none",
+            "biological_likelihood_effects_attested": False,
+            "project_scientific_readiness": "unavailable",
+            "intended_synthetic_fixture": {
+                "measured_frozen_genes_per_species": GENE_COUNT,
+                "genome_wide_unique_pairs": GENOME_WIDE_PAIR_COUNT,
+                "checkpoint_joined_pairs": GENE_COUNT,
+                "unmeasured_out_of_vocabulary_background_pairs": BACKGROUND_PAIR_COUNT,
+                "background_ordinal_start": GENE_COUNT + 1,
+                "background_ordinal_stop_exclusive": GENOME_WIDE_PAIR_COUNT + 1,
+                "artificial_gene_id_prefixes": {"human": "ENSG", "mouse": "ENSMUSG"},
+                "artificial_gene_id_ordinal_digits": 11,
+                "biological_orthology_claim": False,
+            },
+            "external_model_fixture_source": reference(OWN, self.budget),
+            "freeze": None if self.freeze is None else self.inputs[str(Path(self.args.freeze_dir).resolve() / "binding.json")],
+            "inputs": list(self.inputs.values()),
+            "generated_files": generated,
+            "outputs": self.outputs,
+            "details": self.details,
+            "elapsed_before_final_seal_seconds": time.monotonic() - self.budget.began,
+            "complete_invocation_cost": "External GNU time receipt includes startup, imports and final sealing; this field does not.",
+            "peak_process_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+            "created_utc": datetime.now(timezone.utc).isoformat(),
+        }
+        marker = self.output / "summary.json"
+        try:
+            # Creation, fsync, budget admission and the returned hash all belong
+            # to the failure boundary; write_json may raise after fsync.
+            marker_ref = write_json(marker, value, self.budget)
+            if seal_freeze is not None:
+                verify_freeze(seal_freeze, self.budget)
+            for ref in [*self.inputs.values(), *generated, marker_ref]:
+                if reference(ref["path"], self.budget) != ref:
+                    raise ValueError("Post-marker study bytes changed")
+            self.budget.check()
+        except BaseException:
+            self.invalidate_marker()
+            raise
+        return value
+
+
+def freeze(stage):
+    expected = stage.args.expected_app_sha256
+    if not isinstance(expected, str) or len(expected) != 64 or any(c not in "0123456789abcdef" for c in expected):
+        raise ValueError("Freeze requires the final reviewed application SHA256")
+    app_ref = reference(APP, stage.budget)
+    if app_ref["sha256"] != expected:
+        raise ValueError("Application differs from the final reviewed source hash")
+    result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=True)
+    value = {
+        "schema": FREEZE_SCHEMA,
+        "synthetic_fixture_only": True,
+        "reviewed_application": app_ref,
+        "external_model_fixture_source": reference(OWN, stage.budget),
+        "repo_source_file_sha256": {str(path.resolve()): reference(path, stage.budget)["sha256"] for path in repo_sources()},
+        "git_head": result.stdout.strip(),
+        "fixture": {"genes_per_species": GENE_COUNT, "cells_per_species": CELL_COUNT,
+                    "physical_embryos_per_species": EMBRYO_COUNT, "native_sequence_length": SEQUENCE_LENGTH,
+                    "genome_wide_unique_synthetic_pairs": GENOME_WIDE_PAIR_COUNT,
+                    "unmeasured_out_of_vocabulary_background_pairs": BACKGROUND_PAIR_COUNT,
+                    "biological_orthology_claim": False},
+        "model_boundary": "Test-only deterministic gene-ID head; real toy state_dict; never a project checkpoint",
+    }
+    stage.outputs["binding"] = write_json(stage.output / "binding.json", value, stage.budget)
+    verify_freeze(value, stage.budget)
+
+
+def toy_model(width):
+    import torch
+
+    class TinyNativeModel(torch.nn.Module):
+        """Deterministic real forward head matching the certified native contract."""
+
+        def __init__(self):
+            super().__init__()
+            self.register_buffer("fixture_vocabulary_width", torch.tensor(width, dtype=torch.int64))
+            self.forward_calls = 0
+            self.gene_vocab = SimpleNamespace(pad_idx=0, start_idx=1, end_idx=2)
+            self.gene_id_criterion = SimpleNamespace(softcap=0.0, shift_right=False)
+
+        def forward(self, *, batch, embed=False):
+            self.forward_calls += 1
+            ids = batch.gene_token_indices
+            targets = ids.clone()
+            targets[:, -1] = 2
+            logits = torch.zeros((*ids.shape, width), dtype=torch.float64, device=ids.device)
+            context = batch.gene_counts.cumsum(1) / 50
+            logits.scatter_(2, targets.unsqueeze(-1), context.unsqueeze(-1).double())
+            return {"gene_logit": logits, "input_gene_token_indices": targets, "mask": ids == 0}
+
+    return TinyNativeModel()
+
+
+def material(stage):
+    import anndata as ad
+    import numpy as np
+    import pandas as pd
+    from scipy.sparse import csr_matrix
+    import torch
+    from scripts.preflight_b3_measured_zero import run as preflight
+    from scripts.preflight_b3_measured_zero_pair import run as pair_preflight
+    from transcriptformer.finetune.prepare import prepare_run
+
+    torch.set_num_threads(1)
+    genes = {species: [f"{prefix}{i:011d}" for i in range(1, GENE_COUNT + 1)]
+             for species, prefix in (("human", "ENSG"), ("mouse", "ENSMUSG"))}
+    checkpoint = stage.output / "toy-checkpoint"
+    (checkpoint / "vocabs").mkdir(parents=True)
+    fixture_ref = stage.freeze["external_model_fixture_source"]
+    write_json(checkpoint / "config.json", {
+        "model": {"model_config": {"seq_len": SEQUENCE_LENGTH},
+                  "data_config": {"pad_zeros": True, "gene_pad_token": "[PAD]", "filter_outliers": 0, "min_expressed_genes": 0}},
+        "synthetic_study_fixture": {"schema": "b3_eligible_paged_prefix_toy_checkpoint_v1", "source": fixture_ref,
+                                   "project_checkpoint": False, "external_loader_substitution": True},
+    }, stage.budget)
+    vocabulary = {"[PAD]": 0, "[START]": 1, "[END]": 2, "unknown": 3,
+                  **{gene: i + 4 for i, gene in enumerate(genes["human"] + genes["mouse"])}}
+    gene_vocab = write_json(checkpoint / "vocabs/gene_vocabulary.json", vocabulary, stage.budget)
+    aux_vocab = write_json(checkpoint / "vocabs/aux_vocabulary.json", {"assay": {"unknown": 0, "10x": 1}}, stage.budget)
+    torch.save(toy_model(len(vocabulary)).state_dict(), checkpoint / "model_weights.pt")
+    configs, reports = {}, {}
+    for species in ("human", "mouse"):
+        stage.budget.check()
+        folder = stage.output / species
+        folder.mkdir()
+        counts = np.ones((CELL_COUNT, GENE_COUNT + 1), dtype=np.float64)
+        counts[:, 0] = 0  # A genuine measured-zero focal is required by the public resource probe.
+        counts[:, -1] = 9999  # Out-of-vocabulary measured counts remain in normalization.
+        source = folder / "source.h5ad"
+        ad.AnnData(X=csr_matrix(counts), obs=pd.DataFrame({
+            "stage": ["organogenesis"] * CELL_COUNT,
+            "embryo_id": [f"e{i}" for i in range(EMBRYO_COUNT)],
+            "cell_type": ["unknown"] * CELL_COUNT, "assay": ["10x"] * CELL_COUNT,
+        }, index=[f"cell{i}" for i in range(CELL_COUNT)]),
+            var=pd.DataFrame({"ensembl_id": genes[species] + ["outside"]}, index=genes[species] + ["outside"])
+        ).write_h5ad(source)
+        mapping = write_json(folder / "mapping.json", {gene: gene for gene in genes[species] + ["outside"]}, stage.budget)
+        manifest = {"gene_mapping": mapping["path"], "datasets": [{"path": str(source), "species": species,
+                    "dataset_type": "single_cell", "train_only": True}]}
+        manifest_ref = write_json(folder / "manifest.json", manifest, stage.budget)
+        prepared = prepare_run(manifest, folder / "prepared")
+        prepared_ref = write_json(folder / "prepared.json", prepared, stage.budget)
+        config = {"manifest": manifest_ref["path"], "prepared_report": prepared_ref["path"],
+                  "checkpoint": str(checkpoint), "gene_vocabulary": gene_vocab["path"], "aux_vocabulary": aux_vocab["path"],
+                  "species": species, "phase": "organogenesis", "split": "train", "model_arm": "base",
+                  "gene_ids": genes[species], "max_cells": CELL_COUNT, "max_rows": CELL_COUNT * GENE_COUNT,
+                  "metric_normalization": {"method": "library_size_log1p", "target_sum": 10000,
+                      "denominator": "all_prepared_measured_genes_before_vocab_filter_clipping"}}
+        configs[species] = write_json(folder / "config.json", config, stage.budget)
+        reports[species] = write_json(folder / "preflight.json", preflight(Path(configs[species]["path"])), stage.budget)
+    background_genes = {
+        species: [f"{prefix}{i:011d}" for i in range(GENE_COUNT + 1, GENOME_WIDE_PAIR_COUNT + 1)]
+        for species, prefix in (("human", "ENSG"), ("mouse", "ENSMUSG"))
+    }
+    all_pairs = list(zip(genes["human"] + background_genes["human"],
+                         genes["mouse"] + background_genes["mouse"], strict=True))
+    if (len(all_pairs) != GENOME_WIDE_PAIR_COUNT or len(set(all_pairs)) != GENOME_WIDE_PAIR_COUNT
+            or any(set(axis) & set(vocabulary) for axis in background_genes.values())
+            or any(set(background_genes[species]) & set(genes[species]) for species in genes)):
+        raise ValueError("Synthetic background identities must be unique, unmeasured and absent from both vocabularies")
+    synthetic_ortholog_fixture = write_json(stage.output / "synthetic-ortholog-fixture.json", {
+        "schema": "b3_eligible_paged_prefix_synthetic_ortholog_fixture_v1",
+        "biological_orthology_claim": False,
+        "identity_rule": "Artificial human/mouse Ensembl-shaped IDs with the same ordinal; no biological mapping",
+        "n_genome_wide_unique_pairs": GENOME_WIDE_PAIR_COUNT,
+        "n_checkpoint_joined_pairs": GENE_COUNT,
+        "n_background_pairs": BACKGROUND_PAIR_COUNT,
+        "measured_frozen_gene_ids": genes,
+        "background_gene_ids": background_genes,
+        "background_absent_from_both_checkpoint_vocabularies": True,
+        "background_absent_from_measured_frozen_gene_sets": True,
+    }, stage.budget)
+    table = stage.output / "orthologs.tsv"
+    with table.open("x") as stream:
+        stream.write("".join(f"human\t{a}\tmouse\t{b}\n" for a, b in all_pairs))
+    paired = stage.output / "paired_preflight.json"
+    pair_preflight(SimpleNamespace(config_a=Path(configs["human"]["path"]), config_b=Path(configs["mouse"]["path"]),
+                                  preflight_a=Path(reports["human"]["path"]), preflight_b=Path(reports["mouse"]["path"]),
+                                  table=table, output=paired))
+    actual_pair = load_json(paired)
+    if (actual_pair["statistic_eligibility"]["genome_wide_pairs"] != GENOME_WIDE_PAIR_COUNT
+            or actual_pair["n_vocabulary_joined_pairs"] != GENE_COUNT):
+        raise ValueError("Actual public paired counts differ from declared synthetic table/vocabulary identities")
+    bundles = {species: str(stage.output.parent / BUNDLE_NAMES[species] / "bundle") for species in ("human", "mouse")}
+    family = {"schema": "b3_measured_zero_bootstrap_family_v1", "family_id": "synthetic-502-gene-eligible-prefix-study",
+              "model_arm": "base", "comparisons": [{"comparison_id": "human_mouse_organogenesis",
+                  "bundle_a": bundles["human"], "bundle_b": bundles["mouse"], "table": str(table),
+                  "paired_preflight": str(paired), "table_sha256": reference(table, stage.budget)["sha256"],
+                  "paired_preflight_sha256": reference(paired, stage.budget)["sha256"]}]}
+    stage.outputs.update(configs=configs, preflights=reports, checkpoint=str(checkpoint),
+                         paired_preflight=reference(paired, stage.budget), table=reference(table, stage.budget),
+                         family=write_json(stage.output / "family.json", family, stage.budget), bundles=bundles,
+                         synthetic_ortholog_fixture=synthetic_ortholog_fixture)
+    stage.details.update(expected_eligibility="Unknown until the real observed comparator completes; intended >=500/502 finite",
+                         measured_zero_genes=1, positive_genes_per_cell=501, numeric_expression_bytes=CELL_COUNT * (GENE_COUNT + 1) * 8,
+                         one_forward_float64_logits_bytes=SEQUENCE_LENGTH * len(vocabulary) * 8,
+                         genome_wide_unique_synthetic_pairs=GENOME_WIDE_PAIR_COUNT,
+                         checkpoint_joined_pairs=GENE_COUNT, unmeasured_out_of_vocabulary_background_pairs=BACKGROUND_PAIR_COUNT,
+                         biological_orthology_claim=False,
+                         original_mapping_floor="Unchanged5,000 genome-wide unique pairs; joined score denominator remains502")
+
+
+@contextmanager
+def model_boundary(stage, material_outputs):
+    import torch
+    from transcriptformer.finetune import train
+    from transcriptformer.finetune.b3_prepared import checkpoint_configuration
+
+    checkpoint = Path(material_outputs["checkpoint"]).resolve()
+    config = load_json(checkpoint / "config.json")
+    descriptor = config.get("synthetic_study_fixture")
+    if descriptor != {"schema": "b3_eligible_paged_prefix_toy_checkpoint_v1", "source": stage.freeze["external_model_fixture_source"],
+                       "project_checkpoint": False, "external_loader_substitution": True}:
+        raise ValueError("Refuse a checkpoint without the exact declared synthetic loader")
+    vocabulary = load_json(checkpoint / "vocabs/gene_vocabulary.json")
+    auxiliary = load_json(checkpoint / "vocabs/aux_vocabulary.json")
+    cfg = checkpoint_configuration(checkpoint)
+    weights = reference(checkpoint / "model_weights.pt", stage.budget)
+    stage.bind(weights)
+    original = train._load_model
+    loaded_models = []
+
+    def load_model(requested_checkpoint, *args, **kwargs):
+        if Path(requested_checkpoint).resolve() != checkpoint:
+            raise ValueError("Test loader only accepts the declared tiny synthetic checkpoint")
+        stage.budget.check()
+        state = torch.load(checkpoint / "model_weights.pt", map_location="cpu", weights_only=True)
+        model = toy_model(len(vocabulary))
+        model.load_state_dict(state, strict=True)
+        if int(model.fixture_vocabulary_width) != len(vocabulary):
+            raise ValueError("Synthetic state_dict vocabulary width differs")
+        loaded_models.append(model)
+        return model, cfg, vocabulary, auxiliary
+
+    torch.set_num_threads(1)
+    train._load_model = load_model
+    try:
+        yield
+    finally:
+        train._load_model = original
+        stage.details.update(external_model_loader_calls=len(loaded_models),
+                             actual_toy_model_forward_calls=sum(model.forward_calls for model in loaded_models),
+                             model_boundary_source=stage.freeze["external_model_fixture_source"])
+
+
+def probe(stage):
+    from scripts.probe_b3_measured_zero_resources import run
+    material_outputs = stage.previous(stage.args.material_dir, "material")
+    species = stage.args.species
+    with model_boundary(stage, material_outputs):
+        result = run(Path(material_outputs["configs"][species]["path"]),
+                     Path(material_outputs["preflights"][species]["path"]), stage.output / "probe.json",
+                     execute=True, device="cpu", cell_index=0, max_rss_gib=4, max_cuda_gib=0,
+                     max_wall_seconds=stage.budget.integer_remaining())
+    if result["status"] != "resource_probe_passed":
+        raise RuntimeError("Measured public synthetic probe failed; preserve probe.json and refuse scoring")
+    stage.outputs["probe"] = reference(stage.output / "probe.json", stage.budget)
+    stage.details.update(measured_original_seconds=result["elapsed_original_seconds"],
+                         measured_deletion_seconds=result["elapsed_deletion_seconds"],
+                         projected_forward_only_seconds=result["estimated_cohort_seconds_from_single_cell"],
+                         estimate_scope="Actual one-cell toy probe; not complete producer/runtime evidence")
+
+
+def score(stage):
+    from scripts.produce_b3_measured_zero_scores import run
+    material_outputs = stage.previous(stage.args.material_dir, "material")
+    probe_outputs = stage.previous(stage.args.probe_dir, "probe")
+    species = stage.args.species
+    bundle = stage.output / "bundle"
+    if str(bundle) != material_outputs["bundles"][species]:
+        raise ValueError("Output must match the original prospective family bundle path")
+    with model_boundary(stage, material_outputs):
+        result = run(Path(material_outputs["configs"][species]["path"]), bundle,
+                     preflight_path=Path(material_outputs["preflights"][species]["path"]), execute=True,
+                     device="cpu", resource_probe_path=Path(probe_outputs["probe"]["path"]),
+                     max_seconds=stage.budget.remaining(), paired_preflight_path=Path(material_outputs["paired_preflight"]["path"]),
+                     ortholog_table=Path(material_outputs["table"]["path"]),
+                     bootstrap_family_path=Path(material_outputs["family"]["path"]), gpu_idle_seconds=0)
+    stage.outputs.update(bundle=str(bundle), producer_result=result)
+    stage.details["CPU_only_pacing"] = "Public CPU producer default0; frozen project GPU pacing is not exercised or amended"
+
+
+def compare(stage):
+    from scripts.summarize_ortholog_measured_zero_v2 import summarize
+    material_outputs = stage.previous(stage.args.material_dir, "material")
+    human = stage.previous(stage.args.human_score_dir, "score")
+    mouse = stage.previous(stage.args.mouse_score_dir, "score")
+    result = summarize(Path(human["bundle"]), Path(mouse["bundle"]), Path(material_outputs["table"]["path"]),
+                       Path(material_outputs["paired_preflight"]["path"]), stage.output / "observed")
+    stage.outputs.update(comparison=reference(stage.output / "observed/comparison.json", stage.budget),
+                         coverage=reference(stage.output / "observed/coverage.tsv", stage.budget), result=result)
+    stage.details["eligibility_scope"] = "Only the unchanged comparator's actual finite-pair coverage/embryo result; no invented plan status"
+    stage.details.update(observed_status=result["status"], observed_finite_pairs=result["n_full_universe_paired_scores"],
+                         joined_pairs=result["n_vocabulary_joined_pairs"],
+                         physical_embryos=[result["n_embryos_a"], result["n_embryos_b"]])
+
+
+def support(stage):
+    from scripts.preflight_b3_measured_zero_full import run
+    material_outputs = stage.previous(stage.args.material_dir, "material")
+    result = run(Path(material_outputs["configs"][stage.args.species]["path"]), stage.output / "support", chunk_rows=8)
+    stage.outputs.update(report=reference(stage.output / "support/support_preflight.json", stage.budget), result=result)
+
+
+def full_pair(stage):
+    from scripts.preflight_b3_measured_zero_pair import run
+    material_outputs = stage.previous(stage.args.material_dir, "material")
+    human = stage.previous(stage.args.human_support_dir, "support")
+    mouse = stage.previous(stage.args.mouse_support_dir, "support")
+    output = stage.output / "paired_preflight.json"
+    result = run(SimpleNamespace(config_a=Path(material_outputs["configs"]["human"]["path"]),
+                                config_b=Path(material_outputs["configs"]["mouse"]["path"]),
+                                preflight_a=Path(human["report"]["path"]), preflight_b=Path(mouse["report"]["path"]),
+                                table=Path(material_outputs["table"]["path"]), output=output))
+    stage.outputs.update(report=reference(output, stage.budget), result=result)
+
+
+def native_import(stage):
+    from scripts.plan_b3_measured_zero_shards import plan
+    from scripts.import_b3_measured_zero_pilot_shard import run as import_pilot
+    from scripts.reconcile_b3_measured_zero_full_shard import reconcile
+    from scripts.index_b3_measured_zero_full_scores import run as index_scores
+    from scripts.prepare_b3_measured_zero_embryo_metrics import run as metrics
+
+    material_outputs = stage.previous(stage.args.material_dir, "material")
+    original_scores = stage.previous(stage.args.score_dir, "score")
+    support_outputs = stage.previous(stage.args.support_dir, "support")
+    pair_outputs = stage.previous(stage.args.full_pair_dir, "full-pair")
+    observed = stage.previous(stage.args.compare_dir, "compare")
+    comparison = load_json(observed["comparison"]["path"])
+    finite, joined = comparison["n_full_universe_paired_scores"], comparison["n_vocabulary_joined_pairs"]
+    if (comparison["status"] != "reportable_descriptive" or finite < 500 or not joined or finite / joined < 0.8
+            or min(comparison["n_embryos_a"], comparison["n_embryos_b"]) < 5):
+        raise ValueError("Actual observed fixture is not eligible; preserve source receipts and refuse native prefix preparation")
+    species = stage.args.species
+    plan_path = stage.output / "plan.json"
+    plan(Path(material_outputs["configs"][species]["path"]), Path(support_outputs["report"]["path"]),
+         Path(pair_outputs["report"]["path"]), Path(material_outputs["table"]["path"]), plan_path)
+    handoff = stage.output / "handoff"
+    import_pilot(plan_path, Path(original_scores["bundle"]), handoff, max_seconds=stage.budget.integer_remaining())
+    certificates = stage.output / "certificates"
+    certificates.mkdir()
+    certificate = certificates / "shard-000000.json"
+    reconcile(plan_path, handoff / "shards", 0, handoff / "provenance.json", certificate,
+              max_seconds=stage.budget.integer_remaining())
+    index = stage.output / "index"
+    index_scores(plan_path, handoff / "shards", certificates, handoff / "provenance.json", index,
+                 execute=True, max_seconds=stage.budget.remaining())
+    metrics_dir = stage.output / "embryo_metrics"
+    metrics(plan_path, metrics_dir, chunk_rows=2, max_seconds=stage.budget.remaining())
+    stage.outputs.update(plan=reference(plan_path, stage.budget), certificate=reference(certificate, stage.budget),
+                         imported_provenance=reference(handoff / "provenance.json", stage.budget), bundle=original_scores["bundle"],
+                         index_metadata=reference(index / "metadata.json", stage.budget),
+                         csr_arrays={name: reference(index / name, stage.budget) for name in ("gene_offsets.u64", "cell_index.u32", "impact_bits.f64")},
+                         embryo_metrics_metadata=reference(metrics_dir / "metadata.json", stage.budget))
+    stage.details["pilot_origin_scope"] = "The unchanged public importer actually consumed this five-cell toy output; no invented full-context pilot origin"
+
+
+def native_catalog(stage):
+    from scripts.b3_native_catalog_pages import run as publish
+    from scripts.prepare_b3_paged_native_context import SOFTWARE as context_software
+    from scripts.prepare_b3_paged_native_cache import SOFTWARE as cache_software
+
+    native = stage.previous(stage.args.native_import_dir, "native-import")
+    plan = load_json(native["plan"]["path"])
+    full = load_json(plan["full_preflight_path"])
+    paired = load_json(plan["paired_preflight_path"])
+    certificate = load_json(native["certificate"]["path"])
+    provenance = load_json(native["imported_provenance"]["path"])
+    shard = Path(native["imported_provenance"]["path"]).parent / "shards/shard-000000"
+    leaves = {name: reference(shard / name, stage.budget) for name in ("header.json", "records.bin", "proofs.jsonl", "footer.json")}
+    leaves["certificate"] = native["certificate"]
+    excluded = {ref["path"] for ref in leaves.values()}
+    common = {path: reference(path, stage.budget) for path in certificate["verified_input_file_sha256"] if path not in excluded}
+    for name, digest in provenance["pilot_bundle_file_sha256"].items():
+        ref = reference(Path(native["bundle"]) / name, stage.budget)
+        if ref["sha256"] != digest:
+            raise ValueError("Original pilot bundle no longer matches its genuine import")
+        common[ref["path"]] = ref
+    common[native["imported_provenance"]["path"]] = native["imported_provenance"]
+    manifest = stage.output / "entries.jsonl"
+    with manifest.open("xb") as stream:
+        stream.write(canonical({"index": 0, "files": leaves}) + b"\n")
+    catalog_request = write_json(stage.output / "catalog-request.json", {
+        "schema": "b3_native_certificate_catalog_publish_request_v1", "plan": native["plan"],
+        "producer_provenance": native["imported_provenance"], "common_files": [common[key] for key in sorted(common)],
+        "certificate_namespace": str(Path(native["certificate"]["path"]).parent), "shard_namespace": str(shard.parent),
+        "entries_manifest": reference(manifest, stage.budget),
+        "consumer_sha256": stage.freeze["repo_source_file_sha256"][str(ROOT / "scripts/b3_native_catalog_pages.py")],
+    }, stage.budget)
+    published = publish(Path(catalog_request["path"]), stage.output / "catalog", max_seconds=stage.budget.remaining())
+    metadata_paths = {str(path.resolve()) for path in context_software}
+    metadata_paths.add(native["plan"]["path"])
+    metadata_paths.update(plan[key] for key in ("config_path", "full_preflight_path", "paired_preflight_path", "ortholog_table_path"))
+    metadata_paths.add(full["checkpoint_config_path"])
+    metadata_paths.update(full["input_paths"].values())
+    metadata_paths.update(paired["inputs"])
+    context_request = write_json(stage.output / "context-request.json", {
+        "schema": "b3_paged_native_context_request_v1", "plans": [{key: native["plan"][key] for key in ("path", "sha256")}],
+        "input_file_sha256": {path: reference(path, stage.budget)["sha256"] for path in sorted(metadata_paths)},
+    }, stage.budget)
+    request = write_json(stage.output / "native-cache-request-0-8.json", {
+        "schema": "b3_paged_native_cache_request_v1", "catalog": published["catalog"], "context_request": context_request,
+        "embryo_metrics_metadata": native["embryo_metrics_metadata"], "csr_arrays": native["csr_arrays"],
+        "focal_start": 0, "focal_stop": 8,
+        "consumer_file_sha256": {str(path.resolve()): stage.freeze["repo_source_file_sha256"][str(path.resolve())] for path in cache_software},
+    }, stage.budget)
+    stage.outputs.update(catalog=published["catalog"], native_cache_request=request,
+                         original_bundle=native["bundle"], original_imported_provenance=native["imported_provenance"])
+
+
+def cache_measure(stage):
+    from scripts.prepare_b3_paged_native_cache import run
+    native = stage.previous(stage.args.native_catalog_dir, "native-catalog")
+    request_ref = native["native_cache_request"]
+    stage.bind(request_ref)
+    began = time.monotonic()
+    result = run(Path(request_ref["path"]), stage.output / "cache", max_seconds=stage.budget.remaining())
+    elapsed = time.monotonic() - began
+    stage.outputs.update(cache_summary=reference(stage.output / "cache/summary.json", stage.budget),
+                         metadata=result["metadata"], statistics=result["statistics"], native_cache_request=request_ref)
+    stage.details.update(public_run_complete_seconds=elapsed,
+                         public_run_timing_scope="Immediately before run(request,cache) through return after publication and final source seals",
+                         prior_cache_measurement=None, physical_manifest_parity_with_prior=None,
+                         complete_eligible_execute_replay_measured=False)
+    if stage.args.prior_cache_measurement_dir:
+        previous = stage.previous(stage.args.prior_cache_measurement_dir, "cache-measure")
+        if previous["native_cache_request"] != request_ref:
+            raise ValueError("Warm repeat requires the exact same immutable native request")
+        actual, earlier = load_json(result["metadata"]["path"]), load_json(previous["metadata"]["path"])
+        if actual["cache_key_sha256"] != earlier["cache_key_sha256"] or canonical(actual["arrays"]) != canonical(earlier["arrays"]):
+            raise ValueError("Warm rebuilt physical cache differs from its original complete array manifests")
+        stage.details.update(prior_cache_measurement=str(Path(stage.args.prior_cache_measurement_dir).resolve()),
+                             physical_manifest_parity_with_prior=True)
+
+
+ACTIONS = {"freeze": freeze, "material": material, "probe": probe, "score": score, "compare": compare,
+           "support": support, "full-pair": full_pair, "native-import": native_import,
+           "native-catalog": native_catalog, "cache-measure": cache_measure}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("action", choices=ACTIONS)
+    parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--max-seconds", type=float, default=900)
+    parser.add_argument("--freeze-dir", type=Path)
+    parser.add_argument("--expected-app-sha256")
+    parser.add_argument("--species", choices=("human", "mouse"))
+    for name in ("material", "probe", "score", "compare", "human-score", "mouse-score", "support", "human-support", "mouse-support",
+                 "full-pair", "native-import", "native-catalog", "prior-cache-measurement"):
+        parser.add_argument("--" + name + "-dir", type=Path)
+    args = parser.parse_args()
+    if args.action != "freeze" and args.freeze_dir is None:
+        parser.error("Every executing fixture stage requires the final reviewed --freeze-dir")
+    stage = None
+    try:
+        stage = Stage(args)
+        ACTIONS[args.action](stage)
+        result = stage.seal()
+        print(canonical({"status": result["status"], "action": args.action, "summary": str(stage.output / "summary.json")}).decode())
+    except BaseException as error:
+        if stage is not None and stage.output.is_dir():
+            # Preserve the failed attempt and every underlying producer artifact.
+            stage.invalidate_marker()
+            failure = {"schema": STAGE_SCHEMA, "status": "failed", "action": args.action,
+                       "exception_type": type(error).__name__, "message": str(error), "synthetic_fixture_only": True}
+            with (stage.output / "failure.json").open("x") as stream:
+                json.dump(failure, stream, indent=2, allow_nan=False)
+                stream.write("\n")
+                stream.flush()
+                os.fsync(stream.fileno())
+        raise
+
+
+if __name__ == "__main__":
+    main()

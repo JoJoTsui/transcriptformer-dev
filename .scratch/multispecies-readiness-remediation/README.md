@@ -1,6 +1,72 @@
 # Multispecies readiness remediation — ticket index
 
-**Current paged admission milestone — 2026-10-04:** Structural metadata admission
+**Current paged native application and feasibility milestone — 2026-10-04:**
+The separately versioned native cache producer and bootstrap application pass
+bounded engineering acceptance: **49 cache and 49 application targeted checks**,
+Ruff check/format/mypy and independent committed reviews with zero remaining
+hard findings. The cache producer verifies stored original proof/CSR/support
+consistency across pages; the application preserves original source/RNG
+identities, the exact imported-effect bridge and independent physical replay.
+
+Actual human and mouse pilot caches complete in **88.54 / 63.68 seconds** at
+**181.20 / 204.87 MiB** peak process RSS. All **14,407,560** physical scalar
+values match original caches bit for bit. An authentic **129-cell / two-page**
+native fixture also matches the unchanged public engine. The producer's source
+audit preserves **224 preexisting Python / 98 JSON / 2 JSONL** files,
+**58 native modules** and original **107 human / 109 mouse** software hashes.
+See the [cache validation](../../docs/agents/b3-paged-native-cache-validation-2026-10-04.md)
+and [allocation ledger](../../docs/agents/b3-paged-native-cache-allocation-ledger-2026-10-04.json).
+
+The application completes **five genuine original-pilot actions**, including
+the expected production refusal and zero-draw finalization. Fresh native prefix
+execution/replay matches **96 rows / 237,222 all-gene metric records** with
+maximum observed error **0**. The historical public oracle was not rerun;
+fresh native physical reconstruction is separate evidence. The original pilot
+retains **5,111/15,705 finite pairs (32.54%)**, **0/2,000** necessary jointly
+supported draws, its reporting veto and null intervals. Stored likelihood
+effects remain unattested. See the
+[application validation](../../docs/agents/b3-paged-native-bootstrap-validation-2026-10-04.md).
+
+The accepted **C03 synthetic study** performs **5,014 tiny CPU model forwards**;
+the unchanged public comparator measures **500/502 finite pairs**, five
+physical embryos per species and Spearman **1.0**. These are synthetic fixture
+results. The **H02 follow-on completes all 12 stages** and closes the bounded
+cost assessment negatively: complete-call forecasts are **2008.58914 seconds**
+for build, **2090.87981 seconds** for execution and **2098.60836 seconds** for
+independent replay before headroom, each above the **900-second** limit.
+These are projections from measured complete public calls, not complete-family
+runtimes. **No full 126-block build or eligible full-family production/replay
+was attempted.** See the
+[eligible-prefix validation](../../docs/agents/b3-eligible-paged-prefix-validation-2026-10-04.md)
+and [bound evidence](../../docs/agents/b3-eligible-paged-prefix-evidence-2026-10-04.json).
+
+- [ ] Implement a common-source native build/replay batch, then a separately
+  versioned application adapter. Both remain unimplemented; see the
+  [proposal](../../docs/agents/b3-paged-native-common-source-proposal-2026-10-04.md).
+
+One CPU thread, 200 MiB numeric working memory, 4 GiB RSS, 4 GiB available host
+RAM, 20 GiB free disk and a 900-second invocation limit remain enforced.
+Full-mouse focal widths seven/eight exceed the numeric limit even before actual
+proof/axis costs; narrower widths require fresh admission.
+
+**Final 69-module repository CPU regression: passed** at `49e007e`: **1,017
+passed, 5 skipped**, no failures/errors, with stable source bytes, in
+**4356.24 seconds** (runner monotonic scope). The final audit preserves all
+224 preexisting Python / 98 JSON / 2 JSONL files and Git modes, 58 native
+modules, original 107 human / 109 mouse pilot software hashes, and current
+67 cache / 74 application bindings. See the dated cache/application evidence.
+The earlier 919-test admission run predates the cache/application files.
+
+**05 remains open, 11 excluded, ten bounded engineering tickets closed.**
+The bounded paged producer/application child is accepted; the actual
+full-cohort parent remains open. Common-source batching, the new application
+adapter, eligible fixed-family 2,000-draw production and fresh 2,000-draw replay,
+complete method cost, actual full-cohort scored inputs and native effect
+attestation remain unfinished. Reportable project comparison/uncertainty is
+unavailable. Finetuning claims also require project finetuned checkpoint
+provenance; a base-arm comparison does not require that provenance.
+
+**Previous paged admission milestone — 2026-10-04:** Structural metadata admission
 validates **123,952 human / 945,389 mouse cells**, preserving all **22,279**
 original ranges across **175** bounded pages. Actual original pilot certificate
 catalogs pass fresh byte verification with **131 human / 141 mouse common
@@ -194,7 +260,7 @@ per-gene embryo support also limits the fixed-universe bootstrap. See
 Earlier pending-pilot and absent-comparison statements are historical.
 
 
-Status: ten tickets closed for bounded engineering acceptance; 05 open on observed B3 comparison; 11 excluded
+Status: ten tickets closed for bounded engineering acceptance; 05 open on common-source batching/new adapter, complete method cost and reportable actual B3 comparison; 11 excluded; final 69-module regression passed (1,017 tests, 5 skipped)
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 
 [Read the specification](spec.md). Implementation was authorized on 2026-09-28.
@@ -209,7 +275,7 @@ data, chicken identifier repair and production training remain separate gates.
 | [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | Closed for bounded CPU engineering acceptance; two-rank interrupted/resumed dropout continuity passed |
 | [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; recorded splits validated without allocation; six-source preparation validated; finalized multispecies corpus absent |
 | [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Closed for bounded engineering acceptance; strict partial bridge leaves R2 open |
-| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Open; structural metadata and catalog bytes verified; pilot coverage 32.54%; paged native integration, scored inputs, complete effects/cost and reportable comparison/uncertainty pending |
+| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Open; bounded paged producer/application accepted; synthetic complete-call cost gate negative; common-source batch/new adapter, complete method cost, actual full-cohort scored inputs and reportable comparison/uncertainty pending; original pilot coverage 32.54% |
 | [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Closed for bounded engineering acceptance; actual frozen cohort absent |
 | [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Closed for bounded engineering acceptance; production losses absent |
 | [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Closed for bounded engineering acceptance; completed-directory gap repaired; production evidence absent |

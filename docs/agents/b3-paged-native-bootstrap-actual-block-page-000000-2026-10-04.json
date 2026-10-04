@@ -1,0 +1,58 @@
+{
+  "blocks": [
+    {
+      "metadata": {
+        "bytes": 363722,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/native_cache_actual_human/metadata.json",
+        "sha256": "746d6505511159ba2006e5a52008741cf9ab66c9e65f1b3aa72b2769a7dff5f4"
+      },
+      "request": {
+        "bytes": 12597,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/native_cache_validation_requests/human.request.json",
+        "sha256": "e771891b7c2b7bd89b1790a6abd4e2777b53a20742caeb97850f03d06d770811"
+      },
+      "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+      "start": 0,
+      "statistics": {
+        "bytes": 7770912,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/native_cache_actual_human/statistics.h5",
+        "sha256": "4d59b1dae017e4c3674391cf204a2683ffd5c073ba613f0261ecc59782d1fcfd"
+      },
+      "stop": 8,
+      "summary": {
+        "bytes": 1832,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/native_cache_actual_human/summary.json",
+        "sha256": "e68839c1105ba0bf2bcb76d8874cefdebc84eaff986e49e74541744175ac5c50"
+      }
+    },
+    {
+      "metadata": {
+        "bytes": 437657,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/native_cache_actual_mouse/metadata.json",
+        "sha256": "d839283acd495dec81f7d6aa3ab58d055762d6af26cba8e15c68de4b0597328a"
+      },
+      "request": {
+        "bytes": 12596,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/native_cache_validation_requests/mouse.request.json",
+        "sha256": "4f408110474ddd2e1985c35fa8de863103c943a2612c850c30c95d4cad222415"
+      },
+      "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+      "start": 0,
+      "statistics": {
+        "bytes": 40271792,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/native_cache_actual_mouse/statistics.h5",
+        "sha256": "027382218fd0f4e2325f0cc87abb5557f891f53ddb352ff481a9189592913e0f"
+      },
+      "stop": 8,
+      "summary": {
+        "bytes": 1837,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/native_cache_actual_mouse/summary.json",
+        "sha256": "6032e1bed100352dbd1197b08226126645a55b90490c46b624e146c95ebc52a4"
+      }
+    }
+  ],
+  "index": 0,
+  "schema": "b3_paged_native_bootstrap_block_page_v2",
+  "start": 0,
+  "stop": 2
+}

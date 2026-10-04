@@ -1,0 +1,18 @@
+{
+  "comparisons": [
+    {
+      "comparison": {
+        "bytes": 2152099,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/paired_measured_zero_observed_20261002/comparison.json",
+        "sha256": "26f1de4ea6e9c073cc5d0d76a648ba5630d88f4744d0065973c366653ed9e27c"
+      },
+      "comparison_id": "human_mouse_organogenesis_observed_pilot",
+      "coverage": {
+        "bytes": 994836,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/paired_measured_zero_observed_20261002/coverage.tsv",
+        "sha256": "b57ee57704a6c3ab26804a4d85b78dae5189edb94f15f5471c7959b3b9399a0a"
+      }
+    }
+  ],
+  "schema": "b3_paged_native_bootstrap_observed_v2"
+}

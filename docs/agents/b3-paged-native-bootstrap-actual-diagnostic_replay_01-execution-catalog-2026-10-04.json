@@ -1,0 +1,12 @@
+{
+  "artifacts": [
+    {
+      "file": {
+        "bytes": 621686,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/summary.json",
+        "sha256": "dc83b9b195f6c1e6d5256ffa2b43c08b46605159ceeade14f0132f77338ae232"
+      }
+    }
+  ],
+  "schema": "b3_paged_native_bootstrap_artifacts_v2"
+}

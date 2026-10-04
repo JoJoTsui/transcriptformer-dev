@@ -1,0 +1,181 @@
+{
+  "additional_h5_axis_admission_bytes_assumption": 0,
+  "checkpoint_tensors_loaded": false,
+  "conclusion": "Full mouse focal widths 7 and 8 must be refused even before actual proof and axis costs; narrower widths require fresh actual admission. No full-context numerical or runtime capacity is established.",
+  "context_admission": {
+    "bytes": 847949,
+    "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/context_admission_actual_retry01/summary.json",
+    "sha256": "bf52ecd2493f50328f8bc9b7d7ea3bc5dc103ffd052c43617f11d687d35713ce"
+  },
+  "contexts": [
+    {
+      "largest_range_record_reservation": 98256,
+      "n_cells": 123952,
+      "n_embryos_metadata_only": 5,
+      "n_genes": 19406,
+      "n_ranges": 2583,
+      "native_scorable_contrasts_metadata_only": 230980471,
+      "plan": {
+        "bytes": 275547,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/human_native_shard_plan.json",
+        "sha256": "b06233309be599e05c8bff01c2aea2b4df276f28fd853aae786ad54bd7141fa2"
+      },
+      "projected_three_file_csr_snapshot_bytes": 2771920908,
+      "species": "homo_sapiens",
+      "width_bounds": [
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 1,
+          "minimum_implemented_working_upper_bytes": 31713954,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 178001246
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 2,
+          "minimum_implemented_working_upper_bytes": 32684294,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 177030906
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 3,
+          "minimum_implemented_working_upper_bytes": 33654634,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 176060566
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 4,
+          "minimum_implemented_working_upper_bytes": 34624974,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 175090226
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 5,
+          "minimum_implemented_working_upper_bytes": 35595314,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 174119886
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 6,
+          "minimum_implemented_working_upper_bytes": 36565654,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 173149546
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 7,
+          "minimum_implemented_working_upper_bytes": 37535994,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 172179206
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 8,
+          "minimum_implemented_working_upper_bytes": 38506334,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 171208866
+        }
+      ]
+    },
+    {
+      "largest_range_record_reservation": 98256,
+      "n_cells": 945389,
+      "n_embryos_metadata_only": 43,
+      "n_genes": 20131,
+      "n_ranges": 19696,
+      "native_scorable_contrasts_metadata_only": 833826864,
+      "plan": {
+        "bytes": 2133447,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/full_organogenesis_v3/mouse_native_shard_plan.json",
+        "sha256": "559c87f71fa4ad220305a827ca11d8d1907d81c911af2926cc10473e4a888c8f"
+      },
+      "projected_three_file_csr_snapshot_bytes": 10006083424,
+      "species": "mus_musculus",
+      "width_bounds": [
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 1,
+          "minimum_implemented_working_upper_bytes": 158413457,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 51301743
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 2,
+          "minimum_implemented_working_upper_bytes": 167070131,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 42645069
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 3,
+          "minimum_implemented_working_upper_bytes": 175726805,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 33988395
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 4,
+          "minimum_implemented_working_upper_bytes": 184383479,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 25331721
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 5,
+          "minimum_implemented_working_upper_bytes": 193040153,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 16675047
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 6,
+          "minimum_implemented_working_upper_bytes": 201696827,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": false,
+          "remaining_bytes_before_proof_and_h5_axes": 8018373
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 7,
+          "minimum_implemented_working_upper_bytes": 210353501,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": true,
+          "remaining_bytes_before_proof_and_h5_axes": -638301
+        },
+        {
+          "actual_numeric_admission_established": false,
+          "focal_width": 8,
+          "minimum_implemented_working_upper_bytes": 219010175,
+          "must_refuse_even_if_proof_and_axes_cost_were_zero": true,
+          "remaining_bytes_before_proof_and_h5_axes": -9294975
+        }
+      ]
+    }
+  ],
+  "date": "2026-10-04",
+  "evaluated_function": "_working_upper",
+  "evaluated_function_ast_only": true,
+  "interpretation": "Necessary lower bounds on the implemented conservative reservation, conditional on the declared physical embryo counts. Passing a row is not numerical/native admission; actual proof and H5 axis costs must be added and all stored evidence verified.",
+  "interval": null,
+  "largest_proof_bytes_assumption": 0,
+  "matrix_model_checkpoint_or_h5_numeric_bytes_read": false,
+  "model_forwards_performed": false,
+  "numeric_working_ceiling_bytes": 209715200,
+  "runner": {
+    "bytes": 4918,
+    "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/capture_native_allocation_ledger.py",
+    "sha256": "ed75fee98911f09c294f6e94c4dfb0be7a692b3930c86f3476e0a2e1fcda49c6"
+  },
+  "schema": "b3_paged_native_cache_metadata_allocation_ledger_v1",
+  "scientific_readiness": "unavailable",
+  "source": {
+    "bytes": 44664,
+    "path": "/mnt/d/sc/transcriptformer/transcriptformer/scripts/prepare_b3_paged_native_cache.py",
+    "sha256": "572e3e9e8b01e728cce24ba49d9bce1ac58e0ab89c14e37621c336426e8e9a0b"
+  },
+  "ticket": "05",
+  "ticket_status": "open"
+}

@@ -1,0 +1,1374 @@
+{
+  "actual_pilot_actions": {
+    "diagnostic_execute": {
+      "action_record": {
+        "bytes": 1089259,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01.json",
+        "sha256": "e71cdd24e325638f32c373f52f01c79100073b449a20ce0edac45175db28b3d0"
+      },
+      "descriptive_draw_range": [
+        0,
+        3
+      ],
+      "focal_range": [
+        0,
+        8
+      ],
+      "process_cost": {
+        "bytes": 72,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01_process_cost.json",
+        "sha256": "11376ca177ceeed41f8479861e239028d70b379fcb11593dd5f8b7feefe8bff6"
+      },
+      "process_cost_values": {
+        "elapsed_seconds": 295.61,
+        "exit_code": 0,
+        "peak_process_rss_kib": 1095800
+      },
+      "public_action_seconds": 319.6214083840023,
+      "receipt_timings_seconds": {
+        "bins": 0.43888467201031744,
+        "cache_load": 0.7366408259840682,
+        "metric_load": 0.42427067100652494,
+        "metrics": 0.02490838197991252,
+        "native_reconstruction": 0.0,
+        "physical_admission": 0.30444327599252574,
+        "physical_comparison": 0.0,
+        "plan_source_admission": 252.2067763840023,
+        "serialization": 0.34842989400203805,
+        "weighted_rows": 0.24698528400040232
+      },
+      "request": {
+        "bytes": 12387,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/diagnostic_execute_01.request.json",
+        "sha256": "a04dc0df89b7c31c6ef7f8fc0166a4451135d5c5fab859ac890a7853866c654f"
+      },
+      "status": "unavailable_original_coverage_or_embryos",
+      "summary": {
+        "bytes": 621686,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/summary.json",
+        "sha256": "dc83b9b195f6c1e6d5256ffa2b43c08b46605159ceeade14f0132f77338ae232"
+      },
+      "supervisor": {
+        "bytes": 1190,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01_supervisor/state.json",
+        "sha256": "3beb0b2afa5486acb8458f3238667cb4163b624c64a86e227511ffebe55f1a7c"
+      }
+    },
+    "diagnostic_replay": {
+      "action_record": {
+        "bytes": 1089294,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01.json",
+        "sha256": "cf3188190b39287d2f53f76d49606dfdb135343509e3049637418bee04cadec8"
+      },
+      "descriptive_draw_range": [
+        0,
+        3
+      ],
+      "focal_range": [
+        0,
+        8
+      ],
+      "process_cost": {
+        "bytes": 72,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01_process_cost.json",
+        "sha256": "af480e54b8d3824038a7342350365f55d02d62fe9fc02bd58cf58953aae07f3c"
+      },
+      "process_cost_values": {
+        "elapsed_seconds": 451.38,
+        "exit_code": 0,
+        "peak_process_rss_kib": 1095496
+      },
+      "public_action_seconds": 488.2859438930027,
+      "receipt_timings_seconds": {
+        "bins": 0.44276211300166324,
+        "cache_load": 0.7319293579930672,
+        "metric_load": 0.41921200101205613,
+        "metrics": 0.026790570991579443,
+        "native_reconstruction": 168.39298859001428,
+        "physical_admission": 0.2922351450106362,
+        "physical_comparison": 0.30323406198294833,
+        "plan_source_admission": 250.65827996499138,
+        "serialization": 0.34817966297850944,
+        "weighted_rows": 0.2528099789924454
+      },
+      "request": {
+        "bytes": 12655,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/diagnostic_replay_01.request.json",
+        "sha256": "e8501a479e0538f5f9c09f08cfffed6bb8b8718dee59126d767f42515ecadd17"
+      },
+      "status": "unavailable_original_coverage_or_embryos",
+      "summary": {
+        "bytes": 621724,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/summary.json",
+        "sha256": "5cbd242057a9a909aebc9914c377f6aa7832c723ac0f3763d39309394b7f3bb6"
+      },
+      "supervisor": {
+        "bytes": 1189,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01_supervisor/state.json",
+        "sha256": "cea6199aade4d9ef1d93a5690d2831bbe95f77cd6c40a2c14a0dc0cef3fd0f27"
+      }
+    },
+    "finalize_empty": {
+      "action_record": {
+        "bytes": 3697,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_finalize_empty_01.json",
+        "sha256": "44a51e703345c1901d298b13e7eb17ebda007277954fbc4e9f25e7e0dc9c9966"
+      },
+      "descriptive_draw_range": null,
+      "focal_range": null,
+      "process_cost": {
+        "bytes": 72,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_finalize_empty_01_process_cost.json",
+        "sha256": "9be4c857fe2398ed8e088726892e164f597a655eeaafc8585345daa834d7e781"
+      },
+      "process_cost_values": {
+        "elapsed_seconds": 293.75,
+        "exit_code": 0,
+        "peak_process_rss_kib": 1096596
+      },
+      "public_action_seconds": 317.66284928099776,
+      "receipt_timings_seconds": null,
+      "request": {
+        "bytes": 12887,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/finalize_empty_01.request.json",
+        "sha256": "95e3d364d8e75520469865c146dc9488219b95437de18f51fa4ef8eb2c23aec7"
+      },
+      "status": "unavailable_original_coverage_or_embryos",
+      "summary": {
+        "bytes": 1970,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_finalize_empty_01/summary.json",
+        "sha256": "ac5a1980c9ddc4c238e0b9e3a65cebe3245445d759b83ed8d8f8e8ae466d9452"
+      },
+      "supervisor": {
+        "bytes": 1182,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_finalize_empty_01_supervisor/state.json",
+        "sha256": "d04538893d00baee78f93d28882c17d6aa6196a511bc726af81fffe24d103700"
+      }
+    },
+    "prepare": {
+      "action_record": {
+        "bytes": 5408,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_prepare_01.json",
+        "sha256": "8e738736f259880501fff6ddad8058fc386892f024df899a2c8f90f70d746f2e"
+      },
+      "descriptive_draw_range": null,
+      "focal_range": null,
+      "process_cost": {
+        "bytes": 72,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_prepare_01_process_cost.json",
+        "sha256": "b57964719b4a78e08125a1e92a8af3fecb75b8bea8bb490a235bd9353352144b"
+      },
+      "process_cost_values": {
+        "elapsed_seconds": 294.15,
+        "exit_code": 0,
+        "peak_process_rss_kib": 1121824
+      },
+      "public_action_seconds": 317.28911087500455,
+      "receipt_timings_seconds": null,
+      "request": {
+        "bytes": 13180,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/prepare.request.json",
+        "sha256": "2a3b3551e9a32af44fb85782c2d40e81eaf808b878d6a6b30b6b9c9e3a4bf2d0"
+      },
+      "status": "unavailable_original_coverage_or_embryos",
+      "summary": {
+        "bytes": 3198,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_prepare_01/summary.json",
+        "sha256": "5497c7257709b046b23a312123f8a7e75926afccb603c9fbda7467a945bc84b3"
+      },
+      "supervisor": {
+        "bytes": 1166,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_prepare_01_supervisor/state.json",
+        "sha256": "fcf5b54c93543913e5d60a400aebfdbe852e5d7221aed4c248abc6ec83fd4182"
+      }
+    },
+    "refusal": {
+      "action_record": {
+        "bytes": 1274,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_refusal_01.json",
+        "sha256": "7a7dc8cfb43c930ca2ea45d1d3c04fc00d6a4577ce53d8fd594fa83f352e01e7"
+      },
+      "descriptive_draw_range": null,
+      "focal_range": null,
+      "process_cost": {
+        "bytes": 72,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_refusal_01_process_cost.json",
+        "sha256": "721b30846ee658426a658961007938d29dfee91dedb8d09f875d60603db70aa9"
+      },
+      "process_cost_values": {
+        "elapsed_seconds": 237.7,
+        "exit_code": 0,
+        "peak_process_rss_kib": 1136740
+      },
+      "public_action_seconds": 254.44220108300215,
+      "receipt_timings_seconds": null,
+      "request": {
+        "bytes": 12331,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/refusal_01.request.json",
+        "sha256": "f4efee5aaccb1d25f5671c0a46f5bbfb15c1c59e474c18a13fd69456aa4573d0"
+      },
+      "status": "expected_production_refusal",
+      "summary": null,
+      "supervisor": {
+        "bytes": 1169,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_refusal_01_supervisor/state.json",
+        "sha256": "fe8950853fa88ab858037ed316f7301a6293319078a8a74014da0453b7614489"
+      }
+    }
+  },
+  "application_consumer_count": 74,
+  "artifact_storage": "Large immutable outputs remain ignored under runs; compact archives retain exact bytes and original canonical local references.",
+  "author_handoff": {
+    "bytes": 31354,
+    "path": "runs/b3_feasibility/20261004/paged_bootstrap_author_handoff01.json",
+    "sha256": "60d4e767fcfab1e1197a117f9dae87b9bf2a2a869eab4110fcb19f7e1e4765a1"
+  },
+  "baseline": "ec02c2b75bca10e42cfc0650df9c73999e76404b",
+  "bounded_engineering_tickets_closed": 10,
+  "capture_runner": {
+    "bytes": 18745,
+    "path": "runs/b3_feasibility/20261004/capture_paged_native_bootstrap_evidence.py",
+    "sha256": "ec9583927498f4c84b61a4697a2da48244bcaff5f34412f9cbf12f9177279227"
+  },
+  "checkpoint_tensors_loaded": false,
+  "checks_manifest": {
+    "bytes": 6227,
+    "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_checks_manifest.json",
+    "sha256": "88a65ed9bf407eca1b9e215faeea549a4ee93835ac8aa3c5b9a8d7201ccda8ba"
+  },
+  "ci_workflow": {
+    "bytes": 2178,
+    "path": ".github/workflows/b3-paged-native-bootstrap-tests.yml",
+    "sha256": "24c8fe8516585eb0bfc0c46f1194bc4bfbefb72da7c84375797fd92b9e6e63f7"
+  },
+  "code": {
+    "scripts/bootstrap_b3_paged_native.py": {
+      "bytes": 112102,
+      "path": "scripts/bootstrap_b3_paged_native.py",
+      "sha256": "caa2b8b3f54dda7405a0708c16fc00003dcab9f5a1d9f4404e7f0e57e969859e"
+    },
+    "test/test_b3_paged_native_bootstrap.py": {
+      "bytes": 50908,
+      "path": "test/test_b3_paged_native_bootstrap.py",
+      "sha256": "d91e9d78012e8d5f23d37f5184989e7ecc5259a3f76a26eaaf6040bc70a94fd0"
+    }
+  },
+  "complete_cpu_regression": {
+    "all_repository_modules_once": true,
+    "counts": {
+      "errors": 0,
+      "failures": 0,
+      "passed": 1017,
+      "skipped": 5,
+      "tests": 1022
+    },
+    "elapsed_seconds": 4356.242386122001,
+    "junit": {
+      "artifact": {
+        "bytes": 140205,
+        "path": "runs/b3_feasibility/20261004/paged_native_backend_complete_cpu.xml",
+        "sha256": "d9f1c38436d4b3e2d8da042a358b51dd695d66a825ff4e07cb10f3466da05a06"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 1017,
+        "skipped": 5,
+        "tests": 1022
+      },
+      "junit_seconds": 4353.174
+    },
+    "modules": 69,
+    "result": {
+      "bytes": 29209,
+      "path": "runs/b3_feasibility/20261004/paged_native_backend_complete_cpu_result.json",
+      "sha256": "c3e97caf79e6056d1f8d49554999e3adf8f32df820a65136628c42a3b6bcfbe2"
+    },
+    "supervisor": {
+      "bytes": 896,
+      "path": "runs/b3_feasibility/20261004/paged_native_backend_complete_cpu_supervisor/state.json",
+      "sha256": "94d5c5641b162a627fa8f244280331635c56c4697e56e87bfd05eddf88666196"
+    }
+  },
+  "contract": {
+    "bytes": 15529,
+    "path": "docs/agents/b3-paged-native-bootstrap-contract-2026-10-04.md",
+    "sha256": "43a83f053b6c26f8ddef5ed21c6df60a18ac9f4763c7bfbcacdc014ca0f1b8c2"
+  },
+  "date": "2026-10-04",
+  "exact_request_and_catalog_archives": {
+    "assembly.json": {
+      "exact_archive": {
+        "bytes": 14071,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-assembly-2026-10-04.json",
+        "sha256": "c52e78d48d4e701273de8472a08fcb11b024bd949f6d0e508ecbdd1b099e5a88"
+      },
+      "original": {
+        "bytes": 14071,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/assembly.json",
+        "sha256": "c52e78d48d4e701273de8472a08fcb11b024bd949f6d0e508ecbdd1b099e5a88"
+      }
+    },
+    "block-page-000000.json": {
+      "exact_archive": {
+        "bytes": 2668,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-block-page-000000-2026-10-04.json",
+        "sha256": "b81941b8651c7943f50ca0fac00d56868ef678d88c1ee485a0e0080bec830a7c"
+      },
+      "original": {
+        "bytes": 2668,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/block-page-000000.json",
+        "sha256": "b81941b8651c7943f50ca0fac00d56868ef678d88c1ee485a0e0080bec830a7c"
+      }
+    },
+    "blocks.json": {
+      "exact_archive": {
+        "bytes": 460,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-blocks-2026-10-04.json",
+        "sha256": "d89f3813ba19f81dcecb7f4fdcdda6b9b1954a14a04dbca8c206d16142de9d6b"
+      },
+      "original": {
+        "bytes": 460,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/blocks.json",
+        "sha256": "d89f3813ba19f81dcecb7f4fdcdda6b9b1954a14a04dbca8c206d16142de9d6b"
+      }
+    },
+    "diagnostic_execute_01.request.json": {
+      "exact_archive": {
+        "bytes": 12387,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-diagnostic_execute_01-request-2026-10-04.json",
+        "sha256": "a04dc0df89b7c31c6ef7f8fc0166a4451135d5c5fab859ac890a7853866c654f"
+      },
+      "original": {
+        "bytes": 12387,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/diagnostic_execute_01.request.json",
+        "sha256": "a04dc0df89b7c31c6ef7f8fc0166a4451135d5c5fab859ac890a7853866c654f"
+      }
+    },
+    "diagnostic_replay_01.execution-catalog.json": {
+      "exact_archive": {
+        "bytes": 382,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-diagnostic_replay_01-execution-catalog-2026-10-04.json",
+        "sha256": "d23ba0b9f2475080c281deeb63bd94c602c1deb52d5f37de5b89a56058466410"
+      },
+      "original": {
+        "bytes": 382,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/diagnostic_replay_01.execution-catalog.json",
+        "sha256": "d23ba0b9f2475080c281deeb63bd94c602c1deb52d5f37de5b89a56058466410"
+      }
+    },
+    "diagnostic_replay_01.request.json": {
+      "exact_archive": {
+        "bytes": 12655,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-diagnostic_replay_01-request-2026-10-04.json",
+        "sha256": "e8501a479e0538f5f9c09f08cfffed6bb8b8718dee59126d767f42515ecadd17"
+      },
+      "original": {
+        "bytes": 12655,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/diagnostic_replay_01.request.json",
+        "sha256": "e8501a479e0538f5f9c09f08cfffed6bb8b8718dee59126d767f42515ecadd17"
+      }
+    },
+    "finalize_empty_01.empty-catalog.json": {
+      "exact_archive": {
+        "bytes": 76,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-finalize_empty_01-empty-catalog-2026-10-04.json",
+        "sha256": "dba89b60e37d34e05952aca38b36cc8de64d8f083472272f851f50cbfd47bf46"
+      },
+      "original": {
+        "bytes": 76,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/finalize_empty_01.empty-catalog.json",
+        "sha256": "dba89b60e37d34e05952aca38b36cc8de64d8f083472272f851f50cbfd47bf46"
+      }
+    },
+    "finalize_empty_01.request.json": {
+      "exact_archive": {
+        "bytes": 12887,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-finalize_empty_01-request-2026-10-04.json",
+        "sha256": "95e3d364d8e75520469865c146dc9488219b95437de18f51fa4ef8eb2c23aec7"
+      },
+      "original": {
+        "bytes": 12887,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/finalize_empty_01.request.json",
+        "sha256": "95e3d364d8e75520469865c146dc9488219b95437de18f51fa4ef8eb2c23aec7"
+      }
+    },
+    "observed.json": {
+      "exact_archive": {
+        "bytes": 734,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-observed-2026-10-04.json",
+        "sha256": "38a61b9377040aa40dd2ca24ec66c6c619df78ea1ef63a4e6e339c874c85639e"
+      },
+      "original": {
+        "bytes": 734,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/observed.json",
+        "sha256": "38a61b9377040aa40dd2ca24ec66c6c619df78ea1ef63a4e6e339c874c85639e"
+      }
+    },
+    "prepare.request.json": {
+      "exact_archive": {
+        "bytes": 13180,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-prepare-request-2026-10-04.json",
+        "sha256": "2a3b3551e9a32af44fb85782c2d40e81eaf808b878d6a6b30b6b9c9e3a4bf2d0"
+      },
+      "original": {
+        "bytes": 13180,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/prepare.request.json",
+        "sha256": "2a3b3551e9a32af44fb85782c2d40e81eaf808b878d6a6b30b6b9c9e3a4bf2d0"
+      }
+    },
+    "refusal_01.request.json": {
+      "exact_archive": {
+        "bytes": 12331,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-refusal_01-request-2026-10-04.json",
+        "sha256": "f4efee5aaccb1d25f5671c0a46f5bbfb15c1c59e474c18a13fd69456aa4573d0"
+      },
+      "original": {
+        "bytes": 12331,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/refusal_01.request.json",
+        "sha256": "f4efee5aaccb1d25f5671c0a46f5bbfb15c1c59e474c18a13fd69456aa4573d0"
+      }
+    },
+    "sources.json": {
+      "exact_archive": {
+        "bytes": 123594,
+        "path": "docs/agents/b3-paged-native-bootstrap-actual-sources-2026-10-04.json",
+        "sha256": "e2a40ee181234758fa5a30f5c6fc87e9d532c0c67da25959bd4fa492c80e7a53"
+      },
+      "original": {
+        "bytes": 123594,
+        "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/sources.json",
+        "sha256": "e2a40ee181234758fa5a30f5c6fc87e9d532c0c67da25959bd4fa492c80e7a53"
+      }
+    }
+  },
+  "excluded_ticket": "11",
+  "genuine_pilot_assembly": {
+    "bytes": 14071,
+    "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_requests/assembly.json",
+    "sha256": "c52e78d48d4e701273de8472a08fcb11b024bd949f6d0e508ecbdd1b099e5a88"
+  },
+  "genuine_review_regressions": [
+    {
+      "fixture_only_attempts": [],
+      "genuine_red": [
+        {
+          "artifact": {
+            "bytes": 3881,
+            "path": "runs/b3_feasibility/20261004/paged_bootstrap_arithmetic_adapter_red.xml",
+            "sha256": "74327cc334127023a242b00408248667687da2063e37659893f4accd55b503aa"
+          },
+          "counts": {
+            "errors": 0,
+            "failures": 1,
+            "passed": 0,
+            "skipped": 0,
+            "tests": 1
+          },
+          "junit_seconds": 10.581
+        }
+      ],
+      "green": {
+        "artifact": {
+          "bytes": 752,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_bridge.xml",
+          "sha256": "65a26fe37e65b72abb1f6645cb4625a4e98fed5871581a50ff1c739c6db788e0"
+        },
+        "counts": {
+          "errors": 0,
+          "failures": 0,
+          "passed": 3,
+          "skipped": 0,
+          "tests": 3
+        },
+        "junit_seconds": 190.897
+      },
+      "name": "missing_complete_status",
+      "scope": "Pure in-memory arithmetic only; source/native/effect attestation remains false. Final bridge group includes the worked adapter case."
+    },
+    {
+      "fixture_only_attempts": [],
+      "genuine_red": [
+        {
+          "artifact": {
+            "bytes": 17363,
+            "path": "runs/b3_feasibility/20261004/paged_bootstrap_nested_refs_red.xml",
+            "sha256": "fa02528ad997b9dd68568c669d37491cf59966dbf3d85bed3101b71756ff3c13"
+          },
+          "counts": {
+            "errors": 0,
+            "failures": 4,
+            "passed": 2,
+            "skipped": 0,
+            "tests": 6
+          },
+          "junit_seconds": 616.358
+        },
+        {
+          "artifact": {
+            "bytes": 7615,
+            "path": "runs/b3_feasibility/20261004/paged_bootstrap_nested_marker_refs_red.xml",
+            "sha256": "1374d779b6a7578bde4be4ff481b55d6cc28e93a08ebdc291621db16b39a06c9"
+          },
+          "counts": {
+            "errors": 0,
+            "failures": 2,
+            "passed": 0,
+            "skipped": 0,
+            "tests": 2
+          },
+          "junit_seconds": 238.402
+        }
+      ],
+      "green": {
+        "artifact": {
+          "bytes": 1264,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_nested_refs_green.xml",
+          "sha256": "fd51385e840fad488a1e3e574e03d131ef023b9d4b6adbb5a9826096f394435b"
+        },
+        "counts": {
+          "errors": 0,
+          "failures": 0,
+          "passed": 6,
+          "skipped": 0,
+          "tests": 6
+        },
+        "junit_seconds": 501.151
+      },
+      "name": "strict_nested_references",
+      "scope": "Four original REDs plus two isolated marker REDs prove all six aliases; earlier GREEN predates exact-copy repair, final complete suite covers final source."
+    },
+    {
+      "fixture_only_attempts": [
+        {
+          "artifact": {
+            "bytes": 10316,
+            "path": "runs/b3_feasibility/20261004/paged_bootstrap_stored_copy_red.xml",
+            "sha256": "3609a34659020f85d0d1a5307251d7fb6707ccf125ca9fe79010300b87bcdbbd"
+          },
+          "counts": {
+            "errors": 0,
+            "failures": 1,
+            "passed": 0,
+            "skipped": 0,
+            "tests": 1
+          },
+          "junit_seconds": 67.494
+        }
+      ],
+      "genuine_red": [
+        {
+          "artifact": {
+            "bytes": 2814,
+            "path": "runs/b3_feasibility/20261004/paged_bootstrap_stored_copy_red_retry01.xml",
+            "sha256": "8b265b1da5fa9d7a829b537ae1d35276cb3d0bbff5da6f480ce7ca383ae5729e"
+          },
+          "counts": {
+            "errors": 0,
+            "failures": 1,
+            "passed": 0,
+            "skipped": 0,
+            "tests": 1
+          },
+          "junit_seconds": 84.337
+        }
+      ],
+      "green": {
+        "artifact": {
+          "bytes": 752,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_bridge.xml",
+          "sha256": "65a26fe37e65b72abb1f6645cb4625a4e98fed5871581a50ff1c739c6db788e0"
+        },
+        "counts": {
+          "errors": 0,
+          "failures": 0,
+          "passed": 3,
+          "skipped": 0,
+          "tests": 3
+        },
+        "junit_seconds": 190.897
+      },
+      "name": "exact_original_native_attempt_copy",
+      "scope": "Unchanged public producers accept a scaled native closure, original six files stay pinned and unit Z matches; repaired public bridge must reject incorrect21-byte tuples."
+    }
+  ],
+  "historical_value_parity": {
+    "old_public_oracle_freshly_executed_this_turn": false,
+    "result": {
+      "bytes": 27475,
+      "path": "runs/b3_feasibility/20261004/paged_native_bootstrap_actual_historical_parity.json",
+      "sha256": "f21707d56c410ff7e05174c02320dd90defa535289f66a81211a84310beaadc8"
+    },
+    "result_values": {
+      "all_gene_metric_records_compared_across_two_phases": 237222,
+      "checkpoint_tensors_loaded": false,
+      "comparison_is_canonical_value_parity_including_unavailability_and_signed_zero": true,
+      "elapsed_seconds": 3.2952178830018966,
+      "fresh_native_physical_reconstruction_is_separate": true,
+      "historical_public_oracle_freshly_executed_this_turn": false,
+      "historical_public_oracle_receipt": {
+        "bytes": 47508,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session_parity.json",
+        "sha256": "3e835463b68aec3b17b27f546ed064d68424726170f1116061f2d0838e28f3e9"
+      },
+      "interval": null,
+      "maximum_observed_numerical_error": 0,
+      "model_forwards_performed": false,
+      "native_likelihood_effects_attested": false,
+      "original_summary": {
+        "bytes": 60892,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/summary.json",
+        "sha256": "3398367b12a69725f5cdce37a68266b0491fdf6caa2cdd5f1fb99ae0c6510821"
+      },
+      "phases": {
+        "execution": {
+          "all_gene_metric_records": 118611,
+          "all_metrics_bins_weights_rows_exact": true,
+          "checks": [
+            {
+              "draw_index": 0,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4631202,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0000-source-000.json",
+                "sha256": "5a22aebba9e261dc59f0542d290922a8c65871876e8c24965016e46aeea31e12"
+              },
+              "rows": {
+                "bytes": 2685,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000003.json",
+                "sha256": "fe58b0c98c5a1fdf7cf0d57122a0f40652ab013f8d533646ef0bdb51ebb2caa1"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+              "state": {
+                "bytes": 4583716,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000000.json",
+                "sha256": "d464710b8d37208f552e96a641551ceab80e4632f9366f67e17048241a41f044"
+              }
+            },
+            {
+              "draw_index": 0,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4755396,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0000-source-001.json",
+                "sha256": "ea376e812be456b5fa942c91ee0bcd55b3e8bac784b9624d4112e162f43ebce5"
+              },
+              "rows": {
+                "bytes": 2505,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000009.json",
+                "sha256": "d7e6f8cf060702eeb6989993cb838bd3a6f0da3f796b70dd5d7c09f43295ae0c"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+              "state": {
+                "bytes": 4707077,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000006.json",
+                "sha256": "e08d3757e5d7d25d5ce7819d4cc51b513ce0e32a04c09c8a01c54a8f1b30e1e4"
+              }
+            },
+            {
+              "draw_index": 1,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4638181,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0001-source-000.json",
+                "sha256": "2aeab36472f86e30c110d6533d676c61b18711cf638e3684cdeb0c22c954a62f"
+              },
+              "rows": {
+                "bytes": 2684,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000004.json",
+                "sha256": "20a2206e4ac178460eb6ac76379a1d03f7aa0bf84d4f2a6097dbbd242e056fa6"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+              "state": {
+                "bytes": 4590612,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000001.json",
+                "sha256": "60a665c425c67e1728bff4dea64eaf44c2713eeeeba3318197b622f6f25d53fa"
+              }
+            },
+            {
+              "draw_index": 1,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4745589,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0001-source-001.json",
+                "sha256": "c3b91ef2681de10991505c554421d84164954993c66e4d394e7cda3ab8a27b08"
+              },
+              "rows": {
+                "bytes": 2507,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000010.json",
+                "sha256": "2f9d0d2600ab612e1c3f79324cbe9b8f0d07908a3f23410a7f4a6dc958db657d"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+              "state": {
+                "bytes": 4697184,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000007.json",
+                "sha256": "b131adba46464bb841452bdcf476af3c30a40f462e23613a46953e86373b0516"
+              }
+            },
+            {
+              "draw_index": 2,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4612796,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0002-source-000.json",
+                "sha256": "c8e9f94f3ef4213a258ad0b57bedd6735e478e3e4ecd9da12b072546a5b4b209"
+              },
+              "rows": {
+                "bytes": 2740,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000005.json",
+                "sha256": "ea038e2fe82c1fcd9f143591569765eb33c67665a5cf874d5887763bc900e658"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+              "state": {
+                "bytes": 4565170,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000002.json",
+                "sha256": "382ba2235dca27f6e0550c4ab19b49a3cee77ab09dcd41c10b92519273dab20c"
+              }
+            },
+            {
+              "draw_index": 2,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4760999,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0002-source-001.json",
+                "sha256": "a97be359bc54c743aa2b29a844e269fce4a8b5d980b7044f5e2675ddcc1507f5"
+              },
+              "rows": {
+                "bytes": 2505,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000011.json",
+                "sha256": "9026640f5ffefb106aaa2f71362266ddabce1d54f2fabcca36374f1f7b6b64c3"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+              "state": {
+                "bytes": 4712596,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000008.json",
+                "sha256": "777d4f60c765a397092a9acf85b0c7c59697e7bccfa375cd2d327c1fde9a1acf"
+              }
+            }
+          ],
+          "finite_rows": 19,
+          "fresh_native_prefix_reconstruction": false,
+          "rows": 48,
+          "summary": {
+            "bytes": 621686,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/summary.json",
+            "sha256": "dc83b9b195f6c1e6d5256ffa2b43c08b46605159ceeade14f0132f77338ae232"
+          },
+          "unavailable_rows": 29
+        },
+        "replay": {
+          "all_gene_metric_records": 118611,
+          "all_metrics_bins_weights_rows_exact": true,
+          "checks": [
+            {
+              "draw_index": 0,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4631202,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0000-source-000.json",
+                "sha256": "5a22aebba9e261dc59f0542d290922a8c65871876e8c24965016e46aeea31e12"
+              },
+              "rows": {
+                "bytes": 2685,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000003.json",
+                "sha256": "fe58b0c98c5a1fdf7cf0d57122a0f40652ab013f8d533646ef0bdb51ebb2caa1"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+              "state": {
+                "bytes": 4583716,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000000.json",
+                "sha256": "d464710b8d37208f552e96a641551ceab80e4632f9366f67e17048241a41f044"
+              }
+            },
+            {
+              "draw_index": 0,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4755396,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0000-source-001.json",
+                "sha256": "ea376e812be456b5fa942c91ee0bcd55b3e8bac784b9624d4112e162f43ebce5"
+              },
+              "rows": {
+                "bytes": 2505,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000009.json",
+                "sha256": "d7e6f8cf060702eeb6989993cb838bd3a6f0da3f796b70dd5d7c09f43295ae0c"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+              "state": {
+                "bytes": 4707077,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000006.json",
+                "sha256": "e08d3757e5d7d25d5ce7819d4cc51b513ce0e32a04c09c8a01c54a8f1b30e1e4"
+              }
+            },
+            {
+              "draw_index": 1,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4638181,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0001-source-000.json",
+                "sha256": "2aeab36472f86e30c110d6533d676c61b18711cf638e3684cdeb0c22c954a62f"
+              },
+              "rows": {
+                "bytes": 2684,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000004.json",
+                "sha256": "20a2206e4ac178460eb6ac76379a1d03f7aa0bf84d4f2a6097dbbd242e056fa6"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+              "state": {
+                "bytes": 4590612,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000001.json",
+                "sha256": "60a665c425c67e1728bff4dea64eaf44c2713eeeeba3318197b622f6f25d53fa"
+              }
+            },
+            {
+              "draw_index": 1,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4745589,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0001-source-001.json",
+                "sha256": "c3b91ef2681de10991505c554421d84164954993c66e4d394e7cda3ab8a27b08"
+              },
+              "rows": {
+                "bytes": 2507,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000010.json",
+                "sha256": "2f9d0d2600ab612e1c3f79324cbe9b8f0d07908a3f23410a7f4a6dc958db657d"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+              "state": {
+                "bytes": 4697184,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000007.json",
+                "sha256": "b131adba46464bb841452bdcf476af3c30a40f462e23613a46953e86373b0516"
+              }
+            },
+            {
+              "draw_index": 2,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4612796,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0002-source-000.json",
+                "sha256": "c8e9f94f3ef4213a258ad0b57bedd6735e478e3e4ecd9da12b072546a5b4b209"
+              },
+              "rows": {
+                "bytes": 2740,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000005.json",
+                "sha256": "ea038e2fe82c1fcd9f143591569765eb33c67665a5cf874d5887763bc900e658"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/human_measured_zero_restart_02_scores",
+              "state": {
+                "bytes": 4565170,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000002.json",
+                "sha256": "382ba2235dca27f6e0550c4ab19b49a3cee77ab09dcd41c10b92519273dab20c"
+              }
+            },
+            {
+              "draw_index": 2,
+              "metrics_bins_weights_rows_exact": true,
+              "original": {
+                "bytes": 4760999,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0002-source-001.json",
+                "sha256": "a97be359bc54c743aa2b29a844e269fce4a8b5d980b7044f5e2675ddcc1507f5"
+              },
+              "rows": {
+                "bytes": 2505,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000011.json",
+                "sha256": "9026640f5ffefb106aaa2f71362266ddabce1d54f2fabcca36374f1f7b6b64c3"
+              },
+              "source_key": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_pilot/organogenesis_v3/mouse_measured_zero_20261002_scores",
+              "state": {
+                "bytes": 4712596,
+                "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000008.json",
+                "sha256": "777d4f60c765a397092a9acf85b0c7c59697e7bccfa375cd2d327c1fde9a1acf"
+              }
+            }
+          ],
+          "finite_rows": 19,
+          "fresh_native_prefix_reconstruction": true,
+          "rows": 48,
+          "summary": {
+            "bytes": 621724,
+            "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/summary.json",
+            "sha256": "5cbd242057a9a909aebc9914c377f6aa7832c723ac0f3763d39309394b7f3bb6"
+          },
+          "unavailable_rows": 29
+        }
+      },
+      "rows_compared_across_two_phases": 96,
+      "runner": {
+        "bytes": 8460,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/compare_paged_native_bootstrap_actual.py",
+        "sha256": "de45e99a5549eb515680eab25385bccc071ac8d6525bde6c30617b67b9f70b87"
+      },
+      "schema": "b3_paged_native_bootstrap_genuine_historical_query_parity_v1",
+      "scientific_readiness": "unavailable",
+      "source_refs_checked_before_after": [
+        {
+          "bytes": 60892,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/summary.json",
+          "sha256": "3398367b12a69725f5cdce37a68266b0491fdf6caa2cdd5f1fb99ae0c6510821"
+        },
+        {
+          "bytes": 47508,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session_parity.json",
+          "sha256": "3e835463b68aec3b17b27f546ed064d68424726170f1116061f2d0838e28f3e9"
+        },
+        {
+          "bytes": 1797882,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_prepare_01/plan.json",
+          "sha256": "ade94b448f333a821ae0db66417cf948218d4c08c73d75ba227ec503c0eb75c1"
+        },
+        {
+          "bytes": 621686,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/summary.json",
+          "sha256": "dc83b9b195f6c1e6d5256ffa2b43c08b46605159ceeade14f0132f77338ae232"
+        },
+        {
+          "bytes": 380,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/queries.json",
+          "sha256": "d9caf184e039995b8c05877a55c0ead71483adfb4d56e01dfe386faba139d365"
+        },
+        {
+          "bytes": 5155,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-page-000000.json",
+          "sha256": "fe6a0f564c36e17a9496d2d834cee6aa24d634f214355bf3bcc6ea5d3aa9f5e3"
+        },
+        {
+          "bytes": 4631202,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0000-source-000.json",
+          "sha256": "5a22aebba9e261dc59f0542d290922a8c65871876e8c24965016e46aeea31e12"
+        },
+        {
+          "bytes": 4583716,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000000.json",
+          "sha256": "d464710b8d37208f552e96a641551ceab80e4632f9366f67e17048241a41f044"
+        },
+        {
+          "bytes": 2685,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000003.json",
+          "sha256": "fe58b0c98c5a1fdf7cf0d57122a0f40652ab013f8d533646ef0bdb51ebb2caa1"
+        },
+        {
+          "bytes": 4755396,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0000-source-001.json",
+          "sha256": "ea376e812be456b5fa942c91ee0bcd55b3e8bac784b9624d4112e162f43ebce5"
+        },
+        {
+          "bytes": 4707077,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000006.json",
+          "sha256": "e08d3757e5d7d25d5ce7819d4cc51b513ce0e32a04c09c8a01c54a8f1b30e1e4"
+        },
+        {
+          "bytes": 2505,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000009.json",
+          "sha256": "d7e6f8cf060702eeb6989993cb838bd3a6f0da3f796b70dd5d7c09f43295ae0c"
+        },
+        {
+          "bytes": 4638181,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0001-source-000.json",
+          "sha256": "2aeab36472f86e30c110d6533d676c61b18711cf638e3684cdeb0c22c954a62f"
+        },
+        {
+          "bytes": 4590612,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000001.json",
+          "sha256": "60a665c425c67e1728bff4dea64eaf44c2713eeeeba3318197b622f6f25d53fa"
+        },
+        {
+          "bytes": 2684,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000004.json",
+          "sha256": "20a2206e4ac178460eb6ac76379a1d03f7aa0bf84d4f2a6097dbbd242e056fa6"
+        },
+        {
+          "bytes": 4745589,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0001-source-001.json",
+          "sha256": "c3b91ef2681de10991505c554421d84164954993c66e4d394e7cda3ab8a27b08"
+        },
+        {
+          "bytes": 4697184,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000007.json",
+          "sha256": "b131adba46464bb841452bdcf476af3c30a40f462e23613a46953e86373b0516"
+        },
+        {
+          "bytes": 2507,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000010.json",
+          "sha256": "2f9d0d2600ab612e1c3f79324cbe9b8f0d07908a3f23410a7f4a6dc958db657d"
+        },
+        {
+          "bytes": 4612796,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0002-source-000.json",
+          "sha256": "c8e9f94f3ef4213a258ad0b57bedd6735e478e3e4ecd9da12b072546a5b4b209"
+        },
+        {
+          "bytes": 4565170,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000002.json",
+          "sha256": "382ba2235dca27f6e0550c4ab19b49a3cee77ab09dcd41c10b92519273dab20c"
+        },
+        {
+          "bytes": 2740,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000005.json",
+          "sha256": "ea038e2fe82c1fcd9f143591569765eb33c67665a5cf874d5887763bc900e658"
+        },
+        {
+          "bytes": 4760999,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261003/prepared_sparse_session/draw-0002-source-001.json",
+          "sha256": "a97be359bc54c743aa2b29a844e269fce4a8b5d980b7044f5e2675ddcc1507f5"
+        },
+        {
+          "bytes": 4712596,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000008.json",
+          "sha256": "777d4f60c765a397092a9acf85b0c7c59697e7bccfa375cd2d327c1fde9a1acf"
+        },
+        {
+          "bytes": 2505,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_execute_01/query-00000011.json",
+          "sha256": "9026640f5ffefb106aaa2f71362266ddabce1d54f2fabcca36374f1f7b6b64c3"
+        },
+        {
+          "bytes": 621724,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/summary.json",
+          "sha256": "5cbd242057a9a909aebc9914c377f6aa7832c723ac0f3763d39309394b7f3bb6"
+        },
+        {
+          "bytes": 379,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/queries.json",
+          "sha256": "5d0b7bfb171c9af4bef88c40f3084e3a6a0d2f7da02a66246c1874079d0d425e"
+        },
+        {
+          "bytes": 5143,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-page-000000.json",
+          "sha256": "229128cc3e20c481394130ac45de04525939772e4a32ef660584395657fc0e27"
+        },
+        {
+          "bytes": 4583716,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000000.json",
+          "sha256": "d464710b8d37208f552e96a641551ceab80e4632f9366f67e17048241a41f044"
+        },
+        {
+          "bytes": 2685,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000003.json",
+          "sha256": "fe58b0c98c5a1fdf7cf0d57122a0f40652ab013f8d533646ef0bdb51ebb2caa1"
+        },
+        {
+          "bytes": 4707077,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000006.json",
+          "sha256": "e08d3757e5d7d25d5ce7819d4cc51b513ce0e32a04c09c8a01c54a8f1b30e1e4"
+        },
+        {
+          "bytes": 2505,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000009.json",
+          "sha256": "d7e6f8cf060702eeb6989993cb838bd3a6f0da3f796b70dd5d7c09f43295ae0c"
+        },
+        {
+          "bytes": 4590612,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000001.json",
+          "sha256": "60a665c425c67e1728bff4dea64eaf44c2713eeeeba3318197b622f6f25d53fa"
+        },
+        {
+          "bytes": 2684,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000004.json",
+          "sha256": "20a2206e4ac178460eb6ac76379a1d03f7aa0bf84d4f2a6097dbbd242e056fa6"
+        },
+        {
+          "bytes": 4697184,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000007.json",
+          "sha256": "b131adba46464bb841452bdcf476af3c30a40f462e23613a46953e86373b0516"
+        },
+        {
+          "bytes": 2507,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000010.json",
+          "sha256": "2f9d0d2600ab612e1c3f79324cbe9b8f0d07908a3f23410a7f4a6dc958db657d"
+        },
+        {
+          "bytes": 4565170,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000002.json",
+          "sha256": "382ba2235dca27f6e0550c4ab19b49a3cee77ab09dcd41c10b92519273dab20c"
+        },
+        {
+          "bytes": 2740,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000005.json",
+          "sha256": "ea038e2fe82c1fcd9f143591569765eb33c67665a5cf874d5887763bc900e658"
+        },
+        {
+          "bytes": 4712596,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000008.json",
+          "sha256": "777d4f60c765a397092a9acf85b0c7c59697e7bccfa375cd2d327c1fde9a1acf"
+        },
+        {
+          "bytes": 2505,
+          "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/paged_native_bootstrap_actual_diagnostic_replay_01/query-00000011.json",
+          "sha256": "9026640f5ffefb106aaa2f71362266ddabce1d54f2fabcca36374f1f7b6b64c3"
+        }
+      ],
+      "status": "all_original_queries_and_fresh_native_replay_match"
+    }
+  },
+  "independent_reviews": {
+    "bytes": 8443,
+    "path": "docs/agents/b3-paged-native-bootstrap-reviews-2026-10-04.md",
+    "sha256": "f4d16f585ab3ba472f86c54527e1d8529d03e24f1277fd9600712a812a63c384"
+  },
+  "interval": null,
+  "model_flag_scope": "Native application validation and genuine pilot actions. The separate CPU regression uses synthetic fixtures and may execute small CPU models; real-model/checkpoint tests are disabled.",
+  "model_forwards_performed": false,
+  "native_arithmetic_replay_verified": false,
+  "native_likelihood_effects_attested": false,
+  "original_family_canonical_sha256": "5b2ed69bec7c56db883479341e4350f829a9b45991965c0232478644e96de2f0",
+  "original_source_keys_preserved": true,
+  "remaining_scientific_gates": [
+    "Actual complete full-cohort scored inputs and caches",
+    "Likelihood-effect attestation",
+    "Complete production and replay method cost",
+    "Reportable paired comparison and uncertainty",
+    "Project finetuned checkpoint provenance"
+  ],
+  "resource_scope": "One heavy CPU job at a time; one native thread; CUDA and real-model tests disabled. Application public calls retain 900s/200MiB numeric/4GiB RSS and host/disk floors. Complete repository regression has a separate bounded test budget. GNU invocation costs, receipt phases and supervisor heartbeats are distinct scopes; process RSS is not aggregate tree memory.",
+  "review_counts": {
+    "spec_remaining": 0,
+    "standards_hard": 0,
+    "standards_optional": 1
+  },
+  "reviewed_application_head": "49e007ef56bb0bb2c40b3a218f44f4fd069ea7d0",
+  "schema": "b3_paged_native_bootstrap_milestone_evidence_v2",
+  "scientific_readiness": "unavailable",
+  "source_preservation": {
+    "application_consumer_count": 74,
+    "counts": {
+      "json": 98,
+      "jsonl": 2,
+      "python": 224
+    },
+    "existing_bytes_and_git_index_modes_unchanged": true,
+    "native_cache_consumer_count": 67,
+    "result": {
+      "bytes": 49594,
+      "path": "runs/b3_feasibility/20261004/paged_native_backend_source_audit.json",
+      "sha256": "187fad203e05e1e0eb992916d24a16362784b744540fef371c5600173198ceca"
+    }
+  },
+  "static_checks": {
+    "bytes": 2318,
+    "path": "runs/b3_feasibility/20261004/paged_bootstrap_author_static03.json",
+    "sha256": "aba2f77d5f0c11db3648046370e96523687130d099cc8ad26e253f266b65552f"
+  },
+  "targeted": {
+    "all_final_application_cases_covered": true,
+    "disjoint": true,
+    "groups": [
+      {
+        "artifact": {
+          "bytes": 752,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_bridge.xml",
+          "sha256": "65a26fe37e65b72abb1f6645cb4625a4e98fed5871581a50ff1c739c6db788e0"
+        },
+        "counts": {
+          "errors": 0,
+          "failures": 0,
+          "passed": 3,
+          "skipped": 0,
+          "tests": 3
+        },
+        "junit_seconds": 190.897,
+        "original_supervisor_return_code": 0,
+        "selection_reason": "Entire raw invocation passed",
+        "supervisor": {
+          "bytes": 1037,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_bridge_supervisor/state.json",
+          "sha256": "a7880810e5d1f90dc8eaf9bfd04f69a141abf2f3e2f39901f4e6e52b05ee965b"
+        },
+        "supervisor_limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 950.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 738,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_core.xml",
+          "sha256": "89a917bad63d0d1e330a5e32b6a97749f5c85d2b1970beac2a40d568d0eceb7f"
+        },
+        "counts": {
+          "errors": 0,
+          "failures": 0,
+          "passed": 3,
+          "skipped": 0,
+          "tests": 3
+        },
+        "junit_seconds": 563.124,
+        "original_supervisor_return_code": 0,
+        "selection_reason": "Entire raw invocation passed",
+        "supervisor": {
+          "bytes": 998,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_core_supervisor/state.json",
+          "sha256": "87ea6e6c5e1d69c272fa41bb8ae8a4acab99f02bcb73431589c0432f1697a384"
+        },
+        "supervisor_limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 950.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 1308,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_protocol.xml",
+          "sha256": "b53ab757b01ef026a7d3247154bb1694d8ccb6d0bcd76bfb2ce45d14de95e5e2"
+        },
+        "counts": {
+          "errors": 0,
+          "failures": 0,
+          "passed": 6,
+          "skipped": 0,
+          "tests": 6
+        },
+        "junit_seconds": 348.147,
+        "original_supervisor_return_code": 0,
+        "selection_reason": "Entire raw invocation passed",
+        "supervisor": {
+          "bytes": 963,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_protocol_supervisor/state.json",
+          "sha256": "122e8864ea8bac35e44fdce3abfee3a619f46d19421842e91cb12f9cc2d3ecc5"
+        },
+        "supervisor_limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 950.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 4361,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_admission.xml",
+          "sha256": "f6f2ee732511bbaeade0ab2e1d480c40dd636a9b9ec45169e318992207ee5b49"
+        },
+        "counts": {
+          "errors": 0,
+          "failures": 0,
+          "passed": 28,
+          "skipped": 0,
+          "tests": 28
+        },
+        "junit_seconds": 375.433,
+        "original_supervisor_return_code": 0,
+        "selection_reason": "Entire raw invocation passed",
+        "supervisor": {
+          "bytes": 1245,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_admission_supervisor/state.json",
+          "sha256": "0ce228ffa41ba6b5fc5111a00f142986d275a602188ba19478267a04b96dca73"
+        },
+        "supervisor_limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 950.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        }
+      },
+      {
+        "artifact": {
+          "bytes": 10036,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_integrity.xml",
+          "sha256": "893e263d6114ab1b841019738a7e038cdc1363abcbd30706377d54647ebf0682"
+        },
+        "case_selection": [
+          "test_rebound_cache_cannot_change_source_commitment_or_h5_storage[different_cohort]",
+          "test_rebound_cache_cannot_change_source_commitment_or_h5_storage[noncanonical_commitment]",
+          "test_rebound_cache_cannot_change_source_commitment_or_h5_storage[external_statistics]",
+          "test_rebound_cache_cannot_change_source_commitment_or_h5_storage[summary_request_bytes]",
+          "test_rebound_cache_cannot_change_source_commitment_or_h5_storage[summary_metadata_bytes]",
+          "test_rebound_cache_cannot_change_source_commitment_or_h5_storage[summary_statistics_bytes]"
+        ],
+        "counts": {
+          "errors": 0,
+          "failures": 0,
+          "passed": 6,
+          "skipped": 0,
+          "tests": 6
+        },
+        "junit_seconds": 431.989,
+        "original_supervisor_return_code": 1,
+        "raw_xml_counts": {
+          "errors": 0,
+          "failures": 2,
+          "passed": 7,
+          "skipped": 0,
+          "tests": 9
+        },
+        "raw_xml_suite_seconds": 646.607,
+        "selection_reason": "Six unchanged PASS cache cases only; original three fsync observer outcomes are transitional and excluded",
+        "supervisor": {
+          "bytes": 975,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_integrity_supervisor/state.json",
+          "sha256": "97d745d4768c055e2717ae7f1376f99f806b5db7e3cff49518b9d4611e1090c4"
+        },
+        "supervisor_limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 950.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        },
+        "timing_scope": "Selected case times; raw XML and its complete suite duration are preserved separately. This is not a rewritten passing report for the original invocation."
+      },
+      {
+        "artifact": {
+          "bytes": 690,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_seal.xml",
+          "sha256": "de3ee5165d168009316e081f3585c310c4211a032768a04bbc4cabd5fdfaaf14"
+        },
+        "counts": {
+          "errors": 0,
+          "failures": 0,
+          "passed": 3,
+          "skipped": 0,
+          "tests": 3
+        },
+        "junit_seconds": 290.104,
+        "original_supervisor_return_code": 0,
+        "selection_reason": "Entire raw invocation passed",
+        "supervisor": {
+          "bytes": 948,
+          "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_seal_supervisor/state.json",
+          "sha256": "481736626afe1d95e03f1bb776286f3061736ade1db22af845c200d6824020af"
+        },
+        "supervisor_limits": {
+          "gpu_index": 0,
+          "max_gpu_temperature_c": null,
+          "max_rss_gib": 4.0,
+          "max_wall_seconds": 950.0,
+          "min_disk_gib": 20.0,
+          "min_host_ram_gib": 4.0
+        }
+      }
+    ],
+    "passed": 49
+  },
+  "ticket": "05",
+  "ticket_status": "open",
+  "transitional_fixture_reports": [
+    {
+      "artifact": {
+        "bytes": 10036,
+        "path": "runs/b3_feasibility/20261004/paged_bootstrap_final_repair_integrity.xml",
+        "sha256": "893e263d6114ab1b841019738a7e038cdc1363abcbd30706377d54647ebf0682"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 2,
+        "passed": 7,
+        "skipped": 0,
+        "tests": 9
+      },
+      "junit_seconds": 646.607
+    }
+  ]
+}

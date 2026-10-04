@@ -1,0 +1,107 @@
+"""Sequential supervised synthetic study; all eligibility comes from public producers."""
+
+import argparse
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+
+
+def main():
+    root = Path(__file__).resolve().parents[3]
+    base = Path(__file__).resolve().parent
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--study-root", type=Path, required=True)
+    parser.add_argument("--expected-app-sha256", required=True)
+    parser.add_argument("--through", choices=("compare", "cache"), default="cache")
+    args = parser.parse_args()
+    study = args.study_root.resolve()
+    study.relative_to(base)
+    if study.exists():
+        raise FileExistsError("Preserve every study attempt")
+    app = root / "scripts/bootstrap_b3_paged_native.py"
+    if sha256(app.read_bytes()).hexdigest() != args.expected_app_sha256:
+        raise ValueError("Use the exact final reviewed application")
+    study.mkdir()
+    fixture = base / "eligible_paged_prefix_tools/study_eligible_paged_prefix.py"
+    freeze, material = study / "00-freeze", study / "01-material"
+    ph, pm = study / "02-probe-human", study / "02-probe-mouse"
+    sh, sm = study / "03-score-human", study / "03-score-mouse"
+    compare = study / "04-compare"
+    uh, um = study / "05-support-human", study / "05-support-mouse"
+    pair, native, catalog = study / "06-full-pair", study / "07-native-human", study / "08-native-catalog-human"
+    cold, warm = study / "09-cache-human-cold", study / "10-cache-human-warm"
+    stages = [("freeze", freeze, ["--expected-app-sha256", args.expected_app_sha256]),
+              ("material", material, []),
+              ("probe", ph, ["--material-dir", material, "--species", "human"]),
+              ("probe", pm, ["--material-dir", material, "--species", "mouse"]),
+              ("score", sh, ["--material-dir", material, "--probe-dir", ph, "--species", "human"]),
+              ("score", sm, ["--material-dir", material, "--probe-dir", pm, "--species", "mouse"]),
+              ("compare", compare, ["--material-dir", material, "--human-score-dir", sh, "--mouse-score-dir", sm])]
+    if args.through == "cache":
+        stages.extend([("support", uh, ["--material-dir", material, "--species", "human"]),
+                       ("support", um, ["--material-dir", material, "--species", "mouse"]),
+                       ("full-pair", pair, ["--material-dir", material, "--human-support-dir", uh, "--mouse-support-dir", um]),
+                       ("native-import", native, ["--material-dir", material, "--score-dir", sh, "--support-dir", uh, "--full-pair-dir", pair, "--compare-dir", compare, "--species", "human"]),
+                       ("native-catalog", catalog, ["--native-import-dir", native]),
+                       ("cache-measure", cold, ["--native-catalog-dir", catalog]),
+                       ("cache-measure", warm, ["--native-catalog-dir", catalog, "--prior-cache-measurement-dir", cold])])
+    env = dict(os.environ)
+    env.update(OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1",
+               NUMEXPR_NUM_THREADS="1", CUDA_VISIBLE_DEVICES="", TF_RUN_REAL_MODEL_TESTS="0")
+    began = time.monotonic()
+    completed = []
+    observed_candidate_eligible = None
+    for action, output, parameters in stages:
+        supervisor = study / (output.name + "-supervisor")
+        argv = [sys.executable, root / "scripts/supervise_b3_pilot.py", "--run-dir", supervisor,
+                "--max-wall-seconds", "950", "--max-rss-gib", "4",
+                "--min-host-ram-gib", "4", "--min-disk-gib", "20", "--", "/usr/bin/time", "-v",
+                "-o", supervisor / "gnu-time.txt", sys.executable, fixture, action,
+                "--output", output, "--max-seconds", "900"]
+        if action != "freeze":
+            argv.extend(["--freeze-dir", freeze])
+        argv.extend(parameters)
+        print(json.dumps({"starting": output.name, "action": action}), flush=True)
+        result = subprocess.run([str(part) for part in argv], cwd=root, env=env, check=False)
+        state = json.loads((supervisor / "state.json").read_bytes())
+        if result.returncode or state["status"] != "completed" or state["return_code"] != 0:
+            raise RuntimeError("Preserved failed study stage: " + output.name)
+        if not (output / "summary.json").is_file():
+            raise ValueError("Successful study stage has no completion marker")
+        completed.append(output.name)
+        print(json.dumps({"completed": output.name, "summary": str(output / "summary.json")}), flush=True)
+        if action == "compare":
+            comparison = json.loads((output / "observed/comparison.json").read_bytes())
+            finite, joined = comparison["n_full_universe_paired_scores"], comparison["n_vocabulary_joined_pairs"]
+            embryos = (comparison["n_embryos_a"], comparison["n_embryos_b"])
+            assert all(type(value) is int and value >= 0 for value in (finite, joined, *embryos))
+            observed_candidate_eligible = (comparison["status"] == "reportable_descriptive" and finite >= 500
+                                           and joined > 0 and finite / joined >= 0.8 and min(embryos) >= 5)
+            if not observed_candidate_eligible:
+                print(json.dumps({"observed_candidate_eligible": False, "public_status": comparison["status"],
+                                  "finite_pairs": finite, "joined_pairs": joined, "embryos": embryos}), flush=True)
+                break
+    report = {"schema": "b3_eligible_paged_prefix_sequential_study_v1",
+              "status": "all_requested_stages_completed" if observed_candidate_eligible else "observed_fixture_not_eligible",
+              "requested_through": args.through, "observed_candidate_eligible": observed_candidate_eligible,
+              "completed": completed, "one_heavy_job_at_a_time": True, "one_native_thread": True,
+              "cuda_disabled": True, "cooperative_seconds": 900, "supervisor_seconds": 950,
+              "rss_ceiling_gib": 4, "host_ram_floor_gib": 4, "disk_floor_gib": 20,
+              "real_project_model_executed": False, "biological_orthology_claim": False,
+              "eligibility_decided_by_unchanged_public_comparator": True,
+              "native_likelihood_effects_attested": False, "scientific_readiness": "unavailable", "interval": None,
+              "elapsed_sequential_driver_seconds": time.monotonic() - began,
+              "fixture_runner_sha256": sha256(fixture.read_bytes()).hexdigest(),
+              "driver_sha256": sha256(Path(__file__).read_bytes()).hexdigest()}
+    with (study / "sequence.json").open("x") as handle:
+        json.dump(report, handle, indent=2, sort_keys=True, allow_nan=False)
+        handle.write("\n")
+    print(json.dumps({"sequence": str(study / "sequence.json"), "completed_stages": len(completed)}), flush=True)
+
+
+if __name__ == "__main__":
+    main()

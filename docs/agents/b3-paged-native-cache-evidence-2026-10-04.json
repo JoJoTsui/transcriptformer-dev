@@ -1,0 +1,619 @@
+{
+  "actual_pilots": {
+    "human": {
+      "array_elements_checked": 2328760,
+      "catalog_pages": 1,
+      "elapsed_before_final_seal_seconds": 76.34734595600457,
+      "metadata": {
+        "bytes": 363722,
+        "path": "runs/b3_feasibility/20261004/native_cache_actual_human/metadata.json",
+        "sha256": "746d6505511159ba2006e5a52008741cf9ab66c9e65f1b3aa72b2769a7dff5f4"
+      },
+      "native_likelihood_effects_attested": false,
+      "native_structure_verified": true,
+      "numeric_working_upper_bytes": 50601886,
+      "physical_arrays_bitwise_equal_to_original": true,
+      "process_cost": {
+        "bytes": 70,
+        "path": "runs/b3_feasibility/20261004/native_cache_actual_human_process_cost.json",
+        "sha256": "a7bbf5b638ffb5a13fccc0c54174d4fb46e205dd5a9e78a239c95b0150f2f905"
+      },
+      "process_cost_values": {
+        "elapsed_seconds": 88.54,
+        "exit_code": 0,
+        "peak_process_rss_kib": 185544
+      },
+      "statistics": {
+        "bytes": 7770912,
+        "path": "runs/b3_feasibility/20261004/native_cache_actual_human/statistics.h5",
+        "sha256": "4d59b1dae017e4c3674391cf204a2683ffd5c073ba613f0261ecc59782d1fcfd"
+      },
+      "summary": {
+        "bytes": 1832,
+        "path": "runs/b3_feasibility/20261004/native_cache_actual_human/summary.json",
+        "sha256": "e68839c1105ba0bf2bcb76d8874cefdebc84eaff986e49e74541744175ac5c50"
+      },
+      "supervisor": {
+        "bytes": 1383,
+        "path": "runs/b3_feasibility/20261004/native_cache_actual_human_supervisor/state.json",
+        "sha256": "31f2dbb29b4ef2a8a0add4387498b1f483c63486c64dbe2469097dd62bdf2ef2"
+      },
+      "timings_seconds": {
+        "bootstrap_admission": 0.5734121860004961,
+        "consumer_verification": 0.5262238680006703,
+        "initial_catalog_verification": 15.59654216200579,
+        "metadata_closure_and_consumer_imports": 1.600810375995934,
+        "native_numeric_validation": 11.84535178700753,
+        "native_proof_validation": 1.1086204120074399,
+        "snapshot_admission": 0.1960795710037928,
+        "snapshot_copy": 0.2006657570018433,
+        "statistics": 42.637499518998084,
+        "structural_readmission": 1.90809763399011
+      },
+      "verified_cells": 30,
+      "verified_ranges": 1,
+      "verified_scored_rows": 54268
+    },
+    "mouse": {
+      "array_elements_checked": 12078800,
+      "catalog_pages": 1,
+      "elapsed_before_final_seal_seconds": 49.47134452300088,
+      "metadata": {
+        "bytes": 437657,
+        "path": "runs/b3_feasibility/20261004/native_cache_actual_mouse/metadata.json",
+        "sha256": "d839283acd495dec81f7d6aa3ab58d055762d6af26cba8e15c68de4b0597328a"
+      },
+      "native_likelihood_effects_attested": false,
+      "native_structure_verified": true,
+      "numeric_working_upper_bytes": 94371774,
+      "physical_arrays_bitwise_equal_to_original": true,
+      "process_cost": {
+        "bytes": 70,
+        "path": "runs/b3_feasibility/20261004/native_cache_actual_mouse_process_cost.json",
+        "sha256": "1bbf57410903fb7930d4791cb464762464d5e0e07bffb16dd94dd0cda032deba"
+      },
+      "process_cost_values": {
+        "elapsed_seconds": 63.68,
+        "exit_code": 0,
+        "peak_process_rss_kib": 209784
+      },
+      "statistics": {
+        "bytes": 40271792,
+        "path": "runs/b3_feasibility/20261004/native_cache_actual_mouse/statistics.h5",
+        "sha256": "027382218fd0f4e2325f0cc87abb5557f891f53ddb352ff481a9189592913e0f"
+      },
+      "summary": {
+        "bytes": 1837,
+        "path": "runs/b3_feasibility/20261004/native_cache_actual_mouse/summary.json",
+        "sha256": "6032e1bed100352dbd1197b08226126645a55b90490c46b624e146c95ebc52a4"
+      },
+      "supervisor": {
+        "bytes": 1383,
+        "path": "runs/b3_feasibility/20261004/native_cache_actual_mouse_supervisor/state.json",
+        "sha256": "d723947cddedc6d897f4a02a01c12422bc96e70ec59deffa79499f8c1bc8a139"
+      },
+      "timings_seconds": {
+        "bootstrap_admission": 0.5827329129970167,
+        "consumer_verification": 0.5532166339980904,
+        "initial_catalog_verification": 16.140679092990467,
+        "metadata_closure_and_consumer_imports": 1.799036527008866,
+        "native_numeric_validation": 12.103989505005302,
+        "native_proof_validation": 0.7372600460075773,
+        "snapshot_admission": 0.2822962100035511,
+        "snapshot_copy": 0.25375823299691547,
+        "statistics": 14.565296964996378,
+        "structural_readmission": 2.006357467005728
+      },
+      "verified_cells": 25,
+      "verified_ranges": 1,
+      "verified_scored_rows": 21008
+    }
+  },
+  "artifact_storage": "Large immutable artifacts remain ignored under runs; exact compact requests are archived without rewriting canonical local source paths.",
+  "baseline": "ff76116d0c1c9e4eae429d9cffbf53d794bdbb5f",
+  "bounded_engineering_tickets_closed": 10,
+  "capture_runner": {
+    "bytes": 13168,
+    "path": "runs/b3_feasibility/20261004/capture_paged_native_cache_evidence.py",
+    "sha256": "34273ed3ac794464d4c599dc0f5e9ae5410bd663d5f636022552c2875b02ef51"
+  },
+  "checkpoint_tensors_loaded": false,
+  "ci_workflow": {
+    "bytes": 1568,
+    "path": ".github/workflows/b3-paged-native-cache-tests.yml",
+    "sha256": "a96217c6fbd60d66e921f15349be3d73f00df59ac4e0f7a963b8576d6db0e6a0"
+  },
+  "code": {
+    "scripts/prepare_b3_paged_native_cache.py": {
+      "bytes": 44664,
+      "path": "scripts/prepare_b3_paged_native_cache.py",
+      "sha256": "572e3e9e8b01e728cce24ba49d9bce1ac58e0ab89c14e37621c336426e8e9a0b"
+    },
+    "test/test_b3_paged_native_cache.py": {
+      "bytes": 41939,
+      "path": "test/test_b3_paged_native_cache.py",
+      "sha256": "45f9c2873c109a5334d8187139788c3dd57483ecf552da18e1fa0be7ac351297"
+    }
+  },
+  "complete_cpu_regression": {
+    "all_modules_once": true,
+    "counts": {
+      "errors": 0,
+      "failures": 0,
+      "passed": 1017,
+      "skipped": 5,
+      "tests": 1022
+    },
+    "elapsed_seconds": 4356.242386122001,
+    "junit": {
+      "artifact": {
+        "bytes": 140205,
+        "path": "runs/b3_feasibility/20261004/paged_native_backend_complete_cpu.xml",
+        "sha256": "d9f1c38436d4b3e2d8da042a358b51dd695d66a825ff4e07cb10f3466da05a06"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 1017,
+        "skipped": 5,
+        "tests": 1022
+      },
+      "junit_seconds": 4353.174
+    },
+    "modules": 69,
+    "result": {
+      "bytes": 29209,
+      "path": "runs/b3_feasibility/20261004/paged_native_backend_complete_cpu_result.json",
+      "sha256": "c3e97caf79e6056d1f8d49554999e3adf8f32df820a65136628c42a3b6bcfbe2"
+    },
+    "supervisor": {
+      "bytes": 896,
+      "path": "runs/b3_feasibility/20261004/paged_native_backend_complete_cpu_supervisor/state.json",
+      "sha256": "94d5c5641b162a627fa8f244280331635c56c4697e56e87bfd05eddf88666196"
+    }
+  },
+  "contract": {
+    "bytes": 7149,
+    "path": "docs/agents/b3-paged-native-cache-contract-2026-10-04.md",
+    "sha256": "6a90b9bc758cea54c8ce8a7451fcff78bf44ae8f7e0f77c895137fb26ef6e928"
+  },
+  "crosspage_order_refusal": {
+    "artifact": {
+      "bytes": 386,
+      "path": "runs/b3_feasibility/20261004/native_cache_crosspage_order01.xml",
+      "sha256": "e19184c7d9fcaab8e5f712ab11da0e5645c3b656df93b0d799a693de650bca9a"
+    },
+    "counts": {
+      "errors": 0,
+      "failures": 0,
+      "passed": 1,
+      "skipped": 0,
+      "tests": 1
+    },
+    "junit_seconds": 31.008
+  },
+  "date": "2026-10-04",
+  "exact_request_archives": {
+    "context": {
+      "exact_archive": {
+        "bytes": 12929,
+        "path": "docs/agents/b3-paged-native-cache-context-request-2026-10-04.json",
+        "sha256": "7747adfdac1c6ea40691fb9a8d1850c70f052766ba73746404e3ca759fc10e88"
+      },
+      "original": {
+        "bytes": 12929,
+        "path": "runs/b3_feasibility/20261004/native_cache_pilot_context_request.json",
+        "sha256": "7747adfdac1c6ea40691fb9a8d1850c70f052766ba73746404e3ca759fc10e88"
+      }
+    },
+    "human": {
+      "exact_archive": {
+        "bytes": 12597,
+        "path": "docs/agents/b3-paged-native-cache-human-request-2026-10-04.json",
+        "sha256": "e771891b7c2b7bd89b1790a6abd4e2777b53a20742caeb97850f03d06d770811"
+      },
+      "original": {
+        "bytes": 12597,
+        "path": "runs/b3_feasibility/20261004/native_cache_validation_requests/human.request.json",
+        "sha256": "e771891b7c2b7bd89b1790a6abd4e2777b53a20742caeb97850f03d06d770811"
+      }
+    },
+    "mouse": {
+      "exact_archive": {
+        "bytes": 12596,
+        "path": "docs/agents/b3-paged-native-cache-mouse-request-2026-10-04.json",
+        "sha256": "4f408110474ddd2e1985c35fa8de863103c943a2612c850c30c95d4cad222415"
+      },
+      "original": {
+        "bytes": 12596,
+        "path": "runs/b3_feasibility/20261004/native_cache_validation_requests/mouse.request.json",
+        "sha256": "4f408110474ddd2e1985c35fa8de863103c943a2612c850c30c95d4cad222415"
+      }
+    }
+  },
+  "excluded_ticket": "11",
+  "genuine_regressions": {
+    "native_cache_bootstrap_green.xml": {
+      "artifact": {
+        "bytes": 680,
+        "path": "runs/b3_feasibility/20261004/native_cache_bootstrap_green.xml",
+        "sha256": "75d1238512df0aa66c59d801874dda7503757b9a7360beebd3e4993345567638"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 3,
+        "skipped": 0,
+        "tests": 3
+      },
+      "junit_seconds": 14.275
+    },
+    "native_cache_bootstrap_red.xml": {
+      "artifact": {
+        "bytes": 7003,
+        "path": "runs/b3_feasibility/20261004/native_cache_bootstrap_red.xml",
+        "sha256": "3fc78e3480deaa77043d2eaa7cb3591edc897b1662d021951ddf1fa3b1c704c0"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 3,
+        "passed": 0,
+        "skipped": 0,
+        "tests": 3
+      },
+      "junit_seconds": 13.829
+    },
+    "native_cache_bootstrap_same_size_red.xml": {
+      "artifact": {
+        "bytes": 1929,
+        "path": "runs/b3_feasibility/20261004/native_cache_bootstrap_same_size_red.xml",
+        "sha256": "716b1fd82aed5e628fee02011dec835f500d2873d6a07151b0278934a8709210"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 1,
+        "passed": 0,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 11.343
+    },
+    "native_cache_footer_types_green.xml": {
+      "artifact": {
+        "bytes": 527,
+        "path": "runs/b3_feasibility/20261004/native_cache_footer_types_green.xml",
+        "sha256": "365d618d7582c6011544ab7375aed8d58f5ee164f6a5167e21c04f6be9452c7e"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 2,
+        "skipped": 0,
+        "tests": 2
+      },
+      "junit_seconds": 14.199
+    },
+    "native_cache_footer_types_red.xml": {
+      "artifact": {
+        "bytes": 2504,
+        "path": "runs/b3_feasibility/20261004/native_cache_footer_types_red.xml",
+        "sha256": "677ff56559c595eff8defad3897d1027ba1967946ac841bb572bef9cb3a6796d"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 2,
+        "passed": 0,
+        "skipped": 0,
+        "tests": 2
+      },
+      "junit_seconds": 25.675
+    },
+    "native_cache_green01.xml": {
+      "artifact": {
+        "bytes": 394,
+        "path": "runs/b3_feasibility/20261004/native_cache_green01.xml",
+        "sha256": "95773568d9f95a9d2f68efe5bf816baed45455f6631b223bad39cf5b09e7f928"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 1,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 29.012
+    },
+    "native_cache_green02.xml": {
+      "artifact": {
+        "bytes": 391,
+        "path": "runs/b3_feasibility/20261004/native_cache_green02.xml",
+        "sha256": "c3b476ab7f43fe03dc3787e6e1838d1a512ec550c10ed01496b2d53b6b639b73"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 1,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 11.465
+    },
+    "native_cache_green03.xml": {
+      "artifact": {
+        "bytes": 679,
+        "path": "runs/b3_feasibility/20261004/native_cache_green03.xml",
+        "sha256": "dbc97b80e4ef3c2cc0b60a008010bf876e084ab998476477ef7eedddd5094421"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 3,
+        "skipped": 0,
+        "tests": 3
+      },
+      "junit_seconds": 45.057
+    },
+    "native_cache_green04.xml": {
+      "artifact": {
+        "bytes": 378,
+        "path": "runs/b3_feasibility/20261004/native_cache_green04.xml",
+        "sha256": "0322c106908b598453a64653cd3aa8284fc29299f12e33533b65ed99b68a84be"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 1,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 12.28
+    },
+    "native_cache_metadata_types_green.xml": {
+      "artifact": {
+        "bytes": 1271,
+        "path": "runs/b3_feasibility/20261004/native_cache_metadata_types_green.xml",
+        "sha256": "ca2e65930502b05f9b8af0ab88003a5d4c822728c96a1de20387c43c5f400cd0"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 7,
+        "skipped": 0,
+        "tests": 7
+      },
+      "junit_seconds": 44.085
+    },
+    "native_cache_metadata_types_red.xml": {
+      "artifact": {
+        "bytes": 9584,
+        "path": "runs/b3_feasibility/20261004/native_cache_metadata_types_red.xml",
+        "sha256": "8535aba01a42b117bc4a6e7628f88a1a99fdb24e998a7753052966dd5ab31725"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 7,
+        "passed": 0,
+        "skipped": 0,
+        "tests": 7
+      },
+      "junit_seconds": 75.911
+    },
+    "native_cache_normalization_type_red.xml": {
+      "artifact": {
+        "bytes": 1704,
+        "path": "runs/b3_feasibility/20261004/native_cache_normalization_type_red.xml",
+        "sha256": "1bf7642fa426d1e8fb44539038402103766cb1b82faafe18fb3a8bb7010a2a42"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 1,
+        "passed": 0,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 12.39
+    },
+    "native_cache_partial_map_green.xml": {
+      "artifact": {
+        "bytes": 381,
+        "path": "runs/b3_feasibility/20261004/native_cache_partial_map_green.xml",
+        "sha256": "3b9450bc46e6c577c72c2e5476e4ec7fed308bcfc90b357988adb57a8800ddd7"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 1,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 6.803
+    },
+    "native_cache_partial_map_red.xml": {
+      "artifact": {
+        "bytes": 2295,
+        "path": "runs/b3_feasibility/20261004/native_cache_partial_map_red.xml",
+        "sha256": "6fcb08e42a95d295ff3db19b788a1bb616d42ff964cf8f5ca43cd55867b07e0b"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 1,
+        "passed": 0,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 7.716
+    },
+    "native_cache_red01.xml": {
+      "artifact": {
+        "bytes": 897,
+        "path": "runs/b3_feasibility/20261004/native_cache_red01.xml",
+        "sha256": "0e3a2f2ee0cfd56653728f175fafda867a6a726e7fde4e0ce525d9baa66f6e20"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 1,
+        "passed": 0,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 1.438
+    },
+    "native_cache_red02.xml": {
+      "artifact": {
+        "bytes": 2249,
+        "path": "runs/b3_feasibility/20261004/native_cache_red02.xml",
+        "sha256": "d631ea79b50a8fc51fe01bc3ca8a15f7d77771d2af0da5cd77021ab4b316c91f"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 1,
+        "passed": 0,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 7.835
+    },
+    "native_cache_red03.xml": {
+      "artifact": {
+        "bytes": 1462,
+        "path": "runs/b3_feasibility/20261004/native_cache_red03.xml",
+        "sha256": "9339dc9449d8ada8cd2b801adec46ed7810e79559a8a51a21e1d022f9157d773"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 1,
+        "passed": 0,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 10.746
+    },
+    "native_cache_red04.xml": {
+      "artifact": {
+        "bytes": 1785,
+        "path": "runs/b3_feasibility/20261004/native_cache_red04.xml",
+        "sha256": "ee2fac08d8e53996a37fefff4a833fd235bb4c39815cced3d361dcd35482f3db"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 1,
+        "passed": 0,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 12.192
+    }
+  },
+  "independent_reviews": {
+    "bytes": 2426,
+    "path": "docs/agents/b3-paged-native-cache-reviews-2026-10-04.md",
+    "sha256": "9e36eeb910b0f565fc2dcf4714f908d6d2210c84e7f1248b63f1386ae0e44e06"
+  },
+  "interval": null,
+  "metadata_allocation_ledger": {
+    "bytes": 7880,
+    "path": "docs/agents/b3-paged-native-cache-allocation-ledger-2026-10-04.json",
+    "sha256": "dcd55c41b73f7eb1f26b2fdfa025898f5d3a2f5d6a0a1d6114eb4ad9849e5e80"
+  },
+  "model_flag_scope": "Native cache validation and genuine pilot actions. The separate CPU regression uses synthetic fixtures and may execute small CPU models; real-model/checkpoint tests are disabled.",
+  "model_forwards_performed": false,
+  "native_likelihood_effects_attested": false,
+  "one_heavy_job_at_a_time": true,
+  "physical_parity": {
+    "all_bitwise_equal": true,
+    "array_elements_checked": 14407560,
+    "maximum_observed_numerical_error": 0,
+    "maximum_pair_payload_bytes": 25600,
+    "process_cost": {
+      "bytes": 69,
+      "path": "runs/b3_feasibility/20261004/native_cache_actual_parity_process_cost.json",
+      "sha256": "0aa6ee2e6d26e3cc1a5bb8750c8974d5e7b24edee19147b806739bcf778ac722"
+    },
+    "process_cost_values": {
+      "elapsed_seconds": 12.35,
+      "exit_code": 0,
+      "peak_process_rss_kib": 54636
+    },
+    "result": {
+      "bytes": 6460,
+      "path": "runs/b3_feasibility/20261004/native_cache_actual_parity.json",
+      "sha256": "343e906ef24af544dea6b784a8e353b5188a12aef021baff480935d4672c297c"
+    }
+  },
+  "public_two_page_native_oracle": {
+    "all_four_physical_arrays_bitwise_equal": true,
+    "cells": 129,
+    "junit": {
+      "artifact": {
+        "bytes": 401,
+        "path": "runs/b3_feasibility/20261004/native_cache_two_pages01.xml",
+        "sha256": "84ab509f627423e5e2919f817247e3b2465dbec802c863eae3b9b637f50496cb"
+      },
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 1,
+        "skipped": 0,
+        "tests": 1
+      },
+      "junit_seconds": 109.652
+    },
+    "pages": 2,
+    "ranges": 129
+  },
+  "resource_scope": "GNU time measures complete child wall/RSS. Supervisor watches the time wrapper; the native cooperative budget also checks its own process RSS. RSS is not aggregate tree memory.",
+  "review_counts": {
+    "spec_remaining": 0,
+    "standards_hard": 0,
+    "standards_optional": 1
+  },
+  "reviewed_native_cache_head": "ec02c2b75bca10e42cfc0650df9c73999e76404b",
+  "schema": "b3_paged_native_cache_milestone_evidence_v1",
+  "scientific_readiness": "unavailable",
+  "sequential_validation": {
+    "bytes": 7328,
+    "path": "runs/b3_feasibility/20261004/native_cache_sequential_validation.json",
+    "sha256": "9b618e9b7332ba045c6fe4541637167688b80e1ae86bd4261cc5624d11678789"
+  },
+  "source_preservation": {
+    "bytes_and_git_index_modes_unchanged": true,
+    "cache_consumer_bindings": 67,
+    "counts": {
+      "json": 98,
+      "jsonl": 2,
+      "python": 224
+    },
+    "native_modules": 58,
+    "original_pilot_software": {
+      "human": 107,
+      "mouse": 109
+    },
+    "result": {
+      "bytes": 50817,
+      "path": "runs/b3_feasibility/20261004/paged_native_cache_source_audit.json",
+      "sha256": "e729fce19a533ee8418956f3ce0ff32a9a488c52cac069ccb7610dbebd15f3fe"
+    }
+  },
+  "static_checks": {
+    "bytes": 2445,
+    "path": "runs/b3_feasibility/20261004/native_cache_bootstrap_static_checks.json",
+    "sha256": "4e7a473389da7cdb7ec6361338b2d8a96635c29e2fc4a3e97cc48edc66ed9593"
+  },
+  "targeted": {
+    "artifact": {
+      "bytes": 7303,
+      "path": "runs/b3_feasibility/20261004/native_cache_bootstrap_final_targeted.xml",
+      "sha256": "de6e43e1d0789233ef831520a554318869f8d8787a73b7b05ee20c0d4fc79dca"
+    },
+    "counts": {
+      "errors": 0,
+      "failures": 0,
+      "passed": 49,
+      "skipped": 0,
+      "tests": 49
+    },
+    "junit_seconds": 433.714
+  },
+  "ticket": "05",
+  "ticket_status": "open"
+}
