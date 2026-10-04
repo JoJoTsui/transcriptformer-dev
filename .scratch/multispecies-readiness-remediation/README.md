@@ -1,6 +1,31 @@
 # Multispecies readiness remediation — ticket index
 
-**Current streamed pipeline milestone — 2026-10-04:** Three bounded dependencies
+**Current paged admission milestone — 2026-10-04:** Structural metadata admission
+validates **123,952 human / 945,389 mouse cells**, preserving all **22,279**
+original ranges across **175** bounded pages. Actual original pilot certificate
+catalogs pass fresh byte verification with **131 human / 141 mouse common
+bindings**, including separately authenticated six-file import lineage.
+Native numerical/effect attestation and full pipeline integration remain false;
+structural matrix/support/checkpoint references remain unverified.
+
+All **96 targeted checks** and Ruff check/format/mypy pass. Independent committed
+reviews have zero remaining hard findings (one optional read-duplication
+judgment). The final complete CPU regression passes **919 tests,
+5 skipped**, no failures/errors, across all **67 modules once**
+in **1441.12 seconds**. Source audit preserves all **220 preexisting Python
+files**, **92 prior JSON files**, **58 native modules**, and original **107 human /
+109 mouse** pilot software hashes. See the
+[validation record](../../docs/agents/b3-paged-native-admission-validation-2026-10-04.md) and
+[bound evidence](../../docs/agents/b3-paged-native-admission-evidence-2026-10-04.json).
+
+**05 remains open, 11 excluded, ten bounded engineering tickets closed.**
+Page-aware native proof/CSR/support verification and cache integration remain
+unfinished; actual full-cohort scored inputs, complete effects/method cost and
+reportable comparison/uncertainty remain unavailable. The pilot's **32.54%**
+coverage and **0/2,000** necessary jointly supported draws still withhold
+reporting. Scientific rules and existing source-bound Python remain unchanged.
+
+**Previous streamed pipeline milestone — 2026-10-04:** Three bounded dependencies
 are validated: fixed-family reduction with incomplete-input refusal; general
 prepare/execute/replay/finalize orchestration; and private windowed native
 snapshots with H5 allocation admission. All 96 saved diagnostic rows and three
@@ -184,7 +209,7 @@ data, chicken identifier repair and production training remain separate gates.
 | [02 — Preserve stochastic optimization across single-process and distributed resume](issues/02-stochastic-resume-continuity.md) | R7; tracker A/F | 01 | Closed for bounded CPU engineering acceptance; two-rank interrupted/resumed dropout continuity passed |
 | [03 — Report surviving holdout observations and embryos from prepared artifacts](issues/03-post-qc-holdout-coverage.md) | R4; B1 freeze workflow | None | Closed for bounded engineering acceptance; recorded splits validated without allocation; six-source preparation validated; finalized multispecies corpus absent |
 | [04 — Validate actual ortholog joins and reconcile chicken identifiers](issues/04-ortholog-identifier-joins.md) | R2; register 4.3; tracker N | None | Closed for bounded engineering acceptance; strict partial bridge leaves R2 open |
-| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Open; bounded streamed pipeline verified; pilot coverage 32.54%; full-context/paging, complete effects/cost and reportable comparison/uncertainty pending |
+| [05 — Enforce registered ortholog floors on actual statistic inputs](issues/05-statistic-specific-ortholog-eligibility.md) | R3; stale post-filter counts; register 4.3; tracker N | 04 | Open; structural metadata and catalog bytes verified; pilot coverage 32.54%; paged native integration, scored inputs, complete effects/cost and reportable comparison/uncertainty pending |
 | [06 — Build a bounded validation cohort with embryo and phase provenance](issues/06-frozen-validation-cohort.md) | R5; ADR 0004 | 03 | Closed for bounded engineering acceptance; actual frozen cohort absent |
 | [07 — Compute hierarchical baseline-relative scores and eligibility](issues/07-baseline-relative-selection-score.md) | R5; ADR 0004 | 06 | Closed for bounded engineering acceptance; production losses absent |
 | [08 — Integrate approved selection with early stopping, resume and model export](issues/08-selection-resume-and-export.md) | R1/R5/R7 integration; ADR 0004 | 01, 02, 06, 07 | Closed for bounded engineering acceptance; completed-directory gap repaired; production evidence absent |

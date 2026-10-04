@@ -1,6 +1,31 @@
 # Multispecies embryogenesis readiness remediation
 
-**Current streamed pipeline milestone — 2026-10-04:** Three bounded dependencies
+**Current paged admission milestone — 2026-10-04:** Structural metadata admission
+validates **123,952 human / 945,389 mouse cells**, preserving all **22,279**
+original ranges across **175** bounded pages. Actual original pilot certificate
+catalogs pass fresh byte verification with **131 human / 141 mouse common
+bindings**, including separately authenticated six-file import lineage.
+Native numerical/effect attestation and full pipeline integration remain false;
+structural matrix/support/checkpoint references remain unverified.
+
+All **96 targeted checks** and Ruff check/format/mypy pass. Independent committed
+reviews have zero remaining hard findings (one optional read-duplication
+judgment). The final complete CPU regression passes **919 tests,
+5 skipped**, no failures/errors, across all **67 modules once**
+in **1441.12 seconds**. Source audit preserves all **220 preexisting Python
+files**, **92 prior JSON files**, **58 native modules**, and original **107 human /
+109 mouse** pilot software hashes. See the
+[validation record](../../docs/agents/b3-paged-native-admission-validation-2026-10-04.md) and
+[bound evidence](../../docs/agents/b3-paged-native-admission-evidence-2026-10-04.json).
+
+**05 remains open, 11 excluded, ten bounded engineering tickets closed.**
+Page-aware native proof/CSR/support verification and cache integration remain
+unfinished; actual full-cohort scored inputs, complete effects/method cost and
+reportable comparison/uncertainty remain unavailable. The pilot's **32.54%**
+coverage and **0/2,000** necessary jointly supported draws still withhold
+reporting. Scientific rules and existing source-bound Python remain unchanged.
+
+**Previous streamed pipeline milestone — 2026-10-04:** Three bounded dependencies
 are validated: fixed-family reduction with incomplete-input refusal; general
 prepare/execute/replay/finalize orchestration; and private windowed native
 snapshots with H5 allocation admission. All 96 saved diagnostic rows and three

@@ -1,6 +1,6 @@
 # Bounded full-context admission and certificate paging — 2026-10-04
 
-Status: implementation in progress under
+Status: implemented and validated for bounded metadata/byte admission under
 [ADR 0005](../adr/0005-b3-feasibility-before-full-cohort-expansion.md).
 This advances ticket 05's full-context/paging prerequisite. All existing Python
 bytes at baseline `222be38159af57fa017fe625851daa65952e629e` remain unchanged.

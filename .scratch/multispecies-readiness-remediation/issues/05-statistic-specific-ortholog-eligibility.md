@@ -1,6 +1,31 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-**Current streamed pipeline milestone — 2026-10-04:** Three bounded dependencies
+**Current paged admission milestone — 2026-10-04:** Structural metadata admission
+validates **123,952 human / 945,389 mouse cells**, preserving all **22,279**
+original ranges across **175** bounded pages. Actual original pilot certificate
+catalogs pass fresh byte verification with **131 human / 141 mouse common
+bindings**, including separately authenticated six-file import lineage.
+Native numerical/effect attestation and full pipeline integration remain false;
+structural matrix/support/checkpoint references remain unverified.
+
+All **96 targeted checks** and Ruff check/format/mypy pass. Independent committed
+reviews have zero remaining hard findings (one optional read-duplication
+judgment). The final complete CPU regression passes **919 tests,
+5 skipped**, no failures/errors, across all **67 modules once**
+in **1441.12 seconds**. Source audit preserves all **220 preexisting Python
+files**, **92 prior JSON files**, **58 native modules**, and original **107 human /
+109 mouse** pilot software hashes. See the
+[validation record](../../../docs/agents/b3-paged-native-admission-validation-2026-10-04.md) and
+[bound evidence](../../../docs/agents/b3-paged-native-admission-evidence-2026-10-04.json).
+
+**05 remains open, 11 excluded, ten bounded engineering tickets closed.**
+Page-aware native proof/CSR/support verification and cache integration remain
+unfinished; actual full-cohort scored inputs, complete effects/method cost and
+reportable comparison/uncertainty remain unavailable. The pilot's **32.54%**
+coverage and **0/2,000** necessary jointly supported draws still withhold
+reporting. Scientific rules and existing source-bound Python remain unchanged.
+
+**Previous streamed pipeline milestone — 2026-10-04:** Three bounded dependencies
 are validated: fixed-family reduction with incomplete-input refusal; general
 prepare/execute/replay/finalize orchestration; and private windowed native
 snapshots with H5 allocation admission. All 96 saved diagnostic rows and three
@@ -181,7 +206,7 @@ The eight-hour producer budget retains memory/storage guards. Actual completion
 is pending and this pilot cannot meet the paired 80% reporting floor.
 
 Category: correctness and readiness
-Status: Open — bounded streamed pipeline verified; full-context/paging, complete effects/cost, reportable comparison and uncertainty pending
+Status: Open — structural metadata and catalog bytes verified; paged native integration, scored inputs, complete effects/cost, reportable comparison and uncertainty pending
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -814,12 +839,19 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   checks verify native physical/weighted parity, H5 admission, live allocation
   reservations, source mutation refusal and cleanup. Existing reader caps
   remain enforced; full-context authentication and paging stay separate below.
-- [ ] Implement a separately versioned bounded full-context authenticator and
-  hash-bound catalog/certificate paging protocol for actual full-cohort inputs.
-  The general backend still inherits a 48-cell whole-context limit. At least
-  12,915 human and 98,480 mouse per-range bindings exceed the new frontend's
-  8,192 cap; mouse also exceeds the frozen native 20,000-binding cap.
-  The bounded window adapter does not close this distinct engineering gate.
+- [ ] Complete separately versioned full-context native authentication and
+  integrate paged original proof/CSR/support verification with native cache
+  source commitments. The general backend still inherits the 48-cell
+  whole-context and flat closure contracts; their caps remain unchanged.
+  - [x] Admit actual full-cohort metadata without the pilot whole-context limit:
+    all 22,279 original ranges across 175 bounded pages, with native readiness false.
+  - [x] Publish and freshly verify original certificate/four-shard byte catalogs
+    without flattening aggregate bindings. A 1,700-range fixture covers 14 pages
+    and 8,511 bindings; both actual pilot certificates pass byte-only verification.
+  - [ ] Carry global coverage/source-row state across pages, preserve every
+    original native proof/CSR/support invariant, and integrate a versioned
+    native cache/source commitment. Actual full-cohort scored shards are absent.
+  The bounded metadata/byte receipt does not close this native engineering gate.
 - [ ] Measure complete method-preserving scoring, verification and aggregation
   cost within explicit WSL budgets before expanding full-cohort production.
   Partial: planning, import, reconciliation, indexing, 64-gene null ranges,
