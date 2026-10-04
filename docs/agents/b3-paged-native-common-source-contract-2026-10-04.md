@@ -149,7 +149,11 @@ publisher's AST selection retains its separate fixed engine hash admission.
 The original role loop reuses private imported modules; intentional numeric
 engine clones retain independent globals. Private module registrations are
 removed on success and failure, while canonical caches and interpreter builtins
-remain intact. Public finalization passes its verified private math validator
+remain intact. A session-local `sys` facade gives nested frozen loaders owned
+module aliases and unique runtime registrations, including dataclass lookups;
+pre-existing entries are preserved and all owned registrations are removed.
+The attribute compile guard delegates to the authenticated registry compiler
+so its unchanged code can pass guarded execution. Public finalization passes its verified private math validator
 to shared receipt adaptation, including the deferred scheduler import.
 A final source seal alone cannot establish these properties. Earlier producers
 keep their original bytes and are not retroactively claimed to have this guard.

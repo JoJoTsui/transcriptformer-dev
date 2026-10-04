@@ -8,7 +8,6 @@ query receipts authenticate their own versioned sources and commitments.
 from __future__ import annotations
 
 import argparse
-import builtins
 from contextlib import contextmanager
 from hashlib import sha256
 import json
@@ -477,7 +476,7 @@ class _Session:
             self.budget.check()
             if filename != str(ATTRIBUTE_SOURCE) or mode != "exec" or type(source) is not bytes or source != expected:
                 raise ValueError("Attribute helper compile buffer differs from its authenticated consumer bytes")
-            return builtins.compile(source, filename, mode, *args, **kwargs)
+            return self.helper_registry._compile(source, filename, mode, *args, **kwargs)
 
         # Only this session's exact-buffer private window module is affected.
         # The frozen file and public scientific/numeric methods stay intact.

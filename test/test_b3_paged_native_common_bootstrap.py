@@ -503,6 +503,12 @@ def test_private_receipt_adaptation_uses_verified_math_validator_and_retains_ori
         assert (
             application._adapt_common_draw_receipts(science, [], phase="production", validator=recorded_validator) == []
         )
+        window = session.modules["window"]
+        code = window.__dict__["compile"](session.attribute_source_bytes, str(application.ATTRIBUTE_SOURCE), "exec")
+        assert code in session.helper_registry.compiled
+        parser_namespace = {"__file__": str(application.ATTRIBUTE_SOURCE), "__name__": "_guarded_parser_test"}
+        window.__dict__["__builtins__"]["exec"](code, parser_namespace)
+        assert parser_namespace["_align8"](1) == 8
         result = session.modules["math"].finalize_replayed_draws(science, [], [])
         assert calls == [science] and forbidden == []
         assert result["draws"] == 0 and result["source_attestation_performed"] is False
@@ -640,3 +646,60 @@ def test_common_draw_range_refuses_before_plan_loading(tmp_path, action, start, 
     with pytest.raises(ValueError, match="range|draw|Draw"):
         getattr(application, action)(path, output)
     assert not output.exists()
+
+
+def test_nested_frozen_loader_owns_clone_registrations_and_preserves_existing_cache(tmp_path, monkeypatch):
+    from types import ModuleType, SimpleNamespace
+
+    from scripts.b3_authenticated_helpers import AuthenticatedHelpers
+
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    loader = scripts / "nested_loader.py"
+    child = scripts / "clone.py"
+    failing = scripts / "failed_clone.py"
+    sources = {
+        loader: (
+            b"from types import ModuleType\nimport sys\n"
+            b"def clone(data, path, name):\n"
+            b"    module = ModuleType(name)\n"
+            b"    module.__file__ = path\n"
+            b"    sys.modules[name] = module\n"
+            b"    exec(compile(data, path, 'exec'), module.__dict__)\n"
+            b"    return module\n"
+        ),
+        child: (
+            b"from __future__ import annotations\n"
+            b"from dataclasses import dataclass\n"
+            b"@dataclass\nclass Value:\n    number: int = 7\n"
+            b"VALUE = 7\n"
+        ),
+        failing: b"raise RuntimeError('owned clone failure')\n",
+    }
+    for path, data in sources.items():
+        path.write_bytes(data)
+    alias = "_common_frozen_nested_clone"
+    previous = ModuleType(alias)
+    previous.VALUE = -1
+    monkeypatch.setitem(sys.modules, alias, previous)
+    registry = AuthenticatedHelpers(tmp_path, sources, SimpleNamespace(check=lambda: None))
+    try:
+        module = registry.load(loader)
+        first = module.clone(sources[child], str(child), alias)
+        assert sys.modules[alias] is previous
+        second = module.clone(sources[child], str(child), alias)
+        assert first is not second and first.__dict__ is not second.__dict__
+        first.VALUE = 99
+        assert second.VALUE == 7 and second.Value().number == 7
+        assert first.__name__ != second.__name__
+        assert sys.modules[first.__name__] is first and sys.modules[second.__name__] is second
+        with pytest.raises(RuntimeError, match="owned clone failure"):
+            module.clone(sources[failing], str(failing), alias)
+        assert sys.modules[alias] is previous
+        names = list(registry.module_names)
+        assert first.__name__ in names and second.__name__ in names
+    finally:
+        names = list(registry.module_names)
+        registry.close()
+    assert all(name not in sys.modules for name in names)
+    assert sys.modules[alias] is previous

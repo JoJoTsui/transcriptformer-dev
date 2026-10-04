@@ -8,12 +8,55 @@ from __future__ import annotations
 
 import ast
 import builtins
+from collections.abc import MutableMapping
 from importlib.util import resolve_name
 from pathlib import Path
 import sys
 from types import CodeType, ModuleType
 from typing import Any
 from weakref import WeakSet
+
+# A nested invocation can load this stdlib-only helper through its parent's
+# private importer. Each registry still owns registrations in the actual
+# runtime, so an inner close removes its own modules immediately.
+sys = getattr(sys, "_b3_authenticated_runtime_sys", sys)
+
+
+class _OwnedModules(MutableMapping):
+    """Expose original cache reads; keep helper writes and deletions private."""
+
+    def __init__(self, registry):
+        self.registry = registry
+        self.aliases: dict[str, ModuleType] = {}
+
+    def __getitem__(self, key):
+        if key in self.aliases:
+            return self.aliases[key]
+        return sys.modules[key]
+
+    def __setitem__(self, key, value):
+        self.registry.budget.check()
+        if not isinstance(key, str) or not isinstance(value, ModuleType):
+            raise ValueError("Private helper registration requires a module and string identity")
+        if value.__name__ not in self.registry.module_names or sys.modules.get(value.__name__) is not value:
+            private = f"_b3_authenticated_{id(self.registry)}_clone_{len(self.registry.module_names)}"
+            value.__name__ = private
+            sys.modules[private] = value
+            self.registry.module_names.append(private)
+        self.aliases[key] = value
+
+    def __delitem__(self, key):
+        # Canonical/pre-existing runtime entries cannot be deleted by helpers.
+        del self.aliases[key]
+
+    def __iter__(self):
+        return iter(dict.fromkeys([*sys.modules, *self.aliases]))
+
+    def __len__(self):
+        return len(set(sys.modules) | set(self.aliases))
+
+    def pop(self, key, default=None):
+        return self.aliases.pop(key, default)
 
 
 class AuthenticatedHelpers:
@@ -27,6 +70,11 @@ class AuthenticatedHelpers:
         self.states: dict[str, str] = {}
         self.paths: dict[str, Path] = {}
         self.compiled: WeakSet[CodeType] = WeakSet()
+        self.owned_modules = _OwnedModules(self)
+        self.sys_facade = ModuleType("sys")
+        self.sys_facade.__dict__.update(vars(sys))
+        self.sys_facade.__dict__["modules"] = self.owned_modules
+        self.sys_facade.__dict__["_b3_authenticated_runtime_sys"] = sys
         self._ordinary_import = builtins.__import__
         self._ordinary_compile, self._ordinary_exec = builtins.compile, builtins.exec
         self.guarded_builtins = dict(vars(builtins))
@@ -98,6 +146,8 @@ class AuthenticatedHelpers:
             if not isinstance(package, str) or not package:
                 raise ValueError("Relative helper import has no authenticated package")
             name = resolve_name("." * level + name, package)
+        if name == "sys":
+            return self.sys_facade
         if name in {"scripts", "transcriptformer"} or name.startswith(("scripts.", "transcriptformer.")):
             module = self._module(name)
             for leaf in fromlist or ():
@@ -181,3 +231,4 @@ class AuthenticatedHelpers:
         self.states.clear()
         self.buffers.clear()
         self.compiled.clear()
+        self.owned_modules.aliases.clear()
