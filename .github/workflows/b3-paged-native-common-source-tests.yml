@@ -1,0 +1,61 @@
+name: B3 Common Source Native Tests
+
+on:
+  push:
+    branches: [main]
+    paths: &common-source-paths
+      - "scripts/prepare_b3_paged_native_common_source.py"
+      - "scripts/bootstrap_b3_paged_native_common_source.py"
+      - "scripts/prepare_b3_paged_native_cache.py"
+      - "scripts/bootstrap_b3_paged_native.py"
+      - "scripts/prepare_b3_paged_native_context.py"
+      - "scripts/b3_native_catalog_pages.py"
+      - "scripts/b3_windowed_native.py"
+      - "scripts/b3_h5_attribute_admission.py"
+      - "scripts/bootstrap_b3_streamed.py"
+      - "scripts/b3_streamed_bootstrap.py"
+      - "scripts/b3_streamed_draw_schedule.py"
+      - "scripts/reduce_b3_streamed_fixed_pairs.py"
+      - "scripts/replay_b3_sparse_null.py"
+      - "scripts/replay_b3_prepared_sparse_session.py"
+      - "scripts/replay_b3_streamed_sparse_blocks.py"
+      - "scripts/replay_b3_sparse_bootstrap_draws.py"
+      - "scripts/summarize_ortholog_measured_zero_v2.py"
+      - "scripts/summarize_ortholog_paired_scores.py"
+      - "src/transcriptformer/**"
+      - "test/test_b3_paged_native_common_source.py"
+      - "test/test_b3_paged_native_common_bootstrap.py"
+      - "test/test_b3_paged_native_cache.py"
+      - "test/test_b3_paged_native_bootstrap.py"
+      - "docs/agents/b3-paged-native-common-source-contract-2026-10-04.md"
+      - ".github/workflows/b3-paged-native-common-source-tests.yml"
+      - "pyproject.toml"
+      - "uv.lock"
+  pull_request:
+    paths: *common-source-paths
+  workflow_dispatch:
+
+jobs:
+  bounded-common-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      CUDA_VISIBLE_DEVICES: ""
+      TF_RUN_REAL_MODEL_TESTS: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Run public common source and adapter tests
+        run: >-
+          python -m pytest
+          test/test_b3_paged_native_common_source.py
+          test/test_b3_paged_native_common_bootstrap.py
+          -q --junitxml=b3-paged-native-common-source-tests.xml
