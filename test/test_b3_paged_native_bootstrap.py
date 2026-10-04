@@ -829,7 +829,12 @@ def test_final_fsync_mutation_rejects_complete_publication(paged_sources, tmp_pa
     def at_summary_fsync(fd):
         fsync(fd)
         path = Path(os.readlink(f"/proc/self/fd/{fd}"))
-        if path.name == "summary.json" and path.parent.name == "publication" and not triggered:
+        if (
+            path.name == "summary.json"
+            and path.parent.name == "publication"
+            and path.parent.parent.name.startswith(".b3-paged-application-")
+            and not triggered
+        ):
             triggered.append(path)
             target = (
                 source if mutated == "source" else path.parent / "plan.json" if mutated == "generated_plan" else path
