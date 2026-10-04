@@ -1,0 +1,24 @@
+Command exited with non-zero status 1
+	Command being timed: ".venv/bin/python runs/b3_feasibility/20261004/run_common_source_complete_cpu.py --expected-runner-sha256 4b9fe6074d11194e8bfe58e8b982e80ee5554fce2e645b2894307d832444a07d"
+	User time (seconds): 381.14
+	System time (seconds): 389.11
+	Percent of CPU this job got: 11%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:52:13
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 858688
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 8261
+	Minor (reclaiming a frame) page faults: 2684099
+	Voluntary context switches: 110822999
+	Involuntary context switches: 15935
+	Swaps: 0
+	File system inputs: 9692123
+	File system outputs: 858800
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

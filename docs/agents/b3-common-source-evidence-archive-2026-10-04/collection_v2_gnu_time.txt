@@ -1,0 +1,23 @@
+	Command being timed: ".venv/bin/python runs/b3_feasibility/20261004/reconcile_common_source_cpu_collection_v2.py --expected-reconciliation-sha256 9c8abc1d03a7a48326e4647a90b6c1a548eab9ef82bd1877cb1a399de436cdf3"
+	User time (seconds): 4.83
+	System time (seconds): 2.79
+	Percent of CPU this job got: 19%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:39.11
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 747132
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 7218
+	Minor (reclaiming a frame) page faults: 141822
+	Voluntary context switches: 551656
+	Involuntary context switches: 218
+	Swaps: 0
+	File system inputs: 248723
+	File system outputs: 96
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

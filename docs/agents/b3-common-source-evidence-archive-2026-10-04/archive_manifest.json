@@ -1,0 +1,169 @@
+{
+  "scope": "Exact original metadata/source bytes; embedded original paths unchanged. Source archives use .py.txt and are not executable canonical modules. Other run/H5/numeric payloads remain local producer byte references, not new payload attestation.",
+  "captured_implementation_head": "71c12543277895678bef85f4d9524a183234d0bd",
+  "packaging_local_date": "2026-10-05",
+  "files": [
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/capture_common_source_evidence_v3.py",
+      "archive_file": "capture_common_source_evidence_v3.py.txt",
+      "sha256": "72b237f89fd8fcd0deaee904d5ad1ffd01e12a513643c4ef2aea3264974e710a",
+      "bytes": 54020
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/final_capture_manifest_v3.json",
+      "archive_file": "final_capture_manifest_v3.json",
+      "sha256": "fd3cc6b52f8349f1505600ed542f5551d906817d312eeac5618c847262bdd3e7",
+      "bytes": 22363
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/reconcile_common_source_cpu_collection_v2.py",
+      "archive_file": "reconcile_common_source_cpu_collection_v2.py.txt",
+      "sha256": "9c8abc1d03a7a48326e4647a90b6c1a548eab9ef82bd1877cb1a399de436cdf3",
+      "bytes": 21566
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/reconcile_common_source_cpu_collection.py",
+      "archive_file": "reconcile_common_source_cpu_collection.py.txt",
+      "sha256": "c60b7a6ac00794605dcf1d47d7b3c61a269f11287d0c9b9ec102e1ed9b43819f",
+      "bytes": 18046
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/run_common_source_complete_cpu.py",
+      "archive_file": "run_common_source_complete_cpu.py.txt",
+      "sha256": "4b9fe6074d11194e8bfe58e8b982e80ee5554fce2e645b2894307d832444a07d",
+      "bytes": 15306
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_complete_cpu_result.json",
+      "archive_file": "original_full_result.json",
+      "sha256": "3d3ef25c915a2dd1a84a195f58550d5b966a2ae7a940e5ef622acf41afaa3b64",
+      "bytes": 586089
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_complete_cpu.xml",
+      "archive_file": "original_full.xml",
+      "sha256": "fd4c7a073a904050adeca1056a856c5921e05452220388db43338477c80953b2",
+      "bytes": 152317
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_complete_cpu_supervisor/state.json",
+      "archive_file": "original_full_supervisor.json",
+      "sha256": "ec6a9b398e83b124032ca2de743ca99c5e449469f259a09f9da003833323a0bb",
+      "bytes": 999
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_complete_cpu_gnu_time.txt",
+      "archive_file": "original_full_gnu_time.txt",
+      "sha256": "174b7424f6eab988b2ebf2342ee4435074aeb5b292cf366fa34b2c77d61324e9",
+      "bytes": 956
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_cpu_collection_reconciliation_v2_result.json",
+      "archive_file": "collection_v2_result.json",
+      "sha256": "a44439d07c7777ad95d886bf5d751a95a8537881f1c75ae850002197b618f05b",
+      "bytes": 518555
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_cpu_collection_reconciliation_v2_supervisor/state.json",
+      "archive_file": "collection_v2_supervisor.json",
+      "sha256": "e43609bee4bbe28989a3d0ac13da918a8b7fe772cb9e699cc2be3677a2cc3ee1",
+      "bytes": 1029
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_cpu_collection_reconciliation_v2_gnu_time.txt",
+      "archive_file": "collection_v2_gnu_time.txt",
+      "sha256": "cfff1c1b6521903a59d8ce81173e31a60295c655cb8747f94885c4a03c438e65",
+      "bytes": 922
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_cpu_collection_reconciliation_result.json",
+      "archive_file": "collection_first_result.json",
+      "sha256": "6ed2b14cf304b0f732f4fa284e127a9cdc23aacd1a47ea0279f62ef47b0d84cf",
+      "bytes": 518549
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_cpu_collection_reconciliation_supervisor/state.json",
+      "archive_file": "collection_first_supervisor.json",
+      "sha256": "866a41577a66b4a273e97aa31b698cf48d94b27df2ede6e1a3a4de34cd4adccc",
+      "bytes": 1022
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_cpu_collection_reconciliation_gnu_time.txt",
+      "archive_file": "collection_first_gnu_time.txt",
+      "sha256": "cda027b445d2d5e869a02cde67b2026c8b9d1b41fe16faa14a819604d6fc337a",
+      "bytes": 919
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_evidence_v3_capture_supervisor/state.json",
+      "archive_file": "capture_v3_supervisor.json",
+      "sha256": "fac4aafbca20a017b29e8cf13e121b0999a86b05e25ed5c308aad34d22258011",
+      "bytes": 1135
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_evidence_v3_capture_gnu_time.txt",
+      "archive_file": "capture_v3_gnu_time.txt",
+      "sha256": "508d87bd21c3ad074e6626a1133d05eefaa17c74688c04e0eef92b2c53b3854a",
+      "bytes": 1022
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_static06.json",
+      "archive_file": "public_static06.json",
+      "sha256": "5b9fc0da1fcbbb726d1c5275a1894228b86518273df71f9d16b2af2e2130abdf",
+      "bytes": 3466
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/common_source_public_review_record.md",
+      "archive_file": "common_source_public_review_record.md",
+      "sha256": "c5f6c5d529b294ca4c2e2d9b1764b837ed6c632c3193ae37ced0eceb0ac6e4e9",
+      "bytes": 3806
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/common_source_10_capture_review_record.md",
+      "archive_file": "common_source_10_capture_review_record.md",
+      "sha256": "96c685134bc0ac1d86bcf96a2f5242dc1189a24886a86df2c3be8194db81f639",
+      "bytes": 1859
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/metadata_guard_standards_review_v3_20261004.md",
+      "archive_file": "metadata_guard_standards_review_v3_20261004.md",
+      "sha256": "a03357489ca7867b596b6addd5b7279264a8e71d93bc43b29e21ac6f2567ccca",
+      "bytes": 2537
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/metadata_guard_standards_review_v3_final_20261004.md",
+      "archive_file": "metadata_guard_standards_review_v3_final_20261004.md",
+      "sha256": "f3298f0d5f4523b9e10c250efa9706affccb4c7f05fd54a6ab648dfb77d62da7",
+      "bytes": 2443
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/spec_cpu_reconciliation_v2_capture_v3_review01.md",
+      "archive_file": "spec_cpu_reconciliation_v2_capture_v3_review01.md",
+      "sha256": "b936d15ce969af6834dcd99bc4931e94556987bbe5204de2086e81eaeb1fb7a7",
+      "bytes": 2847
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/spec_cpu_reconciliation_v2_capture_v3_review02.md",
+      "archive_file": "spec_cpu_reconciliation_v2_capture_v3_review02.md",
+      "sha256": "7b044269ee63bd9b0d3b4de3cf519cd98477058d60b6ce49832960bc5f96c48f",
+      "bytes": 2045
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/spec_cpu_reconciliation_v2_capture_v3_review03.md",
+      "archive_file": "spec_cpu_reconciliation_v2_capture_v3_review03.md",
+      "sha256": "85b8ec757ca574fd7c24099415e0eb0d59f665fe121f37845f00338a72c52176",
+      "bytes": 2237
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/common_source_milestone_evidence_v3.json",
+      "archive_file": "../b3-paged-native-common-source-evidence-2026-10-04.json",
+      "sha256": "cd2a7d15b6363bb8d0b15f41bf4b77fb0c05d33f82a8cee7efbc02016a5618d2",
+      "bytes": 623384
+    },
+    {
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/common_source_10_engineering_evidence.json",
+      "archive_file": "../b3-paged-native-common-source-10-draw-evidence-2026-10-04.json",
+      "sha256": "0868a11387eb3c9f031bf2fa6a99c366a2327fa7e3673eab61aa26c791a87314",
+      "bytes": 961352
+    }
+  ]
+}

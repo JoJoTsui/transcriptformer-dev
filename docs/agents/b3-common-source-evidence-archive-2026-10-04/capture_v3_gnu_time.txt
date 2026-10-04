@@ -1,0 +1,23 @@
+	Command being timed: ".venv/bin/python runs/b3_feasibility/20261004/common_source_draft/capture_common_source_evidence_v3.py --manifest runs/b3_feasibility/20261004/common_source_draft/final_capture_manifest_v3.json --output runs/b3_feasibility/20261004/common_source_draft/common_source_milestone_evidence_v3.json"
+	User time (seconds): 4.03
+	System time (seconds): 7.68
+	Percent of CPU this job got: 9%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:05.73
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 37236
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 172
+	Minor (reclaiming a frame) page faults: 15990
+	Voluntary context switches: 2069119
+	Involuntary context switches: 105
+	Swaps: 0
+	File system inputs: 334223
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

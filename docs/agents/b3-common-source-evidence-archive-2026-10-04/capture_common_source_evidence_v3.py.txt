@@ -1,0 +1,898 @@
+"""Versioned capture with explicit original-full-run collection reconciliation.
+
+This ignored collector reads bounded JSON/XML, hashes declared source and
+metadata files, and asks Git for tracked baseline identities. It never runs the
+application, imports project modules, or opens H5/numeric payloads. Large stage
+artifacts retain the producing stage's exact byte references without a second
+payload read; that limitation is explicit in the output.
+
+The original full pytest passed 1092 cases and skipped five, while its harness
+returned one for requiring nonempty tests in two CLI utility files. This
+version requires a separate source-bound collect-only reconciliation and
+preserves every original failed outer status. It never rewrites raw receipts
+or labels the collection-only invocation as a new full test execution.
+"""
+
+from __future__ import annotations
+
+import argparse
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import stat
+import subprocess
+import xml.etree.ElementTree as ET
+
+ROOT = Path(__file__).resolve().parents[4]
+BASE = ROOT / "runs/b3_feasibility/20261004"
+OLD_AUDIT = BASE / "paged_native_backend_source_audit.json"
+ORIGINAL_BASELINE = "ff76116d0c1c9e4eae429d9cffbf53d794bdbb5f"
+COMPLETE_BASELINE = "76813e8bd8ed4cf3a96002f4843b8c355b1cc1a8"
+METADATA_SUFFIXES = frozenset({".json", ".jsonl", ".py", ".md", ".txt",
+                               ".xml", ".log", ".yaml", ".yml"})
+METADATA_CAP = 32 * 1024**2
+PINNED_REFS: dict[str, dict] = {}
+CALLER_RESOLUTIONS: dict[str, str] = {}
+STAGES = (
+    ("00-freeze", "freeze"), ("01-build-human", "build-human"),
+    ("02-build-mouse", "build-mouse"), ("03-prepare", "prepare"),
+    ("04-execute", "execute"), ("05-replay", "replay"),
+    ("06-qualify", "qualify"),
+)
+SOURCE_NAMES = (
+    "scripts/prepare_b3_paged_native_common_source.py",
+    "scripts/bootstrap_b3_paged_native_common_source.py",
+    "scripts/b3_authenticated_helpers.py",
+)
+TEST_NAMES = ("test/test_b3_paged_native_common_source.py",
+              "test/test_b3_paged_native_common_bootstrap.py")
+FIVE_PYTHON = set(SOURCE_NAMES) | set(TEST_NAMES)
+STATIC_PATH_ORDER = (SOURCE_NAMES[2], SOURCE_NAMES[0], SOURCE_NAMES[1],
+                     TEST_NAMES[0], TEST_NAMES[1])
+STAGE_SCHEMA = "b3_common_source_representative_stage_v1"
+DRIVER_SCHEMA = "b3_common_source_representative_driver_v1"
+FREEZE_SCHEMA = "b3_common_source_representative_freeze_v1"
+GATE_SCHEMA = "b3_common_source_representative_cost_gate_v1"
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError(message)
+
+
+def bounded_metadata_bytes(path: Path, cap: int) -> bytes:
+    require(path.suffix.lower() in METADATA_SUFFIXES, f"Payload is not metadata: {path}")
+    initial = path.stat()
+    require(stat.S_ISREG(initial.st_mode) and 0 <= initial.st_size <= cap,
+            f"Missing/nonregular/oversize metadata: {path}")
+    descriptor = os.open(path, os.O_RDONLY | os.O_NONBLOCK | os.O_NOFOLLOW)
+    with os.fdopen(descriptor, "rb") as stream:
+        opened = os.fstat(stream.fileno())
+        require(stat.S_ISREG(opened.st_mode)
+                and (opened.st_dev, opened.st_ino, opened.st_size)
+                == (initial.st_dev, initial.st_ino, initial.st_size)
+                and opened.st_size <= cap, f"Metadata changed before bounded read: {path}")
+        pieces, total = [], 0
+        while True:
+            piece = stream.read(min(1024**2, cap - total + 1))
+            if not piece:
+                break
+            total += len(piece)
+            require(total <= cap, f"Metadata grew beyond cap: {path}")
+            pieces.append(piece)
+        finished = os.fstat(stream.fileno())
+        require((finished.st_dev, finished.st_ino, finished.st_size)
+                == (opened.st_dev, opened.st_ino, opened.st_size)
+                and total == opened.st_size, f"Metadata changed during bounded read: {path}")
+    final = path.stat()
+    require((final.st_dev, final.st_ino, final.st_size)
+            == (opened.st_dev, opened.st_ino, opened.st_size),
+            f"Metadata path changed after bounded read: {path}")
+    return b"".join(pieces)
+
+
+def read_small(path: Path, cap: int = METADATA_CAP) -> bytes:
+    require(type(cap) is int and 0 < cap <= METADATA_CAP, "Invalid metadata cap")
+    caller = os.path.abspath(os.fspath(path))
+    canonical = Path(caller).resolve(strict=True)
+    previous_resolution = CALLER_RESOLUTIONS.get(caller)
+    require(previous_resolution is None or previous_resolution == str(canonical),
+            f"Metadata caller path redirected after first admission: {caller}")
+    require(str(canonical.resolve(strict=True)) == str(canonical),
+            f"Canonical metadata path redirected before admission: {canonical}")
+    data = bounded_metadata_bytes(canonical, cap)
+    require(str(Path(caller).resolve(strict=True)) == str(canonical)
+            and str(canonical.resolve(strict=True)) == str(canonical),
+            f"Metadata path redirected during admission: {caller}")
+    ref = {"path": str(canonical), "sha256": sha256(data).hexdigest(), "bytes": len(data)}
+    prior = PINNED_REFS.get(str(canonical))
+    require(prior is None or prior == ref, f"Pinned metadata/source bytes changed: {canonical}")
+    CALLER_RESOLUTIONS.setdefault(caller, str(canonical))
+    PINNED_REFS.setdefault(str(canonical), ref)
+    return data
+
+
+def load(path: Path) -> dict:
+    def unique(pairs: list[tuple[str, object]]) -> dict:
+        result = {}
+        for key, value in pairs:
+            require(key not in result, f"Duplicate JSON key: {key}")
+            result[key] = value
+        return result
+
+    value = json.loads(read_small(path), object_pairs_hook=unique,
+                       parse_constant=lambda x: (_ for _ in ()).throw(ValueError(x)))
+    require(isinstance(value, dict), f"JSON object required: {path}")
+    return value
+
+
+def small_ref(path: Path) -> dict:
+    caller = os.path.abspath(os.fspath(path))
+    read_small(path)
+    canonical = CALLER_RESOLUTIONS[caller]
+    return PINNED_REFS[canonical].copy()
+
+
+def recheck_pins() -> None:
+    original_pins = {name: ref.copy() for name, ref in PINNED_REFS.items()}
+    original_callers = CALLER_RESOLUTIONS.copy()
+    for caller, original in original_callers.items():
+        require(str(Path(caller).resolve(strict=True)) == original,
+                f"Metadata caller alias redirected at final seal: {caller}")
+    for name, first in original_pins.items():
+        path = Path(name)
+        require(str(path.resolve(strict=True)) == name,
+                f"Canonical metadata path redirected at final seal: {name}")
+        data = bounded_metadata_bytes(path, METADATA_CAP)
+        require(str(path.resolve(strict=True)) == name,
+                f"Canonical metadata path redirected during final seal: {name}")
+        fresh = {"path": name, "sha256": sha256(data).hexdigest(), "bytes": len(data)}
+        require(fresh == first, f"Pinned file bytes changed at final seal: {name}")
+    for caller, original in original_callers.items():
+        require(str(Path(caller).resolve(strict=True)) == original,
+                f"Metadata caller alias redirected during final seal: {caller}")
+    require(PINNED_REFS == original_pins and CALLER_RESOLUTIONS == original_callers,
+            "Metadata pin registry changed during final seal")
+
+
+def exact_ref(value: dict, *, metadata: bool = False) -> dict:
+    require(isinstance(value, dict) and set(value) == {"path", "sha256", "bytes"}, "Bad byte reference")
+    path = Path(value["path"])
+    require(path.is_absolute() and str(path.resolve(strict=True)) == value["path"], "Noncanonical byte path")
+    require(type(value["bytes"]) is int and value["bytes"] >= 0, "Bad byte count")
+    require(isinstance(value["sha256"], str) and len(value["sha256"]) == 64
+            and all(x in "0123456789abcdef" for x in value["sha256"]), "Bad SHA256")
+    require(path.is_file() and path.stat().st_size == value["bytes"], "Referenced file size changed")
+    if metadata:
+        require(small_ref(path) == value, "Metadata bytes changed")
+    return value
+
+
+def sealed_ref(value: dict) -> dict:
+    """Rehash allowlisted bounded metadata; retain producer seal for all payloads."""
+    exact_ref(value)
+    path = Path(value["path"])
+    verified = path.suffix.lower() in METADATA_SUFFIXES and value["bytes"] <= METADATA_CAP
+    if verified:
+        require(small_ref(path) == value, "Metadata bytes changed")
+    return {"reference": value, "collector_rehashed": verified,
+            "verification": "sha256_and_size" if verified else "producer_sha256_shape_and_current_size_only"}
+
+
+def git(*args: str) -> bytes:
+    return subprocess.check_output(["git", *args], cwd=ROOT)
+
+
+def tree_entries(revision: str) -> dict[str, tuple[str, str]]:
+    result = {}
+    for item in git("ls-tree", "-r", "-z", revision).split(b"\0"):
+        if not item:
+            continue
+        header, name = item.split(b"\t", 1)
+        mode, kind, blob = header.decode().split()
+        require(kind == "blob", "Unexpected Git tree object")
+        result[name.decode()] = (mode, blob)
+    return result
+
+
+def index_entries() -> dict[str, tuple[str, str]]:
+    result = {}
+    for item in git("ls-files", "-s", "-z").split(b"\0"):
+        if not item:
+            continue
+        header, name = item.split(b"\t", 1)
+        mode, blob, stage = header.decode().split()
+        require(stage == "0", "Unmerged Git index")
+        result[name.decode()] = (mode, blob)
+    return result
+
+
+def git_python_inventory(head: str) -> tuple[dict, dict, dict]:
+    index = {p: {"mode": m, "blob": b} for p, (m, b) in index_entries().items()
+             if p.endswith(".py")}
+    tree = {p: {"mode": m, "blob": b} for p, (m, b) in tree_entries(head).items()
+            if p.endswith(".py")}
+    require(index == tree and len(index) == 233, "Current 233 Python index/HEAD inventory differs")
+    digests = {p: small_ref(ROOT / p)["sha256"] for p in index}
+    return index, tree, digests
+
+
+def relative_name(name: str) -> str:
+    require(isinstance(name, str) and not Path(name).is_absolute(), "Nonrelative Git path")
+    require(str((ROOT / name).resolve(strict=True)).startswith(str(ROOT.resolve()) + os.sep),
+            "Git path leaves repository")
+    return name
+
+
+def preserved_map(values: dict, count: int, tree: dict, index: dict, label: str) -> dict:
+    require(isinstance(values, dict) and len(values) == count, f"{label} inventory count differs")
+    for name, digest in values.items():
+        relative_name(name)
+        require(tree.get(name) is not None and index.get(name) == tree[name],
+                f"{label} Git mode/blob differs: {name}")
+        require(small_ref(ROOT / name)["sha256"] == digest, f"{label} bytes differ: {name}")
+    return {"count": count, "baseline": label,
+            "git_mode_blob_and_worktree_sha256_verified": True}
+
+
+def source_audit(freeze: dict, expected: dict,
+                 full_index: dict[str, tuple[str, str]]) -> dict:
+    old = load(OLD_AUDIT)
+    require(old.get("baseline") == ORIGINAL_BASELINE, "Backend audit baseline differs")
+    require(old["preserved_file_counts"] == {"python": 224, "json": 98, "jsonl": 2}, "Old count audit differs")
+    require(old["native_modules"] == 58 and old["original_pilot_software"] == {"human": 107, "mouse": 109},
+            "Original native/pilot source counts differ")
+    require(old["existing_bytes_and_git_index_modes_unchanged"] is True, "Old audit did not pass")
+    old_source = freeze["original_source_file_sha256"]
+    original_native = freeze["original_native_consumer_file_sha256"]
+    original_app = freeze["legacy_application_consumer_file_sha256"]
+    current_native = freeze["batch_consumer_file_sha256"]
+    current_app = freeze["application_consumer_file_sha256"]
+    require((len(original_native), len(original_app), len(current_native), len(current_app)) == (67, 74, 69, 82),
+            "Consumer closure counts differ")
+    require(all(current_native.get(p) == h for p, h in original_native.items()), "Original 67 altered")
+    require(all(current_app.get(p) == h for p, h in original_app.items()), "Original 74 altered")
+    new_paths = {str((ROOT / p).resolve()) for p in SOURCE_NAMES}
+    require(set(current_native) - set(original_native) == {
+        str((ROOT / SOURCE_NAMES[0]).resolve()), str((ROOT / SOURCE_NAMES[2]).resolve())},
+        "Native closure has unexpected additions")
+    require(set(current_app) - set(original_app) == new_paths | set(freeze["comparator_transitive_file_sha256"]),
+            "Application closure has unexpected additions")
+    require(set(freeze["comparator_transitive_file_sha256"]) <= set(old_source),
+            "Comparator transitive absent from original freeze")
+    require(len(set(old_source) & new_paths) == 0, "New scripts overlap historical source set")
+    require(all(small_ref(Path(p))["sha256"] == h for p, h in old_source.items()), "Historical source bytes changed")
+    require(all(small_ref(Path(p))["sha256"] == h for p, h in current_native.items()), "Native source bytes changed")
+    require(all(small_ref(Path(p))["sha256"] == h for p, h in current_app.items()), "Application source bytes changed")
+    require({p: small_ref(ROOT / p)["sha256"] for p in SOURCE_NAMES} == expected,
+            "Independently reviewed source SHAs differ")
+    original_ref = old["original_audit"]
+    require(original_ref["path"] == str(OLD_AUDIT.parent.relative_to(ROOT) /
+                                        "paged_native_cache_source_audit.json"), "Original audit path differs")
+    original_path = ROOT / original_ref["path"]
+    require(small_ref(original_path)["sha256"] == original_ref["sha256"]
+            and small_ref(original_path)["bytes"] == original_ref["bytes"],
+            "Original audit reference differs")
+    original = load(original_path)
+    require(original.get("baseline") == ORIGINAL_BASELINE
+            and original.get("preserved_file_counts") == {"python": 224, "json": 98, "jsonl": 2},
+            "Original audit baseline/counts differ")
+    index = full_index
+    original_tree = tree_entries(ORIGINAL_BASELINE)
+    original_checks = {kind: preserved_map(original["preserved"][kind], number,
+                                           original_tree, index, ORIGINAL_BASELINE)
+                       for kind, number in (("python", 224), ("json", 98), ("jsonl", 2))}
+    complete_tree = tree_entries(COMPLETE_BASELINE)
+    complete_python = old["complete_regression_python_file_sha256"]
+    complete_check = preserved_map(complete_python, 228, complete_tree, index, COMPLETE_BASELINE)
+    current_tree = tree_entries("HEAD")
+    require(all(current_tree.get(p) == index.get(p) for p in SOURCE_NAMES), "New source index/HEAD differs")
+    counts = {"python": 0, "json": 0, "jsonl": 0}
+    for name in index:
+        for kind, suffix in (("python", ".py"), ("json", ".json"), ("jsonl", ".jsonl")):
+            if name.endswith(suffix):
+                counts[kind] += 1
+    return {"historical_audit": small_ref(OLD_AUDIT), "original_audit": small_ref(original_path),
+            "original_baseline": ORIGINAL_BASELINE, "complete_regression_baseline": COMPLETE_BASELINE,
+            "original_preserved_inventories": original_checks,
+            "complete_regression_python_inventory": complete_check,
+            "historical_native_modules": 58, "original_pilot_software": {"human": 107, "mouse": 109},
+            "original_consumer_counts": {"native": 67, "application": 74},
+            "new_consumer_counts": {"native": 69, "application": 82},
+            "current_git_index_suffix_counts": counts,
+            "source_sha256": expected}
+
+
+def junit(path: Path) -> dict:
+    data = read_small(path)
+    root = ET.fromstring(data)
+    suites = [root] if root.tag == "testsuite" else list(root.iter("testsuite"))
+    require(bool(suites), "JUnit has no suites")
+    counts = {k: sum(int(s.get(k, "0")) for s in suites) for k in ("tests", "failures", "errors", "skipped")}
+    counts["passed"] = counts["tests"] - counts["failures"] - counts["errors"] - counts["skipped"]
+    require(counts["passed"] >= 0, "Invalid JUnit counts")
+    cases = []
+    for item in root.iter("testcase"):
+        cases.append({"classname": item.get("classname"), "name": item.get("name"),
+                      "passed": not any(child.tag in {"failure", "error", "skipped"}
+                                        for child in item)})
+    require(len(cases) == counts["tests"], "JUnit suite count/case count differs")
+    return {"artifact": small_ref(path), "counts": counts, "cases": cases,
+            "junit_suite_seconds": sum(float(s.get("time", "0")) for s in suites)}
+
+
+def selected_cases(report: dict) -> dict:
+    selected = {"native": [], "application": []}
+    for case in report["cases"]:
+        name = case["classname"] or ""
+        side = ("native" if name.endswith("test_b3_paged_native_common_source")
+                else "application" if name.endswith("test_b3_paged_native_common_bootstrap")
+                else None)
+        if side:
+            selected[side].append(case)
+    for side, total in (("native", 45), ("application", 30)):
+        rows = selected[side]
+        ids = {(x["classname"], x["name"]) for x in rows}
+        require(len(rows) == len(ids) == total and all(x["passed"] for x in rows),
+                f"Final suite does not prove {total} distinct passing {side} cases")
+    return selected
+
+
+def completed_study(path: Path) -> dict:
+    marker = load(path / "summary.json")
+    require(marker.get("schema") == DRIVER_SCHEMA and marker.get("status") ==
+            "completed_one_draw_representative_study_and_cost_gate", "Study final marker is absent/incomplete")
+    require(marker["synthetic_fixture_only"] is True and marker["full_2000_draws_completed"] is False
+            and marker["whole_method_fit_established"] is False and marker["scientific_readiness"] == "unavailable",
+            "Study overstates readiness")
+    require(len(marker["jobs"]) == len(STAGES), "Seven supervised jobs required")
+    freeze_marker = load(path / "stages/00-freeze/summary.json")
+    binding_ref = freeze_marker["outputs"]["binding"]
+    exact_ref(binding_ref, metadata=True)
+    freeze = load(Path(binding_ref["path"]))
+    require(freeze.get("schema") == FREEZE_SCHEMA and freeze.get("synthetic_fixture_only") is True,
+            "Source freeze differs")
+    require({k: freeze.get(k) for k in (
+        "max_cooperative_stage_seconds", "max_supervised_stage_seconds",
+        "process_rss_cap_bytes", "host_ram_floor_bytes", "disk_free_floor_bytes",
+        "numeric_cap_bytes")} == {
+        "max_cooperative_stage_seconds": 900, "max_supervised_stage_seconds": 950,
+        "process_rss_cap_bytes": 4 * 1024**3, "host_ram_floor_bytes": 4 * 1024**3,
+        "disk_free_floor_bytes": 20 * 1024**3, "numeric_cap_bytes": 200 * 1024**2},
+        "Frozen host/cost limits differ")
+    stages = {}
+    for (name, action), job in zip(STAGES, marker["jobs"], strict=True):
+        require(job["name"] == name and job["action"] == action and job["controller_return_code"] == 0,
+                "Stage/controller did not complete in sequence")
+        summary_path = path / "stages" / name / "summary.json"
+        summary = load(summary_path)
+        require(summary.get("schema") == STAGE_SCHEMA and summary.get("status") == "complete"
+                and summary.get("action") == action, "Stage marker differs")
+        require(summary.get("synthetic_fixture_only") is True
+                and summary.get("model_forwards_performed") is False
+                and summary.get("checkpoint_tensors_loaded") is False
+                and summary.get("full_2000_draws_completed") is False,
+                "Stage marker overstates scientific work")
+        if name != "00-freeze":
+            require(summary.get("binding") == binding_ref, "Stage is bound to another source freeze")
+        require(exact_ref(job["summary"], metadata=True) == small_ref(summary_path), "Stage marker bytes differ")
+        for item in [*summary["inputs"], *summary["generated_files"]]:
+            sealed_ref(item)
+        available = {item["path"]: item for item in [*summary["inputs"], *summary["generated_files"]]}
+        for item in summary["outputs"].values():
+            if isinstance(item, dict) and set(item) == {"path", "sha256", "bytes"}:
+                require(item == available.get(item["path"]), "Stage output is not in its sealed byte set")
+        state = load(Path(job["supervisor_state"]["path"]))
+        require(state.get("status") == "completed" and state.get("return_code") == 0,
+                "Supervisor did not complete")
+        exact_ref(job["supervisor_state"], metadata=True)
+        exact_ref(job["gnu_complete_child_cost"], metadata=True)
+        require(type(job.get("complete_supervised_invocation_monotonic_seconds")) in (int, float)
+                and 0 <= job["complete_supervised_invocation_monotonic_seconds"] <= 950 + 30,
+                "Supervised stage clock missing/out of scope")
+        require(type(summary.get("elapsed_before_final_seal_seconds")) in (int, float)
+                and 0 <= summary["elapsed_before_final_seal_seconds"] <= 900,
+                "Cooperative stage clock missing/out of scope")
+        public = summary["details"].get("public_complete_return_seconds")
+        if name in {"01-build-human", "02-build-mouse", "03-prepare", "04-execute", "05-replay"}:
+            require(type(public) in (int, float) and 0 <= public <= 900,
+                    "Complete public-call return clock missing/out of scope")
+        stages[name] = {"marker": small_ref(summary_path), "supervisor_state": job["supervisor_state"],
+                        "gnu_complete_child_cost": job["gnu_complete_child_cost"],
+                        "cooperative_before_final_seal_seconds": summary["elapsed_before_final_seal_seconds"],
+                        "public_complete_return_seconds": public,
+                        "complete_supervised_invocation_monotonic_seconds":
+                            job["complete_supervised_invocation_monotonic_seconds"]}
+    gate_ref = marker["cost_gate"]
+    require(gate_ref == load(path / "stages/06-qualify/summary.json")["outputs"]["cost_gate"],
+            "Driver gate differs from final stage output")
+    exact_ref(gate_ref, metadata=True)
+    gate = load(Path(gate_ref["path"]))
+    require(gate.get("schema") == GATE_SCHEMA and gate.get("full_2000_draw_stage_permitted") is False
+            and gate.get("fit_proven_for_100_draws") is False, "Cost gate overstates fit")
+    require(set(gate.get("measurement_receipts", {})) == {
+        "01-build-human", "02-build-mouse", "03-prepare", "04-execute", "05-replay"}
+            and set(gate.get("forecasts", {})) == {"04-execute", "05-replay"}
+            and type(gate.get("bounded_100_draw_probe_permitted")) is bool,
+            "Cost gate measurements/forecast scope differs")
+    for name, entry in gate["measurement_receipts"].items():
+        require(entry["complete_public_return_seconds"] == stages[name]["public_complete_return_seconds"],
+                "Gate public-return cost differs from stage")
+    require(marker["native_arithmetic_replay_verified"] is False
+            and marker["native_likelihood_effects_attested"] is False and marker["interval"] is None,
+            "Study overstates science")
+    return {"final_marker": small_ref(path / "summary.json"), "stages": stages,
+            "freeze": freeze, "freeze_reference": binding_ref, "cost_gate": gate_ref,
+            "gate_values": gate}
+
+
+def current_modules() -> list[str]:
+    names = git("ls-files", "--", "test").decode().splitlines()
+    # Match the runner's actual `rg --files test` inventory, including the
+    # worktree rather than silently substituting a Git-only test list.
+    rg_names = subprocess.check_output(["rg", "--files", "test"], cwd=ROOT).decode().splitlines()
+    result = sorted(p for p in rg_names if Path(p).name.startswith("test_") and p.endswith(".py"))
+    require(len(result) == len(set(result)) == 71 and set(result) <= set(names),
+            "Current sorted rg 71-module inventory differs")
+    return result
+
+
+def collection_reconciliation(path: Path, result: dict, xml_path: Path,
+                              head: str, index: dict, tree: dict, digests: dict,
+                              modules: list[str], expected_sha256: str) -> dict:
+    value = load(path)
+    require(value.get("schema") == "b3_common_source_cpu_collection_reconciliation_v2"
+            and value.get("status") == "completed_original_pytest_pass_collection_accounting_reconciliation"
+            and value.get("scope") == "Separate collect-only reconciliation; original full harness remains exit 1.",
+            "Collection reconciliation is incomplete")
+    require(value.get("original_full_result") == small_ref(BASE / "common_source_complete_cpu_result.json")
+            and value.get("original_full_xml") == small_ref(xml_path)
+            and value.get("original_full_runner") == small_ref(BASE / "run_common_source_complete_cpu.py")
+            and value.get("original_full_supervisor") == small_ref(BASE / "common_source_complete_cpu_supervisor/state.json")
+            and value.get("original_full_gnu") == small_ref(BASE / "common_source_complete_cpu_gnu_time.txt")
+            and value.get("original_full_log") == small_ref(BASE / "common_source_complete_cpu_supervisor/producer.log"),
+            "Reconciliation does not bind the actual failed full-run artifacts")
+    source = small_ref(BASE / "reconcile_common_source_cpu_collection_v2.py")
+    require(source["sha256"] == expected_sha256 and value.get("reconciliation_source") == source,
+            "Reconciliation source differs")
+    require(type(value.get("original_pytest_exit_code")) is int and value["original_pytest_exit_code"] == 0
+            and type(value.get("original_runner_exit_code")) is int and value["original_runner_exit_code"] == 1
+            and type(value.get("original_outer_return_code")) is int and value["original_outer_return_code"] == 1
+            and type(value.get("collect_only_exit_code")) is int and value["collect_only_exit_code"] == 0,
+            "Do not normalize original failed outer return codes")
+    require(value.get("original_counts") == result.get("counts")
+            == {"tests": 1097, "passed": 1092, "skipped": 5, "errors": 0, "failures": 0}
+            and value.get("original_direct_case_counts") == {"native": 45, "application": 30},
+            "Reconciled original runtime counts differ")
+    snapshot = {"head": head, "python_index_path_mode_blob": index,
+                "python_head_path_mode_blob": tree, "python_file_sha256": digests,
+                "sorted_rg_test_modules": modules}
+    require(value.get("frozen_implementation_head") == head
+            and value.get("source_snapshot_before") == value.get("source_snapshot_after") == snapshot
+            and value.get("source_stable_before_after") is True,
+            "Fresh collect-only source/index snapshots differ")
+    require(value.get("full_git_index_before_after") == {
+        p: {"mode": m, "blob": b} for p, (m, b) in index_entries().items()},
+        "Reconciliation full Git index differs")
+    require(value.get("collect_only_argv") == modules + ["--collect-only", "-q",
+            "--basetemp=/tmp/b3-common-source-collection-reconciliation-v2-20261004"]
+            and value.get("deselected_node_ids") == []
+            and value.get("runtest_reported_node_ids") == []
+            and value.get("new_full_test_execution_performed") is False
+            and value.get("project_model_job_performed") is False,
+            "Collection-only scope, selection or execution differs")
+    original = result.get("collection_proof", {})
+    require(value.get("selected_node_ids") == original.get("selected_node_ids")
+            and value.get("items_by_test_module") == original.get("items_by_test_module")
+            and value.get("original_runtime_selection_equals_fresh_collection") is True,
+            "Fresh selected IDs/module membership differ from actual original runtime")
+    empty = {"test/test_compare_emb.py", "test/test_compare_umap.py"}
+    require(value.get("empty_cli_sources") == {name: small_ref(ROOT / name) for name in empty}
+            and value.get("all_71_files_accounted_for") is True
+            and type(value.get("nonempty_test_modules")) is int and value["nonempty_test_modules"] == 69
+            and type(value.get("empty_cli_modules")) is int and value["empty_cli_modules"] == 2,
+            "Empty utility accounting/source facts differ")
+    reports = value.get("actual_module_collection_reports")
+    require(isinstance(reports, dict) and set(reports) == set(modules)
+            and all(isinstance(row, dict) and set(row) == {"outcome", "direct_children"}
+                    and row["outcome"] == "passed" and type(row["direct_children"]) is int
+                    and row["direct_children"] >= 0 for row in reports.values())
+            and {name for name, row in reports.items() if row["direct_children"] == 0} == empty
+            and set(original.get("items_by_test_module", {})) == set(modules) - empty,
+            "Actual 71-file collection reports do not establish exactly two empty utilities")
+    return {"result": small_ref(path), "source": source,
+            "scope": value["scope"], "original_pytest_exit_code": 0,
+            "original_runner_exit_code": 1, "original_outer_return_code": 1,
+            "nonempty_test_modules": 69, "empty_cli_modules": 2,
+            "actual_module_collection_reports": reports,
+            "collect_only_exit_code": 0, "collect_only_seconds": value.get("collect_only_seconds"),
+            "new_full_test_execution_performed": False}
+
+
+def full_suite(result_path: Path, xml_path: Path, head: str,
+               index: dict, tree: dict, digests: dict, modules: list[str],
+               expected_runner_sha256: str, reconciliation_path: Path,
+               expected_reconciliation_sha256: str) -> dict:
+    result = load(result_path)
+    require(result_path.resolve() == (BASE / "common_source_complete_cpu_result.json").resolve()
+            and xml_path.resolve() == (BASE / "common_source_complete_cpu.xml").resolve(),
+            "Require the preserved original complete-suite result and XML")
+    require(result.get("schema") == "b3_common_source_complete_cpu_regression_v1"
+            and result.get("status") == "failed_or_unverified"
+            and type(result.get("exit_code")) is int and result["exit_code"] == 1
+            and type(result.get("pytest_exit_code")) is int and result["pytest_exit_code"] == 0,
+            "Original pytest-PASS/accounting-failed result differs")
+    reconciled = collection_reconciliation(reconciliation_path, result, xml_path,
+                                          head, index, tree, digests, modules,
+                                          expected_reconciliation_sha256)
+    require(result.get("frozen_implementation_commit") == head
+            and result.get("head_before") == head and result.get("head_after") == head,
+            "Final-suite HEAD snapshots differ")
+    require(result.get("python_source_stable_before_after") is True
+            and result.get("tracked_python_worktree_clean_after") is True
+            and result.get("all_repository_test_modules_covered_once") is False,
+            "Final-suite stability/coverage flags differ")
+    require(result.get("python_file_sha256") == digests
+            and result.get("python_file_sha256_before") == digests
+            and result.get("python_file_sha256_after") == digests,
+            "Final-suite 233 Python before/after byte inventories differ")
+    for key in ("python_index_path_mode_blob_before", "python_index_path_mode_blob_after"):
+        require(result.get(key) == index, f"Final-suite {key} differs")
+    for key in ("python_head_path_mode_blob_before", "python_head_path_mode_blob_after"):
+        require(result.get(key) == tree, f"Final-suite {key} differs")
+    require(result.get("sorted_rg_test_modules_before") == modules
+            and result.get("sorted_rg_test_modules_after") == modules
+            and type(result.get("complete_test_module_count")) is int
+            and result["complete_test_module_count"] == 71,
+            "Final-suite actual 71-module snapshots differ")
+    argv = result.get("argv")
+    require(isinstance(argv, list) and argv[:71] == modules and len(argv) == 74
+            and argv[71] == "-v" and isinstance(argv[72], str)
+            and argv[72].startswith("--basetemp=")
+            and argv[73] == "--junitxml=" + str(xml_path.resolve()),
+            "Final-suite pytest argv differs from inventory/XML")
+    require(result.get("pytest_exception") is None and result.get("after_snapshot_exception") is None
+            and result.get("junit_parse_exception") is None, "Final-suite exceptions recorded")
+    cleared = result.get("cleared_pytest_environment_variable_names")
+    require(isinstance(cleared, list) and len(cleared) == len(set(cleared))
+            and set(cleared) <= {"PYTEST_ADDOPTS", "PYTEST_PLUGINS"},
+            "Runner environment-clearance record differs")
+    runner_ref = small_ref(BASE / "run_common_source_complete_cpu.py")
+    require(result.get("runner_sha256") == expected_runner_sha256 == runner_ref["sha256"]
+            and result.get("runner_source_before") == runner_ref
+            and result.get("runner_source_after") == runner_ref
+            and result.get("runner_source_stable_before_after") is True
+            and result.get("runner_source_after_exception") is None,
+            "Final-suite runner source before/after seal differs")
+    parsed = junit(xml_path)
+    recorded = result.get("junit")
+    require(isinstance(recorded, dict) and recorded.get("artifact") == parsed["artifact"]
+            and recorded.get("counts") == parsed["counts"]
+            and recorded.get("junit_suite_seconds") == parsed["junit_suite_seconds"],
+            "Final-suite XML/result binding differs")
+    require(parsed["counts"] == result.get("counts")
+            and parsed["counts"]["failures"] == parsed["counts"]["errors"] == 0,
+            "Final-suite counts/failures differ")
+    selected = selected_cases(parsed)
+    require(recorded.get("common_source_cases") == selected
+            and recorded.get("common_source_case_counts") == {"native": 45, "application": 30}
+            and result.get("common_source_case_counts") == {"native": 45, "application": 30}
+            and recorded.get("distinct_45_native_and_30_application_passes") is True
+            and result.get("distinct_45_native_and_30_application_passes") is True,
+            "Final-suite 75 direct PASS case proof differs")
+    collection = result.get("collection_proof")
+    require(isinstance(collection, dict)
+            and collection.get("all_71_modules_collected_and_reported_without_deselection") is False
+            and collection.get("deselected_node_ids") == [],
+            "Actual pytest collection or deselection differs")
+    by_module = collection.get("items_by_test_module")
+    ids = collection.get("selected_node_ids")
+    reported = collection.get("reported_node_ids")
+    empty = {"test/test_compare_emb.py", "test/test_compare_umap.py"}
+    require(isinstance(by_module, dict) and set(by_module) == set(modules) - empty
+            and all(isinstance(by_module[name], list) and by_module[name]
+                    and all(isinstance(item, str) and item for item in by_module[name])
+                    for name in by_module)
+            and isinstance(ids, list) and isinstance(reported, list),
+            "Actual 69 nonempty modules plus two empty CLI files differ")
+    flattened = [item for name in modules for item in by_module.get(name, [])]
+    require(len(ids) == len(set(ids)) == len(flattened) == parsed["counts"]["tests"]
+            and len(reported) == len(set(reported)) == len(ids)
+            and set(ids) == set(flattened) == set(reported),
+            "Actual collected, reported and JUnit test counts differ")
+    return {"result": small_ref(result_path), "xml": parsed["artifact"],
+            "counts": parsed["counts"], "module_count": 71,
+            "actual_original_collection_proof": collection,
+            "collection_accounting_reconciliation": reconciled,
+            "original_harness_status": "failed_or_unverified",
+            "original_harness_exit_code": 1, "original_pytest_exit_code": 0,
+            "nonempty_test_module_count": 69, "empty_cli_utility_count": 2,
+            "case_proof": {"scope": "subset_of_final_full_suite",
+                           "independent_target_run": False, "cases": selected,
+                           "native_passed": 45, "application_passed": 30,
+                           "parent_result": small_ref(result_path),
+                           "parent_xml": parsed["artifact"]},
+            "junit_suite_seconds": parsed["junit_suite_seconds"],
+            "runner_complete_elapsed_seconds": result.get("elapsed_seconds"),
+            "peak_main_process_rss_bytes": result.get("peak_main_process_rss_bytes"),
+            "largest_completed_child_rss_bytes": result.get("largest_completed_child_rss_bytes"),
+            "rss_scope": result.get("rss_scope")}
+
+
+def static_checks(path: Path, digests: dict[str, str]) -> dict:
+    report = load(path)
+    rows = report.get("checks")
+    require(report.get("schema") == "b3_common_source_static_v1"
+            and report.get("all_passed") is True
+            and isinstance(rows, list) and len(rows) == 3, "Final static report differs")
+    commands = [row.get("command") for row in rows]
+    ruff = {"ruff", "/home/joey/micromamba/bin/ruff"}
+    suffixes = (("check",), ("format", "--check"),
+                ("-m", "mypy", "--follow-imports=silent",
+                 "--ignore-missing-imports", "--explicit-package-bases"))
+    for number, (row, command, suffix) in enumerate(zip(rows, commands, suffixes, strict=True)):
+        valid_executable = (command[0] in ruff if number < 2
+                            else command[0] == ".venv/bin/python") if command else False
+        require(type(row.get("return_code")) is int and row["return_code"] == 0
+                and isinstance(command, list) and valid_executable
+                and tuple(command[1:1 + len(suffix)]) == suffix
+                and len(command[1 + len(suffix):]) == 5
+                and tuple(command[1 + len(suffix):]) == STATIC_PATH_ORDER,
+                "Static check command, paths or result differs")
+    recorded = report.get("source_file_sha256")
+    require(isinstance(recorded, dict), "Static source map missing")
+    for name in FIVE_PYTHON:
+        require(recorded.get(str((ROOT / name).resolve())) == digests[name],
+                f"Static check source identity differs: {name}")
+    return {"report": small_ref(path), "five_python_paths": sorted(FIVE_PYTHON),
+            "commands": commands, "successful_integer_return_codes": [0, 0, 0]}
+
+
+def full_supervision(state_path: Path, gnu_path: Path, expected_runner_sha256: str) -> dict:
+    require(state_path.resolve() == (BASE / "common_source_complete_cpu_supervisor/state.json").resolve()
+            and gnu_path.resolve() == (BASE / "common_source_complete_cpu_gnu_time.txt").resolve(),
+            "Require the original complete-suite supervisor and GNU receipts bound by reconciliation")
+    state = load(state_path)
+    require(state.get("status") == "stopped" and state.get("stop_reason") is None
+            and type(state.get("return_code")) is int and state["return_code"] == 1,
+            "Original accounting-failed supervisor state differs")
+    limits = state.get("limits", {})
+    require(limits.get("max_wall_seconds") == 9000
+            and limits.get("max_rss_gib") == 6
+            and limits.get("min_host_ram_gib") == 4
+            and limits.get("min_disk_gib") == 20,
+            "Complete-suite supervisor resource limits differ")
+    command = state.get("command")
+    def command_path(raw: str) -> Path:
+        path = Path(raw)
+        return (path if path.is_absolute() else ROOT / path).resolve()
+
+    require(isinstance(command, list) and len(command) == 8
+            and command[:3] == ["/usr/bin/time", "-v", "-o"]
+            and command_path(command[3]) == gnu_path.resolve()
+            and command_path(command[4]) == (ROOT / ".venv/bin/python").resolve()
+            and command[-2:] == ["--expected-runner-sha256", expected_runner_sha256]
+            and command_path(command[-3]) == (BASE / "run_common_source_complete_cpu.py").resolve(),
+            "Complete-suite supervisor command/source pin differs")
+    return {"supervisor_state": small_ref(state_path), "gnu_complete_child_cost": small_ref(gnu_path),
+            "supervisor_elapsed_seconds": state.get("elapsed_seconds"),
+            "limits": limits, "command": command, "status": state["status"],
+            "original_outer_return_code": 1, "failure_scope": "Known nonempty-module accounting gate; raw pytest exit 0 independently reconciled.",
+            "timing_scope": "Supervisor elapsed, GNU time, runner elapsed and JUnit suite seconds remain separate."}
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--manifest", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    require(not args.output.exists(), "Evidence output already exists")
+    manifest = load(args.manifest)
+    require(manifest["schema"] == "b3_common_source_capture_manifest_v3", "Manifest schema differs")
+    require(manifest.get("expected_collector_sha256") == small_ref(Path(__file__))["sha256"],
+            "Collector source differs from frozen capture manifest")
+    expected = manifest["expected_source_sha256"]
+    require(set(expected) == set(SOURCE_NAMES), "Require exactly three reviewed new source SHAs")
+    head = git("rev-parse", "HEAD").decode().strip()
+    require(head == manifest["implementation_head"], "Source HEAD changed after acceptance jobs")
+    index, tree, digests = git_python_inventory(head)
+    require(all(digests.get(name) == digest for name, digest in expected.items()),
+            "Reviewed public source differs from current tracked bytes")
+    require(FIVE_PYTHON <= set(digests), "Five new source/test paths are not tracked")
+    modules = current_modules()
+    study = completed_study(Path(manifest["study_attempt"]).resolve())
+    full_index = index_entries()
+    require({p: {"mode": m, "blob": b} for p, (m, b) in full_index.items()
+             if p.endswith(".py")} == index,
+            "Full Git index differs from 233-Python source snapshot")
+    source = source_audit(study["freeze"], expected, full_index)
+    full = full_suite(Path(manifest["full_result"]), Path(manifest["full_junit"]),
+                      head, index, tree, digests, modules, manifest["expected_full_runner_sha256"],
+                      Path(manifest["full_reconciliation"]), manifest["expected_reconciliation_runner_sha256"])
+    supervision = full_supervision(Path(manifest["full_supervisor_state"]),
+                                   Path(manifest["full_gnu_time"]),
+                                   manifest["expected_full_runner_sha256"])
+    collect_state = load(Path(manifest["reconciliation_supervisor_state"]))
+    require(collect_state.get("status") == "completed"
+            and type(collect_state.get("return_code")) is int and collect_state["return_code"] == 0,
+            "Separate reconciliation supervisor did not complete")
+    collect_limits = collect_state.get("limits", {})
+    require(collect_limits.get("max_wall_seconds") == 900
+            and collect_limits.get("max_rss_gib") == collect_limits.get("min_host_ram_gib") == 4
+            and collect_limits.get("min_disk_gib") == 20,
+            "Reconciliation resource limits differ")
+    collect_command = collect_state.get("command", [])
+    require(isinstance(collect_command, list) and len(collect_command) == 8
+            and collect_command[:3] == ["/usr/bin/time", "-v", "-o"]
+            and (ROOT / collect_command[3]).resolve() == Path(manifest["reconciliation_gnu_time"]).resolve()
+            and (ROOT / collect_command[4]).resolve() == (ROOT / ".venv/bin/python").resolve()
+            and (ROOT / collect_command[-3]).resolve() == (BASE / "reconcile_common_source_cpu_collection_v2.py").resolve()
+            and collect_command[-2:] == ["--expected-reconciliation-sha256", manifest["expected_reconciliation_runner_sha256"]],
+            "Reconciliation actual command/source pin differs")
+    collect_gnu = read_small(Path(manifest["reconciliation_gnu_time"])).decode()
+    require([line.strip() for line in collect_gnu.splitlines()
+             if line.strip().startswith("Exit status:")] == ["Exit status: 0"],
+            "Reconciliation GNU child did not exit zero")
+    static = static_checks(Path(manifest["static_checks"]), digests)
+    reviews = {name: small_ref(Path(path)) for name, path in manifest["reviews"].items()}
+    require(set(reviews) == {"standards", "spec"}, "Both independent review records required")
+    outcomes = manifest.get("review_outcomes")
+    require(isinstance(outcomes, dict) and set(outcomes) == {"standards", "spec"},
+            "Both review outcomes required")
+    for axis, outcome in outcomes.items():
+        require(outcome.get("reviewed_head") == "c15decdfed36b72b03bc628bd8975e8107773f0e"
+                and outcome.get("reviewed_public_source_sha256") == expected
+                and outcome.get("record_sha256") == reviews[axis]["sha256"]
+                and type(outcome.get("remaining_hard_findings")) is int
+                and outcome["remaining_hard_findings"] == 0
+                and (axis != "standards" or (type(outcome.get("optional_findings")) is int
+                                             and outcome["optional_findings"] == 0)),
+                f"{axis} review outcome differs")
+    guard_reviews = manifest.get("metadata_guard_reviews")
+    require(isinstance(guard_reviews, dict) and set(guard_reviews) == {"standards", "spec"},
+            "Both metadata guard review axes are required")
+    guard_review_facts = {}
+    guard_sources = {"reconciliation": manifest["expected_reconciliation_runner_sha256"],
+                     "collector": manifest["expected_collector_sha256"]}
+    for axis, outcome in guard_reviews.items():
+        record = small_ref(Path(outcome["record"]))
+        require(outcome.get("record_sha256") == record["sha256"]
+                and outcome.get("reviewed_source_sha256") == guard_sources
+                and type(outcome.get("remaining_hard_findings")) is int
+                and outcome["remaining_hard_findings"] == 0
+                and type(outcome.get("optional_findings")) is int
+                and outcome["optional_findings"] == 0,
+                f"{axis} metadata guard review differs")
+        guard_review_facts[axis] = {"record": record, "outcome": outcome}
+    attempts = []
+    for item in manifest["attempts"]:
+        require(item["kind"] in {"red", "green", "fixture_failure", "study_failure", "transition"},
+                "Attempt kind differs")
+        require(isinstance(item.get("scope"), str) and item["scope"], "Attempt scope missing")
+        files = [small_ref(Path(path)) for path in item["metadata_files"]]
+        require(files, "Do not omit failed/RED raw attempt metadata")
+        attempts.append({"kind": item["kind"], "scope": item["scope"], "files": files})
+    require(any(x["kind"] == "red" for x in attempts)
+            and any(x["kind"] == "green" for x in attempts), "Repair history absent")
+    report = {
+        "schema": "b3_common_source_milestone_evidence_v3", "ticket": "05", "ticket_status": "open",
+        "excluded_ticket": "11", "acceptance_scope": "bounded common-source representative engineering",
+        "implementation_head": head, "capture_manifest": small_ref(args.manifest),
+        "collector_source": small_ref(Path(__file__)),
+        "source_preservation": source,
+        "current_tracked_python_count": len(digests),
+        "current_python_index_path_mode_blob": index,
+        "current_python_head_path_mode_blob": tree,
+        "current_full_git_index_path_mode_blob": {
+            p: {"mode": m, "blob": b} for p, (m, b) in full_index.items()},
+        "current_python_file_sha256": digests,
+        "full_suite": full, "full_suite_supervision": supervision, "static_checks": static,
+        "collection_reconciliation_supervision": {
+            "state": small_ref(Path(manifest["reconciliation_supervisor_state"])),
+            "gnu": small_ref(Path(manifest["reconciliation_gnu_time"])),
+            "status": "completed", "return_code": 0, "limits": collect_limits,
+            "supervisor_last_elapsed_seconds": collect_state.get("elapsed_seconds"),
+            "scope": "Separate collect-only reconciliation; no full tests rerun; original harness/GNU/supervisor exit 1 preserved."},
+        "reviews": reviews, "review_outcomes": outcomes,
+        "metadata_guard_reviews": guard_review_facts, "attempt_history": attempts,
+        "representative_study": {k: v for k, v in study.items() if k != "freeze"},
+        "large_stage_payloads": "Metadata allowlist at most 32 MiB is rehashed; H5, numeric, unknown, and oversized payloads retain producer-sealed exact path/SHA256/byte references with current size only.",
+        "capture_consistency_scope": "Pinned metadata/source bytes and Git/module inventories rechecked immediately before and after the owned output fsync; trusted local writer only, no signature or crash-durability assertion.",
+        "full_2000_draws_completed": False, "whole_method_fit_established": False,
+        "native_likelihood_effects_attested": False, "scientific_readiness": "unavailable",
+    }
+    def finish_recheck() -> None:
+        recheck_pins()
+        require(git("rev-parse", "HEAD").decode().strip() == head,
+                "Implementation HEAD changed during capture")
+        require(index_entries() == full_index, "Full Git index changed during capture")
+        require(current_modules() == modules, "Test module inventory changed during capture")
+
+    finish_recheck()
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    output_data = json.dumps(report, sort_keys=True, indent=2, allow_nan=False).encode() + b"\n"
+    require(len(output_data) <= METADATA_CAP, "Evidence output exceeds bounded metadata cap")
+    output_caller_parent = Path(os.path.abspath(os.fspath(args.output.parent)))
+    output_parent = output_caller_parent.resolve(strict=True)
+    directory_fd = os.open(output_parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        directory_info = os.fstat(directory_fd)
+    except BaseException:
+        os.close(directory_fd)
+        raise
+    directory_closed = False
+    parent_identity = (directory_info.st_dev, directory_info.st_ino)
+    owned_inode = None
+
+    def verify_owned_output() -> None:
+        require(output_caller_parent.resolve(strict=True) == output_parent
+                and output_parent.resolve(strict=True) == output_parent,
+                "Owned evidence parent caller/canonical alias changed")
+        parent = output_parent.lstat()
+        require(stat.S_ISDIR(parent.st_mode)
+                and (parent.st_dev, parent.st_ino) == parent_identity,
+                "Owned evidence parent storage changed")
+        occupying = os.stat(args.output.name, dir_fd=directory_fd, follow_symlinks=False)
+        require(stat.S_ISREG(occupying.st_mode)
+                and (occupying.st_dev, occupying.st_ino) == owned_inode,
+                "Owned evidence output storage identity changed")
+
+    def invalidate_owned_output() -> None:
+        if owned_inode is None:
+            return
+        recovery_fd = None
+        try:
+            try:
+                parent = os.fstat(directory_fd)
+                cleanup_fd = directory_fd
+            except OSError:
+                recovery_fd = os.open(output_parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+                parent = os.fstat(recovery_fd)
+                cleanup_fd = recovery_fd
+            require(stat.S_ISDIR(parent.st_mode)
+                    and (parent.st_dev, parent.st_ino) == parent_identity,
+                    "Refuse cleanup through foreign evidence parent storage")
+            current = os.stat(args.output.name, dir_fd=cleanup_fd, follow_symlinks=False)
+            if stat.S_ISREG(current.st_mode) and (current.st_dev, current.st_ino) == owned_inode:
+                os.unlink(args.output.name, dir_fd=cleanup_fd)
+        except FileNotFoundError:
+            pass
+        finally:
+            if recovery_fd is not None:
+                os.close(recovery_fd)
+
+    try:
+        require(output_caller_parent.resolve(strict=True) == output_parent,
+                "Evidence parent alias changed before publication")
+        descriptor = os.open(args.output.name,
+                             os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+                             0o600, dir_fd=directory_fd)
+        with os.fdopen(descriptor, "wb") as output:
+            opened = os.fstat(output.fileno())
+            owned_inode = (opened.st_dev, opened.st_ino)
+            output.write(output_data)
+            output.flush()
+            os.fsync(output.fileno())
+        finish_recheck()
+        verify_owned_output()
+        require(read_small(args.output) == output_data, "Exact owned evidence output bytes changed")
+        finish_recheck()
+        verify_owned_output()
+        require(read_small(args.output) == output_data, "Owned evidence bytes changed at final return seal")
+        verify_owned_output()
+        os.close(directory_fd)
+        directory_closed = True
+    except BaseException:
+        invalidate_owned_output()
+        raise
+    finally:
+        if not directory_closed:
+            try:
+                os.close(directory_fd)
+            except OSError:
+                pass
+
+
+if __name__ == "__main__":
+    main()

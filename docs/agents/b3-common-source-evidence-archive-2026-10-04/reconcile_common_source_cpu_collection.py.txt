@@ -1,0 +1,359 @@
+"""Reconcile a failed collection-accounting harness without rerunning tests.
+
+The immutable original full run passed every selected case. Its harness
+incorrectly required nonempty cases in two CLI utilities. This separate
+collect-only invocation records actual empty-module collection and binds the
+original runtime XML, source snapshots and failed outer receipts. It never
+rewrites them or advertises a new full test execution.
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import resource
+import stat
+import subprocess
+import time
+
+ROOT = Path(__file__).resolve().parents[3]
+BASE = Path(__file__).resolve().parent
+OWN = Path(__file__).resolve()
+ORIGINAL_RUNNER = BASE / "run_common_source_complete_cpu.py"
+ORIGINAL_RUNNER_SHA = "4b9fe6074d11194e8bfe58e8b982e80ee5554fce2e645b2894307d832444a07d"
+ORIGINAL_RESULT = BASE / "common_source_complete_cpu_result.json"
+ORIGINAL_XML = BASE / "common_source_complete_cpu.xml"
+ORIGINAL_SUPERVISOR = BASE / "common_source_complete_cpu_supervisor/state.json"
+ORIGINAL_GNU = BASE / "common_source_complete_cpu_gnu_time.txt"
+ORIGINAL_LOG = BASE / "common_source_complete_cpu_supervisor/producer.log"
+OUTPUT = BASE / "common_source_cpu_collection_reconciliation_result.json"
+BASETEMP = Path("/tmp/b3-common-source-collection-reconciliation-20261004")
+EMPTY = ("test/test_compare_emb.py", "test/test_compare_umap.py")
+MIB = 1024**2
+
+
+def need(condition, reason):
+    if not condition:
+        raise ValueError(reason)
+
+
+class Pins:
+    def __init__(self, began):
+        self.began = began
+        self.entries = {}
+        self.callers = {}
+
+    def check(self):
+        need(time.monotonic() - self.began < 900, "Reconciliation exceeds 900 seconds")
+        need(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 <= 4 * 1024**3,
+             "Reconciliation exceeds 4 GiB process RSS")
+        available = next((int(row.split()[1]) * 1024 for row in
+                          Path("/proc/meminfo").read_text().splitlines()
+                          if row.startswith("MemAvailable:")), 0)
+        need(available >= 4 * 1024**3, "Reconciliation requires 4 GiB available host RAM")
+        fs = os.statvfs(BASE)
+        need(fs.f_bavail * fs.f_frsize >= 20 * 1024**3 + 4 * MIB,
+             "Reconciliation requires 20 GiB free disk after metadata output")
+
+    def read(self, path, cap=32 * MIB):
+        self.check()
+        caller = Path(os.path.abspath(os.fspath(path)))
+        path = caller.resolve(strict=True)
+        if caller in self.callers:
+            need(self.callers[caller] == path, "Caller resolution changed")
+        initial = path.lstat()
+        identity = initial.st_dev, initial.st_ino, initial.st_size
+        need(stat.S_ISREG(initial.st_mode) and 0 <= initial.st_size <= cap,
+             "Require bounded regular metadata/source")
+        if path in self.entries:
+            need(self.entries[path][0] == identity, "Pinned storage identity changed")
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        parts, count = [], 0
+        with os.fdopen(fd, "rb") as stream:
+            opened = os.fstat(stream.fileno())
+            need(stat.S_ISREG(opened.st_mode)
+                 and (opened.st_dev, opened.st_ino, opened.st_size) == identity,
+                 "Opened metadata differs from admitted regular storage")
+            while piece := stream.read(MIB):
+                self.check()
+                count += len(piece)
+                need(count <= cap and count <= identity[2], "Metadata grew beyond admission")
+                parts.append(piece)
+            finished = os.fstat(stream.fileno())
+            need((finished.st_dev, finished.st_ino, finished.st_size) == identity,
+                 "Opened metadata changed during read")
+        current = path.lstat()
+        need(stat.S_ISREG(current.st_mode)
+             and (current.st_dev, current.st_ino, current.st_size) == identity
+             and count == identity[2] and caller.resolve(strict=True) == path
+             and path.resolve(strict=True) == path, "Metadata identity/resolution changed")
+        data = b"".join(parts)
+        digest = sha256(data).hexdigest()
+        if path in self.entries:
+            need(self.entries[path][1] == digest, "Pinned metadata/source bytes changed")
+        self.entries[path] = identity, digest, cap
+        self.callers[caller] = path
+        self.check()
+        return {"path": str(path), "sha256": digest, "bytes": len(data)}, data
+
+    def recheck(self):
+        for caller, expected in list(self.callers.items()):
+            need(caller.resolve(strict=True) == expected, "Pinned caller alias changed")
+        for path, (_, _, cap) in list(self.entries.items()):
+            self.read(path, cap)
+        self.check()
+
+
+def decode(data):
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            need(key not in result, "Duplicate JSON key")
+            result[key] = value
+        return result
+
+    def nonfinite(value):
+        raise ValueError("Nonfinite JSON constant: " + value)
+
+    value = json.loads(data, object_pairs_hook=unique, parse_constant=nonfinite)
+    need(type(value) is dict, "Require a metadata object")
+    return value
+
+
+class Collection:
+    def __init__(self, expected):
+        self.expected = set(expected)
+        self.module_reports = {}
+        self.ids = []
+        self.by_module = {}
+        self.deselected = []
+        self.runtime_reports = []
+
+    def pytest_collectreport(self, report):
+        if report.nodeid in self.expected:
+            need(report.nodeid not in self.module_reports, "Duplicate module collection report")
+            self.module_reports[report.nodeid] = {
+                "outcome": report.outcome,
+                "direct_children": len(report.result),
+            }
+
+    def pytest_deselected(self, items):
+        self.deselected.extend(item.nodeid for item in items)
+
+    def pytest_collection_finish(self, session):
+        self.ids = [item.nodeid for item in session.items]
+        for item in session.items:
+            name = Path(item.path).resolve().relative_to(ROOT).as_posix()
+            self.by_module.setdefault(name, []).append(item.nodeid)
+
+    def pytest_runtest_logreport(self, report):
+        self.runtime_reports.append(report.nodeid)
+
+
+def index_entries():
+    result = {}
+    data = subprocess.check_output(["git", "ls-files", "--stage", "-z"], cwd=ROOT)
+    for row in data.split(b"\0"):
+        if row:
+            header, name = row.split(b"\t", 1)
+            mode, blob, stage = header.decode().split()
+            need(stage == "0", "Unmerged Git index")
+            result[name.decode()] = {"mode": mode, "blob": blob}
+    return result
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--expected-reconciliation-sha256", required=True)
+    args = parser.parse_args()
+    began = time.monotonic()
+    pins = Pins(began)
+    own_ref, _ = pins.read(OWN, 4 * MIB)
+    need(own_ref["sha256"] == args.expected_reconciliation_sha256, "Reconciliation source changed")
+    need(not os.path.lexists(OUTPUT), "Preserve prior reconciliation output")
+    need(not os.path.lexists(BASETEMP), "Require fresh collect-only basetemp")
+    original_source_ref, original_buffer = pins.read(ORIGINAL_RUNNER, 4 * MIB)
+    need(original_source_ref["sha256"] == ORIGINAL_RUNNER_SHA, "Original full runner source changed")
+    # Actual admitted original stdlib-only helper buffer; its main guard stays
+    # inactive. There is no pathname reread or repository-helper import here.
+    original = {"__file__": str(ORIGINAL_RUNNER), "__name__": "_b3_original_full_runner"}
+    exec(compile(original_buffer, str(ORIGINAL_RUNNER), "exec"), original)
+    del original_buffer
+    raw_ref, data = pins.read(ORIGINAL_RESULT)
+    raw = decode(data)
+    del data
+    xml_ref, _ = pins.read(ORIGINAL_XML)
+    supervisor_ref, data = pins.read(ORIGINAL_SUPERVISOR)
+    supervisor = decode(data)
+    gnu_ref, gnu_data = pins.read(ORIGINAL_GNU, MIB)
+    log_ref, log_data = pins.read(ORIGINAL_LOG, 4 * MIB)
+    need(raw.get("schema") == "b3_common_source_complete_cpu_regression_v1"
+         and raw.get("status") == "failed_or_unverified"
+         and type(raw.get("exit_code")) is int and raw["exit_code"] == 1
+         and type(raw.get("pytest_exit_code")) is int and raw["pytest_exit_code"] == 0,
+         "Require the original pytest-PASS/accounting-failed result")
+    need(all(raw.get(key) is None for key in
+             ("pytest_exception", "after_snapshot_exception", "junit_parse_exception",
+              "runner_source_after_exception")), "Original full run recorded other errors")
+    need(raw.get("python_source_stable_before_after") is True
+         and raw.get("tracked_python_worktree_clean_after") is True
+         and raw.get("runner_source_stable_before_after") is True
+         and raw.get("all_repository_test_modules_covered_once") is False,
+         "Original stability/accounting flags differ")
+    need(raw.get("runner_sha256") == ORIGINAL_RUNNER_SHA
+         and raw.get("runner_source_before") == original_source_ref
+         and raw.get("runner_source_after") == original_source_ref,
+         "Original full runner pins differ")
+    need(supervisor.get("status") == "stopped"
+         and type(supervisor.get("return_code")) is int and supervisor["return_code"] == 1
+         and supervisor.get("stop_reason") is None, "Original outer failure differs")
+    limits = supervisor.get("limits", {})
+    need(limits.get("max_wall_seconds") == 9000 and limits.get("max_rss_gib") == 6
+         and limits.get("min_host_ram_gib") == 4 and limits.get("min_disk_gib") == 20,
+         "Original full-run limits differ")
+    need("Exit status: 1" in gnu_data.decode()
+         and "1092 passed, 5 skipped" in log_data.decode(errors="strict"),
+         "Original process/log outcome differs")
+    del log_data, gnu_data
+    before = original["snapshot"]()
+    need(original["frozen"](before) and len(before["python_file_sha256"]) == 233,
+         "Current frozen 233-source/71-file snapshot differs")
+    full_index = index_entries()
+    modules = before["sorted_rg_test_modules"]
+    need(raw["head_before"] == raw["head_after"] == raw["frozen_implementation_commit"] == before["head"],
+         "Original/current HEAD differs")
+    for key, current in (
+        ("python_file_sha256", before["python_file_sha256"]),
+        ("python_file_sha256_before", before["python_file_sha256"]),
+        ("python_file_sha256_after", before["python_file_sha256"]),
+        ("python_index_path_mode_blob_before", before["python_index_path_mode_blob"]),
+        ("python_index_path_mode_blob_after", before["python_index_path_mode_blob"]),
+        ("python_head_path_mode_blob_before", before["python_head_path_mode_blob"]),
+        ("python_head_path_mode_blob_after", before["python_head_path_mode_blob"]),
+        ("sorted_rg_test_modules_before", modules), ("sorted_rg_test_modules_after", modules),
+    ):
+        need(raw.get(key) == current, "Original/current source snapshot differs: " + key)
+    need(raw.get("argv") == modules + ["-v", "--basetemp=" + str(original["BASETEMP"]),
+                                       "--junitxml=" + str(ORIGINAL_XML)],
+         "Original full invocation did not supply the exact 71 files")
+    xml = original["xml_evidence"](ORIGINAL_XML)
+    need(xml["artifact"] == xml_ref and raw.get("junit") == xml
+         and xml["counts"] == {"tests": 1097, "passed": 1092, "skipped": 5, "errors": 0, "failures": 0}
+         and raw.get("counts") == xml["counts"]
+         and xml["distinct_45_native_and_30_application_passes"] is True
+         and raw.get("distinct_45_native_and_30_application_passes") is True,
+         "Original full XML/count/direct-75 evidence differs")
+    cp = raw["collection_proof"]
+    old_ids, old_by_module = cp["selected_node_ids"], cp["items_by_test_module"]
+    need(cp["deselected_node_ids"] == []
+         and cp["all_71_modules_collected_and_reported_without_deselection"] is False
+         and len(old_ids) == len(set(old_ids)) == len(cp["reported_node_ids"]) == 1097
+         and set(old_ids) == set(cp["reported_node_ids"])
+         and set(modules) - set(old_by_module) == set(EMPTY)
+         and set(old_by_module) <= set(modules) and len(old_by_module) == 69,
+         "Original failed accounting has another cause")
+    flattened = [node for name in modules for node in old_by_module.get(name, [])]
+    need(len(flattened) == 1097 and set(flattened) == set(old_ids),
+         "Original module/node membership differs")
+    empty_sources = {}
+    for name in EMPTY:
+        ref, data = pins.read(ROOT / name, 4 * MIB)
+        need(ref["sha256"] == before["python_file_sha256"][name], "Empty utility source differs")
+        tree = ast.parse(data, filename=str(ROOT / name))
+        need(not any(isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                     and node.name.startswith("test_") for node in ast.walk(tree))
+             and not any(isinstance(node, ast.ClassDef) for node in ast.walk(tree)),
+             "Claimed empty CLI utility contains testable declarations")
+        empty_sources[name] = ref
+    for name in ("B3_PAGED_APP_PREPARED_ROOT", "B3_PAGED_APP_EXECUTED_ROOT",
+                 "B3_PAGED_NATIVE_FIXTURE_ROOT", "PYTEST_ADDOPTS", "PYTEST_PLUGINS"):
+        os.environ.pop(name, None)
+    for name in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+        os.environ[name] = "1"
+    os.environ["CUDA_VISIBLE_DEVICES"] = ""
+    os.environ["TF_RUN_REAL_MODEL_TESTS"] = "0"
+    pins.recheck()
+    import pytest
+
+    plugin = Collection(modules)
+    argv = modules + ["--collect-only", "-q", "--basetemp=" + str(BASETEMP)]
+    collect_began = time.monotonic()
+    collect_exit = int(pytest.main(argv, plugins=[plugin]))
+    collect_seconds = time.monotonic() - collect_began
+    need(collect_exit == 0 and plugin.deselected == [] and plugin.runtime_reports == [],
+         "Collection-only invocation failed, deselected or ran tests")
+    need(plugin.ids == old_ids and plugin.by_module == old_by_module
+         and set(plugin.module_reports) == set(modules),
+         "Fresh collection differs from original full invocation")
+    need(all(report["outcome"] == "passed" for report in plugin.module_reports.values())
+         and {name for name, report in plugin.module_reports.items()
+              if report["direct_children"] == 0} == set(EMPTY),
+         "Fresh actual empty/nonempty module reports differ")
+    after = original["snapshot"]()
+    need(after == before and index_entries() == full_index
+         and subprocess.run(["git", "diff", "--quiet", "HEAD", "--", "*.py"],
+                            cwd=ROOT, check=False).returncode == 0,
+         "Source/index changed during collection-only reconciliation")
+    pins.recheck()
+    report = {
+        "schema": "b3_common_source_cpu_collection_reconciliation_v1",
+        "status": "completed_original_pytest_pass_collection_accounting_reconciliation",
+        "scope": "Separate collect-only reconciliation; original full harness remains exit 1.",
+        "original_full_result": raw_ref, "original_full_xml": xml_ref,
+        "original_full_runner": original_source_ref,
+        "original_full_supervisor": supervisor_ref, "original_full_gnu": gnu_ref,
+        "original_full_log": log_ref,
+        "original_pytest_exit_code": 0, "original_runner_exit_code": 1,
+        "original_outer_return_code": 1, "original_counts": xml["counts"],
+        "original_direct_case_counts": {"native": 45, "application": 30},
+        "frozen_implementation_head": before["head"],
+        "source_snapshot_before": before, "source_snapshot_after": after,
+        "full_git_index_before_after": full_index,
+        "reconciliation_source": own_ref,
+        "empty_cli_sources": empty_sources,
+        "actual_module_collection_reports": plugin.module_reports,
+        "collect_only_argv": argv, "collect_only_exit_code": collect_exit,
+        "collect_only_seconds": collect_seconds,
+        "selected_node_ids": plugin.ids, "items_by_test_module": plugin.by_module,
+        "deselected_node_ids": plugin.deselected, "runtest_reported_node_ids": plugin.runtime_reports,
+        "all_71_files_accounted_for": True, "nonempty_test_modules": 69,
+        "empty_cli_modules": 2, "original_runtime_selection_equals_fresh_collection": True,
+        "source_stable_before_after": True, "new_full_test_execution_performed": False,
+        "project_model_job_performed": False,
+        "elapsed_before_final_seal_seconds": time.monotonic() - began,
+    }
+    data = json.dumps(report, indent=2, sort_keys=True, allow_nan=False).encode() + b"\n"
+    need(len(data) <= 4 * MIB, "Reconciliation output exceeds admitted metadata bound")
+    marker_identity = None
+    try:
+        with OUTPUT.open("xb") as stream:
+            info = os.fstat(stream.fileno())
+            marker_identity = info.st_dev, info.st_ino
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        pins.recheck()
+        need(original["snapshot"]() == before and index_entries() == full_index,
+             "Final source/index seal differs")
+        current_ref, current = pins.read(OUTPUT, 4 * MIB)
+        need(current == data and current_ref["sha256"] == sha256(data).hexdigest(),
+             "Owned reconciliation output bytes changed")
+        print(json.dumps({"status": report["status"], "output": current_ref,
+                          "counts": xml["counts"], "new_full_test_execution_performed": False}))
+    except BaseException:
+        if marker_identity is not None:
+            try:
+                info = OUTPUT.lstat()
+                if stat.S_ISREG(info.st_mode) and (info.st_dev, info.st_ino) == marker_identity:
+                    OUTPUT.unlink()
+            except FileNotFoundError:
+                pass
+        raise
+
+
+if __name__ == "__main__":
+    main()

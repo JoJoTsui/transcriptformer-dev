@@ -1,0 +1,66 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "combined_output": "All checks passed!\n",
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "scripts/b3_authenticated_helpers.py",
+        "scripts/prepare_b3_paged_native_common_source.py",
+        "scripts/bootstrap_b3_paged_native_common_source.py",
+        "test/test_b3_paged_native_common_source.py",
+        "test/test_b3_paged_native_common_bootstrap.py"
+      ],
+      "elapsed_seconds": 0.027382842992665246,
+      "return_code": 0
+    },
+    {
+      "combined_output": "5 files already formatted\n",
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--check",
+        "scripts/b3_authenticated_helpers.py",
+        "scripts/prepare_b3_paged_native_common_source.py",
+        "scripts/bootstrap_b3_paged_native_common_source.py",
+        "test/test_b3_paged_native_common_source.py",
+        "test/test_b3_paged_native_common_bootstrap.py"
+      ],
+      "elapsed_seconds": 0.02879146800842136,
+      "return_code": 0
+    },
+    {
+      "combined_output": "scripts/b3_authenticated_helpers.py:30: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nSuccess: no issues found in 5 source files\n",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "scripts/b3_authenticated_helpers.py",
+        "scripts/prepare_b3_paged_native_common_source.py",
+        "scripts/bootstrap_b3_paged_native_common_source.py",
+        "test/test_b3_paged_native_common_source.py",
+        "test/test_b3_paged_native_common_bootstrap.py"
+      ],
+      "elapsed_seconds": 4.356410979991779,
+      "return_code": 0
+    }
+  ],
+  "mypy_environment": {
+    "MYPY_CACHE_DIR": "/tmp/b3-common-source-mypy",
+    "PYTHONPATH": "/home/joey/.cache/uv/archive-v0/xRyg4HEqkxLwm2OA:/home/joey/.cache/uv/archive-v0/0P1lZuvxYyZrbYlh16qWy:/home/joey/.cache/uv/archive-v0/erB5vv3vCnGbzwlL:/home/joey/.cache/uv/archive-v0/LH6ffABWhmcwoA1Tz2iL9:/home/joey/.cache/uv/archive-v0/WrO-Eo3zoRZ6ZiPi"
+  },
+  "schema": "b3_common_source_static_v1",
+  "source_file_sha256": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/.github/workflows/b3-paged-native-common-source-tests.yml": "1c347ea0e3315bd487da507425dcfdf56253a89865d39fd0c800713c1a2062e4",
+    "/mnt/d/sc/transcriptformer/transcriptformer/docs/agents/b3-paged-native-common-source-contract-2026-10-04.md": "320d5ed74afe19a475b76b3dbccdcbd9b2d507bba84c06ac06991a9c2f069967",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/b3_authenticated_helpers.py": "a931e9d2ee1a35a13d2e7659fa71ff6e1565e289d5ab6c6f15170701525487f3",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/bootstrap_b3_paged_native_common_source.py": "9d32e5d187388b68649fe7d6ae54b2765367bb5ce335ad0f3e452e7788593bbd",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/prepare_b3_paged_native_common_source.py": "ac14388571b878a69c20ac3f452eaf7f529ac9c77f829f64fbced59ddeb15086",
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_paged_native_common_bootstrap.py": "2990e97a362d0f97ce2c228a56bf08728fb06ae0b1abbb0f1fbf0a8902564bad",
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_paged_native_common_source.py": "fb079ae9fd2c84b0c2f855c9a05d1338dfda8ca1e95c14caed1a7c236b808729"
+  }
+}

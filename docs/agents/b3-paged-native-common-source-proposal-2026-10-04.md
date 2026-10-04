@@ -1,7 +1,29 @@
 # Common-source native cache preparation and replay — proposal, 2026-10-04
 
-**Status: proposed and unimplemented.** This is the next bounded engineering
-dependency identified by the completed negative representative cost gate. It follows
+**Status: bounded engineering accepted; acceptance recorded 2026-10-05.** The batch and separately versioned application were committed at
+`202fbc2`, then repaired at `4d6e26d` and `c15decd`; `71c1254` repairs only an
+owned test-fixture mutation. Independent Standards and Spec reviews report
+zero remaining hard findings on the final public source bytes. The seven-stage
+synthetic representative study completed, including both 63-block builds,
+1,000 original fixed-gene controls and fresh independent one-draw replay.
+Its 100-draw forecasts with headroom are 969.05/978.93 seconds, above the
+900-second limit, so no 100-draw job launched. A separately admitted 50-draw
+production API returned in 698.47 seconds, but its outer stage failed during
+the final byte seal at the unchanged 900-second cap; that attempt is not
+accepted and its replay never launched. A fresh 10-draw measurement with an
+explicit outer-work reserve completed all four stages and passed independent
+bounded metadata capture. Its production/replay public returns were
+423.59/463.82 seconds; complete supervised invocations were 526.31/642.81
+seconds. The 200 + 200 public-call-only projection is 49.30 hours with 398
+other invocations, aggregation and final seals unmeasured. The full runtime passed
+1,092 cases and skipped five, including all 75 new cases in its own JUnit.
+All 71 supplied files are accounted for: 69 nonempty test modules and two
+empty CLI utilities. Original wrappers remain failed/exit 1; separate fresh
+collect-only reconciliation and reviewed v3 capture are accepted. See the
+[validation](b3-paged-native-common-source-validation-2026-10-04.md) and
+[10-draw capture](b3-paged-native-common-source-10-draw-evidence-2026-10-04.json).
+This is the bounded engineering dependency identified by the completed negative
+representative cost gate. It follows
 [ADR 0005](../adr/0005-b3-feasibility-before-full-cohort-expansion.md), the
 [paged native producer](b3-paged-native-cache-contract-2026-10-04.md) and its
 [application](b3-paged-native-bootstrap-contract-2026-10-04.md). Existing

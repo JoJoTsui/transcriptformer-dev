@@ -1,6 +1,39 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-**Current paged native application and feasibility milestone — 2026-10-04:**
+**Current common-source milestone — acceptance recorded 2026-10-05.**
+The native batch/v3 application at `71c1254` passes bounded engineering
+acceptance: **1,092 passed, 5 skipped**, zero failures/errors. All **75 new
+cases** passed in that same source-stable JUnit. All **71 supplied files** are
+accounted for: **69 nonempty test modules and two empty CLI utilities**.
+The original harness/supervisor/GNU stay **failed/exit 1** for their accounting
+bug; a separate source-bound **collect-only v2**, exit 0, confirms identical
+1,097 IDs. No full tests were rerun or original failure receipts rewritten.
+Final public and metadata-guard reviews have zero remaining hard findings.
+See the [validation](../../../docs/agents/b3-paged-native-common-source-validation-2026-10-04.md) and [exact bound evidence](../../../docs/agents/b3-paged-native-common-source-evidence-2026-10-04.json).
+
+- [x] Accept the bounded common-source batch/v3 dependency, including the
+  source-stable full runtime, direct 75-case subset and repaired accounting.
+
+Fresh [10-draw production/replay capture](../../../docs/agents/b3-paged-native-common-source-10-draw-evidence-2026-10-04.json) verifies all four synthetic
+stages, 1,000 original gene controls, 126 blocks and 7,565,140 physical values.
+Public returns were **423.59 / 463.82 seconds**; complete supervised
+invocations **526.31 / 642.81 seconds**. The 100-draw gate was negative;
+the 50-draw outer seal failed and has no accepted marker or replay. The
+**49.30-hour** public-call projection leaves 398 invocations, aggregation,
+scaled final seals and full method cost unmeasured. No 2,000-draw run is admitted.
+
+**05 remains open, 11 excluded, ten bounded engineering tickets closed.**
+The genuine pilot retains **32.54% coverage and 0/2,000 necessary jointly
+supported draws**, its reporting veto and null intervals. Full-context observed
+publication and a metadata-only controller planner are drafted and under
+review; they are not runtime accepted. Genuine prospective registration,
+full-context comparison/successor integration and the effect-proof consumer
+remain separate software dependencies. Full-cohort scored inputs, project
+effect attestation, complete method cost and reportable uncertainty are absent.
+Finetuning claims additionally require verified training/selection provenance.
+The seven-stage and ten-draw studies performed no model forwards.
+
+**Previous paged cache/application and eligible-prefix milestone — 2026-10-04:**
 The separately versioned native cache producer and bootstrap application pass
 bounded engineering acceptance: **49 cache and 49 application targeted checks**,
 Ruff check/format/mypy and independent committed reviews with zero remaining
@@ -35,21 +68,17 @@ cost assessment negatively: complete-call forecasts are **2008.58914 seconds**
 for build, **2090.87981 seconds** for execution and **2098.60836 seconds** for
 independent replay before headroom, each above the **900-second** limit.
 These are projections from measured complete public calls, not complete-family
-runtimes. **No full 126-block build or eligible full-family production/replay
-was attempted.** See the
+runtimes. **H02 did not attempt a full 126-block build or eligible full-family
+production/replay.** See the
 [eligible-prefix validation](../../../docs/agents/b3-eligible-paged-prefix-validation-2026-10-04.md)
 and [bound evidence](../../../docs/agents/b3-eligible-paged-prefix-evidence-2026-10-04.json).
-
-- [ ] Implement a common-source native build/replay batch, then a separately
-  versioned application adapter. Both remain unimplemented; see the
-  [proposal](../../../docs/agents/b3-paged-native-common-source-proposal-2026-10-04.md).
 
 One CPU thread, 200 MiB numeric working memory, 4 GiB RSS, 4 GiB available host
 RAM, 20 GiB free disk and a 900-second invocation limit remain enforced.
 Full-mouse focal widths seven/eight exceed the numeric limit even before actual
 proof/axis costs; narrower widths require fresh admission.
 
-**Final 69-module repository CPU regression: passed** at `49e007e`: **1,017
+**Historical 69-module repository CPU regression: passed** at `49e007e`: **1,017
 passed, 5 skipped**, no failures/errors, with stable source bytes, in
 **4356.24 seconds** (runner monotonic scope). The final audit preserves all
 224 preexisting Python / 98 JSON / 2 JSONL files and Git modes, 58 native
@@ -59,8 +88,10 @@ The earlier 919-test admission run predates the cache/application files.
 
 **05 remains open, 11 excluded, ten bounded engineering tickets closed.**
 The bounded paged producer/application child is accepted; the actual
-full-cohort parent remains open. Common-source batching, the new application
-adapter, eligible fixed-family 2,000-draw production and fresh 2,000-draw replay,
+full-cohort parent remains open. The common-source batch/v3 dependency has bounded engineering acceptance,
+including the completed full runtime, separate collect-only accounting
+reconciliation and reviewed v3 capture. Its ten-draw measurement is complete. Eligible fixed-family 2,000-draw production and fresh
+2,000-draw replay,
 complete method cost, actual full-cohort scored inputs and native effect
 attestation remain unfinished. Reportable project comparison/uncertainty is
 unavailable. Finetuning claims also require project finetuned checkpoint
@@ -272,7 +303,7 @@ The eight-hour producer budget retains memory/storage guards. Actual completion
 is pending and this pilot cannot meet the paired 80% reporting floor.
 
 Category: correctness and readiness
-Status: Open — bounded paged producer/application accepted; synthetic cost gate negative; common-source batch/new adapter, actual full-cohort scored inputs, complete effects/cost, reportable comparison and uncertainty pending; final 69-module regression passed (1,017 tests, 5 skipped)
+Status: Open — bounded paged producer/application accepted; synthetic cost gate negative; common-source batch/v3 adapter repaired at `71c1254`, statically reviewed, and verified in completed representative/10-draw measurements and bounded capture; source-stable full runtime/accounting accepted (1,092 PASS/5 SKIP; 69 nonempty modules plus two empty CLI files); actual full-cohort scored inputs, complete effects/cost, reportable comparison and uncertainty pending; prior 69-module regression passed (1,017 tests, 5 skipped)
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
@@ -934,13 +965,24 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   The bounded producer/application children close their engineering
   dependencies; the actual full-cohort parent and scientific/data gates remain
   open.
-- [ ] Implement a common-source native build/replay batch and then a separately
+- [x] Accept the bounded common-source native build/replay batch and separately
   versioned application adapter, preserving fresh independent reconstruction,
   exact source/RNG identities, all allocation limits and final seals. The
   [common-source proposal](../../../docs/agents/b3-paged-native-common-source-proposal-2026-10-04.md)
-  is unimplemented; the frozen application cannot consume the proposed new
-  cache versions. Complete batch and application costs must be measured before
-  eligible full-family production/replay is admitted.
+  has repaired public implementations at `71c1254` with independent static
+  reviews reporting zero hard findings. The seven-stage study and fresh
+  four-stage 10-draw production/replay plus bounded metadata capture are
+  complete. The source-stable full runtime passes 1,092 cases/5 skipped,
+  including all 75 new cases in the same JUnit. A separate fresh collect-only
+  v2 reconciles 71 supplied files: 69 nonempty modules and two empty CLI
+  utilities. The original failed/exit-1 wrappers remain unchanged; reviewed
+  v3 evidence capture is complete. See the
+  [validation](../../../docs/agents/b3-paged-native-common-source-validation-2026-10-04.md). The
+  v3 adapter consumes the new cache versions without rewriting frozen v2.
+  The 100-draw gate is negative, the distinct 50-draw outer seal failed,
+  and the 10-draw projection is 49.30 hours of public calls alone with 398
+  other calls and aggregation/finalization unmeasured. Complete method cost
+  and actual 2,000-draw production/replay remain unestablished.
 - [ ] Measure complete method-preserving scoring, verification and aggregation
   cost within explicit WSL budgets before expanding full-cohort production.
   Partial: planning, import, reconciliation, indexing, 64-gene null ranges,
@@ -963,7 +1005,7 @@ and the [fresh review](../../../docs/agents/grill-with-docs-review-2026-10-02.md
   1.0 through the unchanged public comparator. The H02 follow-on completes all
   12 stages; complete-call build/execution/replay forecasts of 2008.58914 /
   2090.87981 / 2098.60836 seconds before headroom exceed the 900-second limit.
-  No full 126-block attempt is made. These projections close a bounded
+  H02 made no full 126-block attempt. These projections close a bounded
   feasibility assessment negatively; they do not establish complete-family
   runtime, native effect attestation or a reportable project comparison. See
   [eligible-prefix validation](../../../docs/agents/b3-eligible-paged-prefix-validation-2026-10-04.md)

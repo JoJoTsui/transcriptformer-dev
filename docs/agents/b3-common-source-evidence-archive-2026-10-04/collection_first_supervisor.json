@@ -1,0 +1,33 @@
+{
+  "status": "completed",
+  "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+  "supervisor_pid": 2,
+  "producer_pid": 3,
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261004/common_source_cpu_collection_reconciliation_gnu_time.txt",
+    ".venv/bin/python",
+    "runs/b3_feasibility/20261004/reconcile_common_source_cpu_collection.py",
+    "--expected-reconciliation-sha256",
+    "c60b7a6ac00794605dcf1d47d7b3c61a269f11287d0c9b9ec102e1ed9b43819f"
+  ],
+  "started_unix": 1791127906.1598632,
+  "limits": {
+    "max_wall_seconds": 900.0,
+    "max_rss_gib": 4.0,
+    "min_host_ram_gib": 4.0,
+    "min_disk_gib": 20.0,
+    "max_gpu_temperature_c": null,
+    "gpu_index": 0
+  },
+  "producer_start_ticks": 12388807,
+  "heartbeat_unix": 1791127933.6870484,
+  "elapsed_seconds": 30.037503047002247,
+  "producer_rss_gib": 0.001392364501953125,
+  "host_available_ram_gib": 28.43179702758789,
+  "disk_available_gib": 382.963565826416,
+  "return_code": 0,
+  "finished_unix": 1791127936.7079563
+}

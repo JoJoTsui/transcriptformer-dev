@@ -1,9 +1,14 @@
 # Common-source native batches and bootstrap application — contract
 
-**Draft pending public validation.** This contract implements the dependency
-identified by the negative C03/H02 cost study under ADR 0005. Ticket 05 stays
-open and ticket 11 remains excluded. Existing source-bound consumers and
-scientific rules keep their original meanings.
+**Bounded engineering accepted; acceptance recorded 2026-10-05.**
+The source-stable full runtime has 1,092 PASS/5 SKIP and all 75 new cases in
+that same JUnit. The 71 supplied files comprise 69 nonempty test modules and
+two empty CLI utilities. Original failed/exit-1 wrapper receipts remain;
+a fresh collect-only v2 and separately reviewed v3 capture reconcile the
+accounting. The four-stage ten-draw measurement and capture are complete.
+See the [validation](b3-paged-native-common-source-validation-2026-10-04.md).
+This implements the bounded dependency from the negative C03/H02 cost study
+under ADR 0005. Ticket 05 stays open and ticket 11 remains excluded.
 
 ## Native batch
 

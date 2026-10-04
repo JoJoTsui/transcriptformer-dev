@@ -1,0 +1,35 @@
+{
+  "status": "completed",
+  "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+  "supervisor_pid": 2,
+  "producer_pid": 3,
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261004/common_source_evidence_v3_capture_gnu_time.txt",
+    ".venv/bin/python",
+    "runs/b3_feasibility/20261004/common_source_draft/capture_common_source_evidence_v3.py",
+    "--manifest",
+    "runs/b3_feasibility/20261004/common_source_draft/final_capture_manifest_v3.json",
+    "--output",
+    "runs/b3_feasibility/20261004/common_source_draft/common_source_milestone_evidence_v3.json"
+  ],
+  "started_unix": 1791129397.9718695,
+  "limits": {
+    "max_wall_seconds": 900.0,
+    "max_rss_gib": 4.0,
+    "min_host_ram_gib": 4.0,
+    "min_disk_gib": 20.0,
+    "max_gpu_temperature_c": null,
+    "gpu_index": 0
+  },
+  "producer_start_ticks": 12548668,
+  "heartbeat_unix": 1791129523.3583462,
+  "elapsed_seconds": 135.44006065400026,
+  "producer_rss_gib": 0.001331329345703125,
+  "host_available_ram_gib": 28.76241683959961,
+  "disk_available_gib": 382.96162033081055,
+  "return_code": 0,
+  "finished_unix": 1791129524.3663309
+}
