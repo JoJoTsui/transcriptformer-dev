@@ -12,6 +12,33 @@ import pytest
 from test.test_b3_observed_bootstrap_feasibility import observed_pair as observed_pair
 
 
+def test_paged_arithmetic_adapter_preserves_frozen_complete_draw_intervals_without_source_attestation():
+    from scripts.bootstrap_b3_paged_native import adapt_paged_draw_receipts
+    from scripts.b3_streamed_bootstrap import finalize_replayed_draws
+    from test.test_b3_streamed_bootstrap import _scientific_plan, _shards
+
+    plan = _scientific_plan()
+    production = _shards(plan, phase="production")
+    replay = _shards(plan, phase="replay")
+    for receipts in (production, replay):
+        for receipt in receipts:
+            receipt["schema"] = "b3_paged_native_bootstrap_shard_v2"
+            receipt["status"] = "prepared_complete_fixed_family_catalog"
+            del receipt["plan_sha256"]
+    result = finalize_replayed_draws(
+        plan,
+        adapt_paged_draw_receipts(plan, production, phase="production"),
+        adapt_paged_draw_receipts(plan, replay, phase="replay"),
+    )
+    assert result["draws"] == 2000
+    assert result["joint_valid_draws"] == 1900
+    assert result["simultaneous_interval_halfwidth"] == 0.3
+    assert result["comparisons"][0]["interval"] == pytest.approx([0.6, 1.0])
+    assert result["comparisons"][1]["interval"] == pytest.approx([-1.0, -0.5])
+    assert result["source_attestation_performed"] is False
+    assert "native_arithmetic_replay_verified" not in result
+
+
 def test_prepare_rejects_invalid_closed_request_without_publication(tmp_path):
     from scripts.bootstrap_b3_paged_native import prepare
 
@@ -256,8 +283,17 @@ def _public_reference(source):
             ]
             for proof in native_proofs:
                 raw = bytes.fromhex(proof["original_target_log_probs"])
+                finite = proof["finite_original_targets"]
                 proofs.append(
-                    {**proof, "original_target_log_probs": list(struct.unpack("<" + "d" * (len(raw) // 8), raw))}
+                    {
+                        **proof,
+                        "original_target_log_probs": list(struct.unpack("<" + "d" * (len(raw) // 8), raw))
+                        if finite
+                        else None,
+                        "original_target_log_probs_sha256": proof["original_target_log_probs_sha256"]
+                        if finite
+                        else None,
+                    }
                 )
             for record in np.frombuffer(Path(entry["files"]["records.bin"]["path"]).read_bytes(), dtype=RECORD_DTYPE):
                 proof = proofs[int(record["cell_index"])]
@@ -426,7 +462,7 @@ def test_independent_diagnostic_replay_reconstructs_every_physical_block_and_que
     assert _query_artifacts(result)
 
 
-def _observed_native_catalogs(observed_request, folder):
+def _observed_native_catalogs(observed_request, folder, *, scale_imported_impacts=False):
     from scripts.b3_native_catalog_pages import run as publish_catalog
     from scripts.prepare_b3_paged_native_cache import run as build_cache, SOFTWARE as producer_software
     from scripts.prepare_b3_paged_native_context import SOFTWARE as context_software
@@ -446,8 +482,11 @@ def _observed_native_catalogs(observed_request, folder):
         pair = json.loads(Path(plan["paired_preflight_path"]).read_bytes())
         imported_path = Path(context["import_provenance"])
         certificate_path = imported_path.parent.parent / "certificates/shard-000000.json"
-        certificate = json.loads(certificate_path.read_bytes())
         shard = imported_path.parent / "shards/shard-000000"
+        if scale_imported_impacts and number == 0:
+            context, certificate_path, shard, bindings = _scaled_imported_shard(context, root)
+            original["input_file_sha256"].update(bindings)
+        certificate = json.loads(certificate_path.read_bytes())
         files = {name: _ref(shard / name) for name in ("header.json", "records.bin", "proofs.jsonl", "footer.json")}
         files["certificate"] = _ref(certificate_path)
         excluded = {ref["path"] for ref in files.values()}
@@ -845,7 +884,17 @@ def test_cli_finalization_uses_public_handoff_and_small_unavailable_receipt(prep
     assert summary["interval"] is None
 
 
-@pytest.mark.parametrize("malformation", ["rng_source_order", "scientific_bridge", "sample_weights", "unbound_gene"])
+@pytest.mark.parametrize(
+    "malformation",
+    [
+        "rng_source_order",
+        "scientific_bridge",
+        "sample_weights",
+        "unbound_gene",
+        "receipt_plan_bytes",
+        "request_plan_bytes",
+    ],
+)
 def test_rebound_protocol_cannot_change_original_rng_identity_or_native_gene_axes(
     prepared_application, executed_application, tmp_path, monkeypatch, malformation
 ):
@@ -866,6 +915,12 @@ def test_rebound_protocol_cannot_change_original_rng_identity_or_native_gene_axe
     elif malformation == "sample_weights":
         source = next(iter(changed["draws"][0]["weights"]))
         changed["draws"][0]["weights"][source] = {"emb0": 1, "emb1": 1}
+    elif malformation == "receipt_plan_bytes":
+        changed["plan"]["bytes"] = float(changed["plan"]["bytes"])
+    elif malformation == "request_plan_bytes":
+        original_request = json.loads(Path(changed["request"]["path"]).read_bytes())
+        original_request["plan"]["bytes"] = float(original_request["plan"]["bytes"])
+        changed["request"] = _write(tmp_path / "rebound-execution-request.json", original_request)
     else:
         query_root = json.loads(Path(changed["artifact_catalog"]["path"]).read_bytes())
         page = json.loads(Path(query_root["pages"][0]["file"]["path"]).read_bytes())
@@ -893,14 +948,24 @@ def test_rebound_protocol_cannot_change_original_rng_identity_or_native_gene_axe
         return original_open(path, *args, **kwargs)
 
     monkeypatch.setattr(os, "open", reconstruction_creation)
-    with pytest.raises(ValueError, match="source|RNG|gene|focal|scientific|family|score record"):
+    with pytest.raises(ValueError, match="source|RNG|gene|focal|scientific|family|score record|strict byte reference"):
         diagnostic(Path(request["path"]), tmp_path / "out")
     assert not (tmp_path / "out").exists()
     assert not (tmp_path / "out.claim").exists()
     assert not list(tmp_path.glob(".b3-paged-application-*"))
 
 
-@pytest.mark.parametrize("malformation", ["different_cohort", "noncanonical_commitment", "external_statistics"])
+@pytest.mark.parametrize(
+    "malformation",
+    [
+        "different_cohort",
+        "noncanonical_commitment",
+        "external_statistics",
+        "summary_request_bytes",
+        "summary_metadata_bytes",
+        "summary_statistics_bytes",
+    ],
+)
 def test_rebound_cache_cannot_change_source_commitment_or_h5_storage(paged_sources, tmp_path, malformation):
     import shutil
     import h5py
@@ -921,7 +986,7 @@ def test_rebound_cache_cannot_change_source_commitment_or_h5_storage(paged_sourc
         summary["cache_key_sha256"] = meta["cache_key_sha256"]
     elif malformation == "noncanonical_commitment":
         meta["source_commitment"]["focal_start"] = False
-    else:
+    elif malformation == "external_statistics":
         with h5py.File(statistics, "r+") as handle:
             del handle["means"]
             handle["means"] = h5py.ExternalLink(original["statistics"]["path"], "/means")
@@ -929,6 +994,9 @@ def test_rebound_cache_cannot_change_source_commitment_or_h5_storage(paged_sourc
     meta["statistics_h5_sha256"] = stats["sha256"]
     metadata = _write(cache / "metadata.json", meta)
     summary.update(metadata=metadata, statistics=stats)
+    if malformation.startswith("summary_"):
+        role = malformation.removeprefix("summary_").removesuffix("_bytes")
+        summary[role] = {**summary[role], "bytes": float(summary[role]["bytes"])}
     completion = _write(cache / "summary.json", summary)
     original.update(metadata=metadata, statistics=stats, summary=completion)
     page = _write(
@@ -945,8 +1013,8 @@ def test_rebound_cache_cannot_change_source_commitment_or_h5_storage(paged_sourc
         },
     )
     request = _prepare_request(tmp_path, {**declared, "block_catalog": root})
-    if malformation in ("different_cohort", "noncanonical_commitment"):
-        with pytest.raises(ValueError, match="source/array commitment"):
+    if malformation != "external_statistics":
+        with pytest.raises(ValueError, match="source/array commitment|strict byte reference"):
             prepare(Path(request["path"]), tmp_path / "prepared")
         assert not (tmp_path / "prepared").exists()
     else:
@@ -959,6 +1027,27 @@ def test_rebound_cache_cannot_change_source_commitment_or_h5_storage(paged_sourc
         assert not (tmp_path / "out").exists()
         assert not (tmp_path / "out.claim").exists()
     assert not list(tmp_path.glob(".b3-paged-application-*"))
+
+
+def test_prepared_completion_plan_reference_requires_strict_byte_count(prepared_application, tmp_path):
+    from scripts.bootstrap_b3_paged_native import finalize
+
+    prepared, _folder, _sources, _blocks = prepared_application
+    original_plan = Path(prepared["plan"]["path"])
+    folder = tmp_path / "rebound-prepared"
+    folder.mkdir()
+    plan = folder / "plan.json"
+    plan.write_bytes(original_plan.read_bytes())
+    reference = _ref(plan)
+    summary = json.loads((original_plan.parent / "summary.json").read_bytes())
+    summary["plan"] = {**reference, "bytes": float(reference["bytes"])}
+    _write(folder / "summary.json", summary)
+    empty = _write(tmp_path / "empty.json", {"schema": "b3_paged_native_bootstrap_artifacts_v2", "artifacts": []})
+    request = _action_request(tmp_path, "finalize", reference, production_catalog=empty, replay_catalog=empty)
+    with pytest.raises(ValueError, match="strict byte reference"):
+        finalize(Path(request["path"]), tmp_path / "out")
+    assert not (tmp_path / "out").exists()
+    assert not (tmp_path / "out.claim").exists()
 
 
 def test_native_request_focal_bool_cannot_impersonate_integer_range(paged_sources, tmp_path):
@@ -975,5 +1064,75 @@ def test_native_request_focal_bool_cannot_impersonate_integer_range(paged_source
     request = _prepare_request(tmp_path, {**declared, "source_catalog": source_catalog})
     with pytest.raises(ValueError, match="native producer|focal"):
         prepare(Path(request["path"]), tmp_path / "out")
+    assert not (tmp_path / "out").exists()
+    assert not (tmp_path / "out.claim").exists()
+
+
+def _scaled_imported_shard(context, folder):
+    """Publish a structurally valid stored-data adversary through frozen APIs."""
+    import numpy as np
+    from scripts.index_b3_measured_zero_full_scores import run as index_scores
+    from scripts.reconcile_b3_measured_zero_full_shard import reconcile
+    from transcriptformer.finetune.b3_measured_zero_shards import RECORD_DTYPE, write_shard
+
+    imported_path = Path(context["import_provenance"])
+    original_shard = imported_path.parent / "shards/shard-000000"
+    records = np.frombuffer((original_shard / "records.bin").read_bytes(), dtype=RECORD_DTYPE).copy()
+    scored = records["status"] == 0
+    assert np.any(scored)
+    assert np.any(records["impact_bits"][scored] != 0)
+    records["impact_bits"][scored] *= 2.0
+    shards = folder / "scaled-shards"
+    write_shard(Path(context["plan"]), 0, records, (original_shard / "proofs.jsonl").read_bytes(), shards)
+    certificates = folder / "scaled-certificates"
+    certificates.mkdir()
+    certificate = certificates / "shard-000000.json"
+    reconcile(Path(context["plan"]), shards, 0, imported_path, certificate)
+    index = folder / "scaled-index"
+    index_scores(Path(context["plan"]), shards, certificates, imported_path, index, execute=True, max_seconds=900)
+    metadata = json.loads((index / "metadata.json").read_bytes())
+    bindings = {
+        **metadata["verified_input_file_sha256"],
+        str(index / "metadata.json"): _ref(index / "metadata.json")["sha256"],
+    }
+    bindings.update({str(path): _ref(path)["sha256"] for path in index.iterdir() if path.is_file()})
+    return {**context, "index_root": str(index)}, certificate, shards / "shard-000000", bindings
+
+
+def test_capped_import_bridge_rejects_self_consistent_scaled_native_attempts(observed_pair, tmp_path):
+    from scripts.bootstrap_b3_paged_native import prepare
+    from transcriptformer.finetune.b3_measured_zero_bootstrap import load_bundle, weighted_metrics
+    from transcriptformer.finetune.b3_measured_zero_scores import score_bounded_measured_zero
+
+    folder = tmp_path / "scaled-handoffs"
+    folder.mkdir()
+    declared = _observed_native_catalogs(observed_pair, folder, scale_imported_impacts=True)
+    sources = json.loads(Path(declared["source_catalog"]["path"]).read_bytes())["sources"]
+    family = json.loads(Path(declared["family"]["path"]).read_bytes())
+    scaled = next(row for row in sources if row["source_key"] == family["comparisons"][0]["bundle_a"])
+    native = _public_reference(scaled)
+    original = load_bundle(Path(scaled["source_key"]))
+    weights = {embryo: 1 for embryo in native["embryo_metrics"]}
+    unit = []
+    for value in (original, native):
+        oracle = score_bounded_measured_zero(
+            positive_rows=value["rows"],
+            cell_proofs=value["proofs"],
+            metrics=weighted_metrics(value, weights),
+            gene_ids=value["gene_ids"],
+            _embryo_multiplicity=weights,
+        )
+        unit.append([row["null_corrected_z"] for row in oracle["gene_results"]])
+    assert any(value is not None for value in unit[0])
+    for expected, observed in zip(unit[0], unit[1], strict=True):
+        if expected is None:
+            assert observed is None
+        else:
+            assert observed == pytest.approx(expected, rel=1e-12, abs=1e-12)
+    for source in sources:
+        for name, expected in source["original_bundle_file_sha256"].items():
+            assert _ref(Path(source["source_key"]) / name)["sha256"] == expected
+    with pytest.raises(ValueError, match="original positive attempt|stored-copy"):
+        prepare(Path(_prepare_request(tmp_path, declared)["path"]), tmp_path / "out")
     assert not (tmp_path / "out").exists()
     assert not (tmp_path / "out.claim").exists()

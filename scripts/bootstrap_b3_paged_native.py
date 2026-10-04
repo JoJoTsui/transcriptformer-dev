@@ -614,9 +614,9 @@ def _block_spec(session: _Session, row: dict, context: dict) -> dict:
         or summary.get("checkpoint_tensors_loaded") is not False
         or summary.get("scientific_readiness") != "unavailable"
         or summary.get("interval") is not None
-        or summary.get("request") != row["request"]
-        or summary.get("metadata") != row["metadata"]
-        or summary.get("statistics") != row["statistics"]
+        or _ref(summary.get("request")) != row["request"]
+        or _ref(summary.get("metadata")) != row["metadata"]
+        or _ref(summary.get("statistics")) != row["statistics"]
         or summary.get("cache_key_sha256") != key
         or type(summary.get("numeric_working_upper_bytes")) is not int
         or not 0 < summary["numeric_working_upper_bytes"] <= MAX_WORKING
@@ -864,7 +864,7 @@ def _prepared(session: _Session, request: dict, workspace: Path) -> tuple[dict, 
     summary = session.read(summary_ref, MIB)
     if (
         summary.get("schema") != "b3_paged_native_bootstrap_preparation_v2"
-        or summary.get("plan") != request["plan"]
+        or _ref(summary.get("plan")) != request["plan"]
         or summary.get("status") != plan["status"]
     ):
         raise ValueError("Prepared plan lacks matching completion marker")
@@ -874,7 +874,7 @@ def _prepared(session: _Session, request: dict, workspace: Path) -> tuple[dict, 
         "consumer_file_sha256": session.consumers,
         **{key: plan[key] for key in REQUEST_FIELDS["prepare"]},
     }
-    if original != expected:
+    if _canonical(original) != _canonical(expected):
         raise ValueError("Prepared plan has conflicting original request")
     admitted = _admit(session, expected, workspace)
     actual = {
@@ -887,7 +887,10 @@ def _prepared(session: _Session, request: dict, workspace: Path) -> tuple[dict, 
     }
     if any(_canonical(plan[key]) != _canonical(value) for key, value in actual.items()):
         raise ValueError("Prepared plan no longer matches authenticated source facts")
-    if any(summary.get(key) != value for key, value in _flags(admitted["bridged"]).items()):
+    if any(
+        type(summary.get(key)) is not type(value) or summary[key] != value
+        for key, value in _flags(admitted["bridged"]).items()
+    ):
         raise ValueError("Prepared completion has conflicting scientific scope")
     session.admitted = admitted
     return plan, admitted
@@ -1437,6 +1440,131 @@ def _coverage(scientific: dict, contexts: dict, blocks: list[dict]) -> dict:
     }
 
 
+def _verify_pilot_attempt_copy(session: _Session, context: dict, audit: dict, original_sha256: str) -> dict:
+    """Verify the capped import's stored tuples without recomputing effects."""
+    import struct
+
+    codec = struct.Struct("<IIHHdB")
+    expected_layout = [
+        ["cell_index", "<u4"],
+        ["gene_index", "<u4"],
+        ["token_position", "<u2"],
+        ["n_targets", "<u2"],
+        ["impact_bits", "<f8"],
+        ["status", "|u1"],
+    ]
+    count = audit.get("n_positive_attempts")
+    if type(count) is not int or not 0 <= count <= 100_000 or context["plan"]["record_dtype"] != expected_layout:
+        raise ValueError("Original positive attempt count or frozen record layout differs")
+    # No caller numeric arrays exist at this admission stage. The keyed packed
+    # tuples, bounded JSON line and one native tuple are the numeric payload.
+    upper = count * codec.size + MIB + codec.size
+    if upper > MAX_WORKING:
+        raise ValueError("Pilot stored-copy comparison exceeds 200 MiB working payload")
+    session.budget.check()
+
+    def checked_chunks(reference, read_chunk):
+        reference = _ref(reference)
+        path = _path(reference["path"])
+        before = path.lstat()
+        if not stat.S_ISREG(before.st_mode) or before.st_size != reference["bytes"]:
+            raise ValueError("Pilot stored-copy requires bound regular file storage")
+        checksum, consumed = sha256(), 0
+        with path.open("rb") as stream:
+            while chunk := read_chunk(stream):
+                session.budget.check()
+                if len(chunk) > MIB or consumed + len(chunk) > reference["bytes"]:
+                    raise ValueError("Pilot stored-copy input exceeds its bounded read")
+                consumed += len(chunk)
+                checksum.update(chunk)
+                yield chunk
+        after = path.lstat()
+        if (
+            consumed != reference["bytes"]
+            or after.st_size != consumed
+            or (before.st_dev, before.st_ino) != (after.st_dev, after.st_ino)
+            or checksum.hexdigest() != reference["sha256"]
+        ):
+            raise ValueError("Pilot stored-copy consumed source bytes changed")
+
+    path = _path(context["source_key"]) / "positive_raw.jsonl"
+    raw_ref = session.bind(
+        {
+            "path": str(path),
+            "sha256": context["original_bundle_file_sha256"][path.name],
+            "bytes": path.stat().st_size,
+        }
+    )
+    if raw_ref["bytes"] > 512 * MIB:
+        raise ValueError("Original positive attempt file exceeds the frozen raw cap")
+    lines = iter(checked_chunks(raw_ref, lambda stream: stream.readline(MIB + 1)))
+    header = _json(next(lines, b""))
+    if (
+        header.get("kind") != "header"
+        or header.get("schema") != "b3_measured_zero_positive_raw_v2"
+        or header.get("provenance_sha256") != original_sha256
+    ):
+        raise ValueError("Original positive attempt header/provenance differs")
+    genes = {gene: index for index, gene in enumerate(context["axes"]["gene_ids"])}
+    attempts: dict[tuple[int, int], bytes] = {}
+    rows_sha256, footer = sha256(), None
+    for line in lines:
+        row = _json(line)
+        if footer is not None:
+            raise ValueError("Original positive attempt footer has trailing data")
+        if row.get("kind") == "footer":
+            footer = row
+            continue
+        cell, position, targets = row.get("cell_index"), row.get("token_position"), row.get("n_targets")
+        scored = row.get("status") == "scored"
+        impact: Any = row.get("impact_bits")
+        if (
+            row.get("kind") != "positive_impact"
+            or len(attempts) >= count
+            or type(cell) is not int
+            or not 0 <= cell < context["plan"]["n_cells"]
+            or not isinstance(row.get("gene_id"), str)
+            or row["gene_id"] not in genes
+            or type(position) is not int
+            or not 0 <= position < min(65536, context["plan"]["native_sequence_length"])
+            or type(targets) is not int
+            or not 0 <= targets <= min(65535, context["plan"]["native_sequence_length"])
+            or row.get("status") not in {"scored", "no_matched_target"}
+            or (scored and (targets < 1 or type(impact) not in (int, float) or not isfinite(impact)))
+            or (not scored and (targets != 0 or impact is not None))
+        ):
+            raise ValueError("Original positive attempt tuple lies outside the frozen typed domain")
+        key = cell, genes[row["gene_id"]]
+        if key in attempts:
+            raise ValueError("Original positive attempt tuple is duplicated")
+        attempts[key] = codec.pack(cell, key[1], position, targets, impact if scored else 0.0, 0 if scored else 1)
+        rows_sha256.update(line)
+    if (
+        footer is None
+        or set(footer) != {"kind", "row_count", "rows_sha256"}
+        or type(footer["row_count"]) is not int
+        or footer != {"kind": "footer", "row_count": count, "rows_sha256": rows_sha256.hexdigest()}
+        or len(attempts) != count
+    ):
+        raise ValueError("Original positive attempt count/footer differs")
+    compared, previous = 0, None
+    for page in session.modules["producer"]._pages(context["root"], session.modules["catalog"], session.budget):
+        for entry in page["entries"]:
+            reference = entry["files"]["records.bin"]
+            for record in checked_chunks(reference, lambda stream: stream.read(codec.size)):
+                if len(record) != codec.size:
+                    raise ValueError("Pilot stored-copy native tuple is incomplete")
+                key = struct.unpack_from("<II", record)
+                if (previous is not None and key <= previous) or attempts.pop(key, None) != record:
+                    raise ValueError("Pilot/native stored-copy differs from original positive attempt tuple")
+                previous = key
+                compared += 1
+    if attempts or compared != count:
+        raise ValueError("Pilot/native stored-copy omits original positive attempt tuples")
+    session.budget.check()
+    return {"positive_attempts_verified": compared, "packed_copy_working_upper_bytes": upper}
+
+
 def _pilot_bridge(session: _Session, family: dict, context: dict, workspace: Path) -> dict | None:
     import struct
     from collections import Counter
@@ -1501,6 +1629,7 @@ def _pilot_bridge(session: _Session, family: dict, context: dict, workspace: Pat
         or imported.get("pilot_bundle_file_sha256") != context["original_bundle_file_sha256"]
     ):
         raise ValueError("Pilot bridge shared prepared/checkpoint/physical identities differ")
+    attempt_copy = _verify_pilot_attempt_copy(session, context, audit, _digest(original))
     proofs = [_json(line) for line in legacy.data(_path(context["source_key"]) / "cell_proofs.jsonl").splitlines()]
     native_proofs: list[dict[str, Any]] = []
     for page in session.modules["producer"]._pages(root, session.modules["catalog"], session.budget):
@@ -1557,6 +1686,7 @@ def _pilot_bridge(session: _Session, family: dict, context: dict, workspace: Pat
         "ordered_cells_verified": len(proofs),
         "physical_embryos": original_context["embryos"],
         "n_frozen_genes": len(audit["gene_ids"]),
+        **attempt_copy,
     }
 
 
@@ -1677,7 +1807,7 @@ def _receipt_catalog(
         if (
             receipt.get("schema") != expected_schema
             or receipt.get("phase") != phase
-            or receipt.get("plan") != plan_ref
+            or _ref(receipt.get("plan")) != plan_ref
             or receipt.get("consumer_file_sha256") != session.consumers
             or type(receipt.get("seed")) is not int
             or receipt["seed"] != 20260930
@@ -1714,7 +1844,7 @@ def _receipt_catalog(
             set(original) != {"schema", "consumer_file_sha256", *REQUEST_FIELDS[action]}
             or original.get("schema") != f"b3_paged_native_bootstrap_{action}_request_v2"
             or original.get("consumer_file_sha256") != session.consumers
-            or original.get("plan") != plan_ref
+            or _ref(original.get("plan")) != plan_ref
             or type(original.get("start")) is not int
             or original["start"] != start
             or type(original.get("stop")) is not int
@@ -2013,6 +2143,31 @@ def replay(request_path: Path, output: Path, *, max_seconds: float = 900) -> dic
     return _production("replay", request_path, output, max_seconds)
 
 
+def adapt_paged_draw_receipts(scientific_plan: dict, receipts: list[dict], *, phase: str) -> list[dict]:
+    """Convert draw envelopes for arithmetic; this seam attests no source files."""
+    if phase not in {"production", "replay"}:
+        raise ValueError("Arithmetic adaptation requires a production or replay phase")
+    if any(
+        receipt.get("schema") != "b3_paged_native_bootstrap_shard_v2" or receipt.get("phase") != phase
+        for receipt in receipts
+    ):
+        raise ValueError("Paged arithmetic receipt schema or phase differs")
+    return [
+        {
+            "schema": "b3_streamed_bootstrap_shard_v1" if phase == "production" else "b3_streamed_bootstrap_replay_v1",
+            "phase": phase,
+            "plan_sha256": _digest(scientific_plan),
+            "seed": 20260930,
+            "start": receipt["start"],
+            "stop_requested": receipt["stop_requested"],
+            "stop_completed": receipt["stop_completed"],
+            "status": "complete" if receipt["stop_completed"] == receipt["stop_requested"] else "time_budget_reached",
+            "draws": receipt["draws"],
+        }
+        for receipt in receipts
+    ]
+
+
 def finalize(request_path: Path, output: Path, *, max_seconds: float = 900) -> dict:
     """Seal complete coordinated arithmetic, retaining the unavailable effect gate."""
     request, budget, output, request_ref = _open("finalize", request_path, output, max_seconds)
@@ -2033,25 +2188,10 @@ def finalize(request_path: Path, output: Path, *, max_seconds: float = 900) -> d
                 if plan["status"] != "prepared_complete_fixed_family_catalog":
                     raise ValueError("Incomplete or unbridged eligible family cannot finalize")
 
-                def compact(receipts, phase):
-                    return [
-                        {
-                            "schema": "b3_streamed_bootstrap_shard_v1"
-                            if phase == "production"
-                            else "b3_streamed_bootstrap_replay_v1",
-                            "phase": phase,
-                            "plan_sha256": _digest(scientific),
-                            "seed": 20260930,
-                            "start": receipt["start"],
-                            "stop_requested": receipt["stop_requested"],
-                            "stop_completed": receipt["stop_completed"],
-                            "draws": receipt["draws"],
-                        }
-                        for receipt in receipts
-                    ]
-
                 calculated = session.modules["math"].finalize_replayed_draws(
-                    scientific, compact(production, "production"), compact(repeated, "replay")
+                    scientific,
+                    adapt_paged_draw_receipts(scientific, production, phase="production"),
+                    adapt_paged_draw_receipts(scientific, repeated, phase="replay"),
                 )
                 arithmetic = admitted["bridged"] and bool(calculated["draws"] == 2000)
             elif scientific is not None:

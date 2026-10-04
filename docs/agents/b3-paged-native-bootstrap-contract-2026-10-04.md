@@ -39,6 +39,19 @@ the old pilot import's exact meaning; no new artifact may falsely claim it was
 produced by that capped importer. A missing or incompatible bridge refuses
 scientific/production admission.
 
+For the capped original import subtype, stream every original positive attempt
+and require its exact `(cell_index, gene_index, token_position, n_targets,
+float64 impact bytes, status)` tuple in the native records. Preserve signed
+zero and the importer's zero/status encoding for unavailable attempts; reject
+duplicates, omissions and changed values. Authenticate the consumed bytes,
+header/footer and complete counts before granting the bridge. This is a
+stored-copy check and performs no model/effect recomputation. Its keyed packed
+tuples are bounded by the unchanged 100,000-positive legacy cap, with at most
+1 MiB per JSON line and one 21-byte native tuple read at a time. Reserve that
+packed comparison payload under the 200 MiB limit before allocating it; no
+caller numerical arrays are loaded during this bridge stage. Native leaves
+remain locally verified through their hash-bound pages.
+
 Freshly invoke the unchanged public observed comparator, reconcile its
 coverage artifact and freeze exactly its complete finite observed pair family.
 For an eligible complete catalog, replay original unit-multiplicity fixed-gene
@@ -178,6 +191,12 @@ calculation witnesses and a paged query-artifact catalog. Query artifacts
 separate all-gene metric/bin state from block rows. Arithmetic finalization
 adapts validated v2 envelopes in memory to the unchanged frozen finalizer;
 those local arithmetic objects do not claim to be historical v1 file outputs.
+The pure public `adapt_paged_draw_receipts(scientific_plan, receipts, *, phase)`
+seam converts production/replay draw envelopes for that unchanged arithmetic
+finalizer. Its worked 2,000-draw fixture checks completion status, the frozen
+nearest-rank halfwidth and clipped intervals; this seam performs no native,
+bridge, source-file or historical-receipt attestation. The file finalizer
+performs its byte-bound admissions before using this conversion.
 No final interval is published without native likelihood-effect attestation.
 Descriptive reconstruction and row parity flags refer only to their stated
 prefix; final bootstrap arithmetic replay remains false for diagnostics and
