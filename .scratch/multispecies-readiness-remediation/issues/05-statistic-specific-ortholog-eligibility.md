@@ -1,6 +1,90 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-## Current control and memory feasibility prerequisites — 2026-10-05
+## Complete current-source CPU regression — 2026-10-05
+
+The fresh v5 full repository invocation at frozen **`32f9426`** passes
+**1,310 tests / five existing integration/manual skips**, zero failures/errors.
+All 1,315 actual selected/collected/JUnit identities match, all 75 files are
+accounted once (73 nonempty/two explicit empty CLI utilities), with no
+deselection or reused output. Same-run subsets pass: native 45, application 30,
+publisher 102, planner 95, preparation 10 and source verification 11.
+
+It runs from the actual isolated committed Linux checkout with localhost IPC
+permitted. All 241 Python bytes, HEAD/index/mode/blob, runner/manifest maps stay
+stable; the original shared checkout also still matches after closure. All 233
+earlier Python bytes and Git modes/blobs are preserved. Original WSL v3 remains
+failed at 1,298 passes/five skips/one sandbox Gloo EPERM; the unchanged host DDP
+case passes. Original v4 cwd collection failure remains separately failed;
+v5 corrects its harness cwd. No original code/test, skip or host config changes.
+
+Complete pytest 579.610830 s, JUnit 577.213 s, driver command/raw stdio-close
+window 580.820214 s, supervisor last sample 570.707532 s, GNU wall 9:35.91 and
+peak process RSS 914,620 KiB retain separate scopes. Raw exits are all 0. This
+is complete regression coverage, not complete pipeline cost or source/run/
+scientific admission. Whole numeric census remains null; fresh independent
+Spec/Standards source reviews remain pending at the agent service usage limit.
+
+- [x] Complete fresh unchanged-source whole-repository CPU regression, including
+  every supplied test file and all six source subsets.
+- [ ] Obtain independent exact-source reviews and complete source/runtime gates.
+
+Evidence: [complete actual CPU capture](../../../docs/agents/b3-full-context-complete-cpu-evidence-2026-10-05-v5/manifest.json).
+
+## Current control and Linux-source feasibility prerequisites — 2026-10-05
+
+The isolated current control implementation passes **56** cases in one exact
+source-bound capture: 14 standalone real-channel tests, ten persistent
+reservations, eight joined reservation/channel tests, eight actual child
+identity tests, three child-bound exchange tests and eight absolute-deadline
+controls, four producer source-key refusals and one issuer source-key refusal.
+Parent/double-root aliases and bounded UTF8 syntax now agree at both sides.
+The preserved alias regressions expose acknowledgement/journal creation before
+the repair; original failures and source buffers remain retained. The real FD-reuse regression exposed a foreign send before timeout;
+the repair checks ownership before wrapping or channel IO. Nested seams pass
+the unchanged absolute parent deadline, which can only lower the public cap.
+Original failure/error/journal history and first errors remain preserved.
+Ruff check/format and configured mypy pass. Actual raw/capture exits are 0;
+JUnit 7.131 s, complete pytest 7.245445 s, command/raw stdio-close window
+7.752342 s, GNU wall 0:07.70 and per-process peak 36,896 KiB keep their scopes.
+No numerical modules/model work or normative Start/Permit/source/run authority
+is created. The code remains `.py.txt` outside the canonical execution inventory.
+
+Actual strict source verification also passes on isolated Linux filesystem
+checkouts: 70 retained preparation files at `80ba78b` and all 241 current
+Python buffers at `32f9426`. Git blobs/live hashes/executable modes agree.
+The original object store is read only; shared working tree/index/HEAD, DrvFS
+modes and host/mount/Git configuration stay unchanged. Future controlled
+operations must bind and review the new canonical source paths; copied bytes
+do not inherit original registrations, admissions, keys or producer history.
+These requested source maps are metadata prerequisites, not executed closure.
+
+One unchanged four-gene / 129-cell stored-arithmetic test passes in the Linux
+checkout. All 241 Python and two actual config assets match before/after;
+complete pytest 31.065889 s, JUnit 30.613 s, GNU wall 0:32.24 and peak process
+735,440 KiB, command/raw stdio-close window 33.177233 s and supervisor last
+sample 30.076932 s retain distinct scopes. The original WSL suite's same test
+has setup 319.485339 s; the differing scopes and import/cache conditions do not
+establish whole-method speedup. No project model/data or dependency installation
+is introduced. A separate bounded source IO diagnostic reads only actual file
+size plus one (maximum request 122,281 bytes), peaks at 18,669,568 RSS bytes,
+and leaves complete method cost/numeric census unknown.
+
+Independent Spec/Standards source reviews remain pending at the agent service
+usage limit. Registration replay, admitted owner/attempt capabilities, durable
+normative Start/Permit adoption, actual computational transition/capture,
+controlled all-range native producer/supervisor, complete native allocator
+guard/census, runtime authority/pin/Origin, bridge/v4, real project effects,
+whole-method cost and reportable actual comparison remain unfinished. The
+full repository rerun's actual closed result must be recorded separately.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Real pilot
+coverage 32.54%, necessary jointly-supported draws 0/2,000, reporting veto/null
+intervals and all frozen scientific/public resource limits stay unchanged.
+
+Evidence: [current controls](../../../docs/agents/b3-full-context-joint-control-evidence-2026-10-05-v2/manifest.json), [Linux source feasibility](../../../docs/agents/b3-full-context-linux-source-evidence-2026-10-05/manifest.json), [bounded source reads](../../../docs/agents/b3-full-context-linux-source-evidence-2026-10-05-v2/manifest.json).
+
+
+## Previous control and memory feasibility prerequisites — 2026-10-05
 
 The isolated Start/Permit drafts pass **14** real socket/child transport cases
 and **ten** persistent reservation cases at their separate exact source-bound
@@ -521,7 +605,7 @@ The eight-hour producer budget retains memory/storage guards. Actual completion
 is pending and this pilot cannot meet the paired 80% reporting floor.
 
 Category: correctness and readiness
-Status: Open — common-source bounded milestone retained; current source prerequisites and three-file integration pass; the latest whole CPU attempt stops after 676 passes because its progress clock conflicts with a mocked deadline test, now repaired in a passing focused replay; fresh whole-suite and independent source reviews remain pending; controlled producer/issuer/authority, complete numeric guard/census, project outcomes/effects, full cost and reportable comparison remain unfinished.
+Status: Open — full unchanged-source CPU coverage passes 1,310/5 skips; 56 control prerequisites and Linux source-mode route verified. Independent reviews, controlled native/authority, complete numeric census/guard, bridge/v4, real effects/full cost/reportable comparison remain unfinished; zebrafish 11 excluded.
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
