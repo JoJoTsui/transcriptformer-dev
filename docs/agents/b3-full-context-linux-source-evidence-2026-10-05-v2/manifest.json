@@ -1,0 +1,95 @@
+{
+  "schema": "b3_full_context_linux_source_IO_supplement_v1",
+  "scope": "Versioned source-bound source IO loops only; no cold-cache or whole-method/native/source/run acceptance",
+  "predecessor_manifest_sha256": "4baa4fe11442bfbeabcee38c5f20f2d79ef2e8209567a98f2584f323332e863b",
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "complete_numeric_census": false,
+  "whole_method_speedup_measured": false,
+  "artifacts": [
+    {
+      "path": "measure_b3_source_io_draft_v02.py.txt",
+      "sha256": "ab7cc12ff922b8b7a8dc48ce7c6bc2dbea3f662d509f82eb4e05a344bcd17795",
+      "bytes": 4715,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/measure_b3_source_io_draft_v02.py"
+    },
+    {
+      "path": "measure_b3_source_io_draft_v03.py.txt",
+      "sha256": "756d143b94d9fd174736ce9ff8dc319225a6a54a88e5a9f442f9f2e6ed6e66d7",
+      "bytes": 5065,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/measure_b3_source_io_draft_v03.py"
+    },
+    {
+      "path": "source_io_diagnostic_v02_capture_result.json",
+      "sha256": "84e25655d395b38400208bc027069749b431435232d7e175df088a72e9183da0",
+      "bytes": 547,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v02_capture_result.json"
+    },
+    {
+      "path": "source_io_diagnostic_v02_gnu_time.txt",
+      "sha256": "eec9113839d34ef8014e4f94b577bfd3655022781eae62db7c0a4aaa2d47fa8f",
+      "bytes": 803,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v02_gnu_time.txt"
+    },
+    {
+      "path": "source_io_diagnostic_v02_invocation.json",
+      "sha256": "15f51ac39940aacc0caa8372b2e4065949c5be865d702c97b63c29421136408a",
+      "bytes": 419,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v02_invocation.json"
+    },
+    {
+      "path": "source_io_diagnostic_v02_result.json",
+      "sha256": "4419078fa6aedbfca88240cc37c1d0691bb6a75a26e9cc6c8dfbcaa5ada26e07",
+      "bytes": 3190,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v02_result.json"
+    },
+    {
+      "path": "source_io_diagnostic_v02_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v02_stderr.txt"
+    },
+    {
+      "path": "source_io_diagnostic_v02_stdout.txt",
+      "sha256": "4419078fa6aedbfca88240cc37c1d0691bb6a75a26e9cc6c8dfbcaa5ada26e07",
+      "bytes": 3190,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v02_stdout.txt"
+    },
+    {
+      "path": "source_io_diagnostic_v03_capture_result.json",
+      "sha256": "85ab7659a96d459db988c1ea6efad9586f7608d5e369e52552a74cf0f51715ca",
+      "bytes": 548,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v03_capture_result.json"
+    },
+    {
+      "path": "source_io_diagnostic_v03_gnu_time.txt",
+      "sha256": "a3668a887ed609ac4a11e5b8effd6aef832153ac1483184b84c93e40427ed3b6",
+      "bytes": 802,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v03_gnu_time.txt"
+    },
+    {
+      "path": "source_io_diagnostic_v03_invocation.json",
+      "sha256": "09b78690b09b82b5946644f4e18ea57ca188ef663b308c32d8652f021d17129e",
+      "bytes": 419,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v03_invocation.json"
+    },
+    {
+      "path": "source_io_diagnostic_v03_result.json",
+      "sha256": "c5335eb762bab09b7ccd84a3f73b3bcde012cdf2a5f281a5351abb3090d00ced",
+      "bytes": 3190,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v03_result.json"
+    },
+    {
+      "path": "source_io_diagnostic_v03_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v03_stderr.txt"
+    },
+    {
+      "path": "source_io_diagnostic_v03_stdout.txt",
+      "sha256": "c5335eb762bab09b7ccd84a3f73b3bcde012cdf2a5f281a5351abb3090d00ced",
+      "bytes": 3190,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v03_stdout.txt"
+    }
+  ]
+}

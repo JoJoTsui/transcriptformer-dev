@@ -1,0 +1,50 @@
+"""Unmodified tiny stored-arithmetic regression on the Linux checkout."""
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import resource
+import sys
+import time
+
+BASE=Path(__file__).resolve().parent
+PREFIX=BASE/"linux_paged_prepare_regression_v01"
+REPOSITORY=Path("/tmp/b3-full-context-linux-current-source-probe-v01")
+CASE="test/test_b3_paged_native_bootstrap.py::test_prepare_admits_two_paged_global_sources_without_inventing_observed_family"
+CLOCK=time.monotonic
+
+
+def snapshot(expected):
+    return {name:sha256(Path(name).read_bytes()).hexdigest() for name in expected}
+
+
+def main():
+    setup=json.loads((BASE/"linux_current_source_probe_v01_setup.json").read_bytes())
+    assets=json.loads((BASE/"linux_current_source_probe_v01_config_assets.json").read_bytes())
+    expected={**setup["requested_file_sha256"],**{row["path"]:row["sha256"] for row in assets["assets"]}}
+    before=snapshot(expected)
+    if before!=expected:raise ValueError("Actual frozen Python/config bytes differ")
+    os.chdir(REPOSITORY)
+    sys.path[:0]=[str(REPOSITORY),str(REPOSITORY/"src")]
+    import pytest
+    began=CLOCK()
+    code=int(pytest.main(["-q",CASE,"--basetemp=/tmp/b3-linux-paged-regression-v01","--junitxml="+str(PREFIX)+".xml"]))
+    elapsed=CLOCK()-began
+    after=snapshot(expected)
+    residual=[]
+    original=Path("/mnt/d/sc/transcriptformer/transcriptformer")
+    for name,module in list(sys.modules.items()):
+        path=getattr(module,"__file__",None)
+        if type(path) is str:
+            file=Path(path).absolute()
+            if file.is_relative_to(original/"src") or file.is_relative_to(original/"scripts") or file.is_relative_to(original/"test"):
+                residual.append({"module":name,"path":str(file)})
+    record={"scope":"One actual unchanged four-gene/129-cell stored-arithmetic pytest regression and module fixtures; not admitted controlled native production, complete allocation census or whole-method performance","source_commit_actual":setup["software_commit_actual"],"exact_test_node":CASE,"pytest_exit_code":code,"complete_pytest_call_seconds":elapsed,"source_before":before,"source_after":after,"source_stable":before==after==expected,"residual_original_repository_modules":residual,"residual_module_observation_scope":"Only module objects still present after pytest returns; not a complete executed source inventory","main_process_peak_RSS_bytes":resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,"child_process_peak_RSS_bytes":resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss*1024,"source_admission_granted":False,"runtime_admission_granted":False,"project_model_forwards_performed":False,"whole_method_speedup_measured":False}
+    with Path(str(PREFIX)+"_result.json").open("x") as handle:
+        json.dump(record,handle,indent=2);handle.write("\n")
+    print(json.dumps({k:v for k,v in record.items() if k not in ("source_before","source_after")},indent=2))
+    return code if before==after==expected and not residual else code or 1
+
+
+if __name__=="__main__":
+    raise SystemExit(main())

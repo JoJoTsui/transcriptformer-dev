@@ -1,5 +1,30 @@
 # Full-context source commit inspection — 2026-10-05
 
+
+## Current Linux-filesystem route — 2026-10-05
+
+Actual strict verification succeeds in isolated existing-commit Linux checkouts:
+70 retained preparation files at `80ba78b` and all 241 current Python files at
+`32f9426`. Commit/tree/blob/live bytes and executable modes agree; original
+DrvFS permissions, shared HEAD/index and mount/Git configuration stay unchanged.
+The shared original Git object store is read only. Source/RuntimeAdmission
+remain false; these requested maps do not prove complete executed dependency
+closure. Future registration/source reviews must bind their new canonical
+paths; existing admissions, keys or producer history cannot transfer by copy.
+
+An unchanged four-gene/129-cell test passes in 31.065889 complete pytest seconds.
+The complete frozen v5 CPU regression then passes 1,310 tests/five existing
+skips with full 75-file/source accounting, in 579.610830 pytest seconds. Its
+actual source/HEAD/index/runner/manifest stay stable. Sandbox local Gloo denial
+and the intermediate harness cwd failure remain separately archived; no
+original code/test or host permission change is used for their recovery.
+These are regression/component observations; whole project method cost and
+complete numeric census remain unknown. Ticket05 open; ticket11 excluded.
+
+See [actual Linux source feasibility](b3-full-context-linux-source-evidence-2026-10-05/manifest.json),
+[bounded source IO](b3-full-context-linux-source-evidence-2026-10-05-v2/manifest.json)
+and [complete current regression](b3-full-context-complete-cpu-evidence-2026-10-05-v5/manifest.json).
+
 This read-only prerequisite for the planned authority entrypoint verifies
 actual Git commit, tree and blob bytes against an explicit live source map.
 It grants no SourceAdmission, RuntimeAdmission, ledger capability or comparison

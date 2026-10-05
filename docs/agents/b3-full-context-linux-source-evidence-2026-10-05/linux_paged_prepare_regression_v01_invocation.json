@@ -1,0 +1,38 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "scripts/supervise_b3_pilot.py",
+    "--run-dir",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_paged_prepare_regression_v01_supervisor",
+    "--max-wall-seconds",
+    "950",
+    "--max-rss-gib",
+    "4",
+    "--min-host-ram-gib",
+    "4",
+    "--min-disk-gib",
+    "20",
+    "--",
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_paged_prepare_regression_v01_gnu_time.txt",
+    "/mnt/d/sc/transcriptformer/transcriptformer/.venv/bin/python",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_linux_paged_prepare_regression_v01.py"
+  ],
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "CUDA_VISIBLE_DEVICES": "",
+    "TF_RUN_REAL_MODEL_TESTS": "0",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "PYTHONPATH": "/tmp/b3-full-context-linux-current-source-probe-v01:/tmp/b3-full-context-linux-current-source-probe-v01/src"
+  },
+  "driver_source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_linux_paged_prepare_regression_v01.py": "3519ea3b40761dbb7b524b383cba6a41a4504861f6ecb276a118660b21b2fe51",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/supervise_b3_pilot.py": "19ad86b77895878cf7e3d609586da61f511498506ab13f1cf800381705a02afe"
+  },
+  "scope": "One unchanged tiny stored-arithmetic regression on isolated Linux source checkout; no project model work, source/runtime admission or complete method-cost claim"
+}

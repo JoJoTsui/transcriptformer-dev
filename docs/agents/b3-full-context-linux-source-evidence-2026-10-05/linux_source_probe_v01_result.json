@@ -1,0 +1,11 @@
+{
+  "actual_gnu_exit_code": 0,
+  "driver_command_and_raw_stdio_close_seconds": 1.3685048240004107,
+  "driver_elapsed_scope": "supervised command/raw stdout+stderr close; excludes result IO and final driver return",
+  "metadata_source_check_complete": true,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "authority_activated": false,
+  "complete_execution_inventory": false,
+  "capture_exit_code": 0
+}

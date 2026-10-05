@@ -1,0 +1,30 @@
+{
+  "scope": "Exact existing committed pytest/config assets for an unmodified bounded regression; no source/runtime admission",
+  "commit": "32f942623e1999e1f8fb0b473ddf5e1553a414de",
+  "checkout_command": [
+    "/usr/bin/git",
+    "--no-replace-objects",
+    "-c",
+    "core.hooksPath=/dev/null",
+    "-C",
+    "/tmp/b3-full-context-linux-current-source-probe-v01",
+    "checkout-index",
+    "--stdin",
+    "-z"
+  ],
+  "actual_returncode": 0,
+  "assets": [
+    {
+      "path": "/tmp/b3-full-context-linux-current-source-probe-v01/pyproject.toml",
+      "sha256": "f8ac33b81054f73b1957fb6cd9ace0944685d3465e88d5b7f19d81d0cdf55196",
+      "bytes": 3206,
+      "relative_git_path": "pyproject.toml"
+    },
+    {
+      "path": "/tmp/b3-full-context-linux-current-source-probe-v01/src/transcriptformer/cli/conf/inference_config.yaml",
+      "sha256": "e8567437b22a51f21c7e853a2e35efbc371c0a93d5fbca69206d6657851ade3a",
+      "bytes": 2579,
+      "relative_git_path": "src/transcriptformer/cli/conf/inference_config.yaml"
+    }
+  ]
+}

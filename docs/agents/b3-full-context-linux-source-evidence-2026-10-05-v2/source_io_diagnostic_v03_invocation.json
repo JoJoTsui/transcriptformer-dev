@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/source_io_diagnostic_v03_gnu_time.txt",
+    ".venv/bin/python",
+    "runs/b3_feasibility/20261005/measure_b3_source_io_draft_v03.py"
+  ],
+  "source_before_sha256": "756d143b94d9fd174736ce9ff8dc319225a6a54a88e5a9f442f9f2e6ed6e66d7",
+  "scope": "Bounded source IO diagnostic only; no runtime admission or complete method cost"
+}

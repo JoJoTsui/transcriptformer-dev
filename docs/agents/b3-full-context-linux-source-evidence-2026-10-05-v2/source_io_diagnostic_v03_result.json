@@ -1,0 +1,70 @@
+{
+  "scope": "Six bounded source-read/hash/ownership loops at the same 241 actual source buffers; no repo/numerical imports, project data/model work or whole-method/cold-cache speedup. Each read allocates only its admitted file size plus one.",
+  "software_commit_actual": "32f942623e1999e1f8fb0b473ddf5e1553a414de",
+  "source_before_sha256": "756d143b94d9fd174736ce9ff8dc319225a6a54a88e5a9f442f9f2e6ed6e66d7",
+  "source_after_sha256": "756d143b94d9fd174736ce9ff8dc319225a6a54a88e5a9f442f9f2e6ed6e66d7",
+  "source_stable": true,
+  "rows": [
+    {
+      "repetition": 1,
+      "location_label": "WSL_windows_drive",
+      "canonical_repository": "/mnt/d/sc/transcriptformer/transcriptformer",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "maximum_individual_read_request_bytes": 122281,
+      "complete_admitted_file_read_hash_and_ownership_loop_seconds": 0.8354020609986037
+    },
+    {
+      "repetition": 1,
+      "location_label": "WSL_linux_tmp",
+      "canonical_repository": "/tmp/b3-full-context-linux-current-source-probe-v01",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "maximum_individual_read_request_bytes": 122281,
+      "complete_admitted_file_read_hash_and_ownership_loop_seconds": 0.006899641011841595
+    },
+    {
+      "repetition": 2,
+      "location_label": "WSL_windows_drive",
+      "canonical_repository": "/mnt/d/sc/transcriptformer/transcriptformer",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "maximum_individual_read_request_bytes": 122281,
+      "complete_admitted_file_read_hash_and_ownership_loop_seconds": 0.7913200930051971
+    },
+    {
+      "repetition": 2,
+      "location_label": "WSL_linux_tmp",
+      "canonical_repository": "/tmp/b3-full-context-linux-current-source-probe-v01",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "maximum_individual_read_request_bytes": 122281,
+      "complete_admitted_file_read_hash_and_ownership_loop_seconds": 0.006981733022257686
+    },
+    {
+      "repetition": 3,
+      "location_label": "WSL_windows_drive",
+      "canonical_repository": "/mnt/d/sc/transcriptformer/transcriptformer",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "maximum_individual_read_request_bytes": 122281,
+      "complete_admitted_file_read_hash_and_ownership_loop_seconds": 0.8194018549984321
+    },
+    {
+      "repetition": 3,
+      "location_label": "WSL_linux_tmp",
+      "canonical_repository": "/tmp/b3-full-context-linux-current-source-probe-v01",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "maximum_individual_read_request_bytes": 122281,
+      "complete_admitted_file_read_hash_and_ownership_loop_seconds": 0.006841577996965498
+    }
+  ],
+  "complete_body_before_result_IO_seconds": 2.837819947017124,
+  "body_clock_scope": "Includes metadata admission, resource checks and six read loops; excludes result IO/final function return",
+  "main_process_peak_RSS_bytes": 18669568,
+  "numerical_modules_loaded": [],
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "whole_method_speedup_measured": false
+}

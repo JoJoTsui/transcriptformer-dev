@@ -1,0 +1,11 @@
+{
+  "actual_gnu_exit_code": 0,
+  "driver_command_and_raw_stdio_close_seconds": 3.631491037987871,
+  "driver_elapsed_scope": "Command/raw stdout+stderr close window; excludes post-command source checks/result IO/final driver return",
+  "source_before_sha256": "ab7cc12ff922b8b7a8dc48ce7c6bc2dbea3f662d509f82eb4e05a344bcd17795",
+  "source_after_sha256": "ab7cc12ff922b8b7a8dc48ce7c6bc2dbea3f662d509f82eb4e05a344bcd17795",
+  "source_stable": true,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "capture_exit_code": 0
+}

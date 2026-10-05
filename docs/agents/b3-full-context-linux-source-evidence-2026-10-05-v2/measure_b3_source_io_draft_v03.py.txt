@@ -1,0 +1,77 @@
+"""Bounded source-read component only; no whole-method performance or authority."""
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import resource
+import shutil
+import stat
+import sys
+import time
+
+ROOT=Path(__file__).resolve().parents[3]
+BASE=Path(__file__).resolve().parent
+PREFIX=BASE/"source_io_diagnostic_v03"
+LINUX=Path("/tmp/b3-full-context-linux-current-source-probe-v01")
+
+
+def main():
+    started=time.monotonic()
+    deadline=started+900
+    own_source=Path(__file__).resolve()
+    own_before=sha256(own_source.read_bytes()).hexdigest()
+    freeze=json.loads((BASE/"full_context_complete_cpu_v3_freeze_manifest.json").read_bytes())["snapshot"]
+    expected=freeze["python_file_sha256"]
+    if type(expected) is not dict or not 1<=len(expected)<=512:
+        raise ValueError("Bounded explicit source map required")
+    def check():
+        if time.monotonic()>=deadline:raise TimeoutError("Original source IO deadline reached")
+        available=next((int(s.split()[1])*1024 for s in Path('/proc/meminfo').read_text().splitlines() if s.startswith('MemAvailable:')),0)
+        if available<4*1024**3 or resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024>=4*1024**3:
+            raise MemoryError("Retain 4 GiB host RAM floor and process RSS cap")
+        if any(shutil.disk_usage(p).free<20*1024**3 for p in (ROOT,LINUX)):
+            raise OSError("Retain 20 GiB disk floor")
+    check()
+    rows=[]
+    for repetition in range(3):
+        for label,base in (('WSL_windows_drive',ROOT),('WSL_linux_tmp',LINUX)):
+            total=0
+            for name in expected:
+                path=base/name;info=path.lstat()
+                if not stat.S_ISREG(info.st_mode) or not 0<=info.st_size<=64*1024**2:
+                    raise ValueError("Actual source file bound differs")
+                total+=info.st_size
+                if total>128*1024**2:raise MemoryError("Source aggregate exceeds admitted bound")
+            began=time.monotonic();count=0;bytes_read=0;max_read_request=0
+            for name,digest in expected.items():
+                if time.monotonic()>=deadline:raise TimeoutError("Original source IO deadline reached")
+                path=base/name;initial=path.lstat()
+                if not stat.S_ISREG(initial.st_mode) or not 0<=initial.st_size<=64*1024**2:
+                    raise ValueError('Original source exceeded its file-size admission before read')
+                if bytes_read+initial.st_size>128*1024**2:
+                    raise MemoryError('Original source exceeded aggregate admission before read')
+                if path.resolve(strict=True)!=path:raise ValueError("Source alias refused")
+                identity=lambda row:(row.st_dev,row.st_ino,row.st_mode,row.st_size)
+                with path.open('rb') as handle:
+                    if identity(os.fstat(handle.fileno()))!=identity(initial):raise ValueError("Original source changed at open")
+                    request=initial.st_size+1
+                    max_read_request=max(max_read_request,request)
+                    raw=handle.read(request)
+                    if identity(os.fstat(handle.fileno()))!=identity(initial):raise ValueError("Original source changed during read")
+                if identity(path.lstat())!=identity(initial) or len(raw)!=initial.st_size or sha256(raw).hexdigest()!=digest:
+                    raise ValueError("Actual source byte binding differs")
+                bytes_read+=len(raw);count+=1
+            elapsed=time.monotonic()-began
+            check()
+            rows.append({'repetition':repetition+1,'location_label':label,'canonical_repository':str(base),'actual_verified_files':count,'actual_bytes_read':bytes_read,'maximum_individual_read_request_bytes':max_read_request,'complete_admitted_file_read_hash_and_ownership_loop_seconds':elapsed})
+    check()
+    after=sha256(own_source.read_bytes()).hexdigest()
+    if own_before!=after:raise ValueError("Actual diagnostic source changed")
+    record={'scope':'Six bounded source-read/hash/ownership loops at the same 241 actual source buffers; no repo/numerical imports, project data/model work or whole-method/cold-cache speedup. Each read allocates only its admitted file size plus one.','software_commit_actual':freeze['head'],'source_before_sha256':own_before,'source_after_sha256':after,'source_stable':own_before==after,'rows':rows,'complete_body_before_result_IO_seconds':time.monotonic()-started,'body_clock_scope':'Includes metadata admission, resource checks and six read loops; excludes result IO/final function return','main_process_peak_RSS_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,'numerical_modules_loaded':[n for n in ('numpy','torch','h5py','scipy','anndata') if n in sys.modules],'source_admission_granted':False,'runtime_admission_granted':False,'whole_method_speedup_measured':False}
+    with Path(str(PREFIX)+'_result.json').open('x') as handle:
+        json.dump(record,handle,indent=2);handle.write('\n')
+    print(json.dumps(record,indent=2))
+
+
+if __name__=='__main__':
+    main()

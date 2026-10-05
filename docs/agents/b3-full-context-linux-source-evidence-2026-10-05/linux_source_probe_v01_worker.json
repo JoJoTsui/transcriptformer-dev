@@ -1,0 +1,12 @@
+{
+  "source_before_sha256": "e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d",
+  "source_after_sha256": "e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d",
+  "source_stable": true,
+  "complete_source_verification_public_seconds": 1.2659529880038463,
+  "requested_source_files": 70,
+  "strict_mode_verification_passed": true,
+  "numerical_modules_loaded": [],
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "authority_activated": false
+}

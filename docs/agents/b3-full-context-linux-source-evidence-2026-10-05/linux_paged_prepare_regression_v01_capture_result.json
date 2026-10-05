@@ -1,0 +1,18 @@
+{
+  "actual_supervisor_returncode": 0,
+  "driver_command_and_raw_stdio_close_seconds": 33.177233372000046,
+  "driver_elapsed_scope": "Original supervisor command/raw stdio-close window; excludes post-command checks/capture-result IO/final driver return",
+  "driver_source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_linux_paged_prepare_regression_v01.py": "3519ea3b40761dbb7b524b383cba6a41a4504861f6ecb276a118660b21b2fe51",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/supervise_b3_pilot.py": "19ad86b77895878cf7e3d609586da61f511498506ab13f1cf800381705a02afe"
+  },
+  "driver_source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_linux_paged_prepare_regression_v01.py": "3519ea3b40761dbb7b524b383cba6a41a4504861f6ecb276a118660b21b2fe51",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/supervise_b3_pilot.py": "19ad86b77895878cf7e3d609586da61f511498506ab13f1cf800381705a02afe"
+  },
+  "driver_sources_stable": true,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "whole_method_speedup_measured": false,
+  "capture_exit_code": 0
+}

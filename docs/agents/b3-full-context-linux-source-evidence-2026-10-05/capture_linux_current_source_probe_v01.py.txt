@@ -1,0 +1,69 @@
+"""Actual strict verification in a local Linux source checkout; no admission."""
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+import types
+
+BASE=Path(__file__).resolve().parent
+ROOT=BASE.parents[2]
+PREFIX=BASE/"linux_current_source_probe_v01"
+SOURCE=Path("/tmp/b3-full-context-linux-current-source-probe-v01/scripts/b3_full_context_runtime_authority.py")
+EXPECTED="e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d"
+
+
+def write(path, value):
+    with path.open("x") as handle:
+        json.dump(value,handle,indent=2,allow_nan=False);handle.write("\n")
+
+
+def worker():
+    setup=json.loads(Path(str(PREFIX)+"_setup.json").read_bytes())
+    before=SOURCE.read_bytes()
+    if sha256(before).hexdigest()!=EXPECTED:
+        raise ValueError("Pinned canonical source prerequisite differs")
+    module=types.ModuleType("linux_source_prerequisite_probe")
+    module.__file__=str(SOURCE)
+    exec(compile(before,str(SOURCE),"exec"),module.__dict__)
+    began=time.monotonic()
+    proof=module.verify_committed_source_map(Path(setup["repository"]),setup["software_commit_actual"],setup["requested_file_sha256"],max_seconds=900)
+    complete_public=time.monotonic()-began
+    after=SOURCE.read_bytes()
+    if before!=after:
+        raise ValueError("Canonical source changed during Linux checkout probe")
+    write(Path(str(PREFIX)+"_strict_source_proof.json"),proof)
+    write(Path(str(PREFIX)+"_worker.json"),{
+        "source_before_sha256":sha256(before).hexdigest(),"source_after_sha256":sha256(after).hexdigest(),
+        "source_stable":before==after,"complete_source_verification_public_seconds":complete_public,
+        "requested_source_files":len(proof["files"]),"strict_mode_verification_passed":True,
+        "numerical_modules_loaded":[name for name in ("numpy","torch","h5py","scipy","anndata") if name in sys.modules],
+        "source_admission_granted":False,"runtime_admission_granted":False,"authority_activated":False,
+    })
+    return 0
+
+
+def capture():
+    for suffix in ("_invocation.json","_strict_source_proof.json","_worker.json","_gnu_time.txt","_stdout.txt","_stderr.txt","_result.json"):
+        if os.path.lexists(str(PREFIX)+suffix):
+            raise FileExistsError(str(PREFIX)+suffix)
+    env={"OMP_NUM_THREADS":"1","OPENBLAS_NUM_THREADS":"1","MKL_NUM_THREADS":"1","NUMEXPR_NUM_THREADS":"1","CUDA_VISIBLE_DEVICES":"","TF_RUN_REAL_MODEL_TESTS":"0"}
+    command=["/usr/bin/time","-v","-o",str(PREFIX)+"_gnu_time.txt",sys.executable,str(Path(__file__).resolve()),"--worker"]
+    write(Path(str(PREFIX)+"_invocation.json"),{"command":command,"environment_overrides":env,"scope":"actual metadata-only strict source verification; isolated existing-commit source subset, no SourceAdmission or model/native execution"})
+    began=time.monotonic()
+    with Path(str(PREFIX)+"_stdout.txt").open("xb") as stdout,Path(str(PREFIX)+"_stderr.txt").open("xb") as stderr:
+        actual=subprocess.run(command,env={**os.environ,**env},stdout=stdout,stderr=stderr,timeout=950)
+    elapsed=time.monotonic()-began
+    path=Path(str(PREFIX)+"_worker.json")
+    evidence=json.loads(path.read_bytes()) if path.exists() else None
+    complete=actual.returncode==0 and evidence is not None and evidence["strict_mode_verification_passed"] and evidence["source_stable"] and not evidence["numerical_modules_loaded"]
+    record={"actual_gnu_exit_code":actual.returncode,"driver_command_and_raw_stdio_close_seconds":elapsed,"driver_elapsed_scope":"supervised command/raw stdout+stderr close; excludes result IO and final driver return","metadata_source_check_complete":complete,"source_admission_granted":False,"runtime_admission_granted":False,"authority_activated":False,"complete_execution_inventory":False,"capture_exit_code":actual.returncode if complete else actual.returncode or 1}
+    write(Path(str(PREFIX)+"_result.json"),record)
+    print(json.dumps(record,indent=2))
+    return record["capture_exit_code"]
+
+
+if __name__=="__main__":
+    raise SystemExit(worker() if sys.argv[1:]==["--worker"] else capture())

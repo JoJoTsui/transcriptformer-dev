@@ -1,0 +1,59 @@
+{
+  "scope": "Six bounded sequential read+hash loops over the same 241 committed Python buffers; no imports of repo code/numerical libraries, data/checkpoints, or model work. This is not whole-method or cold-cache performance.",
+  "software_commit_actual": "32f942623e1999e1f8fb0b473ddf5e1553a414de",
+  "rows": [
+    {
+      "repetition": 1,
+      "location_label": "WSL_windows_drive",
+      "canonical_repository": "/mnt/d/sc/transcriptformer/transcriptformer",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "complete_file_read_and_hash_loop_seconds": 2.6516132469987497
+    },
+    {
+      "repetition": 1,
+      "location_label": "WSL_linux_tmp",
+      "canonical_repository": "/tmp/b3-full-context-linux-current-source-probe-v01",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "complete_file_read_and_hash_loop_seconds": 0.008340999978827313
+    },
+    {
+      "repetition": 2,
+      "location_label": "WSL_windows_drive",
+      "canonical_repository": "/mnt/d/sc/transcriptformer/transcriptformer",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "complete_file_read_and_hash_loop_seconds": 2.6640851520060096
+    },
+    {
+      "repetition": 2,
+      "location_label": "WSL_linux_tmp",
+      "canonical_repository": "/tmp/b3-full-context-linux-current-source-probe-v01",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "complete_file_read_and_hash_loop_seconds": 0.00851674602017738
+    },
+    {
+      "repetition": 3,
+      "location_label": "WSL_windows_drive",
+      "canonical_repository": "/mnt/d/sc/transcriptformer/transcriptformer",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "complete_file_read_and_hash_loop_seconds": 2.6206145939941052
+    },
+    {
+      "repetition": 3,
+      "location_label": "WSL_linux_tmp",
+      "canonical_repository": "/tmp/b3-full-context-linux-current-source-probe-v01",
+      "actual_verified_files": 241,
+      "actual_bytes_read": 3800886,
+      "complete_file_read_and_hash_loop_seconds": 0.008259383990662172
+    }
+  ],
+  "complete_diagnostic_loop_seconds": 7.961441219988046,
+  "process_peak_RSS_bytes": 85385216,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "whole_method_speedup_measured": false
+}

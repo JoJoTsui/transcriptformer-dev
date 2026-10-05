@@ -1,0 +1,9 @@
+{
+  "scope": "actual source subset checkout after strict verification; shared original object store read only, no source/runtime authority",
+  "checkout_files": 70,
+  "live_modes": [
+    420
+  ],
+  "source_file_sha256": "e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d",
+  "original_workspace_source_modes_unchanged": true
+}

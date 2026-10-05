@@ -1,0 +1,209 @@
+{
+  "schema": "b3_full_context_linux_source_feasibility_evidence_v1",
+  "scope": "Actual strict source-byte/mode verification of 70 historical and 241 current Python buffers in isolated Linux checkouts, source IO microdiagnostic and one unchanged bounded stored-arithmetic regression; no source/runtime/science acceptance",
+  "current_canonical_commit": "32f942623e1999e1f8fb0b473ddf5e1553a414de",
+  "original_shared_Git_working_tree_and_host_permissions_unchanged": true,
+  "canonical_source_buffer_after": "e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d",
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "complete_executed_source_inventory": false,
+  "complete_numeric_guard_or_census": false,
+  "whole_method_cost_or_speedup_measured": false,
+  "ticket05_closed": false,
+  "ticket11_excluded": true,
+  "artifacts": [
+    {
+      "path": "capture_linux_current_source_probe_v01.py.txt",
+      "sha256": "dbcb75906bb77046f1d283e2097302c441273f8d2c46429d339da46b313f5b18",
+      "bytes": 4101,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_linux_current_source_probe_v01.py"
+    },
+    {
+      "path": "capture_linux_source_probe_v01.py.txt",
+      "sha256": "6c20559bcf07f261274b4d58178fbcda4e3c693631ab149055d48d58a67985be",
+      "bytes": 4040,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_linux_source_probe_v01.py"
+    },
+    {
+      "path": "linux_current_source_probe_v01_config_assets.json",
+      "sha256": "afe16f33b31adff8bc3f88bff5f6159c4aa16ab0c0af19fb880cf269fd894b54",
+      "bytes": 1029,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_current_source_probe_v01_config_assets.json"
+    },
+    {
+      "path": "linux_current_source_probe_v01_gnu_time.txt",
+      "sha256": "9216c64ed9446ab1841e5c410b9de7a33634fb199dea455b8621dbb69ab619bc",
+      "bytes": 910,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_current_source_probe_v01_gnu_time.txt"
+    },
+    {
+      "path": "linux_current_source_probe_v01_invocation.json",
+      "sha256": "614b9cd23573b8b05c6af9486c6c2321bc91340d9b118ba54c45e0fe1457ff54",
+      "bytes": 763,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_current_source_probe_v01_invocation.json"
+    },
+    {
+      "path": "linux_current_source_probe_v01_result.json",
+      "sha256": "cf0fa7505d18d35ec30f75534316171a17551c468b0aa3443eb9a3c155f7f3dd",
+      "bytes": 431,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_current_source_probe_v01_result.json"
+    },
+    {
+      "path": "linux_current_source_probe_v01_setup.json",
+      "sha256": "832c4446e81c8febacd090d0405acbf35084cdd347908fa02202b7f9019c05d9",
+      "bytes": 42098,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_current_source_probe_v01_setup.json"
+    },
+    {
+      "path": "linux_current_source_probe_v01_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_current_source_probe_v01_stderr.txt"
+    },
+    {
+      "path": "linux_current_source_probe_v01_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_current_source_probe_v01_stdout.txt"
+    },
+    {
+      "path": "linux_current_source_probe_v01_strict_source_proof.json",
+      "sha256": "6ffa56fe2ab7a0aaae22ae28aa0d652131812b6e87c8e5277472d8be8b75ebdf",
+      "bytes": 102056,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_current_source_probe_v01_strict_source_proof.json"
+    },
+    {
+      "path": "linux_current_source_probe_v01_worker.json",
+      "sha256": "0e045376652a5f396b6bec0bcd5d452854b78f9bac3eedaea4f3d2d5c32eb2aa",
+      "bytes": 500,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_current_source_probe_v01_worker.json"
+    },
+    {
+      "path": "linux_paged_prepare_regression_v01.xml",
+      "sha256": "ea27bc065642b5c3335a99327798e6df176edf01cb2c1445e6bc23c99d5dd0a3",
+      "bytes": 406,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_paged_prepare_regression_v01.xml"
+    },
+    {
+      "path": "linux_paged_prepare_regression_v01_capture_result.json",
+      "sha256": "148aaf7c6ac365044f4a12395f00de7a9eed392a2430f52e73ec569145fa9b1f",
+      "bytes": 1173,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_paged_prepare_regression_v01_capture_result.json"
+    },
+    {
+      "path": "linux_paged_prepare_regression_v01_gnu_time.txt",
+      "sha256": "2301975b0cc85611d3ddce954e58a71ca24df4ec225b9e8c0fd61d3a4e253e1d",
+      "bytes": 911,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_paged_prepare_regression_v01_gnu_time.txt"
+    },
+    {
+      "path": "linux_paged_prepare_regression_v01_invocation.json",
+      "sha256": "9fcbe37c3ec3ae372d43dd1cede59a0224ca3388e3e9a37ea4bfe44b4db29aab",
+      "bytes": 1669,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_paged_prepare_regression_v01_invocation.json"
+    },
+    {
+      "path": "linux_paged_prepare_regression_v01_result.json",
+      "sha256": "98e1e68b9d1aea82f2c45b469dd4227a8e8ce478901cd3504abd045b96ed00f5",
+      "bytes": 80916,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_paged_prepare_regression_v01_result.json"
+    },
+    {
+      "path": "linux_paged_prepare_regression_v01_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_paged_prepare_regression_v01_stderr.txt"
+    },
+    {
+      "path": "linux_paged_prepare_regression_v01_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_paged_prepare_regression_v01_stdout.txt"
+    },
+    {
+      "path": "linux_paged_prepare_regression_v01_supervisor_producer.log",
+      "sha256": "97f1d46e32c917680b45c88ea89b593ab0f5a5c2f86bd33cbcd4144563d902aa",
+      "bytes": 2069,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_paged_prepare_regression_v01_supervisor/producer.log"
+    },
+    {
+      "path": "linux_paged_prepare_regression_v01_supervisor_state.json",
+      "sha256": "63abf4acd0fc58b8a5a540f4adc888dc64bd6b37ec00838e74c6b4b19ebf22fb",
+      "bytes": 1034,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_paged_prepare_regression_v01_supervisor/state.json"
+    },
+    {
+      "path": "linux_source_probe_v01_gnu_time.txt",
+      "sha256": "72d1c50405b543b2a3bb2d26dec210ef23e8c5fec9dfcde4ecebd466729e8f9b",
+      "bytes": 901,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_source_probe_v01_gnu_time.txt"
+    },
+    {
+      "path": "linux_source_probe_v01_invocation.json",
+      "sha256": "7873b350f0ef34497758f7fc0868050b90c7f800cd4519a973f5299711cf7906",
+      "bytes": 747,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_source_probe_v01_invocation.json"
+    },
+    {
+      "path": "linux_source_probe_v01_result.json",
+      "sha256": "7b9247d0535d798237a7b6812e8449554fbf122841d27b626ce13b48caa78dea",
+      "bytes": 432,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_source_probe_v01_result.json"
+    },
+    {
+      "path": "linux_source_probe_v01_setup.json",
+      "sha256": "83811eb3a3c8e186e4b049c49e3a1ed6de47ee670cf641ea9ce23d54b10ead39",
+      "bytes": 13766,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_source_probe_v01_setup.json"
+    },
+    {
+      "path": "linux_source_probe_v01_setup_observation.json",
+      "sha256": "65b774b45ad1e315bcd1dfe850fd69c16b8fa31ccd275a196f6956164ddf5172",
+      "bytes": 342,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_source_probe_v01_setup_observation.json"
+    },
+    {
+      "path": "linux_source_probe_v01_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_source_probe_v01_stderr.txt"
+    },
+    {
+      "path": "linux_source_probe_v01_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_source_probe_v01_stdout.txt"
+    },
+    {
+      "path": "linux_source_probe_v01_strict_source_proof.json",
+      "sha256": "05951561490038e46d1da74666d2dc4b3cce7e1b3ce87352433b4bfedec3936f",
+      "bytes": 29739,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_source_probe_v01_strict_source_proof.json"
+    },
+    {
+      "path": "linux_source_probe_v01_worker.json",
+      "sha256": "faddfdaf16ee83309bf642fe13dd5419c88cd90f729e2aa8051aba630a7270af",
+      "bytes": 500,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_source_probe_v01_worker.json"
+    },
+    {
+      "path": "original_WSL_case_phases_observed_subset.jsonl",
+      "sha256": "b55a1b4761e128cc5f5376d0e42427f98ece451e988a0ba9a4d8453503355f6f",
+      "bytes": 857,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v3_case_events.jsonl",
+      "scope": "Parsed observed subset from still-running canonical v3 events; not whole repository completion"
+    },
+    {
+      "path": "run_linux_paged_prepare_regression_v01.py.txt",
+      "sha256": "3519ea3b40761dbb7b524b383cba6a41a4504861f6ecb276a118660b21b2fe51",
+      "bytes": 3069,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_linux_paged_prepare_regression_v01.py"
+    },
+    {
+      "path": "source_io_diagnostic_v01_result.json",
+      "sha256": "8b5d1a6f44c76087df2a37188ecb83c9be10eb8c84f2f148771a0140ec79d4eb",
+      "bytes": 2341,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_io_diagnostic_v01_result.json"
+    }
+  ]
+}
