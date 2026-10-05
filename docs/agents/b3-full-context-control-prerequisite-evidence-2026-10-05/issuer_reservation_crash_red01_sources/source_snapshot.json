@@ -1,0 +1,15 @@
+{
+  "scope": "First actual child-process reservation regression; original result XML retained",
+  "artifacts": [
+    {
+      "path": "issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "a3fc32b976fe10811af3e2528f46f974341a8c9481f6304e58061ffca8f1bc7c",
+      "bytes": 86
+    },
+    {
+      "path": "test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "edbe5423797e7a0fb013df8db3b63e33ac408eb776286c85dd4642a587a2b122",
+      "bytes": 1795
+    }
+  ]
+}

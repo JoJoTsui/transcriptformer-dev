@@ -1,0 +1,513 @@
+{
+  "schema": "b3_full_context_control_protocol_draft_evidence_v1",
+  "scope": "Isolated transport/reservation prerequisites; not a canonical controlled producer/issuer or authority admission",
+  "transport_current_capture": "start_permit_transport_draft_v02_final01_result.json",
+  "transport_current_cases": 14,
+  "reservation_current_capture": "issuer_reservation_draft_final02_result.json",
+  "reservation_current_cases": 9,
+  "canonical_whole_repository_capture": "running; separate source freeze f567f13",
+  "historical_results_scope": "Exploratory XMLs do not prove later bytes; final01 binds earlier six-case reservation source; concurrency_green01 was not source-frozen and formatting overlapped its invocation",
+  "fresh_independent_source_reviews": "pending_agent_service_usage_limit",
+  "durable_normative_start_verified": false,
+  "channel_release_by_reservation_performed": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "native_operation_performed": false,
+  "model_forwards_performed": false,
+  "ticket05_closed": false,
+  "ticket11_excluded": true,
+  "artifacts": [
+    {
+      "path": "capture_issuer_reservation_draft_v01.py.txt",
+      "sha256": "d210772494b4bd3d049efe5fb3409a098a549aae0bec77d191a5524c2bb14157",
+      "bytes": 4943,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_issuer_reservation_draft_v01.py"
+    },
+    {
+      "path": "capture_issuer_reservation_draft_v02.py.txt",
+      "sha256": "06befa449f92cf9b8716cea0f3ee0cf16a346d3fc59f144b4d9abfae88e24def",
+      "bytes": 4943,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_issuer_reservation_draft_v02.py"
+    },
+    {
+      "path": "capture_start_permit_transport_draft_v05.py.txt",
+      "sha256": "5944e59b46e5523feb2740eb91354f921c85f63302790db07a9fb51fa3ffefab",
+      "bytes": 4734,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_transport_draft_v05.py"
+    },
+    {
+      "path": "issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "35073281bdea78a07e652a3196f4c134c352aa2a2928f71cb307ef5a1c7ab06b",
+      "bytes": 7904,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v01.py"
+    },
+    {
+      "path": "issuer_reservation_birth_green01.xml",
+      "sha256": "595f868a0379f64fdab35b5ab24d2c992f4cf9961819b4ea3b85d2313a88251d",
+      "bytes": 1512,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_birth_green01.xml"
+    },
+    {
+      "path": "issuer_reservation_birth_red01.xml",
+      "sha256": "edebe918febf689c646065ce3e4918fa3920941238565fdd57c80ea9db053213",
+      "bytes": 2040,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_birth_red01.xml"
+    },
+    {
+      "path": "issuer_reservation_birth_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "b6a2fea341c24c487152541d166ecb80e193cc87a497655be8e21c18515f9a20",
+      "bytes": 7578,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_birth_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_birth_red01_sources/source_snapshot.json",
+      "sha256": "41a43acee2d280866b9c4d54d6f029727eb860f72b315d4805fc2bce6e6e393f",
+      "bytes": 470,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_birth_red01_sources/source_snapshot.json"
+    },
+    {
+      "path": "issuer_reservation_birth_red01_sources/test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "c8f72c01ba1ed99e615022b7cfdbc1c7b5d1e994e599dbe7f35a5d0043e60e3e",
+      "bytes": 11292,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_birth_red01_sources/test_issuer_reservation_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_cleanup_green01.xml",
+      "sha256": "b96c8121c566c2084eea30dd540807e33df572ee0b4c273dace666347db2da9c",
+      "bytes": 612,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_cleanup_green01.xml"
+    },
+    {
+      "path": "issuer_reservation_cleanup_red01.xml",
+      "sha256": "45b9eb96a19f8d9b46cc3ab4a9aa048375a605b4ca49c162311f946e979276da",
+      "bytes": 2659,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_cleanup_red01.xml"
+    },
+    {
+      "path": "issuer_reservation_cleanup_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "ef681950d910ee35e63259c13d08b99143564e7066d649d4addffe2c72c7bceb",
+      "bytes": 2719,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_cleanup_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_cleanup_red01_sources/source_snapshot.json",
+      "sha256": "11ab681f9aca2328841453f9242ba6faf4b0828d032d094892ad1ce9cc94204f",
+      "bytes": 473,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_cleanup_red01_sources/source_snapshot.json"
+    },
+    {
+      "path": "issuer_reservation_cleanup_red01_sources/test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "91e2313ed6bdf66daa96e21f02e786333dc2362e1e4662c191cd5d7b0245b6a7",
+      "bytes": 3573,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_cleanup_red01_sources/test_issuer_reservation_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_concurrency_green01.xml",
+      "sha256": "5d42d8093e0adf321b964e5195be0212c9c2b95e4348aa52c994ce8f6492c762",
+      "bytes": 1326,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_concurrency_green01.xml"
+    },
+    {
+      "path": "issuer_reservation_crash_green01.xml",
+      "sha256": "d54d4b6870e20eb350adcb51dadfea57ab549721ea5e786cc032223fe65b8554",
+      "bytes": 421,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_crash_green01.xml"
+    },
+    {
+      "path": "issuer_reservation_crash_red01.xml",
+      "sha256": "599c0218e658d3d76689201c01bc452c3c194cd3ace727902e59e7a2d8e28d54",
+      "bytes": 2845,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_crash_red01.xml"
+    },
+    {
+      "path": "issuer_reservation_crash_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "a3fc32b976fe10811af3e2528f46f974341a8c9481f6304e58061ffca8f1bc7c",
+      "bytes": 86,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_crash_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_crash_red01_sources/source_snapshot.json",
+      "sha256": "0529754e9f21cec6f57c5460dc37c70c15afb3e2785dd2767e77b05df64867d1",
+      "bytes": 475,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_crash_red01_sources/source_snapshot.json"
+    },
+    {
+      "path": "issuer_reservation_crash_red01_sources/test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "edbe5423797e7a0fb013df8db3b63e33ac408eb776286c85dd4642a587a2b122",
+      "bytes": 1795,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_crash_red01_sources/test_issuer_reservation_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_deadline_green01.xml",
+      "sha256": "7fcd0ce1039e514b0fee38fc1eb938c052700429f514dc668f79fd98bc19fbab",
+      "bytes": 980,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_deadline_green01.xml"
+    },
+    {
+      "path": "issuer_reservation_deadline_red01.xml",
+      "sha256": "f335ecc825129785df446c597dfd627a9cda7e6a85ee40c8c583510f958ab1fc",
+      "bytes": 1603,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_deadline_red01.xml"
+    },
+    {
+      "path": "issuer_reservation_deadline_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "af8960e8f3e472340dd560ab125dbb43d2298132d56ca5d0e4e116d4305fcaef",
+      "bytes": 5645,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_deadline_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_deadline_red01_sources/source_snapshot.json",
+      "sha256": "708174c9c3d6efb519e8805bb27df091fec4422edda56afdb10abd8a4a698bb0",
+      "bytes": 517,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_deadline_red01_sources/source_snapshot.json"
+    },
+    {
+      "path": "issuer_reservation_deadline_red01_sources/test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "7ac70157109468240eaa2f9222ccca1f0660bb86ab21237ca3ae6d2134305b21",
+      "bytes": 6220,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_deadline_red01_sources/test_issuer_reservation_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final01.xml",
+      "sha256": "13df095f5921519b554eaaedc11eaf338f8a09b59fdff8a23e2e4d43476151f5",
+      "bytes": 1326,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final01.xml"
+    },
+    {
+      "path": "issuer_reservation_draft_final01_gnu_time.txt",
+      "sha256": "b16466f8522f594fb14bfc532ed60ca61fb90460274a6c6f85b31ba066225326",
+      "bytes": 906,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final01_gnu_time.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final01_invocation.json",
+      "sha256": "19dabfa8294a5b74fdcb9171cf20b729967f2d3e8399ffb10b3d8b431634595e",
+      "bytes": 1400,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final01_invocation.json"
+    },
+    {
+      "path": "issuer_reservation_draft_final01_result.json",
+      "sha256": "0c7ea4b676773c4507b51956c41b8c70d278bcafc03651a12670ade951c6d360",
+      "bytes": 2886,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final01_result.json"
+    },
+    {
+      "path": "issuer_reservation_draft_final01_sources/capture_issuer_reservation_draft_v01.py.txt",
+      "sha256": "d210772494b4bd3d049efe5fb3409a098a549aae0bec77d191a5524c2bb14157",
+      "bytes": 4943,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final01_sources/capture_issuer_reservation_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final01_sources/issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "b6a2fea341c24c487152541d166ecb80e193cc87a497655be8e21c18515f9a20",
+      "bytes": 7578,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final01_sources/issue_b3_full_context_controlled_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final01_sources/source_snapshot.json",
+      "sha256": "acd2ed7305e7584d329329e0ebd4547da439f07af1fb1ad4c888145c3e226010",
+      "bytes": 664,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final01_sources/source_snapshot.json"
+    },
+    {
+      "path": "issuer_reservation_draft_final01_sources/test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "04450783e3bf227d09d2b8b86762afada2ffbf7c52b6925db4d76b826eddf150",
+      "bytes": 9866,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final01_sources/test_issuer_reservation_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final01_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final01_stderr.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final01_stdout.txt",
+      "sha256": "c7758136170a4fd878d0b82a422e9dc8fddd507e20d9dd0ea7003eeda72967b3",
+      "bytes": 1003,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final01_stdout.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final01_worker.json",
+      "sha256": "0b2c262681a388f3d83d78664d2b61e2e5f099247b21dca05f0b96958303cbb4",
+      "bytes": 1591,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final01_worker.json"
+    },
+    {
+      "path": "issuer_reservation_draft_final02.xml",
+      "sha256": "4c6594c5fb234b1cfa35fe0492cb73780eb72dfcaf3235cf3dfa00b507913a75",
+      "bytes": 1872,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final02.xml"
+    },
+    {
+      "path": "issuer_reservation_draft_final02_gnu_time.txt",
+      "sha256": "1f44699a8baefcc3f6abf6f66e8b3907177cfe6fafbd652e4fe9b96da6cb6329",
+      "bytes": 907,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final02_gnu_time.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final02_invocation.json",
+      "sha256": "b48b4a18660fa8cf7e8a2181bfe41440b7f4f8f486b4fa41bc24c27414112702",
+      "bytes": 1400,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final02_invocation.json"
+    },
+    {
+      "path": "issuer_reservation_draft_final02_result.json",
+      "sha256": "46f6bfd1cfdac85a12729fdbee46fb94cedda8bbe8c50c0d2f64d23e87aeede0",
+      "bytes": 3390,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final02_result.json"
+    },
+    {
+      "path": "issuer_reservation_draft_final02_sources/capture_issuer_reservation_draft_v02.py.txt",
+      "sha256": "06befa449f92cf9b8716cea0f3ee0cf16a346d3fc59f144b4d9abfae88e24def",
+      "bytes": 4943,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final02_sources/capture_issuer_reservation_draft_v02.py.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final02_sources/issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "35073281bdea78a07e652a3196f4c134c352aa2a2928f71cb307ef5a1c7ab06b",
+      "bytes": 7904,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final02_sources/issue_b3_full_context_controlled_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final02_sources/source_snapshot.json",
+      "sha256": "22459d6a46b74e264c5a4041a2353482deae689eeca547f9b4c5a641a2553b1c",
+      "bytes": 692,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final02_sources/source_snapshot.json"
+    },
+    {
+      "path": "issuer_reservation_draft_final02_sources/test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "5425fce918d46d561965ec4d0fc106b394f8cd2df1a5d25f65803a838ba91467",
+      "bytes": 15109,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final02_sources/test_issuer_reservation_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final02_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final02_stderr.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final02_stdout.txt",
+      "sha256": "f09db68eddc7c164992ff9346b5c46370fb936487ccdb85bbbbe7621dd4dfc8d",
+      "bytes": 1003,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final02_stdout.txt"
+    },
+    {
+      "path": "issuer_reservation_draft_final02_worker.json",
+      "sha256": "ad829b9faf8977d4fce44e96cf8eda6cfbbdbb96d286b53ded950055538ab9ff",
+      "bytes": 1591,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final02_worker.json"
+    },
+    {
+      "path": "issuer_reservation_fd_birth_green01.xml",
+      "sha256": "fd8ead60f6c624f0d710ee7ca4e563c1e6cb4e767a7abd2d86990fbdd30b1e07",
+      "bytes": 1685,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_fd_birth_green01.xml"
+    },
+    {
+      "path": "issuer_reservation_fd_birth_red01.xml",
+      "sha256": "5c4bc454079b408eb0f064c1fbe0e210ec4ac97a17c97c01a05c2c962a23e22d",
+      "bytes": 2230,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_fd_birth_red01.xml"
+    },
+    {
+      "path": "issuer_reservation_fd_birth_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "ced438099a70bc05de03f8e3c264d2b68f59df460eaf859e5c498c234a3800f8",
+      "bytes": 7582,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_fd_birth_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_fd_birth_red01_sources/source_snapshot.json",
+      "sha256": "0de4625c6cdd80c970221f832f135d53ccbd96c68dc2297f5f517c415702fb1a",
+      "bytes": 477,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_fd_birth_red01_sources/source_snapshot.json"
+    },
+    {
+      "path": "issuer_reservation_fd_birth_red01_sources/test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "b521b86bd06027ae14cfdcf50f46b806f81e610d842efabfcec122b46e159962",
+      "bytes": 12831,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_fd_birth_red01_sources/test_issuer_reservation_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_late_bytes_green01.xml",
+      "sha256": "7a9abda439bbd7bc7bc652b0b9fc5a2b36f6054e0002beec492f5105089bf361",
+      "bytes": 801,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_late_bytes_green01.xml"
+    },
+    {
+      "path": "issuer_reservation_late_bytes_red01.xml",
+      "sha256": "b5f259c696196d54774743f5a1ad3b8b0adb67001d2aac39e8201ec1a0093e01",
+      "bytes": 2242,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_late_bytes_red01.xml"
+    },
+    {
+      "path": "issuer_reservation_late_bytes_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "8fb0bd509ebd11f7dd410afb6779be3a05a72e97a539f474ef1d72135589327b",
+      "bytes": 3582,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_late_bytes_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_late_bytes_red01_sources/source_snapshot.json",
+      "sha256": "46e462124507aeee760e81c25f62b9bed6b9ad2f448ffb54e1b6b80e9adb47be",
+      "bytes": 481,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_late_bytes_red01_sources/source_snapshot.json"
+    },
+    {
+      "path": "issuer_reservation_late_bytes_red01_sources/test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "dd2fc2f083bfc5fe4f8b1b28724eb38444d8cbfdc75250313ab5873bd8b17ae4",
+      "bytes": 5111,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_late_bytes_red01_sources/test_issuer_reservation_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_resource_seal_green01.xml",
+      "sha256": "232f634e450a81cb855d1e0930ce350415cc57cd377e5b2ca260d628ae54e4a9",
+      "bytes": 1872,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_resource_seal_green01.xml"
+    },
+    {
+      "path": "issuer_reservation_resource_seal_red01.xml",
+      "sha256": "c948bd47aa0b343c1cfddb41ead6443021bf41bd33a260e66e968a598e800740",
+      "bytes": 2963,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_resource_seal_red01.xml"
+    },
+    {
+      "path": "issuer_reservation_resource_seal_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "2e40b7065c4cbfe61751d836a89fb582bba76521d6b92482724fe5c17388e574",
+      "bytes": 7614,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_resource_seal_red01_sources/issue_b3_full_context_controlled_draft_v01.py.txt"
+    },
+    {
+      "path": "issuer_reservation_resource_seal_red01_sources/source_snapshot.json",
+      "sha256": "d4eb3ea1c8bc73d58ded9cc25d82eda8f316aa0fe1a3f57b6d1f5a7ace6d60e8",
+      "bytes": 472,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_resource_seal_red01_sources/source_snapshot.json"
+    },
+    {
+      "path": "issuer_reservation_resource_seal_red01_sources/test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "32327a79787b4b58b7e8d1f4a72469d5df47ccc88a3ac96b88c9f0081bbe4f2b",
+      "bytes": 14924,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_resource_seal_red01_sources/test_issuer_reservation_draft_v01.py.txt"
+    },
+    {
+      "path": "produce_b3_synthetic_native_stored_draft_v02.py.txt",
+      "sha256": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+      "bytes": 8189,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py"
+    },
+    {
+      "path": "start_permit_transport_draft_v02_final01.xml",
+      "sha256": "2170f0b95b260badfe2b8811a8874f20384b0c3cc9ab62cb69b5c68b4e77ec05",
+      "bytes": 2859,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_draft_v02_final01.xml"
+    },
+    {
+      "path": "start_permit_transport_draft_v02_final01_gnu_time.txt",
+      "sha256": "6bc8fa529d1e2e1f10c5d6ee7fc242fc9ea2775b6a12e586cc006d9e32af1a74",
+      "bytes": 909,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_draft_v02_final01_gnu_time.txt"
+    },
+    {
+      "path": "start_permit_transport_draft_v02_final01_invocation.json",
+      "sha256": "3bdb3c84e5bf6967c3f9a622a9fbd0b6aee226edc1173cce222ecf94975f8a99",
+      "bytes": 1394,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_draft_v02_final01_invocation.json"
+    },
+    {
+      "path": "start_permit_transport_draft_v02_final01_result.json",
+      "sha256": "7d2ed1b0006dfdcee1976f3a571d83207038177eacf156ccdbe96b928f8d5c27",
+      "bytes": 4244,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_draft_v02_final01_result.json"
+    },
+    {
+      "path": "start_permit_transport_draft_v02_final01_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_draft_v02_final01_stderr.txt"
+    },
+    {
+      "path": "start_permit_transport_draft_v02_final01_stdout.txt",
+      "sha256": "82d4a928b0e5a6f8f19e52f5a3907dbd1b7364a0908abb41803e44a2037e20a5",
+      "bytes": 1012,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_draft_v02_final01_stdout.txt"
+    },
+    {
+      "path": "start_permit_transport_draft_v02_final01_worker.json",
+      "sha256": "a10d068bc2b390e4fca89b15b436f2094deec3714320b97e6a96b7ae3c722595",
+      "bytes": 1530,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_draft_v02_final01_worker.json"
+    },
+    {
+      "path": "start_permit_transport_v02_cleanup_red01.xml",
+      "sha256": "4bcc43dc58820655bf4d7fdff3f469fd651ba3407b851485215cd5b838955020",
+      "bytes": 11218,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_v02_cleanup_red01.xml"
+    },
+    {
+      "path": "start_permit_transport_v02_cleanup_red01_sources/produce_b3_synthetic_native_stored_draft_v02.py.txt",
+      "sha256": "5ffa83bcc53ce396f39b9674dd54fdcc06f6aa272547497b3d90f1f8046b2c1d",
+      "bytes": 6869,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_v02_cleanup_red01_sources/produce_b3_synthetic_native_stored_draft_v02.py.txt"
+    },
+    {
+      "path": "start_permit_transport_v02_cleanup_red01_sources/source_snapshot.json",
+      "sha256": "00780280040284246f35438e36266ef8af2873250602d9bc9fd6ba933770bc2b",
+      "bytes": 481,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_v02_cleanup_red01_sources/source_snapshot.json"
+    },
+    {
+      "path": "start_permit_transport_v02_cleanup_red01_sources/test_start_permit_transport_draft_v02.py.txt",
+      "sha256": "10178fedf42219a345529e4246c7ca1f756ba883bd8a6f8bd0a95686a062e86c",
+      "bytes": 15853,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_v02_cleanup_red01_sources/test_start_permit_transport_draft_v02.py.txt"
+    },
+    {
+      "path": "start_permit_transport_v02_green01.xml",
+      "sha256": "8fdc6a8f78a5af47826dbfd97aa376b7afa63dcf9a4994ccff281597143100b0",
+      "bytes": 2255,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_v02_green01.xml"
+    },
+    {
+      "path": "start_permit_transport_v02_green02.xml",
+      "sha256": "f9a8ebbf8d4d056fcc77d330007f61c35fe244e3ddc61c1fcbc5323c2cf39ecd",
+      "bytes": 2859,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_v02_green02.xml"
+    },
+    {
+      "path": "start_permit_transport_v02_ownership_red01.xml",
+      "sha256": "9e4b2ecc4efbe9f2a0885a62f80822b7e5b1d4dae0f4cc06b795f65a2d5463b2",
+      "bytes": 6682,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_v02_ownership_red01.xml"
+    },
+    {
+      "path": "start_permit_transport_v02_ownership_red01_sources/observed_result.json",
+      "sha256": "0c8d8f883a3eb8df36e0ce7b5e843c0f4243e851435fe63ae8f8e25af8e5fd66",
+      "bytes": 611,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_v02_ownership_red01_sources/observed_result.json"
+    },
+    {
+      "path": "start_permit_transport_v02_ownership_red01_sources/produce_b3_synthetic_native_stored_draft_v02.py.txt",
+      "sha256": "274781d9ee545726cb61c21af01a156b352c7dae85ce0f73cd563b05d45dc8e5",
+      "bytes": 6163,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_v02_ownership_red01_sources/produce_b3_synthetic_native_stored_draft_v02.py.txt"
+    },
+    {
+      "path": "start_permit_transport_v02_ownership_red01_sources/test_start_permit_transport_draft_v02.py.txt",
+      "sha256": "fc503f9e2ba046da0c0a4752929b46bd55882e51f463d761fa999dfbaba1f602",
+      "bytes": 12877,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_v02_ownership_red01_sources/test_start_permit_transport_draft_v02.py.txt"
+    },
+    {
+      "path": "test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "5425fce918d46d561965ec4d0fc106b394f8cd2df1a5d25f65803a838ba91467",
+      "bytes": 15109,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py"
+    },
+    {
+      "path": "test_start_permit_transport_draft_v02.py.txt",
+      "sha256": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+      "bytes": 16231,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py"
+    }
+  ]
+}

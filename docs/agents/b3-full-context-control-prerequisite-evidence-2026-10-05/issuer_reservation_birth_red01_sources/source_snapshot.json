@@ -1,0 +1,15 @@
+{
+  "scope": "Attempt directory replacement at actual open; original raw XML retained",
+  "artifacts": [
+    {
+      "path": "issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "b6a2fea341c24c487152541d166ecb80e193cc87a497655be8e21c18515f9a20",
+      "bytes": 7578
+    },
+    {
+      "path": "test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "c8f72c01ba1ed99e615022b7cfdbc1c7b5d1e994e599dbe7f35a5d0043e60e3e",
+      "bytes": 11292
+    }
+  ]
+}

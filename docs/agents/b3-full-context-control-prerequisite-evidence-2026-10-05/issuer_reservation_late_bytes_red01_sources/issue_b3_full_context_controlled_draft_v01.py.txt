@@ -1,0 +1,69 @@
+"""Isolated issuer reservation draft; no permit release, admission or native work."""
+
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import re
+
+_TERMINAL_CLOSE=os.close
+
+
+def reserve_one_use_transport_probe(attempt_directory, *, attempt_id, source_key,
+    registration_sha256, start_sha256, producer_pid, start_nonce, permit_nonce):
+    """Persist one conservative reservation; its JSON never authorizes work."""
+    directory=Path(attempt_directory).absolute()
+    if directory.resolve(strict=True)!=directory or not directory.is_dir():
+        raise ValueError("Require the original canonical attempt directory")
+    for name,value in (("attempt_id",attempt_id),("start_nonce",start_nonce),("permit_nonce",permit_nonce)):
+        if type(value) is not str or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}",value) is None:
+            raise ValueError("Require a canonical original "+name)
+    key=Path(source_key)
+    if type(source_key) is not str or not key.is_absolute() or str(key)!=source_key or ".." in key.parts:
+        raise ValueError("Require the original canonical source key syntax")
+    if any(type(v) is not str or re.fullmatch(r"[0-9a-f]{64}",v) is None for v in (registration_sha256,start_sha256)):
+        raise ValueError("Require canonical original registration/Start SHA256 values")
+    if type(producer_pid) is not int or producer_pid<=0:
+        raise ValueError("Require the original positive producer PID")
+    document={"schema":"b3_full_context_transport_probe_reservation_v1","attempt_id":attempt_id,
+        "source_key":source_key,"registration_sha256":registration_sha256,"start_sha256":start_sha256,
+        "producer_pid":producer_pid,"start_nonce":start_nonce,"permit_nonce":permit_nonce,"issuer_pid":os.getpid()}
+    raw=json.dumps(document,sort_keys=True,separators=(",",":"),allow_nan=False).encode()+b"\n"
+    if len(raw)>8192:
+        raise ValueError("Probe reservation exceeds its metadata bound")
+    directory_fd=os.open(directory,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
+    pins=[(directory_fd,os.fstat(directory_fd))]
+    first_error=None
+    try:
+        fd=os.open("permit-reservation.json",os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600,dir_fd=directory_fd)
+        pins.append((fd,os.fstat(fd)))
+        offset=0
+        while offset<len(raw):
+            count=os.write(fd,raw[offset:])
+            if count<=0:
+                raise OSError("Probe reservation write did not advance")
+            offset+=count
+        os.fsync(fd)
+        os.fsync(directory_fd)
+    except BaseException as error:
+        first_error=error
+    finally:
+        for owned_fd,identity in reversed(pins):
+            try:
+                current=os.fstat(owned_fd)
+                if (current.st_dev,current.st_ino)!=(identity.st_dev,identity.st_ino):
+                    raise ValueError("Reservation descriptor changed before cleanup")
+                os.close(owned_fd)
+            except BaseException as error:
+                if first_error is None:
+                    first_error=error
+                try:
+                    current=os.fstat(owned_fd)
+                    if (current.st_dev,current.st_ino)==(identity.st_dev,identity.st_ino):
+                        _TERMINAL_CLOSE(owned_fd)
+                except OSError:
+                    pass
+    if first_error is not None:
+        raise first_error
+    return {"reservation_sha256":sha256(raw).hexdigest(),"transport_only":True,
+        "native_operation_authorized":False,"channel_release_performed":False,"source_admission_granted":False}

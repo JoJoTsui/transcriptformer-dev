@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.199" timestamp="2026-10-05T16:45:28.647755+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_issuer_reservation_draft_v01" name="test_failed_reservation_remains_consumed_preserves_first_error_and_drains_owned_fds" time="0.005"><failure message="AssertionError: assert OSError('secondary reservation close refused') is OSError('original reservation fsync refused')&#10; +  where OSError('secondary reservation close refused') = &lt;ExceptionInfo OSError('secondary reservation close refused') tblen=3&gt;.value">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-95/test_failed_reservation_remain0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x721f5f39c610&gt;
+
+    def test_failed_reservation_remains_consumed_preserves_first_error_and_drains_owned_fds(tmp_path, monkeypatch):
+        public=issuer()
+        attempt=tmp_path/"attempt-failed"; attempt.mkdir()
+        first=OSError("original reservation fsync refused")
+        real_open,real_close,real_fstat=os.open,os.close,os.fstat
+        born=[]
+        def record_open(*args,**kwargs):
+            fd=real_open(*args,**kwargs); born.append((fd,real_fstat(fd))); return fd
+        def fsync_refusal(fd):
+            raise first
+        def close_refusal(fd):
+            if born and fd==born[-1][0]:
+                raise OSError("secondary reservation close refused")
+            return real_close(fd)
+        arguments=dict(attempt_id="attempt-failed",source_key=str(tmp_path/"original-source-key"),
+           registration_sha256="a"*64,start_sha256="b"*64,producer_pid=os.getpid(),start_nonce="start-failed",permit_nonce="permit-failed")
+        try:
+            with monkeypatch.context() as injection:
+                injection.setattr(public.os,"open",record_open)
+                injection.setattr(public.os,"fsync",fsync_refusal)
+                injection.setattr(public.os,"close",close_refusal)
+                with pytest.raises(OSError) as observed:
+                    public.reserve_one_use_transport_probe(attempt,**arguments)
+&gt;           assert observed.value is first
+E           AssertionError: assert OSError('secondary reservation close refused') is OSError('original reservation fsync refused')
+E            +  where OSError('secondary reservation close refused') = &lt;ExceptionInfo OSError('secondary reservation close refused') tblen=3&gt;.value
+
+runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py:66: AssertionError</failure></testcase></testsuite></testsuites>

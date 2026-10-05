@@ -1,0 +1,147 @@
+"""Draft pre-permit transport only; no native producer or authority exists here."""
+
+import json
+import math
+import os
+from pathlib import Path
+import re
+import selectors
+import socket
+import stat
+import struct
+import time
+
+_CONSUMED_CHANNELS: set[tuple[int, int, int]] = set()
+_TERMINAL_CLOSE = os.close
+
+
+def await_computation_permit(
+    control_fd,
+    *,
+    attempt_id,
+    source_key,
+    start_nonce,
+    registration_sha256,
+    start_sha256,
+    expected_issuer_pid,
+    max_seconds=900,
+):
+    """Refuse copied regular-file permits before any computation transition."""
+    started = time.monotonic()
+    if type(control_fd) is not int or control_fd < 0:
+        raise ValueError("Require an inherited issuer-owned socket channel")
+    original = os.fstat(control_fd)
+    if not stat.S_ISSOCK(original.st_mode):
+        raise ValueError("Require an inherited issuer-owned socket channel")
+    identity = (os.getpid(), original.st_dev, original.st_ino)
+    if identity in _CONSUMED_CHANNELS:
+        raise ValueError("Original permit channel was already consumed")
+    if type(max_seconds) not in (int, float) or not math.isfinite(max_seconds) or not 0 < max_seconds <= 900:
+        raise ValueError("Permit deadline must be positive and at most 900 seconds")
+    deadline = started + max_seconds
+    if time.monotonic() >= deadline:
+        raise TimeoutError("Original permit deadline reached during descriptor admission")
+    if type(expected_issuer_pid) is not int or expected_issuer_pid <= 0:
+        raise ValueError("Require the original positive issuer PID")
+    duplicate = os.dup(control_fd)
+    try:
+        channel = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET, fileno=duplicate)
+    except BaseException:
+        # A constructor refusal can leave our duplicate allocated or replace
+        # its number with a foreign descriptor. Retain the original refusal
+        # while draining only the socket inode this call actually borrowed.
+        try:
+            current = os.fstat(duplicate)
+            if (current.st_dev, current.st_ino) == (original.st_dev, original.st_ino):
+                try:
+                    os.close(duplicate)
+                except BaseException:
+                    current = os.fstat(duplicate)
+                    if (current.st_dev, current.st_ino) == (original.st_dev, original.st_ino):
+                        _TERMINAL_CLOSE(duplicate)
+        except OSError:
+            pass
+        raise
+    with channel:
+        if channel.getsockopt(socket.SOL_SOCKET, socket.SO_TYPE) != socket.SOCK_SEQPACKET:
+            raise ValueError("Require the original sequenced issuer socket channel")
+        peer_pid, _, _ = struct.unpack("3i", channel.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, 12))
+        if peer_pid != expected_issuer_pid:
+            raise ValueError("Issuer peer process binding differs")
+        with selectors.DefaultSelector() as selector:
+            selector.register(channel, selectors.EVENT_READ)
+            if not selector.select(max(0, deadline - time.monotonic())):
+                raise TimeoutError("Original permit deadline reached before issuer release")
+            data = channel.recv(8193, socket.MSG_DONTWAIT)
+        if not data or len(data) > 8192:
+            raise ValueError("Permit channel message must be present and bounded")
+
+        def unique(pairs):
+            result = {}
+            for key, value in pairs:
+                if key in result:
+                    raise ValueError("Duplicate permit channel field")
+                result[key] = value
+            return result
+
+        def invalid(value):
+            raise ValueError("Nonfinite permit channel value: " + value)
+
+        permit = json.loads(data, object_pairs_hook=unique, parse_constant=invalid)
+        fields = {
+            "schema",
+            "attempt_id",
+            "source_key",
+            "start_nonce",
+            "registration_sha256",
+            "start_sha256",
+            "producer_pid",
+            "permit_nonce",
+        }
+        if (
+            type(permit) is not dict
+            or set(permit) != fields
+            or permit["schema"] != "b3_full_context_live_permit_channel_v1"
+        ):
+            raise ValueError("Closed live permit channel schema differs")
+        if (
+            permit["attempt_id"] != attempt_id
+            or permit["source_key"] != source_key
+            or permit["start_nonce"] != start_nonce
+            or permit["registration_sha256"] != registration_sha256
+            or permit["start_sha256"] != start_sha256
+            or type(permit["producer_pid"]) is not int
+            or permit["producer_pid"] != os.getpid()
+        ):
+            raise ValueError("Original permit attempt/process/source binding differs")
+        for name in ("attempt_id", "start_nonce", "permit_nonce"):
+            if type(permit[name]) is not str or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", permit[name]) is None:
+                raise ValueError("Permit attempt/nonce identifier is noncanonical")
+        for name in ("registration_sha256", "start_sha256"):
+            if type(permit[name]) is not str or re.fullmatch(r"[0-9a-f]{64}", permit[name]) is None:
+                raise ValueError("Permit source digest is noncanonical")
+        if type(source_key) is not str or not Path(source_key).is_absolute() or str(Path(source_key)) != source_key:
+            raise ValueError("Permit source key must be original canonical absolute syntax")
+        if time.monotonic() >= deadline:
+            raise TimeoutError("Original permit deadline reached before message admission")
+        if len(_CONSUMED_CHANNELS) >= 8192:
+            raise MemoryError("Bounded consumed-channel identity table is full")
+        _CONSUMED_CHANNELS.add(identity)
+        acknowledgement = {
+            "schema": "b3_full_context_live_permit_ack_v1",
+            "attempt_id": attempt_id,
+            "start_nonce": start_nonce,
+            "producer_pid": os.getpid(),
+            "permit_nonce": permit["permit_nonce"],
+        }
+        raw = json.dumps(acknowledgement, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+        with selectors.DefaultSelector() as selector:
+            selector.register(channel, selectors.EVENT_WRITE)
+            if not selector.select(max(0, deadline - time.monotonic())):
+                raise TimeoutError("Original permit deadline reached before acknowledgement")
+            if channel.send(raw, socket.MSG_DONTWAIT) != len(raw):
+                raise ValueError("Permit acknowledgement was not sent completely")
+        channel.shutdown(socket.SHUT_RDWR)
+    if time.monotonic() >= deadline:
+        raise TimeoutError("Original permit deadline reached after channel cleanup")
+    return {"permit_nonce": permit["permit_nonce"], "transport_only": True, "native_operation_authorized": False}

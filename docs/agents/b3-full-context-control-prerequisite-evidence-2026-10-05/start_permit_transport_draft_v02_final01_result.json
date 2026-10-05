@@ -1,0 +1,91 @@
+{
+  "actual_gnu_exit_code": 0,
+  "driver_elapsed_seconds": 1.1777191300061531,
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_transport_draft_v05.py": "5944e59b46e5523feb2740eb91354f921c85f63302790db07a9fb51fa3ffefab"
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_transport_draft_v05.py": "5944e59b46e5523feb2740eb91354f921c85f63302790db07a9fb51fa3ffefab"
+  },
+  "junit_suites": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "14",
+      "time": "0.670",
+      "timestamp": "2026-10-05T16:40:10.007797+08:00",
+      "hostname": "Conundrum"
+    }
+  ],
+  "junit_case_identities": [
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_copied_permit_bytes_in_regular_file_cannot_enable_computation"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_real_channel_without_issuer_release_times_out_and_preserves_borrowed_fd"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_actual_channel_message_from_another_attempt_is_refused"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_actual_child_acknowledges_one_live_release_before_transport_probe_transition"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_consumed_channel_cannot_accept_another_copied_release"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_original_transport_deadline_includes_fd_admission"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_malformed_actual_channel_bytes_never_emit_acknowledgement[duplicate_field]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_malformed_actual_channel_bytes_never_emit_acknowledgement[nonfinite_value]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_malformed_actual_channel_bytes_never_emit_acknowledgement[oversized_message]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_constructor_refusal_drains_only_its_owned_duplicate[owned_duplicate]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_constructor_refusal_drains_only_its_owned_duplicate[foreign_reuse]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_completed_channel_cleanup_preserves_ownership_and_first_error[owned_close_refusal]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_completed_channel_cleanup_preserves_ownership_and_first_error[foreign_reuse_on_close]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_completed_channel_cleanup_preserves_ownership_and_first_error[first_timeout_preserved]"
+    ]
+  ],
+  "complete_transport_probe_checks": true,
+  "durable_start_verified": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "native_operation_performed": false,
+  "model_forwards_performed": false,
+  "capture_exit_code": 0
+}

@@ -1,0 +1,15 @@
+{
+  "scope": "Source buffers at actual cleanup regressions; actual results in original XML",
+  "artifacts": [
+    {
+      "path": "produce_b3_synthetic_native_stored_draft_v02.py.txt",
+      "sha256": "5ffa83bcc53ce396f39b9674dd54fdcc06f6aa272547497b3d90f1f8046b2c1d",
+      "bytes": 6869
+    },
+    {
+      "path": "test_start_permit_transport_draft_v02.py.txt",
+      "sha256": "10178fedf42219a345529e4246c7ca1f756ba883bd8a6f8bd0a95686a062e86c",
+      "bytes": 15853
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.244" timestamp="2026-10-05T16:48:55.764388+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_issuer_reservation_draft_v01" name="test_original_reservation_deadline_includes_attempt_directory_admission" time="0.008"><failure message="Failed: DID NOT RAISE &lt;class 'TimeoutError'&gt;">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-99/test_original_reservation_dead0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x73bb414f7b90&gt;
+
+    def test_original_reservation_deadline_includes_attempt_directory_admission(tmp_path, monkeypatch):
+        public=issuer(); attempt=tmp_path/"attempt-deadline"; attempt.mkdir()
+        real_open, real_clock=os.open, time.monotonic
+        elapsed=0
+        def directory_admission_exhausts_original_deadline(*args,**kwargs):
+            nonlocal elapsed
+            result=real_open(*args,**kwargs)
+            if Path(args[0])==attempt:
+                elapsed=901
+            return result
+        with monkeypatch.context() as injection:
+            injection.setattr(public.os,"open",directory_admission_exhausts_original_deadline)
+            injection.setattr(time,"monotonic",lambda:real_clock()+elapsed)
+&gt;           with pytest.raises(TimeoutError,match="deadline"):
+E           Failed: DID NOT RAISE &lt;class 'TimeoutError'&gt;
+
+runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py:124: Failed</failure></testcase></testsuite></testsuites>

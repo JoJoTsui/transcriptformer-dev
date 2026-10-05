@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="1.186" timestamp="2026-10-05T16:35:37.063834+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02" name="test_constructor_refusal_drains_only_its_owned_duplicate[owned_duplicate]" time="0.006"><failure message="OSError: primary duplicate close refused">args = (&lt;AddressFamily.AF_UNIX: 1&gt;, &lt;SocketKind.SOCK_SEQPACKET: 5&gt;)
+kwargs = {'fileno': 14}, fd = 14
+
+    def refused_constructor(*args, **kwargs):
+        fd = kwargs["fileno"]
+        captured.append(fd)
+        if replacement:
+            real_close(fd)
+            foreign_fd = os.open(foreign, os.O_RDONLY)
+            if foreign_fd != fd:
+                os.dup2(foreign_fd, fd)
+                real_close(foreign_fd)
+&gt;       raise failure
+E       RuntimeError: constructor refused after duplicate allocation
+
+runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py:298: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-88/test_constructor_refusal_drain0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x75b6caa5cfd0&gt;
+replacement = False
+
+    @pytest.mark.parametrize("replacement", [False, True], ids=("owned_duplicate", "foreign_reuse"))
+    def test_constructor_refusal_drains_only_its_owned_duplicate(tmp_path, monkeypatch, replacement):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        foreign = tmp_path / "foreign-control-binding"
+        foreign.write_bytes(b"preserve foreign descriptor")
+        public = _producer()
+        real_close = os.close
+        captured = []
+        borrowed_identity = os.fstat(producer.fileno())
+        failure = RuntimeError("constructor refused after duplicate allocation")
+    
+        def refused_constructor(*args, **kwargs):
+            fd = kwargs["fileno"]
+            captured.append(fd)
+            if replacement:
+                real_close(fd)
+                foreign_fd = os.open(foreign, os.O_RDONLY)
+                if foreign_fd != fd:
+                    os.dup2(foreign_fd, fd)
+                    real_close(foreign_fd)
+            raise failure
+    
+        def refused_primary_close(fd):
+            if not replacement and captured and fd == captured[0]:
+                raise OSError("primary duplicate close refused")
+            return real_close(fd)
+    
+        try:
+            with monkeypatch.context() as injection:
+                injection.setattr(public.socket, "socket", refused_constructor)
+                injection.setattr(public.os, "close", refused_primary_close)
+                with pytest.raises(RuntimeError) as observed:
+&gt;                   public.await_computation_permit(
+                        producer.fileno(), attempt_id="attempt-01", source_key=str(tmp_path / "future-native-source"),
+                        start_nonce="issuer-start-01", registration_sha256="a"*64, start_sha256="b"*64,
+                        expected_issuer_pid=os.getpid(), max_seconds=1)
+
+runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py:310: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py:49: in await_computation_permit
+    os.close(duplicate)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fd = 14
+
+    def refused_primary_close(fd):
+        if not replacement and captured and fd == captured[0]:
+&gt;           raise OSError("primary duplicate close refused")
+E           OSError: primary duplicate close refused
+
+runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py:302: OSError</failure></testcase><testcase classname="runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02" name="test_constructor_refusal_drains_only_its_owned_duplicate[foreign_reuse]" time="0.002"><failure message="OSError: [Errno 9] Bad file descriptor">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-88/test_constructor_refusal_drain1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x75b6cad87890&gt;
+replacement = True
+
+    @pytest.mark.parametrize("replacement", [False, True], ids=("owned_duplicate", "foreign_reuse"))
+    def test_constructor_refusal_drains_only_its_owned_duplicate(tmp_path, monkeypatch, replacement):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        foreign = tmp_path / "foreign-control-binding"
+        foreign.write_bytes(b"preserve foreign descriptor")
+        public = _producer()
+        real_close = os.close
+        captured = []
+        borrowed_identity = os.fstat(producer.fileno())
+        failure = RuntimeError("constructor refused after duplicate allocation")
+    
+        def refused_constructor(*args, **kwargs):
+            fd = kwargs["fileno"]
+            captured.append(fd)
+            if replacement:
+                real_close(fd)
+                foreign_fd = os.open(foreign, os.O_RDONLY)
+                if foreign_fd != fd:
+                    os.dup2(foreign_fd, fd)
+                    real_close(foreign_fd)
+            raise failure
+    
+        def refused_primary_close(fd):
+            if not replacement and captured and fd == captured[0]:
+                raise OSError("primary duplicate close refused")
+            return real_close(fd)
+    
+        try:
+            with monkeypatch.context() as injection:
+                injection.setattr(public.socket, "socket", refused_constructor)
+                injection.setattr(public.os, "close", refused_primary_close)
+                with pytest.raises(RuntimeError) as observed:
+                    public.await_computation_permit(
+                        producer.fileno(), attempt_id="attempt-01", source_key=str(tmp_path / "future-native-source"),
+                        start_nonce="issuer-start-01", registration_sha256="a"*64, start_sha256="b"*64,
+                        expected_issuer_pid=os.getpid(), max_seconds=1)
+            assert observed.value is failure
+            assert len(captured) == 1
+            assert os.fstat(producer.fileno()).st_ino == borrowed_identity.st_ino
+            if replacement:
+&gt;               assert os.fstat(captured[0]).st_ino == foreign.stat().st_ino
+                       ^^^^^^^^^^^^^^^^^^^^^
+E               OSError: [Errno 9] Bad file descriptor
+
+runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py:318: OSError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="3" time="1.377" timestamp="2026-10-05T16:38:01.233083+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02" name="test_completed_channel_cleanup_preserves_ownership_and_first_error[owned_close_refusal]" time="0.004"><failure message="Failed: DID NOT RAISE &lt;class 'OSError'&gt;">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-90/test_completed_channel_cleanup0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x73f103f3d750&gt;
+release = True, replacement = False
+
+    @pytest.mark.parametrize("release, replacement", [(True, False), (True, True), (False, False)],
+                             ids=("owned_close_refusal", "foreign_reuse_on_close", "first_timeout_preserved"))
+    def test_completed_channel_cleanup_preserves_ownership_and_first_error(tmp_path, monkeypatch, release, replacement):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        foreign = tmp_path / "foreign-during-channel-close"
+        foreign.write_bytes(b"foreign close binding")
+        public = _producer()
+        real_close, real_socket_close, real_dup = os.close, socket.socket.close, os.dup
+        captured = []
+        failure = RuntimeError("primary channel close refused")
+        key = str(tmp_path / "future-native-source")
+    
+        def observe_dup(fd):
+            duplicate = real_dup(fd)
+            if fd == producer.fileno():
+                captured.append(duplicate)
+            return duplicate
+    
+        def refused_channel_close(channel):
+            fd = channel.fileno()
+            if captured and fd == captured[0]:
+                if replacement:
+                    real_close(fd)
+                    foreign_fd = os.open(foreign, os.O_RDONLY)
+                    if foreign_fd != fd:
+                        os.dup2(foreign_fd, fd)
+                        real_close(foreign_fd)
+                raise failure
+            return real_socket_close(channel)
+    
+        try:
+            if release:
+                issuer.send(json.dumps({
+                    "schema":"b3_full_context_live_permit_channel_v1", "attempt_id":"attempt-01", "source_key":key,
+                    "start_nonce":"issuer-start-01", "registration_sha256":"a"*64, "start_sha256":"b"*64,
+                    "producer_pid":os.getpid(), "permit_nonce":"live-release-01"}).encode())
+            with monkeypatch.context() as injection:
+                injection.setattr(public.os, "dup", observe_dup)
+                injection.setattr(socket.socket, "close", refused_channel_close)
+                with pytest.raises(RuntimeError if release else TimeoutError) as observed:
+                    public.await_computation_permit(
+                        producer.fileno(), attempt_id="attempt-01", source_key=key, start_nonce="issuer-start-01",
+                        registration_sha256="a"*64, start_sha256="b"*64, expected_issuer_pid=os.getpid(), max_seconds=0.05)
+            if release:
+                assert observed.value is failure
+            assert len(captured) == 1
+            if replacement:
+                assert os.fstat(captured[0]).st_ino == foreign.stat().st_ino
+                assert os.read(captured[0], 4096) == b"foreign close binding"
+            else:
+&gt;               with pytest.raises(OSError):
+E               Failed: DID NOT RAISE &lt;class 'OSError'&gt;
+
+runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py:389: Failed</failure></testcase><testcase classname="runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02" name="test_completed_channel_cleanup_preserves_ownership_and_first_error[foreign_reuse_on_close]" time="0.002" /><testcase classname="runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02" name="test_completed_channel_cleanup_preserves_ownership_and_first_error[first_timeout_preserved]" time="0.053"><failure message="RuntimeError: primary channel close refused">control_fd = 13
+
+    def await_computation_permit(
+        control_fd,
+        *,
+        attempt_id,
+        source_key,
+        start_nonce,
+        registration_sha256,
+        start_sha256,
+        expected_issuer_pid,
+        max_seconds=900,
+    ):
+        """Refuse copied regular-file permits before any computation transition."""
+        started = time.monotonic()
+        if type(control_fd) is not int or control_fd &lt; 0:
+            raise ValueError("Require an inherited issuer-owned socket channel")
+        original = os.fstat(control_fd)
+        if not stat.S_ISSOCK(original.st_mode):
+            raise ValueError("Require an inherited issuer-owned socket channel")
+        identity = (os.getpid(), original.st_dev, original.st_ino)
+        if identity in _CONSUMED_CHANNELS:
+            raise ValueError("Original permit channel was already consumed")
+        if type(max_seconds) not in (int, float) or not math.isfinite(max_seconds) or not 0 &lt; max_seconds &lt;= 900:
+            raise ValueError("Permit deadline must be positive and at most 900 seconds")
+        deadline = started + max_seconds
+        if time.monotonic() &gt;= deadline:
+            raise TimeoutError("Original permit deadline reached during descriptor admission")
+        if type(expected_issuer_pid) is not int or expected_issuer_pid &lt;= 0:
+            raise ValueError("Require the original positive issuer PID")
+        duplicate = os.dup(control_fd)
+        try:
+            channel = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET, fileno=duplicate)
+        except BaseException:
+            # A constructor refusal can leave our duplicate allocated or replace
+            # its number with a foreign descriptor. Retain the original refusal
+            # while draining only the socket inode this call actually borrowed.
+            try:
+                current = os.fstat(duplicate)
+                if (current.st_dev, current.st_ino) == (original.st_dev, original.st_ino):
+                    try:
+                        os.close(duplicate)
+                    except BaseException:
+                        current = os.fstat(duplicate)
+                        if (current.st_dev, current.st_ino) == (original.st_dev, original.st_ino):
+                            _TERMINAL_CLOSE(duplicate)
+            except OSError:
+                pass
+            raise
+        with channel:
+            if channel.getsockopt(socket.SOL_SOCKET, socket.SO_TYPE) != socket.SOCK_SEQPACKET:
+                raise ValueError("Require the original sequenced issuer socket channel")
+            peer_pid, _, _ = struct.unpack("3i", channel.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, 12))
+            if peer_pid != expected_issuer_pid:
+                raise ValueError("Issuer peer process binding differs")
+            with selectors.DefaultSelector() as selector:
+                selector.register(channel, selectors.EVENT_READ)
+                if not selector.select(max(0, deadline - time.monotonic())):
+&gt;                   raise TimeoutError("Original permit deadline reached before issuer release")
+E                   TimeoutError: Original permit deadline reached before issuer release
+
+runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py:74: TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-90/test_completed_channel_cleanup2')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x73f1042318d0&gt;
+release = False, replacement = False
+
+    @pytest.mark.parametrize("release, replacement", [(True, False), (True, True), (False, False)],
+                             ids=("owned_close_refusal", "foreign_reuse_on_close", "first_timeout_preserved"))
+    def test_completed_channel_cleanup_preserves_ownership_and_first_error(tmp_path, monkeypatch, release, replacement):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        foreign = tmp_path / "foreign-during-channel-close"
+        foreign.write_bytes(b"foreign close binding")
+        public = _producer()
+        real_close, real_socket_close, real_dup = os.close, socket.socket.close, os.dup
+        captured = []
+        failure = RuntimeError("primary channel close refused")
+        key = str(tmp_path / "future-native-source")
+    
+        def observe_dup(fd):
+            duplicate = real_dup(fd)
+            if fd == producer.fileno():
+                captured.append(duplicate)
+            return duplicate
+    
+        def refused_channel_close(channel):
+            fd = channel.fileno()
+            if captured and fd == captured[0]:
+                if replacement:
+                    real_close(fd)
+                    foreign_fd = os.open(foreign, os.O_RDONLY)
+                    if foreign_fd != fd:
+                        os.dup2(foreign_fd, fd)
+                        real_close(foreign_fd)
+                raise failure
+            return real_socket_close(channel)
+    
+        try:
+            if release:
+                issuer.send(json.dumps({
+                    "schema":"b3_full_context_live_permit_channel_v1", "attempt_id":"attempt-01", "source_key":key,
+                    "start_nonce":"issuer-start-01", "registration_sha256":"a"*64, "start_sha256":"b"*64,
+                    "producer_pid":os.getpid(), "permit_nonce":"live-release-01"}).encode())
+            with monkeypatch.context() as injection:
+                injection.setattr(public.os, "dup", observe_dup)
+                injection.setattr(socket.socket, "close", refused_channel_close)
+                with pytest.raises(RuntimeError if release else TimeoutError) as observed:
+&gt;                   public.await_computation_permit(
+                        producer.fileno(), attempt_id="attempt-01", source_key=key, start_nonce="issuer-start-01",
+                        registration_sha256="a"*64, start_sha256="b"*64, expected_issuer_pid=os.getpid(), max_seconds=0.05)
+
+runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py:379: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py:65: in await_computation_permit
+    with channel:
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/socket.py:241: in __exit__
+    self.close()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+channel = &lt;socket.socket fd=14, family=1, type=5, proto=0&gt;
+
+    def refused_channel_close(channel):
+        fd = channel.fileno()
+        if captured and fd == captured[0]:
+            if replacement:
+                real_close(fd)
+                foreign_fd = os.open(foreign, os.O_RDONLY)
+                if foreign_fd != fd:
+                    os.dup2(foreign_fd, fd)
+                    real_close(foreign_fd)
+&gt;           raise failure
+E           RuntimeError: primary channel close refused
+
+runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py:366: RuntimeError</failure></testcase></testsuite></testsuites>

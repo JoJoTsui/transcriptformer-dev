@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_transport_draft_v02_final01_gnu_time.txt",
+    "/mnt/d/sc/transcriptformer/transcriptformer/.venv/bin/python",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_transport_draft_v05.py",
+    "--worker"
+  ],
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_transport_draft_v05.py": "5944e59b46e5523feb2740eb91354f921c85f63302790db07a9fb51fa3ffefab"
+  },
+  "environment_overrides": {
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "CUDA_VISIBLE_DEVICES": "",
+    "TF_RUN_REAL_MODEL_TESTS": "0"
+  },
+  "scope": "real host socket/child transport probes only; no durable Start, source/runtime admission or native producer"
+}

@@ -1,0 +1,4 @@
+*.xml -whitespace
+*.log -whitespace
+*_stdout.txt -whitespace
+*.py.txt -whitespace

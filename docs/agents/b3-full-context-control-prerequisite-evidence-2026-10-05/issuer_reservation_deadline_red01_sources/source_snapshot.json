@@ -1,0 +1,15 @@
+{
+  "scope": "Injected-clock admission deadline regression; original XML retained; fake clock restored before pytest records duration",
+  "artifacts": [
+    {
+      "path": "issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "af8960e8f3e472340dd560ab125dbb43d2298132d56ca5d0e4e116d4305fcaef",
+      "bytes": 5645
+    },
+    {
+      "path": "test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "7ac70157109468240eaa2f9222ccca1f0660bb86ab21237ca3ae6d2134305b21",
+      "bytes": 6220
+    }
+  ]
+}

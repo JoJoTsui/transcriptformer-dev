@@ -1,0 +1,106 @@
+"""Crash persistence at the approved issuer Start/Permit seam."""
+import importlib.util
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+import pytest
+
+
+def issuer():
+    p=Path(__file__).with_name("issue_b3_full_context_controlled_draft_v01.py")
+    spec=importlib.util.spec_from_file_location("issuer_reservation_draft",p)
+    public=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(public)
+    return public
+
+
+def test_crash_after_actual_reservation_does_not_enable_a_second_release(tmp_path):
+    source=Path(__file__).with_name("issue_b3_full_context_controlled_draft_v01.py")
+    attempt=tmp_path/"attempt-01"
+    attempt.mkdir()
+    key=str(tmp_path/"original-source-key")
+    program="""
+import importlib.util, os, sys
+s=importlib.util.spec_from_file_location('issuer_reservation_child',sys.argv[1])
+p=importlib.util.module_from_spec(s); s.loader.exec_module(p)
+r=p.reserve_one_use_transport_probe(sys.argv[2],attempt_id='attempt-01',source_key=sys.argv[3],
+ registration_sha256='a'*64,start_sha256='b'*64,producer_pid=int(sys.argv[4]),start_nonce='start-01',permit_nonce='permit-01')
+if r['native_operation_authorized'] is not False or r['channel_release_performed'] is not False:
+ raise RuntimeError('The primitive must not release or authorize native computation')
+os._exit(23)
+"""
+    child=subprocess.run([sys.executable,'-c',program,str(source),str(attempt),key,str(os.getpid())],capture_output=True,timeout=2)
+    assert child.returncode==23,child.stderr.decode()
+    with pytest.raises(FileExistsError):
+        issuer().reserve_one_use_transport_probe(attempt,attempt_id='attempt-01',source_key=key,
+            registration_sha256='a'*64,start_sha256='b'*64,producer_pid=os.getpid(),start_nonce='start-01',permit_nonce='permit-02')
+
+
+
+def test_failed_reservation_remains_consumed_preserves_first_error_and_drains_owned_fds(tmp_path, monkeypatch):
+    public=issuer()
+    attempt=tmp_path/"attempt-failed"; attempt.mkdir()
+    first=OSError("original reservation fsync refused")
+    real_open,real_close,real_fstat=os.open,os.close,os.fstat
+    born=[]
+    def record_open(*args,**kwargs):
+        fd=real_open(*args,**kwargs); born.append((fd,real_fstat(fd))); return fd
+    def fsync_refusal(fd):
+        raise first
+    def close_refusal(fd):
+        if born and fd==born[-1][0]:
+            raise OSError("secondary reservation close refused")
+        return real_close(fd)
+    arguments=dict(attempt_id="attempt-failed",source_key=str(tmp_path/"original-source-key"),
+       registration_sha256="a"*64,start_sha256="b"*64,producer_pid=os.getpid(),start_nonce="start-failed",permit_nonce="permit-failed")
+    try:
+        with monkeypatch.context() as injection:
+            injection.setattr(public.os,"open",record_open)
+            injection.setattr(public.os,"fsync",fsync_refusal)
+            injection.setattr(public.os,"close",close_refusal)
+            with pytest.raises(OSError) as observed:
+                public.reserve_one_use_transport_probe(attempt,**arguments)
+        assert observed.value is first
+        for fd,_ in born:
+            with pytest.raises(OSError):
+                real_fstat(fd)
+        with pytest.raises(FileExistsError):
+            issuer().reserve_one_use_transport_probe(attempt,**arguments)
+    finally:
+        for fd,identity in born:
+            try:
+                current=real_fstat(fd)
+                if (current.st_dev,current.st_ino)==(identity.st_dev,identity.st_ino):
+                    real_close(fd)
+            except OSError:
+                pass
+
+
+
+def test_reservation_bytes_changed_during_primary_close_are_refused_and_stay_consumed(tmp_path, monkeypatch):
+    public=issuer(); attempt=tmp_path/"attempt-late"; attempt.mkdir()
+    reservation=attempt/"permit-reservation.json"
+    real_close=os.close; mutated=False
+    def mutate_owned_bytes_before_close(fd):
+        nonlocal mutated
+        if not mutated and reservation.exists() and os.fstat(fd).st_ino==reservation.stat().st_ino:
+            before=reservation.stat()
+            raw=reservation.read_bytes()
+            assert b'"permit_nonce":"permit-late"' in raw
+            reservation.write_bytes(raw.replace(b'"permit_nonce":"permit-late"',b'"permit_nonce":"permit-evil"'))
+            after=reservation.stat()
+            assert (after.st_dev,after.st_ino,after.st_size)==(before.st_dev,before.st_ino,before.st_size)
+            mutated=True
+        return real_close(fd)
+    arguments=dict(attempt_id="attempt-late",source_key=str(tmp_path/"original-source-key"),registration_sha256="a"*64,
+        start_sha256="b"*64,producer_pid=os.getpid(),start_nonce="start-late",permit_nonce="permit-late")
+    with monkeypatch.context() as injection:
+        injection.setattr(public.os,"close",mutate_owned_bytes_before_close)
+        with pytest.raises(ValueError,match="reservation.*(changed|bytes)|bytes.*reservation"):
+            public.reserve_one_use_transport_probe(attempt,**arguments)
+    assert mutated
+    with pytest.raises(FileExistsError):
+        issuer().reserve_one_use_transport_probe(attempt,**arguments)

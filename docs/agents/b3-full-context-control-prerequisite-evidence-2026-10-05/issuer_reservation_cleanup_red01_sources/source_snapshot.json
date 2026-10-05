@@ -1,0 +1,15 @@
+{
+  "scope": "Actual file fsync/close refusal regression buffers; raw result XML retained",
+  "artifacts": [
+    {
+      "path": "issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "ef681950d910ee35e63259c13d08b99143564e7066d649d4addffe2c72c7bceb",
+      "bytes": 2719
+    },
+    {
+      "path": "test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "91e2313ed6bdf66daa96e21f02e786333dc2362e1e4662c191cd5d7b0245b6a7",
+      "bytes": 3573
+    }
+  ]
+}

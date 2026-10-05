@@ -1,0 +1,39 @@
+"""Crash persistence at the approved issuer Start/Permit seam."""
+import importlib.util
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+import pytest
+
+
+def issuer():
+    p=Path(__file__).with_name("issue_b3_full_context_controlled_draft_v01.py")
+    spec=importlib.util.spec_from_file_location("issuer_reservation_draft",p)
+    public=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(public)
+    return public
+
+
+def test_crash_after_actual_reservation_does_not_enable_a_second_release(tmp_path):
+    source=Path(__file__).with_name("issue_b3_full_context_controlled_draft_v01.py")
+    attempt=tmp_path/"attempt-01"
+    attempt.mkdir()
+    key=str(tmp_path/"original-source-key")
+    program="""
+import importlib.util, os, sys
+s=importlib.util.spec_from_file_location('issuer_reservation_child',sys.argv[1])
+p=importlib.util.module_from_spec(s); s.loader.exec_module(p)
+r=p.reserve_one_use_transport_probe(sys.argv[2],attempt_id='attempt-01',source_key=sys.argv[3],
+ registration_sha256='a'*64,start_sha256='b'*64,producer_pid=int(sys.argv[4]),start_nonce='start-01',permit_nonce='permit-01')
+if r['native_operation_authorized'] is not False or r['channel_release_performed'] is not False:
+ raise RuntimeError('The primitive must not release or authorize native computation')
+os._exit(23)
+"""
+    child=subprocess.run([sys.executable,'-c',program,str(source),str(attempt),key,str(os.getpid())],capture_output=True,timeout=2)
+    assert child.returncode==23,child.stderr.decode()
+    with pytest.raises(FileExistsError):
+        issuer().reserve_one_use_transport_probe(attempt,attempt_id='attempt-01',source_key=key,
+            registration_sha256='a'*64,start_sha256='b'*64,producer_pid=os.getpid(),start_nonce='start-01',permit_nonce='permit-02')

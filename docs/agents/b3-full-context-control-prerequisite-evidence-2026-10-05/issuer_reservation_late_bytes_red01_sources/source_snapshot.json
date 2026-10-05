@@ -1,0 +1,15 @@
+{
+  "scope": "Same-inode same-size late reservation mutation regression buffers; raw XML retained",
+  "artifacts": [
+    {
+      "path": "issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "8fb0bd509ebd11f7dd410afb6779be3a05a72e97a539f474ef1d72135589327b",
+      "bytes": 3582
+    },
+    {
+      "path": "test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "dd2fc2f083bfc5fe4f8b1b28724eb38444d8cbfdc75250313ab5873bd8b17ae4",
+      "bytes": 5111
+    }
+  ]
+}

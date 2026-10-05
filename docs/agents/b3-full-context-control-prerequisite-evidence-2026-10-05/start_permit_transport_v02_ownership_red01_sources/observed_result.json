@@ -1,0 +1,21 @@
+{
+  "actual_exec_session": 86534,
+  "actual_exit_code": 1,
+  "counts": {
+    "failed": 2,
+    "deselected": 9
+  },
+  "scope": "Real local descriptor failure regressions; XML preserved; full driver/raw stdout not captured",
+  "artifacts": [
+    {
+      "path": "produce_b3_synthetic_native_stored_draft_v02.py.txt",
+      "sha256": "274781d9ee545726cb61c21af01a156b352c7dae85ce0f73cd563b05d45dc8e5",
+      "bytes": 6163
+    },
+    {
+      "path": "test_start_permit_transport_draft_v02.py.txt",
+      "sha256": "fc503f9e2ba046da0c0a4752929b46bd55882e51f463d761fa999dfbaba1f602",
+      "bytes": 12877
+    }
+  ]
+}

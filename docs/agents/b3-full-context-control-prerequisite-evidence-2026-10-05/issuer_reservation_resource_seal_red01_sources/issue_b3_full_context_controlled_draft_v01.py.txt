@@ -1,0 +1,171 @@
+"""Isolated issuer reservation draft; no permit release, admission or native work."""
+
+from hashlib import sha256
+import json
+import math
+import os
+from pathlib import Path
+import re
+import shutil
+import time
+
+_TERMINAL_CLOSE = os.close
+_BIRTH_FSTAT = os.fstat
+
+
+def reserve_one_use_transport_probe(
+    attempt_directory,
+    *,
+    attempt_id,
+    source_key,
+    registration_sha256,
+    start_sha256,
+    producer_pid,
+    start_nonce,
+    permit_nonce,
+    max_seconds=900,
+):
+    """Persist one conservative reservation; its JSON never authorizes work."""
+    started = time.monotonic()
+    if type(max_seconds) not in (int, float) or not math.isfinite(max_seconds) or not 0 < max_seconds <= 900:
+        raise ValueError("Original reservation deadline must be positive and at most 900 seconds")
+    deadline = started + max_seconds
+    directory = Path(attempt_directory).absolute()
+
+    def check():
+        if time.monotonic() >= deadline:
+            raise TimeoutError("Original reservation deadline reached")
+        available = None
+        for row in Path("/proc/meminfo").read_text().splitlines():
+            if row.startswith("MemAvailable:"):
+                available = int(row.split()[1]) * 1024
+        rss = None
+        for row in Path("/proc/self/status").read_text().splitlines():
+            if row.startswith("VmRSS:"):
+                rss = int(row.split()[1]) * 1024
+        if available is None or available < 4 * 1024**3:
+            raise MemoryError("Reservation available host RAM floor is 4 GiB")
+        if rss is None or rss > 4 * 1024**3:
+            raise MemoryError("Reservation process RSS limit is 4 GiB")
+        if shutil.disk_usage(directory).free < 20 * 1024**3:
+            raise OSError("Reservation available disk floor is 20 GiB")
+        if time.monotonic() >= deadline:
+            raise TimeoutError("Original reservation deadline reached during resource admission")
+
+    check()
+    if directory.resolve(strict=True) != directory or not directory.is_dir():
+        raise ValueError("Require the original canonical attempt directory")
+    for name, value in (("attempt_id", attempt_id), ("start_nonce", start_nonce), ("permit_nonce", permit_nonce)):
+        if type(value) is not str or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", value) is None:
+            raise ValueError("Require a canonical original " + name)
+    key = Path(source_key)
+    if type(source_key) is not str or not key.is_absolute() or str(key) != source_key or ".." in key.parts:
+        raise ValueError("Require the original canonical source key syntax")
+    if any(type(v) is not str or re.fullmatch(r"[0-9a-f]{64}", v) is None for v in (registration_sha256, start_sha256)):
+        raise ValueError("Require canonical original registration/Start SHA256 values")
+    if type(producer_pid) is not int or producer_pid <= 0:
+        raise ValueError("Require the original positive producer PID")
+    document = {
+        "schema": "b3_full_context_transport_probe_reservation_v1",
+        "attempt_id": attempt_id,
+        "source_key": source_key,
+        "registration_sha256": registration_sha256,
+        "start_sha256": start_sha256,
+        "producer_pid": producer_pid,
+        "start_nonce": start_nonce,
+        "permit_nonce": permit_nonce,
+        "issuer_pid": os.getpid(),
+    }
+    raw = json.dumps(document, sort_keys=True, separators=(",", ":"), allow_nan=False).encode() + b"\n"
+    if len(raw) > 8192:
+        raise ValueError("Probe reservation exceeds its metadata bound")
+    check()
+    original_directory = directory.lstat()
+    directory_fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    pins = [(directory_fd, _BIRTH_FSTAT(directory_fd))]
+    verification_pins = []
+    first_error = None
+    try:
+        check()
+        current = os.fstat(directory_fd)
+        if (current.st_dev, current.st_ino) != (original_directory.st_dev, original_directory.st_ino):
+            raise ValueError("Original reservation directory changed before creation")
+        verification_pins.append((os.dup(directory_fd), original_directory))
+        fd = os.open(
+            "permit-reservation.json", os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=directory_fd
+        )
+        original_file = _BIRTH_FSTAT(fd)
+        pins.append((fd, original_file))
+        verification_pins.append((os.dup(fd), original_file))
+        offset = 0
+        while offset < len(raw):
+            check()
+            count = os.write(fd, raw[offset:])
+            if count <= 0:
+                raise OSError("Probe reservation write did not advance")
+            offset += count
+        check()
+        os.fsync(fd)
+        check()
+        os.fsync(directory_fd)
+    except BaseException as error:
+        first_error = error
+    finally:
+        for owned_fd, identity in reversed(pins):
+            try:
+                current = os.fstat(owned_fd)
+                if (current.st_dev, current.st_ino) != (identity.st_dev, identity.st_ino):
+                    raise ValueError("Reservation descriptor changed before cleanup")
+                os.close(owned_fd)
+            except BaseException as error:
+                if first_error is None:
+                    first_error = error
+                try:
+                    current = os.fstat(owned_fd)
+                    if (current.st_dev, current.st_ino) == (identity.st_dev, identity.st_ino):
+                        _TERMINAL_CLOSE(owned_fd)
+                except OSError:
+                    pass
+    try:
+        if first_error is None:
+            check()
+            directory_pin, file_pin = (row[0] for row in verification_pins)
+            current_directory = directory.lstat()
+            if directory.resolve(strict=True) != directory or (current_directory.st_dev, current_directory.st_ino) != (
+                original_directory.st_dev,
+                original_directory.st_ino,
+            ):
+                raise ValueError("Original reservation directory changed during cleanup")
+            current_file = os.stat("permit-reservation.json", dir_fd=directory_pin, follow_symlinks=False)
+            live_file = os.fstat(file_pin)
+            if (current_file.st_dev, current_file.st_ino) != (original_file.st_dev, original_file.st_ino) or (
+                live_file.st_dev,
+                live_file.st_ino,
+            ) != (original_file.st_dev, original_file.st_ino):
+                raise ValueError("Original reservation file changed during cleanup")
+            if current_file.st_size != len(raw) or live_file.st_size != len(raw) or os.pread(file_pin, 8193, 0) != raw:
+                raise ValueError("Original reservation bytes changed during cleanup")
+            check()
+    except BaseException as error:
+        if first_error is None:
+            first_error = error
+    finally:
+        for owned_fd, identity in reversed(verification_pins):
+            try:
+                current = os.fstat(owned_fd)
+                if (current.st_dev, current.st_ino) != (identity.st_dev, identity.st_ino):
+                    raise ValueError("Verification reservation descriptor was replaced")
+                _TERMINAL_CLOSE(owned_fd)
+            except BaseException as error:
+                if first_error is None:
+                    first_error = error
+    if first_error is not None:
+        raise first_error
+    check()
+    return {
+        "reservation_sha256": sha256(raw).hexdigest(),
+        "transport_only": True,
+        "native_operation_authorized": False,
+        "channel_release_performed": False,
+        "source_admission_granted": False,
+    }

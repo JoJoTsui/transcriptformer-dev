@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_reservation_draft_final03_gnu_time.txt",
+    "/mnt/d/sc/transcriptformer/transcriptformer/.venv/bin/python",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_issuer_reservation_draft_v03.py",
+    "--worker"
+  ],
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v01.py": "9b76e09a64fadee9541b4672ea1b31336e78e76410110d27b7a0bd28b70264eb",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py": "8375c758d1e4f62b2d9826f245a3fa7b8f947be8e5c3a14cbc195b8d55fe413b",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_issuer_reservation_draft_v03.py": "d66ed177fadff7fb371fbd56e8c954bc7151132ee6730e558eb279b2c2b910b8"
+  },
+  "environment_overrides": {
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "CUDA_VISIBLE_DEVICES": "",
+    "TF_RUN_REAL_MODEL_TESTS": "0"
+  },
+  "scope": "real local file/child reservation probes only; no normative durable Start, channel release, source/runtime admission or native producer"
+}

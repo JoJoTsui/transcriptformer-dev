@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.367" timestamp="2026-10-05T16:43:39.714373+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_issuer_reservation_draft_v01" name="test_crash_after_actual_reservation_does_not_enable_a_second_release" time="0.039"><failure message="AssertionError: Traceback (most recent call last):&#10;    File &quot;&lt;string&gt;&quot;, line 5, in &lt;module&gt;&#10;  AttributeError: module 'issuer_reservation_child' has no attribute 'reserve_one_use_transport_probe'&#10;  &#10;assert 1 == 23&#10; +  where 1 = CompletedProcess(args=['/mnt/d/sc/transcriptformer/transcriptformer/.venv/bin/python', '-c', &quot;\nimport importlib.util,... &lt;module&gt;\nAttributeError: module \'issuer_reservation_child\' has no attribute \'reserve_one_use_transport_probe\'\n').returncode">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-93/test_crash_after_actual_reserv0')
+
+    def test_crash_after_actual_reservation_does_not_enable_a_second_release(tmp_path):
+        source=Path(__file__).with_name("issue_b3_full_context_controlled_draft_v01.py")
+        attempt=tmp_path/"attempt-01"
+        attempt.mkdir()
+        key=str(tmp_path/"original-source-key")
+        program="""
+    import importlib.util, os, sys
+    s=importlib.util.spec_from_file_location('issuer_reservation_child',sys.argv[1])
+    p=importlib.util.module_from_spec(s); s.loader.exec_module(p)
+    r=p.reserve_one_use_transport_probe(sys.argv[2],attempt_id='attempt-01',source_key=sys.argv[3],
+     registration_sha256='a'*64,start_sha256='b'*64,producer_pid=int(sys.argv[4]),start_nonce='start-01',permit_nonce='permit-01')
+    if r['native_operation_authorized'] is not False or r['channel_release_performed'] is not False:
+     raise RuntimeError('The primitive must not release or authorize native computation')
+    os._exit(23)
+    """
+        child=subprocess.run([sys.executable,'-c',program,str(source),str(attempt),key,str(os.getpid())],capture_output=True,timeout=2)
+&gt;       assert child.returncode==23,child.stderr.decode()
+E       AssertionError: Traceback (most recent call last):
+E           File "&lt;string&gt;", line 5, in &lt;module&gt;
+E         AttributeError: module 'issuer_reservation_child' has no attribute 'reserve_one_use_transport_probe'
+E         
+E       assert 1 == 23
+E        +  where 1 = CompletedProcess(args=['/mnt/d/sc/transcriptformer/transcriptformer/.venv/bin/python', '-c', "\nimport importlib.util,... &lt;module&gt;\nAttributeError: module \'issuer_reservation_child\' has no attribute \'reserve_one_use_transport_probe\'\n').returncode
+
+runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py:36: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,23 @@
+{
+  "pytest_exit_code": 0,
+  "complete_pytest_call_seconds": 0.8368381920154206,
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v01.py": "35073281bdea78a07e652a3196f4c134c352aa2a2928f71cb307ef5a1c7ab06b",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py": "5425fce918d46d561965ec4d0fc106b394f8cd2df1a5d25f65803a838ba91467",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_issuer_reservation_draft_v02.py": "06befa449f92cf9b8716cea0f3ee0cf16a346d3fc59f144b4d9abfae88e24def"
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v01.py": "35073281bdea78a07e652a3196f4c134c352aa2a2928f71cb307ef5a1c7ab06b",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py": "5425fce918d46d561965ec4d0fc106b394f8cd2df1a5d25f65803a838ba91467",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_issuer_reservation_draft_v02.py": "06befa449f92cf9b8716cea0f3ee0cf16a346d3fc59f144b4d9abfae88e24def"
+  },
+  "source_stable": true,
+  "numerical_modules_loaded": [],
+  "durable_start_verified": false,
+  "power_loss_durability_verified": false,
+  "channel_release_performed": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "native_operation_performed": false,
+  "model_forwards_performed": false
+}

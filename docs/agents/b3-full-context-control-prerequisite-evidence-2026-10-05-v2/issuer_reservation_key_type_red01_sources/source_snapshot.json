@@ -1,0 +1,15 @@
+{
+  "scope": "Public source-key argument executes a caller string conversion before strict type validation; original XML retained",
+  "artifacts": [
+    {
+      "path": "issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "35073281bdea78a07e652a3196f4c134c352aa2a2928f71cb307ef5a1c7ab06b",
+      "bytes": 7904
+    },
+    {
+      "path": "test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "b1e123adf704151709e79b11cf5d1f4356d3fb4e9761efbb59297207bfe8895b",
+      "bytes": 15798
+    }
+  ]
+}

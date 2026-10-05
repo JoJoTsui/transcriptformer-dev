@@ -1,0 +1,330 @@
+"""Test a real inherited control FD; grant no native execution or authority."""
+
+import importlib.util
+import json
+import os
+from pathlib import Path
+import socket
+import subprocess
+import sys
+import time
+
+import pytest
+
+
+def _producer():
+    source = Path(__file__).with_name("produce_b3_synthetic_native_stored_draft_v02.py")
+    spec = importlib.util.spec_from_file_location("b3_producer_transport_draft", source)
+    public = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(public)
+    return public
+
+
+def test_copied_permit_bytes_in_regular_file_cannot_enable_computation(tmp_path):
+    copied = tmp_path / "copied-permit.json"
+    copied.write_bytes(b'{"permit_nonce":"copied","operation_kind":"synthetic_native_stored_arithmetic"}\n')
+    fd = os.open(copied, os.O_RDONLY)
+    try:
+        with pytest.raises(ValueError, match="socket|channel"):
+            _producer().await_computation_permit(
+                fd,
+                attempt_id="attempt-01",
+                source_key=str(tmp_path / "future-native-source"),
+                start_nonce="issuer-start-01",
+                registration_sha256="a" * 64,
+                start_sha256="b" * 64,
+                expected_issuer_pid=os.getpid(),
+                max_seconds=1,
+            )
+        assert os.fstat(fd).st_size == copied.stat().st_size
+    finally:
+        os.close(fd)
+
+
+def test_real_channel_without_issuer_release_times_out_and_preserves_borrowed_fd(tmp_path):
+    issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    try:
+        with pytest.raises(TimeoutError, match="permit|deadline"):
+            _producer().await_computation_permit(
+                producer.fileno(),
+                attempt_id="attempt-01",
+                source_key=str(tmp_path / "future-native-source"),
+                start_nonce="issuer-start-01",
+                registration_sha256="a" * 64,
+                start_sha256="b" * 64,
+                expected_issuer_pid=os.getpid(),
+                max_seconds=0.02,
+            )
+        assert producer.fileno() >= 0
+        assert os.fstat(producer.fileno()).st_ino > 0
+    finally:
+        issuer.close()
+        producer.close()
+
+
+def test_actual_channel_message_from_another_attempt_is_refused(tmp_path):
+    issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    try:
+        issuer.send(
+            json.dumps(
+                {
+                    "schema": "b3_full_context_live_permit_channel_v1",
+                    "attempt_id": "other-attempt",
+                    "source_key": str(tmp_path / "future-native-source"),
+                    "start_nonce": "issuer-start-01",
+                    "registration_sha256": "a" * 64,
+                    "start_sha256": "b" * 64,
+                    "producer_pid": os.getpid(),
+                    "permit_nonce": "live-issuer-release-01",
+                }
+            ).encode()
+        )
+        with pytest.raises(ValueError, match="attempt|binding"):
+            _producer().await_computation_permit(
+                producer.fileno(),
+                attempt_id="attempt-01",
+                source_key=str(tmp_path / "future-native-source"),
+                start_nonce="issuer-start-01",
+                registration_sha256="a" * 64,
+                start_sha256="b" * 64,
+                expected_issuer_pid=os.getpid(),
+                max_seconds=1,
+            )
+    finally:
+        issuer.close()
+        producer.close()
+
+
+def test_actual_child_acknowledges_one_live_release_before_transport_probe_transition(tmp_path):
+    source = Path(__file__).with_name("produce_b3_synthetic_native_stored_draft_v02.py")
+    key = str(tmp_path / "future-native-source")
+    issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    child = None
+    program = """
+import importlib.util, json, os, sys
+spec=importlib.util.spec_from_file_location('producer_transport_probe',sys.argv[1])
+public=importlib.util.module_from_spec(spec); spec.loader.exec_module(public)
+result=public.await_computation_permit(int(sys.argv[2]), attempt_id='attempt-01', source_key=sys.argv[3],
+ start_nonce='issuer-start-01', registration_sha256='a'*64, start_sha256='b'*64,
+ expected_issuer_pid=int(sys.argv[4]), max_seconds=2)
+print(json.dumps({'transport_probe_transition_reached':True,'pid':os.getpid(),'permit_nonce':result['permit_nonce'],
+ 'native_operation_performed':False,'runtime_admission_granted':False}))
+"""
+    try:
+        child = subprocess.Popen(
+            [sys.executable, "-c", program, str(source), str(producer.fileno()), key, str(os.getpid())],
+            pass_fds=(producer.fileno(),),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        producer.close()
+        message = {
+            "schema": "b3_full_context_live_permit_channel_v1",
+            "attempt_id": "attempt-01",
+            "source_key": key,
+            "start_nonce": "issuer-start-01",
+            "registration_sha256": "a" * 64,
+            "start_sha256": "b" * 64,
+            "producer_pid": child.pid,
+            "permit_nonce": "live-issuer-release-01",
+        }
+        issuer.send(json.dumps(message).encode())
+        issuer.settimeout(2)
+        acknowledgement = json.loads(issuer.recv(8192))
+        assert acknowledgement == {
+            "schema": "b3_full_context_live_permit_ack_v1",
+            "attempt_id": "attempt-01",
+            "start_nonce": "issuer-start-01",
+            "producer_pid": child.pid,
+            "permit_nonce": "live-issuer-release-01",
+        }
+        stdout, stderr = child.communicate(timeout=2)
+        assert child.returncode == 0, stderr.decode()
+        observed = json.loads(stdout)
+        assert observed == {
+            "transport_probe_transition_reached": True,
+            "pid": child.pid,
+            "permit_nonce": "live-issuer-release-01",
+            "native_operation_performed": False,
+            "runtime_admission_granted": False,
+        }
+    finally:
+        producer.close()
+        issuer.close()
+        if child is not None and child.poll() is None:
+            child.kill()
+            child.communicate()
+
+
+def test_consumed_channel_cannot_accept_another_copied_release(tmp_path):
+    issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    key = str(tmp_path / "future-native-source")
+    public = _producer()
+    arguments = dict(
+        attempt_id="attempt-01",
+        source_key=key,
+        start_nonce="issuer-start-01",
+        registration_sha256="a" * 64,
+        start_sha256="b" * 64,
+        expected_issuer_pid=os.getpid(),
+        max_seconds=1,
+    )
+    release = json.dumps(
+        {
+            "schema": "b3_full_context_live_permit_channel_v1",
+            "attempt_id": "attempt-01",
+            "source_key": key,
+            "start_nonce": "issuer-start-01",
+            "registration_sha256": "a" * 64,
+            "start_sha256": "b" * 64,
+            "producer_pid": os.getpid(),
+            "permit_nonce": "live-release-01",
+        }
+    ).encode()
+    try:
+        issuer.send(release)
+        issuer.send(release)
+        first = public.await_computation_permit(producer.fileno(), **arguments)
+        assert first["native_operation_authorized"] is False
+        assert json.loads(issuer.recv(8192))["permit_nonce"] == "live-release-01"
+        with pytest.raises(ValueError, match="consum|closed|message"):
+            public.await_computation_permit(producer.fileno(), **arguments)
+    finally:
+        issuer.close()
+        producer.close()
+
+
+def test_original_transport_deadline_includes_fd_admission(tmp_path, monkeypatch):
+    issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    key = str(tmp_path / "future-native-source")
+    real_stat, real_clock = os.fstat, time.monotonic
+    elapsed = 0
+
+    def fd_admission_exhausts_original_deadline(fd):
+        nonlocal elapsed
+        result = real_stat(fd)
+        if fd == producer.fileno() and elapsed == 0:
+            elapsed = 901
+        return result
+
+    try:
+        issuer.send(
+            json.dumps(
+                {
+                    "schema": "b3_full_context_live_permit_channel_v1",
+                    "attempt_id": "attempt-01",
+                    "source_key": key,
+                    "start_nonce": "issuer-start-01",
+                    "registration_sha256": "a" * 64,
+                    "start_sha256": "b" * 64,
+                    "producer_pid": os.getpid(),
+                    "permit_nonce": "live-release-01",
+                }
+            ).encode()
+        )
+        public = _producer()
+        with monkeypatch.context() as injection:
+            injection.setattr(os, "fstat", fd_admission_exhausts_original_deadline)
+            injection.setattr(time, "monotonic", lambda: real_clock() + elapsed)
+            with pytest.raises(TimeoutError, match="deadline"):
+                public.await_computation_permit(
+                    producer.fileno(),
+                    attempt_id="attempt-01",
+                    source_key=key,
+                    start_nonce="issuer-start-01",
+                    registration_sha256="a" * 64,
+                    start_sha256="b" * 64,
+                    expected_issuer_pid=os.getpid(),
+                    max_seconds=900,
+                )
+        assert elapsed == 901
+    finally:
+        issuer.close()
+        producer.close()
+
+
+@pytest.mark.parametrize(
+    "payload, reason",
+    [
+        (b'{"schema":"first","schema":"second"}', "Duplicate"),
+        (b'{"unexpected":NaN}', "Nonfinite"),
+        (b"x" * 8193, "bounded"),
+    ],
+    ids=("duplicate_field", "nonfinite_value", "oversized_message"),
+)
+def test_malformed_actual_channel_bytes_never_emit_acknowledgement(tmp_path, payload, reason):
+    issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    try:
+        issuer.send(payload)
+        with pytest.raises(ValueError, match=reason):
+            _producer().await_computation_permit(
+                producer.fileno(),
+                attempt_id="attempt-01",
+                source_key=str(tmp_path / "future-native-source"),
+                start_nonce="issuer-start-01",
+                registration_sha256="a" * 64,
+                start_sha256="b" * 64,
+                expected_issuer_pid=os.getpid(),
+                max_seconds=1,
+            )
+        issuer.setblocking(False)
+        with pytest.raises(BlockingIOError):
+            issuer.recv(8192)
+    finally:
+        issuer.close()
+        producer.close()
+
+
+@pytest.mark.parametrize("replacement", [False, True], ids=("owned_duplicate", "foreign_reuse"))
+def test_constructor_refusal_drains_only_its_owned_duplicate(tmp_path, monkeypatch, replacement):
+    issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    foreign = tmp_path / "foreign-control-binding"
+    foreign.write_bytes(b"preserve foreign descriptor")
+    public = _producer()
+    real_close = os.close
+    captured = []
+    borrowed_identity = os.fstat(producer.fileno())
+    failure = RuntimeError("constructor refused after duplicate allocation")
+
+    def refused_constructor(*args, **kwargs):
+        fd = kwargs["fileno"]
+        captured.append(fd)
+        if replacement:
+            real_close(fd)
+            foreign_fd = os.open(foreign, os.O_RDONLY)
+            if foreign_fd != fd:
+                os.dup2(foreign_fd, fd)
+                real_close(foreign_fd)
+        raise failure
+
+    def refused_primary_close(fd):
+        if not replacement and captured and fd == captured[0]:
+            raise OSError("primary duplicate close refused")
+        return real_close(fd)
+
+    try:
+        with monkeypatch.context() as injection:
+            injection.setattr(public.socket, "socket", refused_constructor)
+            injection.setattr(public.os, "close", refused_primary_close)
+            with pytest.raises(RuntimeError) as observed:
+                public.await_computation_permit(
+                    producer.fileno(), attempt_id="attempt-01", source_key=str(tmp_path / "future-native-source"),
+                    start_nonce="issuer-start-01", registration_sha256="a"*64, start_sha256="b"*64,
+                    expected_issuer_pid=os.getpid(), max_seconds=1)
+        assert observed.value is failure
+        assert len(captured) == 1
+        assert os.fstat(producer.fileno()).st_ino == borrowed_identity.st_ino
+        if replacement:
+            assert os.fstat(captured[0]).st_ino == foreign.stat().st_ino
+            assert os.read(captured[0], 4096) == b"preserve foreign descriptor"
+        else:
+            with pytest.raises(OSError):
+                os.fstat(captured[0])
+    finally:
+        for fd in captured:
+            try:
+                real_close(fd)
+            except OSError:
+                pass
+        issuer.close()
+        producer.close()

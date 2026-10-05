@@ -1,0 +1,15 @@
+{
+  "scope": "Original descriptor-check refusal at directory allocation; actual XML retained",
+  "artifacts": [
+    {
+      "path": "issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "ced438099a70bc05de03f8e3c264d2b68f59df460eaf859e5c498c234a3800f8",
+      "bytes": 7582
+    },
+    {
+      "path": "test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "b521b86bd06027ae14cfdcf50f46b806f81e610d842efabfcec122b46e159962",
+      "bytes": 12831
+    }
+  ]
+}

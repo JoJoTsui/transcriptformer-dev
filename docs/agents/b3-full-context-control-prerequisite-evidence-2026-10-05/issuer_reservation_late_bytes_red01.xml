@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.187" timestamp="2026-10-05T16:47:05.601403+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_issuer_reservation_draft_v01" name="test_reservation_bytes_changed_during_primary_close_are_refused_and_stay_consumed" time="0.009"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-97/test_reservation_bytes_changed0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7a3cbe070cd0&gt;
+
+    def test_reservation_bytes_changed_during_primary_close_are_refused_and_stay_consumed(tmp_path, monkeypatch):
+        public=issuer(); attempt=tmp_path/"attempt-late"; attempt.mkdir()
+        reservation=attempt/"permit-reservation.json"
+        real_close=os.close; mutated=False
+        def mutate_owned_bytes_before_close(fd):
+            nonlocal mutated
+            if not mutated and reservation.exists() and os.fstat(fd).st_ino==reservation.stat().st_ino:
+                before=reservation.stat()
+                raw=reservation.read_bytes()
+                assert b'"permit_nonce":"permit-late"' in raw
+                reservation.write_bytes(raw.replace(b'"permit_nonce":"permit-late"',b'"permit_nonce":"permit-evil"'))
+                after=reservation.stat()
+                assert (after.st_dev,after.st_ino,after.st_size)==(before.st_dev,before.st_ino,before.st_size)
+                mutated=True
+            return real_close(fd)
+        arguments=dict(attempt_id="attempt-late",source_key=str(tmp_path/"original-source-key"),registration_sha256="a"*64,
+            start_sha256="b"*64,producer_pid=os.getpid(),start_nonce="start-late",permit_nonce="permit-late")
+        with monkeypatch.context() as injection:
+            injection.setattr(public.os,"close",mutate_owned_bytes_before_close)
+&gt;           with pytest.raises(ValueError,match="reservation.*(changed|bytes)|bytes.*reservation"):
+E           Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py:102: Failed</failure></testcase></testsuite></testsuites>

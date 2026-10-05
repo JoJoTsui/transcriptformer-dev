@@ -1,0 +1,15 @@
+{
+  "scope": "Actual late resource-read mutation after byte seal; original XML retained",
+  "artifacts": [
+    {
+      "path": "issue_b3_full_context_controlled_draft_v01.py.txt",
+      "sha256": "2e40b7065c4cbfe61751d836a89fb582bba76521d6b92482724fe5c17388e574",
+      "bytes": 7614
+    },
+    {
+      "path": "test_issuer_reservation_draft_v01.py.txt",
+      "sha256": "32327a79787b4b58b7e8d1f4a72469d5df47ccc88a3ac96b88c9f0081bbe4f2b",
+      "bytes": 14924
+    }
+  ]
+}

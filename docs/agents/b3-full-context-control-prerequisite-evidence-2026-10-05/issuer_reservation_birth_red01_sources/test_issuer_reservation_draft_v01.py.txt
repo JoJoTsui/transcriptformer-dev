@@ -1,0 +1,282 @@
+"""Crash persistence at the approved issuer Start/Permit seam."""
+
+import importlib.util
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+
+import pytest
+
+
+def issuer():
+    p = Path(__file__).with_name("issue_b3_full_context_controlled_draft_v01.py")
+    spec = importlib.util.spec_from_file_location("issuer_reservation_draft", p)
+    public = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(public)
+    return public
+
+
+def test_crash_after_actual_reservation_does_not_enable_a_second_release(tmp_path):
+    source = Path(__file__).with_name("issue_b3_full_context_controlled_draft_v01.py")
+    attempt = tmp_path / "attempt-01"
+    attempt.mkdir()
+    key = str(tmp_path / "original-source-key")
+    program = """
+import importlib.util, os, sys
+s=importlib.util.spec_from_file_location('issuer_reservation_child',sys.argv[1])
+p=importlib.util.module_from_spec(s); s.loader.exec_module(p)
+r=p.reserve_one_use_transport_probe(sys.argv[2],attempt_id='attempt-01',source_key=sys.argv[3],
+ registration_sha256='a'*64,start_sha256='b'*64,producer_pid=int(sys.argv[4]),start_nonce='start-01',permit_nonce='permit-01')
+if r['native_operation_authorized'] is not False or r['channel_release_performed'] is not False:
+ raise RuntimeError('The primitive must not release or authorize native computation')
+os._exit(23)
+"""
+    child = subprocess.run(
+        [sys.executable, "-c", program, str(source), str(attempt), key, str(os.getpid())],
+        capture_output=True,
+        timeout=2,
+    )
+    assert child.returncode == 23, child.stderr.decode()
+    with pytest.raises(FileExistsError):
+        issuer().reserve_one_use_transport_probe(
+            attempt,
+            attempt_id="attempt-01",
+            source_key=key,
+            registration_sha256="a" * 64,
+            start_sha256="b" * 64,
+            producer_pid=os.getpid(),
+            start_nonce="start-01",
+            permit_nonce="permit-02",
+        )
+
+
+def test_failed_reservation_remains_consumed_preserves_first_error_and_drains_owned_fds(tmp_path, monkeypatch):
+    public = issuer()
+    attempt = tmp_path / "attempt-failed"
+    attempt.mkdir()
+    first = OSError("original reservation fsync refused")
+    real_open, real_close, real_fstat = os.open, os.close, os.fstat
+    born = []
+
+    def record_open(*args, **kwargs):
+        fd = real_open(*args, **kwargs)
+        born.append((fd, real_fstat(fd)))
+        return fd
+
+    def fsync_refusal(fd):
+        raise first
+
+    def close_refusal(fd):
+        if born and fd == born[-1][0]:
+            raise OSError("secondary reservation close refused")
+        return real_close(fd)
+
+    arguments = dict(
+        attempt_id="attempt-failed",
+        source_key=str(tmp_path / "original-source-key"),
+        registration_sha256="a" * 64,
+        start_sha256="b" * 64,
+        producer_pid=os.getpid(),
+        start_nonce="start-failed",
+        permit_nonce="permit-failed",
+    )
+    try:
+        with monkeypatch.context() as injection:
+            injection.setattr(public.os, "open", record_open)
+            injection.setattr(public.os, "fsync", fsync_refusal)
+            injection.setattr(public.os, "close", close_refusal)
+            with pytest.raises(OSError) as observed:
+                public.reserve_one_use_transport_probe(attempt, **arguments)
+        assert observed.value is first
+        for fd, _ in born:
+            with pytest.raises(OSError):
+                real_fstat(fd)
+        with pytest.raises(FileExistsError):
+            issuer().reserve_one_use_transport_probe(attempt, **arguments)
+    finally:
+        for fd, identity in born:
+            try:
+                current = real_fstat(fd)
+                if (current.st_dev, current.st_ino) == (identity.st_dev, identity.st_ino):
+                    real_close(fd)
+            except OSError:
+                pass
+
+
+def test_reservation_bytes_changed_during_primary_close_are_refused_and_stay_consumed(tmp_path, monkeypatch):
+    public = issuer()
+    attempt = tmp_path / "attempt-late"
+    attempt.mkdir()
+    reservation = attempt / "permit-reservation.json"
+    real_close = os.close
+    mutated = False
+
+    def mutate_owned_bytes_before_close(fd):
+        nonlocal mutated
+        if not mutated and reservation.exists() and os.fstat(fd).st_ino == reservation.stat().st_ino:
+            before = reservation.stat()
+            raw = reservation.read_bytes()
+            assert b'"permit_nonce":"permit-late"' in raw
+            reservation.write_bytes(raw.replace(b'"permit_nonce":"permit-late"', b'"permit_nonce":"permit-evil"'))
+            after = reservation.stat()
+            assert (after.st_dev, after.st_ino, after.st_size) == (before.st_dev, before.st_ino, before.st_size)
+            mutated = True
+        return real_close(fd)
+
+    arguments = dict(
+        attempt_id="attempt-late",
+        source_key=str(tmp_path / "original-source-key"),
+        registration_sha256="a" * 64,
+        start_sha256="b" * 64,
+        producer_pid=os.getpid(),
+        start_nonce="start-late",
+        permit_nonce="permit-late",
+    )
+    with monkeypatch.context() as injection:
+        injection.setattr(public.os, "close", mutate_owned_bytes_before_close)
+        with pytest.raises(ValueError, match="reservation.*(changed|bytes)|bytes.*reservation"):
+            public.reserve_one_use_transport_probe(attempt, **arguments)
+    assert mutated
+    with pytest.raises(FileExistsError):
+        issuer().reserve_one_use_transport_probe(attempt, **arguments)
+
+
+def test_original_reservation_deadline_includes_attempt_directory_admission(tmp_path, monkeypatch):
+    public = issuer()
+    attempt = tmp_path / "attempt-deadline"
+    attempt.mkdir()
+    real_open, real_clock = os.open, time.monotonic
+    elapsed = 0
+
+    def directory_admission_exhausts_original_deadline(*args, **kwargs):
+        nonlocal elapsed
+        result = real_open(*args, **kwargs)
+        if Path(args[0]) == attempt:
+            elapsed = 901
+        return result
+
+    with monkeypatch.context() as injection:
+        injection.setattr(public.os, "open", directory_admission_exhausts_original_deadline)
+        injection.setattr(time, "monotonic", lambda: real_clock() + elapsed)
+        with pytest.raises(TimeoutError, match="deadline"):
+            public.reserve_one_use_transport_probe(
+                attempt,
+                attempt_id="attempt-deadline",
+                source_key=str(tmp_path / "original-source-key"),
+                registration_sha256="a" * 64,
+                start_sha256="b" * 64,
+                producer_pid=os.getpid(),
+                start_nonce="start-deadline",
+                permit_nonce="permit-deadline",
+            )
+    assert elapsed == 901
+    assert not (attempt / "permit-reservation.json").exists()
+
+
+def test_concurrent_actual_issuers_cannot_reserve_one_attempt_twice(tmp_path):
+    source = Path(__file__).with_name("issue_b3_full_context_controlled_draft_v01.py")
+    attempt = tmp_path / "attempt-race"
+    attempt.mkdir()
+    key = str(tmp_path / "original-source-key")
+    program = """
+import importlib.util, os, sys
+s=importlib.util.spec_from_file_location('issuer_reservation_child',sys.argv[1])
+p=importlib.util.module_from_spec(s); s.loader.exec_module(p)
+try:
+ r=p.reserve_one_use_transport_probe(sys.argv[2],attempt_id='attempt-race',source_key=sys.argv[3],
+ registration_sha256='a'*64,start_sha256='b'*64,producer_pid=int(sys.argv[4]),start_nonce='start-race',permit_nonce=sys.argv[5])
+ if r['native_operation_authorized'] is not False or r['channel_release_performed'] is not False:
+  raise RuntimeError('No native release is allowed by the reservation primitive')
+except FileExistsError:
+ raise SystemExit(17)
+"""
+    children = []
+    try:
+        for nonce in ("permit-a", "permit-b"):
+            children.append(
+                subprocess.Popen(
+                    [sys.executable, "-c", program, str(source), str(attempt), key, str(os.getpid()), nonce],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                )
+            )
+        results = [c.communicate(timeout=2) for c in children]
+        assert sorted(c.returncode for c in children) == [0, 17], [e.decode() for _, e in results]
+    finally:
+        for child in children:
+            if child.poll() is None:
+                child.kill()
+                child.communicate()
+
+
+def test_foreign_attempt_directory_replacement_is_preserved_and_refused(tmp_path, monkeypatch):
+    public = issuer()
+    attempt = tmp_path / "attempt-replaced"
+    attempt.mkdir()
+    moved = tmp_path / "owned-attempt-moved"
+    real_close = os.close
+    replacement = False
+    directory_inode = attempt.stat().st_ino
+
+    def replace_attempt_before_primary_directory_close(fd):
+        nonlocal replacement
+        if not replacement and os.fstat(fd).st_ino == directory_inode:
+            attempt.rename(moved)
+            attempt.mkdir()
+            (attempt / "permit-reservation.json").write_bytes(b"foreign reservation sentinel")
+            replacement = True
+        return real_close(fd)
+
+    arguments = dict(
+        attempt_id="attempt-replaced",
+        source_key=str(tmp_path / "original-source-key"),
+        registration_sha256="a" * 64,
+        start_sha256="b" * 64,
+        producer_pid=os.getpid(),
+        start_nonce="start-replaced",
+        permit_nonce="permit-replaced",
+    )
+    with monkeypatch.context() as injection:
+        injection.setattr(public.os, "close", replace_attempt_before_primary_directory_close)
+        with pytest.raises(ValueError, match="directory changed"):
+            public.reserve_one_use_transport_probe(attempt, **arguments)
+    assert replacement
+    assert (attempt / "permit-reservation.json").read_bytes() == b"foreign reservation sentinel"
+    assert (moved / "permit-reservation.json").is_file()
+
+
+
+def test_attempt_replaced_during_open_refuses_before_writing_and_closes_its_new_fd(tmp_path, monkeypatch):
+    public=issuer()
+    attempt=tmp_path/"attempt-birth"
+    attempt.mkdir()
+    moved=tmp_path/"original-attempt-birth"
+    real_open,real_close=os.open,os.close
+    created=[]
+    def replace_before_open(*args,**kwargs):
+        if Path(args[0])==attempt and not created:
+            attempt.rename(moved)
+            attempt.mkdir()
+            fd=real_open(*args,**kwargs)
+            created.append(fd)
+            return fd
+        return real_open(*args,**kwargs)
+    try:
+        with monkeypatch.context() as injection:
+            injection.setattr(public.os,"open",replace_before_open)
+            with pytest.raises(ValueError,match="directory changed"):
+                public.reserve_one_use_transport_probe(attempt,attempt_id="attempt-birth",source_key=str(tmp_path/"original-source-key"),
+                    registration_sha256="a"*64,start_sha256="b"*64,producer_pid=os.getpid(),start_nonce="start-birth",permit_nonce="permit-birth")
+        assert len(created)==1
+        with pytest.raises(OSError):
+            os.fstat(created[0])
+        assert not (attempt/"permit-reservation.json").exists()
+        assert not (moved/"permit-reservation.json").exists()
+    finally:
+        for fd in created:
+            try:
+                real_close(fd)
+            except OSError:
+                pass

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.253" timestamp="2026-10-05T17:10:28.631318+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_issuer_reservation_draft_v01" name="test_noncanonical_source_key_refuses_before_caller_string_conversion" time="0.005"><failure message="AssertionError: Caller conversion callback must not execute">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-110/test_noncanonical_source_key_r0')
+
+    def test_noncanonical_source_key_refuses_before_caller_string_conversion(tmp_path):
+        public=issuer()
+        attempt=tmp_path/"attempt-key-type"
+        attempt.mkdir()
+        class CallbackKey(str):
+            def __str__(self):
+                raise AssertionError("Caller conversion callback must not execute")
+        with pytest.raises(ValueError,match="source key"):
+&gt;           public.reserve_one_use_transport_probe(attempt,attempt_id="attempt-key-type",source_key=CallbackKey("/copied/source"),
+                registration_sha256="a"*64,start_sha256="b"*64,producer_pid=os.getpid(),start_nonce="start-key-type",permit_nonce="permit-key-type")
+
+runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py:399: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v01.py:61: in reserve_one_use_transport_probe
+    key = Path(source_key)
+          ^^^^^^^^^^^^^^^^
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/pathlib.py:871: in __new__
+    self = cls._from_parts(args)
+           ^^^^^^^^^^^^^^^^^^^^^
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/pathlib.py:509: in _from_parts
+    drv, root, parts = self._parse_args(args)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/pathlib.py:496: in _parse_args
+    parts.append(str(a))
+                 ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = '/copied/source'
+
+    def __str__(self):
+&gt;       raise AssertionError("Caller conversion callback must not execute")
+E       AssertionError: Caller conversion callback must not execute
+
+runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py:397: AssertionError</failure></testcase></testsuite></testsuites>

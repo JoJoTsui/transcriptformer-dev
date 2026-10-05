@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.258" timestamp="2026-10-05T16:54:52.753646+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_issuer_reservation_draft_v01" name="test_attempt_replaced_during_open_refuses_before_writing_and_closes_its_new_fd" time="0.005"><failure message="Failed: DID NOT RAISE &lt;class 'OSError'&gt;">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-103/test_attempt_replaced_during_o0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x725704a30790&gt;
+
+    def test_attempt_replaced_during_open_refuses_before_writing_and_closes_its_new_fd(tmp_path, monkeypatch):
+        public=issuer()
+        attempt=tmp_path/"attempt-birth"
+        attempt.mkdir()
+        moved=tmp_path/"original-attempt-birth"
+        real_open,real_close=os.open,os.close
+        created=[]
+        def replace_before_open(*args,**kwargs):
+            if Path(args[0])==attempt and not created:
+                attempt.rename(moved)
+                attempt.mkdir()
+                fd=real_open(*args,**kwargs)
+                created.append(fd)
+                return fd
+            return real_open(*args,**kwargs)
+        try:
+            with monkeypatch.context() as injection:
+                injection.setattr(public.os,"open",replace_before_open)
+                with pytest.raises(ValueError,match="directory changed"):
+                    public.reserve_one_use_transport_probe(attempt,attempt_id="attempt-birth",source_key=str(tmp_path/"original-source-key"),
+                        registration_sha256="a"*64,start_sha256="b"*64,producer_pid=os.getpid(),start_nonce="start-birth",permit_nonce="permit-birth")
+            assert len(created)==1
+&gt;           with pytest.raises(OSError):
+E           Failed: DID NOT RAISE &lt;class 'OSError'&gt;
+
+runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py:273: Failed</failure></testcase></testsuite></testsuites>

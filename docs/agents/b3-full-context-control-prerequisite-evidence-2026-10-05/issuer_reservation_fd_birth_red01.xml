@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.272" timestamp="2026-10-05T16:56:23.735506+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_issuer_reservation_draft_v01" name="test_initial_descriptor_check_refusal_closes_its_new_directory_fd" time="0.005"><failure message="Failed: DID NOT RAISE &lt;class 'OSError'&gt;">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-105/test_initial_descriptor_check_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7906897d07d0&gt;
+
+    def test_initial_descriptor_check_refusal_closes_its_new_directory_fd(tmp_path, monkeypatch):
+        public=issuer()
+        attempt=tmp_path/"attempt-stat"
+        attempt.mkdir()
+        real_open,real_fstat,real_close=os.open,os.fstat,os.close
+        born=[]
+        failure=OSError("original descriptor check refused")
+        refused=False
+        def observe_directory_open(*args,**kwargs):
+            fd=real_open(*args,**kwargs)
+            if Path(args[0])==attempt:
+                born.append(fd)
+            return fd
+        def refuse_one_check(fd):
+            nonlocal refused
+            if born and fd==born[0] and not refused:
+                refused=True
+                raise failure
+            return real_fstat(fd)
+        try:
+            with monkeypatch.context() as injection:
+                injection.setattr(public.os,"open",observe_directory_open)
+                injection.setattr(public.os,"fstat",refuse_one_check)
+                with pytest.raises(OSError) as observed:
+                    public.reserve_one_use_transport_probe(attempt,attempt_id="attempt-stat",source_key=str(tmp_path/"original-source-key"),
+                        registration_sha256="a"*64,start_sha256="b"*64,producer_pid=os.getpid(),start_nonce="start-stat",permit_nonce="permit-stat")
+            assert observed.value is failure
+            assert len(born)==1
+&gt;           with pytest.raises(OSError):
+E           Failed: DID NOT RAISE &lt;class 'OSError'&gt;
+
+runs/b3_feasibility/20261005/test_issuer_reservation_draft_v01.py:314: Failed</failure></testcase></testsuite></testsuites>
