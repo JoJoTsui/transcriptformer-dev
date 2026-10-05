@@ -1,2 +1,4 @@
-# Preserve exact raw pytest transcript spacing; validate these files by SHA-256.
+# Preserve exact raw evidence spacing; validate these files by SHA-256.
 *_producer.log -whitespace
+committed_diff_*.patch -whitespace
+red_*.xml -whitespace
