@@ -1,7 +1,7 @@
-"""Focused public publisher tests, drafted for test/test_b3_full_context_observed.py.
+"""Focused tests for the actual canonical full-context observed publisher.
 
-This file has not been imported or run. The future canonical publisher must
-exist before these tests can construct its actual 70-file request closure.
+The canonical publisher must exist to construct its actual 70-file closure.
+Exact execution and acceptance evidence is recorded in separate receipts.
 All numerical fixtures contain stored synthetic native evidence; no model
 forwards or positive 500-pair/five-embryo eligibility claim is requested.
 """
@@ -1703,6 +1703,425 @@ def test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail(
     assert injected == [True]
     _assert_no_complete_output(output)
     _assert_no_owned_modules(before)
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "foreign_file_fd",
+        "foreign_directory_fd",
+        "descriptor_probe",
+        "canonical_lstat",
+        "canonical_resolve",
+        "descriptor_address",
+    ],
+)
+def test_workspace_root_refusal_drains_each_independently_bound_private_child(
+    stored_native, tmp_path, monkeypatch, failure
+):
+    public = _module()
+    request = _request(stored_native.path, tmp_path / "request")
+    output = tmp_path / "output"
+    seal = public._Publication.seal_published
+    ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
+    ordinary_lstat, ordinary_resolve, ordinary_readlink = Path.lstat, Path.resolve, os.readlink
+    before = dict(sys.modules)
+    owned, children, roots, foreign_descriptors, foreign_files, injected = [], [], [], [], [], []
+    foreign = tmp_path / "foreign-workspace-root"
+    foreign_bytes = b"foreign root descriptor and sentinel must remain owned by the caller\n"
+    if failure == "foreign_directory_fd":
+        foreign.mkdir()
+        sentinel = foreign / "sentinel.bin"
+        sentinel.write_bytes(foreign_bytes)
+    else:
+        sentinel = foreign
+        sentinel.write_bytes(foreign_bytes)
+
+    def record_actual_publication_and_arm_root_failure(owner):
+        seal(owner)
+        if roots:
+            return
+        assert (output / "summary.json").is_file()
+        assert owner.workspace is not None and owner.workspace_fd is not None
+        roots.append((owner.workspace, owner.workspace_fd))
+        for name in (
+            "workspace_publication_fd",
+            "workspace_context_fd",
+            "workspace_snapshot_fd",
+            "workspace_fd",
+            "parent_fd",
+            "claim_fd",
+            "output_fd",
+            "staging_fd",
+            "marker_fd",
+        ):
+            fd = getattr(owner, name)
+            assert fd is not None
+            opened = ordinary_fstat(fd)
+            owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+        for name in ("context", "snapshot"):
+            path = owner.workspace / name
+            copied = list(path.iterdir())
+            assert copied and all(leaf.is_file() for leaf in copied)
+            if name == "snapshot":
+                assert len(copied) == 5
+            else:
+                assert (path / "summary.json").is_file()
+            children.append((path, copied))
+        if failure in {"foreign_file_fd", "foreign_directory_fd"}:
+            fd = owner.workspace_fd
+            ordinary_close(fd)
+            flags = os.O_RDONLY | os.O_NOFOLLOW | (os.O_DIRECTORY if failure == "foreign_directory_fd" else 0)
+            replacement = ordinary_open(foreign, flags)
+            if replacement != fd:
+                ordinary_dup2(replacement, fd)
+                ordinary_close(replacement)
+            opened = ordinary_fstat(fd)
+            foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+            injected.append(failure)
+            if failure == "foreign_file_fd":
+                foreign_files.append(fd)
+        if not foreign_files:
+            fd = ordinary_open(sentinel, os.O_RDONLY | os.O_NOFOLLOW)
+            opened = ordinary_fstat(fd)
+            foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+            foreign_files.append(fd)
+
+    def root_metadata_refusal(kind):
+        if roots and failure == kind and not injected:
+            injected.append(kind)
+            raise OSError(errno.EIO, "injected root metadata refusal")
+
+    def fail_root_fstat(fd):
+        if roots and fd == roots[0][1]:
+            root_metadata_refusal("descriptor_probe")
+        return ordinary_fstat(fd)
+
+    def fail_canonical_root_lstat(path, *args, **kwargs):
+        if roots and path == roots[0][0]:
+            root_metadata_refusal("canonical_lstat")
+        return ordinary_lstat(path, *args, **kwargs)
+
+    def fail_canonical_root_resolve(path, *args, **kwargs):
+        if roots and path == roots[0][0]:
+            root_metadata_refusal("canonical_resolve")
+        return ordinary_resolve(path, *args, **kwargs)
+
+    def fail_root_descriptor_address(path, *args, **kwargs):
+        if roots and path == f"/proc/self/fd/{roots[0][1]}":
+            root_metadata_refusal("descriptor_address")
+        return ordinary_readlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(public._Publication, "seal_published", record_actual_publication_and_arm_root_failure)
+    monkeypatch.setattr(os, "fstat", fail_root_fstat)
+    monkeypatch.setattr(Path, "lstat", fail_canonical_root_lstat)
+    monkeypatch.setattr(Path, "resolve", fail_canonical_root_resolve)
+    monkeypatch.setattr(os, "readlink", fail_root_descriptor_address)
+    try:
+        expected = RuntimeError if failure in {"foreign_file_fd", "foreign_directory_fd"} else OSError
+        with pytest.raises(expected):
+            public.run(request, output)
+        assert injected == [failure] and len(owned) == 9 and len(children) == 2
+        for path, copied in children:
+            # Their original live directory handles remain owned even when
+            # the root descriptor or canonical root inspection is refused.
+            assert not path.exists()
+            assert all(not leaf.exists() for leaf in copied)
+        assert sentinel.read_bytes() == foreign_bytes
+        for fd in foreign_files:
+            assert os.read(fd, len(foreign_bytes)) == foreign_bytes
+        for fd, identity in foreign_descriptors:
+            opened = ordinary_fstat(fd)
+            assert (opened.st_dev, opened.st_ino) == identity
+        if failure == "foreign_directory_fd":
+            assert list(foreign.iterdir()) == [sentinel]
+        for name, fd, _identity in owned:
+            if name == "workspace_fd" and failure in {"foreign_file_fd", "foreign_directory_fd"}:
+                continue
+            with pytest.raises(OSError) as caught:
+                ordinary_fstat(fd)
+            assert caught.value.errno == errno.EBADF
+        assert not (output / "summary.json").exists()
+        assert not output.with_name(output.name + ".claim").exists()
+        _assert_no_owned_modules(before)
+    finally:
+        for name, fd, identity in owned:
+            if name == "workspace_fd" and failure in {"foreign_file_fd", "foreign_directory_fd"}:
+                continue
+            try:
+                opened = ordinary_fstat(fd)
+            except OSError as error:
+                assert error.errno == errno.EBADF
+            else:
+                if (opened.st_dev, opened.st_ino) == identity:
+                    ordinary_close(fd)
+        for fd, identity in foreign_descriptors:
+            opened = ordinary_fstat(fd)
+            assert (opened.st_dev, opened.st_ino) == identity
+            ordinary_close(fd)
+
+
+def test_refused_output_marker_lookup_still_invalidates_through_owned_staging_descriptor(
+    stored_native, tmp_path, monkeypatch
+):
+    public = _module()
+    request = _request(stored_native.path, tmp_path / "request")
+    output, moved = tmp_path / "output", tmp_path / "moved-owned-output"
+    seal, invalidate = public._Publication.seal_published, public._Publication.invalidate
+    ordinary_fstat, ordinary_close = os.fstat, os.close
+    before = dict(sys.modules)
+    owned, active, injected, foreign_descriptors, relocated = [], [], [], [], []
+    foreign_bytes = b"foreign complete marker must survive owned invalidation refusal\n"
+
+    def relocate_actual_owned_output_after_its_complete_seal(owner):
+        seal(owner)
+        if relocated:
+            return
+        assert (output / "summary.json").is_file()
+        for name in (
+            "workspace_publication_fd",
+            "workspace_context_fd",
+            "workspace_snapshot_fd",
+            "workspace_fd",
+            "parent_fd",
+            "claim_fd",
+            "output_fd",
+            "staging_fd",
+            "marker_fd",
+        ):
+            fd = getattr(owner, name)
+            assert fd is not None
+            opened = ordinary_fstat(fd)
+            owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+        output.rename(moved)
+        output.mkdir()
+        marker = output / "summary.json"
+        marker.write_bytes(foreign_bytes)
+        fd = os.open(marker, os.O_RDONLY | os.O_NOFOLLOW)
+        opened = ordinary_fstat(fd)
+        foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+        relocated.append(True)
+
+    def during_actual_invalidation(owner):
+        active.append(owner)
+        try:
+            return invalidate(owner)
+        finally:
+            active.pop()
+
+    def fail_first_actual_output_route_probe(fd):
+        if active and fd == active[-1].output_fd and not injected:
+            assert (moved / "summary.json").is_file()
+            injected.append(True)
+            raise OSError(errno.EIO, "owned output marker route metadata refusal")
+        return ordinary_fstat(fd)
+
+    monkeypatch.setattr(public._Publication, "seal_published", relocate_actual_owned_output_after_its_complete_seal)
+    monkeypatch.setattr(public._Publication, "invalidate", during_actual_invalidation)
+    monkeypatch.setattr(os, "fstat", fail_first_actual_output_route_probe)
+    try:
+        with pytest.raises(OSError, match="owned output marker route metadata refusal"):
+            public.run(request, output)
+        assert relocated == injected == [True] and len(owned) == 9
+        assert not (moved / "summary.json").exists()
+        assert (output / "summary.json").read_bytes() == foreign_bytes
+        assert not output.with_name(output.name + ".claim").exists()
+        assert not list(output.parent.glob(".b3-full-context-observed-*"))
+        for _name, fd, _identity in owned:
+            with pytest.raises(OSError) as caught:
+                ordinary_fstat(fd)
+            assert caught.value.errno == errno.EBADF
+        for fd, identity in foreign_descriptors:
+            opened = ordinary_fstat(fd)
+            assert (opened.st_dev, opened.st_ino) == identity
+            assert os.read(fd, len(foreign_bytes)) == foreign_bytes
+        _assert_no_owned_modules(before)
+    finally:
+        for _name, fd, identity in owned:
+            try:
+                opened = ordinary_fstat(fd)
+            except OSError as error:
+                assert error.errno == errno.EBADF
+            else:
+                if (opened.st_dev, opened.st_ino) == identity:
+                    ordinary_close(fd)
+        for fd, identity in foreign_descriptors:
+            opened = ordinary_fstat(fd)
+            assert (opened.st_dev, opened.st_ino) == identity
+            ordinary_close(fd)
+
+
+def test_refused_recovery_marker_probe_still_invalidates_through_verified_owned_fallback(
+    stored_native, tmp_path, monkeypatch
+):
+    public = _module()
+    request = _request(stored_native.path, tmp_path / "request")
+    output = tmp_path / "output"
+    construct, close, invalidate = public._Recovery.__init__, public._Publication.close, public._Recovery.invalidate
+    ordinary_fstat, ordinary_close = os.fstat, os.close
+    before = dict(sys.modules)
+    owners, recovered, active, primary, injected = [], [], [], [], []
+
+    def record_actual_independent_recovery(recovery, owner):
+        construct(recovery, owner)
+        assert (output / "summary.json").is_file()
+        for name in (
+            "workspace_publication_fd",
+            "workspace_context_fd",
+            "workspace_snapshot_fd",
+            "workspace_fd",
+            "parent_fd",
+            "claim_fd",
+            "output_fd",
+            "staging_fd",
+            "marker_fd",
+        ):
+            fd = getattr(owner, name)
+            assert fd is not None
+            opened = ordinary_fstat(fd)
+            owners.append((fd, (opened.st_dev, opened.st_ino)))
+        for name in ("parent_fd", "directory_fd", "marker_fd"):
+            fd = getattr(recovery, name)
+            assert fd is not None
+            opened = ordinary_fstat(fd)
+            recovered.append((fd, (opened.st_dev, opened.st_ino)))
+
+    def fail_after_real_owner_release(owner):
+        close(owner)
+        if not primary:
+            assert len(recovered) == 3 and (output / "summary.json").is_file()
+            primary.append(True)
+            raise MemoryError("actual owner descriptor cleanup refusal with live independent recovery")
+
+    def during_actual_recovery_invalidation(recovery):
+        active.append(recovery)
+        try:
+            return invalidate(recovery)
+        finally:
+            active.pop()
+
+    def fail_first_actual_recovery_directory_probe(fd):
+        if active and fd == active[-1].directory_fd and not injected:
+            assert primary == [True] and (output / "summary.json").is_file()
+            injected.append(True)
+            raise OSError(errno.EIO, "owned recovery marker route metadata refusal")
+        return ordinary_fstat(fd)
+
+    monkeypatch.setattr(public._Recovery, "__init__", record_actual_independent_recovery)
+    monkeypatch.setattr(public._Publication, "close", fail_after_real_owner_release)
+    monkeypatch.setattr(public._Recovery, "invalidate", during_actual_recovery_invalidation)
+    monkeypatch.setattr(os, "fstat", fail_first_actual_recovery_directory_probe)
+    try:
+        with pytest.raises(OSError, match="owned recovery marker route metadata refusal"):
+            public.run(request, output)
+        assert primary == injected == [True] and len(owners) == 9 and len(recovered) == 3
+        _assert_no_complete_output(output)
+        _assert_no_owned_modules(before)
+        for fd, _identity in [*owners, *recovered]:
+            with pytest.raises(OSError) as caught:
+                ordinary_fstat(fd)
+            assert caught.value.errno == errno.EBADF
+    finally:
+        for fd, identity in [*owners, *recovered]:
+            try:
+                opened = ordinary_fstat(fd)
+            except OSError as error:
+                assert error.errno == errno.EBADF
+            else:
+                if (opened.st_dev, opened.st_ino) == identity:
+                    ordinary_close(fd)
+
+
+def test_owned_snapshot_unlink_refusal_drains_other_known_leaves_and_preserves_failed_original(
+    stored_native, tmp_path, monkeypatch
+):
+    public = _module()
+    request = _request(stored_native.path, tmp_path / "request")
+    output = tmp_path / "output"
+    seal = public._Publication.seal_published
+    ordinary_unlink, ordinary_fstat, ordinary_close = os.unlink, os.fstat, os.close
+    before = dict(sys.modules)
+    owned, snapshots, failures, foreign_descriptors = [], [], [], []
+    foreign = tmp_path / "foreign-unlink-sentinel.bin"
+    foreign_bytes = b"unrelated foreign descriptor survives private cleanup refusal\n"
+    foreign.write_bytes(foreign_bytes)
+
+    def record_actual_snapshot_before_private_cleanup(owner):
+        seal(owner)
+        if snapshots:
+            return
+        assert (output / "summary.json").is_file()
+        assert owner.workspace is not None and owner.workspace_snapshot_fd is not None
+        snapshot = owner.workspace / "snapshot"
+        copied = {path.name: path.read_bytes() for path in snapshot.iterdir()}
+        assert len(copied) == 5
+        snapshots.append((owner.workspace, snapshot, owner.workspace_snapshot_fd, copied))
+        for name in (
+            "workspace_publication_fd",
+            "workspace_context_fd",
+            "workspace_snapshot_fd",
+            "workspace_fd",
+            "parent_fd",
+            "claim_fd",
+            "output_fd",
+            "staging_fd",
+            "marker_fd",
+        ):
+            fd = getattr(owner, name)
+            assert fd is not None
+            opened = ordinary_fstat(fd)
+            owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+        fd = os.open(foreign, os.O_RDONLY | os.O_NOFOLLOW)
+        opened = ordinary_fstat(fd)
+        foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+
+    def fail_one_actual_snapshot_leaf(path, *args, **kwargs):
+        if snapshots and kwargs.get("dir_fd") == snapshots[0][2] and not failures:
+            name = Path(path).name
+            if name in snapshots[0][3]:
+                assert (snapshots[0][1] / name).read_bytes() == snapshots[0][3][name]
+                failures.append(name)
+                raise OSError(errno.EIO, "owned snapshot leaf unlink refusal")
+        return ordinary_unlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(public._Publication, "seal_published", record_actual_snapshot_before_private_cleanup)
+    monkeypatch.setattr(os, "unlink", fail_one_actual_snapshot_leaf)
+    try:
+        with pytest.raises(OSError, match="owned snapshot leaf unlink refusal"):
+            public.run(request, output)
+        assert len(snapshots) == len(failures) == 1 and len(owned) == 9
+        workspace, snapshot, _fd, copied = snapshots[0]
+        failed = snapshot / failures[0]
+        assert workspace.is_dir() and snapshot.is_dir()
+        assert failed.read_bytes() == copied[failed.name]
+        assert list(snapshot.iterdir()) == [failed]
+        assert all(not (snapshot / name).exists() for name in copied if name != failed.name)
+        assert not (workspace / "context").exists()
+        assert not (output / "summary.json").exists()
+        assert not output.with_name(output.name + ".claim").exists()
+        assert foreign.read_bytes() == foreign_bytes
+        for _name, fd, _identity in owned:
+            with pytest.raises(OSError) as caught:
+                ordinary_fstat(fd)
+            assert caught.value.errno == errno.EBADF
+        for fd, identity in foreign_descriptors:
+            opened = ordinary_fstat(fd)
+            assert (opened.st_dev, opened.st_ino) == identity
+            assert os.read(fd, len(foreign_bytes)) == foreign_bytes
+        _assert_no_owned_modules(before)
+    finally:
+        for _name, fd, identity in owned:
+            try:
+                opened = ordinary_fstat(fd)
+            except OSError as error:
+                assert error.errno == errno.EBADF
+            else:
+                if (opened.st_dev, opened.st_ino) == identity:
+                    ordinary_close(fd)
+        for fd, identity in foreign_descriptors:
+            opened = ordinary_fstat(fd)
+            assert (opened.st_dev, opened.st_ino) == identity
+            ordinary_close(fd)
 
 
 @pytest.mark.parametrize("child_name", ["publication", "snapshot"])

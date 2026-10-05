@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """Publish all original-axis observed stored arithmetic without model effects.
 
-Implementation draft for scripts/publish_b3_full_context_observed.py. This
-ignored copy is not an installed public consumer: run() requires its canonical
-location and authenticates that existing source file's actual bytes. It never
-manufactures an original v2 bundle, RNG family or likelihood-effect receipt.
+The public consumer requires scripts/publish_b3_full_context_observed.py as
+its canonical location and authenticates that installed source's actual bytes.
+It never manufactures an original v2 bundle, RNG family or likelihood-effect
+receipt.
 The public seam admits one complete native context, including unavailable rows.
 Embedded callers must release caller-owned numeric payload before entering
 this path-only interface, as with the existing public native batch producer.
@@ -1038,7 +1038,7 @@ class _Publication:
         ):
             raise RuntimeError("Original observed workspace child identity changed after publication")
 
-    def _cleanup_workspace_child(self, name: str) -> bool:
+    def _cleanup_workspace_child(self, name: str, workspace_address: Path | None) -> bool:
         """Clean an already-bound original child; never adopt a current alias."""
         if name in self.workspace_children_removed:
             return False
@@ -1047,25 +1047,54 @@ class _Publication:
         identity = self.descriptor_identities.get(attribute)
         if fd is None or identity is None or name not in self.workspace_children:
             raise RuntimeError("Owned observed workspace child lacks its original binding")
-        address = self._directory_address(fd, identity)
-        workspace_address = self._workspace_address()
+        opened = os.fstat(fd)
+        if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != identity:
+            raise RuntimeError("Owned observed workspace child descriptor identity changed")
         # A no-replace publication rename transfers the original private
         # directory to public ownership. Its early child FD still names the
         # public directory, including after an admitted output relocation.
-        if name == "publication" and self.publishing:
-            if identity == self.output_identity or address == self.output:
+        # Recognize that independently captured transfer before inspecting any
+        # private/root address. A different admitted output identity proves
+        # fallback staging is still private, regardless of its current alias.
+        if name == "publication" and self.publishing and identity == self.output_identity:
+            self.workspace_children_removed.add(name)
+            return False
+        cleanup = _Cleanup()
+        address: Path | None = None
+        changed = workspace_address is None
+
+        def capture_address() -> None:
+            nonlocal address
+            address = self._directory_address(fd, identity)
+
+        cleanup.attempt(capture_address)
+        if name == "publication" and self.publishing and self.output_identity is None:
+            # Until the actual public output's first capture, the existing
+            # trusted no-replace operation can prove transfer at its live
+            # target address. Known original staging at the verified private
+            # root stays private. Missing both proofs cannot authorize deletion.
+            if address == self.output:
                 self.workspace_children_removed.add(name)
                 return False
-            if address.parent != workspace_address:
-                raise RuntimeError("Published workspace child lacks its original output binding")
-        try:
-            current = os.stat(name, dir_fd=self._workspace_descriptor(), follow_symlinks=False)
-        except FileNotFoundError:
-            changed = True
-        else:
-            changed = not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != identity
-        if address != workspace_address / name:
-            changed = True
+            if address is None or workspace_address is None or address.parent != workspace_address:
+                cleanup.finish()
+                raise RuntimeError("Publication transfer lacks an admitted output identity or verified private address")
+
+        def inspect_alias() -> None:
+            nonlocal changed
+            if workspace_address is None:
+                return
+            try:
+                current = (workspace_address / name).lstat()
+            except FileNotFoundError:
+                changed = True
+            else:
+                if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != identity:
+                    changed = True
+            if address != workspace_address / name:
+                changed = True
+
+        cleanup.attempt(inspect_alias)
         # All three created children are flat. Stream their retained original
         # descriptors with fixed metadata state; a foreign replacement entry
         # is neither opened nor enumerated, even when the outer inode is intact.
@@ -1074,17 +1103,61 @@ class _Publication:
             "publication": (MAX_GENES + PAGE_SIZE - 1) // PAGE_SIZE + 5,
             "context": 32 * ((2_000_000 + PAGE_SIZE - 1) // PAGE_SIZE) + 1,
         }[name]
-        count = 0
-        with os.scandir(fd) as entries:
-            for entry in entries:
-                count += 1
-                if count > maximum or entry.is_dir(follow_symlinks=False):
+
+        def verify_descriptor() -> None:
+            current = os.fstat(fd)
+            if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != identity:
+                raise RuntimeError("Owned observed workspace child descriptor changed before private cleanup")
+
+        def remove_leaves() -> None:
+            # Address/alias callbacks can themselves refuse after an FD reuse.
+            # Revalidate the independent live birth binding before leaf effects.
+            verify_descriptor()
+            leaves = _Cleanup()
+            descriptor_lost = False
+
+            def remove_leaf(entry: os.DirEntry[str]) -> None:
+                nonlocal descriptor_lost
+                if entry.is_dir(follow_symlinks=False):
                     raise RuntimeError("Owned observed workspace exceeds its bounded flat cleanup layout")
+                try:
+                    verify_descriptor()
+                except BaseException:
+                    descriptor_lost = True
+                    raise
                 os.unlink(entry.name, dir_fd=fd)
-        if self._directory_address(fd, identity) != address:
-            changed = True
-        self._remove_workspace_directory(fd, identity)
-        self.workspace_children_removed.add(name)
+
+            def scan_leaves() -> None:
+                count = 0
+                with os.scandir(fd) as entries:
+                    for entry in entries:
+                        count += 1
+                        if count > maximum:
+                            raise RuntimeError("Owned observed workspace exceeds its bounded flat cleanup layout")
+                        # A refused flat entry does not revoke later leaves'
+                        # independently verified ownership. Retain its error
+                        # and entry, while stopping every effect if the live
+                        # descriptor itself loses its original birth identity.
+                        leaves.attempt(remove_leaf, entry)
+                        if descriptor_lost:
+                            break
+
+            leaves.attempt(scan_leaves)
+            leaves.finish()
+
+        def remove_directory() -> None:
+            nonlocal changed
+            if self._directory_address(fd, identity) != address:
+                changed = True
+            self._remove_workspace_directory(fd, identity)
+            self.workspace_children_removed.add(name)
+
+        # A root/current-alias lookup cannot suppress safe private leaf cleanup
+        # through this independently verified original FD. Empty-directory
+        # removal still requires a fresh verified descriptor address and parent.
+        cleanup.attempt(remove_leaves)
+        cleanup.attempt(remove_directory)
+        cleanup.finish()
         return changed
 
     def cleanup_workspace(self) -> None:
@@ -1100,28 +1173,47 @@ class _Publication:
         """
         if self.workspace is None or self.workspace_removed:
             return
-        fd = self._workspace_descriptor()
-        try:
-            canonical = self.workspace.lstat()
-        except FileNotFoundError:
-            canonical_changed = True
-        else:
-            canonical_changed = (
-                not stat.S_ISDIR(canonical.st_mode)
-                or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
-                or self.workspace.resolve(strict=True) != self.workspace
-            )
-        # Verify the descriptor-derived original address before deleting any
-        # leaves. This cleanup address is never an original-byte source alias.
-        if self._workspace_address() != self.workspace:
-            canonical_changed = True
+        cleanup = _Cleanup()
+        fd: int | None = None
+        workspace_address: Path | None = None
+        canonical_changed = False
+
+        def capture_root() -> None:
+            nonlocal fd
+            fd = self._workspace_descriptor()
+
+        def inspect_canonical() -> None:
+            nonlocal canonical_changed
+            assert self.workspace is not None
+            try:
+                canonical = self.workspace.lstat()
+            except FileNotFoundError:
+                canonical_changed = True
+            else:
+                canonical_changed = (
+                    not stat.S_ISDIR(canonical.st_mode)
+                    or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
+                    or self.workspace.resolve(strict=True) != self.workspace
+                )
+
+        def capture_root_address() -> None:
+            nonlocal workspace_address, canonical_changed
+            workspace_address = self._workspace_address()
+            if workspace_address != self.workspace:
+                canonical_changed = True
+
+        # Root checks gate root removal and successful return. A refused root
+        # descriptor or alias does not revoke the independent original child
+        # births, so retain the first refusal and still attempt their cleanup.
+        cleanup.attempt(capture_root)
+        cleanup.attempt(inspect_canonical)
+        cleanup.attempt(capture_root_address)
 
         def cleanup_child(name: str) -> None:
             nonlocal canonical_changed
-            if self._cleanup_workspace_child(name):
+            if self._cleanup_workspace_child(name, workspace_address):
                 canonical_changed = True
 
-        cleanup = _Cleanup()
         for name in ("publication", "context", "snapshot"):
             if name in self.workspace_children:
                 cleanup.attempt(cleanup_child, name)
@@ -1132,6 +1224,7 @@ class _Publication:
         # Any remaining entry may be a foreign replacement or a child whose
         # creation/admission failed before its ownership could be bound.
         # Preserve it and the enclosing directory, then refuse the public call.
+        assert fd is not None
         with os.scandir(fd) as entries:
             if next(entries, None) is not None:
                 raise RuntimeError("Owned observed workspace contains a preserved foreign or unadmitted child")
@@ -1236,17 +1329,15 @@ class _Publication:
         marker_identity = marker[1][:2]
         # The retained staging descriptor still reaches our renamed directory;
         # fallback links retain the exact generated marker inode as well.
+        cleanup = _Cleanup()
         removed = False
-        for fd, identity in (
-            (self.output_fd, self.output_identity),
-            (self.staging_fd, self.staging_identity),
-        ):
-            if fd is None or identity is None:
-                continue
+
+        def invalidate_descriptor(fd: int, identity: tuple[int, int]) -> None:
+            nonlocal removed
             try:
                 directory = os.fstat(fd)
                 if not stat.S_ISDIR(directory.st_mode) or (directory.st_dev, directory.st_ino) != identity:
-                    continue
+                    return
                 current = os.stat("summary.json", dir_fd=fd, follow_symlinks=False)
                 if stat.S_ISREG(current.st_mode) and (current.st_dev, current.st_ino) == marker_identity:
                     os.unlink("summary.json", dir_fd=fd)
@@ -1256,36 +1347,51 @@ class _Publication:
             except OSError as error:
                 if error.errno != errno.EBADF:
                     raise
-        if removed:
-            return
-        # Descriptor cleanup itself can fail late. Reopen only our unchanged
-        # canonical directory and match its inode before touching the marker.
-        # A foreign replacement directory or marker is never invalidated.
-        expected = self.output_identity or self.staging_identity
-        if expected is None:
-            return
-        try:
-            parent, current = self.parent.lstat(), self.output.lstat()
-            if (
-                not stat.S_ISDIR(parent.st_mode)
-                or (parent.st_dev, parent.st_ino) != self.parent_identity
-                or self.parent.resolve(strict=True) != self.parent
-                or not stat.S_ISDIR(current.st_mode)
-                or (current.st_dev, current.st_ino) != expected
-            ):
+
+        def invalidate_fallback() -> None:
+            # Descriptor cleanup itself can fail late. Reopen only our
+            # unchanged canonical directory and match its inode before
+            # touching the marker. Foreign replacements remain untouched.
+            expected = self.output_identity or self.staging_identity
+            if expected is None:
                 return
-            fd = os.open(self.output, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
             try:
-                opened = os.fstat(fd)
-                if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != expected:
+                parent, current = self.parent.lstat(), self.output.lstat()
+                if (
+                    not stat.S_ISDIR(parent.st_mode)
+                    or (parent.st_dev, parent.st_ino) != self.parent_identity
+                    or self.parent.resolve(strict=True) != self.parent
+                    or not stat.S_ISDIR(current.st_mode)
+                    or (current.st_dev, current.st_ino) != expected
+                ):
                     return
-                marker_stat = os.stat("summary.json", dir_fd=fd, follow_symlinks=False)
-                if stat.S_ISREG(marker_stat.st_mode) and (marker_stat.st_dev, marker_stat.st_ino) == marker_identity:
-                    os.unlink("summary.json", dir_fd=fd)
-            finally:
-                os.close(fd)
-        except FileNotFoundError:
-            pass
+                fd = os.open(self.output, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
+                try:
+                    opened = os.fstat(fd)
+                    if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != expected:
+                        return
+                    marker_stat = os.stat("summary.json", dir_fd=fd, follow_symlinks=False)
+                    if (
+                        stat.S_ISREG(marker_stat.st_mode)
+                        and (marker_stat.st_dev, marker_stat.st_ino) == marker_identity
+                    ):
+                        os.unlink("summary.json", dir_fd=fd)
+                finally:
+                    os.close(fd)
+            except FileNotFoundError:
+                pass
+
+        for fd, identity in (
+            (self.output_fd, self.output_identity),
+            (self.staging_fd, self.staging_identity),
+        ):
+            if fd is not None and identity is not None:
+                cleanup.attempt(invalidate_descriptor, fd, identity)
+        if not removed:
+            cleanup.attempt(invalidate_fallback)
+        # A successful independent route invalidates the marker, but it cannot
+        # turn a real earlier metadata/unlink refusal into a successful return.
+        cleanup.finish()
 
     def close(self) -> None:
         cleanup = _Cleanup()
@@ -1432,33 +1538,45 @@ class _Recovery:
     def invalidate(self) -> None:
         # This independently retained descriptor reaches the owned directory
         # after owner.close even if another writer renamed/replaced its path.
-        if self.directory_fd is not None:
+        cleanup = _Cleanup()
+        removed = False
+
+        def invalidate_descriptor() -> None:
+            nonlocal removed
+            if self.directory_fd is None:
+                return
             try:
                 opened = os.fstat(self.directory_fd)
                 if stat.S_ISDIR(opened.st_mode) and (opened.st_dev, opened.st_ino) == self.directory_identity:
-                    if self._invalidate_at(self.directory_fd):
-                        return
+                    removed = self._invalidate_at(self.directory_fd)
             except FileNotFoundError:
-                return
+                pass
             except OSError as error:
                 if error.errno != errno.EBADF:
                     raise
-        # A terminal descriptor-release error may leave no live directory.
-        # Reopen only the last descriptor-derived path with exact ownership,
-        # rather than the potentially foreign canonical output destination.
-        try:
-            current = self.fallback.lstat()
-            if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != self.directory_identity:
-                return
-            fd = os.open(self.fallback, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
+
+        def invalidate_fallback() -> None:
+            # Reopen only the last descriptor-derived path with exact
+            # ownership. A refused primary probe must not skip this
+            # independently verified route or adopt a foreign destination.
             try:
-                opened = os.fstat(fd)
-                if stat.S_ISDIR(opened.st_mode) and (opened.st_dev, opened.st_ino) == self.directory_identity:
-                    self._invalidate_at(fd)
-            finally:
-                os.close(fd)
-        except FileNotFoundError:
-            pass
+                current = self.fallback.lstat()
+                if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != self.directory_identity:
+                    return
+                fd = os.open(self.fallback, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
+                try:
+                    opened = os.fstat(fd)
+                    if stat.S_ISDIR(opened.st_mode) and (opened.st_dev, opened.st_ino) == self.directory_identity:
+                        self._invalidate_at(fd)
+                finally:
+                    os.close(fd)
+            except FileNotFoundError:
+                pass
+
+        cleanup.attempt(invalidate_descriptor)
+        if not removed:
+            cleanup.attempt(invalidate_fallback)
+        cleanup.finish()
 
     def release(self) -> None:
         # Keep the actual owned directory live through all other fallible
