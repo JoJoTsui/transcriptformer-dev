@@ -1025,24 +1025,31 @@ def test_real_summary_fsync_mutation_seam_has_no_complete_publication(tmp_path, 
     def mutate_after_fsync(fd):
         original_fsync(fd)
         path = Path(os.readlink(f"/proc/self/fd/{fd}"))
-        if path.name == "summary.json" and path.parent.name == "publication" and not changed:
-            changed.append(True)
-            if target == "source":
-                source = Path(native["csr_arrays"]["impact_bits.f64"]["path"])
-                data = bytearray(source.read_bytes())
-                data[7] ^= 0x80
-                source.write_bytes(data)
-            elif target == "generated":
-                generated = path.parent / "unit-state.json"
-                data = bytearray(generated.read_bytes())
-                data[0] = ord("[")
-                generated.write_bytes(data)
-            else:
-                path.write_bytes(
-                    path.read_bytes().replace(
-                        b'"scientific_readiness":"unavailable"', b'"scientific_readiness":"ready"'
-                    )
-                )
+        if path.name != "summary.json" or path.parent.name != "publication" or changed:
+            return
+        original = path.read_bytes()
+        summary = json.loads(original)
+        # The genuine context producer also writes a publication/summary.json.
+        # Admit the observed result schema before firing this mutation seam.
+        if summary.get("schema") != public.RESULT_SCHEMA:
+            return
+        assert path.parent.parent.parent == tmp_path
+        assert path.parent.parent.name.startswith(".b3-full-context-observed-")
+        changed.append(str(path))
+        if target == "source":
+            source = Path(native["csr_arrays"]["impact_bits.f64"]["path"])
+            data = bytearray(source.read_bytes())
+            data[7] ^= 0x80
+            source.write_bytes(data)
+        elif target == "generated":
+            generated = path.parent / "unit-state.json"
+            data = bytearray(generated.read_bytes())
+            data[0] = ord("[")
+            generated.write_bytes(data)
+        else:
+            modified = original.replace(b'"scientific_readiness":"unavailable"', b'"scientific_readiness":"ready"')
+            assert modified != original
+            path.write_bytes(modified)
 
     monkeypatch.setattr(os, "fsync", mutate_after_fsync)
     output = tmp_path / "output"
