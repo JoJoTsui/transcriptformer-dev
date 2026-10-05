@@ -7,6 +7,7 @@ on:
       - "scripts/**"
       - "src/transcriptformer/**"
       - "test/test_b3_full_context_observed.py"
+      - "test/test_b3_full_context_synthetic_fixture.py"
       - "test/test_b3_paged_native_common_source_controller.py"
       - "test/test_b3_paged_native_common_source.py"
       - "test/test_b3_paged_native_cache.py"
@@ -42,9 +43,10 @@ jobs:
           python-version: "3.11"
       - name: Install dependencies
         run: python -m pip install -e '.[dev]'
-      - name: Run stored arithmetic and metadata planning tests
+      - name: Run stored arithmetic, preparation and metadata planning tests
         run: >-
           python -m pytest
           test/test_b3_full_context_observed.py
+          test/test_b3_full_context_synthetic_fixture.py
           test/test_b3_paged_native_common_source_controller.py
           -q --junitxml=b3-full-context-and-planning-tests.xml
