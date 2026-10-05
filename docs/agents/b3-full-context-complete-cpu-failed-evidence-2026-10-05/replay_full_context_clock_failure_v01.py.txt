@@ -1,0 +1,25 @@
+"""Drive the real deadline test through the original progress recorder."""
+
+import importlib.util
+import json
+import os
+from pathlib import Path
+import sys
+
+BASE=Path(__file__).resolve().parent
+runner=Path(sys.argv[1]).resolve()
+for key in ("OMP_NUM_THREADS","OPENBLAS_NUM_THREADS","MKL_NUM_THREADS","NUMEXPR_NUM_THREADS"):
+    os.environ[key]="1"
+os.environ["CUDA_VISIBLE_DEVICES"]=""
+os.environ["TF_RUN_REAL_MODEL_TESTS"]="0"
+spec=importlib.util.spec_from_file_location("b3_actual_clock_failure_replay",runner)
+module=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+module.EVENTS=BASE/(sys.argv[2]+"_events.jsonl")
+module.EVENTS.open("x").close()
+import pytest
+proof=module.CollectionProof(["test/test_b3_prepared_sparse_session.py"])
+case="test/test_b3_prepared_sparse_session.py::test_public_run_expires_cooperative_deadline_without_complete_output"
+actual=int(pytest.main(["-q",case,"--junitxml="+str(BASE/(sys.argv[2]+".xml"))],plugins=[proof]))
+print(json.dumps({"actual_pytest_exit_code":actual,"scope":"Actual deadline case plus retained progress recorder only; no full-suite acceptance"}))
+raise SystemExit(actual)

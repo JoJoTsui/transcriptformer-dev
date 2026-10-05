@@ -1,0 +1,19 @@
+{
+  "actual_supervisor_exit_code": 1,
+  "driver_elapsed_seconds": 11066.85363682799,
+  "actual_full_cpu_runner_result_present": true,
+  "complete_cpu_accounting_passed": false,
+  "runner_sha256_stable": true,
+  "freeze_manifest_sha256_stable": true,
+  "counts": {
+    "errors": 1,
+    "failures": 0,
+    "passed": 676,
+    "skipped": 0,
+    "tests": 677
+  },
+  "capture_exit_code": 1,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "scientific_acceptance": false
+}

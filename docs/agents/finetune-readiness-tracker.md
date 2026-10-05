@@ -1,6 +1,49 @@
 # Finetune readiness tracker
 
-## Current complete three-file and source prerequisite milestone — 2026-10-05
+## Current control and memory feasibility prerequisites — 2026-10-05
+
+The isolated Start/Permit drafts pass **14** real socket/child transport cases
+and **ten** persistent reservation cases at their separate exact source-bound
+captures. The latter survives actual child exit, concurrent issuers, original
+fsync/close errors, late byte mutation, foreign directory/descriptor bindings,
+original deadline and strict bounded arguments. These are prerequisites only;
+no normative Start or controlled native authorization is created. The code is
+retained as `.py.txt` outside the canonical execution inventory. Independent
+source reviews remain pending at the agent service usage limit.
+
+The existing-library CPU allocator diagnostic completes with stable sources,
+raw/capture exits 0 and no project checkpoint/data/model or explicit GPU query. GNU wall
+18.58 seconds and process peak 530,720 KiB retain separate scope from the driver
+command/raw stdio-close window 18.589212 seconds and partial body 18.212757 seconds.
+Its raw driver field name overstates scope; source checks/capture-result IO and
+final driver return are excluded. The complete numeric peak remains null.
+
+Actual samples expose the coverage gap: the 1 MiB Torch CPU storage adds only
+1,347 traced-current bytes, mappings are absent from the NumPy data domain,
+HDF5 actual cache occupancy stays unknown, and a post-free snapshot omits the
+actual 8 MiB transient. A guarded explicit request over 200 MiB is refused before
+allocation, without claiming a complete native guard. No package is installed.
+SourceAdmission, RuntimeAdmission and complete allocation census remain false.
+
+The original whole repository CPU attempt at frozen `f567f13` collects
+1,315 cases from 75 files, but stops after 676 passes on a progress-recorder
+internal error. A deadline test replaces the global clock with a finite iterator;
+the recorder consumes an extra tick. The bare test passes and the old recorder
+reproduces pytest exit 3. The repaired recorder captures its original clock
+before tests import. Fresh whole-suite rerun remains pending; this failed run
+provides no complete repository acceptance. All 233 earlier Python bytes and Git modes
+remain unchanged; prototype evidence grants no canonical source execution trust.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Pilot coverage
+32.54%, necessary jointly-supported draws 0/2,000, reporting veto/null intervals
+and the frozen scientific/resource rules remain unchanged. Actual source reviews,
+controlled producer/issuer/owner/supervisor, registration/bridge/v4, complete
+native allocation guard/census, outcomes/effects, whole-method cost and
+reportable actual comparison remain unfinished.
+
+Evidence: [control prerequisites](b3-full-context-control-prerequisite-evidence-2026-10-05-v2/manifest.json), [numeric coverage](b3-full-context-numeric-coverage-evidence-2026-10-05/manifest.json).
+
+## Previous complete three-file and source prerequisite milestone — 2026-10-05
 
 At frozen **`157e8fb`**, the fresh complete three-file run passes **207 cases**:
 publisher **102**, preparation **10**, planner **95**. No failures, errors,

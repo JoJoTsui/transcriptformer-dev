@@ -1,0 +1,42 @@
+{
+  "schema": "b3_full_context_clock_replay_supplement_v1",
+  "scope": "Original one-case replay fails exit3, bare case passes, repaired recorder passes; no whole-repository acceptance",
+  "original_failed_manifest_sha256": "26455919e5013a38edd3520841c213e9032d0252be95718e52c03c19cc08f0f5",
+  "artifacts": [
+    {
+      "path": "full_context_clock_bare01.xml",
+      "sha256": "b8ffc5414f1209d464668a2958e91811a524db114dab186b6daff8df827cefcf",
+      "bytes": 396
+    },
+    {
+      "path": "full_context_clock_green01.xml",
+      "sha256": "f2f1e6c4814b21f47454dea3333d806c550855f43c046eba63f66de8b8321511",
+      "bytes": 396
+    },
+    {
+      "path": "full_context_clock_green01_events.jsonl",
+      "sha256": "445bb25ed6818e264ec540acdfe68383d7e6830911d6b86455fa0db44ff4178c",
+      "bytes": 832
+    },
+    {
+      "path": "full_context_clock_red01.xml",
+      "sha256": "0b169777c6d8d91480993db4117566c55dee29d1ed9b7699129153ddf85982b6",
+      "bytes": 6192
+    },
+    {
+      "path": "full_context_clock_red01_events.jsonl",
+      "sha256": "e623e666e532e1b589b19b8c02c6d4dacc94d5ca39d9d3a30a9f11cbd430ef46",
+      "bytes": 276
+    },
+    {
+      "path": "replay_full_context_clock_failure_v01.py.txt",
+      "sha256": "488875582973e8b9e34e8c4a496de9a5a5fe18cb6af4480a869b2cf1534fa077",
+      "bytes": 1147
+    },
+    {
+      "path": "run_full_context_complete_cpu_v3.py.txt",
+      "sha256": "67fd891a08d88122e6fc7cb9029f4809adb38c6531ea60471bbe11957fb3be59",
+      "bytes": 21064
+    }
+  ]
+}

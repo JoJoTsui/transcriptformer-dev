@@ -1,0 +1,1 @@
+{"node_id": "test/test_b3_prepared_sparse_session.py::test_public_run_expires_cooperative_deadline_without_complete_output", "phase": "setup", "outcome": "passed", "pytest_phase_seconds": 0.003840116987703368, "observed_monotonic_seconds": 196340.744883877, "longrepr": null}
