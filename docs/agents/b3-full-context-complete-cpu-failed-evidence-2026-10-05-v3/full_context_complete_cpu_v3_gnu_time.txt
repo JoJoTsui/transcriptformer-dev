@@ -1,0 +1,24 @@
+Command exited with non-zero status 1
+	Command being timed: ".venv/bin/python /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_full_context_complete_cpu_v3.py --expected-runner-sha256 67fd891a08d88122e6fc7cb9029f4809adb38c6531ea60471bbe11957fb3be59 --freeze-manifest /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v3_freeze_manifest.json --expected-manifest-sha256 93332dd3d2b73ca25f9dafcd4abd45a5b0b48b618d1d5cfc303279201ad489fe"
+	User time (seconds): 643.87
+	System time (seconds): 681.97
+	Percent of CPU this job got: 10%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:22:37
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 912588
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 6953
+	Minor (reclaiming a frame) page faults: 2182734
+	Voluntary context switches: 201588625
+	Involuntary context switches: 24795
+	Swaps: 0
+	File system inputs: 11820582
+	File system outputs: 1658824
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

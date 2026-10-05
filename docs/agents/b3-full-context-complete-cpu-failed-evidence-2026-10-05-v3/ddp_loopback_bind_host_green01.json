@@ -1,0 +1,8 @@
+{
+  "local_bind_succeeded": true,
+  "address": [
+    "127.0.0.1",
+    29551
+  ],
+  "scope": "same loopback socket creation/bind only; no connections or external traffic"
+}

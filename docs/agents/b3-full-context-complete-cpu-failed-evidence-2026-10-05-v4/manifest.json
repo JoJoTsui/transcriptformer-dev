@@ -1,0 +1,93 @@
+{
+  "schema": "b3_full_context_cpu_linux_cwd_failure_evidence_v1",
+  "scope": "Original failed collection observer/cwd attempt with zero executed test phases; actual producer collects 1,315 cases before internal error, no repository acceptance",
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "scientific_acceptance": false,
+  "artifacts": [
+    {
+      "path": "capture_full_context_complete_cpu_v4.py.txt",
+      "sha256": "70e3535704176e50a613eff830be0b0523ef63b106d11a09e205f6c959e6baf8",
+      "bytes": 4554,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_full_context_complete_cpu_v4.py"
+    },
+    {
+      "path": "full_context_complete_cpu_v4.xml",
+      "sha256": "a79b8b4a932eb152321724dfa49095f144288d466818a2f8a633be7638498396",
+      "bytes": 4695,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v4.xml"
+    },
+    {
+      "path": "full_context_complete_cpu_v4_capture_result.json",
+      "sha256": "98cf193014b7daa840bc8c0f94a2518c78f38f15026806d480bb02fa8009d203",
+      "bytes": 560,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v4_capture_result.json"
+    },
+    {
+      "path": "full_context_complete_cpu_v4_case_events.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v4_case_events.jsonl"
+    },
+    {
+      "path": "full_context_complete_cpu_v4_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v4_driver_stderr.txt"
+    },
+    {
+      "path": "full_context_complete_cpu_v4_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v4_driver_stdout.txt"
+    },
+    {
+      "path": "full_context_complete_cpu_v4_freeze_manifest.json",
+      "sha256": "2965a53c302f0899b11c2f702194b5ff1d66298698982314908a814109a10a7f",
+      "bytes": 126882,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v4_freeze_manifest.json"
+    },
+    {
+      "path": "full_context_complete_cpu_v4_gnu_time.txt",
+      "sha256": "a4e9f87d40273451fbd4f202e4516cb6fb224c51f1311672c11b7f6dcfd324b2",
+      "bytes": 1221,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v4_gnu_time.txt"
+    },
+    {
+      "path": "full_context_complete_cpu_v4_invocation.json",
+      "sha256": "684ccdbeadff5c5608e2496905097088dec20ed57aa943b85674bc4e10a7ed93",
+      "bytes": 2002,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v4_invocation.json"
+    },
+    {
+      "path": "full_context_complete_cpu_v4_result.json",
+      "sha256": "bb1f5b7ad1fedd35d8a951c38464133206863183ca7c493bf498aa40bb2c031e",
+      "bytes": 365133,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v4_result.json"
+    },
+    {
+      "path": "full_context_complete_cpu_v4_supervisor_producer.log",
+      "sha256": "60b850375def9efebfcf67e8b23dc412e91960987e5c5b7e90e3dc55a56a36f1",
+      "bytes": 5754,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v4_supervisor/producer.log"
+    },
+    {
+      "path": "full_context_complete_cpu_v4_supervisor_state.json",
+      "sha256": "a8d79b8208d24e5ee8d8ee488dac717b15107735753c951b652a6cde54ba91d1",
+      "bytes": 1350,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v4_supervisor/state.json"
+    },
+    {
+      "path": "linux_full_checkout_setup01.json",
+      "sha256": "546d646a8b5e37bceb80e685cb6e7c248a5ac57837bad339f0e5bb7193cd6bba",
+      "bytes": 592,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/linux_full_checkout_setup01.json"
+    },
+    {
+      "path": "run_full_context_complete_cpu_v4.py.txt",
+      "sha256": "98a83de514c3198e643dc67c3efe221bc753bf20e8930b114fd5fe59210bb0e5",
+      "bytes": 21088,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_full_context_complete_cpu_v4.py"
+    }
+  ]
+}

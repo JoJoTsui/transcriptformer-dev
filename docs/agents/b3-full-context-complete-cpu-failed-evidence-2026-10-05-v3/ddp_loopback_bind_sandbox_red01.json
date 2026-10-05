@@ -1,0 +1,7 @@
+{
+  "local_bind_succeeded": false,
+  "errno": 1,
+  "error_type": "PermissionError",
+  "message": "[Errno 1] Operation not permitted",
+  "scope": "loopback socket creation/bind only; no connections or external traffic"
+}

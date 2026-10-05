@@ -1,0 +1,18 @@
+{
+  "actual_gnu_exit_code": 0,
+  "driver_command_and_raw_stdio_close_seconds": 46.20341254599043,
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_train.py": "c44358b501b5ec0f4a829a1cfcd08c699b3cb6c9064827acad14700f7e4c1a00",
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/ddp_gloo_driver.py": "772b81020b4eaa5879e48eb00fd89b7a4ea22740d5e14597b163c180bd641149",
+    "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/train.py": "be73585f49e9947a183f3762ab545522d1661d68aca4c22df4af658fb432bec4"
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_train.py": "c44358b501b5ec0f4a829a1cfcd08c699b3cb6c9064827acad14700f7e4c1a00",
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/ddp_gloo_driver.py": "772b81020b4eaa5879e48eb00fd89b7a4ea22740d5e14597b163c180bd641149",
+    "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/train.py": "be73585f49e9947a183f3762ab545522d1661d68aca4c22df4af658fb432bec4"
+  },
+  "source_stable": true,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "capture_exit_code": 0
+}

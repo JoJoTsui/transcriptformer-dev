@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/ddp_host_regression_green01_gnu_time.txt",
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "test/test_train.py::test_ddp_cpu_gloo_smoke",
+    "--junitxml=runs/b3_feasibility/20261005/ddp_host_regression_green01.xml"
+  ],
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_train.py": "c44358b501b5ec0f4a829a1cfcd08c699b3cb6c9064827acad14700f7e4c1a00",
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/ddp_gloo_driver.py": "772b81020b4eaa5879e48eb00fd89b7a4ea22740d5e14597b163c180bd641149",
+    "/mnt/d/sc/transcriptformer/transcriptformer/src/transcriptformer/finetune/train.py": "be73585f49e9947a183f3762ab545522d1661d68aca4c22df4af658fb432bec4"
+  },
+  "scope": "Unchanged two-step tiny CPU DDP test outside socket-denying sandbox; localhost IPC only, no project model or host config change"
+}

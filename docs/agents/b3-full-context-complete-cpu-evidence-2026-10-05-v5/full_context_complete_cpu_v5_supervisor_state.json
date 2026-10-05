@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+  "supervisor_pid": 361003,
+  "producer_pid": 361004,
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_gnu_time.txt",
+    ".venv/bin/python",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_full_context_complete_cpu_v5.py",
+    "--expected-runner-sha256",
+    "ec7f90a12e071c52859e16a67f8da5b885c2a889adcf3895c7d1691b2fd99c35",
+    "--freeze-manifest",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_freeze_manifest.json",
+    "--expected-manifest-sha256",
+    "2965a53c302f0899b11c2f702194b5ff1d66298698982314908a814109a10a7f"
+  ],
+  "started_unix": 1791211626.1662152,
+  "limits": {
+    "max_wall_seconds": 14400.0,
+    "max_rss_gib": 4.0,
+    "min_host_ram_gib": 4.0,
+    "min_disk_gib": 20.0,
+    "max_gpu_temperature_c": null,
+    "gpu_index": 0
+  },
+  "producer_start_ticks": 20966757,
+  "heartbeat_unix": 1791212192.0798979,
+  "elapsed_seconds": 570.7075317180133,
+  "producer_rss_gib": 0.001331329345703125,
+  "host_available_ram_gib": 27.203388214111328,
+  "disk_available_gib": 382.8616409301758,
+  "return_code": 0,
+  "finished_unix": 1791212202.1043475
+}

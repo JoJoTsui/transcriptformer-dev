@@ -1,0 +1,21 @@
+{
+  "scope": "Complete existing committed checkout on isolated Linux filesystem only; source byte/mode policies unchanged, original shared workspace untouched",
+  "command": [
+    "/usr/bin/git",
+    "--no-replace-objects",
+    "--no-optional-locks",
+    "-c",
+    "core.hooksPath=/dev/null",
+    "-C",
+    "/tmp/b3-full-context-linux-current-source-probe-v01",
+    "checkout-index",
+    "--all",
+    "--force"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "",
+  "checkout_command_seconds": 5.630005632003304,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false
+}

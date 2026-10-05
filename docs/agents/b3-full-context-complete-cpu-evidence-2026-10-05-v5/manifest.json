@@ -1,0 +1,110 @@
+{
+  "schema": "b3_full_context_complete_cpu_evidence_v5",
+  "scope": "Complete actual repository CPU regression; no independent source/run authority or scientific acceptance",
+  "frozen_head": "32f942623e1999e1f8fb0b473ddf5e1553a414de",
+  "counts": {
+    "errors": 0,
+    "failures": 0,
+    "passed": 1310,
+    "skipped": 5,
+    "tests": 1315
+  },
+  "supplied_test_files": 75,
+  "nonempty_test_files": 73,
+  "empty_cli_files": 2,
+  "fresh_independent_reviews": "pending_agent_service_usage_limit",
+  "ticket05_closed": false,
+  "ticket11_excluded": true,
+  "artifacts": [
+    {
+      "path": "capture_full_context_complete_cpu_v5.py.txt",
+      "sha256": "b7f303b36ed6bae850493a9aae2550df4f5e69f5be91f6183e4e0dc18719308f",
+      "bytes": 4554,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_full_context_complete_cpu_v5.py"
+    },
+    {
+      "path": "full_context_complete_cpu_v5.xml",
+      "sha256": "87c970139eb701e3f4bb7daf2f228f2bae5553ed139595129b86344287c3c68d",
+      "bytes": 188063,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5.xml"
+    },
+    {
+      "path": "full_context_complete_cpu_v5_capture_result.json",
+      "sha256": "090e6f0f05f3029deabdc64f6050fd7c02d7ac22dc399b774d28c25e51e6dedb",
+      "bytes": 651,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_capture_result.json"
+    },
+    {
+      "path": "full_context_complete_cpu_v5_case_events.jsonl",
+      "sha256": "d21bc76806bfdee4757b9dde61a134dfb5f43497c50b6ca36eb6f9c7f018eaa1",
+      "bytes": 1059500,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_case_events.jsonl"
+    },
+    {
+      "path": "full_context_complete_cpu_v5_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_driver_stderr.txt"
+    },
+    {
+      "path": "full_context_complete_cpu_v5_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_driver_stdout.txt"
+    },
+    {
+      "path": "full_context_complete_cpu_v5_freeze_manifest.json",
+      "sha256": "2965a53c302f0899b11c2f702194b5ff1d66298698982314908a814109a10a7f",
+      "bytes": 126882,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_freeze_manifest.json"
+    },
+    {
+      "path": "full_context_complete_cpu_v5_gnu_time.txt",
+      "sha256": "5f31cf144f74e056996a7c023a38bd1fe1f7cc6d3cb3a4580989b36352dcb161",
+      "bytes": 1194,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_gnu_time.txt"
+    },
+    {
+      "path": "full_context_complete_cpu_v5_invocation.json",
+      "sha256": "917c6ca40d09998d242958eb011d09c483da830e56c94f5a9cfef4a1983bc398",
+      "bytes": 2002,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_invocation.json"
+    },
+    {
+      "path": "full_context_complete_cpu_v5_result.json",
+      "sha256": "9f4031c59a092eda54cd3453862510cad821ee07a3507129adb7c27233f1f720",
+      "bytes": 1095965,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_result.json"
+    },
+    {
+      "path": "full_context_complete_cpu_v5_supervisor_producer.log",
+      "sha256": "c991cc0b0e607c9f3f99be2e7795977a7052f8da6a97e2d027080cfb18b9cdc7",
+      "bytes": 158188,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_supervisor/producer.log"
+    },
+    {
+      "path": "full_context_complete_cpu_v5_supervisor_state.json",
+      "sha256": "73f94ef1f1a271fd89525360aadd61f180195484544766804b0d3b4f63295ca2",
+      "bytes": 1355,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_complete_cpu_v5_supervisor/state.json"
+    },
+    {
+      "path": "run_full_context_complete_cpu_v5.py.txt",
+      "sha256": "ec7f90a12e071c52859e16a67f8da5b885c2a889adcf3895c7d1691b2fd99c35",
+      "bytes": 21107,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_full_context_complete_cpu_v5.py"
+    },
+    {
+      "path": "scripts__b3_full_context_runtime_authority.py.txt",
+      "sha256": "e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d",
+      "bytes": 14573,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/scripts/b3_full_context_runtime_authority.py"
+    },
+    {
+      "path": "test__test_b3_full_context_runtime_authority.py.txt",
+      "sha256": "5dae27d24d415de8ce35f21af21a6c67322d8cdeec111c470ee70c32b2a2c5bf",
+      "bytes": 14685,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_runtime_authority.py"
+    }
+  ]
+}
