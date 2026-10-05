@@ -1,0 +1,962 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+_ test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle _
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/full-context-observed-native0'), path=PosixPa...set': 'raw_positive', 'sha256': 'b6c8fbaa87d5f25c503b3ae9c23e649178e68af3b3ec0afcddbcaa100d54eefd', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/test_reused_private_child_desc0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x792d10573450>
+
+    def test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle(
+        stored_native, tmp_path, monkeypatch
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        seal = public._Publication.seal_published
+        ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
+        before = dict(sys.modules)
+        owned, reused = [], []
+        foreign = tmp_path / "foreign-reused-child-fd.bin"
+        foreign_bytes = b"caller-owned replacement descriptor must survive\n"
+        foreign.write_bytes(foreign_bytes)
+    
+        def replace_actual_context_descriptor_before_private_cleanup(owner):
+            seal(owner)
+            if not reused:
+                assert (output / "summary.json").is_file()
+                for name in (
+                    "workspace_publication_fd", "workspace_context_fd", "workspace_snapshot_fd",
+                    "workspace_fd", "parent_fd", "claim_fd", "output_fd", "staging_fd", "marker_fd",
+                ):
+                    fd = getattr(owner, name)
+                    assert fd is not None
+                    opened = ordinary_fstat(fd)
+                    owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+                fd = owner.workspace_context_fd
+                ordinary_close(fd)
+                replacement = ordinary_open(foreign, os.O_RDONLY | os.O_NOFOLLOW)
+                if replacement != fd:
+                    ordinary_dup2(replacement, fd)
+                    ordinary_close(replacement)
+                opened = ordinary_fstat(fd)
+                reused.append((fd, (opened.st_dev, opened.st_ino)))
+    
+        monkeypatch.setattr(public._Publication, "seal_published", replace_actual_context_descriptor_before_private_cleanup)
+        try:
+            with pytest.raises(RuntimeError, match="descriptor|identity|workspace"):
+                public.run(request, output)
+            assert len(owned) == 9 and len(reused) == 1
+            foreign_fd, foreign_identity = reused[0]
+            current = ordinary_fstat(foreign_fd)
+            assert (current.st_dev, current.st_ino) == foreign_identity
+            assert os.read(foreign_fd, len(foreign_bytes)) == foreign_bytes
+            assert foreign.read_bytes() == foreign_bytes
+            assert not (output / "summary.json").exists()
+            assert not output.with_name(output.name + ".claim").exists()
+            for name, fd, _identity in owned:
+                if name != "workspace_context_fd":
+>                   with pytest.raises(OSError) as caught:
+E                   Failed: DID NOT RAISE <class 'OSError'>
+
+test/test_b3_full_context_observed.py:1617: Failed
+_ test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[temporary_cleanup] _
+
+temporary = <TemporaryDirectory '/tmp/b3-publisher-v08-lifecycle-red-20261005/test_genuine_context_publicati0/.b3-full-context-observed-l4j3kixv/.b3-streamed-bootstrap-wlt71x3y'>
+
+    def fail_actual_inner_cleanup(temporary):
+        cleanup(temporary)
+        path = Path(temporary.name)
+        if (
+            path.name.startswith(".b3-streamed-bootstrap-")
+            and path.parent.name.startswith(".b3-full-context-observed-")
+            and not injected
+        ):
+            assert (path.parent / "context/summary.json").is_file()
+            injected.append(True)
+>           raise MemoryError("genuine context inner temporary cleanup refusal")
+E           MemoryError: genuine context inner temporary cleanup refusal
+
+test/test_b3_full_context_observed.py:1661: MemoryError
+
+During handling of the above exception, another exception occurred:
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/full-context-observed-native0'), path=PosixPa...set': 'raw_positive', 'sha256': 'b6c8fbaa87d5f25c503b3ae9c23e649178e68af3b3ec0afcddbcaa100d54eefd', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/test_genuine_context_publicati0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x792d0fcdda90>
+failure = 'temporary_cleanup'
+
+    @pytest.mark.parametrize("failure", ["temporary_cleanup", "claim_unlink"])
+    def test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail(
+        stored_native, tmp_path, monkeypatch, failure
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output, injected = tmp_path / "output", []
+        before = dict(sys.modules)
+        if failure == "temporary_cleanup":
+            cleanup = public.tempfile.TemporaryDirectory.cleanup
+    
+            def fail_actual_inner_cleanup(temporary):
+                cleanup(temporary)
+                path = Path(temporary.name)
+                if (
+                    path.name.startswith(".b3-streamed-bootstrap-")
+                    and path.parent.name.startswith(".b3-full-context-observed-")
+                    and not injected
+                ):
+                    assert (path.parent / "context/summary.json").is_file()
+                    injected.append(True)
+                    raise MemoryError("genuine context inner temporary cleanup refusal")
+    
+            monkeypatch.setattr(public.tempfile.TemporaryDirectory, "cleanup", fail_actual_inner_cleanup)
+            expected, message = MemoryError, "genuine context inner temporary cleanup refusal"
+        else:
+            unlink = Path.unlink
+    
+            def fail_actual_inner_claim_unlink(path, *args, **kwargs):
+                result = unlink(path, *args, **kwargs)
+                if (
+                    path.name == "context.claim"
+                    and path.parent.name.startswith(".b3-full-context-observed-")
+                    and not injected
+                ):
+                    assert (path.parent / "context/summary.json").is_file()
+                    injected.append(True)
+                    raise OSError(errno.EIO, "genuine context inner claim unlink refusal")
+                return result
+    
+            monkeypatch.setattr(Path, "unlink", fail_actual_inner_claim_unlink)
+            expected, message = OSError, "genuine context inner claim unlink refusal"
+        with pytest.raises(expected, match=message):
+>           public.run(request, output)
+
+test/test_b3_full_context_observed.py:1683: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:2084: in run
+    result = _run(request_path, output, ledger, max_seconds=max_seconds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:1812: in _run
+    with _publication(output, output_caller, budget, ledger) as (workspace, staging, owner):
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/contextlib.py:158: in __exit__
+    self.gen.throw(typ, value, traceback)
+scripts/publish_b3_full_context_observed.py:1414: in _publication
+    owner.cleanup_workspace()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <scripts.publish_b3_full_context_observed._Publication object at 0x792d0fc63290>
+
+    def cleanup_workspace(self) -> None:
+        """Delete only the retained private tree and refuse a rebound alias.
+    
+        The canonical workspace path may name a foreign replacement. Its
+        identity is checked before side effects, but all private leaf cleanup
+        uses the independently retained original FD. A moved original is
+        reached through its verified descriptor address for empty-root
+        removal. No TemporaryDirectory finalizer recursively follows an
+        unverified pathname. Cleanup remains available after a cap refusal;
+        the unchanged inclusive seals still gate a successful public return.
+        """
+        if self.workspace is None or self.workspace_removed:
+            return
+        fd = self._workspace_descriptor()
+        try:
+            canonical = self.workspace.lstat()
+        except FileNotFoundError:
+            canonical_changed = True
+        else:
+            canonical_changed = (
+                not stat.S_ISDIR(canonical.st_mode)
+                or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
+                or self.workspace.resolve(strict=True) != self.workspace
+            )
+        # Verify the descriptor-derived original address before deleting any
+        # leaves. This cleanup address is never an original-byte source alias.
+        if self._workspace_address() != self.workspace:
+            canonical_changed = True
+        for name in ("publication", "context", "snapshot"):
+            if name in self.workspace_children and self._cleanup_workspace_child(name):
+                canonical_changed = True
+        # Any remaining entry may be a foreign replacement or a child whose
+        # creation/admission failed before its ownership could be bound.
+        # Preserve it and the enclosing directory, then refuse the public call.
+        with os.scandir(fd) as entries:
+            if next(entries, None) is not None:
+>               raise RuntimeError("Owned observed workspace contains a preserved foreign or unadmitted child")
+E               RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child
+
+scripts/publish_b3_full_context_observed.py:1045: RuntimeError
+_ test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[claim_unlink] _
+
+path = PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/test_genuine_context_publicati1/.b3-full-context-observed-abfqbo_m/context.claim')
+args = (), kwargs = {}, result = None, @py_assert1 = None, @py_assert3 = None
+@py_assert5 = None, @py_assert6 = None, @py_assert8 = None
+
+    def fail_actual_inner_claim_unlink(path, *args, **kwargs):
+        result = unlink(path, *args, **kwargs)
+        if (
+            path.name == "context.claim"
+            and path.parent.name.startswith(".b3-full-context-observed-")
+            and not injected
+        ):
+            assert (path.parent / "context/summary.json").is_file()
+            injected.append(True)
+>           raise OSError(errno.EIO, "genuine context inner claim unlink refusal")
+E           OSError: [Errno 5] genuine context inner claim unlink refusal
+
+test/test_b3_full_context_observed.py:1677: OSError
+
+During handling of the above exception, another exception occurred:
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/full-context-observed-native0'), path=PosixPa...set': 'raw_positive', 'sha256': 'b6c8fbaa87d5f25c503b3ae9c23e649178e68af3b3ec0afcddbcaa100d54eefd', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/test_genuine_context_publicati1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x792d0f300390>
+failure = 'claim_unlink'
+
+    @pytest.mark.parametrize("failure", ["temporary_cleanup", "claim_unlink"])
+    def test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail(
+        stored_native, tmp_path, monkeypatch, failure
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output, injected = tmp_path / "output", []
+        before = dict(sys.modules)
+        if failure == "temporary_cleanup":
+            cleanup = public.tempfile.TemporaryDirectory.cleanup
+    
+            def fail_actual_inner_cleanup(temporary):
+                cleanup(temporary)
+                path = Path(temporary.name)
+                if (
+                    path.name.startswith(".b3-streamed-bootstrap-")
+                    and path.parent.name.startswith(".b3-full-context-observed-")
+                    and not injected
+                ):
+                    assert (path.parent / "context/summary.json").is_file()
+                    injected.append(True)
+                    raise MemoryError("genuine context inner temporary cleanup refusal")
+    
+            monkeypatch.setattr(public.tempfile.TemporaryDirectory, "cleanup", fail_actual_inner_cleanup)
+            expected, message = MemoryError, "genuine context inner temporary cleanup refusal"
+        else:
+            unlink = Path.unlink
+    
+            def fail_actual_inner_claim_unlink(path, *args, **kwargs):
+                result = unlink(path, *args, **kwargs)
+                if (
+                    path.name == "context.claim"
+                    and path.parent.name.startswith(".b3-full-context-observed-")
+                    and not injected
+                ):
+                    assert (path.parent / "context/summary.json").is_file()
+                    injected.append(True)
+                    raise OSError(errno.EIO, "genuine context inner claim unlink refusal")
+                return result
+    
+            monkeypatch.setattr(Path, "unlink", fail_actual_inner_claim_unlink)
+            expected, message = OSError, "genuine context inner claim unlink refusal"
+        with pytest.raises(expected, match=message):
+>           public.run(request, output)
+
+test/test_b3_full_context_observed.py:1683: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:2084: in run
+    result = _run(request_path, output, ledger, max_seconds=max_seconds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:1812: in _run
+    with _publication(output, output_caller, budget, ledger) as (workspace, staging, owner):
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/contextlib.py:158: in __exit__
+    self.gen.throw(typ, value, traceback)
+scripts/publish_b3_full_context_observed.py:1414: in _publication
+    owner.cleanup_workspace()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <scripts.publish_b3_full_context_observed._Publication object at 0x792d0fc18710>
+
+    def cleanup_workspace(self) -> None:
+        """Delete only the retained private tree and refuse a rebound alias.
+    
+        The canonical workspace path may name a foreign replacement. Its
+        identity is checked before side effects, but all private leaf cleanup
+        uses the independently retained original FD. A moved original is
+        reached through its verified descriptor address for empty-root
+        removal. No TemporaryDirectory finalizer recursively follows an
+        unverified pathname. Cleanup remains available after a cap refusal;
+        the unchanged inclusive seals still gate a successful public return.
+        """
+        if self.workspace is None or self.workspace_removed:
+            return
+        fd = self._workspace_descriptor()
+        try:
+            canonical = self.workspace.lstat()
+        except FileNotFoundError:
+            canonical_changed = True
+        else:
+            canonical_changed = (
+                not stat.S_ISDIR(canonical.st_mode)
+                or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
+                or self.workspace.resolve(strict=True) != self.workspace
+            )
+        # Verify the descriptor-derived original address before deleting any
+        # leaves. This cleanup address is never an original-byte source alias.
+        if self._workspace_address() != self.workspace:
+            canonical_changed = True
+        for name in ("publication", "context", "snapshot"):
+            if name in self.workspace_children and self._cleanup_workspace_child(name):
+                canonical_changed = True
+        # Any remaining entry may be a foreign replacement or a child whose
+        # creation/admission failed before its ownership could be bound.
+        # Preserve it and the enclosing directory, then refuse the public call.
+        with os.scandir(fd) as entries:
+            if next(entries, None) is not None:
+>               raise RuntimeError("Owned observed workspace contains a preserved foreign or unadmitted child")
+E               RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child
+
+scripts/publish_b3_full_context_observed.py:1045: RuntimeError
+_ test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-publication] _
+
+owner = <scripts.publish_b3_full_context_observed._Publication object at 0x792d0fa0a090>
+name = 'publication'
+
+    def observe_actual_binding(owner, name):
+        active.append((owner, name))
+        try:
+>           return bind(owner, name)
+                   ^^^^^^^^^^^^^^^^^
+
+test/test_b3_full_context_observed.py:1705: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:940: in bind_workspace_child
+    opened = self._adopt(attribute, fd, directory=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:809: in _adopt
+    proc = os.stat(f"/proc/self/fd/{fd}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/test_b3_full_context_observed.py:1731: in observe_stat
+    fail_later_probe(acquired[0][0])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fd = 16
+
+    def fail_later_probe(fd):
+        if acquired and fd == acquired[0][0] and not injected:
+            assert birth_seen == [True]
+            owner = acquired[0][2]
+            assert owner.descriptor_identities["workspace_" + child_name + "_fd"] == acquired[0][1]
+            injected.append(True)
+>           raise OSError(errno.EIO, "recoverable child birth followed by admission probe refusal")
+E           OSError: [Errno 5] recoverable child birth followed by admission probe refusal
+
+test/test_b3_full_context_observed.py:1723: OSError
+
+During handling of the above exception, another exception occurred:
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/full-context-observed-native0'), path=PosixPa...set': 'raw_positive', 'sha256': 'b6c8fbaa87d5f25c503b3ae9c23e649178e68af3b3ec0afcddbcaa100d54eefd', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/test_recoverable_original_chil0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x792d0fc67250>
+child_name = 'publication', probe = 'proc'
+
+    @pytest.mark.parametrize("child_name", ["publication", "snapshot"])
+    @pytest.mark.parametrize("probe", ["proc", "fstat"])
+    def test_recoverable_original_child_birth_survives_later_admission_probe_failure(
+        stored_native, tmp_path, monkeypatch, child_name, probe
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        bind = public._Publication.bind_workspace_child
+        ordinary_open, ordinary_stat, ordinary_fstat, ordinary_close = os.open, os.stat, os.fstat, os.close
+        before = dict(sys.modules)
+        active, acquired, birth_seen, injected = [], [], [], []
+    
+        def observe_actual_binding(owner, name):
+            active.append((owner, name))
+            try:
+                return bind(owner, name)
+            finally:
+                active.pop()
+    
+        def record_original_open(path, flags, *args, **kwargs):
+            fd = ordinary_open(path, flags, *args, **kwargs)
+            if active and active[-1][1] == child_name and Path(path).name == child_name and flags & os.O_DIRECTORY:
+                opened = ordinary_fstat(fd)
+                assert not acquired
+                acquired.append((fd, (opened.st_dev, opened.st_ino), active[-1][0]))
+            return fd
+    
+        def fail_later_probe(fd):
+            if acquired and fd == acquired[0][0] and not injected:
+                assert birth_seen == [True]
+                owner = acquired[0][2]
+                assert owner.descriptor_identities["workspace_" + child_name + "_fd"] == acquired[0][1]
+                injected.append(True)
+                raise OSError(errno.EIO, "recoverable child birth followed by admission probe refusal")
+    
+        def observe_stat(path, *args, **kwargs):
+            if acquired and type(path) is int and path == acquired[0][0] and not birth_seen:
+                result = ordinary_stat(path, *args, **kwargs)
+                birth_seen.append(True)
+                return result
+            if probe == "proc" and acquired and path == f"/proc/self/fd/{acquired[0][0]}":
+                fail_later_probe(acquired[0][0])
+            return ordinary_stat(path, *args, **kwargs)
+    
+        def observe_fstat(fd):
+            if probe == "fstat":
+                fail_later_probe(fd)
+            return ordinary_fstat(fd)
+    
+        monkeypatch.setattr(public._Publication, "bind_workspace_child", observe_actual_binding)
+        monkeypatch.setattr(os, "open", record_original_open)
+        monkeypatch.setattr(os, "stat", observe_stat)
+        monkeypatch.setattr(os, "fstat", observe_fstat)
+        try:
+            with pytest.raises(OSError, match="recoverable child birth followed by admission probe refusal"):
+>               public.run(request, output)
+
+test/test_b3_full_context_observed.py:1745: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:2084: in run
+    result = _run(request_path, output, ledger, max_seconds=max_seconds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:1812: in _run
+    with _publication(output, output_caller, budget, ledger) as (workspace, staging, owner):
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:1414: in _publication
+    owner.cleanup_workspace()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <scripts.publish_b3_full_context_observed._Publication object at 0x792d0fa0a090>
+
+    def cleanup_workspace(self) -> None:
+        """Delete only the retained private tree and refuse a rebound alias.
+    
+        The canonical workspace path may name a foreign replacement. Its
+        identity is checked before side effects, but all private leaf cleanup
+        uses the independently retained original FD. A moved original is
+        reached through its verified descriptor address for empty-root
+        removal. No TemporaryDirectory finalizer recursively follows an
+        unverified pathname. Cleanup remains available after a cap refusal;
+        the unchanged inclusive seals still gate a successful public return.
+        """
+        if self.workspace is None or self.workspace_removed:
+            return
+        fd = self._workspace_descriptor()
+        try:
+            canonical = self.workspace.lstat()
+        except FileNotFoundError:
+            canonical_changed = True
+        else:
+            canonical_changed = (
+                not stat.S_ISDIR(canonical.st_mode)
+                or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
+                or self.workspace.resolve(strict=True) != self.workspace
+            )
+        # Verify the descriptor-derived original address before deleting any
+        # leaves. This cleanup address is never an original-byte source alias.
+        if self._workspace_address() != self.workspace:
+            canonical_changed = True
+        for name in ("publication", "context", "snapshot"):
+            if name in self.workspace_children and self._cleanup_workspace_child(name):
+                canonical_changed = True
+        # Any remaining entry may be a foreign replacement or a child whose
+        # creation/admission failed before its ownership could be bound.
+        # Preserve it and the enclosing directory, then refuse the public call.
+        with os.scandir(fd) as entries:
+            if next(entries, None) is not None:
+>               raise RuntimeError("Owned observed workspace contains a preserved foreign or unadmitted child")
+E               RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child
+
+scripts/publish_b3_full_context_observed.py:1045: RuntimeError
+_ test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-snapshot] _
+
+owner = <scripts.publish_b3_full_context_observed._Publication object at 0x792d0fe9bc50>
+name = 'snapshot'
+
+    def observe_actual_binding(owner, name):
+        active.append((owner, name))
+        try:
+>           return bind(owner, name)
+                   ^^^^^^^^^^^^^^^^^
+
+test/test_b3_full_context_observed.py:1705: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:940: in bind_workspace_child
+    opened = self._adopt(attribute, fd, directory=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:809: in _adopt
+    proc = os.stat(f"/proc/self/fd/{fd}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/test_b3_full_context_observed.py:1731: in observe_stat
+    fail_later_probe(acquired[0][0])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fd = 18
+
+    def fail_later_probe(fd):
+        if acquired and fd == acquired[0][0] and not injected:
+            assert birth_seen == [True]
+            owner = acquired[0][2]
+            assert owner.descriptor_identities["workspace_" + child_name + "_fd"] == acquired[0][1]
+            injected.append(True)
+>           raise OSError(errno.EIO, "recoverable child birth followed by admission probe refusal")
+E           OSError: [Errno 5] recoverable child birth followed by admission probe refusal
+
+test/test_b3_full_context_observed.py:1723: OSError
+
+During handling of the above exception, another exception occurred:
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/full-context-observed-native0'), path=PosixPa...set': 'raw_positive', 'sha256': 'b6c8fbaa87d5f25c503b3ae9c23e649178e68af3b3ec0afcddbcaa100d54eefd', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/test_recoverable_original_chil1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x792d0f379710>
+child_name = 'snapshot', probe = 'proc'
+
+    @pytest.mark.parametrize("child_name", ["publication", "snapshot"])
+    @pytest.mark.parametrize("probe", ["proc", "fstat"])
+    def test_recoverable_original_child_birth_survives_later_admission_probe_failure(
+        stored_native, tmp_path, monkeypatch, child_name, probe
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        bind = public._Publication.bind_workspace_child
+        ordinary_open, ordinary_stat, ordinary_fstat, ordinary_close = os.open, os.stat, os.fstat, os.close
+        before = dict(sys.modules)
+        active, acquired, birth_seen, injected = [], [], [], []
+    
+        def observe_actual_binding(owner, name):
+            active.append((owner, name))
+            try:
+                return bind(owner, name)
+            finally:
+                active.pop()
+    
+        def record_original_open(path, flags, *args, **kwargs):
+            fd = ordinary_open(path, flags, *args, **kwargs)
+            if active and active[-1][1] == child_name and Path(path).name == child_name and flags & os.O_DIRECTORY:
+                opened = ordinary_fstat(fd)
+                assert not acquired
+                acquired.append((fd, (opened.st_dev, opened.st_ino), active[-1][0]))
+            return fd
+    
+        def fail_later_probe(fd):
+            if acquired and fd == acquired[0][0] and not injected:
+                assert birth_seen == [True]
+                owner = acquired[0][2]
+                assert owner.descriptor_identities["workspace_" + child_name + "_fd"] == acquired[0][1]
+                injected.append(True)
+                raise OSError(errno.EIO, "recoverable child birth followed by admission probe refusal")
+    
+        def observe_stat(path, *args, **kwargs):
+            if acquired and type(path) is int and path == acquired[0][0] and not birth_seen:
+                result = ordinary_stat(path, *args, **kwargs)
+                birth_seen.append(True)
+                return result
+            if probe == "proc" and acquired and path == f"/proc/self/fd/{acquired[0][0]}":
+                fail_later_probe(acquired[0][0])
+            return ordinary_stat(path, *args, **kwargs)
+    
+        def observe_fstat(fd):
+            if probe == "fstat":
+                fail_later_probe(fd)
+            return ordinary_fstat(fd)
+    
+        monkeypatch.setattr(public._Publication, "bind_workspace_child", observe_actual_binding)
+        monkeypatch.setattr(os, "open", record_original_open)
+        monkeypatch.setattr(os, "stat", observe_stat)
+        monkeypatch.setattr(os, "fstat", observe_fstat)
+        try:
+            with pytest.raises(OSError, match="recoverable child birth followed by admission probe refusal"):
+>               public.run(request, output)
+
+test/test_b3_full_context_observed.py:1745: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:2084: in run
+    result = _run(request_path, output, ledger, max_seconds=max_seconds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:1812: in _run
+    with _publication(output, output_caller, budget, ledger) as (workspace, staging, owner):
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/contextlib.py:158: in __exit__
+    self.gen.throw(typ, value, traceback)
+scripts/publish_b3_full_context_observed.py:1414: in _publication
+    owner.cleanup_workspace()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <scripts.publish_b3_full_context_observed._Publication object at 0x792d0fe9bc50>
+
+    def cleanup_workspace(self) -> None:
+        """Delete only the retained private tree and refuse a rebound alias.
+    
+        The canonical workspace path may name a foreign replacement. Its
+        identity is checked before side effects, but all private leaf cleanup
+        uses the independently retained original FD. A moved original is
+        reached through its verified descriptor address for empty-root
+        removal. No TemporaryDirectory finalizer recursively follows an
+        unverified pathname. Cleanup remains available after a cap refusal;
+        the unchanged inclusive seals still gate a successful public return.
+        """
+        if self.workspace is None or self.workspace_removed:
+            return
+        fd = self._workspace_descriptor()
+        try:
+            canonical = self.workspace.lstat()
+        except FileNotFoundError:
+            canonical_changed = True
+        else:
+            canonical_changed = (
+                not stat.S_ISDIR(canonical.st_mode)
+                or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
+                or self.workspace.resolve(strict=True) != self.workspace
+            )
+        # Verify the descriptor-derived original address before deleting any
+        # leaves. This cleanup address is never an original-byte source alias.
+        if self._workspace_address() != self.workspace:
+            canonical_changed = True
+        for name in ("publication", "context", "snapshot"):
+            if name in self.workspace_children and self._cleanup_workspace_child(name):
+                canonical_changed = True
+        # Any remaining entry may be a foreign replacement or a child whose
+        # creation/admission failed before its ownership could be bound.
+        # Preserve it and the enclosing directory, then refuse the public call.
+        with os.scandir(fd) as entries:
+            if next(entries, None) is not None:
+>               raise RuntimeError("Owned observed workspace contains a preserved foreign or unadmitted child")
+E               RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child
+
+scripts/publish_b3_full_context_observed.py:1045: RuntimeError
+_ test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-publication] _
+
+owner = <scripts.publish_b3_full_context_observed._Publication object at 0x792d0fc6f4d0>
+name = 'publication'
+
+    def observe_actual_binding(owner, name):
+        active.append((owner, name))
+        try:
+>           return bind(owner, name)
+                   ^^^^^^^^^^^^^^^^^
+
+test/test_b3_full_context_observed.py:1705: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:940: in bind_workspace_child
+    opened = self._adopt(attribute, fd, directory=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:810: in _adopt
+    opened = os.fstat(fd)
+             ^^^^^^^^^^^^
+test/test_b3_full_context_observed.py:1736: in observe_fstat
+    fail_later_probe(fd)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fd = 16
+
+    def fail_later_probe(fd):
+        if acquired and fd == acquired[0][0] and not injected:
+            assert birth_seen == [True]
+            owner = acquired[0][2]
+            assert owner.descriptor_identities["workspace_" + child_name + "_fd"] == acquired[0][1]
+            injected.append(True)
+>           raise OSError(errno.EIO, "recoverable child birth followed by admission probe refusal")
+E           OSError: [Errno 5] recoverable child birth followed by admission probe refusal
+
+test/test_b3_full_context_observed.py:1723: OSError
+
+During handling of the above exception, another exception occurred:
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/full-context-observed-native0'), path=PosixPa...set': 'raw_positive', 'sha256': 'b6c8fbaa87d5f25c503b3ae9c23e649178e68af3b3ec0afcddbcaa100d54eefd', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/test_recoverable_original_chil2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x792d0f660590>
+child_name = 'publication', probe = 'fstat'
+
+    @pytest.mark.parametrize("child_name", ["publication", "snapshot"])
+    @pytest.mark.parametrize("probe", ["proc", "fstat"])
+    def test_recoverable_original_child_birth_survives_later_admission_probe_failure(
+        stored_native, tmp_path, monkeypatch, child_name, probe
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        bind = public._Publication.bind_workspace_child
+        ordinary_open, ordinary_stat, ordinary_fstat, ordinary_close = os.open, os.stat, os.fstat, os.close
+        before = dict(sys.modules)
+        active, acquired, birth_seen, injected = [], [], [], []
+    
+        def observe_actual_binding(owner, name):
+            active.append((owner, name))
+            try:
+                return bind(owner, name)
+            finally:
+                active.pop()
+    
+        def record_original_open(path, flags, *args, **kwargs):
+            fd = ordinary_open(path, flags, *args, **kwargs)
+            if active and active[-1][1] == child_name and Path(path).name == child_name and flags & os.O_DIRECTORY:
+                opened = ordinary_fstat(fd)
+                assert not acquired
+                acquired.append((fd, (opened.st_dev, opened.st_ino), active[-1][0]))
+            return fd
+    
+        def fail_later_probe(fd):
+            if acquired and fd == acquired[0][0] and not injected:
+                assert birth_seen == [True]
+                owner = acquired[0][2]
+                assert owner.descriptor_identities["workspace_" + child_name + "_fd"] == acquired[0][1]
+                injected.append(True)
+                raise OSError(errno.EIO, "recoverable child birth followed by admission probe refusal")
+    
+        def observe_stat(path, *args, **kwargs):
+            if acquired and type(path) is int and path == acquired[0][0] and not birth_seen:
+                result = ordinary_stat(path, *args, **kwargs)
+                birth_seen.append(True)
+                return result
+            if probe == "proc" and acquired and path == f"/proc/self/fd/{acquired[0][0]}":
+                fail_later_probe(acquired[0][0])
+            return ordinary_stat(path, *args, **kwargs)
+    
+        def observe_fstat(fd):
+            if probe == "fstat":
+                fail_later_probe(fd)
+            return ordinary_fstat(fd)
+    
+        monkeypatch.setattr(public._Publication, "bind_workspace_child", observe_actual_binding)
+        monkeypatch.setattr(os, "open", record_original_open)
+        monkeypatch.setattr(os, "stat", observe_stat)
+        monkeypatch.setattr(os, "fstat", observe_fstat)
+        try:
+            with pytest.raises(OSError, match="recoverable child birth followed by admission probe refusal"):
+>               public.run(request, output)
+
+test/test_b3_full_context_observed.py:1745: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:2084: in run
+    result = _run(request_path, output, ledger, max_seconds=max_seconds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:1812: in _run
+    with _publication(output, output_caller, budget, ledger) as (workspace, staging, owner):
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:1414: in _publication
+    owner.cleanup_workspace()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <scripts.publish_b3_full_context_observed._Publication object at 0x792d0fc6f4d0>
+
+    def cleanup_workspace(self) -> None:
+        """Delete only the retained private tree and refuse a rebound alias.
+    
+        The canonical workspace path may name a foreign replacement. Its
+        identity is checked before side effects, but all private leaf cleanup
+        uses the independently retained original FD. A moved original is
+        reached through its verified descriptor address for empty-root
+        removal. No TemporaryDirectory finalizer recursively follows an
+        unverified pathname. Cleanup remains available after a cap refusal;
+        the unchanged inclusive seals still gate a successful public return.
+        """
+        if self.workspace is None or self.workspace_removed:
+            return
+        fd = self._workspace_descriptor()
+        try:
+            canonical = self.workspace.lstat()
+        except FileNotFoundError:
+            canonical_changed = True
+        else:
+            canonical_changed = (
+                not stat.S_ISDIR(canonical.st_mode)
+                or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
+                or self.workspace.resolve(strict=True) != self.workspace
+            )
+        # Verify the descriptor-derived original address before deleting any
+        # leaves. This cleanup address is never an original-byte source alias.
+        if self._workspace_address() != self.workspace:
+            canonical_changed = True
+        for name in ("publication", "context", "snapshot"):
+            if name in self.workspace_children and self._cleanup_workspace_child(name):
+                canonical_changed = True
+        # Any remaining entry may be a foreign replacement or a child whose
+        # creation/admission failed before its ownership could be bound.
+        # Preserve it and the enclosing directory, then refuse the public call.
+        with os.scandir(fd) as entries:
+            if next(entries, None) is not None:
+>               raise RuntimeError("Owned observed workspace contains a preserved foreign or unadmitted child")
+E               RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child
+
+scripts/publish_b3_full_context_observed.py:1045: RuntimeError
+_ test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-snapshot] _
+
+owner = <scripts.publish_b3_full_context_observed._Publication object at 0x792d0f186ad0>
+name = 'snapshot'
+
+    def observe_actual_binding(owner, name):
+        active.append((owner, name))
+        try:
+>           return bind(owner, name)
+                   ^^^^^^^^^^^^^^^^^
+
+test/test_b3_full_context_observed.py:1705: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:940: in bind_workspace_child
+    opened = self._adopt(attribute, fd, directory=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:810: in _adopt
+    opened = os.fstat(fd)
+             ^^^^^^^^^^^^
+test/test_b3_full_context_observed.py:1736: in observe_fstat
+    fail_later_probe(fd)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fd = 18
+
+    def fail_later_probe(fd):
+        if acquired and fd == acquired[0][0] and not injected:
+            assert birth_seen == [True]
+            owner = acquired[0][2]
+            assert owner.descriptor_identities["workspace_" + child_name + "_fd"] == acquired[0][1]
+            injected.append(True)
+>           raise OSError(errno.EIO, "recoverable child birth followed by admission probe refusal")
+E           OSError: [Errno 5] recoverable child birth followed by admission probe refusal
+
+test/test_b3_full_context_observed.py:1723: OSError
+
+During handling of the above exception, another exception occurred:
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/full-context-observed-native0'), path=PosixPa...set': 'raw_positive', 'sha256': 'b6c8fbaa87d5f25c503b3ae9c23e649178e68af3b3ec0afcddbcaa100d54eefd', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher-v08-lifecycle-red-20261005/test_recoverable_original_chil3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x792d0f15c950>
+child_name = 'snapshot', probe = 'fstat'
+
+    @pytest.mark.parametrize("child_name", ["publication", "snapshot"])
+    @pytest.mark.parametrize("probe", ["proc", "fstat"])
+    def test_recoverable_original_child_birth_survives_later_admission_probe_failure(
+        stored_native, tmp_path, monkeypatch, child_name, probe
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        bind = public._Publication.bind_workspace_child
+        ordinary_open, ordinary_stat, ordinary_fstat, ordinary_close = os.open, os.stat, os.fstat, os.close
+        before = dict(sys.modules)
+        active, acquired, birth_seen, injected = [], [], [], []
+    
+        def observe_actual_binding(owner, name):
+            active.append((owner, name))
+            try:
+                return bind(owner, name)
+            finally:
+                active.pop()
+    
+        def record_original_open(path, flags, *args, **kwargs):
+            fd = ordinary_open(path, flags, *args, **kwargs)
+            if active and active[-1][1] == child_name and Path(path).name == child_name and flags & os.O_DIRECTORY:
+                opened = ordinary_fstat(fd)
+                assert not acquired
+                acquired.append((fd, (opened.st_dev, opened.st_ino), active[-1][0]))
+            return fd
+    
+        def fail_later_probe(fd):
+            if acquired and fd == acquired[0][0] and not injected:
+                assert birth_seen == [True]
+                owner = acquired[0][2]
+                assert owner.descriptor_identities["workspace_" + child_name + "_fd"] == acquired[0][1]
+                injected.append(True)
+                raise OSError(errno.EIO, "recoverable child birth followed by admission probe refusal")
+    
+        def observe_stat(path, *args, **kwargs):
+            if acquired and type(path) is int and path == acquired[0][0] and not birth_seen:
+                result = ordinary_stat(path, *args, **kwargs)
+                birth_seen.append(True)
+                return result
+            if probe == "proc" and acquired and path == f"/proc/self/fd/{acquired[0][0]}":
+                fail_later_probe(acquired[0][0])
+            return ordinary_stat(path, *args, **kwargs)
+    
+        def observe_fstat(fd):
+            if probe == "fstat":
+                fail_later_probe(fd)
+            return ordinary_fstat(fd)
+    
+        monkeypatch.setattr(public._Publication, "bind_workspace_child", observe_actual_binding)
+        monkeypatch.setattr(os, "open", record_original_open)
+        monkeypatch.setattr(os, "stat", observe_stat)
+        monkeypatch.setattr(os, "fstat", observe_fstat)
+        try:
+            with pytest.raises(OSError, match="recoverable child birth followed by admission probe refusal"):
+>               public.run(request, output)
+
+test/test_b3_full_context_observed.py:1745: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:2084: in run
+    result = _run(request_path, output, ledger, max_seconds=max_seconds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:1812: in _run
+    with _publication(output, output_caller, budget, ledger) as (workspace, staging, owner):
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/contextlib.py:158: in __exit__
+    self.gen.throw(typ, value, traceback)
+scripts/publish_b3_full_context_observed.py:1414: in _publication
+    owner.cleanup_workspace()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <scripts.publish_b3_full_context_observed._Publication object at 0x792d0f186ad0>
+
+    def cleanup_workspace(self) -> None:
+        """Delete only the retained private tree and refuse a rebound alias.
+    
+        The canonical workspace path may name a foreign replacement. Its
+        identity is checked before side effects, but all private leaf cleanup
+        uses the independently retained original FD. A moved original is
+        reached through its verified descriptor address for empty-root
+        removal. No TemporaryDirectory finalizer recursively follows an
+        unverified pathname. Cleanup remains available after a cap refusal;
+        the unchanged inclusive seals still gate a successful public return.
+        """
+        if self.workspace is None or self.workspace_removed:
+            return
+        fd = self._workspace_descriptor()
+        try:
+            canonical = self.workspace.lstat()
+        except FileNotFoundError:
+            canonical_changed = True
+        else:
+            canonical_changed = (
+                not stat.S_ISDIR(canonical.st_mode)
+                or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
+                or self.workspace.resolve(strict=True) != self.workspace
+            )
+        # Verify the descriptor-derived original address before deleting any
+        # leaves. This cleanup address is never an original-byte source alias.
+        if self._workspace_address() != self.workspace:
+            canonical_changed = True
+        for name in ("publication", "context", "snapshot"):
+            if name in self.workspace_children and self._cleanup_workspace_child(name):
+                canonical_changed = True
+        # Any remaining entry may be a foreign replacement or a child whose
+        # creation/admission failed before its ownership could be bound.
+        # Preserve it and the enclosing directory, then refuse the public call.
+        with os.scandir(fd) as entries:
+            if next(entries, None) is not None:
+>               raise RuntimeError("Owned observed workspace contains a preserved foreign or unadmitted child")
+E               RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child
+
+scripts/publish_b3_full_context_observed.py:1045: RuntimeError
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_v08_lifecycle_regressions_against_v07_red.xml -
+=========================== short test summary info ============================
+FAILED test/test_b3_full_context_observed.py::test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle
+FAILED test/test_b3_full_context_observed.py::test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[temporary_cleanup]
+FAILED test/test_b3_full_context_observed.py::test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[claim_unlink]
+FAILED test/test_b3_full_context_observed.py::test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-publication]
+FAILED test/test_b3_full_context_observed.py::test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-snapshot]
+FAILED test/test_b3_full_context_observed.py::test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-publication]
+FAILED test/test_b3_full_context_observed.py::test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-snapshot]
+7 failed, 2 warnings in 245.11s (0:04:05)

@@ -1,0 +1,174 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_genuine_context_fallback_birth_is_bound_before_engine_descriptor_release_can_fail _
+
+fd = 17
+
+    def fail_after_real_engine_descriptor_release(fd):
+        frame = inspect.currentframe()
+        assert frame is not None
+        try:
+            caller = frame.f_back
+            actual_engine_close = (
+                engines and caller is not None and caller.f_code is engines[0][0].publish_new_directory.__code__
+            )
+        finally:
+            del frame
+        if actual_engine_close and not released:
+            path = Path(os.readlink(f"/proc/self/fd/{fd}"))
+            assert path.name == "context" and path.parent.name.startswith(".b3-full-context-observed-")
+            assert (path / "summary.json").is_file()
+            opened = ordinary_fstat(fd)
+            ordinary_close(fd)
+            released.append((fd, (opened.st_dev, opened.st_ino)))
+>           raise OSError(errno.EIO, "genuine context fallback engine close refusal after actual release")
+E           OSError: [Errno 5] genuine context fallback engine close refusal after actual release
+
+test/test_b3_full_context_observed.py:1831: OSError
+
+During handling of the above exception, another exception occurred:
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher-v10-fallback-red-20261005/full-context-observed-native0'), path=PosixPat...set': 'raw_positive', 'sha256': 'e229cf3824eb62a976e98574b18140fd16aacfe96ec64fdb4ac45732c9d71b54', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher-v10-fallback-red-20261005/test_genuine_context_fallback_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7bec54a72fd0>
+
+    def test_genuine_context_fallback_birth_is_bound_before_engine_descriptor_release_can_fail(
+        stored_native, tmp_path, monkeypatch
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        bootstrap = public._bootstrap
+        ordinary_close, ordinary_fstat = os.close, os.fstat
+        before = dict(sys.modules)
+        engines, fallbacks, released = [], [], []
+    
+        def force_actual_context_engine_fallback(request, budget):
+            modules, consumers, original = bootstrap(request, budget)
+            load = modules["context"]._load
+    
+            def load_real_context_engine(*args, **kwargs):
+                engine = load(*args, **kwargs)
+                assert engine.__file__ == str(ROOT / "scripts/replay_b3_sparse_null.py")
+                rename = engine._rename_new
+    
+                def unsupported_actual_directory_rename(staging, target):
+                    assert Path(target).name == "context"
+                    fallbacks.append(True)
+                    raise OSError(errno.EOPNOTSUPP, "exercise genuine context publication fallback")
+    
+                engine._rename_new = unsupported_actual_directory_rename
+                engines.append((engine, rename))
+                return engine
+    
+            modules["context"]._load = load_real_context_engine
+            return modules, consumers, original
+    
+        def fail_after_real_engine_descriptor_release(fd):
+            frame = inspect.currentframe()
+            assert frame is not None
+            try:
+                caller = frame.f_back
+                actual_engine_close = (
+                    engines and caller is not None and caller.f_code is engines[0][0].publish_new_directory.__code__
+                )
+            finally:
+                del frame
+            if actual_engine_close and not released:
+                path = Path(os.readlink(f"/proc/self/fd/{fd}"))
+                assert path.name == "context" and path.parent.name.startswith(".b3-full-context-observed-")
+                assert (path / "summary.json").is_file()
+                opened = ordinary_fstat(fd)
+                ordinary_close(fd)
+                released.append((fd, (opened.st_dev, opened.st_ino)))
+                raise OSError(errno.EIO, "genuine context fallback engine close refusal after actual release")
+            ordinary_close(fd)
+    
+        monkeypatch.setattr(public, "_bootstrap", force_actual_context_engine_fallback)
+        monkeypatch.setattr(os, "close", fail_after_real_engine_descriptor_release)
+        try:
+            with pytest.raises(OSError, match="genuine context fallback engine close refusal after actual release"):
+>               public.run(request, output)
+
+test/test_b3_full_context_observed.py:1838: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:2186: in run
+    result = _run(request_path, output, ledger, max_seconds=max_seconds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:1898: in _run
+    with _publication(output, output_caller, budget, ledger) as (workspace, staging, owner):
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/contextlib.py:158: in __exit__
+    self.gen.throw(typ, value, traceback)
+scripts/publish_b3_full_context_observed.py:1500: in _publication
+    owner.cleanup_workspace()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <scripts.publish_b3_full_context_observed._Publication object at 0x7beb820757d0>
+
+    def cleanup_workspace(self) -> None:
+        """Delete only the retained private tree and refuse a rebound alias.
+    
+        The canonical workspace path may name a foreign replacement. Its
+        identity is checked before side effects, but all private leaf cleanup
+        uses the independently retained original FD. A moved original is
+        reached through its verified descriptor address for empty-root
+        removal. No TemporaryDirectory finalizer recursively follows an
+        unverified pathname. Cleanup remains available after a cap refusal;
+        the unchanged inclusive seals still gate a successful public return.
+        """
+        if self.workspace is None or self.workspace_removed:
+            return
+        fd = self._workspace_descriptor()
+        try:
+            canonical = self.workspace.lstat()
+        except FileNotFoundError:
+            canonical_changed = True
+        else:
+            canonical_changed = (
+                not stat.S_ISDIR(canonical.st_mode)
+                or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
+                or self.workspace.resolve(strict=True) != self.workspace
+            )
+        # Verify the descriptor-derived original address before deleting any
+        # leaves. This cleanup address is never an original-byte source alias.
+        if self._workspace_address() != self.workspace:
+            canonical_changed = True
+    
+        def cleanup_child(name: str) -> None:
+            nonlocal canonical_changed
+            if self._cleanup_workspace_child(name):
+                canonical_changed = True
+    
+        cleanup = _Cleanup()
+        for name in ("publication", "context", "snapshot"):
+            if name in self.workspace_children:
+                cleanup.attempt(cleanup_child, name)
+        # Refusing one child's ownership cannot strand another child's known
+        # private numeric copies. Drain all fixed independent bindings first,
+        # then preserve any uncertain child/root and propagate the first error.
+        cleanup.finish()
+        # Any remaining entry may be a foreign replacement or a child whose
+        # creation/admission failed before its ownership could be bound.
+        # Preserve it and the enclosing directory, then refuse the public call.
+        with os.scandir(fd) as entries:
+            if next(entries, None) is not None:
+>               raise RuntimeError("Owned observed workspace contains a preserved foreign or unadmitted child")
+E               RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child
+
+scripts/publish_b3_full_context_observed.py:1119: RuntimeError
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_v10_context_fallback_against_v09_red.xml -
+=========================== short test summary info ============================
+FAILED test/test_b3_full_context_observed.py::test_genuine_context_fallback_birth_is_bound_before_engine_descriptor_release_can_fail
+1 failed, 2 warnings in 41.34s

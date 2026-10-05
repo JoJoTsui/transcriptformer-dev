@@ -1,0 +1,94 @@
+F......                                                                  [100%]
+=================================== FAILURES ===================================
+_ test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle _
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher-v09-snapshot-red-20261005/full-context-observed-native0'), path=PosixPat...set': 'raw_positive', 'sha256': '7566f162b607d81ee660daf35cbd3b729ccdde201272966fdde59802a5257487', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher-v09-snapshot-red-20261005/test_reused_private_child_desc0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7069eea795d0>
+
+    def test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle(
+        stored_native, tmp_path, monkeypatch
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        seal = public._Publication.seal_published
+        ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
+        before = dict(sys.modules)
+        owned, reused, snapshots = [], [], []
+        foreign = tmp_path / "foreign-reused-child-fd.bin"
+        foreign_bytes = b"caller-owned replacement descriptor must survive\n"
+        foreign.write_bytes(foreign_bytes)
+    
+        def replace_actual_context_descriptor_before_private_cleanup(owner):
+            seal(owner)
+            if not reused:
+                assert (output / "summary.json").is_file()
+                assert owner.workspace is not None
+                snapshot = owner.workspace / "snapshot"
+                copied = list(snapshot.iterdir())
+                assert len(copied) == 5 and all(path.is_file() for path in copied)
+                snapshots.append((snapshot, copied))
+                for name in (
+                    "workspace_publication_fd",
+                    "workspace_context_fd",
+                    "workspace_snapshot_fd",
+                    "workspace_fd",
+                    "parent_fd",
+                    "claim_fd",
+                    "output_fd",
+                    "staging_fd",
+                    "marker_fd",
+                ):
+                    fd = getattr(owner, name)
+                    assert fd is not None
+                    opened = ordinary_fstat(fd)
+                    owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+                fd = owner.workspace_context_fd
+                ordinary_close(fd)
+                replacement = ordinary_open(foreign, os.O_RDONLY | os.O_NOFOLLOW)
+                if replacement != fd:
+                    ordinary_dup2(replacement, fd)
+                    ordinary_close(replacement)
+                opened = ordinary_fstat(fd)
+                reused.append((fd, (opened.st_dev, opened.st_ino)))
+    
+        monkeypatch.setattr(public._Publication, "seal_published", replace_actual_context_descriptor_before_private_cleanup)
+        try:
+            with pytest.raises(RuntimeError, match="descriptor|identity|workspace"):
+                public.run(request, output)
+            assert len(owned) == 9 and len(reused) == 1
+            foreign_fd, foreign_identity = reused[0]
+            current = ordinary_fstat(foreign_fd)
+            assert (current.st_dev, current.st_ino) == foreign_identity
+            assert os.read(foreign_fd, len(foreign_bytes)) == foreign_bytes
+            assert foreign.read_bytes() == foreign_bytes
+            assert not (output / "summary.json").exists()
+            assert not output.with_name(output.name + ".claim").exists()
+            assert len(snapshots) == 1
+            snapshot, copied = snapshots[0]
+            # Context ownership is uncertain after its FD was reused. The original
+            # snapshot remains independently bound and must be drained before
+            # refusing, even while that context and its enclosing root are kept.
+>           assert not snapshot.exists()
+E           AssertionError: assert not True
+E            +  where True = exists()
+E            +    where exists = PosixPath('/tmp/b3-publisher-v09-snapshot-red-20261005/test_reused_private_child_desc0/.b3-full-context-observed-8niauj9c/snapshot').exists
+
+test/test_b3_full_context_observed.py:1632: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_v09_snapshot_cleanup_against_v08_red.xml -
+=========================== short test summary info ============================
+FAILED test/test_b3_full_context_observed.py::test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle
+1 failed, 6 passed, 2 warnings in 244.10s (0:04:04)

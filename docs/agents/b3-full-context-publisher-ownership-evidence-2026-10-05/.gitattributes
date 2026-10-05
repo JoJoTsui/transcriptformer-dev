@@ -1,0 +1,2 @@
+# Preserve exact raw pytest transcript spacing; validate these files by SHA-256.
+*_producer.log -whitespace
