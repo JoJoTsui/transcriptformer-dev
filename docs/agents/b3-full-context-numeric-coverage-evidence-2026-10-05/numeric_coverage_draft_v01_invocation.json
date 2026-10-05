@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/usr/bin/timeout",
+    "--signal=TERM",
+    "--kill-after=5",
+    "900",
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/numeric_coverage_draft_v01_gnu_time.txt",
+    "/mnt/d/sc/transcriptformer/transcriptformer/.venv/bin/python",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/diagnose_b3_numeric_coverage_draft_v01.py"
+  ],
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/diagnose_b3_numeric_coverage_draft_v01.py": "b1a5ecd3ccea1c634b16303738105b08eb653bd454311026243a50bdea708513",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_b3_numeric_coverage_draft_v01.py": "73a455eda6b8924507600fe4d2ce281323516036eebc538f5d705128b97df250"
+  },
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "CUDA_VISIBLE_DEVICES": "",
+    "TF_RUN_REAL_MODEL_TESTS": "0"
+  },
+  "scope": "Small synthetic CPU allocator diagnostic only; no project data/checkpoint/model/native producer or admission",
+  "rss_check_scope": "Actual diagnostic process samples at stage boundaries; GNU completed command peak remains separate; no process-tree or complete allocator guarantee"
+}

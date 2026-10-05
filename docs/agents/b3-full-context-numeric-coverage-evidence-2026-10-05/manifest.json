@@ -1,0 +1,60 @@
+{
+  "schema": "b3_full_context_numeric_coverage_evidence_v1",
+  "scope": "Actual small synthetic CPU allocator-coverage diagnostic; not complete allocator census/guard or native admission",
+  "artifacts": [
+    {
+      "path": "numeric_coverage_draft_v01_invocation.json",
+      "sha256": "5c9079ebfc8d66a4c1dd4229c2832cb0efcaef24cd99cdec1eac2dad91073ccb",
+      "bytes": 1372,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/numeric_coverage_draft_v01_invocation.json"
+    },
+    {
+      "path": "numeric_coverage_draft_v01_stdout.txt",
+      "sha256": "e57c18f76a5f1b29795f281867e579f76a80bd19b88fe84a5971a7e00da8298d",
+      "bytes": 222,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/numeric_coverage_draft_v01_stdout.txt"
+    },
+    {
+      "path": "numeric_coverage_draft_v01_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/numeric_coverage_draft_v01_stderr.txt"
+    },
+    {
+      "path": "numeric_coverage_draft_v01_gnu_time.txt",
+      "sha256": "c343df5f9c9ef0856348d85588492871c964f4ca56c60dbce3abc6a8c2df8409",
+      "bytes": 910,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/numeric_coverage_draft_v01_gnu_time.txt"
+    },
+    {
+      "path": "numeric_coverage_draft_v01_result.json",
+      "sha256": "ef36aa08583ae9f66cd50f9a3d29128a2bf4ee0fa007077998fd713680c81f73",
+      "bytes": 7492,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/numeric_coverage_draft_v01_result.json"
+    },
+    {
+      "path": "numeric_coverage_draft_v01_capture_result.json",
+      "sha256": "a1bbad3ac27357496d19cd97bc8611e2c9adcb074baca4b15228e538699a4112",
+      "bytes": 1200,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/numeric_coverage_draft_v01_capture_result.json"
+    },
+    {
+      "path": "diagnose_b3_numeric_coverage_draft_v01.py.txt",
+      "sha256": "b1a5ecd3ccea1c634b16303738105b08eb653bd454311026243a50bdea708513",
+      "bytes": 10779,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/diagnose_b3_numeric_coverage_draft_v01.py"
+    },
+    {
+      "path": "capture_b3_numeric_coverage_draft_v01.py.txt",
+      "sha256": "73a455eda6b8924507600fe4d2ce281323516036eebc538f5d705128b97df250",
+      "bytes": 3444,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_b3_numeric_coverage_draft_v01.py"
+    }
+  ],
+  "complete_numeric_census_granted": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "ticket05_closed": false,
+  "ticket11_excluded": true,
+  "fresh_independent_source_reviews": "pending_agent_service_usage_limit"
+}

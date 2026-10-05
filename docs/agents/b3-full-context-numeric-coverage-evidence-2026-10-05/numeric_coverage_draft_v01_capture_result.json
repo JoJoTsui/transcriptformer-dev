@@ -1,0 +1,20 @@
+{
+  "actual_timeout_gnu_command_exit_code": 0,
+  "driver_complete_command_and_capture_seconds": 18.58921198299504,
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/diagnose_b3_numeric_coverage_draft_v01.py": "b1a5ecd3ccea1c634b16303738105b08eb653bd454311026243a50bdea708513",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_b3_numeric_coverage_draft_v01.py": "73a455eda6b8924507600fe4d2ce281323516036eebc538f5d705128b97df250"
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/diagnose_b3_numeric_coverage_draft_v01.py": "b1a5ecd3ccea1c634b16303738105b08eb653bd454311026243a50bdea708513",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_b3_numeric_coverage_draft_v01.py": "73a455eda6b8924507600fe4d2ce281323516036eebc538f5d705128b97df250"
+  },
+  "source_stable": true,
+  "diagnostic_completed": true,
+  "complete_numeric_census_granted": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "checkpoint_tensors_loaded": false,
+  "model_forwards_performed": false,
+  "capture_exit_code": 0
+}

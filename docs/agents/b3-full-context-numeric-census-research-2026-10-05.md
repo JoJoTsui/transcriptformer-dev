@@ -6,6 +6,43 @@ remain useful observations, but neither proves that gate. Ticket 05 stays
 open; this research changes no scientific rule, resource cap or execution
 permission.
 
+## Current measured diagnostic — 2026-10-05
+
+The [exact CPU diagnostic](b3-full-context-numeric-coverage-evidence-2026-10-05/manifest.json)
+now completes at source `b1a5ecd3…` with unchanged before/after bytes. Actual
+raw/capture exits are 0. The driver command and raw stdio-close window is
+18.589212 seconds; it excludes later source checks and capture-result IO. Raw GNU
+wall 18.58 seconds and peak process RSS 530,720 KiB retain their separate scopes.
+The 18.212757 second body field precedes result IO/cleanup and is not complete
+public-return time. No project data, checkpoint tensor, model forward,
+explicit GPU query or package installation is introduced. Static checks pass.
+
+Observed NumPy domain 389047 grows by exactly 4,194,304 bytes for the owner,
+while a shared view adds no second owner. The external 1,048,576-byte bytearray
+is traced outside the NumPy domain. The real 1,048,576-byte Torch CPU storage
+adds only 1,347 total traced-current bytes; its view shares the same storage
+pointer. A 1 MiB mapping adds no NumPy-domain payload. Two opened HDF5 datasets
+configure 65,536-byte caches each, but actual occupancy remains unknown.
+Their read buffers add 8,192 NumPy-domain bytes. An 8 MiB transient is present
+in its live sample and absent after release. These observations demonstrate
+incomplete coverage at these exact versions; they do not measure a whole-
+operation simultaneous peak or complete allocation chronology.
+
+The APIs are checked against [NumPy 2.2 memory documentation](https://numpy.org/doc/2.2/reference/c-api/data_memory.html),
+[PyTorch 2.5.1 storage source](https://github.com/pytorch/pytorch/blob/v2.5.1/torch/storage.py)
+and [h5py 3.14 dataset-cache documentation](https://docs.h5py.org/en/3.14.0/high/file.html#chunk-cache).
+The [CPython 3.11 tracing API](https://docs.python.org/3.11/library/tracemalloc.html)
+reports traced peak separately from snapshot state. Inferring that these
+mechanisms are insufficient for the frozen complete census is an engineering
+conclusion from the measured omissions and API scopes.
+
+The explicit 200 MiB plus one request is refused without allocating an array;
+this is a local requested-buffer guard, not interception of all native
+allocations. Complete numeric peak remains null; complete census/native guard,
+SourceAdmission and RuntimeAdmission remain false. Unknown import/cache/scratch,
+mappings, HDF5 occupancy, transient intervals and parent/producer/helper scope
+are recorded. **Ticket 05 remains open; ticket 11 excluded.**
+
 ## Version and operation scope
 
 Local package metadata reports NumPy 2.2.6, PyTorch 2.5.1, h5py 3.14.0,
@@ -30,7 +67,23 @@ and the [retained actual audit evidence](b3-full-context-integration-and-audit-e
 The consequences in the final column are engineering inferences from the
 cited mechanisms, not a measured result for this repository.
 
-## Recommended next implementation slice
+## Next instrumentation dependency
+
+The completed small diagnostic demonstrates owner/view and tracing boundaries;
+it does not supply the originally proposed complete chronology or native guard.
+The next dependency is a source-reviewed native allocation observer and refusal
+mechanism covering Torch, mappings, HDF5, import/cache scratch and every actual
+producer/helper process. Its actual sources, dependencies and instrumentation
+cost must be pinned before a protected run. Installing an observer alone does
+not establish a preallocation guard. Until complete coverage is demonstrated,
+retain unknown census and refuse RuntimeAdmission.
+
+The full repository regression currently freezes the existing environment and
+241 tracked Python buffers. Any dependency installation or canonical source
+integration must follow its closure. The diagnostic uses existing packages;
+no installation is needed to reproduce the retained workload.
+
+## Previous proposed diagnostic slice
 
 Build an independently reviewable allocator-coverage diagnostic before
 claiming RuntimeAdmission. It must start before numeric state is created,

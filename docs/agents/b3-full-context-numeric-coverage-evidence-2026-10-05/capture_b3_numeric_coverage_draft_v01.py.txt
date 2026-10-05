@@ -1,0 +1,102 @@
+"""Capture actual diagnostic completion without admitting a native producer."""
+
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+
+BASE = Path(__file__).resolve().parent
+PREFIX = BASE / "numeric_coverage_draft_v01"
+SOURCE = BASE / "diagnose_b3_numeric_coverage_draft_v01.py"
+
+
+def pins():
+    return {str(p): sha256(p.read_bytes()).hexdigest() for p in (SOURCE, Path(__file__).resolve())}
+
+
+def write(path, body):
+    with path.open("x") as handle:
+        json.dump(body, handle, indent=2, allow_nan=False)
+        handle.write("\n")
+
+
+def main():
+    for suffix in (
+        "_invocation.json",
+        "_stdout.txt",
+        "_stderr.txt",
+        "_gnu_time.txt",
+        "_capture_result.json",
+        "_result.json",
+    ):
+        if os.path.lexists(str(PREFIX) + suffix):
+            raise FileExistsError(str(PREFIX) + suffix)
+    before = pins()
+    environment = {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "TF_RUN_REAL_MODEL_TESTS": "0",
+    }
+    command = [
+        "/usr/bin/timeout",
+        "--signal=TERM",
+        "--kill-after=5",
+        "900",
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        str(PREFIX) + "_gnu_time.txt",
+        sys.executable,
+        str(SOURCE),
+    ]
+    write(
+        Path(str(PREFIX) + "_invocation.json"),
+        {
+            "command": command,
+            "source_before": before,
+            "environment_overrides": environment,
+            "scope": "Small synthetic CPU allocator diagnostic only; no project data/checkpoint/model/native producer or admission",
+            "rss_check_scope": "Actual diagnostic process samples at stage boundaries; GNU completed command peak remains separate; no process-tree or complete allocator guarantee",
+        },
+    )
+    started = time.monotonic()
+    with Path(str(PREFIX) + "_stdout.txt").open("xb") as stdout:
+        with Path(str(PREFIX) + "_stderr.txt").open("xb") as stderr:
+            actual = subprocess.run(command, env={**os.environ, **environment}, stdout=stdout, stderr=stderr)
+    elapsed = time.monotonic() - started
+    after = pins()
+    result_path = Path(str(PREFIX) + "_result.json")
+    diagnostic = json.loads(result_path.read_bytes()) if result_path.exists() else None
+    complete = (
+        bool(diagnostic)
+        and actual.returncode == 0
+        and before == after
+        and diagnostic["source_sha256_before"] == diagnostic["source_sha256_after"] == before[str(SOURCE)]
+    )
+    capture = {
+        "actual_timeout_gnu_command_exit_code": actual.returncode,
+        "driver_complete_command_and_capture_seconds": elapsed,
+        "source_before": before,
+        "source_after": after,
+        "source_stable": before == after,
+        "diagnostic_completed": complete,
+        "complete_numeric_census_granted": False,
+        "source_admission_granted": False,
+        "runtime_admission_granted": False,
+        "checkpoint_tensors_loaded": False,
+        "model_forwards_performed": False,
+        "capture_exit_code": actual.returncode if complete else actual.returncode or 1,
+    }
+    write(Path(str(PREFIX) + "_capture_result.json"), capture)
+    print(json.dumps(capture, indent=2))
+    return capture["capture_exit_code"]
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

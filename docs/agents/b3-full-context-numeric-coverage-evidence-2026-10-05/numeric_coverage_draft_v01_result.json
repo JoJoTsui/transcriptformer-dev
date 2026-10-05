@@ -1,0 +1,205 @@
+{
+  "schema": "b3_numeric_allocator_coverage_diagnostic_v1",
+  "status": "completed_diagnostic_only",
+  "source_sha256_before": "b1a5ecd3ccea1c634b16303738105b08eb653bd454311026243a50bdea708513",
+  "source_sha256_after": "b1a5ecd3ccea1c634b16303738105b08eb653bd454311026243a50bdea708513",
+  "package_versions": {
+    "numpy": "2.2.6",
+    "torch": "2.5.1",
+    "h5py": "3.14.0"
+  },
+  "tracing_started_before_numeric_imports": true,
+  "numpy_tracemalloc_domain": 389047,
+  "samples": [
+    {
+      "observed_process_rss_bytes": 432492544,
+      "observed_available_ram_bytes": 29844209664,
+      "label": "after_numeric_imports",
+      "sampled_domain_live_bytes": {
+        "0": 59861561,
+        "389047": 380
+      },
+      "traced_all_domain_current_before_snapshot_bytes": 59861877,
+      "traced_all_domain_peak_before_snapshot_bytes": 59878797,
+      "tracer_metadata_current_bytes": 26552608
+    },
+    {
+      "observed_process_rss_bytes": 479821824,
+      "observed_available_ram_bytes": 29741817856,
+      "label": "numpy_owner_and_alias_live",
+      "sampled_domain_live_bytes": {
+        "0": 59854638,
+        "389047": 4194684
+      },
+      "traced_all_domain_current_before_snapshot_bytes": 64049258,
+      "traced_all_domain_peak_before_snapshot_bytes": 64059686,
+      "tracer_metadata_current_bytes": 26553920
+    },
+    {
+      "observed_process_rss_bytes": 493428736,
+      "observed_available_ram_bytes": 29745631232,
+      "label": "external_buffer_and_numpy_view_live",
+      "sampled_domain_live_bytes": {
+        "0": 60904841,
+        "389047": 4194684
+      },
+      "traced_all_domain_current_before_snapshot_bytes": 65099461,
+      "traced_all_domain_peak_before_snapshot_bytes": 65109889,
+      "tracer_metadata_current_bytes": 26554912
+    },
+    {
+      "observed_process_rss_bytes": 499470336,
+      "observed_available_ram_bytes": 29741330432,
+      "label": "torch_cpu_storage_and_alias_live",
+      "sampled_domain_live_bytes": {
+        "0": 60906188,
+        "389047": 4194684
+      },
+      "traced_all_domain_current_before_snapshot_bytes": 65100808,
+      "traced_all_domain_peak_before_snapshot_bytes": 65111216,
+      "tracer_metadata_current_bytes": 26555808
+    },
+    {
+      "observed_process_rss_bytes": 502681600,
+      "observed_available_ram_bytes": 29743525888,
+      "label": "memory_mapping_live",
+      "sampled_domain_live_bytes": {
+        "0": 60912505,
+        "389047": 4194684
+      },
+      "traced_all_domain_current_before_snapshot_bytes": 65107125,
+      "traced_all_domain_peak_before_snapshot_bytes": 65117539,
+      "tracer_metadata_current_bytes": 26560416
+    },
+    {
+      "observed_process_rss_bytes": 505221120,
+      "observed_available_ram_bytes": 29763203072,
+      "label": "two_hdf5_dataset_caches_and_read_buffers_live",
+      "sampled_domain_live_bytes": {
+        "0": 60920778,
+        "389047": 4202876
+      },
+      "traced_all_domain_current_before_snapshot_bytes": 65123590,
+      "traced_all_domain_peak_before_snapshot_bytes": 65133998,
+      "tracer_metadata_current_bytes": 26564960
+    },
+    {
+      "observed_process_rss_bytes": 504188928,
+      "observed_available_ram_bytes": 29739601920,
+      "label": "mapping_and_hdf5_closed",
+      "sampled_domain_live_bytes": {
+        "0": 60915710,
+        "389047": 4194684
+      },
+      "traced_all_domain_current_before_snapshot_bytes": 65110330,
+      "traced_all_domain_peak_before_snapshot_bytes": 65133998,
+      "tracer_metadata_current_bytes": 26564640
+    },
+    {
+      "observed_process_rss_bytes": 506245120,
+      "observed_available_ram_bytes": 29742252032,
+      "label": "explicit_transient_live",
+      "sampled_domain_live_bytes": {
+        "0": 60916747,
+        "389047": 12583292
+      },
+      "traced_all_domain_current_before_snapshot_bytes": 73499975,
+      "traced_all_domain_peak_before_snapshot_bytes": 73510383,
+      "tracer_metadata_current_bytes": 26565440
+    },
+    {
+      "observed_process_rss_bytes": 513310720,
+      "observed_available_ram_bytes": 29735854080,
+      "label": "explicit_transient_freed",
+      "sampled_domain_live_bytes": {
+        "0": 60917806,
+        "389047": 4194684
+      },
+      "traced_all_domain_current_before_snapshot_bytes": 65112426,
+      "traced_all_domain_peak_before_snapshot_bytes": 73510383,
+      "tracer_metadata_current_bytes": 26565984
+    },
+    {
+      "observed_process_rss_bytes": 514342912,
+      "observed_available_ram_bytes": 29737021440,
+      "label": "explicit_python_numpy_torch_owners_released",
+      "sampled_domain_live_bytes": {
+        "0": 59869530,
+        "389047": 380
+      },
+      "traced_all_domain_current_before_snapshot_bytes": 59869846,
+      "traced_all_domain_peak_before_snapshot_bytes": 73510383,
+      "tracer_metadata_current_bytes": 26566176
+    }
+  ],
+  "observations": {
+    "numpy_owned_buffer": {
+      "owner_bytes": 4194304,
+      "view_logical_bytes": 2097152,
+      "shares_memory": true,
+      "view_owns_data": false
+    },
+    "external_python_buffer": {
+      "owner_bytes": 1048576,
+      "view_logical_bytes": 1048576,
+      "view_owns_data": false,
+      "view_base_is_memoryview": true
+    },
+    "torch_cpu_storage": {
+      "storage_bytes": 1048576,
+      "view_storage_bytes": 1048576,
+      "same_storage_pointer": true,
+      "device": "cpu"
+    },
+    "numpy_memory_mapping": {
+      "logical_bytes": 1048576,
+      "owns_data": false,
+      "backing_type": "mmap",
+      "mapping_file_bytes": 1048576
+    },
+    "hdf5_two_datasets": {
+      "configured_raw_chunk_cache_capacity_bytes_per_dataset": [
+        65536,
+        65536
+      ],
+      "configured_cache_capacity_sum_bytes": 131072,
+      "actual_cache_occupancy_bytes": null,
+      "explicit_read_buffers_bytes": 8192
+    },
+    "transient": {
+      "explicit_buffer_bytes": 8388608,
+      "all_traced_before_current_bytes": 65110945,
+      "all_traced_while_live_current_bytes": 73499713,
+      "all_traced_while_live_peak_bytes": 73499914,
+      "all_traced_after_free_current_bytes": 65111068,
+      "all_traced_after_free_peak_bytes": 73510383,
+      "peak_scope": "All tracemalloc domains since explicit reset; not a numeric or NumPy-domain peak"
+    }
+  },
+  "explicit_200mib_plus_one_request_refused_without_allocation": true,
+  "known_explicit_simultaneous_buffer_upper_bound_bytes": 16785408,
+  "complete_live_numeric_peak_bytes": null,
+  "complete_numeric_allocation_chronology": false,
+  "complete_native_allocation_guard": false,
+  "complete_numeric_census_granted": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "checkpoint_tensors_loaded": false,
+  "model_forwards_performed": false,
+  "project_data_loaded": false,
+  "explicit_gpu_device_queries_performed": false,
+  "unknown_coverage": [
+    "native allocator scratch/caches and library import state",
+    "HDF5 actual cache occupancy and native allocations",
+    "PyTorch CPU storage allocation/deallocation chronology",
+    "memory mappings not covered by array data-domain tracing",
+    "transient allocations between snapshots",
+    "complete parent/producer/helper process scope"
+  ],
+  "diagnostic_body_seconds_before_result_io_and_final_cleanup": 18.212757347006118,
+  "final_resource_sample": {
+    "observed_process_rss_bytes": 494592000,
+    "observed_available_ram_bytes": 29706686464
+  },
+  "scope": "Small isolated existing-library CPU diagnostic; samples and explicit storage arithmetic are not whole-operation census/admission"
+}

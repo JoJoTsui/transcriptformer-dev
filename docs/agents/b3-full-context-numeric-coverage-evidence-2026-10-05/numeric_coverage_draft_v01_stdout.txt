@@ -1,0 +1,1 @@
+{"status": "completed_diagnostic_only", "complete_numeric_census_granted": false, "samples": 10, "result": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/numeric_coverage_draft_v01_result.json"}
