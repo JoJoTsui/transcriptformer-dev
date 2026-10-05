@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import argparse
 import builtins
-from collections.abc import Iterator, MutableMapping
+from collections.abc import Callable, Iterator, MutableMapping
 from contextlib import contextmanager
 import errno
 from hashlib import sha256
@@ -729,6 +729,29 @@ def _close_owned_descriptor(owner: Any, name: str, identity: tuple[int, ...], *,
     setattr(owner, name, None)
 
 
+class _Cleanup:
+    """Attempt independent owned cleanup operations and retain their first error.
+
+    Callers supply only their fixed, already-owned handles. A failure never
+    authorizes a later ownership adoption or an unconditional descriptor close.
+    Retaining one exception avoids an expanding collection of failure frames.
+    """
+
+    def __init__(self) -> None:
+        self.first_error: BaseException | None = None
+
+    def attempt(self, operation: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
+        try:
+            operation(*args, **kwargs)
+        except BaseException as error:
+            if self.first_error is None:
+                self.first_error = error
+
+    def finish(self) -> None:
+        if self.first_error is not None:
+            raise self.first_error
+
+
 class _Publication:
     """Keep owned marker/directory identities through publication and cleanup."""
 
@@ -773,7 +796,14 @@ class _Publication:
             self._close_descriptor("parent_fd", directory=True)
             raise
 
-    def _adopt(self, name: str, fd: int, *, directory: bool) -> os.stat_result:
+    def _adopt(
+        self,
+        name: str,
+        fd: int,
+        *,
+        directory: bool,
+        original_child: tuple[str, tuple[int, int]] | None = None,
+    ) -> os.stat_result:
         """Bind an acquired descriptor before its fallible fstat admission.
 
         A direct descriptor stat binds ownership independently of any caller
@@ -781,14 +811,38 @@ class _Publication:
         that first capture fails, /proc or fstat provides a cleanup binding;
         the original lookup error still refuses admission.
         Logical publication inode bindings stay separate from these cleanup
-        identities. Early admission failure releases only a captured owned FD
-        and cannot make a rebound pathname eligible for deletion.
+        identities. A workspace child's verified birth enters the private
+        cleanup ledger immediately and keeps its original FD through later
+        admission faults. Other early failures release only a captured owned
+        FD and cannot make a rebound pathname eligible for deletion.
         """
+        if original_child is not None:
+            child_name, _identity = original_child
+            if (
+                not directory
+                or child_name not in {"publication", "context", "snapshot"}
+                or name != "workspace_" + child_name + "_fd"
+                or child_name in self.workspace_children
+            ):
+                raise ValueError("Private child birth requires its unique original directory binding")
         setattr(self, name, fd)
         captured: os.stat_result | None = None
+        retained_child = False
 
         def remember(opened: os.stat_result) -> None:
+            nonlocal retained_child
+            if original_child is not None:
+                child_name, original_identity = original_child
+                if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != original_identity:
+                    raise RuntimeError("Original observed workspace child changed before birth binding")
             self.descriptor_identities[name] = opened.st_dev, opened.st_ino
+            if original_child is not None:
+                child_name, _identity = original_child
+                # This identity is captured from the actual acquired FD at
+                # its trusted creation/publication boundary. Keep it live
+                # independently of later proc/fstat admission or path errors.
+                self.workspace_children.add(child_name)
+                retained_child = True
             if name == "claim_fd":
                 # Keep the claim inode alive while the failure path compares
                 # and unlinks its own directory entry. A substituted claim
@@ -817,6 +871,12 @@ class _Publication:
                 raise RuntimeError("Acquired observed descriptor changed before admission")
             return opened
         except BaseException:
+            if retained_child:
+                # The private context exit owns the original child's cleanup.
+                # Its live descriptor and birth identity must survive a later
+                # one-shot admission fault. Cleanup still verifies identity;
+                # a reused descriptor is refused and never closed as owned.
+                raise
             try:
                 if name == "claim_fd" and captured is not None:
                     self.release_claim()
@@ -937,13 +997,16 @@ class _Publication:
             os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK,
             dir_fd=workspace_fd,
         )
-        opened = self._adopt(attribute, fd, directory=True)
+        opened = self._adopt(attribute, fd, directory=True, original_child=(name, (before.st_dev, before.st_ino)))
         if (opened.st_dev, opened.st_ino) != (before.st_dev, before.st_ino):
             raise RuntimeError("Original observed workspace child changed during admission")
-        self.workspace_children.add(name)
 
     def _remove_workspace_directory(self, fd: int, identity: tuple[int, int]) -> None:
         """Remove an empty original directory through its verified address."""
+        # A previous removal's close can refuse while leaving its original
+        # parent handle live. Verify/release that handle before opening another;
+        # never overwrite its cleanup identity or close a foreign FD reuse.
+        self._close_descriptor("workspace_cleanup_parent_fd", directory=True)
         address = self._directory_address(fd, identity)
         parent_fd = os.open(address.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
         try:
@@ -956,6 +1019,24 @@ class _Publication:
             os.rmdir(address.name, dir_fd=parent_fd)
         finally:
             self._close_descriptor("workspace_cleanup_parent_fd", directory=True)
+
+    def verify_workspace_child(self, name: str) -> None:
+        """Verify an existing original child binding without adopting an alias."""
+        if name not in {"publication", "context", "snapshot"} or name not in self.workspace_children:
+            raise ValueError("Require an originally bound private workspace child")
+        attribute = "workspace_" + name + "_fd"
+        fd = getattr(self, attribute)
+        identity = self.descriptor_identities.get(attribute)
+        if fd is None or identity is None or self.workspace is None:
+            raise RuntimeError("Original observed workspace child lacks its live binding")
+        current = os.stat(name, dir_fd=self._workspace_descriptor(), follow_symlinks=False)
+        if (
+            not stat.S_ISDIR(current.st_mode)
+            or (current.st_dev, current.st_ino) != identity
+            or self._workspace_address() != self.workspace
+            or self._directory_address(fd, identity) != self.workspace / name
+        ):
+            raise RuntimeError("Original observed workspace child identity changed after publication")
 
     def _cleanup_workspace_child(self, name: str) -> bool:
         """Clean an already-bound original child; never adopt a current alias."""
@@ -1034,9 +1115,20 @@ class _Publication:
         # leaves. This cleanup address is never an original-byte source alias.
         if self._workspace_address() != self.workspace:
             canonical_changed = True
-        for name in ("publication", "context", "snapshot"):
-            if name in self.workspace_children and self._cleanup_workspace_child(name):
+
+        def cleanup_child(name: str) -> None:
+            nonlocal canonical_changed
+            if self._cleanup_workspace_child(name):
                 canonical_changed = True
+
+        cleanup = _Cleanup()
+        for name in ("publication", "context", "snapshot"):
+            if name in self.workspace_children:
+                cleanup.attempt(cleanup_child, name)
+        # Refusing one child's ownership cannot strand another child's known
+        # private numeric copies. Drain all fixed independent bindings first,
+        # then preserve any uncertain child/root and propagate the first error.
+        cleanup.finish()
         # Any remaining entry may be a foreign replacement or a child whose
         # creation/admission failed before its ownership could be bound.
         # Preserve it and the enclosing directory, then refuse the public call.
@@ -1196,6 +1288,7 @@ class _Publication:
             pass
 
     def close(self) -> None:
+        cleanup = _Cleanup()
         for name, directory in (
             ("workspace_publication_fd", True),
             ("workspace_context_fd", True),
@@ -1208,7 +1301,8 @@ class _Publication:
             ("staging_fd", True),
             ("marker_fd", False),
         ):
-            self._close_descriptor(name, directory=directory)
+            cleanup.attempt(self._close_descriptor, name, directory=directory)
+        cleanup.finish()
 
 
 class _Recovery:
@@ -1248,9 +1342,12 @@ class _Recovery:
                     raise RuntimeError("Duplicated publication recovery descriptor changed")
                 owner.budget.check()
             self.seal()
-        except BaseException:
-            owner.invalidate()
-            self.release()
+        except BaseException as failure:
+            cleanup = _Cleanup()
+            cleanup.attempt(owner.invalidate)
+            cleanup.attempt(self.release)
+            if cleanup.first_error is not None:
+                raise cleanup.first_error from failure
             raise
 
     def _directory(self) -> None:
@@ -1367,18 +1464,25 @@ class _Recovery:
         # Keep the actual owned directory live through all other fallible
         # descriptor releases. The last byte/alias seal already retained its
         # descriptor-derived path for identity-checked last-close recovery.
-        try:
-            for name, identity, directory in (
-                ("parent_fd", self.parent_identity, True),
-                ("marker_fd", self.marker[1], False),
-            ):
-                if getattr(self, name) is not None:
-                    _close_owned_descriptor(self, name, identity, directory=directory)
-            if self.directory_fd is not None:
-                _close_owned_descriptor(self, "directory_fd", self.directory_identity, directory=True)
-        except BaseException:
-            self.invalidate()
-            raise
+        cleanup = _Cleanup()
+        for name, identity, directory in (
+            ("parent_fd", self.parent_identity, True),
+            ("marker_fd", self.marker[1], False),
+        ):
+            if getattr(self, name) is not None:
+                cleanup.attempt(_close_owned_descriptor, self, name, identity, directory=directory)
+        if cleanup.first_error is not None:
+            # Keep the independent owned directory alive while invalidating
+            # after an earlier release refusal, then still attempt its close.
+            cleanup.attempt(self.invalidate)
+        if self.directory_fd is not None:
+            cleanup.attempt(_close_owned_descriptor, self, "directory_fd", self.directory_identity, directory=True)
+        if cleanup.first_error is not None:
+            # A directory close can fail after actual release. Its previously
+            # sealed, descriptor-derived fallback still requires exact inode
+            # and marker bytes before invalidation; foreign aliases survive.
+            cleanup.attempt(self.invalidate)
+        cleanup.finish()
 
 
 @contextmanager
@@ -1396,7 +1500,7 @@ def _publication(output: Path, caller: Path, budget: _Budget, ledger: list[_Publ
         """
 
         def mkdir(self, mode=0o777, parents=False, exist_ok=False):
-            child = self.parent == owner.workspace and self.name in {"publication", "snapshot"}
+            child = self.parent == owner.workspace and self.name in {"publication", "context", "snapshot"}
             if child and (parents or exist_ok or self.name in owner.workspace_children):
                 raise ValueError("Private workspace child creation requires an exclusive original mkdir")
             super().mkdir(mode=mode, parents=parents, exist_ok=exist_ok)
@@ -1811,21 +1915,52 @@ def _run(request_path: Path, output: Path, ledger: list[_Publication], *, max_se
         budget.parent = output.parent
         with _publication(output, output_caller, budget, ledger) as (workspace, staging, owner):
             started = time.monotonic()
-            context_run = modules["context"].run
+            context_publication = modules["context"]._publication
 
-            def bind_completed_context(*args, **kwargs):
-                # The unchanged authenticated producer returns only after its
-                # genuine output publication and cleanup. Bind that actual
-                # original child before subsequent source metadata checks.
-                admitted = context_run(*args, **kwargs)
-                owner.bind_workspace_child("context")
-                return admitted
+            @contextmanager
+            def bind_context_publication(destination, inputs, context_engine):
+                if destination != workspace / "context":
+                    raise ValueError("Require the genuine private context publication destination")
 
-            modules["context"].run = bind_completed_context
+                class BoundContextPublisher:
+                    """Delegate actual publication and bind it before inner cleanup."""
+
+                    def publish_new_directory(self, context_staging, target, marker, check=None):
+                        if target != destination or marker != "summary.json":
+                            raise ValueError("Require the genuine private context publication marker")
+                        context_path = context_engine.Path
+                        # The unchanged engine normalizes Path(target) before
+                        # fallback mkdir. Preserve this owner-closed creation
+                        # capability only inside its private authenticated
+                        # clone, so the actual exclusive mkdir binds context
+                        # before its later fstat/link/close operations can fail.
+                        # Global pathlib and every source buffer are unchanged.
+                        context_engine.Path = type(workspace)
+                        try:
+                            admitted = context_engine.publish_new_directory(
+                                context_staging, target, marker, check=check
+                            )
+                        finally:
+                            context_engine.Path = context_path
+                        # The frozen publisher has actually completed its
+                        # no-replace publication. Atomic rename has no mkdir
+                        # callback and first captures the completed original
+                        # here. Fallback already owns the actual created
+                        # directory; verify that binding without re-adoption.
+                        # Neither path adopts an output on a publish exception.
+                        if "context" not in owner.workspace_children:
+                            owner.bind_workspace_child("context")
+                        owner.verify_workspace_child("context")
+                        return admitted
+
+                with context_publication(destination, inputs, BoundContextPublisher()) as publication:
+                    yield publication
+
+            modules["context"]._publication = bind_context_publication
             try:
                 source = common._source_admission(request, modules, consumers, original, workspace, output, budget)
             finally:
-                modules["context"].run = context_run
+                modules["context"]._publication = context_publication
             source["request"] = request
             # Structural readmission owns a separate helper budget. Retain its
             # complete original source identities in this invocation before
@@ -2103,16 +2238,19 @@ def run(request_path: Path, output: Path, *, max_seconds: float = 900) -> dict:
             recovery.release()
             recovery.owner.budget.check()
         return result
-    except BaseException:
+    except BaseException as failure:
+        cleanup = _Cleanup()
         for recovery in recoveries:
-            recovery.invalidate()
+            cleanup.attempt(recovery.invalidate)
         for owner in ledger:
             if not any(recovery.owner is owner for recovery in recoveries):
-                owner.invalidate()
+                cleanup.attempt(owner.invalidate)
         for owner in ledger:
-            owner.close()
+            cleanup.attempt(owner.close)
         for recovery in recoveries:
-            recovery.release()
+            cleanup.attempt(recovery.release)
+        if cleanup.first_error is not None:
+            raise cleanup.first_error from failure
         raise
 
 

@@ -1565,6 +1565,288 @@ def test_original_completed_context_is_bound_before_later_source_admission_failu
     _assert_no_owned_modules(before)
 
 
+def test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle(
+    stored_native, tmp_path, monkeypatch
+):
+    public = _module()
+    request = _request(stored_native.path, tmp_path / "request")
+    output = tmp_path / "output"
+    seal = public._Publication.seal_published
+    ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
+    before = dict(sys.modules)
+    owned, reused, snapshots = [], [], []
+    foreign = tmp_path / "foreign-reused-child-fd.bin"
+    foreign_bytes = b"caller-owned replacement descriptor must survive\n"
+    foreign.write_bytes(foreign_bytes)
+
+    def replace_actual_context_descriptor_before_private_cleanup(owner):
+        seal(owner)
+        if not reused:
+            assert (output / "summary.json").is_file()
+            assert owner.workspace is not None
+            snapshot = owner.workspace / "snapshot"
+            copied = list(snapshot.iterdir())
+            assert len(copied) == 5 and all(path.is_file() for path in copied)
+            snapshots.append((snapshot, copied))
+            for name in (
+                "workspace_publication_fd",
+                "workspace_context_fd",
+                "workspace_snapshot_fd",
+                "workspace_fd",
+                "parent_fd",
+                "claim_fd",
+                "output_fd",
+                "staging_fd",
+                "marker_fd",
+            ):
+                fd = getattr(owner, name)
+                assert fd is not None
+                opened = ordinary_fstat(fd)
+                owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+            fd = owner.workspace_context_fd
+            ordinary_close(fd)
+            replacement = ordinary_open(foreign, os.O_RDONLY | os.O_NOFOLLOW)
+            if replacement != fd:
+                ordinary_dup2(replacement, fd)
+                ordinary_close(replacement)
+            opened = ordinary_fstat(fd)
+            reused.append((fd, (opened.st_dev, opened.st_ino)))
+
+    monkeypatch.setattr(public._Publication, "seal_published", replace_actual_context_descriptor_before_private_cleanup)
+    try:
+        with pytest.raises(RuntimeError, match="descriptor|identity|workspace"):
+            public.run(request, output)
+        assert len(owned) == 9 and len(reused) == 1
+        foreign_fd, foreign_identity = reused[0]
+        current = ordinary_fstat(foreign_fd)
+        assert (current.st_dev, current.st_ino) == foreign_identity
+        assert os.read(foreign_fd, len(foreign_bytes)) == foreign_bytes
+        assert foreign.read_bytes() == foreign_bytes
+        assert not (output / "summary.json").exists()
+        assert not output.with_name(output.name + ".claim").exists()
+        assert len(snapshots) == 1
+        snapshot, copied = snapshots[0]
+        # Context ownership is uncertain after its FD was reused. The original
+        # snapshot remains independently bound and must be drained before
+        # refusing, even while that context and its enclosing root are kept.
+        assert not snapshot.exists()
+        assert all(not path.exists() for path in copied)
+        for name, fd, _identity in owned:
+            if name != "workspace_context_fd":
+                with pytest.raises(OSError) as caught:
+                    ordinary_fstat(fd)
+                assert caught.value.errno == errno.EBADF
+        _assert_no_owned_modules(before)
+    finally:
+        # A failing RED implementation may leak the independently known
+        # owned handles. Release only exact originals, never a reused foreign FD.
+        for name, fd, identity in owned:
+            if name == "workspace_context_fd":
+                continue
+            try:
+                current = ordinary_fstat(fd)
+            except OSError as error:
+                assert error.errno == errno.EBADF
+            else:
+                if (current.st_dev, current.st_ino) == identity:
+                    ordinary_close(fd)
+        for fd, identity in reused:
+            current = ordinary_fstat(fd)
+            assert (current.st_dev, current.st_ino) == identity
+            ordinary_close(fd)
+
+
+@pytest.mark.parametrize("failure", ["temporary_cleanup", "claim_unlink"])
+def test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail(
+    stored_native, tmp_path, monkeypatch, failure
+):
+    public = _module()
+    request = _request(stored_native.path, tmp_path / "request")
+    output, injected = tmp_path / "output", []
+    before = dict(sys.modules)
+    if failure == "temporary_cleanup":
+        cleanup = public.tempfile.TemporaryDirectory.cleanup
+
+        def fail_actual_inner_cleanup(temporary):
+            cleanup(temporary)
+            path = Path(temporary.name)
+            if (
+                path.name.startswith(".b3-streamed-bootstrap-")
+                and path.parent.name.startswith(".b3-full-context-observed-")
+                and not injected
+            ):
+                assert (path.parent / "context/summary.json").is_file()
+                injected.append(True)
+                raise MemoryError("genuine context inner temporary cleanup refusal")
+
+        monkeypatch.setattr(public.tempfile.TemporaryDirectory, "cleanup", fail_actual_inner_cleanup)
+        expected, message = MemoryError, "genuine context inner temporary cleanup refusal"
+    else:
+        unlink = Path.unlink
+
+        def fail_actual_inner_claim_unlink(path, *args, **kwargs):
+            result = unlink(path, *args, **kwargs)
+            if (
+                path.name == "context.claim"
+                and path.parent.name.startswith(".b3-full-context-observed-")
+                and not injected
+            ):
+                assert (path.parent / "context/summary.json").is_file()
+                injected.append(True)
+                raise OSError(errno.EIO, "genuine context inner claim unlink refusal")
+            return result
+
+        monkeypatch.setattr(Path, "unlink", fail_actual_inner_claim_unlink)
+        expected, message = OSError, "genuine context inner claim unlink refusal"
+    with pytest.raises(expected, match=message):
+        public.run(request, output)
+    assert injected == [True]
+    _assert_no_complete_output(output)
+    _assert_no_owned_modules(before)
+
+
+@pytest.mark.parametrize("child_name", ["publication", "snapshot"])
+@pytest.mark.parametrize("probe", ["proc", "fstat"])
+def test_recoverable_original_child_birth_survives_later_admission_probe_failure(
+    stored_native, tmp_path, monkeypatch, child_name, probe
+):
+    public = _module()
+    request = _request(stored_native.path, tmp_path / "request")
+    output = tmp_path / "output"
+    bind = public._Publication.bind_workspace_child
+    ordinary_open, ordinary_stat, ordinary_fstat, ordinary_close = os.open, os.stat, os.fstat, os.close
+    before = dict(sys.modules)
+    active, acquired, birth_seen, injected = [], [], [], []
+
+    def observe_actual_binding(owner, name):
+        active.append((owner, name))
+        try:
+            return bind(owner, name)
+        finally:
+            active.pop()
+
+    def record_original_open(path, flags, *args, **kwargs):
+        fd = ordinary_open(path, flags, *args, **kwargs)
+        if active and active[-1][1] == child_name and Path(path).name == child_name and flags & os.O_DIRECTORY:
+            opened = ordinary_fstat(fd)
+            assert not acquired
+            acquired.append((fd, (opened.st_dev, opened.st_ino), active[-1][0]))
+        return fd
+
+    def fail_later_probe(fd):
+        if acquired and fd == acquired[0][0] and not injected:
+            assert birth_seen == [True]
+            owner = acquired[0][2]
+            assert owner.descriptor_identities["workspace_" + child_name + "_fd"] == acquired[0][1]
+            injected.append(True)
+            raise OSError(errno.EIO, "recoverable child birth followed by admission probe refusal")
+
+    def observe_stat(path, *args, **kwargs):
+        if acquired and type(path) is int and path == acquired[0][0] and not birth_seen:
+            result = ordinary_stat(path, *args, **kwargs)
+            birth_seen.append(True)
+            return result
+        if probe == "proc" and acquired and path == f"/proc/self/fd/{acquired[0][0]}":
+            fail_later_probe(acquired[0][0])
+        return ordinary_stat(path, *args, **kwargs)
+
+    def observe_fstat(fd):
+        if probe == "fstat":
+            fail_later_probe(fd)
+        return ordinary_fstat(fd)
+
+    monkeypatch.setattr(public._Publication, "bind_workspace_child", observe_actual_binding)
+    monkeypatch.setattr(os, "open", record_original_open)
+    monkeypatch.setattr(os, "stat", observe_stat)
+    monkeypatch.setattr(os, "fstat", observe_fstat)
+    try:
+        with pytest.raises(OSError, match="recoverable child birth followed by admission probe refusal"):
+            public.run(request, output)
+        assert len(acquired) == 1 and birth_seen == injected == [True]
+        with pytest.raises(OSError) as caught:
+            ordinary_fstat(acquired[0][0])
+        assert caught.value.errno == errno.EBADF
+        _assert_no_complete_output(output)
+        _assert_no_owned_modules(before)
+    finally:
+        for fd, identity, _owner in acquired:
+            try:
+                current = ordinary_fstat(fd)
+            except OSError as error:
+                assert error.errno == errno.EBADF
+            else:
+                if (current.st_dev, current.st_ino) == identity:
+                    ordinary_close(fd)
+
+
+def test_genuine_context_fallback_birth_is_bound_before_engine_descriptor_release_can_fail(
+    stored_native, tmp_path, monkeypatch
+):
+    public = _module()
+    request = _request(stored_native.path, tmp_path / "request")
+    output = tmp_path / "output"
+    bootstrap = public._bootstrap
+    ordinary_close, ordinary_fstat = os.close, os.fstat
+    before = dict(sys.modules)
+    engines, fallbacks, released = [], [], []
+
+    def force_actual_context_engine_fallback(request, budget):
+        modules, consumers, original = bootstrap(request, budget)
+        load = modules["context"]._load
+
+        def load_real_context_engine(*args, **kwargs):
+            engine = load(*args, **kwargs)
+            assert engine.__file__ == str(ROOT / "scripts/replay_b3_sparse_null.py")
+            rename = engine._rename_new
+
+            def unsupported_actual_directory_rename(staging, target):
+                assert Path(target).name == "context"
+                fallbacks.append(True)
+                raise OSError(errno.EOPNOTSUPP, "exercise genuine context publication fallback")
+
+            engine._rename_new = unsupported_actual_directory_rename
+            engines.append((engine, rename))
+            return engine
+
+        modules["context"]._load = load_real_context_engine
+        return modules, consumers, original
+
+    def fail_after_real_engine_descriptor_release(fd):
+        frame = inspect.currentframe()
+        assert frame is not None
+        try:
+            caller = frame.f_back
+            actual_engine_close = (
+                engines and caller is not None and caller.f_code is engines[0][0].publish_new_directory.__code__
+            )
+        finally:
+            del frame
+        if actual_engine_close and not released:
+            path = Path(os.readlink(f"/proc/self/fd/{fd}"))
+            assert path.name == "context" and path.parent.name.startswith(".b3-full-context-observed-")
+            assert (path / "summary.json").is_file()
+            opened = ordinary_fstat(fd)
+            ordinary_close(fd)
+            released.append((fd, (opened.st_dev, opened.st_ino)))
+            raise OSError(errno.EIO, "genuine context fallback engine close refusal after actual release")
+        ordinary_close(fd)
+
+    monkeypatch.setattr(public, "_bootstrap", force_actual_context_engine_fallback)
+    monkeypatch.setattr(os, "close", fail_after_real_engine_descriptor_release)
+    try:
+        with pytest.raises(OSError, match="genuine context fallback engine close refusal after actual release"):
+            public.run(request, output)
+        assert len(engines) == 1 and fallbacks == [True] and len(released) == 1
+        with pytest.raises(OSError) as caught:
+            ordinary_fstat(released[0][0])
+        assert caught.value.errno == errno.EBADF
+        _assert_no_complete_output(output)
+        _assert_no_owned_modules(before)
+    finally:
+        for engine, rename in engines:
+            engine._rename_new = rename
+
+
 def test_bootstrap_helper_cleanup_preserves_foreign_cache_replacement(stored_native, tmp_path, monkeypatch):
     public = _module()
     request = _request(stored_native.path, tmp_path / "request")
