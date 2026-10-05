@@ -1,0 +1,82 @@
+{
+  "clock_scope": "Original pytest/JUnit/GNU/supervisor clocks are separate; no aggregate process-tree RSS or reconciliation inferred.",
+  "new_full_repository_test_result": false,
+  "original_233_python_unchanged": true,
+  "original_source_baseline_sha256": "217bcec28861209f83139d01be8131c99e6a41734fd551c7b956f2ab9c1c52fe",
+  "planner_child_launches": 0,
+  "planner_file_tests_passed": 95,
+  "planner_metadata_plan_completed_negative": true,
+  "publisher_source_runtime_accepted": false,
+  "publisher_spec_hard_findings": 2,
+  "publisher_standards_hard_findings": 1,
+  "raw_receipt_copies": {
+    "controller_actual10_archive05_gnu_time.txt": {
+      "archive_file": "controller_actual10_archive05_gnu_time.txt",
+      "bytes": 1025,
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/controller_actual10_archive05_gnu_time.txt",
+      "sha256": "86bd16185c55c346592abf148f01d8def1ecdb5d7e86309eb1e6b05688fa2331"
+    },
+    "controller_actual10_archive05_publication/plan.json": {
+      "archive_file": "controller_actual10_archive05_publication__plan.json",
+      "bytes": 11106,
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/controller_actual10_archive05_publication/plan.json",
+      "sha256": "909b368884a3abb3d20cba1fc07c522ff89351d9b85c32b235b324ab14b8f93b"
+    },
+    "controller_actual10_archive05_publication/summary.json": {
+      "archive_file": "controller_actual10_archive05_publication__summary.json",
+      "bytes": 1631,
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/controller_actual10_archive05_publication/summary.json",
+      "sha256": "cd4aa6a0a53b30ff382e823c5d01e72f5ac95d5b411243b5b48f26f7f8c22600"
+    },
+    "controller_actual10_archive05_request.json": {
+      "archive_file": "controller_actual10_archive05_request.json",
+      "bytes": 1029,
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/controller_actual10_archive05_request.json",
+      "sha256": "a625935614060e9efef54b391844814dd569a03c1b968c9089d4ea34cf5ae46a"
+    },
+    "controller_actual10_archive05_supervisor/state.json": {
+      "archive_file": "controller_actual10_archive05_supervisor__state.json",
+      "bytes": 1161,
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/controller_actual10_archive05_supervisor/state.json",
+      "sha256": "01c04670f166e12ac8138dd25be3b4bb94994817661d1278ce3b9400ce4ca112"
+    },
+    "controller_archive05_file_tests.xml": {
+      "archive_file": "controller_archive05_file_tests.xml",
+      "bytes": 16258,
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/controller_archive05_file_tests.xml",
+      "sha256": "3a22a636efdcae99a1645bdc7da59c7b63d7f480a772a117d714257d8f3b3e3a"
+    },
+    "controller_archive05_file_tests_gnu_time.txt": {
+      "archive_file": "controller_archive05_file_tests_gnu_time.txt",
+      "bytes": 943,
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/controller_archive05_file_tests_gnu_time.txt",
+      "sha256": "a2572e09e0cb386ea4082536dc7a3dfff4b12a74855978cbd970a6490cd5bd5d"
+    },
+    "controller_archive05_file_tests_invocation.json": {
+      "archive_file": "controller_archive05_file_tests_invocation.json",
+      "bytes": 1028,
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/controller_archive05_file_tests_invocation.json",
+      "sha256": "46f4fba7a4a7b0e2d9afe4305a57b4ba00c91bd5e04add1194a72920ab56a6a0"
+    },
+    "controller_archive05_file_tests_supervisor/state.json": {
+      "archive_file": "controller_archive05_file_tests_supervisor__state.json",
+      "bytes": 1063,
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/controller_archive05_file_tests_supervisor/state.json",
+      "sha256": "3cd28c4c706e178347591018617684589fe60fbf807075a50dc9b70435000d98"
+    },
+    "publisher_ownership_repair_static07.json": {
+      "archive_file": "publisher_ownership_repair_static07.json",
+      "bytes": 2598,
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_ownership_repair_static07.json",
+      "sha256": "fad4296bed782748446c72877bdbb22f141a0c6ba1820a6fb15a373da7a9c8b1"
+    }
+  },
+  "schema": "b3_full_context_work_in_progress_status_archive_v1",
+  "scientific_acceptance": false,
+  "source_sha256": {
+    "scripts/orchestrate_b3_paged_native_common_source.py": "1282e86856c300f2b9c3c89fb7c940106957280c9bc57e323faf25def295a3c3",
+    "scripts/publish_b3_full_context_observed.py": "59a80383643bc12df300b2084ee0259e5c56a1a98522e944a616c429b5c261dd",
+    "test/test_b3_full_context_observed.py": "c3a75f5deb50d21cc6bad3eb82d71071a337cba66c8d0a8d03774966abd224c6",
+    "test/test_b3_paged_native_common_source_controller.py": "bb91b7c2359230272f4cae0673fff5ef2e85a6fc576f790885d39b19861d8410"
+  }
+}

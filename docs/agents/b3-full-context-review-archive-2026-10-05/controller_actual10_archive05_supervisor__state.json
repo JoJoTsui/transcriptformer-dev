@@ -1,0 +1,38 @@
+{
+  "status": "completed",
+  "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+  "supervisor_pid": 4,
+  "producer_pid": 5,
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/controller_actual10_archive05_gnu_time.txt",
+    ".venv/bin/python",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/orchestrate_b3_paged_native_common_source.py",
+    "plan",
+    "--request",
+    "runs/b3_feasibility/20261005/controller_actual10_archive05_request.json",
+    "--output",
+    "runs/b3_feasibility/20261005/controller_actual10_archive05_publication",
+    "--max-seconds",
+    "900"
+  ],
+  "started_unix": 1791137061.933543,
+  "limits": {
+    "max_wall_seconds": 950.0,
+    "max_rss_gib": 4.0,
+    "min_host_ram_gib": 4.0,
+    "min_disk_gib": 20.0,
+    "max_gpu_temperature_c": null,
+    "gpu_index": 0
+  },
+  "producer_start_ticks": 13371618,
+  "heartbeat_unix": 1791137061.9336088,
+  "elapsed_seconds": 0.0008939589897636324,
+  "producer_rss_gib": 0.000141143798828125,
+  "host_available_ram_gib": 28.646385192871094,
+  "disk_available_gib": 382.95379638671875,
+  "return_code": 0,
+  "finished_unix": 1791137068.9565992
+}

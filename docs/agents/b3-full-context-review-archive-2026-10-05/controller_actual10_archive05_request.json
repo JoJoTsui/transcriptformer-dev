@@ -1,0 +1,14 @@
+{
+  "consumer_file_sha256": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/b3_authenticated_helpers.py": "a931e9d2ee1a35a13d2e7659fa71ff6e1565e289d5ab6c6f15170701525487f3",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/b3_native_catalog_pages.py": "c5eb352512b4b2aa6627424c4268a6c4c32c518042bf1978e62f5a497e87336d",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/orchestrate_b3_paged_native_common_source.py": "1282e86856c300f2b9c3c89fb7c940106957280c9bc57e323faf25def295a3c3",
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/replay_b3_sparse_null.py": "d061d134908a38b90fa6d23d2ae56da2609237e4d2f5d2c62e07da60f8306dc6"
+  },
+  "measurement_evidence": {
+    "bytes": 961352,
+    "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261004/common_source_draft/common_source_10_engineering_evidence.json",
+    "sha256": "0868a11387eb3c9f031bf2fa6a99c366a2327fa7e3673eab61aa26c791a87314"
+  },
+  "schema": "b3_paged_native_common_bootstrap_controller_plan_request_v1"
+}

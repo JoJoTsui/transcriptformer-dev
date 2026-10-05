@@ -1,0 +1,33 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "scripts/supervise_b3_pilot.py",
+    "--run-dir",
+    "runs/b3_feasibility/20261005/controller_archive05_file_tests_supervisor",
+    "--max-wall-seconds",
+    "950",
+    "--max-rss-gib",
+    "4",
+    "--min-host-ram-gib",
+    "4",
+    "--min-disk-gib",
+    "20",
+    "--",
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/controller_archive05_file_tests_gnu_time.txt",
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "test/test_b3_paged_native_common_source_controller.py",
+    "-q",
+    "--basetemp=/tmp/b3-controller-archive05-file-20261005",
+    "--junitxml=runs/b3_feasibility/20261005/controller_archive05_file_tests.xml"
+  ],
+  "source_sha256": {
+    "scripts/orchestrate_b3_paged_native_common_source.py": "1282e86856c300f2b9c3c89fb7c940106957280c9bc57e323faf25def295a3c3",
+    "test/test_b3_paged_native_common_source_controller.py": "bb91b7c2359230272f4cae0673fff5ef2e85a6fc576f790885d39b19861d8410"
+  },
+  "model_forwards_authorized": false
+}

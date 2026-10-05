@@ -1,5 +1,33 @@
 # Finetune readiness tracker
 
+## Implementation in progress — 2026-10-05
+
+The complete-bootstrap metadata planner passes all **95 file tests** and a
+fresh run over the actual ten-draw receipt graph. That run launches zero
+children and keeps full 2,000-draw execution unadmitted. Its current source is
+`1282e868…`; these are bounded planning results.
+
+The full-context observed publisher is **work in progress**. Current source
+`59a80383…` and tests `c3a75f5d…` pass Ruff check/format and configured mypy.
+Independent review reports **Standards: one hard P2, zero optional** and
+**Spec: two hard P2, zero optional**. Remaining issues concern complete
+cleanup after a reused child descriptor, context publication followed by an
+inner cleanup failure, and retention of child ownership after an admission
+probe failure. They must be repaired and runtime verified before acceptance.
+
+Earlier publisher versions separately passed a finite-score public oracle/TSV/
+fresh-replay check, eleven ownership regressions, and six subsequent repair/
+late-cleanup checks. Two later child-replacement regressions failed the preceding
+version as expected. These receipts describe their exact earlier source bytes;
+they do not establish current publisher or full-suite acceptance. See the
+[current status record](b3-full-context-implementation-status-2026-10-05.md).
+
+All 233 preexisting Python files retain their original bytes. Public operations
+retain 900-second, 4 GiB RSS and 200 MiB numeric caps, one CPU thread, CUDA off,
+4 GiB host RAM and 20 GiB free disk floors. Ticket **05 remains open**,
+**11 excluded**, and **ten tickets closed for bounded engineering**.
+No new complete repository test result or scientific acceptance is claimed.
+
 **Current common-source milestone — acceptance recorded 2026-10-05.**
 The native batch/v3 application at `71c1254` passes bounded engineering
 acceptance: **1,092 passed, 5 skipped**, zero failures/errors. All **75 new
