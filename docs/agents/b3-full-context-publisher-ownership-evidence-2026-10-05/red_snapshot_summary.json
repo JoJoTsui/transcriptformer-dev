@@ -1,0 +1,71 @@
+{
+  "cases": [
+    {
+      "error": false,
+      "failure_message": "AssertionError: assert not True\n +  where True = exists()\n +    where exists = PosixPath('/tmp/b3-publisher-v09-snapshot-red-20261005/test_reused_private_child_desc0/.b3-full-context-observed-8niauj9c/snapshot').exists",
+      "name": "test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle"
+    },
+    {
+      "error": false,
+      "failure_message": null,
+      "name": "test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[temporary_cleanup]"
+    },
+    {
+      "error": false,
+      "failure_message": null,
+      "name": "test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[claim_unlink]"
+    },
+    {
+      "error": false,
+      "failure_message": null,
+      "name": "test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-publication]"
+    },
+    {
+      "error": false,
+      "failure_message": null,
+      "name": "test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-snapshot]"
+    },
+    {
+      "error": false,
+      "failure_message": null,
+      "name": "test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-publication]"
+    },
+    {
+      "error": false,
+      "failure_message": null,
+      "name": "test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-snapshot]"
+    }
+  ],
+  "clock_values_are_independent": true,
+  "gnu_elapsed": "4:06.66",
+  "gnu_maximum_rss_kib": 523140,
+  "junit_suites": [
+    {
+      "errors": "0",
+      "failures": "1",
+      "hostname": "Conundrum",
+      "name": "pytest",
+      "skipped": "0",
+      "tests": "7",
+      "time": "244.088",
+      "timestamp": "2026-10-05T08:45:57.328491+08:00"
+    }
+  ],
+  "milestone_accepted": false,
+  "model_forwards": 0,
+  "raw_refs": {
+    "runs/b3_feasibility/20261005/publisher_v09_snapshot_cleanup_against_v08_red.xml": "3345e30715c1c980a1fd54d8926a6432991e1de006f482d5c3f0b9374c57fcdd",
+    "runs/b3_feasibility/20261005/publisher_v09_snapshot_cleanup_against_v08_red_gnu_time.txt": "3ffa68c55f35c759c22198b141d39f2757aa1866fe91cd65b640c4413fca6b8f",
+    "runs/b3_feasibility/20261005/publisher_v09_snapshot_cleanup_against_v08_red_invocation.json": "d8edddca84c1c8d7836eced783fb033b6656dde68ac072f7d1d5a47d6f0b4f2f",
+    "runs/b3_feasibility/20261005/publisher_v09_snapshot_cleanup_against_v08_red_supervisor/state.json": "ee083bb5ed267dd3e8ae6628cb9f849978c3baec94f927d592fc2f2dc9904728"
+  },
+  "schema": "b3_publisher_owned_snapshot_regression_red_v1",
+  "source_sha256": {
+    "scripts/publish_b3_full_context_observed.py": "d01ffc515cd77d57f52eb5833cab40150e4dab8a145cd06bc8d510c4378031a2",
+    "test/test_b3_full_context_observed.py": "b6f277adc66011b759b934dd1b9c662075f4ee8224ad041af8bc185c76394283"
+  },
+  "status": "six_passed_one_expected_owned_snapshot_regression_failure",
+  "supervisor_last_elapsed_seconds": 240.22888615599368,
+  "supervisor_return_code": 1,
+  "supervisor_stop_reason": null
+}

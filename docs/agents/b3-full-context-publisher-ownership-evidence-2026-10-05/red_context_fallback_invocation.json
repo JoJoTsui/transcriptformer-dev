@@ -1,0 +1,46 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "scripts/supervise_b3_pilot.py",
+    "--run-dir",
+    "runs/b3_feasibility/20261005/publisher_v10_context_fallback_against_v09_red_supervisor",
+    "--max-wall-seconds",
+    "950",
+    "--max-rss-gib",
+    "4",
+    "--min-host-ram-gib",
+    "4",
+    "--min-disk-gib",
+    "20",
+    "--",
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/publisher_v10_context_fallback_against_v09_red_gnu_time.txt",
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "test/test_b3_full_context_observed.py::test_genuine_context_fallback_birth_is_bound_before_engine_descriptor_release_can_fail",
+    "-q",
+    "--basetemp=/tmp/b3-publisher-v10-fallback-red-20261005",
+    "--junitxml=runs/b3_feasibility/20261005/publisher_v10_context_fallback_against_v09_red.xml"
+  ],
+  "environment_overrides": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "TF_RUN_REAL_MODEL_TESTS": "0"
+  },
+  "expected_param_cases": 1,
+  "expected_regression_failures": 1,
+  "head": "b9b1534b12a76064beb4e9d8c4aadf9971ad2683",
+  "milestone_accepted": false,
+  "model_forwards_authorized": false,
+  "retained_sources": "runs/b3_feasibility/20261005/source_archive_full_context_observed10_fallback_red",
+  "source_sha256": {
+    "scripts/publish_b3_full_context_observed.py": "db413c0e1619c76c30163b52e4ac88d1a0bc7e5c7f7da7f49e78c87af5bdcd2d",
+    "test/test_b3_full_context_observed.py": "e353ed218d745d82d4c75082661a4fde43bb8f28aabd7e964c8f78cdf7ade115"
+  }
+}

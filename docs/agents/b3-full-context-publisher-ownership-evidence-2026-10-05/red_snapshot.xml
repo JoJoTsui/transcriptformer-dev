@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="7" time="244.088" timestamp="2026-10-05T08:45:57.328491+08:00" hostname="Conundrum"><testcase classname="test.test_b3_full_context_observed" name="test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle" time="96.872"><failure message="AssertionError: assert not True&#10; +  where True = exists()&#10; +    where exists = PosixPath('/tmp/b3-publisher-v09-snapshot-red-20261005/test_reused_private_child_desc0/.b3-full-context-observed-8niauj9c/snapshot').exists">stored_native = namespace(folder=PosixPath('/tmp/b3-publisher-v09-snapshot-red-20261005/full-context-observed-native0'), path=PosixPat...set': 'raw_positive', 'sha256': '7566f162b607d81ee660daf35cbd3b729ccdde201272966fdde59802a5257487', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher-v09-snapshot-red-20261005/test_reused_private_child_desc0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7069eea795d0&gt;
+
+    def test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle(
+        stored_native, tmp_path, monkeypatch
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        seal = public._Publication.seal_published
+        ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
+        before = dict(sys.modules)
+        owned, reused, snapshots = [], [], []
+        foreign = tmp_path / "foreign-reused-child-fd.bin"
+        foreign_bytes = b"caller-owned replacement descriptor must survive\n"
+        foreign.write_bytes(foreign_bytes)
+    
+        def replace_actual_context_descriptor_before_private_cleanup(owner):
+            seal(owner)
+            if not reused:
+                assert (output / "summary.json").is_file()
+                assert owner.workspace is not None
+                snapshot = owner.workspace / "snapshot"
+                copied = list(snapshot.iterdir())
+                assert len(copied) == 5 and all(path.is_file() for path in copied)
+                snapshots.append((snapshot, copied))
+                for name in (
+                    "workspace_publication_fd",
+                    "workspace_context_fd",
+                    "workspace_snapshot_fd",
+                    "workspace_fd",
+                    "parent_fd",
+                    "claim_fd",
+                    "output_fd",
+                    "staging_fd",
+                    "marker_fd",
+                ):
+                    fd = getattr(owner, name)
+                    assert fd is not None
+                    opened = ordinary_fstat(fd)
+                    owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+                fd = owner.workspace_context_fd
+                ordinary_close(fd)
+                replacement = ordinary_open(foreign, os.O_RDONLY | os.O_NOFOLLOW)
+                if replacement != fd:
+                    ordinary_dup2(replacement, fd)
+                    ordinary_close(replacement)
+                opened = ordinary_fstat(fd)
+                reused.append((fd, (opened.st_dev, opened.st_ino)))
+    
+        monkeypatch.setattr(public._Publication, "seal_published", replace_actual_context_descriptor_before_private_cleanup)
+        try:
+            with pytest.raises(RuntimeError, match="descriptor|identity|workspace"):
+                public.run(request, output)
+            assert len(owned) == 9 and len(reused) == 1
+            foreign_fd, foreign_identity = reused[0]
+            current = ordinary_fstat(foreign_fd)
+            assert (current.st_dev, current.st_ino) == foreign_identity
+            assert os.read(foreign_fd, len(foreign_bytes)) == foreign_bytes
+            assert foreign.read_bytes() == foreign_bytes
+            assert not (output / "summary.json").exists()
+            assert not output.with_name(output.name + ".claim").exists()
+            assert len(snapshots) == 1
+            snapshot, copied = snapshots[0]
+            # Context ownership is uncertain after its FD was reused. The original
+            # snapshot remains independently bound and must be drained before
+            # refusing, even while that context and its enclosing root are kept.
+&gt;           assert not snapshot.exists()
+E           AssertionError: assert not True
+E            +  where True = exists()
+E            +    where exists = PosixPath('/tmp/b3-publisher-v09-snapshot-red-20261005/test_reused_private_child_desc0/.b3-full-context-observed-8niauj9c/snapshot').exists
+
+test/test_b3_full_context_observed.py:1632: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_observed" name="test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[temporary_cleanup]" time="29.962" /><testcase classname="test.test_b3_full_context_observed" name="test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[claim_unlink]" time="30.969" /><testcase classname="test.test_b3_full_context_observed" name="test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-publication]" time="3.719" /><testcase classname="test.test_b3_full_context_observed" name="test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-snapshot]" time="34.162" /><testcase classname="test.test_b3_full_context_observed" name="test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-publication]" time="3.836" /><testcase classname="test.test_b3_full_context_observed" name="test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-snapshot]" time="34.270" /></testsuite></testsuites>

@@ -1,0 +1,8 @@
+{
+  "pre_format_draft_source_sha256": "6ca9d824295fa0501b8d42da48b66b824ec12ded7b5aab6d2f8461df4aaa9998",
+  "pre_format_draft_test_sha256": "5fa917f2dac4657dd5062e9dcb53dc1de93f2ee84fcc5427bea1c9d7051888b9",
+  "source_sha256": {
+    "scripts/publish_b3_full_context_observed.py": "d01ffc515cd77d57f52eb5833cab40150e4dab8a145cd06bc8d510c4378031a2",
+    "test/test_b3_full_context_observed.py": "b6f277adc66011b759b934dd1b9c662075f4ee8224ad041af8bc185c76394283"
+  }
+}

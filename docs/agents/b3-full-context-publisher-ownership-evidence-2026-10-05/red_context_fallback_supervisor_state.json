@@ -1,0 +1,36 @@
+{
+  "status": "stopped",
+  "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+  "supervisor_pid": 5,
+  "producer_pid": 6,
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/publisher_v10_context_fallback_against_v09_red_gnu_time.txt",
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "test/test_b3_full_context_observed.py::test_genuine_context_fallback_birth_is_bound_before_engine_descriptor_release_can_fail",
+    "-q",
+    "--basetemp=/tmp/b3-publisher-v10-fallback-red-20261005",
+    "--junitxml=runs/b3_feasibility/20261005/publisher_v10_context_fallback_against_v09_red.xml"
+  ],
+  "started_unix": 1791161588.803576,
+  "limits": {
+    "max_wall_seconds": 950.0,
+    "max_rss_gib": 4.0,
+    "min_host_ram_gib": 4.0,
+    "min_disk_gib": 20.0,
+    "max_gpu_temperature_c": null,
+    "gpu_index": 0
+  },
+  "producer_start_ticks": 15928973,
+  "heartbeat_unix": 1791161618.8174343,
+  "elapsed_seconds": 30.01464182001655,
+  "producer_rss_gib": 0.001331329345703125,
+  "host_available_ram_gib": 28.36037826538086,
+  "disk_available_gib": 382.9502601623535,
+  "return_code": 1,
+  "finished_unix": 1791161632.8257968
+}

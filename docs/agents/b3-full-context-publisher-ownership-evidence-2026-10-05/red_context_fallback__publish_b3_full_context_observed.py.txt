@@ -1,0 +1,2236 @@
+#!/usr/bin/env python
+"""Publish all original-axis observed stored arithmetic without model effects.
+
+Implementation draft for scripts/publish_b3_full_context_observed.py. This
+ignored copy is not an installed public consumer: run() requires its canonical
+location and authenticates that existing source file's actual bytes. It never
+manufactures an original v2 bundle, RNG family or likelihood-effect receipt.
+The public seam admits one complete native context, including unavailable rows.
+Embedded callers must release caller-owned numeric payload before entering
+this path-only interface, as with the existing public native batch producer.
+"""
+
+from __future__ import annotations
+
+import argparse
+import builtins
+from collections.abc import Callable, Iterator, MutableMapping
+from contextlib import contextmanager
+import errno
+from hashlib import sha256
+import json
+from math import isfinite
+import os
+from pathlib import Path, PosixPath
+import resource
+import shutil
+import stat
+import sys
+import tempfile
+import time
+from types import ModuleType
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[1]
+PUBLISHER_SOURCE = ROOT / "scripts/publish_b3_full_context_observed.py"
+COMMON_SOURCE = ROOT / "scripts/prepare_b3_paged_native_common_source.py"
+HELPER_SOURCE = ROOT / "scripts/b3_authenticated_helpers.py"
+ORIGINAL_SOFTWARE = (
+    ROOT / "scripts/prepare_b3_paged_native_cache.py",
+    *(
+        ROOT / "scripts" / name
+        for name in (
+            "b3_native_catalog_pages.py",
+            "prepare_b3_paged_native_context.py",
+            "bootstrap_b3_streamed.py",
+            "reduce_b3_streamed_fixed_pairs.py",
+            "replay_b3_sparse_null.py",
+            "b3_windowed_native.py",
+            "b3_h5_attribute_admission.py",
+            "replay_b3_prepared_sparse_session.py",
+        )
+    ),
+    *sorted((ROOT / "src/transcriptformer").rglob("*.py")),
+)
+SOFTWARE = (PUBLISHER_SOURCE, COMMON_SOURCE, *ORIGINAL_SOFTWARE, HELPER_SOURCE)
+MIB = 1024**2
+MAX_WORKING = 200 * MIB
+PAGE_SIZE = 128
+MAX_GENES = 100_000
+METHOD = "b3_measured_zero_peer_null_v2"
+SCORE_DEFINITION = "measured_zero_null_corrected_z_v2"
+SCHEMA = "b3_full_context_observed_request_v1"
+RESULT_SCHEMA = "b3_full_context_observed_result_v1"
+SOURCE_SCHEMA = "b3_full_context_observed_source_v1"
+COMMITMENT_SCHEMA = "b3_full_context_observed_source_commitment_v1"
+STATE_SCHEMA = "b3_full_context_observed_unit_state_v1"
+ROWS_SCHEMA = "b3_full_context_observed_rows_v1"
+PAGE_SCHEMA = "b3_full_context_observed_row_page_v1"
+STATUS = "complete_original_axis_observed_stored_arithmetic_effects_unattested"
+FIELDS = {
+    "schema",
+    "catalog",
+    "context_request",
+    "embryo_metrics_metadata",
+    "csr_arrays",
+    "focal_catalog",
+    "phase",
+    "execution_catalog",
+    "consumer_file_sha256",
+}
+RESULT_FIELDS = {
+    "schema",
+    "method",
+    "score_definition",
+    "status",
+    "phase",
+    "request",
+    "execution_catalog",
+    "focal_catalog",
+    "source",
+    "source_commitment_sha256",
+    "unit_state",
+    "rows",
+    "finite_scores",
+    "n_genes",
+    "n_finite_scores",
+    "validation",
+    "flags",
+    "numeric_working_upper_bytes",
+    "timings_seconds",
+    "elapsed_before_final_seal_seconds",
+}
+ROW_FIELDS = {
+    "gene_id",
+    "focal_scored_cells",
+    "focal_scored_embryos",
+    "candidate_peers",
+    "matched_peers",
+    "positive_contrast_peers",
+    "raw_impact_bits",
+    "null_mean_impact_bits",
+    "null_sample_sd_bits",
+    "diagnostic_z",
+    "unavailable_reason",
+}
+COUNT_FIELDS = (
+    "focal_scored_cells",
+    "focal_scored_embryos",
+    "candidate_peers",
+    "matched_peers",
+    "positive_contrast_peers",
+)
+FLOAT_FIELDS = ("raw_impact_bits", "null_mean_impact_bits", "null_sample_sd_bits", "diagnostic_z")
+REASONS = {
+    "no_focal_scored_cells",
+    "unavailable_sparse_dropout_band",
+    "fewer_than_two_matched_peers",
+    "zero_or_nonfinite_null_variance",
+}
+VALIDATION_FIELDS = {
+    "verified_cells",
+    "verified_ranges",
+    "verified_scored_rows",
+    "catalog_pages",
+    "blocks_calculated",
+    "rows_calculated",
+    "rows_compared",
+    "unit_metric_max_abs_error",
+    "original_metric_bins_equal",
+    "unit_weights_verified",
+}
+TIMING_KEYS = {
+    "source_imports",
+    "source_admission",
+    "preallocation_admission",
+    "snapshot",
+    "unit_metrics",
+    "bins",
+    "statistics",
+    "observed_rows",
+    "replay_comparison",
+    "serialization",
+    "seal_before_publication",
+}
+
+
+def _parts(value: Any):
+    encoder = json.JSONEncoder(sort_keys=True, separators=(",", ":"), allow_nan=False)
+    for piece in encoder.iterencode(value):
+        block = piece.encode("utf-8")
+        if len(block) > MIB:
+            raise ValueError("Canonical JSON scalar exceeds bounded writer scratch")
+        yield block
+
+
+def _digest(value: Any) -> str:
+    checksum = sha256()
+    for block in _parts(value):
+        checksum.update(block)
+    return checksum.hexdigest()
+
+
+def _json(data: bytes) -> dict:
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("Duplicate JSON key")
+            result[key] = value
+        return result
+
+    def invalid(value):
+        raise ValueError("Nonfinite JSON constant: " + value)
+
+    try:
+        value = json.loads(data, object_pairs_hook=unique, parse_constant=invalid)
+    except (UnicodeError, RecursionError, json.JSONDecodeError) as error:
+        raise ValueError("Malformed bounded JSON") from error
+    if not isinstance(value, dict):
+        raise ValueError("Require a JSON object")
+    return value
+
+
+def _path(value: Any) -> Path:
+    if (
+        not isinstance(value, str)
+        or not value
+        or value != value.strip()
+        or len(value) > 4096
+        or any(c in value for c in "\x00\r\n")
+        or not Path(value).is_absolute()
+        or str(Path(value).resolve()) != value
+    ):
+        raise ValueError("Require canonical absolute path")
+    return Path(value)
+
+
+def _sha(value: Any) -> str:
+    if not isinstance(value, str) or len(value) != 64 or any(c not in "0123456789abcdef" for c in value):
+        raise ValueError("Require lowercase SHA256")
+    return value
+
+
+def _ref(value: Any) -> dict:
+    if not isinstance(value, dict) or set(value) != {"path", "sha256", "bytes"}:
+        raise ValueError("Require a closed artifact reference")
+    _path(value["path"])
+    _sha(value["sha256"])
+    if type(value["bytes"]) is not int or not 0 <= value["bytes"] < 2**63:
+        raise ValueError("Artifact byte count requires a strict bounded integer")
+    return value
+
+
+class _Budget:
+    """Stdlib admission before executing any authenticated helper."""
+
+    def __init__(self, parent: Path, seconds: float, began: float):
+        if type(seconds) not in (int, float) or not isfinite(seconds) or not 0 < seconds <= 900:
+            raise ValueError("Wall cap must be positive and at most 900 seconds")
+        self.parent, self.seconds, self.began = parent, seconds, began
+        self.last_check = float("-inf")
+        self.pins: dict[Path, tuple[tuple[int, int, int], str]] = {}
+        self.resolutions: dict[Path, Path] = {}
+        self.pin_limit: int | None = None
+        self.pin_paths: frozenset[Path] | None = None
+        self.check()
+
+    def check(self, required: int = 0) -> None:
+        if type(required) is not int or required < 0:
+            raise ValueError("Required disk bytes must be a nonnegative integer")
+        now = time.monotonic()
+        if now - self.began >= self.seconds:
+            raise TimeoutError("Full-context observed publisher wall cap exceeded")
+        if not required and now - self.last_check < 0.1:
+            return
+        if resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 > 4 * 1024**3:
+            raise RuntimeError("Observed publisher exceeds 4 GiB RSS")
+        available = next(
+            (
+                int(line.split()[1]) * 1024
+                for line in Path("/proc/meminfo").read_text().splitlines()
+                if line.startswith("MemAvailable:")
+            ),
+            0,
+        )
+        if available < 4 * 1024**3:
+            raise RuntimeError("Observed publisher requires 4 GiB available host RAM")
+        if shutil.disk_usage(self.parent).free < 20 * 1024**3 + required:
+            raise RuntimeError("Observed publisher requires 20 GiB free after allocation")
+        self.last_check = now
+
+    def remaining(self) -> float:
+        self.check()
+        return min(900.0, self.seconds - (time.monotonic() - self.began))
+
+    def actual(self, path: Path, cap: int | None = None) -> tuple[dict, bytes | None]:
+        self.check()
+        caller = Path(path).absolute()
+        path = _path(str(caller.resolve(strict=True)))
+        if caller in self.resolutions and self.resolutions[caller] != path:
+            raise ValueError("Input caller resolution changed after admission")
+        if path not in self.pins:
+            if self.pin_paths is not None and path not in self.pin_paths:
+                raise ValueError("Source identity lies outside its prospective pin admission")
+            if self.pin_limit is not None and len(self.pins) >= self.pin_limit:
+                raise ValueError("Source pin table exceeds its combined numeric admission")
+        before = path.lstat()
+        if not stat.S_ISREG(before.st_mode) or (cap is not None and before.st_size > cap):
+            raise ValueError("Require a bounded regular input file")
+        identity = (before.st_dev, before.st_ino, before.st_size)
+        if path in self.pins and self.pins[path][0] != identity:
+            raise ValueError("Input storage identity changed after admission")
+        checksum, count = sha256(), 0
+        blocks: list[bytes] | None = [] if cap is not None else None
+        # A regular pathname can become a FIFO or symlink between lstat/open.
+        # O_NONBLOCK bounds FIFO opening; O_NOFOLLOW rejects the final symlink.
+        # The descriptor is admitted before its first byte is read.
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        try:
+            opened = os.fstat(fd)
+            if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino, opened.st_size) != identity:
+                raise ValueError("Opened input differs from admitted regular storage")
+            self.check()
+            with os.fdopen(fd, "rb") as stream:
+                fd = -1
+                while block := stream.read(MIB):
+                    self.check()
+                    count += len(block)
+                    if count > before.st_size or (cap is not None and count > cap):
+                        raise ValueError("Input exceeds admitted byte size")
+                    checksum.update(block)
+                    if blocks is not None:
+                        blocks.append(block)
+                finished = os.fstat(stream.fileno())
+                if (
+                    not stat.S_ISREG(finished.st_mode)
+                    or (finished.st_dev, finished.st_ino, finished.st_size) != identity
+                ):
+                    raise ValueError("Opened input storage changed during reading")
+        finally:
+            if fd >= 0:
+                os.close(fd)
+        after = path.lstat()
+        if (
+            not stat.S_ISREG(after.st_mode)
+            or count != before.st_size
+            or after.st_size != count
+            or (after.st_dev, after.st_ino, after.st_size) != identity
+            or caller.resolve(strict=True) != path
+            or path.resolve(strict=True) != path
+        ):
+            raise ValueError("Input storage changed during reading")
+        digest = checksum.hexdigest()
+        if path in self.pins and self.pins[path][1] != digest:
+            raise ValueError("Input bytes changed after admission")
+        self.pins[path] = identity, digest
+        self.resolutions[caller] = path
+        self.check()
+        return {"path": str(path), "sha256": digest, "bytes": count}, (b"".join(blocks) if blocks is not None else None)
+
+    def verify_pins(self, *, ignore_namespace: Path | None = None) -> None:
+        """Seal storage and caller identities; byte seals remain source-specific."""
+        for caller, path in self.resolutions.items():
+            if ignore_namespace is not None and path.is_relative_to(ignore_namespace):
+                continue
+            self.check()
+            current = path.lstat()
+            if (
+                not stat.S_ISREG(current.st_mode)
+                or (current.st_dev, current.st_ino, current.st_size) != self.pins[path][0]
+                or caller.resolve(strict=True) != path
+                or path.resolve(strict=True) != path
+            ):
+                raise ValueError("Frozen input identity or caller resolution changed before seal")
+        self.check()
+
+    def admit_pins(self, count: int, *, paths: set[Path] | None = None) -> int:
+        if type(count) is not int or count < len(self.pins):
+            raise ValueError("Pin reservation must cover already admitted source identities")
+        if paths is not None:
+            if (
+                type(paths) is not set
+                or len(paths) != count
+                or not set(self.pins).issubset(paths)
+                or any(not isinstance(path, Path) or _path(str(path)) != path for path in paths)
+            ):
+                raise ValueError("Prospective pin paths must cover exact canonical source identities")
+            self.pin_paths = frozenset(paths)
+        self.pin_limit = count
+        # Three fixed-width numeric identity values per pinned file. Python
+        # metadata/object overhead is covered independently by the RSS guard.
+        return count * 3 * 8
+
+    def seal_persistent(self, workspace: Path) -> None:
+        """Rehash every retained original source through the final public seal."""
+        self.verify_pins(ignore_namespace=workspace)
+        for path in tuple(self.pins):
+            if not path.is_relative_to(workspace):
+                self.actual(path)
+        self.verify_pins(ignore_namespace=workspace)
+
+    def owned_bytes(self, directory_fd: int, name: str, ref: dict, identity: tuple[int, int, int]) -> None:
+        """Verify a published file without allocating a second pathname pin."""
+        self.check()
+        before = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+        if not stat.S_ISREG(before.st_mode) or (before.st_dev, before.st_ino, before.st_size) != identity:
+            raise ValueError("Owned published artifact storage differs")
+        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory_fd)
+        try:
+            opened = os.fstat(fd)
+            if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino, opened.st_size) != identity:
+                raise ValueError("Owned published artifact descriptor differs")
+            checksum, count = sha256(), 0
+            with os.fdopen(fd, "rb") as stream:
+                fd = -1
+                while block := stream.read(MIB):
+                    self.check()
+                    count += len(block)
+                    if count > ref["bytes"]:
+                        raise ValueError("Owned published artifact grew after sealing")
+                    checksum.update(block)
+                finished = os.fstat(stream.fileno())
+                if (
+                    not stat.S_ISREG(finished.st_mode)
+                    or (finished.st_dev, finished.st_ino, finished.st_size) != identity
+                ):
+                    raise ValueError("Owned published artifact descriptor changed")
+            after = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+            if (
+                not stat.S_ISREG(after.st_mode)
+                or (after.st_dev, after.st_ino, after.st_size) != identity
+                or count != ref["bytes"]
+                or checksum.hexdigest() != ref["sha256"]
+            ):
+                raise ValueError("Owned published artifact bytes changed after sealing")
+        finally:
+            if fd >= 0:
+                os.close(fd)
+        self.check()
+
+    def digest(self, ref: dict) -> None:
+        ref = _ref(ref)
+        actual, _ = self.actual(_path(ref["path"]))
+        if actual != ref:
+            raise ValueError("Frozen artifact bytes changed")
+
+    def buffer(self, ref: dict, cap: int) -> bytes:
+        ref = _ref(ref)
+        if ref["bytes"] > cap:
+            raise ValueError("Metadata exceeds bounded byte cap")
+        actual, data = self.actual(_path(ref["path"]), cap)
+        if actual != ref:
+            raise ValueError("Frozen metadata bytes changed")
+        assert data is not None
+        return data
+
+
+class _RuntimeModules(MutableMapping[str, Any]):
+    """Own real private cache objects through unchanged nested helper loaders.
+
+    The frozen loader creates source and clone names in its runtime sys
+    module. This consumer supplies a private sys facade backed by this guard;
+    neither global sys.modules nor global builtins is replaced. Canonical
+    cache reads retain the actual runtime view. Foreign keys/replacements are
+    never overwritten or removed, including on failed helper construction.
+    """
+
+    def __init__(self, budget: _Budget):
+        self.budget = budget
+        self.runtime = sys.modules
+        self.owned: dict[str, ModuleType] = {}
+
+    def __getitem__(self, key: str) -> Any:
+        return self.runtime[key]
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        self.budget.check()
+        # Validate against the real stdlib sys module's type, independently of
+        # the observable ModuleType constructor used to reserve the bootstrap.
+        if not isinstance(key, str) or not key.startswith("_b3_authenticated_") or not isinstance(value, type(sys)):
+            raise ValueError("Private authenticated runtime registration requires a private module identity")
+        if key in self.runtime:
+            current = self.runtime[key]
+            if self.owned.get(key) is not current or current is not value:
+                raise ValueError("Private authenticated runtime cache key is occupied by a foreign module")
+        installed = self.runtime.setdefault(key, value)
+        if installed is not value:
+            raise ValueError("Private authenticated runtime cache key is occupied by a foreign module")
+        self.owned[key] = value
+
+    def __delitem__(self, key: str) -> None:
+        owned = self.owned.get(key)
+        if owned is None or self.runtime.get(key) is not owned:
+            # The deletion refusal preserves a replacement while forgetting
+            # our obsolete reference. Frozen close uses the nonthrowing pop.
+            self.owned.pop(key, None)
+            raise KeyError(key)
+        del self.runtime[key]
+        del self.owned[key]
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self.runtime)
+
+    def __len__(self) -> int:
+        return len(self.runtime)
+
+    def pop(self, key: str, default: Any = None) -> Any:
+        owned = self.owned.pop(key, None)
+        if owned is not None and self.runtime.get(key) is owned:
+            del self.runtime[key]
+            return owned
+        return default
+
+    def close(self) -> None:
+        # Cleanup remains available after deadline/resource refusal. The
+        # original inclusive checks still gate every successful public return.
+        # Hold object references until each identity-checked removal completes.
+        for key in list(self.owned):
+            self.pop(key, None)
+
+
+def _bootstrap(request: dict, budget: _Budget) -> tuple[dict, dict, dict]:
+    consumers = request["consumer_file_sha256"]
+    wanted = {str(_path(str(path))) for path in SOFTWARE}
+    if (
+        len(wanted) != 70
+        or not isinstance(consumers, dict)
+        or set(consumers) != wanted
+        or any(_sha(value) != value for value in consumers.values())
+    ):
+        raise ValueError("Require exact separately versioned 70-file observed closure")
+    buffers = {}
+    for path in SOFTWARE:
+        ref, data = budget.actual(path, 4 * MIB)
+        if ref["sha256"] != consumers[ref["path"]] or data is None:
+            raise ValueError("Observed consumer source bytes changed")
+        buffers[path.resolve()] = data
+    budget.verify_pins()
+    # This stdlib-only loader is the first executed helper; all 70 retained
+    # buffers have already passed same-buffer byte authentication.
+    runtime_modules = _RuntimeModules(budget)
+    helper = ModuleType("_b3_observed_helpers")
+    ordinal = 0
+    while (name := f"_b3_observed_helpers_{id(helper)}_{ordinal}") in sys.modules:
+        budget.check()
+        ordinal += 1
+    budget.check()
+    helper.__name__ = name
+    helper.__file__, helper.__package__ = str(HELPER_SOURCE), "scripts"
+    if sys.modules.setdefault(name, helper) is not helper:
+        raise ValueError("Observed bootstrap cache key is occupied by a foreign module")
+    registry = None
+    try:
+        runtime_sys = ModuleType("sys")
+        runtime_sys.__dict__.update(vars(sys))
+        runtime_sys.__dict__["modules"] = runtime_modules
+        runtime_sys.__dict__["_b3_authenticated_runtime_sys"] = runtime_sys
+        ordinary_import = builtins.__import__
+
+        def runtime_import(name, globals=None, locals=None, fromlist=(), level=0):
+            if name == "sys" and level == 0:
+                return runtime_sys
+            return ordinary_import(name, globals, locals, fromlist, level)
+
+        helper.__dict__["__builtins__"] = {**vars(builtins), "__import__": runtime_import}
+        exec(compile(buffers[HELPER_SOURCE], str(HELPER_SOURCE), "exec"), helper.__dict__)
+        registry = helper.AuthenticatedHelpers(ROOT, buffers, budget)
+        common = registry.load(COMMON_SOURCE)
+        if {str(path.resolve()) for path in common.SOFTWARE} != wanted - {str(PUBLISHER_SOURCE)}:
+            raise ValueError("Observed closure must retain exactly the original 69-file batch closure")
+        if {str(path.resolve()) for path in common.ORIGINAL_SOFTWARE} != {
+            str(path.resolve()) for path in ORIGINAL_SOFTWARE
+        }:
+            raise ValueError("Batch and observed consumers disagree on the exact original native closure")
+        modules = {
+            "common": common,
+            "authenticated_helpers": registry,
+            "bootstrap_helper": helper,
+            "runtime_modules": runtime_modules,
+        }
+        for role, name in (
+            ("catalog", "b3_native_catalog_pages.py"),
+            ("producer", "prepare_b3_paged_native_cache.py"),
+            ("context", "prepare_b3_paged_native_context.py"),
+            ("engine", "replay_b3_sparse_null.py"),
+            ("window", "b3_windowed_native.py"),
+            ("prepared", "replay_b3_prepared_sparse_session.py"),
+        ):
+            modules[role] = registry.load(ROOT / "scripts" / name)
+        original = {str(path.resolve()): consumers[str(path.resolve())] for path in ORIGINAL_SOFTWARE}
+        if len(original) != 67 or {str(path.resolve()) for path in modules["producer"].SOFTWARE} != set(original):
+            raise ValueError("Original producer's exact 67-file consumer membership changed")
+        modules["producer"]._read_consumers({"consumer_file_sha256": original}, modules["catalog"], budget)
+        return modules, dict(consumers), original
+    except BaseException:
+        try:
+            if registry is not None:
+                registry.close()
+        finally:
+            try:
+                runtime_modules.close()
+            finally:
+                if sys.modules.get(helper.__name__) is helper:
+                    del sys.modules[helper.__name__]
+        raise
+
+
+def _close_modules(modules: dict) -> None:
+    helper: ModuleType | None = modules.get("bootstrap_helper")
+    try:
+        modules["authenticated_helpers"].close()
+    finally:
+        try:
+            modules["runtime_modules"].close()
+        finally:
+            # The bootstrap helper is separately owned. Its reservation survives
+            # temporary buffer-map lifetimes and never deletes a foreign cache entry.
+            if helper is not None:
+                name = helper.__name__
+                if sys.modules.get(name) is helper:
+                    del sys.modules[name]
+
+
+def _request(value: dict) -> None:
+    if set(value) != FIELDS or value.get("schema") != SCHEMA:
+        raise ValueError("Invalid closed observed request")
+    for key in ("catalog", "context_request", "embryo_metrics_metadata", "focal_catalog"):
+        _ref(value[key])
+    if not isinstance(value["csr_arrays"], dict) or set(value["csr_arrays"]) != {
+        "gene_offsets.u64",
+        "cell_index.u32",
+        "impact_bits.f64",
+    }:
+        raise ValueError("Require exact original three CSR references")
+    for ref in value["csr_arrays"].values():
+        _ref(ref)
+    if value["phase"] == "publish":
+        if value["execution_catalog"] is not None:
+            raise ValueError("Publish execution catalog must be null")
+    elif value["phase"] == "replay":
+        _ref(value["execution_catalog"])
+    else:
+        raise ValueError("Phase must be exactly publish or replay")
+
+
+def _flags(replay: bool) -> dict:
+    return {
+        "stored_native_structure_verified": True,
+        "full_original_gene_axis_covered": True,
+        "observed_stored_arithmetic_verified": True,
+        "independent_observed_arithmetic_replay_verified": replay,
+        "observed_comparison_verified": False,
+        "fixed_observed_family_verified": False,
+        "native_arithmetic_replay_verified": False,
+        "native_likelihood_effects_attested": False,
+        "model_forwards_performed": False,
+        "checkpoint_tensors_loaded": False,
+        "full_pipeline_integration_complete": False,
+        "scientific_readiness": "unavailable",
+        "interval": None,
+    }
+
+
+def _write(path: Path, value: dict, cap: int, budget: _Budget) -> dict:
+    checksum, count = sha256(), 0
+    budget.check(cap)
+    with path.open("xb") as stream:
+        for block in _parts(value):
+            budget.check()
+            count += len(block)
+            if count + 1 > cap:
+                raise ValueError("Generated metadata exceeds bounded byte cap")
+            stream.write(block)
+            checksum.update(block)
+        stream.write(b"\n")
+        checksum.update(b"\n")
+        count += 1
+        stream.flush()
+        os.fsync(stream.fileno())
+    ref = {"path": str(path), "sha256": checksum.hexdigest(), "bytes": count}
+    budget.digest(ref)
+    return ref
+
+
+def _public(ref: dict, output: Path) -> dict:
+    return {**ref, "path": str(output / Path(ref["path"]).name)}
+
+
+def _same_file(actual: dict, expected: dict, message: str) -> None:
+    if (actual["sha256"], actual["bytes"]) != (expected["sha256"], expected["bytes"]):
+        raise ValueError(message)
+
+
+def _namespace(request: dict, output: Path, budget: _Budget) -> None:
+    forbidden = [
+        _path(request[key]["path"]).parent
+        for key in (
+            "catalog",
+            "context_request",
+            "embryo_metrics_metadata",
+            "focal_catalog",
+        )
+    ]
+    forbidden.extend(_path(ref["path"]).parent for ref in request["csr_arrays"].values())
+    if request["execution_catalog"] is not None:
+        forbidden.append(_path(request["execution_catalog"]["path"]).parent)
+    root = _json(budget.buffer(request["catalog"], 16 * MIB))
+    forbidden.extend(_path(root[key]) for key in ("certificate_namespace", "shard_namespace"))
+    for ref in root.get("common_files", []):
+        forbidden.append(_path(_ref(ref)["path"]).parent)
+    if any(output.is_relative_to(path) for path in forbidden):
+        raise ValueError("Observed output cannot be inside an original/input namespace")
+
+
+def _persistent_commitment(commitment: dict, workspace: Path) -> None:
+    """Private numeric snapshots must never become published original identity."""
+    pending = [commitment]
+    while pending:
+        value = pending.pop()
+        if isinstance(value, dict):
+            pending.extend(value)
+            pending.extend(value.values())
+        elif isinstance(value, list):
+            pending.extend(value)
+        elif isinstance(value, str) and Path(value).is_absolute() and Path(value).is_relative_to(workspace):
+            raise ValueError("Observed commitment cannot bind a private copied source path")
+
+
+def _close_owned_descriptor(owner: Any, name: str, identity: tuple[int, ...], *, directory: bool) -> None:
+    """Never close an unrelated descriptor after a partial cleanup failure."""
+    fd = getattr(owner, name)
+    if fd is None:
+        return
+    try:
+        opened = os.fstat(fd)
+    except OSError as error:
+        if error.errno == errno.EBADF:
+            setattr(owner, name, None)
+        raise
+    regular = stat.S_ISDIR(opened.st_mode) if directory else stat.S_ISREG(opened.st_mode)
+    if not regular or (opened.st_dev, opened.st_ino) != identity[:2]:
+        setattr(owner, name, None)
+        raise RuntimeError("Owned publication descriptor identity changed during cleanup")
+    try:
+        os.close(fd)
+    except BaseException:
+        # Some close errors occur after descriptor release. Forget an invalid
+        # or rebound descriptor rather than closing a later foreign reuse.
+        try:
+            current = os.fstat(fd)
+        except OSError as error:
+            if error.errno == errno.EBADF:
+                setattr(owner, name, None)
+        else:
+            if (current.st_dev, current.st_ino) != identity[:2]:
+                setattr(owner, name, None)
+        raise
+    setattr(owner, name, None)
+
+
+class _Cleanup:
+    """Attempt independent owned cleanup operations and retain their first error.
+
+    Callers supply only their fixed, already-owned handles. A failure never
+    authorizes a later ownership adoption or an unconditional descriptor close.
+    Retaining one exception avoids an expanding collection of failure frames.
+    """
+
+    def __init__(self) -> None:
+        self.first_error: BaseException | None = None
+
+    def attempt(self, operation: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
+        try:
+            operation(*args, **kwargs)
+        except BaseException as error:
+            if self.first_error is None:
+                self.first_error = error
+
+    def finish(self) -> None:
+        if self.first_error is not None:
+            raise self.first_error
+
+
+class _Publication:
+    """Keep owned marker/directory identities through publication and cleanup."""
+
+    def __init__(self, output: Path, caller: Path, budget: _Budget):
+        self.output, self.caller, self.budget = output, caller, budget
+        self.parent, self.claim_name = output.parent, output.name + ".claim"
+        self.parent_fd: int | None = None
+        self.staging_fd: int | None = None
+        self.output_fd: int | None = None
+        self.claim_fd: int | None = None
+        self.marker_fd: int | None = None
+        self.workspace_fd: int | None = None
+        self.workspace_publication_fd: int | None = None
+        self.workspace_context_fd: int | None = None
+        self.workspace_snapshot_fd: int | None = None
+        self.workspace_cleanup_parent_fd: int | None = None
+        self.parent_identity: tuple[int, int] | None = None
+        self.staging_identity: tuple[int, int] | None = None
+        self.output_identity: tuple[int, int] | None = None
+        self.claim_identity: tuple[int, int] | None = None
+        self.workspace: Path | None = None
+        self.workspace_identity: tuple[int, int] | None = None
+        self.workspace_removed = False
+        self.workspace_children: set[str] = set()
+        self.workspace_children_removed: set[str] = set()
+        self.artifacts: dict[str, tuple[dict, tuple[int, int, int]]] = {}
+        self.descriptor_identities: dict[str, tuple[int, int]] = {}
+        self.publishing = False
+        before = self.parent.lstat()
+        self.parent_identity = before.st_dev, before.st_ino
+        parent_fd = os.open(self.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        try:
+            opened = self._adopt("parent_fd", parent_fd, directory=True)
+            if (
+                not stat.S_ISDIR(before.st_mode)
+                or not stat.S_ISDIR(opened.st_mode)
+                or (before.st_dev, before.st_ino) != (opened.st_dev, opened.st_ino)
+            ):
+                raise RuntimeError("Observed output parent storage changed")
+            self._parent()
+        except BaseException:
+            self._close_descriptor("parent_fd", directory=True)
+            raise
+
+    def _adopt(
+        self,
+        name: str,
+        fd: int,
+        *,
+        directory: bool,
+        original_child: tuple[str, tuple[int, int]] | None = None,
+    ) -> os.stat_result:
+        """Bind an acquired descriptor before its fallible fstat admission.
+
+        A direct descriptor stat binds ownership independently of any caller
+        or canonical entry before the /proc and fstat admission probes. If
+        that first capture fails, /proc or fstat provides a cleanup binding;
+        the original lookup error still refuses admission.
+        Logical publication inode bindings stay separate from these cleanup
+        identities. A workspace child's verified birth enters the private
+        cleanup ledger immediately and keeps its original FD through later
+        admission faults. Other early failures release only a captured owned
+        FD and cannot make a rebound pathname eligible for deletion.
+        """
+        if original_child is not None:
+            child_name, _identity = original_child
+            if (
+                not directory
+                or child_name not in {"publication", "context", "snapshot"}
+                or name != "workspace_" + child_name + "_fd"
+                or child_name in self.workspace_children
+            ):
+                raise ValueError("Private child birth requires its unique original directory binding")
+        setattr(self, name, fd)
+        captured: os.stat_result | None = None
+        retained_child = False
+
+        def remember(opened: os.stat_result) -> None:
+            nonlocal retained_child
+            if original_child is not None:
+                child_name, original_identity = original_child
+                if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != original_identity:
+                    raise RuntimeError("Original observed workspace child changed before birth binding")
+            self.descriptor_identities[name] = opened.st_dev, opened.st_ino
+            if original_child is not None:
+                child_name, _identity = original_child
+                # This identity is captured from the actual acquired FD at
+                # its trusted creation/publication boundary. Keep it live
+                # independently of later proc/fstat admission or path errors.
+                self.workspace_children.add(child_name)
+                retained_child = True
+            if name == "claim_fd":
+                # Keep the claim inode alive while the failure path compares
+                # and unlinks its own directory entry. A substituted claim
+                # never supplies ownership of the acquired original inode.
+                self.claim_identity = opened.st_dev, opened.st_ino
+
+        try:
+            try:
+                captured = os.stat(fd)
+            except BaseException:
+                try:
+                    captured = os.stat(f"/proc/self/fd/{fd}")
+                except BaseException:
+                    captured = os.fstat(fd)
+                remember(captured)
+                raise
+            remember(captured)
+            proc = os.stat(f"/proc/self/fd/{fd}")
+            opened = os.fstat(fd)
+            expected_mode = stat.S_ISDIR(opened.st_mode) if directory else stat.S_ISREG(opened.st_mode)
+            if (
+                not expected_mode
+                or (proc.st_dev, proc.st_ino) != (captured.st_dev, captured.st_ino)
+                or (opened.st_dev, opened.st_ino) != (captured.st_dev, captured.st_ino)
+            ):
+                raise RuntimeError("Acquired observed descriptor changed before admission")
+            return opened
+        except BaseException:
+            if retained_child:
+                # The private context exit owns the original child's cleanup.
+                # Its live descriptor and birth identity must survive a later
+                # one-shot admission fault. Cleanup still verifies identity;
+                # a reused descriptor is refused and never closed as owned.
+                raise
+            try:
+                if name == "claim_fd" and captured is not None:
+                    self.release_claim()
+            finally:
+                if name == "claim_fd":
+                    # Prevent a second directory-entry release after the live
+                    # original FD has been closed and its inode can be reused.
+                    self.claim_identity = None
+                self._close_descriptor(name, directory=directory)
+            raise
+
+    def _close_descriptor(self, name: str, *, directory: bool) -> None:
+        if getattr(self, name) is None:
+            self.descriptor_identities.pop(name, None)
+            return
+        identity = self.descriptor_identities.get(name)
+        if identity is None:
+            # All descriptor metadata probes failed before acquisition could
+            # be bound. Never adopt a later live descriptor during cleanup;
+            # its numeric FD could already refer to a foreign replacement.
+            # EBADF means no live descriptor remains owned.
+            fd = getattr(self, name)
+            try:
+                os.stat(fd)
+            except OSError as error:
+                if error.errno == errno.EBADF:
+                    setattr(self, name, None)
+                raise
+            raise RuntimeError("Acquired publication descriptor has no recoverable ownership binding")
+        try:
+            _close_owned_descriptor(self, name, identity, directory=directory)
+        finally:
+            if getattr(self, name) is None:
+                self.descriptor_identities.pop(name, None)
+
+    def _parent(self) -> None:
+        self.budget.check()
+        current = self.parent.lstat()
+        if (
+            not stat.S_ISDIR(current.st_mode)
+            or (current.st_dev, current.st_ino) != self.parent_identity
+            or self.parent.resolve(strict=True) != self.parent
+            or self.caller.parent.resolve(strict=True) != self.parent
+            or self.caller.resolve() != self.output
+        ):
+            raise RuntimeError("Observed output parent/caller canonical alias changed")
+
+    def claim(self) -> None:
+        self._parent()
+        claim_fd = os.open(
+            self.claim_name,
+            os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+            0o600,
+            dir_fd=self.parent_fd,
+        )
+        created = self._adopt("claim_fd", claim_fd, directory=False)
+        self.claim_identity = created.st_dev, created.st_ino
+        self()
+
+    def acquire_workspace(self) -> Path:
+        """Retain the exclusively created private directory through cleanup."""
+        self()
+        self.workspace = Path(tempfile.mkdtemp(prefix=".b3-full-context-observed-", dir=self.parent))
+        before = self.workspace.lstat()
+        self.workspace_identity = before.st_dev, before.st_ino
+        fd = os.open(self.workspace, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        opened = self._adopt("workspace_fd", fd, directory=True)
+        if (
+            not stat.S_ISDIR(before.st_mode)
+            or (opened.st_dev, opened.st_ino) != self.workspace_identity
+            or self.workspace.resolve(strict=True) != self.workspace
+        ):
+            raise RuntimeError("Owned observed workspace identity changed during acquisition")
+        self()
+        return self.workspace
+
+    def _workspace_descriptor(self) -> int:
+        if self.workspace_fd is None or self.workspace_identity is None:
+            raise RuntimeError("Owned observed workspace lacks a live directory binding")
+        opened = os.fstat(self.workspace_fd)
+        if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != self.workspace_identity:
+            raise RuntimeError("Owned observed workspace descriptor identity changed")
+        return self.workspace_fd
+
+    def _workspace_address(self) -> Path:
+        fd = self._workspace_descriptor()
+        assert self.workspace_identity is not None
+        return self._directory_address(fd, self.workspace_identity)
+
+    def _directory_address(self, fd: int, identity: tuple[int, int]) -> Path:
+        opened = os.fstat(fd)
+        if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != identity:
+            raise RuntimeError("Owned observed workspace directory descriptor identity changed")
+        value = os.readlink(f"/proc/self/fd/{fd}")
+        address = Path(value)
+        if not address.is_absolute() or value.endswith(" (deleted)"):
+            raise RuntimeError("Owned observed workspace lacks a live cleanup address")
+        current = address.lstat()
+        if (
+            not stat.S_ISDIR(current.st_mode)
+            or (current.st_dev, current.st_ino) != identity
+            or address.resolve(strict=True) != address
+        ):
+            raise RuntimeError("Owned observed workspace cleanup address was rebound")
+        return address
+
+    def bind_workspace_child(self, name: str) -> None:
+        """Bind an actual producer-created child before later mutation seams."""
+        if name not in {"publication", "context", "snapshot"} or name in self.workspace_children:
+            raise ValueError("Require a unique admitted private workspace child")
+        workspace_fd = self._workspace_descriptor()
+        before = os.stat(name, dir_fd=workspace_fd, follow_symlinks=False)
+        if not stat.S_ISDIR(before.st_mode):
+            raise RuntimeError("Original observed workspace child is not its created directory")
+        attribute = "workspace_" + name + "_fd"
+        fd = os.open(
+            name,
+            os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK,
+            dir_fd=workspace_fd,
+        )
+        opened = self._adopt(attribute, fd, directory=True, original_child=(name, (before.st_dev, before.st_ino)))
+        if (opened.st_dev, opened.st_ino) != (before.st_dev, before.st_ino):
+            raise RuntimeError("Original observed workspace child changed during admission")
+
+    def _remove_workspace_directory(self, fd: int, identity: tuple[int, int]) -> None:
+        """Remove an empty original directory through its verified address."""
+        # A previous removal's close can refuse while leaving its original
+        # parent handle live. Verify/release that handle before opening another;
+        # never overwrite its cleanup identity or close a foreign FD reuse.
+        self._close_descriptor("workspace_cleanup_parent_fd", directory=True)
+        address = self._directory_address(fd, identity)
+        parent_fd = os.open(address.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        try:
+            self._adopt("workspace_cleanup_parent_fd", parent_fd, directory=True)
+            current = os.stat(address.name, dir_fd=parent_fd, follow_symlinks=False)
+            if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != identity:
+                raise RuntimeError("Owned observed workspace address changed before removal")
+            if self._directory_address(fd, identity) != address:
+                raise RuntimeError("Owned observed workspace directory moved during cleanup")
+            os.rmdir(address.name, dir_fd=parent_fd)
+        finally:
+            self._close_descriptor("workspace_cleanup_parent_fd", directory=True)
+
+    def _cleanup_workspace_child(self, name: str) -> bool:
+        """Clean an already-bound original child; never adopt a current alias."""
+        if name in self.workspace_children_removed:
+            return False
+        attribute = "workspace_" + name + "_fd"
+        fd = getattr(self, attribute)
+        identity = self.descriptor_identities.get(attribute)
+        if fd is None or identity is None or name not in self.workspace_children:
+            raise RuntimeError("Owned observed workspace child lacks its original binding")
+        address = self._directory_address(fd, identity)
+        workspace_address = self._workspace_address()
+        # A no-replace publication rename transfers the original private
+        # directory to public ownership. Its early child FD still names the
+        # public directory, including after an admitted output relocation.
+        if name == "publication" and self.publishing:
+            if identity == self.output_identity or address == self.output:
+                self.workspace_children_removed.add(name)
+                return False
+            if address.parent != workspace_address:
+                raise RuntimeError("Published workspace child lacks its original output binding")
+        try:
+            current = os.stat(name, dir_fd=self._workspace_descriptor(), follow_symlinks=False)
+        except FileNotFoundError:
+            changed = True
+        else:
+            changed = not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != identity
+        if address != workspace_address / name:
+            changed = True
+        # All three created children are flat. Stream their retained original
+        # descriptors with fixed metadata state; a foreign replacement entry
+        # is neither opened nor enumerated, even when the outer inode is intact.
+        maximum = {
+            "snapshot": 5,
+            "publication": (MAX_GENES + PAGE_SIZE - 1) // PAGE_SIZE + 5,
+            "context": 32 * ((2_000_000 + PAGE_SIZE - 1) // PAGE_SIZE) + 1,
+        }[name]
+        count = 0
+        with os.scandir(fd) as entries:
+            for entry in entries:
+                count += 1
+                if count > maximum or entry.is_dir(follow_symlinks=False):
+                    raise RuntimeError("Owned observed workspace exceeds its bounded flat cleanup layout")
+                os.unlink(entry.name, dir_fd=fd)
+        if self._directory_address(fd, identity) != address:
+            changed = True
+        self._remove_workspace_directory(fd, identity)
+        self.workspace_children_removed.add(name)
+        return changed
+
+    def cleanup_workspace(self) -> None:
+        """Delete only the retained private tree and refuse a rebound alias.
+
+        The canonical workspace path may name a foreign replacement. Its
+        identity is checked before side effects, but all private leaf cleanup
+        uses the independently retained original FD. A moved original is
+        reached through its verified descriptor address for empty-root
+        removal. No TemporaryDirectory finalizer recursively follows an
+        unverified pathname. Cleanup remains available after a cap refusal;
+        the unchanged inclusive seals still gate a successful public return.
+        """
+        if self.workspace is None or self.workspace_removed:
+            return
+        fd = self._workspace_descriptor()
+        try:
+            canonical = self.workspace.lstat()
+        except FileNotFoundError:
+            canonical_changed = True
+        else:
+            canonical_changed = (
+                not stat.S_ISDIR(canonical.st_mode)
+                or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
+                or self.workspace.resolve(strict=True) != self.workspace
+            )
+        # Verify the descriptor-derived original address before deleting any
+        # leaves. This cleanup address is never an original-byte source alias.
+        if self._workspace_address() != self.workspace:
+            canonical_changed = True
+
+        def cleanup_child(name: str) -> None:
+            nonlocal canonical_changed
+            if self._cleanup_workspace_child(name):
+                canonical_changed = True
+
+        cleanup = _Cleanup()
+        for name in ("publication", "context", "snapshot"):
+            if name in self.workspace_children:
+                cleanup.attempt(cleanup_child, name)
+        # Refusing one child's ownership cannot strand another child's known
+        # private numeric copies. Drain all fixed independent bindings first,
+        # then preserve any uncertain child/root and propagate the first error.
+        cleanup.finish()
+        # Any remaining entry may be a foreign replacement or a child whose
+        # creation/admission failed before its ownership could be bound.
+        # Preserve it and the enclosing directory, then refuse the public call.
+        with os.scandir(fd) as entries:
+            if next(entries, None) is not None:
+                raise RuntimeError("Owned observed workspace contains a preserved foreign or unadmitted child")
+        address = self._workspace_address()
+        if address != self.workspace:
+            canonical_changed = True
+        assert self.workspace_identity is not None
+        self._remove_workspace_directory(fd, self.workspace_identity)
+        self.workspace_removed = True
+        if canonical_changed:
+            raise RuntimeError("Owned observed workspace canonical directory identity changed")
+
+    def __call__(self) -> None:
+        self._parent()
+        current = os.stat(self.claim_name, dir_fd=self.parent_fd, follow_symlinks=False)
+        if not stat.S_ISREG(current.st_mode) or (current.st_dev, current.st_ino) != self.claim_identity:
+            raise RuntimeError("Observed publication claim ownership changed")
+        if os.path.lexists(self.output):
+            if not self.publishing:
+                raise FileExistsError(self.output)
+            self._destination()
+        elif self.output_fd is not None:
+            raise RuntimeError("Owned observed output directory disappeared")
+
+    def prepare(self, staging: Path, references: list[dict]) -> None:
+        before = staging.lstat()
+        self.staging_identity = before.st_dev, before.st_ino
+        staging_fd = os.open(staging, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        opened = self._adopt("staging_fd", staging_fd, directory=True)
+        if not stat.S_ISDIR(opened.st_mode) or (before.st_dev, before.st_ino) != (opened.st_dev, opened.st_ino):
+            raise RuntimeError("Observed staging directory ownership changed")
+        for ref in references:
+            path = _path(ref["path"])
+            if path.parent != staging or path.name in self.artifacts:
+                raise ValueError("Owned observed publication requires unique flat artifacts")
+            self.artifacts[path.name] = ref, self.budget.pins[path][0]
+        if "summary.json" not in self.artifacts:
+            raise ValueError("Owned observed publication lacks its generated marker")
+        # Keep the generated inode alive until final cleanup, so a substituted
+        # foreign marker cannot reuse an unlinked original marker's inode.
+        marker_fd = os.open(
+            "summary.json",
+            os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK,
+            dir_fd=self.staging_fd,
+        )
+        marker = self._adopt("marker_fd", marker_fd, directory=False)
+        if (
+            not stat.S_ISREG(marker.st_mode)
+            or (marker.st_dev, marker.st_ino, marker.st_size) != self.artifacts["summary.json"][1]
+        ):
+            raise RuntimeError("Owned generated marker descriptor changed")
+
+    def _destination(self) -> None:
+        # The frozen publisher owns exclusive mkdir through its first inode
+        # capture under the sibling writer claim. Capture during its callback
+        # before fallback links, or capture the original staging inode after
+        # a successful no-replace rename. Later replacement is always refused.
+        current = os.stat(self.output.name, dir_fd=self.parent_fd, follow_symlinks=False)
+        if not stat.S_ISDIR(current.st_mode):
+            raise RuntimeError("Owned observed output directory was replaced")
+        identity = current.st_dev, current.st_ino
+        if self.output_fd is None:
+            self.output_identity = identity
+            fd = os.open(
+                self.output.name,
+                os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK,
+                dir_fd=self.parent_fd,
+            )
+            opened = self._adopt("output_fd", fd, directory=True)
+            if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != identity:
+                self._close_descriptor("output_fd", directory=True)
+                raise RuntimeError("Owned observed output descriptor was rebound")
+        elif identity != self.output_identity:
+            raise RuntimeError("Owned observed output directory identity changed")
+
+    def seal_published(self) -> None:
+        self._parent()
+        self._destination()
+        if self.output_fd is None:
+            raise RuntimeError("Owned observed publication lacks its live output descriptor")
+        for name, (ref, identity) in self.artifacts.items():
+            self.budget.owned_bytes(self.output_fd, name, ref, identity)
+        self._parent()
+        self._destination()
+        self.budget.check()
+
+    def release_claim(self) -> None:
+        if self.claim_identity is None:
+            return
+        try:
+            current = os.stat(self.claim_name, dir_fd=self.parent_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            return
+        if stat.S_ISREG(current.st_mode) and (current.st_dev, current.st_ino) == self.claim_identity:
+            os.unlink(self.claim_name, dir_fd=self.parent_fd)
+
+    def invalidate(self) -> None:
+        """A failed late seal removes only our own marker, even after rename."""
+        marker = self.artifacts.get("summary.json")
+        if marker is None:
+            return
+        marker_identity = marker[1][:2]
+        # The retained staging descriptor still reaches our renamed directory;
+        # fallback links retain the exact generated marker inode as well.
+        removed = False
+        for fd, identity in (
+            (self.output_fd, self.output_identity),
+            (self.staging_fd, self.staging_identity),
+        ):
+            if fd is None or identity is None:
+                continue
+            try:
+                directory = os.fstat(fd)
+                if not stat.S_ISDIR(directory.st_mode) or (directory.st_dev, directory.st_ino) != identity:
+                    continue
+                current = os.stat("summary.json", dir_fd=fd, follow_symlinks=False)
+                if stat.S_ISREG(current.st_mode) and (current.st_dev, current.st_ino) == marker_identity:
+                    os.unlink("summary.json", dir_fd=fd)
+                    removed = True
+            except FileNotFoundError:
+                pass
+            except OSError as error:
+                if error.errno != errno.EBADF:
+                    raise
+        if removed:
+            return
+        # Descriptor cleanup itself can fail late. Reopen only our unchanged
+        # canonical directory and match its inode before touching the marker.
+        # A foreign replacement directory or marker is never invalidated.
+        expected = self.output_identity or self.staging_identity
+        if expected is None:
+            return
+        try:
+            parent, current = self.parent.lstat(), self.output.lstat()
+            if (
+                not stat.S_ISDIR(parent.st_mode)
+                or (parent.st_dev, parent.st_ino) != self.parent_identity
+                or self.parent.resolve(strict=True) != self.parent
+                or not stat.S_ISDIR(current.st_mode)
+                or (current.st_dev, current.st_ino) != expected
+            ):
+                return
+            fd = os.open(self.output, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
+            try:
+                opened = os.fstat(fd)
+                if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != expected:
+                    return
+                marker_stat = os.stat("summary.json", dir_fd=fd, follow_symlinks=False)
+                if stat.S_ISREG(marker_stat.st_mode) and (marker_stat.st_dev, marker_stat.st_ino) == marker_identity:
+                    os.unlink("summary.json", dir_fd=fd)
+            finally:
+                os.close(fd)
+        except FileNotFoundError:
+            pass
+
+    def close(self) -> None:
+        cleanup = _Cleanup()
+        for name, directory in (
+            ("workspace_publication_fd", True),
+            ("workspace_context_fd", True),
+            ("workspace_snapshot_fd", True),
+            ("workspace_cleanup_parent_fd", True),
+            ("workspace_fd", True),
+            ("parent_fd", True),
+            ("claim_fd", False),
+            ("output_fd", True),
+            ("staging_fd", True),
+            ("marker_fd", False),
+        ):
+            cleanup.attempt(self._close_descriptor, name, directory=directory)
+        cleanup.finish()
+
+
+class _Recovery:
+    """Keep independent owned handles across every owner cleanup callback.
+
+    Only terminal os.close operations follow the final byte/alias/deadline
+    seal. Those releases remain inside run's failure handler, and retain an
+    owned directory while closing the other descriptors. There is no success
+    finally that can call fallible cleanup after the last public seal.
+    """
+
+    def __init__(self, owner: _Publication):
+        self.owner = owner
+        self.parent_fd: int | None = None
+        self.directory_fd: int | None = None
+        self.marker_fd: int | None = None
+        if owner.parent_identity is None or owner.output_identity is None:
+            raise RuntimeError("Publication recovery lacks admitted directory identities")
+        self.parent_identity, self.directory_identity = owner.parent_identity, owner.output_identity
+        self.artifacts = dict(owner.artifacts)
+        self.marker = self.artifacts["summary.json"]
+        self.fallback = owner.output
+        owner._parent()
+        try:
+            for name, original, identity, directory in (
+                ("parent_fd", owner.parent_fd, self.parent_identity, True),
+                ("directory_fd", owner.output_fd, self.directory_identity, True),
+                ("marker_fd", owner.marker_fd, self.marker[1], False),
+            ):
+                if original is None or identity is None:
+                    raise RuntimeError("Publication recovery lacks live admitted ownership")
+                fd = os.dup(original)
+                setattr(self, name, fd)
+                opened = os.fstat(fd)
+                regular = stat.S_ISDIR(opened.st_mode) if directory else stat.S_ISREG(opened.st_mode)
+                if not regular or (opened.st_dev, opened.st_ino) != identity[:2]:
+                    raise RuntimeError("Duplicated publication recovery descriptor changed")
+                owner.budget.check()
+            self.seal()
+        except BaseException as failure:
+            cleanup = _Cleanup()
+            cleanup.attempt(owner.invalidate)
+            cleanup.attempt(self.release)
+            if cleanup.first_error is not None:
+                raise cleanup.first_error from failure
+            raise
+
+    def _directory(self) -> None:
+        self.owner._parent()
+        if self.directory_fd is None or self.parent_fd is None:
+            raise RuntimeError("Publication recovery requires live directory ownership")
+        for fd, identity in (
+            (self.parent_fd, self.parent_identity),
+            (self.directory_fd, self.directory_identity),
+        ):
+            opened = os.fstat(fd)
+            if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != identity:
+                raise RuntimeError("Publication recovery directory descriptor changed")
+        current = os.stat(self.owner.output.name, dir_fd=self.parent_fd, follow_symlinks=False)
+        if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != self.directory_identity:
+            raise RuntimeError("Owned observed output directory identity changed after cleanup")
+
+    def seal(self) -> None:
+        self._directory()
+        if self.marker_fd is None or self.directory_fd is None:
+            raise RuntimeError("Publication recovery requires live marker/directory ownership")
+        marker = os.fstat(self.marker_fd)
+        if not stat.S_ISREG(marker.st_mode) or (marker.st_dev, marker.st_ino) != self.marker[1][:2]:
+            raise RuntimeError("Publication recovery marker descriptor changed")
+        for name, (ref, identity) in self.artifacts.items():
+            self.owner.budget.owned_bytes(self.directory_fd, name, ref, identity)
+        # Capture the actual descriptor-bound address before the final
+        # alias/deadline seal. Only terminal descriptor closes follow it.
+        path = os.readlink(f"/proc/self/fd/{self.directory_fd}")
+        if not Path(path).is_absolute() or path.endswith(" (deleted)"):
+            raise RuntimeError("Publication recovery directory lacks its live owned address")
+        self.fallback = Path(path)
+        self._directory()
+        self.owner.budget.check()
+
+    def _invalidate_at(self, fd: int) -> bool:
+        current = os.stat("summary.json", dir_fd=fd, follow_symlinks=False)
+        if not stat.S_ISREG(current.st_mode) or (current.st_dev, current.st_ino) != self.marker[1][:2]:
+            return False
+        pinned = False
+        if self.marker_fd is not None:
+            try:
+                original = os.fstat(self.marker_fd)
+                pinned = stat.S_ISREG(original.st_mode) and (original.st_dev, original.st_ino) == self.marker[1][:2]
+            except OSError as error:
+                if error.errno != errno.EBADF:
+                    raise
+        if not pinned:
+            # Terminal release may have dropped the inode-retaining marker
+            # descriptor. Require the exact original marker bytes as well as
+            # directory/marker identities before any identity-checked fallback.
+            ref, identity = self.marker
+            if current.st_size != ref["bytes"] or current.st_size > 2 * MIB:
+                return False
+            marker_fd = os.open("summary.json", os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=fd)
+            try:
+                opened = os.fstat(marker_fd)
+                if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino, opened.st_size) != identity:
+                    return False
+                checksum, count = sha256(), 0
+                while block := os.read(marker_fd, MIB):
+                    count += len(block)
+                    if count > ref["bytes"]:
+                        return False
+                    checksum.update(block)
+                after = os.stat("summary.json", dir_fd=fd, follow_symlinks=False)
+                if (
+                    not stat.S_ISREG(after.st_mode)
+                    or (after.st_dev, after.st_ino, after.st_size) != identity
+                    or count != ref["bytes"]
+                    or checksum.hexdigest() != ref["sha256"]
+                ):
+                    return False
+                # Unlink while this reopened inode is still retained.
+                os.unlink("summary.json", dir_fd=fd)
+                return True
+            finally:
+                os.close(marker_fd)
+        os.unlink("summary.json", dir_fd=fd)
+        return True
+
+    def invalidate(self) -> None:
+        # This independently retained descriptor reaches the owned directory
+        # after owner.close even if another writer renamed/replaced its path.
+        if self.directory_fd is not None:
+            try:
+                opened = os.fstat(self.directory_fd)
+                if stat.S_ISDIR(opened.st_mode) and (opened.st_dev, opened.st_ino) == self.directory_identity:
+                    if self._invalidate_at(self.directory_fd):
+                        return
+            except FileNotFoundError:
+                return
+            except OSError as error:
+                if error.errno != errno.EBADF:
+                    raise
+        # A terminal descriptor-release error may leave no live directory.
+        # Reopen only the last descriptor-derived path with exact ownership,
+        # rather than the potentially foreign canonical output destination.
+        try:
+            current = self.fallback.lstat()
+            if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != self.directory_identity:
+                return
+            fd = os.open(self.fallback, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
+            try:
+                opened = os.fstat(fd)
+                if stat.S_ISDIR(opened.st_mode) and (opened.st_dev, opened.st_ino) == self.directory_identity:
+                    self._invalidate_at(fd)
+            finally:
+                os.close(fd)
+        except FileNotFoundError:
+            pass
+
+    def release(self) -> None:
+        # Keep the actual owned directory live through all other fallible
+        # descriptor releases. The last byte/alias seal already retained its
+        # descriptor-derived path for identity-checked last-close recovery.
+        cleanup = _Cleanup()
+        for name, identity, directory in (
+            ("parent_fd", self.parent_identity, True),
+            ("marker_fd", self.marker[1], False),
+        ):
+            if getattr(self, name) is not None:
+                cleanup.attempt(_close_owned_descriptor, self, name, identity, directory=directory)
+        if cleanup.first_error is not None:
+            # Keep the independent owned directory alive while invalidating
+            # after an earlier release refusal, then still attempt its close.
+            cleanup.attempt(self.invalidate)
+        if self.directory_fd is not None:
+            cleanup.attempt(_close_owned_descriptor, self, "directory_fd", self.directory_identity, directory=True)
+        if cleanup.first_error is not None:
+            # A directory close can fail after actual release. Its previously
+            # sealed, descriptor-derived fallback still requires exact inode
+            # and marker bytes before invalidation; foreign aliases survive.
+            cleanup.attempt(self.invalidate)
+        cleanup.finish()
+
+
+@contextmanager
+def _publication(output: Path, caller: Path, budget: _Budget, ledger: list[_Publication]):
+    owner = _Publication(output, caller, budget)
+    ledger.append(owner)
+
+    class OwnedWorkspacePath(PosixPath):
+        """Capture only actual exclusive private mkdir operations locally.
+
+        The owner is this local class's closure, so pathlib's propagated
+        child instances need no mutable owner attribute. Frozen producers
+        receive ordinary path-compatible values; global pathlib and their
+        authenticated source buffers are unchanged.
+        """
+
+        def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+            child = self.parent == owner.workspace and self.name in {"publication", "snapshot"}
+            if child and (parents or exist_ok or self.name in owner.workspace_children):
+                raise ValueError("Private workspace child creation requires an exclusive original mkdir")
+            super().mkdir(mode=mode, parents=parents, exist_ok=exist_ok)
+            if child:
+                owner.bind_workspace_child(self.name)
+
+    try:
+        owner.claim()
+        workspace = OwnedWorkspacePath(owner.acquire_workspace())
+        staging = workspace / "publication"
+        staging.mkdir()
+        yield workspace, staging, owner
+    finally:
+        try:
+            owner.cleanup_workspace()
+        finally:
+            owner.release_claim()
+
+
+def _row(row: Any, gene: str, genes: int, cells: int, embryos: int) -> None:
+    if not isinstance(row, dict) or set(row) != ROW_FIELDS or row.get("gene_id") != gene:
+        raise ValueError("Observed row schema or original gene order differs")
+    bounds = (cells, embryos, genes - 1, genes - 1, genes - 1)
+    for key, high in zip(COUNT_FIELDS, bounds, strict=True):
+        if type(row[key]) is not int or not 0 <= row[key] <= high:
+            raise ValueError("Observed row count lies outside its strict physical domain")
+    if row["matched_peers"] > row["candidate_peers"] or row["positive_contrast_peers"] > row["matched_peers"]:
+        raise ValueError("Observed peer counts are inconsistent")
+    for key in FLOAT_FIELDS:
+        value = row[key]
+        if value is not None and (type(value) is not float or not isfinite(value)):
+            raise ValueError("Observed scalar must be a finite float or null")
+    reason = row["unavailable_reason"]
+    if reason is not None and (type(reason) is not str or reason not in REASONS):
+        raise ValueError("Observed unavailable reason differs from the frozen kernel")
+    if reason is None:
+        if any(row[key] is None for key in FLOAT_FIELDS) or row["null_sample_sd_bits"] <= 0:
+            raise ValueError("Available observed row lacks finite positive-variance evidence")
+    elif any(row[key] is not None for key in FLOAT_FIELDS[1:]):
+        raise ValueError("Unavailable observed row cannot contain a finite null score")
+
+
+def _tsv_gene(gene: str) -> None:
+    """Admit this publisher's literal finite-TSV representation locally."""
+    if any(character in gene for character in "\t\r\n"):
+        raise ValueError("Observed TSV gene identifier contains a field or row separator")
+
+
+class _Prior:
+    """Authenticate an execution publication; compare fresh canonical payloads."""
+
+    def __init__(self, reference: dict, request: dict, source: dict, focals: Any, budget: _Budget):
+        self.budget, self.reference = budget, _ref(reference)
+        self.comparison_seconds = 0.0
+        self.parent = _path(reference["path"]).parent
+        self.summary = _json(budget.buffer(reference, 2 * MIB))
+        summary = self.summary
+        if (
+            _path(reference["path"]).name != "summary.json"
+            or set(summary) != RESULT_FIELDS
+            or summary.get("schema") != RESULT_SCHEMA
+            or summary.get("method") != METHOD
+            or summary.get("score_definition") != SCORE_DEFINITION
+            or summary.get("status") != STATUS
+            or summary.get("phase") != "publish"
+            or summary.get("execution_catalog") is not None
+            or _digest(summary.get("flags")) != _digest(_flags(False))
+            or summary.get("source_commitment_sha256") != source["source_commitment_sha256"]
+        ):
+            raise ValueError("Replay requires a complete truthful observed publication")
+        self.refs = [reference]
+        original = _json(budget.buffer(summary["request"], MIB))
+        _request(original)
+        expected = {**request, "phase": "publish", "execution_catalog": None}
+        if _digest(original) != _digest(expected) or _digest(summary["focal_catalog"]) != _digest(focals.reference):
+            raise ValueError("Observed replay original source/focal/consumer request differs")
+        self.refs.append(summary["request"])
+        g = len(source["context"]["gene_ids"])
+        if type(summary.get("n_genes")) is not int or summary["n_genes"] != g:
+            raise ValueError("Observed execution does not cover the full original gene axis")
+        finite = summary.get("n_finite_scores")
+        if type(finite) is not int or not 0 <= finite <= g:
+            raise ValueError("Observed execution finite count requires a strict bounded integer")
+        for key, name, cap in (
+            ("source", "source.json", 32 * MIB),
+            ("unit_state", "unit-state.json", 64 * MIB),
+            ("rows", "rows.json", 2 * MIB),
+            ("finite_scores", "scores.tsv", 64 * MIB),
+        ):
+            ref = _ref(summary[key])
+            if ref["path"] != str(self.parent / name) or ref["bytes"] > cap:
+                raise ValueError("Observed execution artifacts must retain their bounded canonical siblings")
+            budget.digest(ref)
+            self.refs.append(ref)
+        validation = summary.get("validation")
+        if not isinstance(validation, dict) or set(validation) != VALIDATION_FIELDS:
+            raise ValueError("Observed execution validation schema differs")
+        expected_counts = {
+            "verified_cells": source["plan"]["n_cells"],
+            "verified_ranges": len(source["plan"]["ranges"]),
+            "verified_scored_rows": source["plan"]["native_scorable_contrasts"],
+            "catalog_pages": len(source["root"]["pages"]),
+            "blocks_calculated": focals.count,
+            "rows_calculated": g,
+            "rows_compared": 0,
+        }
+        if any(
+            type(validation.get(key)) is not int or validation[key] != value for key, value in expected_counts.items()
+        ):
+            raise ValueError("Observed execution native/row counters differ")
+        if validation["original_metric_bins_equal"] is not True or validation["unit_weights_verified"] is not True:
+            raise ValueError("Observed execution lacks truthful unit metric/bin checks")
+        error = validation["unit_metric_max_abs_error"]
+        if type(error) is not float or not isfinite(error) or not 0 <= error <= 1e-12:
+            raise ValueError("Observed execution unit metric consistency differs")
+        if (
+            type(summary.get("numeric_working_upper_bytes")) is not int
+            or not 0 < summary["numeric_working_upper_bytes"] <= MAX_WORKING
+        ):
+            raise ValueError("Observed execution numeric admission differs")
+        timings = summary.get("timings_seconds")
+        if (
+            not isinstance(timings, dict)
+            or set(timings) != TIMING_KEYS
+            or any(type(v) not in (int, float) or not isfinite(v) or not 0 <= v <= 900 for v in timings.values())
+            or type(summary.get("elapsed_before_final_seal_seconds")) not in (int, float)
+            or not isfinite(summary["elapsed_before_final_seal_seconds"])
+            or not 0 <= summary["elapsed_before_final_seal_seconds"] <= 900
+        ):
+            raise ValueError("Observed execution timing scope differs")
+        self.root = _json(budget.buffer(summary["rows"], 2 * MIB))
+        root = self.root
+        if (
+            set(root) != {"schema", "source_commitment_sha256", "gene_axis_sha256", "page_size", "n_genes", "pages"}
+            or root.get("schema") != ROWS_SCHEMA
+            or root.get("source_commitment_sha256") != source["source_commitment_sha256"]
+            or root.get("gene_axis_sha256") != source["gene_axis_sha256"]
+            or type(root.get("page_size")) is not int
+            or root["page_size"] != PAGE_SIZE
+            or type(root.get("n_genes")) is not int
+            or root["n_genes"] != g
+            or not isinstance(root.get("pages"), list)
+            or len(root["pages"]) != (g + PAGE_SIZE - 1) // PAGE_SIZE
+        ):
+            raise ValueError("Observed execution row catalog omits the original axis")
+        for index, descriptor in enumerate(root["pages"]):
+            first, last = index * PAGE_SIZE, min((index + 1) * PAGE_SIZE, g)
+            if (
+                not isinstance(descriptor, dict)
+                or set(descriptor) != {"index", "start", "stop", "file"}
+                or any(type(descriptor.get(k)) is not int for k in ("index", "start", "stop"))
+                or (descriptor["index"], descriptor["start"], descriptor["stop"]) != (index, first, last)
+                or _ref(descriptor["file"])["path"] != str(self.parent / f"row-page-{index:06d}.json")
+                or descriptor["file"]["bytes"] > MIB
+            ):
+                raise ValueError("Observed execution row page ordinal/range/path differs")
+            budget.digest(descriptor["file"])
+            self.refs.append(descriptor["file"])
+
+    def compare(self, key: str, actual: dict) -> None:
+        began = time.monotonic()
+        self.budget.check()
+        _same_file(actual, self.summary[key], "Fresh observed reconstruction differs from execution " + key)
+        self.comparison_seconds += time.monotonic() - began
+
+    def page(self, index: int, actual: dict) -> None:
+        began = time.monotonic()
+        self.budget.check()
+        _same_file(actual, self.root["pages"][index]["file"], "Fresh observed row fields differ bit for bit")
+        self.comparison_seconds += time.monotonic() - began
+
+    def verify(self) -> None:
+        for ref in self.refs:
+            self.budget.digest(ref)
+
+
+class _Rows:
+    def __init__(self, source: dict, staging: Path, output: Path, budget: _Budget, prior: _Prior | None):
+        self.source, self.staging, self.output, self.budget, self.prior = source, staging, output, budget, prior
+        self.pending: list[dict] = []
+        self.pages: list[dict] = []
+        self.generated: list[dict] = []
+        self.count, self.finite = 0, 0
+        self.score_path = staging / "scores.tsv"
+        self.scores = self.score_path.open("xb")
+        self.score_hash, self.score_bytes = sha256(), 0
+        try:
+            self._score(b"gene_id\tnull_corrected_z\n")
+        except BaseException:
+            self.scores.close()
+            raise
+
+    def _score(self, data: bytes) -> None:
+        self.budget.check()
+        self.score_bytes += len(data)
+        if len(data) > MIB or self.score_bytes > 64 * MIB:
+            raise ValueError("Finite observed score table exceeds bounded storage")
+        self.scores.write(data)
+        self.score_hash.update(data)
+
+    def add(self, row: dict) -> None:
+        genes = self.source["context"]["gene_ids"]
+        if self.count >= len(genes):
+            raise ValueError("Observed calculation has trailing gene rows")
+        _row(
+            row, genes[self.count], len(genes), self.source["plan"]["n_cells"], len(self.source["metric"]["embryo_ids"])
+        )
+        _tsv_gene(row["gene_id"])
+        self.pending.append(row)
+        self.count += 1
+        if row["diagnostic_z"] is not None:
+            self._score(f"{row['gene_id']}\t{row['diagnostic_z']!r}\n".encode())
+            self.finite += 1
+        if len(self.pending) == PAGE_SIZE:
+            self.flush()
+
+    def flush(self) -> None:
+        if not self.pending:
+            return
+        index, first, last = len(self.pages), self.count - len(self.pending), self.count
+        value = {
+            "schema": PAGE_SCHEMA,
+            "source_commitment_sha256": self.source["source_commitment_sha256"],
+            "gene_axis_sha256": self.source["gene_axis_sha256"],
+            "index": index,
+            "start": first,
+            "stop": last,
+            "rows": self.pending,
+        }
+        ref = _write(self.staging / f"row-page-{index:06d}.json", value, MIB, self.budget)
+        if self.prior is not None:
+            self.prior.page(index, ref)
+        self.generated.append(ref)
+        self.pages.append({"index": index, "start": first, "stop": last, "file": _public(ref, self.output)})
+        self.pending = []
+
+    def finish(self) -> tuple[dict, dict]:
+        if self.count != len(self.source["context"]["gene_ids"]):
+            raise ValueError("Observed calculation omitted original gene rows")
+        self.flush()
+        self.scores.flush()
+        os.fsync(self.scores.fileno())
+        self.scores.close()
+        scores_ref = {"path": str(self.score_path), "sha256": self.score_hash.hexdigest(), "bytes": self.score_bytes}
+        self.budget.digest(scores_ref)
+        self.generated.append(scores_ref)
+        root_ref = _write(
+            self.staging / "rows.json",
+            {
+                "schema": ROWS_SCHEMA,
+                "source_commitment_sha256": self.source["source_commitment_sha256"],
+                "gene_axis_sha256": self.source["gene_axis_sha256"],
+                "page_size": PAGE_SIZE,
+                "n_genes": self.count,
+                "pages": self.pages,
+            },
+            2 * MIB,
+            self.budget,
+        )
+        self.generated.append(root_ref)
+        if self.prior is not None:
+            self.prior.compare("finite_scores", scores_ref)
+            if self.finite != self.prior.summary["n_finite_scores"]:
+                raise ValueError("Fresh observed finite count differs from execution")
+        return root_ref, scores_ref
+
+    def close(self) -> None:
+        if not self.scores.closed:
+            self.scores.close()
+
+
+def _unit(source: dict, native: dict, engine: Any, budget: _Budget) -> tuple[dict, Any, Any, float, float, float]:
+    began = time.monotonic()
+    genes, embryos = source["context"]["gene_ids"], source["metric"]["embryo_ids"]
+    original = source["report"]["metrics"]
+    if not isinstance(original, list) or len(original) != len(genes):
+        raise ValueError("Observed metrics must retain the complete original gene axis")
+    fields = {"gene_id", "mean_log1p_normalized_expression", "dropout"}
+    for gene, record in zip(genes, original, strict=True):
+        if not isinstance(record, dict) or set(record) != fields or record["gene_id"] != gene:
+            raise ValueError("Original observed metric record schema/order differs")
+    weights = {embryo: 1 for embryo in embryos}
+    ordered = engine.np.ones(len(embryos), dtype="<i8")
+    ordered.setflags(write=False)
+    budget.check()
+    rebuilt = engine._weighted_metrics(genes, *native["metric_arrays"], ordered)
+    error = 0.0
+    for expected, actual in zip(original, rebuilt, strict=True):
+        if actual["gene_id"] != expected["gene_id"]:
+            raise ValueError("Unit metric original gene order differs")
+        for key in ("mean_log1p_normalized_expression", "dropout"):
+            value = expected[key]
+            if type(value) not in (int, float) or not isfinite(value):
+                raise ValueError("Original unit metric must be finite and typed")
+            difference = abs(value - actual[key])
+            if not isfinite(difference) or difference > 1e-12:
+                raise ValueError("Unit metric differs from original complete metrics")
+            error = max(error, difference)
+    metric_seconds = time.monotonic() - began
+    began = time.monotonic()
+    original_bins = engine.build_expression_dropout_bins(original)
+    rebuilt_bins = engine.build_expression_dropout_bins(rebuilt)
+    bins = [{**b.__dict__, "expression_deciles": list(b.expression_deciles)} for b in original_bins.assignments]
+    restored = [{**b.__dict__, "expression_deciles": list(b.expression_deciles)} for b in rebuilt_bins.assignments]
+    if _digest(bins) != _digest(restored):
+        raise ValueError("Unit metrics within tolerance changed the original complete bin identity")
+    del rebuilt, rebuilt_bins, restored
+    bin_seconds = time.monotonic() - began
+    budget.check()
+    state = {
+        "schema": STATE_SCHEMA,
+        "source_commitment_sha256": source["source_commitment_sha256"],
+        "metrics": original,
+        "metrics_sha256": _digest(original),
+        "bins": bins,
+        "bins_sha256": _digest(bins),
+        "weights": weights,
+        "weights_sha256": _digest(weights),
+    }
+    return state, original_bins, ordered, float(error), metric_seconds, bin_seconds
+
+
+def _reserve_pin_paths(
+    source: dict,
+    snapshot_request: dict,
+    workspace: Path,
+    staging: Path,
+    genes: int,
+    budget: _Budget,
+) -> tuple[int, list[dict]]:
+    """Reserve the exact remaining identity paths before native payload allocation.
+
+    The frozen copier and streamed manifest reader hash originals without
+    adding publisher pins. Complete original source references therefore stay
+    distinct from five private copies, five generated artifacts and row pages.
+    Already admitted canonical paths, including every prior replay payload,
+    count once. Planned private paths are addresses only; no artifact reference
+    claims that they exist.
+    """
+    names = ("gene_offsets.u64", "cell_index.u32", "impact_bits.f64")
+    commitment = source["source_commitment"]
+    if commitment["csr_arrays"] != snapshot_request["csr_arrays"]:
+        raise ValueError("Original source commitment differs from native snapshot references")
+    refs = [
+        commitment[name]
+        for name in (
+            "catalog",
+            "publication_marker",
+            "entries_manifest",
+            "plan",
+            "context_request",
+            "producer_provenance",
+            "checkpoint",
+            "embryo_metrics_metadata",
+            "support",
+            "embryo_metrics_h5",
+        )
+    ]
+    refs.extend(snapshot_request["csr_arrays"][name] for name in names)
+    refs.extend(page["file"] for page in commitment["catalog_pages"])
+    refs.extend(commitment["catalog_common_files"])
+    refs.extend(source["metric_refs"])
+    originals: dict[str, dict] = {}
+    for value in refs:
+        ref = _ref(value)
+        if ref["path"] in originals and originals[ref["path"]] != ref:
+            raise ValueError("Original source references conflict at one canonical path")
+        originals[ref["path"]] = ref
+    original_refs = list(originals.values())
+    paths = set(budget.pins)
+    paths.update(_path(ref["path"]) for ref in original_refs)
+    paths.update(workspace / "snapshot" / name for name in (*names, "support.h5", "metrics.h5"))
+    paths.update(
+        staging / name for name in ("source.json", "unit-state.json", "scores.tsv", "rows.json", "summary.json")
+    )
+    paths.update(staging / f"row-page-{index:06d}.json" for index in range((genes + PAGE_SIZE - 1) // PAGE_SIZE))
+    return budget.admit_pins(len(paths), paths=paths), original_refs
+
+
+def _run(request_path: Path, output: Path, ledger: list[_Publication], *, max_seconds: float) -> dict:
+    began = time.monotonic()
+    if Path(__file__).resolve() != PUBLISHER_SOURCE:
+        raise ValueError("Observed publisher must first exist at its reviewed canonical source path")
+    if type(max_seconds) not in (int, float) or not isfinite(max_seconds) or not 0 < max_seconds <= 900:
+        raise ValueError("Wall cap must be positive and at most 900 seconds")
+    if os.path.lexists(output):
+        raise FileExistsError(output)
+    output_caller = Path(output).absolute()
+    output = output_caller.resolve()
+    if os.path.lexists(output):
+        raise FileExistsError(output)
+    # Admit against the nearest existing directory before any mkdir. Namespace
+    # refusal must not create directories inside a protected source namespace.
+    admission_parent = next(parent for parent in output.parents if parent.is_dir())
+    budget = _Budget(admission_parent, max_seconds, began)
+    for name in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+        os.environ[name] = "1"
+    os.environ["CUDA_VISIBLE_DEVICES"] = ""
+    request_ref, data = budget.actual(Path(request_path), MIB)
+    assert data is not None
+    request = _json(data)
+    del data
+    _request(request)
+    timings = {key: 0.0 for key in sorted(TIMING_KEYS)}
+    started = time.monotonic()
+    modules, consumers, original = _bootstrap(request, budget)
+    timings["source_imports"] = time.monotonic() - started
+    common, producer, engine = modules["common"], modules["producer"], modules["engine"]
+    try:
+        _namespace(request, output, budget)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        budget.parent = output.parent
+        with _publication(output, output_caller, budget, ledger) as (workspace, staging, owner):
+            started = time.monotonic()
+            context_publication = modules["context"]._publication
+
+            @contextmanager
+            def bind_context_publication(destination, inputs, context_engine):
+                if destination != workspace / "context":
+                    raise ValueError("Require the genuine private context publication destination")
+
+                class BoundContextPublisher:
+                    """Delegate actual publication and bind it before inner cleanup."""
+
+                    def publish_new_directory(self, context_staging, target, marker, check=None):
+                        if target != destination or marker != "summary.json":
+                            raise ValueError("Require the genuine private context publication marker")
+                        admitted = context_engine.publish_new_directory(context_staging, target, marker, check=check)
+                        # The frozen publisher has actually completed its
+                        # no-replace publication. Capture this original child
+                        # before its enclosing TemporaryDirectory exit or
+                        # claim unlink can fail, without adopting any path on
+                        # a publication exception. The producer and engine
+                        # source buffers and global modules remain unchanged.
+                        owner.bind_workspace_child("context")
+                        return admitted
+
+                with context_publication(destination, inputs, BoundContextPublisher()) as publication:
+                    yield publication
+
+            modules["context"]._publication = bind_context_publication
+            try:
+                source = common._source_admission(request, modules, consumers, original, workspace, output, budget)
+            finally:
+                modules["context"]._publication = context_publication
+            source["request"] = request
+            # Structural readmission owns a separate helper budget. Retain its
+            # complete original source identities in this invocation before
+            # numeric admission, rather than first adding pins at final seal.
+            for path, digest in source["admitted"]["input_file_sha256"].items():
+                producer._source_ref(_path(path), digest, modules["catalog"], budget)
+            commitment = {**source["source_commitment"], "schema": COMMITMENT_SCHEMA}
+            if set(commitment) != common.COMMITMENT_FIELDS:
+                raise ValueError("Internal observed commitment schema differs from complete original source facts")
+            _persistent_commitment(commitment, workspace)
+            source["source_commitment_sha256"] = _digest(commitment)
+            focals = common._Focals(
+                request["focal_catalog"], source["root"]["plan"], source["context"]["gene_ids"], budget
+            )
+            g, e = len(focals.genes), len(source["metric"]["embryo_ids"])
+            if not focals.full_axis or not 1 <= g <= MAX_GENES or focals.widest is None:
+                raise ValueError("Observed publisher requires complete original-axis focal coverage 0:G")
+            for gene in focals.genes:
+                budget.check()
+                _tsv_gene(gene)
+            source["gene_axis_sha256"] = _digest(focals.genes)
+            source["embryo_axis_sha256"] = _digest(source["metric"]["embryo_ids"])
+            timings["source_admission"] = time.monotonic() - started
+            started = time.monotonic()
+            prior = (
+                _Prior(request["execution_catalog"], request, source, focals, budget)
+                if request["phase"] == "replay"
+                else None
+            )
+            timings["source_admission"] += time.monotonic() - started
+            started = time.monotonic()
+            snapshot_request = {
+                "embryo_metrics_metadata": request["embryo_metrics_metadata"],
+                "csr_arrays": request["csr_arrays"],
+                "focal_start": focals.widest["focal_start"],
+                "focal_stop": focals.widest["focal_stop"],
+            }
+            native_upper, _admission = common._pre_admission(source, snapshot_request, modules, budget)
+            # Extra caller lifetime terms: original/reconstructed metric/bin
+            # plans, unit weights, peer means/deviations/indices, pending row
+            # numeric fields, and writer/replay chunk buffers. No caller ranks,
+            # score vectors, all-block tensors or prior unit state are resident.
+            # The streamed original manifest and CSR payloads need their own
+            # reserved identities; deduplicate all original commitment refs
+            # against catalog/metric/structural/focal/prior admitted paths.
+            pin_upper, original_refs = _reserve_pin_paths(source, snapshot_request, workspace, staging, g, budget)
+            query_upper = 3 * g * 64 + e * 24 + g * 48 + (PAGE_SIZE + focals.max_width) * 160 + 3 * MIB + pin_upper
+            # Thirty-two three-scalar bindings conservatively cover nine
+            # primary owned FDs, three independent recovery handles, logical
+            # alias/birth bindings and the one bounded cleanup parent handle,
+            # including temporary probes. Three child handles are retained
+            # from original admission; cleanup never re-adopts current entries.
+            query_upper += 32 * 3 * 8
+            combined_upper = native_upper + query_upper
+            if combined_upper > MAX_WORKING:
+                raise ValueError("Combined native/observed query allocation exceeds 200 MiB before payload reads")
+            private_bytes = sum(ref["bytes"] for ref in request["csr_arrays"].values())
+            private_bytes += sum(source["source_commitment"][key]["bytes"] for key in ("support", "embryo_metrics_h5"))
+            output_upper = 100 * MIB + ((g + PAGE_SIZE - 1) // PAGE_SIZE) * MIB
+            budget.check(private_bytes + output_upper + 3 * MIB)
+            for ref in original_refs:
+                if _path(ref["path"]) not in budget.pins:
+                    budget.digest(ref)
+            budget.verify_pins()
+            timings["preallocation_admission"] = time.monotonic() - started
+            generated = []
+            started = time.monotonic()
+            with producer._snapshot(
+                snapshot_request,
+                source["root"],
+                source["plan"],
+                source["report"],
+                source["metric"],
+                source["context"],
+                modules["catalog"],
+                modules["window"],
+                modules["prepared"],
+                engine,
+                budget,
+                workspace,
+                source["csr_view"],
+            ) as native:
+                # Exclusive snapshot.mkdir() bound the original child before
+                # the frozen producer's proof-validation work or yield.
+                if "snapshot" not in owner.workspace_children:
+                    raise RuntimeError("Native producer did not create its bound original snapshot child")
+                timings["snapshot"] = time.monotonic() - started
+                if native["upper"] != native_upper:
+                    raise ValueError("Observed native allocation differs from source-bound admission")
+                source_value = {
+                    "schema": SOURCE_SCHEMA,
+                    "method": METHOD,
+                    "source_commitment": commitment,
+                    "source_commitment_sha256": source["source_commitment_sha256"],
+                    "gene_axis_sha256": source["gene_axis_sha256"],
+                    "embryo_axis_sha256": source["embryo_axis_sha256"],
+                    **native["counters"],
+                }
+                started = time.monotonic()
+                source_ref = _write(staging / "source.json", source_value, 32 * MIB, budget)
+                generated.append(source_ref)
+                timings["serialization"] += time.monotonic() - started
+                if prior is not None:
+                    prior.compare("source", source_ref)
+                state, assignments, weights, error, metric_seconds, bin_seconds = _unit(source, native, engine, budget)
+                timings["unit_metrics"], timings["bins"] = metric_seconds, bin_seconds
+                started = time.monotonic()
+                state_ref = _write(staging / "unit-state.json", state, 64 * MIB, budget)
+                generated.append(state_ref)
+                timings["serialization"] += time.monotonic() - started
+                if prior is not None:
+                    prior.compare("unit_state", state_ref)
+                del state
+                rows = _Rows(source, staging, output, budget, prior)
+                blocks = 0
+                try:
+                    for block in focals.rows():
+                        budget.check()
+                        first, last = block["focal_start"], block["focal_stop"]
+                        started = time.monotonic()
+                        statistics = engine._build_statistics(
+                            native["guard"],
+                            native["plan"],
+                            native["arrays"],
+                            native["cell_embryo"],
+                            native["finite_original"],
+                            e,
+                            first,
+                            last,
+                        )
+                        if sum(array.nbytes for array in statistics.values()) != common._array_bytes(
+                            last - first, g, e
+                        ):
+                            raise ValueError("Observed statistic allocation differs from admitted width")
+                        for array in statistics.values():
+                            array.setflags(write=False)
+                        del array
+                        timings["statistics"] += time.monotonic() - started
+                        try:
+                            started = time.monotonic()
+                            computed = engine._weighted_rows(
+                                native["guard"], focals.genes, assignments, statistics, weights, first, last
+                            )
+                            timings["observed_rows"] += time.monotonic() - started
+                            started = time.monotonic()
+                            for row in computed:
+                                rows.add(row)
+                            timings["serialization"] += time.monotonic() - started
+                            del computed, row
+                        finally:
+                            del statistics
+                        blocks += 1
+                        budget.check()
+                    started = time.monotonic()
+                    root_ref, scores_ref = rows.finish()
+                    timings["serialization"] += time.monotonic() - started
+                    generated.extend(rows.generated)
+                    if blocks != focals.count:
+                        raise ValueError("Observed calculation omitted focal blocks")
+                    validation = {
+                        **native["counters"],
+                        "catalog_pages": len(source["root"]["pages"]),
+                        "blocks_calculated": blocks,
+                        "rows_calculated": rows.count,
+                        "rows_compared": rows.count if prior is not None else 0,
+                        "unit_metric_max_abs_error": error,
+                        "original_metric_bins_equal": True,
+                        "unit_weights_verified": True,
+                    }
+                    if set(validation) != VALIDATION_FIELDS:
+                        raise ValueError("Internal observed validation schema differs")
+                    # Comparison timer is nested in serialization; component
+                    # scopes must not be summed as a complete invocation.
+                    timings["replay_comparison"] = prior.comparison_seconds if prior is not None else 0.0
+                    started = time.monotonic()
+                    owner()
+                    common._seal_sources(
+                        request, request_ref, source, modules, consumers, focals, prior, native, budget
+                    )
+                    for ref in generated:
+                        budget.digest(ref)
+                    budget.verify_pins()
+                    timings["seal_before_publication"] = time.monotonic() - started
+                    result = {
+                        "schema": RESULT_SCHEMA,
+                        "method": METHOD,
+                        "score_definition": SCORE_DEFINITION,
+                        "status": STATUS,
+                        "phase": request["phase"],
+                        "request": request_ref,
+                        "execution_catalog": request["execution_catalog"],
+                        "focal_catalog": request["focal_catalog"],
+                        "source": _public(source_ref, output),
+                        "source_commitment_sha256": source["source_commitment_sha256"],
+                        "unit_state": _public(state_ref, output),
+                        "rows": _public(root_ref, output),
+                        "finite_scores": _public(scores_ref, output),
+                        "n_genes": g,
+                        "n_finite_scores": rows.finite,
+                        "validation": validation,
+                        "flags": _flags(prior is not None),
+                        "numeric_working_upper_bytes": combined_upper,
+                        "timings_seconds": timings,
+                        "elapsed_before_final_seal_seconds": time.monotonic() - began,
+                    }
+                    if set(result) != RESULT_FIELDS:
+                        raise ValueError("Internal observed result schema differs")
+                    summary_ref = _write(staging / "summary.json", result, 2 * MIB, budget)
+                    # Real post-fsync seal: source, private copies, generated
+                    # artifacts and the exact marker bytes are still bound.
+                    common._seal_sources(
+                        request, request_ref, source, modules, consumers, focals, prior, native, budget
+                    )
+                    for ref in [*generated, summary_ref]:
+                        budget.digest(ref)
+                    budget.verify_pins()
+                    owner()
+                finally:
+                    rows.close()
+                del assignments, weights
+            # Native snapshot exit rechecks copied bytes and closes maps. The
+            # deadline and writer ownership remain live through publication.
+            budget.check()
+            budget.verify_pins()
+            owner()
+            owner.prepare(staging, [*generated, summary_ref])
+
+            def publication_check():
+                owner()
+                # Shared publication moves only our generated private paths;
+                # all persistent original source/caller pins remain live.
+                budget.verify_pins(ignore_namespace=workspace)
+
+            budget.seal_persistent(workspace)
+            owner.publishing = True
+            source["publisher"]["publish_new_directory"](staging, output, "summary.json", check=publication_check)
+            budget.seal_persistent(workspace)
+            owner.seal_published()
+    finally:
+        _close_modules(modules)
+        modules.clear()
+    # A successful public return includes private workspace/claim and helper
+    # cleanup. The immutable pre-seal timer has a narrower scope. Cooperative
+    # guards cannot promise interruption of a blocking filesystem syscall.
+    budget.check()
+    budget.seal_persistent(workspace)
+    owner.seal_published()
+    return result
+
+
+def run(request_path: Path, output: Path, *, max_seconds: float = 900) -> dict:
+    """Publish/replay one full native context; late failures invalidate our marker."""
+    ledger: list[_Publication] = []
+    recoveries: list[_Recovery] = []
+    try:
+        result = _run(request_path, output, ledger, max_seconds=max_seconds)
+        for owner in ledger:
+            owner.seal_published()
+            assert owner.workspace is not None
+            owner.budget.seal_persistent(owner.workspace)
+            owner._parent()
+            owner._destination()
+            recoveries.append(_Recovery(owner))
+        for owner in ledger:
+            owner.close()
+        # owner.close is a fallible cleanup seam. Sources, all relocated
+        # generated payloads and exact summary bytes are sealed AFTER it, with
+        # independent live ownership and the original inclusive deadline.
+        for recovery in recoveries:
+            owner = recovery.owner
+            assert owner.workspace is not None
+            owner.budget.seal_persistent(owner.workspace)
+            recovery.seal()
+        for recovery in recoveries:
+            recovery.release()
+            recovery.owner.budget.check()
+        return result
+    except BaseException as failure:
+        cleanup = _Cleanup()
+        for recovery in recoveries:
+            cleanup.attempt(recovery.invalidate)
+        for owner in ledger:
+            if not any(recovery.owner is owner for recovery in recoveries):
+                cleanup.attempt(owner.invalidate)
+        for owner in ledger:
+            cleanup.attempt(owner.close)
+        for recovery in recoveries:
+            cleanup.attempt(recovery.release)
+        if cleanup.first_error is not None:
+            raise cleanup.first_error from failure
+        raise
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--request", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--max-seconds", type=float, default=900)
+    args = parser.parse_args()
+    began = time.monotonic()
+    result = run(args.request, args.output, max_seconds=args.max_seconds)
+    print(json.dumps({"result": result, "complete_public_return_seconds": time.monotonic() - began}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

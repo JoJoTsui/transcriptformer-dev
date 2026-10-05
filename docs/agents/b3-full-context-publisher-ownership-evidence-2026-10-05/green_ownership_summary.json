@@ -1,0 +1,60 @@
+{
+  "case_names": [
+    "test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle",
+    "test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[temporary_cleanup]",
+    "test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[claim_unlink]",
+    "test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-publication]",
+    "test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-snapshot]",
+    "test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-publication]",
+    "test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-snapshot]",
+    "test_genuine_context_fallback_birth_is_bound_before_engine_descriptor_release_can_fail",
+    "test_real_64_gene_finite_native_publication_matches_public_oracle_tsv_and_fresh_replay",
+    "test_any_late_cleanup_failure_invalidates_only_the_owned_complete_marker[temporary_cleanup]",
+    "test_any_late_cleanup_failure_invalidates_only_the_owned_complete_marker[helper_cleanup]",
+    "test_any_late_cleanup_failure_invalidates_only_the_owned_complete_marker[final_deadline]",
+    "test_any_late_cleanup_failure_invalidates_only_the_owned_complete_marker[descriptor_cleanup]"
+  ],
+  "clock_values_are_independent": true,
+  "complete_publisher_file_test_run": false,
+  "errors": 0,
+  "failures": 0,
+  "full_publisher_acceptance": false,
+  "full_repository_test_run": false,
+  "gnu_elapsed": "13:20.16",
+  "gnu_maximum_rss_kib": 525880,
+  "junit_suites": [
+    {
+      "errors": "0",
+      "failures": "0",
+      "hostname": "Conundrum",
+      "name": "pytest",
+      "skipped": "0",
+      "tests": "13",
+      "time": "797.641",
+      "timestamp": "2026-10-05T08:58:10.395149+08:00"
+    }
+  ],
+  "open_standards_p2": 1,
+  "passed": 13,
+  "preexisting_233_python_unchanged": true,
+  "preparatory_spec_hard_findings": 0,
+  "project_model_forwards": 0,
+  "pytest_stdout_elapsed_seconds": 797.65,
+  "raw_refs": {
+    "runs/b3_feasibility/20261005/publisher_v10_ownership_and_public_oracle_green_attempt01.xml": "9cfcc3ee1fad407e779329f65cbb874ebd4fdcb80ff4d787909c95276513be1b",
+    "runs/b3_feasibility/20261005/publisher_v10_ownership_and_public_oracle_green_attempt01_gnu_time.txt": "77ba283d3d6305c74df20f37f61fe266105b173f74f8c1683e0163e068e7dc57",
+    "runs/b3_feasibility/20261005/publisher_v10_ownership_and_public_oracle_green_attempt01_invocation.json": "4f73b2e10ac2887f81ed919b74bafefecc403347a3f7521071a81920bb39ed8f",
+    "runs/b3_feasibility/20261005/publisher_v10_ownership_and_public_oracle_green_attempt01_supervisor/state.json": "50cbf055263c9bc370f31264af5e3e5c757b020620483450f6fae6d0f1dc861b"
+  },
+  "schema": "b3_publisher_ownership_targeted_repair_v1",
+  "scientific_acceptance": false,
+  "skipped": 0,
+  "source_sha256": {
+    "scripts/publish_b3_full_context_observed.py": "b16ac039a4ece746c136c5451dca1d89a8291d6861c22908e4b6bcbe4371e8a5",
+    "test/test_b3_full_context_observed.py": "e353ed218d745d82d4c75082661a4fde43bb8f28aabd7e964c8f78cdf7ade115"
+  },
+  "status": "thirteen_targeted_cases_passed",
+  "supervisor_last_elapsed_seconds": 795.8234792349976,
+  "supervisor_return_code": 0,
+  "supervisor_stop_reason": null
+}

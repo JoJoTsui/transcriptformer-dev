@@ -1,0 +1,74 @@
+{
+  "changed_preexisting_python": [],
+  "checks": [
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "scripts/publish_b3_full_context_observed.py",
+        "test/test_b3_full_context_observed.py",
+        "scripts/orchestrate_b3_paged_native_common_source.py",
+        "test/test_b3_paged_native_common_source_controller.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "All checks passed!\n"
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--check",
+        "scripts/publish_b3_full_context_observed.py",
+        "test/test_b3_full_context_observed.py",
+        "scripts/orchestrate_b3_paged_native_common_source.py",
+        "test/test_b3_paged_native_common_source_controller.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "4 files already formatted\n"
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "scripts/publish_b3_full_context_observed.py",
+        "test/test_b3_full_context_observed.py",
+        "scripts/orchestrate_b3_paged_native_common_source.py",
+        "test/test_b3_paged_native_common_source_controller.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "Success: no issues found in 4 source files\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "mypy_environment": {
+    "MYPY_CACHE_DIR": "/tmp/b3-full-context-mypy-20261005",
+    "PYTHONPATH": "/home/joey/.cache/uv/archive-v0/xRyg4HEqkxLwm2OA:/home/joey/.cache/uv/archive-v0/0P1lZuvxYyZrbYlh16qWy:/home/joey/.cache/uv/archive-v0/erB5vv3vCnGbzwlL:/home/joey/.cache/uv/archive-v0/LH6ffABWhmcwoA1Tz2iL9:/home/joey/.cache/uv/archive-v0/WrO-Eo3zoRZ6ZiPi"
+  },
+  "pre_format_draft_source_sha256": "eb2ea7c19ccf4ebfcdebc9201cb2b0b47f7bce4ce9e373a4431590e7761a1f0c",
+  "pre_format_draft_test_sha256": "d127caf837d8038177a3d97473cca73f7c2598c2478f2cdda6db45625e4c74d4",
+  "preexisting_233_python_unchanged": true,
+  "runtime_claim": false,
+  "schema": "b3_publisher_v10_static_v1",
+  "source_sha256": {
+    "scripts/orchestrate_b3_paged_native_common_source.py": "1282e86856c300f2b9c3c89fb7c940106957280c9bc57e323faf25def295a3c3",
+    "scripts/publish_b3_full_context_observed.py": "b16ac039a4ece746c136c5451dca1d89a8291d6861c22908e4b6bcbe4371e8a5",
+    "test/test_b3_full_context_observed.py": "e353ed218d745d82d4c75082661a4fde43bb8f28aabd7e964c8f78cdf7ade115",
+    "test/test_b3_paged_native_common_source_controller.py": "bb91b7c2359230272f4cae0673fff5ef2e85a6fc576f790885d39b19861d8410"
+  }
+}

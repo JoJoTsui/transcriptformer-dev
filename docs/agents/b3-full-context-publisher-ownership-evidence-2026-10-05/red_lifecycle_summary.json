@@ -1,0 +1,72 @@
+{
+  "cases": [
+    {
+      "error": false,
+      "failure_message": "Failed: DID NOT RAISE <class 'OSError'>",
+      "name": "test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle"
+    },
+    {
+      "error": false,
+      "failure_message": "RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child",
+      "name": "test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[temporary_cleanup]"
+    },
+    {
+      "error": false,
+      "failure_message": "RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child",
+      "name": "test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail[claim_unlink]"
+    },
+    {
+      "error": false,
+      "failure_message": "RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child",
+      "name": "test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-publication]"
+    },
+    {
+      "error": false,
+      "failure_message": "RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child",
+      "name": "test_recoverable_original_child_birth_survives_later_admission_probe_failure[proc-snapshot]"
+    },
+    {
+      "error": false,
+      "failure_message": "RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child",
+      "name": "test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-publication]"
+    },
+    {
+      "error": false,
+      "failure_message": "RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child",
+      "name": "test_recoverable_original_child_birth_survives_later_admission_probe_failure[fstat-snapshot]"
+    }
+  ],
+  "clock_values_are_independent": true,
+  "gnu_elapsed": "4:07.58",
+  "gnu_maximum_rss_kib": 522396,
+  "junit_suites": [
+    {
+      "errors": "0",
+      "failures": "7",
+      "hostname": "Conundrum",
+      "name": "pytest",
+      "skipped": "0",
+      "tests": "7",
+      "time": "245.088",
+      "timestamp": "2026-10-05T08:29:08.807852+08:00"
+    }
+  ],
+  "milestone_accepted": false,
+  "model_forwards": 0,
+  "pytest_stdout_elapsed_seconds": 245.11,
+  "raw_refs": {
+    "runs/b3_feasibility/20261005/publisher_v08_lifecycle_regressions_against_v07_red.xml": "b198c67d44bee17e5853d1462035ed366716c54b0f50b3705fb6e5e7c7d8c810",
+    "runs/b3_feasibility/20261005/publisher_v08_lifecycle_regressions_against_v07_red_gnu_time.txt": "8761eb15bed1a089d10c80aa8b27855dd78b96c994617b3b33f89cd77ef79ba6",
+    "runs/b3_feasibility/20261005/publisher_v08_lifecycle_regressions_against_v07_red_invocation.json": "bb678ae7a324c53003455b6216ae48aa6d14f443a892a7368a6835d71e5b23a5",
+    "runs/b3_feasibility/20261005/publisher_v08_lifecycle_regressions_against_v07_red_supervisor/state.json": "28430704c9777265814531601e58044ed54190e6524411ae69384c975f8b714a"
+  },
+  "schema": "b3_publisher_lifecycle_regression_red_v1",
+  "source_sha256": {
+    "scripts/publish_b3_full_context_observed.py": "59a80383643bc12df300b2084ee0259e5c56a1a98522e944a616c429b5c261dd",
+    "test/test_b3_full_context_observed.py": "2787dd5c3c0c2da06f7dcae7c5ca2e4703601d9b98ce3f86abfe287c0fe4a37e"
+  },
+  "status": "seven_expected_regression_failures",
+  "supervisor_last_elapsed_seconds": 240.24802992100012,
+  "supervisor_return_code": 1,
+  "supervisor_stop_reason": null
+}

@@ -1,0 +1,49 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "scripts/supervise_b3_pilot.py",
+    "--run-dir",
+    "runs/b3_feasibility/20261005/publisher_v09_snapshot_cleanup_against_v08_red_supervisor",
+    "--max-wall-seconds",
+    "950",
+    "--max-rss-gib",
+    "4",
+    "--min-host-ram-gib",
+    "4",
+    "--min-disk-gib",
+    "20",
+    "--",
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/publisher_v09_snapshot_cleanup_against_v08_red_gnu_time.txt",
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "test/test_b3_full_context_observed.py::test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle",
+    "test/test_b3_full_context_observed.py::test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail",
+    "test/test_b3_full_context_observed.py::test_recoverable_original_child_birth_survives_later_admission_probe_failure",
+    "-q",
+    "--basetemp=/tmp/b3-publisher-v09-snapshot-red-20261005",
+    "--junitxml=runs/b3_feasibility/20261005/publisher_v09_snapshot_cleanup_against_v08_red.xml"
+  ],
+  "environment_overrides": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "TF_RUN_REAL_MODEL_TESTS": "0"
+  },
+  "expected_param_cases": 7,
+  "expected_passed_cases": 6,
+  "expected_regression_failures": 1,
+  "head": "b9b1534b12a76064beb4e9d8c4aadf9971ad2683",
+  "milestone_accepted": false,
+  "model_forwards_authorized": false,
+  "retained_sources": "runs/b3_feasibility/20261005/source_archive_full_context_observed09_snapshot_red",
+  "source_sha256": {
+    "scripts/publish_b3_full_context_observed.py": "d01ffc515cd77d57f52eb5833cab40150e4dab8a145cd06bc8d510c4378031a2",
+    "test/test_b3_full_context_observed.py": "b6f277adc66011b759b934dd1b9c662075f4ee8224ad041af8bc185c76394283"
+  }
+}

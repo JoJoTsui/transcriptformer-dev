@@ -1,0 +1,40 @@
+{
+  "cases": [
+    {
+      "error": false,
+      "failure_message": "RuntimeError: Owned observed workspace contains a preserved foreign or unadmitted child",
+      "name": "test_genuine_context_fallback_birth_is_bound_before_engine_descriptor_release_can_fail"
+    }
+  ],
+  "clock_values_are_independent": true,
+  "junit_suites": [
+    {
+      "errors": "0",
+      "failures": "1",
+      "hostname": "Conundrum",
+      "name": "pytest",
+      "skipped": "0",
+      "tests": "1",
+      "time": "41.331",
+      "timestamp": "2026-10-05T08:53:10.669684+08:00"
+    }
+  ],
+  "milestone_accepted": false,
+  "model_forwards": 0,
+  "pytest_stdout_elapsed_seconds": 41.34,
+  "raw_refs": {
+    "runs/b3_feasibility/20261005/publisher_v10_context_fallback_against_v09_red.xml": "3b2e0034ac29a5c2024496c978c368c04751da441cd1122ae808d7ef5607c42e",
+    "runs/b3_feasibility/20261005/publisher_v10_context_fallback_against_v09_red_gnu_time.txt": "a457f2859da5df8b8d64e7785b42fe7102c5fdd7a65a971600d7006d9207911d",
+    "runs/b3_feasibility/20261005/publisher_v10_context_fallback_against_v09_red_invocation.json": "5b90d6d47149f775634929ec3a3f921ca30f7f1642e33507e4c590d5ef08405c",
+    "runs/b3_feasibility/20261005/publisher_v10_context_fallback_against_v09_red_supervisor/state.json": "4a08cdfeece8f7f42cde62cf544c03cb4c31a12aba7d6e28d2b66caa7f040bbb"
+  },
+  "schema": "b3_publisher_genuine_context_fallback_regression_red_v1",
+  "source_sha256": {
+    "scripts/publish_b3_full_context_observed.py": "db413c0e1619c76c30163b52e4ac88d1a0bc7e5c7f7da7f49e78c87af5bdcd2d",
+    "test/test_b3_full_context_observed.py": "e353ed218d745d82d4c75082661a4fde43bb8f28aabd7e964c8f78cdf7ade115"
+  },
+  "status": "one_expected_genuine_context_fallback_cleanup_regression_failure",
+  "supervisor_last_elapsed_seconds": 30.01464182001655,
+  "supervisor_return_code": 1,
+  "supervisor_stop_reason": null
+}

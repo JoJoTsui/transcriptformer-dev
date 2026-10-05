@@ -1,0 +1,35 @@
+{
+  "all_058": {
+    "bytes": 481658,
+    "command": [
+      "git",
+      "diff",
+      "--binary",
+      "058bab20d3f2e8ec45fe55f31eea69370d19e8de...5fda72931a6ad3efed6d359d01dfa99a26aa9825"
+    ],
+    "committed_three_dot": true,
+    "identical_to_preparatory_working_diff": true,
+    "path": "runs/b3_feasibility/20261005/full_context_v10_committed_diff_all_058.patch",
+    "sha256": "0bae33034763630d7f047b3be9b9a05c8853ef4f942bbfe5d4d909b0b602b181"
+  },
+  "fix_b9": {
+    "bytes": 31060,
+    "command": [
+      "git",
+      "diff",
+      "--binary",
+      "b9b1534b12a76064beb4e9d8c4aadf9971ad2683...5fda72931a6ad3efed6d359d01dfa99a26aa9825"
+    ],
+    "committed_three_dot": true,
+    "identical_to_preparatory_working_diff": true,
+    "path": "runs/b3_feasibility/20261005/full_context_v10_committed_diff_fix_b9.patch",
+    "sha256": "0c6eb9c8cddb3cc6d1a434905d910c1b5be0a9f25f41b61d54ab29962990afea"
+  },
+  "fix_base": "b9b1534b12a76064beb4e9d8c4aadf9971ad2683",
+  "head": "5fda72931a6ad3efed6d359d01dfa99a26aa9825",
+  "phase_base": "058bab20d3f2e8ec45fe55f31eea69370d19e8de",
+  "source_sha256": {
+    "scripts/publish_b3_full_context_observed.py": "b16ac039a4ece746c136c5451dca1d89a8291d6861c22908e4b6bcbe4371e8a5",
+    "test/test_b3_full_context_observed.py": "e353ed218d745d82d4c75082661a4fde43bb8f28aabd7e964c8f78cdf7ade115"
+  }
+}

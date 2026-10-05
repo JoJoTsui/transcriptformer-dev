@@ -2,31 +2,37 @@
 
 ## Implementation in progress — 2026-10-05
 
-The complete-bootstrap metadata planner passes all **95 file tests** and a
-fresh run over the actual ten-draw receipt graph. That run launches zero
-children and keeps full 2,000-draw execution unadmitted. Its current source is
-`1282e868…`; these are bounded planning results.
+The complete-bootstrap metadata planner retains all **95 passing file tests**
+and a fresh negative plan over the actual ten-draw receipt graph. It launches
+zero children and keeps full 2,000-draw execution unadmitted. Source
+`1282e868…` is unchanged; these are bounded planning results.
 
-The full-context observed publisher is **work in progress**. Current source
-`59a80383…` and tests `c3a75f5d…` pass Ruff check/format and configured mypy.
-Independent review reports **Standards: one hard P2, zero optional** and
-**Spec: two hard P2, zero optional**. Remaining issues concern complete
-cleanup after a reused child descriptor, context publication followed by an
-inner cleanup failure, and retention of child ownership after an admission
-probe failure. They must be repaired and runtime verified before acceptance.
+The full-context observed publisher repair at **`5fda729`** passes **13 focused
+cases**: eight lifecycle regressions, the genuine 64-gene finite public-scorer/
+TSV/fresh-replay check, and four existing late-cleanup controls. Current source
+`b16ac039…` and tests `e353ed21…` pass Ruff check/format and configured mypy.
 
-Earlier publisher versions separately passed a finite-score public oracle/TSV/
-fresh-replay check, eleven ownership regressions, and six subsequent repair/
-late-cleanup checks. Two later child-replacement regressions failed the preceding
-version as expected. These receipts describe their exact earlier source bytes;
-they do not establish current publisher or full-suite acceptance. See the
-[current status record](b3-full-context-implementation-status-2026-10-05.md).
+Independent reviews remain separate: **Spec: zero hard, zero optional**;
+**Standards: one hard P2, zero optional**; tests: zero hard on both axes.
+The remaining finding is root workspace descriptor reuse blocking cleanup of
+otherwise independently owned context/snapshot children. It remains open.
+The earlier descriptor drain, child drain, child-birth retention and genuine
+context publication/fallback cleanup findings are repaired. Complete publisher
+and new full-repository integration acceptance remain pending.
 
-All 233 preexisting Python files retain their original bytes. Public operations
-retain 900-second, 4 GiB RSS and 200 MiB numeric caps, one CPU thread, CUDA off,
-4 GiB host RAM and 20 GiB free disk floors. Ticket **05 remains open**,
-**11 excluded**, and **ten tickets closed for bounded engineering**.
-No new complete repository test result or scientific acceptance is claimed.
+Original failed regressions, fresh passing receipts, exact source identities
+and committed-diff reviews are retained in the [current status record](b3-full-context-implementation-status-2026-10-05.md).
+The 13-case run reports pytest **797.65 seconds**, GNU **13:20.16**, peak
+**525,880 KiB**, and supervisor last sample **795.82348 seconds**, with no
+resource stop. These are separate clocks and per-process RSS observations.
+
+All 233 earlier Python files retain their original bytes. Public operations
+retain 900 seconds, 4 GiB RSS and 200 MiB numeric limits, one CPU thread, CUDA
+off, and available host RAM/disk floors of 4 GiB/20 GiB. Ticket **05 remains
+open**, **11 excluded**, and **ten tickets closed for bounded engineering**.
+The remaining controlled issuer, producer hook, authority resolver, bridge/v4
+and effect-consumer dependencies remain unfinished. No new complete repository
+test result or scientific acceptance is claimed.
 
 **Current common-source milestone — acceptance recorded 2026-10-05.**
 The native batch/v3 application at `71c1254` passes bounded engineering
@@ -52,11 +58,12 @@ scaled final seals and full method cost unmeasured. No 2,000-draw run is admitte
 
 **05 remains open, 11 excluded, ten bounded engineering tickets closed.**
 The genuine pilot retains **32.54% coverage and 0/2,000 necessary jointly
-supported draws**, its reporting veto and null intervals. Full-context observed
-publication and a metadata-only controller planner are drafted and under
-review; they are not runtime accepted. Genuine prospective registration,
-full-context comparison/successor integration and the effect-proof consumer
-remain separate software dependencies. Full-cohort scored inputs, project
+supported draws**, its reporting veto and null intervals. The full-context observed
+publisher has a source-bound 13-case passing repair checkpoint and one open
+Standards finding; complete integration acceptance remains pending. The
+metadata-only controller retains 95 passing tests and its negative execution
+gate. Genuine prospective registration, full-context comparison/successor
+integration and the effect-proof consumer remain separate software dependencies. Full-cohort scored inputs, project
 effect attestation, complete method cost and reportable uncertainty are absent.
 Finetuning claims additionally require verified training/selection provenance.
 The seven-stage and ten-draw studies performed no model forwards.

@@ -1,0 +1,38 @@
+{
+  "status": "stopped",
+  "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+  "supervisor_pid": 5,
+  "producer_pid": 6,
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/publisher_v08_lifecycle_regressions_against_v07_red_gnu_time.txt",
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "test/test_b3_full_context_observed.py::test_reused_private_child_descriptor_refusal_closes_every_other_known_owned_handle",
+    "test/test_b3_full_context_observed.py::test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail",
+    "test/test_b3_full_context_observed.py::test_recoverable_original_child_birth_survives_later_admission_probe_failure",
+    "-q",
+    "--basetemp=/tmp/b3-publisher-v08-lifecycle-red-20261005",
+    "--junitxml=runs/b3_feasibility/20261005/publisher_v08_lifecycle_regressions_against_v07_red.xml"
+  ],
+  "started_unix": 1791160146.9207716,
+  "limits": {
+    "max_wall_seconds": 950.0,
+    "max_rss_gib": 4.0,
+    "min_host_ram_gib": 4.0,
+    "min_disk_gib": 20.0,
+    "max_gpu_temperature_c": null,
+    "gpu_index": 0
+  },
+  "producer_start_ticks": 15784785,
+  "heartbeat_unix": 1791160387.1680498,
+  "elapsed_seconds": 240.24802992100012,
+  "producer_rss_gib": 0.001331329345703125,
+  "host_available_ram_gib": 28.321781158447266,
+  "disk_available_gib": 382.95118713378906,
+  "return_code": 1,
+  "finished_unix": 1791160395.1865938
+}
