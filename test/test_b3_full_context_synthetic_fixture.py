@@ -7,6 +7,7 @@ import json
 import math
 import os
 from pathlib import Path
+import struct
 import sys
 
 import pytest
@@ -115,7 +116,7 @@ def test_public_run_prepares_complete_original_synthetic_axes_without_outcomes(t
     assert len([key for key in vocabulary if key.startswith("ENSG")]) == 502
     assert len([key for key in vocabulary if key.startswith("ENSMUSG")]) == 502
     assert checkpoint["training_provenance"] is None
-    assert checkpoint["tokenizer_admission"] == "unproven_support_scan_assets_only"
+    assert checkpoint["tokenizer_admission"] == "verified_prepared_inputs_only_no_model_or_outcomes"
     table = result["ortholog_table"]
     assert _ref(table["path"]) == table
     assert len(Path(table["path"]).read_text().splitlines()) == 5000
@@ -317,3 +318,37 @@ def test_public_late_cleanup_preserves_foreign_bindings_and_withdraws_owned_comp
         if reused is not None:
             original_close(reused)
         original_close(foreign_fd)
+
+
+def test_public_preparation_verifies_complete_native_input_tokenization_without_model_outcomes(tmp_path):
+    public, request_path, _ = _request(tmp_path)
+    result = public.run(request_path, tmp_path / "attempt", max_seconds=900)
+    vocabulary = _read(result["checkpoint"]["gene_vocabulary"])
+    assert "unknown" in vocabulary, "The genuine batch gene tokenizer requires its unknown token"
+    assert all(token in vocabulary for token in ("[START]", "[END]", "[RD]", "[CELL]", "[PAD]", "[MASK]"))
+    assert result["checkpoint"]["tokenizer_admission"] == "verified_prepared_inputs_only_no_model_or_outcomes"
+    for species in SPECIES:
+        artifacts = result["species"][species]
+        proof = _read(artifacts["native_input_tokenization"])
+        config = _read(artifacts["config"])
+        assert proof["schema"] == "b3_full_context_synthetic_native_input_tokenization_v1"
+        assert proof["n_cells"] == 60
+        assert proof["n_simulated_units"] == 5
+        assert proof["sequence_length"] == 502
+        assert proof["positive_tokens_per_cell"] == 501
+        assert proof["padding_tokens_per_cell"] == 1
+        assert proof["auxiliary_tokens_per_cell"] == 0
+        assert proof["configured_prepared_cells_called"] is True
+        assert proof["native_outcomes_created"] is False
+        assert proof["model_forwards_performed"] is False
+        assert proof["source_cell_order"] == "all configured prepared cells in original source and surviving row order"
+        # Independent literal byte oracles; no reconstructed report or fake
+        # numerical producer stands in for native backed tokenization.
+        counts = struct.pack("<501f", *([1.0] * 501)) + struct.pack("<f", 0.0)
+        tokens = [vocabulary[gene] for gene in config["gene_ids"][:501]] + [vocabulary["[PAD]"]]
+        token_bytes = struct.pack("<502q", *tokens)
+        assert proof["gene_counts_f32le_sha256"] == sha256(counts * 60).hexdigest()
+        assert proof["gene_tokens_i64le_sha256"] == sha256(token_bytes * 60).hexdigest()
+        assert proof["aux_tokens_i64le_sha256"] == sha256(b"").hexdigest()
+        assert len(proof["cell_identities"]) == 60
+        assert [row["cell_id"] for row in proof["cell_identities"]] == [str(i) for i in range(60)]

@@ -721,6 +721,86 @@ def _csv_bytes(columns, rows):
     return stream.getvalue().encode()
 
 
+def _verify_native_tokenization(config_path, owner, pins, registry):
+    """Replay every backed input row without a model or native outcomes."""
+    config = _json(config_path.read_bytes())
+    owner.check()
+    native = _load(registry, "src/transcriptformer/finetune/b3_prepared.py")
+    cells, _, vocabulary, auxiliary = native.configured_prepared_cells(config)
+    identities, units = [], set()
+    counts_hash, tokens_hash, auxiliary_hash = sha256(), sha256(), sha256()
+    expected_tokens = [vocabulary[gene] for gene in config["gene_ids"][:501]] + [vocabulary["[PAD]"]]
+    try:
+        if auxiliary != {} or len(cells.cells) != 60:
+            raise ValueError("Native tokenization changed the complete synthetic input axes")
+        for index, cell in enumerate(cells.iter_cells(device="cpu")):
+            owner.budget.check()
+            counts = cell.batch.gene_counts
+            tokens = cell.batch.gene_token_indices
+            aux = cell.batch.aux_token_indices
+            if (
+                tuple(counts.shape) != (1, 502)
+                or tuple(tokens.shape) != (1, 502)
+                or str(counts.dtype) != "torch.float32"
+                or str(tokens.dtype) != "torch.int64"
+                or counts.device.type != "cpu"
+                or tokens.device.type != "cpu"
+                or aux is None
+                or tuple(aux.shape) != (1, 0)
+                or str(aux.dtype) != "torch.int64"
+                or aux.device.type != "cpu"
+                or counts[0].tolist() != [1.0] * 501 + [0.0]
+                or tokens[0].tolist() != expected_tokens
+                or cell.species != config["species"]
+                or cell.phase != config["phase"]
+                or cell.model_arm != "base"
+                or cell.cell_id != str(index)
+            ):
+                raise ValueError("Genuine native input tokenization differs from the complete fixed fixture")
+            counts_hash.update(counts.numpy().astype("<f4", copy=False).tobytes())
+            tokens_hash.update(tokens.numpy().astype("<i8", copy=False).tobytes())
+            auxiliary_hash.update(aux.numpy().astype("<i8", copy=False).tobytes())
+            identities.append(
+                {
+                    key: getattr(cell, key)
+                    for key in ("species", "phase", "model_arm", "source_id", "cell_id", "embryo_id")
+                }
+            )
+            units.add(cell.embryo_id)
+            del counts, tokens, aux, cell
+            owner.check()
+        if len(identities) != 60 or len(units) != 5:
+            raise ValueError("Native tokenization lost original cells or simulated units")
+    finally:
+        cells.close()
+    owner.check()
+    proof = {
+        "schema": "b3_full_context_synthetic_native_input_tokenization_v1",
+        "config": pins.bind(config_path),
+        "species": config["species"],
+        "n_cells": 60,
+        "n_simulated_units": 5,
+        "sequence_length": 502,
+        "positive_tokens_per_cell": 501,
+        "padding_tokens_per_cell": 1,
+        "auxiliary_tokens_per_cell": 0,
+        "configured_prepared_cells_called": True,
+        "source_cell_order": "all configured prepared cells in original source and surviving row order",
+        "gene_counts_f32le_sha256": counts_hash.hexdigest(),
+        "gene_tokens_i64le_sha256": tokens_hash.hexdigest(),
+        "aux_tokens_i64le_sha256": auxiliary_hash.hexdigest(),
+        "cell_identities": identities,
+        "simulated_unit_ids": sorted(units),
+        "checkpoint_tensors_loaded": False,
+        "embedding_values_loaded": False,
+        "model_forwards_performed": False,
+        "native_outcomes_created": False,
+        "registration_or_authority_created": False,
+    }
+    path = owner.write(config["species"] + "_native_input_tokenization.json", _canonical(proof) + b"\n")
+    return pins.bind(path)
+
+
 def _genuine_inputs(owner, pins, registry, request_ref):
     # All shapes are fixed before importing or constructing numerical assets.
     # Native targets and impacts are not constructed by this operation.
@@ -765,10 +845,11 @@ def _genuine_inputs(owner, pins, registry, request_ref):
         + b"\n",
     )
     weights = owner.write("checkpoint/model_weights.pt", b"constructed fixture byte provenance; no model or tensors\n")
-    scoring_vocabulary = {"[PAD]": 0}
-    for species in SPECIES:
-        for gene in genes[species][:502]:
-            scoring_vocabulary[gene] = len(scoring_vocabulary)
+    # Use the actual frozen constructor so required native special tokens are
+    # present. Embedding construction and checkpoint tensor loading stay absent.
+    scoring_vocabulary = _load(registry, "src/transcriptformer/tokenizer/vocab.py").build_gene_vocab_from_list(
+        [gene for species in SPECIES for gene in genes[species][:502]],
+    )
     gene_vocabulary = owner.write("checkpoint/vocabs/gene_vocabulary.json", _canonical(scoring_vocabulary) + b"\n")
     aux_vocabulary = owner.write("checkpoint/vocabs/aux_vocabulary.json", b"{}\n")
     checkpoint_refs = {
@@ -999,6 +1080,13 @@ def _genuine_inputs(owner, pins, registry, request_ref):
                 },
             }
         )
+        artifacts[species]["native_input_tokenization"] = _verify_native_tokenization(
+            configs[species],
+            owner,
+            pins,
+            registry,
+        )
+    checkpoint_refs["tokenizer_admission"] = "verified_prepared_inputs_only_no_model_or_outcomes"
     return {
         "schema": "b3_full_context_synthetic_preparation_result_v1",
         "status": "complete_synthetic_prospective_inputs_only",
