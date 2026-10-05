@@ -82,6 +82,53 @@ def test_public_run_refuses_changed_helper_before_creating_attempt_assets(tmp_pa
             assert sys.modules.get(name) is module
 
 
+def test_public_preparation_retains_actual_private_execution_and_import_audit_without_admission(tmp_path):
+    public, request_path, request = _request(tmp_path)
+    output = tmp_path / "attempt"
+    result = public.run(request_path, output)
+    audit = _read(result["helper_execution_audit"])
+    assert audit["schema"] == "b3_full_context_synthetic_helper_execution_audit_v1"
+    assert audit["scope"] == "private_authenticated_helper_execution_before_helper_cleanup"
+    assert audit["public_entrypoint"] == _ref(PUBLIC_SOURCE)
+    retained = audit["retained_repository_sources"]
+    assert [ref["path"] for ref in retained] == sorted(request["consumer_file_sha256"])
+    assert len(retained) == 70
+    assert all(_ref(ref["path"]) == ref for ref in retained)
+    events = audit["executions"]
+    assert [event["ordinal"] for event in events] == list(range(len(events)))
+    assert all(event["completed"] is True for event in events)
+    assert {event["source"]["path"] for event in events} == set(result["executed_repository_sources"]) | {
+        str(ROOT / "scripts/b3_authenticated_helpers.py")
+    }
+    assert events[0]["source"] == _ref(ROOT / "scripts/b3_authenticated_helpers.py")
+    assert all(event["source_form"] == "original_full_buffer" for event in events)
+    assert all(event["projection_ast_sha256"] is None for event in events)
+    assert all(event["source"]["path"] == event["code_filename"] for event in events)
+    assert all(event["compile_mode"] == "exec" for event in events)
+    imports = audit["imports"]
+    assert audit["import_calls"] == sum(item["calls"] for item in imports)
+    assert {item["scope"] for item in imports} == {"top_level", "deferred"}
+    assert any(
+        item["caller_source"]["path"] == str(ROOT / "src/transcriptformer/finetune/b3_prepared.py")
+        and item["caller_function"] == "configured_prepared_cells"
+        and item["requested_module"] == "json"
+        and item["scope"] == "deferred"
+        for item in imports
+    )
+    for item in imports:
+        assert item["caller_source"] in retained
+        assert type(item["caller_line"]) is int and item["caller_line"] > 0
+        assert type(item["calls"]) is int and item["calls"] > 0
+    assert audit["source_admission_granted"] is False
+    assert audit["runtime_admission_granted"] is False
+    assert audit["complete_all_process_source_audit"] is False
+    assert audit["ordinary_third_party_execution_observed"] is False
+    assert audit["ordinary_import_bodies_observed"] is False
+    assert audit["public_caller_and_cleanup_execution_observed"] is False
+    assert result["model_forwards_performed"] is False
+    assert result["native_stored_outcomes_created"] is False
+
+
 def test_public_run_prepares_complete_original_synthetic_axes_without_outcomes(tmp_path):
     public, request_path, _ = _request(tmp_path)
     output = tmp_path / "attempt"

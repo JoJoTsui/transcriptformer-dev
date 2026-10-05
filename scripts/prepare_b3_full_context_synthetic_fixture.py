@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import builtins
 from collections import Counter
 from collections.abc import MutableMapping
@@ -12,6 +13,7 @@ from hashlib import sha256
 import io
 import json
 import math
+import marshal
 import os
 from pathlib import Path
 import resource
@@ -19,7 +21,8 @@ import shutil
 import stat
 import sys
 import time
-from types import ModuleType, SimpleNamespace
+from types import CodeType, ModuleType, SimpleNamespace
+from weakref import ref
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_SOURCE = ROOT / "scripts/prepare_b3_full_context_synthetic_fixture.py"
@@ -663,7 +666,139 @@ def _close_helpers(registry, runtime, private, bootstrap):
     cleanup.finish()
 
 
-def _helpers(pins, budget):
+class _ExecutionAudit:
+    """Observe this private loader's actual compile/exec and import calls.
+
+    This bounded helper trace excludes ordinary third-party execution, the
+    caller and cleanup. It cannot grant complete source or runtime admission.
+    """
+
+    def __init__(self, pins, budget):
+        self.pins, self.budget = pins, budget
+        self.compilations = {}
+        self.executions, self.imports = [], {}
+        self.import_calls = 0
+
+    def compiled(self, code, source, filename, mode):
+        self.budget.check()
+        path = Path(filename)
+        if not isinstance(code, CodeType) or mode != "exec" or path not in self.pins.buffers:
+            raise ValueError("Preparation execution requires a retained repository exec buffer")
+        if len(self.compilations) >= 512:
+            raise MemoryError("Preparation compiled-code audit exceeds its fixed bound")
+        original = self.pins.buffers[path]
+        if type(source) is bytes and source == original:
+            form, projection = "original_full_buffer", None
+        elif isinstance(source, ast.AST):
+            form = "source_loaded_ast_projection"
+            projection = sha256(ast.dump(source, include_attributes=True).encode()).hexdigest()
+        else:
+            raise ValueError("Preparation compiled source differs from retained bytes")
+        compilation = {
+            "source": self.pins.files[path][3],
+            "source_form": form,
+            "projection_ast_sha256": projection,
+            "code_sha256": sha256(marshal.dumps(code)).hexdigest(),
+            "code_filename": code.co_filename,
+            "compile_mode": mode,
+        }
+        identity = id(code)
+
+        def released(reference):
+            retained = self.compilations.get(identity)
+            if retained is not None and retained[0] is reference:
+                del self.compilations[identity]
+
+        # Code equality can ignore storage/filename distinctions. Bind the
+        # actual compiled object identity and weak ownership independently.
+        self.compilations[identity] = (ref(code, released), compilation)
+
+    def execute(self, original_exec, code, globals, locals, *, closure=None):
+        self.budget.check()
+        retained = self.compilations.get(id(code))
+        if retained is None or retained[0]() is not code or len(self.executions) >= 512:
+            raise ValueError("Preparation code execution lacks its bounded compile observation")
+        compiled = retained[1]
+        event = {
+            "ordinal": len(self.executions),
+            **compiled,
+            "private_module_name": globals.get("__name__"),
+            "completed": False,
+        }
+        self.executions.append(event)
+        if closure is None:
+            result = original_exec(code, globals, locals)
+        else:
+            result = original_exec(code, globals, locals, closure=closure)
+        event["completed"] = True
+        self.budget.check()
+        return result
+
+    def imported(self, requested, resolved, fromlist, level, caller):
+        self.budget.check()
+        path = Path(caller.f_code.co_filename)
+        if path not in self.pins.buffers:
+            raise ValueError("Preparation import caller is outside retained repository sources")
+        key = (requested, resolved, tuple(fromlist or ()), level, str(path), caller.f_lineno)
+        if key not in self.imports:
+            if len(self.imports) >= 1024:
+                raise MemoryError("Preparation import audit exceeds its fixed bound")
+            route = (
+                "private_repository"
+                if resolved == "scripts"
+                or resolved == "transcriptformer"
+                or resolved.startswith(("scripts.", "transcriptformer."))
+                else "private_sys_facade"
+                if resolved == "sys"
+                else "ordinary_import_body_not_observed"
+            )
+            self.imports[key] = {
+                "requested_module": requested,
+                "resolved_module": resolved,
+                "fromlist": list(fromlist or ()),
+                "level": level,
+                "caller_source": self.pins.files[path][3],
+                "caller_line": caller.f_lineno,
+                "caller_function": caller.f_code.co_name,
+                "scope": "top_level" if caller.f_code.co_name == "<module>" else "deferred",
+                "route": route,
+                "calls": 0,
+            }
+        self.import_calls += 1
+        if self.import_calls > 1_000_000:
+            raise MemoryError("Preparation import-call audit exceeds its fixed bound")
+        self.imports[key]["calls"] += 1
+
+    def result(self):
+        self.budget.check()
+        if not all(event["completed"] for event in self.executions):
+            raise ValueError("Preparation helper execution did not complete")
+        body = {
+            "schema": "b3_full_context_synthetic_helper_execution_audit_v1",
+            "scope": "private_authenticated_helper_execution_before_helper_cleanup",
+            "public_entrypoint": self.pins.files[PUBLIC_SOURCE][3],
+            "retained_repository_sources": sorted(
+                (self.pins.files[path][3] for path in SOFTWARE), key=lambda ref: ref["path"]
+            ),
+            "executions": self.executions,
+            "imports": sorted(self.imports.values(), key=lambda item: _canonical(item)),
+            "import_calls": self.import_calls,
+            "code_digest_encoding": "python_marshal_code_object_interpreter_specific",
+            "python_version": sys.version,
+            "python_executable": sys.executable,
+            "ordinary_third_party_execution_observed": False,
+            "ordinary_import_bodies_observed": False,
+            "public_caller_and_cleanup_execution_observed": False,
+            "complete_all_process_source_audit": False,
+            "source_admission_granted": False,
+            "runtime_admission_granted": False,
+        }
+        if len(_canonical(body)) > MIB:
+            raise MemoryError("Preparation helper audit exceeds its metadata byte cap")
+        return body
+
+
+def _helpers(pins, budget, audit):
     buffer = pins.buffers[HELPER_SOURCE]
     if sha256(buffer).hexdigest() != HELPER_SHA256:
         raise ValueError("Authenticated loader differs from its frozen source")
@@ -684,20 +819,44 @@ def _helpers(pins, budget):
 
         def runtime_import(name, globals=None, locals=None, fromlist=(), level=0):
             if name == "sys" and level == 0:
-                return facade
-            return ordinary_import(name, globals, locals, fromlist, level)
+                result = facade
+            else:
+                result = ordinary_import(name, globals, locals, fromlist, level)
+            audit.imported(name, name, fromlist, level, sys._getframe(1))
+            return result
 
         module.__dict__["__builtins__"] = {**vars(builtins), "__import__": runtime_import}
-        exec(compile(buffer, str(HELPER_SOURCE), "exec"), module.__dict__)
+        code = compile(buffer, str(HELPER_SOURCE), "exec")
+        audit.compiled(code, buffer, str(HELPER_SOURCE), "exec")
+        audit.execute(exec, code, module.__dict__, None)
         registry = module.AuthenticatedHelpers(ROOT, {path: pins.buffers[path] for path in SOFTWARE}, budget)
         registry.sys_facade.path = list(sys.path)
+        original_compile, original_exec = registry._ordinary_compile, registry._ordinary_exec
+
+        def observed_compile(source, filename, mode, *args, **kwargs):
+            code = original_compile(source, filename, mode, *args, **kwargs)
+            audit.compiled(code, source, filename, mode)
+            return code
+
+        def observed_exec(code, globals=None, locals=None, *, closure=None):
+            return audit.execute(original_exec, code, globals, locals, closure=closure)
+
+        registry._ordinary_compile = observed_compile
+        registry._ordinary_exec = observed_exec
         ordinary = registry._import
         sibling_names = {Path(name).stem for name in SCRIPT_PATHS}
 
         def bound_import(name, globals=None, locals=None, fromlist=(), level=0):
             if not level and name in sibling_names:
-                return ordinary("scripts." + name, globals, locals, fromlist=("*",), level=0)
-            return ordinary(name, globals, locals, fromlist, level)
+                resolved = "scripts." + name
+                result = ordinary(resolved, globals, locals, fromlist=("*",), level=0)
+            else:
+                resolved = name
+                if level:
+                    resolved = module.resolve_name("." * level + name, globals["__package__"])
+                result = ordinary(name, globals, locals, fromlist, level)
+            audit.imported(name, resolved, fromlist, level, sys._getframe(1))
+            return result
 
         registry.guarded_builtins["__import__"] = bound_import
         return registry, runtime, private, module
@@ -1159,7 +1318,8 @@ def run(request_path: Path, output: Path, *, max_seconds=900):
         for variable in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
             os.environ[variable] = "1"
         os.environ["CUDA_VISIBLE_DEVICES"] = ""
-        registry, runtime, private, bootstrap = _helpers(pins, budget)
+        audit = _ExecutionAudit(pins, budget)
+        registry, runtime, private, bootstrap = _helpers(pins, budget, audit)
         owner = _Output(output, budget)
         owner.establish()
         result = _genuine_inputs(owner, pins, registry, request_ref)
@@ -1169,6 +1329,8 @@ def run(request_path: Path, output: Path, *, max_seconds=900):
             for name, state in registry.states.items()
             if state == "ready" and name in registry.paths
         )
+        audit_path = owner.write("helper_execution_audit.json", _canonical(audit.result()) + b"\n")
+        result["helper_execution_audit"] = pins.bind(audit_path)
         # Retained mandatory paths and the actual executed subset are distinct.
         result["resource_observations"] = {
             "observation_scope": "before_complete_marker_publication",
