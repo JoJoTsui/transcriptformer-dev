@@ -1,0 +1,2351 @@
+diff --git a/.github/workflows/b3-full-context-and-planning-tests.yml b/.github/workflows/b3-full-context-and-planning-tests.yml
+index f36cdd1..deba74e 100644
+--- a/.github/workflows/b3-full-context-and-planning-tests.yml
++++ b/.github/workflows/b3-full-context-and-planning-tests.yml
+@@ -7,6 +7,7 @@ on:
+       - "scripts/**"
+       - "src/transcriptformer/**"
+       - "test/test_b3_full_context_observed.py"
++      - "test/test_b3_full_context_synthetic_fixture.py"
+       - "test/test_b3_paged_native_common_source_controller.py"
+       - "test/test_b3_paged_native_common_source.py"
+       - "test/test_b3_paged_native_cache.py"
+@@ -42,9 +43,10 @@ jobs:
+           python-version: "3.11"
+       - name: Install dependencies
+         run: python -m pip install -e '.[dev]'
+-      - name: Run stored arithmetic and metadata planning tests
++      - name: Run stored arithmetic, preparation and metadata planning tests
+         run: >-
+           python -m pytest
+           test/test_b3_full_context_observed.py
++          test/test_b3_full_context_synthetic_fixture.py
+           test/test_b3_paged_native_common_source_controller.py
+           -q --junitxml=b3-full-context-and-planning-tests.xml
+diff --git a/scripts/prepare_b3_full_context_synthetic_fixture.py b/scripts/prepare_b3_full_context_synthetic_fixture.py
+new file mode 100644
+index 0000000..cd1da4b
+--- /dev/null
++++ b/scripts/prepare_b3_full_context_synthetic_fixture.py
+@@ -0,0 +1,1147 @@
++#!/usr/bin/env python
++"""Construct genuine prospective toy inputs, without native outcomes or models."""
++
++from __future__ import annotations
++
++import argparse
++import builtins
++from collections import Counter
++from collections.abc import MutableMapping
++import csv
++from hashlib import sha256
++import io
++import json
++import math
++import os
++from pathlib import Path
++import resource
++import shutil
++import stat
++import sys
++import time
++from types import ModuleType, SimpleNamespace
++
++ROOT = Path(__file__).resolve().parents[1]
++PUBLIC_SOURCE = ROOT / "scripts/prepare_b3_full_context_synthetic_fixture.py"
++SCHEMA = "b3_full_context_synthetic_preparation_request_v1"
++PROFILE = "synthetic_stored_arithmetic_v1"
++FIXTURE_PROFILE = "human_mouse_5000_measured_502_joined_5_units_60_cells_v1"
++SPECIES = ("homo_sapiens", "mus_musculus")
++MIB = 1024**2
++NORMALIZATION = {
++    "method": "library_size_log1p",
++    "target_sum": 10000,
++    "denominator": "all_prepared_measured_genes_before_vocab_filter_clipping",
++}
++NATIVE_PATHS = (
++    "src/transcriptformer/__init__.py",
++    "src/transcriptformer/cli/__init__.py",
++    "src/transcriptformer/cli/download_artifacts.py",
++    "src/transcriptformer/cli/download_data.py",
++    "src/transcriptformer/cli/evaluate.py",
++    "src/transcriptformer/cli/finetune.py",
++    "src/transcriptformer/cli/inference.py",
++    "src/transcriptformer/data/__init__.py",
++    "src/transcriptformer/data/bulk_download.py",
++    "src/transcriptformer/data/dataclasses.py",
++    "src/transcriptformer/data/dataloader.py",
++    "src/transcriptformer/datasets.py",
++    "src/transcriptformer/finetune/__init__.py",
++    "src/transcriptformer/finetune/artifacts.py",
++    "src/transcriptformer/finetune/b3_aggregation.py",
++    "src/transcriptformer/finetune/b3_bins.py",
++    "src/transcriptformer/finetune/b3_bootstrap.py",
++    "src/transcriptformer/finetune/b3_cell_stream.py",
++    "src/transcriptformer/finetune/b3_gene_id.py",
++    "src/transcriptformer/finetune/b3_identifiers.py",
++    "src/transcriptformer/finetune/b3_matched_null.py",
++    "src/transcriptformer/finetune/b3_measured_zero.py",
++    "src/transcriptformer/finetune/b3_measured_zero_bootstrap.py",
++    "src/transcriptformer/finetune/b3_measured_zero_prepared.py",
++    "src/transcriptformer/finetune/b3_measured_zero_scores.py",
++    "src/transcriptformer/finetune/b3_measured_zero_shards.py",
++    "src/transcriptformer/finetune/b3_pipeline.py",
++    "src/transcriptformer/finetune/b3_prepared.py",
++    "src/transcriptformer/finetune/b3_raw_artifact.py",
++    "src/transcriptformer/finetune/b3_score_contract.py",
++    "src/transcriptformer/finetune/coordinates.py",
++    "src/transcriptformer/finetune/coverage.py",
++    "src/transcriptformer/finetune/early_stopping.py",
++    "src/transcriptformer/finetune/embryo_identity.py",
++    "src/transcriptformer/finetune/evaluate.py",
++    "src/transcriptformer/finetune/gpu.py",
++    "src/transcriptformer/finetune/manifest.py",
++    "src/transcriptformer/finetune/prepare.py",
++    "src/transcriptformer/finetune/probes.py",
++    "src/transcriptformer/finetune/representation.py",
++    "src/transcriptformer/finetune/resume.py",
++    "src/transcriptformer/finetune/sampling_audit.py",
++    "src/transcriptformer/finetune/selection.py",
++    "src/transcriptformer/finetune/spatial.py",
++    "src/transcriptformer/finetune/species_readiness.py",
++    "src/transcriptformer/finetune/train.py",
++    "src/transcriptformer/model/__init__.py",
++    "src/transcriptformer/model/embedding_surgery.py",
++    "src/transcriptformer/model/inference.py",
++    "src/transcriptformer/model/layers.py",
++    "src/transcriptformer/model/losses.py",
++    "src/transcriptformer/model/masks.py",
++    "src/transcriptformer/model/model.py",
++    "src/transcriptformer/tokenizer/__init__.py",
++    "src/transcriptformer/tokenizer/tokenizer.py",
++    "src/transcriptformer/tokenizer/vocab.py",
++    "src/transcriptformer/utils/__init__.py",
++    "src/transcriptformer/utils/utils.py",
++)
++SCRIPT_PATHS = (
++    "preflight_b3_measured_zero_full.py",
++    "preflight_b3_measured_zero_pair.py",
++    "plan_b3_measured_zero_shards.py",
++    "prepare_b3_measured_zero_embryo_metrics.py",
++    "report_ortholog_eligibility.py",
++    "summarize_ortholog_full_universe.py",
++    "build_ortholog_table.py",
++    "handoff_ortholog_scores.py",
++    "summarize_ortholog_paired_scores.py",
++    "b3_score_contract.py",
++)
++HELPER_SOURCE = ROOT / "scripts/b3_authenticated_helpers.py"
++HELPER_SHA256 = "a931e9d2ee1a35a13d2e7659fa71ff6e1565e289d5ab6c6f15170701525487f3"
++SOFTWARE = (
++    *(ROOT / name for name in NATIVE_PATHS),
++    *(ROOT / "scripts" / name for name in SCRIPT_PATHS),
++    HELPER_SOURCE,
++    PUBLIC_SOURCE,
++)
++YAML_SOURCE = ROOT / "src/transcriptformer/cli/conf/inference_config.yaml"
++
++
++def _canonical(value):
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
++
++
++def _json(data):
++    def unique(pairs):
++        result = {}
++        for key, value in pairs:
++            if key in result:
++                raise ValueError("Duplicate JSON key")
++            result[key] = value
++        return result
++
++    def invalid(value):
++        raise ValueError("Nonfinite JSON constant: " + value)
++
++    value = json.loads(data, object_pairs_hook=unique, parse_constant=invalid)
++    if not isinstance(value, dict):
++        raise ValueError("Require a closed JSON object")
++    return value
++
++
++class _Budget:
++    def __init__(self, parent, max_seconds, began):
++        if type(max_seconds) not in (int, float) or not math.isfinite(max_seconds) or not 0 < max_seconds <= 900:
++            raise ValueError("Wall cap must be positive and at most 900 seconds")
++        self.parent, self.started, self.max_seconds = parent, began, max_seconds
++        self.min_ram = self.min_disk = float("inf")
++        self.storage_reservation = 32 * MIB
++        # Fixed toy CSR/preparation copies, support/chunk scratch and caches.
++        # This is a conservative shape admission bound, not a measured census.
++        self.numeric_upper = 2 * 60 * 5000 * 16 * 8 + 4 * 8 * MIB + 5 * 502 * 64
++        if self.numeric_upper > 200 * MIB:
++            raise MemoryError("Toy numeric allocation admission exceeds 200 MiB")
++        self.check()
++
++    def check(self):
++        if time.monotonic() - self.started >= self.max_seconds:
++            raise TimeoutError("Synthetic preparation wall cap exceeded")
++        if resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 >= 4 * 1024**3:
++            raise MemoryError("Synthetic preparation exceeds 4 GiB RSS")
++        available = next(
++            (
++                int(line.split()[1]) * 1024
++                for line in Path("/proc/meminfo").read_text().splitlines()
++                if line.startswith("MemAvailable:")
++            ),
++            0,
++        )
++        free = shutil.disk_usage(self.parent).free - self.storage_reservation
++        self.min_ram, self.min_disk = min(self.min_ram, available), min(self.min_disk, free)
++        if available < 4 * 1024**3:
++            raise MemoryError("Synthetic preparation needs 4 GiB available host RAM")
++        if free < 20 * 1024**3:
++            raise OSError("Synthetic preparation needs 20 GiB free disk after reservation")
++
++    def remaining(self):
++        self.check()
++        seconds = min(900, math.floor(self.max_seconds - (time.monotonic() - self.started)))
++        if seconds < 1:
++            raise TimeoutError("No complete remaining second for a bounded helper")
++        return seconds
++
++
++class _Cleanup:
++    def __init__(self):
++        self.error = None
++
++    def attempt(self, function, *args):
++        try:
++            function(*args)
++        except BaseException as error:
++            if self.error is None:
++                self.error = error
++
++    def finish(self):
++        if self.error is not None:
++            raise self.error
++
++
++class _Pins:
++    """Retain original regular files; hash and execute the same source buffers."""
++
++    def __init__(self, budget):
++        self.budget = budget
++        self.files = {}
++        self.buffers = {}
++        self.retained_bytes = 0
++        self.recovery = {}
++
++    def bind(self, path, expected=None, *, retain=False):
++        self.budget.check()
++        caller = Path(path).absolute()
++        canonical = caller.resolve(strict=True)
++        if caller != canonical:
++            raise ValueError("Original source and artifact paths must retain canonical aliases")
++        if canonical in self.files:
++            ref = self.verify(canonical)
++            if expected is not None and expected != ref["sha256"]:
++                raise ValueError("Source hash differs from the admitted closure")
++            return ref
++        if len(self.files) >= 128:
++            raise MemoryError("Synthetic preparation file binding limit exceeded")
++        before = canonical.lstat()
++        if not stat.S_ISREG(before.st_mode) or before.st_size > 64 * MIB:
++            raise ValueError("Require a bounded original regular file")
++        fd = os.open(canonical, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++        self.files[canonical] = [fd, (before.st_dev, before.st_ino, before.st_size), caller, None]
++        birth = os.stat(fd)
++        identity = (birth.st_dev, birth.st_ino, birth.st_size)
++        self.files[canonical] = [fd, identity, caller, None]
++        opened = os.fstat(fd)
++        if (
++            not stat.S_ISREG(opened.st_mode)
++            or (opened.st_dev, opened.st_ino, opened.st_size) != identity
++            or identity != (before.st_dev, before.st_ino, before.st_size)
++        ):
++            raise ValueError("Original source storage changed during admission")
++        digest, count, blocks = sha256(), 0, []
++        while block := os.read(fd, MIB):
++            self.budget.check()
++            count += len(block)
++            if count > before.st_size or count > 64 * MIB:
++                raise ValueError("Source grew beyond its admitted size")
++            digest.update(block)
++            if retain:
++                if count > MIB or self.retained_bytes + count > 32 * MIB:
++                    raise MemoryError("Retained source buffers exceed bounded metadata admission")
++                blocks.append(block)
++        ref = {"path": str(canonical), "sha256": digest.hexdigest(), "bytes": count}
++        self.files[canonical][3] = ref
++        if count != before.st_size or (expected is not None and expected != ref["sha256"]):
++            raise ValueError("Source hash differs from the admitted closure")
++        if retain:
++            self.buffers[canonical] = b"".join(blocks)
++            self.retained_bytes += count
++        self.verify(canonical)
++        return ref
++
++    def verify(self, canonical):
++        self.budget.check()
++        fd, identity, caller, ref = self.files[canonical]
++        if fd is None:
++            fd = self.recovery.get(canonical)
++        if fd is None:
++            raise RuntimeError("Source seal lacks independently retained ownership")
++        opened = os.fstat(fd)
++        current = canonical.lstat()
++        if (
++            not stat.S_ISREG(opened.st_mode)
++            or not stat.S_ISREG(current.st_mode)
++            or (opened.st_dev, opened.st_ino, opened.st_size) != identity
++            or (current.st_dev, current.st_ino, current.st_size) != identity
++            or caller.resolve(strict=True) != canonical
++        ):
++            raise ValueError("Original source pathname or storage changed")
++        if ref is None:
++            raise ValueError("Original source admission did not finish")
++        os.lseek(fd, 0, os.SEEK_SET)
++        digest, count = sha256(), 0
++        while block := os.read(fd, MIB):
++            self.budget.check()
++            count += len(block)
++            if count > ref["bytes"]:
++                raise ValueError("Original source bytes changed")
++            digest.update(block)
++        if count != ref["bytes"] or digest.hexdigest() != ref["sha256"]:
++            raise ValueError("Original source bytes changed")
++        return ref
++
++    def seal(self):
++        for path in self.files:
++            self.verify(path)
++
++    def retain_recovery(self):
++        for path, record in self.files.items():
++            self.budget.check()
++            fd, identity, _, _ = record
++            if path in self.recovery:
++                raise RuntimeError("Source recovery cannot be admitted twice")
++            duplicate = os.dup(fd)
++            self.recovery[path] = duplicate
++            opened = os.fstat(duplicate)
++            if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino, opened.st_size) != identity:
++                raise RuntimeError("Source recovery descriptor changed during admission")
++
++    def close(self):
++        cleanup = _Cleanup()
++
++        def close_one(record):
++            fd, identity, _, _ = record
++            if fd is None:
++                return
++            current = os.fstat(fd)
++            if not stat.S_ISREG(current.st_mode) or (current.st_dev, current.st_ino) != identity[:2]:
++                raise RuntimeError("Preserved foreign source descriptor during cleanup")
++            os.close(fd)
++            record[0] = None
++
++        for record in self.files.values():
++            cleanup.attempt(close_one, record)
++        cleanup.finish()
++
++    def release_recovery(self):
++        cleanup = _Cleanup()
++
++        def release(path, fd):
++            identity = self.files[path][1]
++            current = os.fstat(fd)
++            if not stat.S_ISREG(current.st_mode) or (current.st_dev, current.st_ino) != identity[:2]:
++                raise RuntimeError("Preserved foreign recovery source descriptor")
++            os.close(fd)
++            del self.recovery[path]
++
++        for path, fd in list(self.recovery.items()):
++            cleanup.attempt(release, path, fd)
++        cleanup.finish()
++
++
++class _Output:
++    """Own a persistent attempt directory and withdraw only its own marker."""
++
++    def __init__(self, output, budget):
++        self.path, self.budget = output, budget
++        self.fd = self.marker_fd = None
++        self.recovery_fd = self.recovery_marker_fd = None
++        self.identity = self.marker_identity = None
++        self.marker_data = None
++        self.parent_identity = None
++        self.aliases = {}
++        self.fallback = output
++
++    def establish(self):
++        self._check_ancestors()
++        parent = self.path.parent.lstat()
++        self.parent_identity = (parent.st_dev, parent.st_ino)
++        self.path.mkdir(mode=0o700)
++        created = self.path.lstat()
++        self.identity = (created.st_dev, created.st_ino)
++        fd = os.open(self.path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
++        self.fd = fd
++        birth = os.stat(fd)
++        if not stat.S_ISDIR(birth.st_mode) or (birth.st_dev, birth.st_ino) != self.identity:
++            raise RuntimeError("Synthetic output descriptor differs from its original birth")
++        self.check()
++
++    def _check_ancestors(self):
++        for ancestor in (*reversed(self.path.parents), self.path):
++            if os.path.lexists(ancestor) and stat.S_ISLNK(ancestor.lstat().st_mode):
++                raise ValueError("Output ancestors cannot be symlink aliases")
++
++    def check(self):
++        self.budget.check()
++        self._check_ancestors()
++        fd = self.fd if self.fd is not None else self.recovery_fd
++        if fd is None:
++            raise RuntimeError("Synthetic output seal lacks retained ownership")
++        opened, current = os.fstat(fd), self.path.lstat()
++        parent = self.path.parent.lstat()
++        if (
++            not stat.S_ISDIR(opened.st_mode)
++            or not stat.S_ISDIR(current.st_mode)
++            or (opened.st_dev, opened.st_ino) != self.identity
++            or (current.st_dev, current.st_ino) != self.identity
++            or (parent.st_dev, parent.st_ino) != self.parent_identity
++            or self.path.resolve(strict=True) != self.path
++        ):
++            raise RuntimeError("Owned synthetic attempt directory identity changed")
++        for path, identity in self.aliases.items():
++            current = path.lstat()
++            if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != identity:
++                raise RuntimeError("Owned synthetic artifact namespace changed")
++        if self.marker_identity is not None:
++            current = os.stat("complete.json", dir_fd=fd, follow_symlinks=False)
++            if not stat.S_ISREG(current.st_mode) or (current.st_dev, current.st_ino) != self.marker_identity:
++                raise RuntimeError("Owned synthetic complete marker identity changed")
++            marker_fd = self.marker_fd if self.marker_fd is not None else self.recovery_marker_fd
++            if marker_fd is not None and self.marker_data is not None:
++                opened = os.fstat(marker_fd)
++                if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != self.marker_identity:
++                    raise RuntimeError("Owned synthetic complete marker descriptor changed")
++                os.lseek(marker_fd, 0, os.SEEK_SET)
++                if os.read(marker_fd, len(self.marker_data) + 1) != self.marker_data:
++                    raise RuntimeError("Owned synthetic complete marker bytes changed")
++            else:
++                raise RuntimeError("Synthetic marker seal lacks retained ownership")
++
++    def directory(self, relative):
++        self.check()
++        path = self.path / relative
++        path.mkdir(mode=0o700)
++        current = path.lstat()
++        self.aliases[path] = (current.st_dev, current.st_ino)
++        return path
++
++    def adopt_directory(self, path):
++        self.check()
++        current = path.lstat()
++        if not stat.S_ISDIR(current.st_mode) or path.resolve(strict=True) != path:
++            raise RuntimeError("Genuine helper output lost its canonical directory")
++        self.aliases[path] = (current.st_dev, current.st_ino)
++
++    def write(self, relative, data):
++        self.check()
++        path = self.path / relative
++        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
++        birth = path.lstat()
++        identity = (birth.st_dev, birth.st_ino)
++        try:
++            opened = os.fstat(fd)
++            if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != identity:
++                raise RuntimeError("Synthetic asset descriptor changed during creation")
++            with os.fdopen(fd, "wb", closefd=False) as stream:
++                stream.write(data)
++                stream.flush()
++                os.fsync(fd)
++        finally:
++            opened = os.fstat(fd)
++            if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != identity:
++                raise RuntimeError("Preserved foreign synthetic asset descriptor")
++            os.close(fd)
++        self.check()
++        return path
++
++    def _invalidate_at(self, fd):
++        try:
++            marker = os.stat("complete.json", dir_fd=fd, follow_symlinks=False)
++        except FileNotFoundError:
++            return False
++        if not stat.S_ISREG(marker.st_mode) or (marker.st_dev, marker.st_ino) != self.marker_identity:
++            return False
++        pinned = False
++        for marker_fd in (self.marker_fd, self.recovery_marker_fd):
++            if marker_fd is None:
++                continue
++            try:
++                opened = os.fstat(marker_fd)
++            except OSError:
++                continue
++            if stat.S_ISREG(opened.st_mode) and (opened.st_dev, opened.st_ino) == self.marker_identity:
++                pinned = True
++                break
++        if pinned:
++            os.unlink("complete.json", dir_fd=fd)
++            return True
++        # Last-close recovery cannot rely on an inode number alone. Bind and
++        # compare the original complete bytes while a fresh marker FD is live.
++        if self.marker_data is None or marker.st_size != len(self.marker_data):
++            return False
++        marker_fd = os.open("complete.json", os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=fd)
++        identity = (marker.st_dev, marker.st_ino)
++        try:
++            opened = os.fstat(marker_fd)
++            if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != identity:
++                return False
++            if os.read(marker_fd, len(self.marker_data) + 1) != self.marker_data:
++                return False
++            current = os.stat("complete.json", dir_fd=fd, follow_symlinks=False)
++            if not stat.S_ISREG(current.st_mode) or (current.st_dev, current.st_ino) != identity:
++                return False
++            os.unlink("complete.json", dir_fd=fd)
++            return True
++        finally:
++            opened = os.fstat(marker_fd)
++            if stat.S_ISREG(opened.st_mode) and (opened.st_dev, opened.st_ino) == identity:
++                os.close(marker_fd)
++
++    def invalidate(self):
++        if self.marker_identity is None:
++            return
++        cleanup = _Cleanup()
++        removed = False
++
++        def through_descriptor(fd):
++            nonlocal removed
++            if fd is None or removed:
++                return
++            opened = os.fstat(fd)
++            if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != self.identity:
++                raise RuntimeError("Preserved foreign output descriptor during invalidation")
++            removed = self._invalidate_at(fd)
++
++        def through_fallback():
++            nonlocal removed
++            if removed:
++                return
++            try:
++                current = self.fallback.lstat()
++            except FileNotFoundError:
++                return
++            if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != self.identity:
++                return
++            fd = os.open(self.fallback, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
++            try:
++                through_descriptor(fd)
++            finally:
++                opened = os.fstat(fd)
++                if stat.S_ISDIR(opened.st_mode) and (opened.st_dev, opened.st_ino) == self.identity:
++                    os.close(fd)
++
++        for fd in (self.fd, self.recovery_fd):
++            cleanup.attempt(through_descriptor, fd)
++        cleanup.attempt(through_fallback)
++        cleanup.finish()
++
++    def publish_marker(self, data):
++        self.check()
++        fd = os.open(
++            "complete.json",
++            os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
++            0o600,
++            dir_fd=self.fd,
++        )
++        self.marker_fd = fd
++        birth = os.stat("complete.json", dir_fd=self.fd, follow_symlinks=False)
++        self.marker_identity = (birth.st_dev, birth.st_ino)
++        opened = os.stat(fd)
++        if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != self.marker_identity:
++            raise RuntimeError("Synthetic marker descriptor differs from its original birth")
++        self.marker_data = data
++        with os.fdopen(fd, "wb", closefd=False) as stream:
++            stream.write(data)
++            stream.flush()
++            os.fsync(fd)
++        os.fsync(self.fd)
++        self.check()
++        os.lseek(fd, 0, os.SEEK_SET)
++        if os.read(fd, len(data) + 1) != data:
++            raise RuntimeError("Owned synthetic marker bytes changed")
++
++    def retain_recovery(self):
++        self.check()
++        for name, original, identity, directory in (
++            ("recovery_fd", self.fd, self.identity, True),
++            ("recovery_marker_fd", self.marker_fd, self.marker_identity, False),
++        ):
++            fd = os.dup(original)
++            setattr(self, name, fd)
++            opened = os.fstat(fd)
++            valid = stat.S_ISDIR(opened.st_mode) if directory else stat.S_ISREG(opened.st_mode)
++            if not valid or (opened.st_dev, opened.st_ino) != identity:
++                raise RuntimeError("Synthetic publication recovery descriptor changed")
++        self.check()
++        address = os.readlink(f"/proc/self/fd/{self.recovery_fd}")
++        if not Path(address).is_absolute() or address.endswith(" (deleted)"):
++            raise RuntimeError("Synthetic recovery directory lacks its original live address")
++        self.fallback = Path(address)
++
++    def _release(self, name, identity, directory):
++        fd = getattr(self, name)
++        if fd is None:
++            return
++        if identity is None:
++            raise RuntimeError("Cannot release an unadmitted attempt descriptor")
++        current = os.fstat(fd)
++        valid = stat.S_ISDIR(current.st_mode) if directory else stat.S_ISREG(current.st_mode)
++        if not valid or (current.st_dev, current.st_ino) != identity:
++            raise RuntimeError("Preserved foreign attempt descriptor during cleanup")
++        os.close(fd)
++        setattr(self, name, None)
++
++    def close(self):
++        cleanup = _Cleanup()
++
++        if self.marker_fd is not None:
++            cleanup.attempt(self._release, "marker_fd", self.marker_identity, False)
++        if cleanup.error is not None:
++            cleanup.attempt(self.invalidate)
++        if self.fd is not None:
++            cleanup.attempt(self._release, "fd", self.identity, True)
++        if cleanup.error is not None:
++            cleanup.attempt(self.invalidate)
++        cleanup.finish()
++
++    def release_recovery(self):
++        cleanup = _Cleanup()
++        cleanup.attempt(self._release, "recovery_marker_fd", self.marker_identity, False)
++        if cleanup.error is not None:
++            cleanup.attempt(self.invalidate)
++        cleanup.attempt(self._release, "recovery_fd", self.identity, True)
++        if cleanup.error is not None:
++            cleanup.attempt(self.invalidate)
++        cleanup.finish()
++
++
++class _RuntimeModules(MutableMapping):
++    """Track only original private cache objects; preserve foreign replacements."""
++
++    def __init__(self, budget):
++        self.budget, self.runtime, self.owned = budget, sys.modules, {}
++
++    def __getitem__(self, key):
++        return self.runtime[key]
++
++    def __setitem__(self, key, value):
++        self.budget.check()
++        if not isinstance(key, str) or not key.startswith("_b3_authenticated_") or not isinstance(value, type(sys)):
++            raise ValueError("Require a private authenticated module identity")
++        if key in self.runtime and (self.owned.get(key) is not value or self.runtime[key] is not value):
++            raise RuntimeError("Private helper cache key is already occupied")
++        if self.runtime.setdefault(key, value) is not value:
++            raise RuntimeError("Private helper cache key is already occupied")
++        self.owned[key] = value
++
++    def __delitem__(self, key):
++        owned = self.owned.get(key)
++        if owned is None or self.runtime.get(key) is not owned:
++            raise RuntimeError("Preserved foreign private helper cache entry")
++        del self.runtime[key]
++        del self.owned[key]
++
++    def __iter__(self):
++        return iter(self.runtime)
++
++    def __len__(self):
++        return len(self.runtime)
++
++    def pop(self, key, default=None):
++        if key not in self.owned:
++            return default
++        owned = self.owned.pop(key)
++        if self.runtime.get(key) is not owned:
++            raise RuntimeError("Preserved foreign private helper cache replacement")
++        del self.runtime[key]
++        return owned
++
++    def close(self):
++        cleanup = _Cleanup()
++        for key in list(self.owned):
++            cleanup.attempt(self.pop, key, None)
++        cleanup.finish()
++
++
++def _close_helpers(registry, runtime, private, bootstrap):
++    cleanup = _Cleanup()
++    if registry is not None:
++        cleanup.attempt(registry.close)
++    if runtime is not None:
++        cleanup.attempt(runtime.close)
++    if private is not None:
++        if sys.modules.get(private) is bootstrap:
++            del sys.modules[private]
++        elif cleanup.error is None:
++            cleanup.error = RuntimeError("Preserved foreign bootstrap cache entry")
++    cleanup.finish()
++
++
++def _helpers(pins, budget):
++    buffer = pins.buffers[HELPER_SOURCE]
++    if sha256(buffer).hexdigest() != HELPER_SHA256:
++        raise ValueError("Authenticated loader differs from its frozen source")
++    private = "_b3_synthetic_preparation_" + str(id(pins))
++    module = ModuleType(private)
++    module.__file__ = str(HELPER_SOURCE)
++    if sys.modules.setdefault(private, module) is not module:
++        raise RuntimeError("Authenticated loader cache key is already occupied")
++    registry = None
++    runtime = _RuntimeModules(budget)
++    try:
++        budget.check()
++        facade = ModuleType("sys")
++        facade.__dict__.update(vars(sys))
++        facade.modules = runtime
++        facade._b3_authenticated_runtime_sys = facade
++        ordinary_import = builtins.__import__
++
++        def runtime_import(name, globals=None, locals=None, fromlist=(), level=0):
++            if name == "sys" and level == 0:
++                return facade
++            return ordinary_import(name, globals, locals, fromlist, level)
++
++        module.__dict__["__builtins__"] = {**vars(builtins), "__import__": runtime_import}
++        exec(compile(buffer, str(HELPER_SOURCE), "exec"), module.__dict__)
++        registry = module.AuthenticatedHelpers(ROOT, {path: pins.buffers[path] for path in SOFTWARE}, budget)
++        registry.sys_facade.path = list(sys.path)
++        ordinary = registry._import
++        sibling_names = {Path(name).stem for name in SCRIPT_PATHS}
++
++        def bound_import(name, globals=None, locals=None, fromlist=(), level=0):
++            if not level and name in sibling_names:
++                return ordinary("scripts." + name, globals, locals, fromlist=("*",), level=0)
++            return ordinary(name, globals, locals, fromlist, level)
++
++        registry.guarded_builtins["__import__"] = bound_import
++        return registry, runtime, private, module
++    except BaseException as failure:
++        cleanup = _Cleanup()
++        cleanup.attempt(_close_helpers, registry, runtime, private, module)
++        if cleanup.error is not None:
++            raise cleanup.error from failure
++        raise
++
++
++def _load(registry, name):
++    return registry.load(ROOT / name)
++
++
++def _csv_bytes(columns, rows):
++    stream = io.StringIO(newline="")
++    writer = csv.writer(stream, lineterminator="\n")
++    writer.writerow(columns)
++    writer.writerows(rows)
++    return stream.getvalue().encode()
++
++
++def _genuine_inputs(owner, pins, registry, request_ref):
++    # All shapes are fixed before importing or constructing numerical assets.
++    # Native targets and impacts are not constructed by this operation.
++    import anndata as ad
++    import h5py
++    import numpy as np
++    import pandas as pd
++    from scipy.sparse import csr_matrix
++
++    owner.check()
++    raw_dir = owner.directory("raw")
++    owner.directory("identity")
++    checkpoint = owner.directory("checkpoint")
++    owner.directory("checkpoint/vocabs")
++    prepared_root = owner.directory("prepared_run")
++    genes = {
++        species: [prefix + f"{index:011d}" for index in range(1, 5001)]
++        for species, prefix in zip(SPECIES, ("ENSG", "ENSMUSG"), strict=True)
++    }
++    vocabulary_path = owner.path / "retention_vocabulary.h5"
++    with h5py.File(vocabulary_path, "x") as handle:
++        handle.create_dataset(
++            "keys", data=np.asarray([*genes[SPECIES[0]], *genes[SPECIES[1]]], dtype=h5py.string_dtype())
++        )
++        handle.flush()
++    vocabulary_ref = pins.bind(vocabulary_path)
++    checkpoint_config = owner.write(
++        "checkpoint/config.json",
++        _canonical(
++            {
++                "model": {
++                    "model_config": {"seq_len": 502},
++                    "data_config": {
++                        "pad_zeros": True,
++                        "gene_pad_token": "[PAD]",
++                        "filter_outliers": 0,
++                        "min_expressed_genes": 0,
++                    },
++                },
++            }
++        )
++        + b"\n",
++    )
++    weights = owner.write("checkpoint/model_weights.pt", b"constructed fixture byte provenance; no model or tensors\n")
++    scoring_vocabulary = {"[PAD]": 0}
++    for species in SPECIES:
++        for gene in genes[species][:502]:
++            scoring_vocabulary[gene] = len(scoring_vocabulary)
++    gene_vocabulary = owner.write("checkpoint/vocabs/gene_vocabulary.json", _canonical(scoring_vocabulary) + b"\n")
++    aux_vocabulary = owner.write("checkpoint/vocabs/aux_vocabulary.json", b"{}\n")
++    checkpoint_refs = {
++        "path": str(checkpoint),
++        "config": pins.bind(checkpoint_config),
++        "weights": pins.bind(weights),
++        "gene_vocabulary": pins.bind(gene_vocabulary),
++        "aux_vocabulary": pins.bind(aux_vocabulary),
++        "training_provenance": None,
++        "tokenizer_admission": "unproven_support_scan_assets_only",
++    }
++    datasets, audits, sidecars, raw_refs, prepared_refs = [], [], {}, {}, {}
++    for species in SPECIES:
++        owner.check()
++        units = [f"{species}_simulated_unit_{index}" for index in range(5)]
++        samples = [f"{species}_simulated_cell_{index:03d}" for index in range(60)]
++        cell_units = [units[index // 12] for index in range(60)]
++        sidecar = owner.write(
++            "identity/" + species + "_preparation.csv",
++            _csv_bytes(
++                ["source_row_index", "sample", "stage", "embryo_id", "embryo_sex"],
++                [
++                    (index, sample, "toy_native_organogenesis", cell_units[index], "simulated")
++                    for index, sample in enumerate(samples)
++                ],
++            ),
++        )
++        assignment = owner.write(
++            "identity/" + species + "_assignments.csv",
++            _csv_bytes(
++                ["row_index", "sample", "simulated_unit_id"],
++                [(index, sample, cell_units[index]) for index, sample in enumerate(samples)],
++            ),
++        )
++        counts = np.ones((60, 5000), dtype=np.int32)
++        counts[:, 501] = 0
++        matrix = csr_matrix(counts)
++        del counts
++        source_path = raw_dir / (species + ".h5ad")
++        obs = pd.DataFrame(
++            {
++                "sample": samples,
++                "stage": ["toy_native_organogenesis"] * 60,
++                "embryo_id": cell_units,
++                "cell_type": ["toy_cell"] * 60,
++                "assay": ["synthetic"] * 60,
++            },
++            index=samples,
++        )
++        var = pd.DataFrame({"ensembl_id": genes[species]}, index=genes[species])
++        raw = ad.AnnData(X=matrix, obs=obs, var=var)
++        raw.write_h5ad(source_path)
++        # Validate the original assignments against the actual stored source,
++        # then release numerical/observation state before the next source.
++        if list(raw.obs["sample"]) != samples or list(raw.obs["embryo_id"]) != cell_units:
++            raise ValueError("Generated raw source differs from original identity assignments")
++        del raw, matrix, obs, var
++        raw_refs[species] = pins.bind(source_path)
++        sidecars[species] = pins.bind(sidecar)
++        assignment_ref = pins.bind(assignment)
++        digest = sha256()
++        with assignment.open(newline="") as stream:
++            reader = csv.DictReader(stream)
++            if reader.fieldnames != ["row_index", "sample", "simulated_unit_id"]:
++                raise ValueError("Generated assignment CSV schema changed")
++            count = Counter()
++            for index, row in enumerate(reader):
++                if row != {"row_index": str(index), "sample": samples[index], "simulated_unit_id": cell_units[index]}:
++                    raise ValueError("Generated assignment rows differ from the actual source")
++                digest.update((json.dumps(row["sample"], ensure_ascii=True) + "\n").encode())
++                count[row["simulated_unit_id"]] += 1
++            if sum(count.values()) != 60 or dict(count) != {unit: 12 for unit in units}:
++                raise ValueError("Generated assignments do not cover all original units and rows")
++        audits.append(
++            {
++                "source": raw_refs[species],
++                "assignment": assignment_ref,
++                "n_obs": 60,
++                "sample_sha256": digest.hexdigest(),
++                "sample_digest_encoding": "ordered JSON ASCII strings, one newline per barcode",
++                "unit_ids": units,
++                "unit_ids_sha256": sha256(_canonical(units)).hexdigest(),
++                "cells_per_unit": dict(sorted(count.items())),
++            }
++        )
++        datasets.append(
++            {
++                "path": str(source_path),
++                "species": species,
++                "dataset_type": "single_cell",
++                "train_only": True,
++                "embryo_identity": {
++                    "path": str(sidecar),
++                    "sha256": sidecars[species]["sha256"],
++                    "sample_column": "sample",
++                },
++            }
++        )
++        owner.check()
++
++    manifest = {
++        "seed": 20260930,
++        "datasets": datasets,
++        "vocab_path": str(vocabulary_path),
++        "stage_mapping": {"toy_native_organogenesis": "organogenesis"},
++    }
++    manifest_path = owner.write("manifest.json", _canonical(manifest) + b"\n")
++    identity_audit_path = owner.write(
++        "identity_audit.json",
++        _canonical(
++            {
++                "schema": "b3_full_context_synthetic_identity_audit_v1",
++                "registration_profile": PROFILE,
++                "fixture_id": FIXTURE_PROFILE,
++                "sources": audits,
++            }
++        )
++        + b"\n",
++    )
++    table = owner.write(
++        "orthologs.tsv",
++        b"".join(
++            (SPECIES[0] + "\t" + left + "\t" + SPECIES[1] + "\t" + right + "\n").encode()
++            for left, right in zip(genes[SPECIES[0]], genes[SPECIES[1]], strict=True)
++        ),
++    )
++    owner.check()
++    report = _load(registry, "src/transcriptformer/finetune/prepare.py").prepare_run(manifest, prepared_root)
++    owner.check()
++    owner.adopt_directory(prepared_root / "prepared")
++    report_path = prepared_root / "preparation_report.json"
++    split_path = prepared_root / "split_assignments.json"
++    if len(report["datasets"]) != 2 or any(
++        (entry["n_obs"], entry["n_genes"], entry["split"]) != (60, 5000, "train") or len(entry["embryo_ids"]) != 5
++        for entry in report["datasets"]
++    ):
++        raise ValueError("Genuine preparation changed the complete synthetic axes")
++    for species in SPECIES:
++        prepared_refs[species] = [
++            pins.bind(entry["path"]) for entry in report["datasets"] if entry["species"] == species
++        ]
++    preparation = {
++        "manifest": pins.bind(manifest_path),
++        "report": pins.bind(report_path),
++        "split_assignments": pins.bind(split_path),
++        "raw": raw_refs,
++        "prepared": prepared_refs,
++        "retention_vocabulary": vocabulary_ref,
++        "embryo_identity_sidecars": sidecars,
++    }
++    configs, full_paths, artifacts = {}, {}, {}
++    for species in SPECIES:
++        config = {
++            "manifest": str(manifest_path),
++            "prepared_report": str(report_path),
++            "checkpoint": str(checkpoint),
++            "gene_vocabulary": str(gene_vocabulary),
++            "aux_vocabulary": str(aux_vocabulary),
++            "species": species,
++            "phase": "organogenesis",
++            "split": "train",
++            "model_arm": "base",
++            "gene_ids": genes[species][:502],
++            "max_cells": 60,
++            "metric_normalization": NORMALIZATION,
++        }
++        configs[species] = owner.write(species + "_config.json", _canonical(config) + b"\n")
++        owner.check()
++        full_root = owner.path / (species + "_support")
++        full = _load(registry, "scripts/preflight_b3_measured_zero_full.py").run(
++            configs[species],
++            full_root,
++            chunk_rows=8,
++            max_storage_bytes=8 * MIB,
++        )
++        owner.check()
++        owner.adopt_directory(full_root)
++        full_paths[species] = full_root / "support_preflight.json"
++        if (full["n_cells"], full["n_embryos"], full["n_frozen_genes"]) != (60, 5, 502):
++            raise ValueError("Genuine full support changed the registered original axes")
++        artifacts[species] = {
++            "config": pins.bind(configs[species]),
++            "full_support_report": pins.bind(full_paths[species]),
++            "support_h5": pins.bind(full_root / "support.h5"),
++        }
++    pair_path = owner.path / "paired_support.json"
++    owner.check()
++    _load(registry, "scripts/preflight_b3_measured_zero_pair.py").run(
++        SimpleNamespace(
++            config_a=configs[SPECIES[0]],
++            config_b=configs[SPECIES[1]],
++            preflight_a=full_paths[SPECIES[0]],
++            preflight_b=full_paths[SPECIES[1]],
++            table=table,
++            output=pair_path,
++        )
++    )
++    owner.check()
++    pair = _json(pair_path.read_bytes())
++    if pair["join_audit"]["raw_pairs"] != 5000 or pair["n_vocabulary_joined_pairs"] != 502:
++        raise ValueError("Genuine paired support changed the complete original denominator")
++    for species in SPECIES:
++        owner.check()
++        plan_path = owner.path / (species + "_plan.json")
++        _load(registry, "scripts/plan_b3_measured_zero_shards.py").plan(
++            configs[species],
++            full_paths[species],
++            pair_path,
++            table,
++            plan_path,
++        )
++        owner.check()
++        metric_root = owner.path / (species + "_metrics")
++        _load(registry, "scripts/prepare_b3_measured_zero_embryo_metrics.py").run(
++            plan_path,
++            metric_root,
++            chunk_rows=8,
++            max_seconds=owner.budget.remaining(),
++        )
++        owner.check()
++        owner.adopt_directory(metric_root)
++        artifacts[species].update(
++            {
++                "plan": pins.bind(plan_path),
++                "embryo_metrics": {
++                    "metadata": pins.bind(metric_root / "metadata.json"),
++                    "metrics_h5": pins.bind(metric_root / "metrics.h5"),
++                },
++            }
++        )
++    return {
++        "schema": "b3_full_context_synthetic_preparation_result_v1",
++        "status": "complete_synthetic_prospective_inputs_only",
++        "profile": PROFILE,
++        "fixture_profile": FIXTURE_PROFILE,
++        "request": request_ref,
++        "preparation": preparation,
++        "checkpoint": checkpoint_refs,
++        "ortholog_table": pins.bind(table),
++        "identity_audit": pins.bind(identity_audit_path),
++        "paired_support_report": pins.bind(pair_path),
++        "species": artifacts,
++        "checkpoint_tensors_loaded": False,
++        "embedding_values_loaded": False,
++        "model_forwards_performed": False,
++        "native_stored_outcomes_created": False,
++        "registration_created": False,
++        "comparison_performed": False,
++        "p_values": "unavailable",
++        "fdr": "unavailable",
++        "scientific_readiness": "unavailable",
++    }
++
++
++def run(request_path: Path, output: Path, *, max_seconds=900):
++    """Prepare the fixed prospective fixture; this call cannot grant authority."""
++    began = time.monotonic()
++    if Path(__file__).resolve() != PUBLIC_SOURCE:
++        raise ValueError("Require the actual canonical public preparation source")
++    output = Path(output).absolute()
++    if output != output.resolve() or os.path.lexists(output):
++        raise FileExistsError("Require a new canonical output namespace")
++    for namespace in (ROOT / "scripts", ROOT / "src", ROOT / ".git"):
++        if output.is_relative_to(namespace):
++            raise ValueError("Output namespace overlaps protected source storage")
++    if not output.parent.is_dir():
++        raise ValueError("Output parent must already be an existing directory")
++    budget = _Budget(output.parent, max_seconds, began)
++    pins = _Pins(budget)
++    owner = registry = runtime = private = bootstrap = None
++    try:
++        request_ref = pins.bind(request_path, retain=True)
++        body = _json(pins.buffers[Path(request_ref["path"])])
++        if set(body) != {"schema", "profile", "fixture_profile", "consumer_file_sha256", "inference_defaults"}:
++            raise ValueError("Invalid closed preparation request")
++        if body["schema"] != SCHEMA or body["profile"] != PROFILE or body["fixture_profile"] != FIXTURE_PROFILE:
++            raise ValueError("Only the complete fixed synthetic preparation profile is supported")
++        mapping = body["consumer_file_sha256"]
++        if type(mapping) is not dict or set(mapping) != {str(path) for path in SOFTWARE} or len(mapping) != 70:
++            raise ValueError("Consumer source closure differs from the exact 70 paths")
++        for path in SOFTWARE:
++            expected = mapping[str(path)]
++            if type(expected) is not str or len(expected) != 64 or any(c not in "0123456789abcdef" for c in expected):
++                raise ValueError("Consumer source hash must be canonical SHA-256")
++            pins.bind(path, expected, retain=True)
++        yaml_ref = body["inference_defaults"]
++        if (
++            type(yaml_ref) is not dict
++            or set(yaml_ref) != {"path", "sha256", "bytes"}
++            or yaml_ref.get("path") != str(YAML_SOURCE)
++            or type(yaml_ref.get("bytes")) is not int
++            or yaml_ref["bytes"] < 0
++            or type(yaml_ref.get("sha256")) is not str
++        ):
++            raise ValueError("Inference defaults require their original closed configuration Ref")
++        if pins.bind(YAML_SOURCE, yaml_ref["sha256"]) != yaml_ref:
++            raise ValueError("Inference defaults differ from their original byte Ref")
++        if output == Path(request_ref["path"]) or Path(request_ref["path"]).is_relative_to(output):
++            raise ValueError("Output overlaps the original request namespace")
++        for variable in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
++            os.environ[variable] = "1"
++        os.environ["CUDA_VISIBLE_DEVICES"] = ""
++        registry, runtime, private, bootstrap = _helpers(pins, budget)
++        owner = _Output(output, budget)
++        owner.establish()
++        result = _genuine_inputs(owner, pins, registry, request_ref)
++        result["consumer_file_sha256"] = mapping
++        result["executed_repository_sources"] = sorted(
++            str(registry.paths[name])
++            for name, state in registry.states.items()
++            if state == "ready" and name in registry.paths
++        )
++        # Retained mandatory paths and the actual executed subset are distinct.
++        result["resource_observations"] = {
++            "observation_scope": "before_complete_marker_publication",
++            "max_seconds": max_seconds,
++            "max_rss_bytes": 4 * 1024**3,
++            "max_numeric_working_bytes": 200 * MIB,
++            "numeric_allocation_admission_upper_bytes": budget.numeric_upper,
++            "peak_live_numeric_bytes": None,
++            "numeric_census_status": "unavailable_no_complete_allocation_census",
++            "min_available_host_ram_bytes": budget.min_ram,
++            "min_free_disk_bytes": budget.min_disk,
++            "peak_process_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
++            "math_threads": 1,
++            "gpu_enabled": False,
++            "prefinal_elapsed_seconds": time.monotonic() - budget.started,
++            "public_elapsed_seconds": None,
++        }
++        _close_helpers(registry, runtime, private, bootstrap)
++        registry = runtime = private = None
++        pins.seal()
++        owner.check()
++        owner.publish_marker(_canonical(result) + b"\n")
++        pins.retain_recovery()
++        owner.retain_recovery()
++        pins.seal()
++        owner.check()
++        pins.close()
++        owner.close()
++        # All helper and primary cleanup precedes the final byte/alias seal.
++        # Independent source, directory and marker FDs survive that cleanup.
++        pins.seal()
++        owner.check()
++        pins.release_recovery()
++        owner.release_recovery()
++        budget.check()
++        return result
++    except BaseException as failure:
++        cleanup = _Cleanup()
++        if owner is not None:
++            cleanup.attempt(owner.invalidate)
++        cleanup.attempt(_close_helpers, registry, runtime, private, bootstrap)
++        cleanup.attempt(pins.close)
++        cleanup.attempt(pins.release_recovery)
++        if owner is not None:
++            cleanup.attempt(owner.close)
++            cleanup.attempt(owner.release_recovery)
++        if cleanup.error is not None:
++            raise cleanup.error from failure
++        raise
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--request", type=Path, required=True)
++    parser.add_argument("--output", type=Path, required=True)
++    parser.add_argument("--max-seconds", type=float, default=900)
++    args = parser.parse_args()
++    began = time.monotonic()
++    result = run(args.request, args.output, max_seconds=args.max_seconds)
++    print(json.dumps({"result": result, "complete_public_return_seconds": time.monotonic() - began}, sort_keys=True))
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/scripts/publish_b3_full_context_observed.py b/scripts/publish_b3_full_context_observed.py
+index 568bd6b..b14b811 100644
+--- a/scripts/publish_b3_full_context_observed.py
++++ b/scripts/publish_b3_full_context_observed.py
+@@ -1,10 +1,10 @@
+ #!/usr/bin/env python
+ """Publish all original-axis observed stored arithmetic without model effects.
+ 
+-Implementation draft for scripts/publish_b3_full_context_observed.py. This
+-ignored copy is not an installed public consumer: run() requires its canonical
+-location and authenticates that existing source file's actual bytes. It never
+-manufactures an original v2 bundle, RNG family or likelihood-effect receipt.
++The public consumer requires scripts/publish_b3_full_context_observed.py as
++its canonical location and authenticates that installed source's actual bytes.
++It never manufactures an original v2 bundle, RNG family or likelihood-effect
++receipt.
+ The public seam admits one complete native context, including unavailable rows.
+ Embedded callers must release caller-owned numeric payload before entering
+ this path-only interface, as with the existing public native batch producer.
+@@ -1038,7 +1038,7 @@ class _Publication:
+         ):
+             raise RuntimeError("Original observed workspace child identity changed after publication")
+ 
+-    def _cleanup_workspace_child(self, name: str) -> bool:
++    def _cleanup_workspace_child(self, name: str, workspace_address: Path | None) -> bool:
+         """Clean an already-bound original child; never adopt a current alias."""
+         if name in self.workspace_children_removed:
+             return False
+@@ -1047,25 +1047,54 @@ class _Publication:
+         identity = self.descriptor_identities.get(attribute)
+         if fd is None or identity is None or name not in self.workspace_children:
+             raise RuntimeError("Owned observed workspace child lacks its original binding")
+-        address = self._directory_address(fd, identity)
+-        workspace_address = self._workspace_address()
++        opened = os.fstat(fd)
++        if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != identity:
++            raise RuntimeError("Owned observed workspace child descriptor identity changed")
+         # A no-replace publication rename transfers the original private
+         # directory to public ownership. Its early child FD still names the
+         # public directory, including after an admitted output relocation.
+-        if name == "publication" and self.publishing:
+-            if identity == self.output_identity or address == self.output:
++        # Recognize that independently captured transfer before inspecting any
++        # private/root address. A different admitted output identity proves
++        # fallback staging is still private, regardless of its current alias.
++        if name == "publication" and self.publishing and identity == self.output_identity:
++            self.workspace_children_removed.add(name)
++            return False
++        cleanup = _Cleanup()
++        address: Path | None = None
++        changed = workspace_address is None
++
++        def capture_address() -> None:
++            nonlocal address
++            address = self._directory_address(fd, identity)
++
++        cleanup.attempt(capture_address)
++        if name == "publication" and self.publishing and self.output_identity is None:
++            # Until the actual public output's first capture, the existing
++            # trusted no-replace operation can prove transfer at its live
++            # target address. Known original staging at the verified private
++            # root stays private. Missing both proofs cannot authorize deletion.
++            if address == self.output:
+                 self.workspace_children_removed.add(name)
+                 return False
+-            if address.parent != workspace_address:
+-                raise RuntimeError("Published workspace child lacks its original output binding")
+-        try:
+-            current = os.stat(name, dir_fd=self._workspace_descriptor(), follow_symlinks=False)
+-        except FileNotFoundError:
+-            changed = True
+-        else:
+-            changed = not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != identity
+-        if address != workspace_address / name:
+-            changed = True
++            if address is None or workspace_address is None or address.parent != workspace_address:
++                cleanup.finish()
++                raise RuntimeError("Publication transfer lacks an admitted output identity or verified private address")
++
++        def inspect_alias() -> None:
++            nonlocal changed
++            if workspace_address is None:
++                return
++            try:
++                current = (workspace_address / name).lstat()
++            except FileNotFoundError:
++                changed = True
++            else:
++                if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != identity:
++                    changed = True
++            if address != workspace_address / name:
++                changed = True
++
++        cleanup.attempt(inspect_alias)
+         # All three created children are flat. Stream their retained original
+         # descriptors with fixed metadata state; a foreign replacement entry
+         # is neither opened nor enumerated, even when the outer inode is intact.
+@@ -1074,17 +1103,61 @@ class _Publication:
+             "publication": (MAX_GENES + PAGE_SIZE - 1) // PAGE_SIZE + 5,
+             "context": 32 * ((2_000_000 + PAGE_SIZE - 1) // PAGE_SIZE) + 1,
+         }[name]
+-        count = 0
+-        with os.scandir(fd) as entries:
+-            for entry in entries:
+-                count += 1
+-                if count > maximum or entry.is_dir(follow_symlinks=False):
++
++        def verify_descriptor() -> None:
++            current = os.fstat(fd)
++            if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != identity:
++                raise RuntimeError("Owned observed workspace child descriptor changed before private cleanup")
++
++        def remove_leaves() -> None:
++            # Address/alias callbacks can themselves refuse after an FD reuse.
++            # Revalidate the independent live birth binding before leaf effects.
++            verify_descriptor()
++            leaves = _Cleanup()
++            descriptor_lost = False
++
++            def remove_leaf(entry: os.DirEntry[str]) -> None:
++                nonlocal descriptor_lost
++                if entry.is_dir(follow_symlinks=False):
+                     raise RuntimeError("Owned observed workspace exceeds its bounded flat cleanup layout")
++                try:
++                    verify_descriptor()
++                except BaseException:
++                    descriptor_lost = True
++                    raise
+                 os.unlink(entry.name, dir_fd=fd)
+-        if self._directory_address(fd, identity) != address:
+-            changed = True
+-        self._remove_workspace_directory(fd, identity)
+-        self.workspace_children_removed.add(name)
++
++            def scan_leaves() -> None:
++                count = 0
++                with os.scandir(fd) as entries:
++                    for entry in entries:
++                        count += 1
++                        if count > maximum:
++                            raise RuntimeError("Owned observed workspace exceeds its bounded flat cleanup layout")
++                        # A refused flat entry does not revoke later leaves'
++                        # independently verified ownership. Retain its error
++                        # and entry, while stopping every effect if the live
++                        # descriptor itself loses its original birth identity.
++                        leaves.attempt(remove_leaf, entry)
++                        if descriptor_lost:
++                            break
++
++            leaves.attempt(scan_leaves)
++            leaves.finish()
++
++        def remove_directory() -> None:
++            nonlocal changed
++            if self._directory_address(fd, identity) != address:
++                changed = True
++            self._remove_workspace_directory(fd, identity)
++            self.workspace_children_removed.add(name)
++
++        # A root/current-alias lookup cannot suppress safe private leaf cleanup
++        # through this independently verified original FD. Empty-directory
++        # removal still requires a fresh verified descriptor address and parent.
++        cleanup.attempt(remove_leaves)
++        cleanup.attempt(remove_directory)
++        cleanup.finish()
+         return changed
+ 
+     def cleanup_workspace(self) -> None:
+@@ -1100,28 +1173,47 @@ class _Publication:
+         """
+         if self.workspace is None or self.workspace_removed:
+             return
+-        fd = self._workspace_descriptor()
+-        try:
+-            canonical = self.workspace.lstat()
+-        except FileNotFoundError:
+-            canonical_changed = True
+-        else:
+-            canonical_changed = (
+-                not stat.S_ISDIR(canonical.st_mode)
+-                or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
+-                or self.workspace.resolve(strict=True) != self.workspace
+-            )
+-        # Verify the descriptor-derived original address before deleting any
+-        # leaves. This cleanup address is never an original-byte source alias.
+-        if self._workspace_address() != self.workspace:
+-            canonical_changed = True
++        cleanup = _Cleanup()
++        fd: int | None = None
++        workspace_address: Path | None = None
++        canonical_changed = False
++
++        def capture_root() -> None:
++            nonlocal fd
++            fd = self._workspace_descriptor()
++
++        def inspect_canonical() -> None:
++            nonlocal canonical_changed
++            assert self.workspace is not None
++            try:
++                canonical = self.workspace.lstat()
++            except FileNotFoundError:
++                canonical_changed = True
++            else:
++                canonical_changed = (
++                    not stat.S_ISDIR(canonical.st_mode)
++                    or (canonical.st_dev, canonical.st_ino) != self.workspace_identity
++                    or self.workspace.resolve(strict=True) != self.workspace
++                )
++
++        def capture_root_address() -> None:
++            nonlocal workspace_address, canonical_changed
++            workspace_address = self._workspace_address()
++            if workspace_address != self.workspace:
++                canonical_changed = True
++
++        # Root checks gate root removal and successful return. A refused root
++        # descriptor or alias does not revoke the independent original child
++        # births, so retain the first refusal and still attempt their cleanup.
++        cleanup.attempt(capture_root)
++        cleanup.attempt(inspect_canonical)
++        cleanup.attempt(capture_root_address)
+ 
+         def cleanup_child(name: str) -> None:
+             nonlocal canonical_changed
+-            if self._cleanup_workspace_child(name):
++            if self._cleanup_workspace_child(name, workspace_address):
+                 canonical_changed = True
+ 
+-        cleanup = _Cleanup()
+         for name in ("publication", "context", "snapshot"):
+             if name in self.workspace_children:
+                 cleanup.attempt(cleanup_child, name)
+@@ -1132,6 +1224,7 @@ class _Publication:
+         # Any remaining entry may be a foreign replacement or a child whose
+         # creation/admission failed before its ownership could be bound.
+         # Preserve it and the enclosing directory, then refuse the public call.
++        assert fd is not None
+         with os.scandir(fd) as entries:
+             if next(entries, None) is not None:
+                 raise RuntimeError("Owned observed workspace contains a preserved foreign or unadmitted child")
+@@ -1236,17 +1329,15 @@ class _Publication:
+         marker_identity = marker[1][:2]
+         # The retained staging descriptor still reaches our renamed directory;
+         # fallback links retain the exact generated marker inode as well.
++        cleanup = _Cleanup()
+         removed = False
+-        for fd, identity in (
+-            (self.output_fd, self.output_identity),
+-            (self.staging_fd, self.staging_identity),
+-        ):
+-            if fd is None or identity is None:
+-                continue
++
++        def invalidate_descriptor(fd: int, identity: tuple[int, int]) -> None:
++            nonlocal removed
+             try:
+                 directory = os.fstat(fd)
+                 if not stat.S_ISDIR(directory.st_mode) or (directory.st_dev, directory.st_ino) != identity:
+-                    continue
++                    return
+                 current = os.stat("summary.json", dir_fd=fd, follow_symlinks=False)
+                 if stat.S_ISREG(current.st_mode) and (current.st_dev, current.st_ino) == marker_identity:
+                     os.unlink("summary.json", dir_fd=fd)
+@@ -1256,36 +1347,51 @@ class _Publication:
+             except OSError as error:
+                 if error.errno != errno.EBADF:
+                     raise
+-        if removed:
+-            return
+-        # Descriptor cleanup itself can fail late. Reopen only our unchanged
+-        # canonical directory and match its inode before touching the marker.
+-        # A foreign replacement directory or marker is never invalidated.
+-        expected = self.output_identity or self.staging_identity
+-        if expected is None:
+-            return
+-        try:
+-            parent, current = self.parent.lstat(), self.output.lstat()
+-            if (
+-                not stat.S_ISDIR(parent.st_mode)
+-                or (parent.st_dev, parent.st_ino) != self.parent_identity
+-                or self.parent.resolve(strict=True) != self.parent
+-                or not stat.S_ISDIR(current.st_mode)
+-                or (current.st_dev, current.st_ino) != expected
+-            ):
++
++        def invalidate_fallback() -> None:
++            # Descriptor cleanup itself can fail late. Reopen only our
++            # unchanged canonical directory and match its inode before
++            # touching the marker. Foreign replacements remain untouched.
++            expected = self.output_identity or self.staging_identity
++            if expected is None:
+                 return
+-            fd = os.open(self.output, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
+             try:
+-                opened = os.fstat(fd)
+-                if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != expected:
++                parent, current = self.parent.lstat(), self.output.lstat()
++                if (
++                    not stat.S_ISDIR(parent.st_mode)
++                    or (parent.st_dev, parent.st_ino) != self.parent_identity
++                    or self.parent.resolve(strict=True) != self.parent
++                    or not stat.S_ISDIR(current.st_mode)
++                    or (current.st_dev, current.st_ino) != expected
++                ):
+                     return
+-                marker_stat = os.stat("summary.json", dir_fd=fd, follow_symlinks=False)
+-                if stat.S_ISREG(marker_stat.st_mode) and (marker_stat.st_dev, marker_stat.st_ino) == marker_identity:
+-                    os.unlink("summary.json", dir_fd=fd)
+-            finally:
+-                os.close(fd)
+-        except FileNotFoundError:
+-            pass
++                fd = os.open(self.output, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
++                try:
++                    opened = os.fstat(fd)
++                    if not stat.S_ISDIR(opened.st_mode) or (opened.st_dev, opened.st_ino) != expected:
++                        return
++                    marker_stat = os.stat("summary.json", dir_fd=fd, follow_symlinks=False)
++                    if (
++                        stat.S_ISREG(marker_stat.st_mode)
++                        and (marker_stat.st_dev, marker_stat.st_ino) == marker_identity
++                    ):
++                        os.unlink("summary.json", dir_fd=fd)
++                finally:
++                    os.close(fd)
++            except FileNotFoundError:
++                pass
++
++        for fd, identity in (
++            (self.output_fd, self.output_identity),
++            (self.staging_fd, self.staging_identity),
++        ):
++            if fd is not None and identity is not None:
++                cleanup.attempt(invalidate_descriptor, fd, identity)
++        if not removed:
++            cleanup.attempt(invalidate_fallback)
++        # A successful independent route invalidates the marker, but it cannot
++        # turn a real earlier metadata/unlink refusal into a successful return.
++        cleanup.finish()
+ 
+     def close(self) -> None:
+         cleanup = _Cleanup()
+@@ -1432,33 +1538,45 @@ class _Recovery:
+     def invalidate(self) -> None:
+         # This independently retained descriptor reaches the owned directory
+         # after owner.close even if another writer renamed/replaced its path.
+-        if self.directory_fd is not None:
++        cleanup = _Cleanup()
++        removed = False
++
++        def invalidate_descriptor() -> None:
++            nonlocal removed
++            if self.directory_fd is None:
++                return
+             try:
+                 opened = os.fstat(self.directory_fd)
+                 if stat.S_ISDIR(opened.st_mode) and (opened.st_dev, opened.st_ino) == self.directory_identity:
+-                    if self._invalidate_at(self.directory_fd):
+-                        return
++                    removed = self._invalidate_at(self.directory_fd)
+             except FileNotFoundError:
+-                return
++                pass
+             except OSError as error:
+                 if error.errno != errno.EBADF:
+                     raise
+-        # A terminal descriptor-release error may leave no live directory.
+-        # Reopen only the last descriptor-derived path with exact ownership,
+-        # rather than the potentially foreign canonical output destination.
+-        try:
+-            current = self.fallback.lstat()
+-            if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != self.directory_identity:
+-                return
+-            fd = os.open(self.fallback, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
++
++        def invalidate_fallback() -> None:
++            # Reopen only the last descriptor-derived path with exact
++            # ownership. A refused primary probe must not skip this
++            # independently verified route or adopt a foreign destination.
+             try:
+-                opened = os.fstat(fd)
+-                if stat.S_ISDIR(opened.st_mode) and (opened.st_dev, opened.st_ino) == self.directory_identity:
+-                    self._invalidate_at(fd)
+-            finally:
+-                os.close(fd)
+-        except FileNotFoundError:
+-            pass
++                current = self.fallback.lstat()
++                if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != self.directory_identity:
++                    return
++                fd = os.open(self.fallback, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
++                try:
++                    opened = os.fstat(fd)
++                    if stat.S_ISDIR(opened.st_mode) and (opened.st_dev, opened.st_ino) == self.directory_identity:
++                        self._invalidate_at(fd)
++                finally:
++                    os.close(fd)
++            except FileNotFoundError:
++                pass
++
++        cleanup.attempt(invalidate_descriptor)
++        if not removed:
++            cleanup.attempt(invalidate_fallback)
++        cleanup.finish()
+ 
+     def release(self) -> None:
+         # Keep the actual owned directory live through all other fallible
+diff --git a/test/test_b3_full_context_observed.py b/test/test_b3_full_context_observed.py
+index c9d2b04..b140977 100644
+--- a/test/test_b3_full_context_observed.py
++++ b/test/test_b3_full_context_observed.py
+@@ -1,7 +1,7 @@
+-"""Focused public publisher tests, drafted for test/test_b3_full_context_observed.py.
++"""Focused tests for the actual canonical full-context observed publisher.
+ 
+-This file has not been imported or run. The future canonical publisher must
+-exist before these tests can construct its actual 70-file request closure.
++The canonical publisher must exist to construct its actual 70-file closure.
++Exact execution and acceptance evidence is recorded in separate receipts.
+ All numerical fixtures contain stored synthetic native evidence; no model
+ forwards or positive 500-pair/five-embryo eligibility claim is requested.
+ """
+@@ -1705,6 +1705,425 @@ def test_genuine_context_publication_is_bound_before_inner_cleanup_can_fail(
+     _assert_no_owned_modules(before)
+ 
+ 
++@pytest.mark.parametrize(
++    "failure",
++    [
++        "foreign_file_fd",
++        "foreign_directory_fd",
++        "descriptor_probe",
++        "canonical_lstat",
++        "canonical_resolve",
++        "descriptor_address",
++    ],
++)
++def test_workspace_root_refusal_drains_each_independently_bound_private_child(
++    stored_native, tmp_path, monkeypatch, failure
++):
++    public = _module()
++    request = _request(stored_native.path, tmp_path / "request")
++    output = tmp_path / "output"
++    seal = public._Publication.seal_published
++    ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
++    ordinary_lstat, ordinary_resolve, ordinary_readlink = Path.lstat, Path.resolve, os.readlink
++    before = dict(sys.modules)
++    owned, children, roots, foreign_descriptors, foreign_files, injected = [], [], [], [], [], []
++    foreign = tmp_path / "foreign-workspace-root"
++    foreign_bytes = b"foreign root descriptor and sentinel must remain owned by the caller\n"
++    if failure == "foreign_directory_fd":
++        foreign.mkdir()
++        sentinel = foreign / "sentinel.bin"
++        sentinel.write_bytes(foreign_bytes)
++    else:
++        sentinel = foreign
++        sentinel.write_bytes(foreign_bytes)
++
++    def record_actual_publication_and_arm_root_failure(owner):
++        seal(owner)
++        if roots:
++            return
++        assert (output / "summary.json").is_file()
++        assert owner.workspace is not None and owner.workspace_fd is not None
++        roots.append((owner.workspace, owner.workspace_fd))
++        for name in (
++            "workspace_publication_fd",
++            "workspace_context_fd",
++            "workspace_snapshot_fd",
++            "workspace_fd",
++            "parent_fd",
++            "claim_fd",
++            "output_fd",
++            "staging_fd",
++            "marker_fd",
++        ):
++            fd = getattr(owner, name)
++            assert fd is not None
++            opened = ordinary_fstat(fd)
++            owned.append((name, fd, (opened.st_dev, opened.st_ino)))
++        for name in ("context", "snapshot"):
++            path = owner.workspace / name
++            copied = list(path.iterdir())
++            assert copied and all(leaf.is_file() for leaf in copied)
++            if name == "snapshot":
++                assert len(copied) == 5
++            else:
++                assert (path / "summary.json").is_file()
++            children.append((path, copied))
++        if failure in {"foreign_file_fd", "foreign_directory_fd"}:
++            fd = owner.workspace_fd
++            ordinary_close(fd)
++            flags = os.O_RDONLY | os.O_NOFOLLOW | (os.O_DIRECTORY if failure == "foreign_directory_fd" else 0)
++            replacement = ordinary_open(foreign, flags)
++            if replacement != fd:
++                ordinary_dup2(replacement, fd)
++                ordinary_close(replacement)
++            opened = ordinary_fstat(fd)
++            foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
++            injected.append(failure)
++            if failure == "foreign_file_fd":
++                foreign_files.append(fd)
++        if not foreign_files:
++            fd = ordinary_open(sentinel, os.O_RDONLY | os.O_NOFOLLOW)
++            opened = ordinary_fstat(fd)
++            foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
++            foreign_files.append(fd)
++
++    def root_metadata_refusal(kind):
++        if roots and failure == kind and not injected:
++            injected.append(kind)
++            raise OSError(errno.EIO, "injected root metadata refusal")
++
++    def fail_root_fstat(fd):
++        if roots and fd == roots[0][1]:
++            root_metadata_refusal("descriptor_probe")
++        return ordinary_fstat(fd)
++
++    def fail_canonical_root_lstat(path, *args, **kwargs):
++        if roots and path == roots[0][0]:
++            root_metadata_refusal("canonical_lstat")
++        return ordinary_lstat(path, *args, **kwargs)
++
++    def fail_canonical_root_resolve(path, *args, **kwargs):
++        if roots and path == roots[0][0]:
++            root_metadata_refusal("canonical_resolve")
++        return ordinary_resolve(path, *args, **kwargs)
++
++    def fail_root_descriptor_address(path, *args, **kwargs):
++        if roots and path == f"/proc/self/fd/{roots[0][1]}":
++            root_metadata_refusal("descriptor_address")
++        return ordinary_readlink(path, *args, **kwargs)
++
++    monkeypatch.setattr(public._Publication, "seal_published", record_actual_publication_and_arm_root_failure)
++    monkeypatch.setattr(os, "fstat", fail_root_fstat)
++    monkeypatch.setattr(Path, "lstat", fail_canonical_root_lstat)
++    monkeypatch.setattr(Path, "resolve", fail_canonical_root_resolve)
++    monkeypatch.setattr(os, "readlink", fail_root_descriptor_address)
++    try:
++        expected = RuntimeError if failure in {"foreign_file_fd", "foreign_directory_fd"} else OSError
++        with pytest.raises(expected):
++            public.run(request, output)
++        assert injected == [failure] and len(owned) == 9 and len(children) == 2
++        for path, copied in children:
++            # Their original live directory handles remain owned even when
++            # the root descriptor or canonical root inspection is refused.
++            assert not path.exists()
++            assert all(not leaf.exists() for leaf in copied)
++        assert sentinel.read_bytes() == foreign_bytes
++        for fd in foreign_files:
++            assert os.read(fd, len(foreign_bytes)) == foreign_bytes
++        for fd, identity in foreign_descriptors:
++            opened = ordinary_fstat(fd)
++            assert (opened.st_dev, opened.st_ino) == identity
++        if failure == "foreign_directory_fd":
++            assert list(foreign.iterdir()) == [sentinel]
++        for name, fd, _identity in owned:
++            if name == "workspace_fd" and failure in {"foreign_file_fd", "foreign_directory_fd"}:
++                continue
++            with pytest.raises(OSError) as caught:
++                ordinary_fstat(fd)
++            assert caught.value.errno == errno.EBADF
++        assert not (output / "summary.json").exists()
++        assert not output.with_name(output.name + ".claim").exists()
++        _assert_no_owned_modules(before)
++    finally:
++        for name, fd, identity in owned:
++            if name == "workspace_fd" and failure in {"foreign_file_fd", "foreign_directory_fd"}:
++                continue
++            try:
++                opened = ordinary_fstat(fd)
++            except OSError as error:
++                assert error.errno == errno.EBADF
++            else:
++                if (opened.st_dev, opened.st_ino) == identity:
++                    ordinary_close(fd)
++        for fd, identity in foreign_descriptors:
++            opened = ordinary_fstat(fd)
++            assert (opened.st_dev, opened.st_ino) == identity
++            ordinary_close(fd)
++
++
++def test_refused_output_marker_lookup_still_invalidates_through_owned_staging_descriptor(
++    stored_native, tmp_path, monkeypatch
++):
++    public = _module()
++    request = _request(stored_native.path, tmp_path / "request")
++    output, moved = tmp_path / "output", tmp_path / "moved-owned-output"
++    seal, invalidate = public._Publication.seal_published, public._Publication.invalidate
++    ordinary_fstat, ordinary_close = os.fstat, os.close
++    before = dict(sys.modules)
++    owned, active, injected, foreign_descriptors, relocated = [], [], [], [], []
++    foreign_bytes = b"foreign complete marker must survive owned invalidation refusal\n"
++
++    def relocate_actual_owned_output_after_its_complete_seal(owner):
++        seal(owner)
++        if relocated:
++            return
++        assert (output / "summary.json").is_file()
++        for name in (
++            "workspace_publication_fd",
++            "workspace_context_fd",
++            "workspace_snapshot_fd",
++            "workspace_fd",
++            "parent_fd",
++            "claim_fd",
++            "output_fd",
++            "staging_fd",
++            "marker_fd",
++        ):
++            fd = getattr(owner, name)
++            assert fd is not None
++            opened = ordinary_fstat(fd)
++            owned.append((name, fd, (opened.st_dev, opened.st_ino)))
++        output.rename(moved)
++        output.mkdir()
++        marker = output / "summary.json"
++        marker.write_bytes(foreign_bytes)
++        fd = os.open(marker, os.O_RDONLY | os.O_NOFOLLOW)
++        opened = ordinary_fstat(fd)
++        foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
++        relocated.append(True)
++
++    def during_actual_invalidation(owner):
++        active.append(owner)
++        try:
++            return invalidate(owner)
++        finally:
++            active.pop()
++
++    def fail_first_actual_output_route_probe(fd):
++        if active and fd == active[-1].output_fd and not injected:
++            assert (moved / "summary.json").is_file()
++            injected.append(True)
++            raise OSError(errno.EIO, "owned output marker route metadata refusal")
++        return ordinary_fstat(fd)
++
++    monkeypatch.setattr(public._Publication, "seal_published", relocate_actual_owned_output_after_its_complete_seal)
++    monkeypatch.setattr(public._Publication, "invalidate", during_actual_invalidation)
++    monkeypatch.setattr(os, "fstat", fail_first_actual_output_route_probe)
++    try:
++        with pytest.raises(OSError, match="owned output marker route metadata refusal"):
++            public.run(request, output)
++        assert relocated == injected == [True] and len(owned) == 9
++        assert not (moved / "summary.json").exists()
++        assert (output / "summary.json").read_bytes() == foreign_bytes
++        assert not output.with_name(output.name + ".claim").exists()
++        assert not list(output.parent.glob(".b3-full-context-observed-*"))
++        for _name, fd, _identity in owned:
++            with pytest.raises(OSError) as caught:
++                ordinary_fstat(fd)
++            assert caught.value.errno == errno.EBADF
++        for fd, identity in foreign_descriptors:
++            opened = ordinary_fstat(fd)
++            assert (opened.st_dev, opened.st_ino) == identity
++            assert os.read(fd, len(foreign_bytes)) == foreign_bytes
++        _assert_no_owned_modules(before)
++    finally:
++        for _name, fd, identity in owned:
++            try:
++                opened = ordinary_fstat(fd)
++            except OSError as error:
++                assert error.errno == errno.EBADF
++            else:
++                if (opened.st_dev, opened.st_ino) == identity:
++                    ordinary_close(fd)
++        for fd, identity in foreign_descriptors:
++            opened = ordinary_fstat(fd)
++            assert (opened.st_dev, opened.st_ino) == identity
++            ordinary_close(fd)
++
++
++def test_refused_recovery_marker_probe_still_invalidates_through_verified_owned_fallback(
++    stored_native, tmp_path, monkeypatch
++):
++    public = _module()
++    request = _request(stored_native.path, tmp_path / "request")
++    output = tmp_path / "output"
++    construct, close, invalidate = public._Recovery.__init__, public._Publication.close, public._Recovery.invalidate
++    ordinary_fstat, ordinary_close = os.fstat, os.close
++    before = dict(sys.modules)
++    owners, recovered, active, primary, injected = [], [], [], [], []
++
++    def record_actual_independent_recovery(recovery, owner):
++        construct(recovery, owner)
++        assert (output / "summary.json").is_file()
++        for name in (
++            "workspace_publication_fd",
++            "workspace_context_fd",
++            "workspace_snapshot_fd",
++            "workspace_fd",
++            "parent_fd",
++            "claim_fd",
++            "output_fd",
++            "staging_fd",
++            "marker_fd",
++        ):
++            fd = getattr(owner, name)
++            assert fd is not None
++            opened = ordinary_fstat(fd)
++            owners.append((fd, (opened.st_dev, opened.st_ino)))
++        for name in ("parent_fd", "directory_fd", "marker_fd"):
++            fd = getattr(recovery, name)
++            assert fd is not None
++            opened = ordinary_fstat(fd)
++            recovered.append((fd, (opened.st_dev, opened.st_ino)))
++
++    def fail_after_real_owner_release(owner):
++        close(owner)
++        if not primary:
++            assert len(recovered) == 3 and (output / "summary.json").is_file()
++            primary.append(True)
++            raise MemoryError("actual owner descriptor cleanup refusal with live independent recovery")
++
++    def during_actual_recovery_invalidation(recovery):
++        active.append(recovery)
++        try:
++            return invalidate(recovery)
++        finally:
++            active.pop()
++
++    def fail_first_actual_recovery_directory_probe(fd):
++        if active and fd == active[-1].directory_fd and not injected:
++            assert primary == [True] and (output / "summary.json").is_file()
++            injected.append(True)
++            raise OSError(errno.EIO, "owned recovery marker route metadata refusal")
++        return ordinary_fstat(fd)
++
++    monkeypatch.setattr(public._Recovery, "__init__", record_actual_independent_recovery)
++    monkeypatch.setattr(public._Publication, "close", fail_after_real_owner_release)
++    monkeypatch.setattr(public._Recovery, "invalidate", during_actual_recovery_invalidation)
++    monkeypatch.setattr(os, "fstat", fail_first_actual_recovery_directory_probe)
++    try:
++        with pytest.raises(OSError, match="owned recovery marker route metadata refusal"):
++            public.run(request, output)
++        assert primary == injected == [True] and len(owners) == 9 and len(recovered) == 3
++        _assert_no_complete_output(output)
++        _assert_no_owned_modules(before)
++        for fd, _identity in [*owners, *recovered]:
++            with pytest.raises(OSError) as caught:
++                ordinary_fstat(fd)
++            assert caught.value.errno == errno.EBADF
++    finally:
++        for fd, identity in [*owners, *recovered]:
++            try:
++                opened = ordinary_fstat(fd)
++            except OSError as error:
++                assert error.errno == errno.EBADF
++            else:
++                if (opened.st_dev, opened.st_ino) == identity:
++                    ordinary_close(fd)
++
++
++def test_owned_snapshot_unlink_refusal_drains_other_known_leaves_and_preserves_failed_original(
++    stored_native, tmp_path, monkeypatch
++):
++    public = _module()
++    request = _request(stored_native.path, tmp_path / "request")
++    output = tmp_path / "output"
++    seal = public._Publication.seal_published
++    ordinary_unlink, ordinary_fstat, ordinary_close = os.unlink, os.fstat, os.close
++    before = dict(sys.modules)
++    owned, snapshots, failures, foreign_descriptors = [], [], [], []
++    foreign = tmp_path / "foreign-unlink-sentinel.bin"
++    foreign_bytes = b"unrelated foreign descriptor survives private cleanup refusal\n"
++    foreign.write_bytes(foreign_bytes)
++
++    def record_actual_snapshot_before_private_cleanup(owner):
++        seal(owner)
++        if snapshots:
++            return
++        assert (output / "summary.json").is_file()
++        assert owner.workspace is not None and owner.workspace_snapshot_fd is not None
++        snapshot = owner.workspace / "snapshot"
++        copied = {path.name: path.read_bytes() for path in snapshot.iterdir()}
++        assert len(copied) == 5
++        snapshots.append((owner.workspace, snapshot, owner.workspace_snapshot_fd, copied))
++        for name in (
++            "workspace_publication_fd",
++            "workspace_context_fd",
++            "workspace_snapshot_fd",
++            "workspace_fd",
++            "parent_fd",
++            "claim_fd",
++            "output_fd",
++            "staging_fd",
++            "marker_fd",
++        ):
++            fd = getattr(owner, name)
++            assert fd is not None
++            opened = ordinary_fstat(fd)
++            owned.append((name, fd, (opened.st_dev, opened.st_ino)))
++        fd = os.open(foreign, os.O_RDONLY | os.O_NOFOLLOW)
++        opened = ordinary_fstat(fd)
++        foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
++
++    def fail_one_actual_snapshot_leaf(path, *args, **kwargs):
++        if snapshots and kwargs.get("dir_fd") == snapshots[0][2] and not failures:
++            name = Path(path).name
++            if name in snapshots[0][3]:
++                assert (snapshots[0][1] / name).read_bytes() == snapshots[0][3][name]
++                failures.append(name)
++                raise OSError(errno.EIO, "owned snapshot leaf unlink refusal")
++        return ordinary_unlink(path, *args, **kwargs)
++
++    monkeypatch.setattr(public._Publication, "seal_published", record_actual_snapshot_before_private_cleanup)
++    monkeypatch.setattr(os, "unlink", fail_one_actual_snapshot_leaf)
++    try:
++        with pytest.raises(OSError, match="owned snapshot leaf unlink refusal"):
++            public.run(request, output)
++        assert len(snapshots) == len(failures) == 1 and len(owned) == 9
++        workspace, snapshot, _fd, copied = snapshots[0]
++        failed = snapshot / failures[0]
++        assert workspace.is_dir() and snapshot.is_dir()
++        assert failed.read_bytes() == copied[failed.name]
++        assert list(snapshot.iterdir()) == [failed]
++        assert all(not (snapshot / name).exists() for name in copied if name != failed.name)
++        assert not (workspace / "context").exists()
++        assert not (output / "summary.json").exists()
++        assert not output.with_name(output.name + ".claim").exists()
++        assert foreign.read_bytes() == foreign_bytes
++        for _name, fd, _identity in owned:
++            with pytest.raises(OSError) as caught:
++                ordinary_fstat(fd)
++            assert caught.value.errno == errno.EBADF
++        for fd, identity in foreign_descriptors:
++            opened = ordinary_fstat(fd)
++            assert (opened.st_dev, opened.st_ino) == identity
++            assert os.read(fd, len(foreign_bytes)) == foreign_bytes
++        _assert_no_owned_modules(before)
++    finally:
++        for _name, fd, identity in owned:
++            try:
++                opened = ordinary_fstat(fd)
++            except OSError as error:
++                assert error.errno == errno.EBADF
++            else:
++                if (opened.st_dev, opened.st_ino) == identity:
++                    ordinary_close(fd)
++        for fd, identity in foreign_descriptors:
++            opened = ordinary_fstat(fd)
++            assert (opened.st_dev, opened.st_ino) == identity
++            ordinary_close(fd)
++
++
+ @pytest.mark.parametrize("child_name", ["publication", "snapshot"])
+ @pytest.mark.parametrize("probe", ["proc", "fstat"])
+ def test_recoverable_original_child_birth_survives_later_admission_probe_failure(
+diff --git a/test/test_b3_full_context_synthetic_fixture.py b/test/test_b3_full_context_synthetic_fixture.py
+new file mode 100644
+index 0000000..b80c641
+--- /dev/null
++++ b/test/test_b3_full_context_synthetic_fixture.py
+@@ -0,0 +1,319 @@
++"""Exercise genuine preparation and its public source-authentication seam."""
++
++import csv
++import errno
++from hashlib import sha256
++import json
++import math
++import os
++from pathlib import Path
++import sys
++
++import pytest
++
++
++ROOT = next(
++    parent
++    for parent in Path(__file__).resolve().parents
++    if (parent / "pyproject.toml").is_file() and (parent / "src/transcriptformer").is_dir()
++)
++PUBLIC_SOURCE = ROOT / "scripts/prepare_b3_full_context_synthetic_fixture.py"
++SPECIES = ("homo_sapiens", "mus_musculus")
++
++
++def _module():
++    assert PUBLIC_SOURCE.is_file(), "The genuine public preparation entrypoint is not implemented"
++    from scripts import prepare_b3_full_context_synthetic_fixture
++
++    return prepare_b3_full_context_synthetic_fixture
++
++
++def _canonical(value):
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
++
++
++def _ref(path):
++    path = Path(path).resolve(strict=True)
++    body = path.read_bytes()
++    return {"path": str(path), "sha256": sha256(body).hexdigest(), "bytes": len(body)}
++
++
++def _read(ref):
++    assert set(ref) == {"path", "sha256", "bytes"}
++    assert _ref(ref["path"]) == ref
++    return json.loads(Path(ref["path"]).read_bytes())
++
++
++def _request(tmp_path):
++    public = _module()
++    sources = {str(path.resolve()): _ref(path)["sha256"] for path in public.SOFTWARE}
++    assert len(sources) == 70
++    body = {
++        "schema": "b3_full_context_synthetic_preparation_request_v1",
++        "profile": "synthetic_stored_arithmetic_v1",
++        "fixture_profile": "human_mouse_5000_measured_502_joined_5_units_60_cells_v1",
++        "consumer_file_sha256": sources,
++        "inference_defaults": _ref(ROOT / "src/transcriptformer/cli/conf/inference_config.yaml"),
++    }
++    request_path = tmp_path / "request.json"
++    request_path.write_bytes(_canonical(body) + b"\n")
++    return public, request_path, body
++
++
++def test_public_run_refuses_changed_helper_before_creating_attempt_assets(tmp_path):
++    public, request_path, body = _request(tmp_path)
++    body["consumer_file_sha256"][str(ROOT / "scripts/preflight_b3_measured_zero_full.py")] = "0" * 64
++    request_path.write_bytes(_canonical(body) + b"\n")
++    output = tmp_path / "attempt"
++    before = dict(sys.modules)
++    path_before = list(sys.path)
++    with pytest.raises(ValueError, match="source|Source|consumer|closure"):
++        public.run(request_path, output)
++    assert not output.exists()
++    assert list(sys.path) == path_before
++    assert not [
++        name
++        for name in sys.modules
++        if name.startswith(("_b3_authenticated_", "_b3_synthetic_preparation_")) and name not in before
++    ]
++    for name, module in before.items():
++        if name == "scripts" or name.startswith(("scripts.", "transcriptformer")):
++            assert sys.modules.get(name) is module
++
++
++def test_public_run_prepares_complete_original_synthetic_axes_without_outcomes(tmp_path):
++    public, request_path, _ = _request(tmp_path)
++    output = tmp_path / "attempt"
++    before = dict(sys.modules)
++    path_before = list(sys.path)
++    result = public.run(request_path, output, max_seconds=900)
++    assert json.loads((output / "complete.json").read_bytes()) == result
++    assert result["schema"] == "b3_full_context_synthetic_preparation_result_v1"
++    assert result["status"] == "complete_synthetic_prospective_inputs_only"
++    assert result["profile"] == "synthetic_stored_arithmetic_v1"
++    assert result["checkpoint_tensors_loaded"] is False
++    assert result["embedding_values_loaded"] is False
++    assert result["model_forwards_performed"] is False
++    assert result["native_stored_outcomes_created"] is False
++    assert result["registration_created"] is False
++    assert result["comparison_performed"] is False
++    assert result["p_values"] == result["fdr"] == "unavailable"
++    assert result["resource_observations"]["peak_live_numeric_bytes"] is None
++    assert result["resource_observations"]["numeric_census_status"] == "unavailable_no_complete_allocation_census"
++    assert 0 < result["resource_observations"]["numeric_allocation_admission_upper_bytes"] <= 200 * 1024**2
++    manifest = _read(result["preparation"]["manifest"])
++    report = _read(result["preparation"]["report"])
++    splits = _read(result["preparation"]["split_assignments"])
++    assert {item["species"] for item in manifest["datasets"]} == set(SPECIES)
++    assert all(item["train_only"] is True for item in manifest["datasets"])
++    assert len(splits["assignments"]) == 10
++    assert all(row["split"] == "train" and row["reason"] == "train_only" for row in splits["assignments"])
++    assert len(report["datasets"]) == 2
++    assert all(row["n_obs"] == 60 and row["n_genes"] == 5000 and row["split"] == "train" for row in report["datasets"])
++    checkpoint = result["checkpoint"]
++    vocabulary = _read(checkpoint["gene_vocabulary"])
++    assert len([key for key in vocabulary if key.startswith("ENSG")]) == 502
++    assert len([key for key in vocabulary if key.startswith("ENSMUSG")]) == 502
++    assert checkpoint["training_provenance"] is None
++    assert checkpoint["tokenizer_admission"] == "unproven_support_scan_assets_only"
++    table = result["ortholog_table"]
++    assert _ref(table["path"]) == table
++    assert len(Path(table["path"]).read_text().splitlines()) == 5000
++    paired = _read(result["paired_support_report"])
++    assert paired["join_audit"]["raw_pairs"] == 5000
++    assert paired["join_audit"]["usable_pairs"] == paired["n_vocabulary_joined_pairs"] == 502
++    assert paired["join_audit"]["excluded"] == {"unresolved_identifier": 4498}
++    assert paired["statistic_eligibility"]["genome_wide_pairs"] == 5000
++    assert paired["observed_comparison"] is None
++    audit = _read(result["identity_audit"])
++    assert set(audit) == {"schema", "registration_profile", "fixture_id", "sources"}
++    assert audit["schema"] == "b3_full_context_synthetic_identity_audit_v1"
++    assert len(audit["sources"]) == 2
++    for row in audit["sources"]:
++        assert row["n_obs"] == 60
++        assert len(row["unit_ids"]) == 5
++        assert list(row["cells_per_unit"].values()) == [12] * 5
++        assert _ref(row["source"]["path"]) == row["source"]
++        assert _ref(row["assignment"]["path"]) == row["assignment"]
++        with Path(row["assignment"]["path"]).open(newline="") as stream:
++            reader = csv.DictReader(stream)
++            assert reader.fieldnames == ["row_index", "sample", "simulated_unit_id"]
++            assignments = list(reader)
++        assert [entry["row_index"] for entry in assignments] == [str(i) for i in range(60)]
++        sample_digest = sha256()
++        for assignment in assignments:
++            sample_digest.update((json.dumps(assignment["sample"], ensure_ascii=True) + "\n").encode())
++        assert sample_digest.hexdigest() == row["sample_sha256"]
++
++    # Public-linked actual HDF5 artifacts; this is the scalar normalization
++    # oracle for a row with 4,999 measured counts and only 501 scoring counts.
++    import h5py
++
++    with h5py.File(result["preparation"]["retention_vocabulary"]["path"], "r") as handle:
++        assert len(handle["keys"]) == 10000
++    for species in SPECIES:
++        artifacts = result["species"][species]
++        config = _read(artifacts["config"])
++        full = _read(artifacts["full_support_report"])
++        plan = _read(artifacts["plan"])
++        metadata = _read(artifacts["embryo_metrics"]["metadata"])
++        assert config["checkpoint"] == checkpoint["path"]
++        assert len(config["gene_ids"]) == 502
++        assert (full["n_cells"], full["n_embryos"], full["n_frozen_genes"]) == (60, 5, 502)
++        assert full["configured_producer_row_cap_applied"] is False
++        assert full["checkpoint_tensors_loaded"] is full["model_forwards_performed"] is False
++        assert full["native_sequence_length"] == 502
++        assert len(full["metrics"]) == 502
++        assert math.isclose(
++            full["metrics"][0]["mean_log1p_normalized_expression"], math.log1p(10000 / 4999), rel_tol=0, abs_tol=1e-12
++        )
++        assert full["metrics"][-1]["mean_log1p_normalized_expression"] == 0
++        assert full["metrics"][-1]["dropout"] == 1
++        assert plan["n_cells"] == 60 and plan["n_frozen_genes"] == 502
++        assert plan["ranges"][0]["start"] == 0 and plan["ranges"][-1]["stop"] == 60
++        assert sum(row["stop"] - row["start"] for row in plan["ranges"]) == 60
++        assert metadata["n_embryos"] == 5 and metadata["embryo_cell_counts"] == [12] * 5
++        with h5py.File(artifacts["embryo_metrics"]["metrics_h5"]["path"], "r") as handle:
++            assert handle["expression_sum"].shape == (5, 502)
++            assert math.isclose(
++                float(handle["expression_sum"][0, 0]), 12 * math.log1p(10000 / 4999), rel_tol=0, abs_tol=1e-12
++            )
++            assert handle["detected"][0, -1] == 0
++        entry = next(row for row in report["datasets"] if row["species"] == species)
++        assert _ref(entry["path"]) == result["preparation"]["prepared"][species][0]
++        with h5py.File(entry["path"], "r") as handle:
++            assert tuple(handle["X"].attrs["shape"]) == (60, 5000)
++            assert handle["X"].attrs["encoding-type"] == "csr_matrix"
++        sidecar = result["preparation"]["embryo_identity_sidecars"][species]
++        assert _ref(sidecar["path"]) == sidecar
++        with Path(sidecar["path"]).open(newline="") as stream:
++            reader = csv.DictReader(stream)
++            assert set(reader.fieldnames) == {"source_row_index", "sample", "stage", "embryo_id", "embryo_sex"}
++            assert len(list(reader)) == 60
++    # PyTorch's cold third-party JIT import appends its actual owned template
++    # directory. Account for that exact source-defined addition, while still
++    # refusing every repository helper insertion/removal or order change.
++    expected_path = list(path_before)
++    jit_name = "torch.distributed.nn.jit.instantiator"
++    if jit_name not in before and (jit := sys.modules.get(jit_name)) is not None:
++        expected_path.append(jit.INSTANTIATED_TEMPLATE_DIR_PATH)
++    assert list(sys.path) == expected_path
++    assert not [
++        name
++        for name in sys.modules
++        if name.startswith(("_b3_authenticated_", "_b3_synthetic_preparation_")) and name not in before
++    ]
++    for name, module in before.items():
++        if name == "scripts" or name.startswith(("scripts.", "transcriptformer")):
++            assert sys.modules.get(name) is module
++
++
++@pytest.mark.parametrize(
++    "fault",
++    ["source_bytes", "source_fd_reuse", "primary_close", "foreign_output", "foreign_marker", "last_close"],
++)
++def test_public_late_cleanup_preserves_foreign_bindings_and_withdraws_owned_completion(tmp_path, monkeypatch, fault):
++    public, request_path, _ = _request(tmp_path)
++    output = tmp_path / "attempt"
++    moved = tmp_path / "moved-owned-attempt"
++    foreign_path = tmp_path / "foreign.txt"
++    foreign_bytes = b"caller-owned foreign bytes\n"
++    foreign_path.write_bytes(foreign_bytes)
++    request_bytes = request_path.read_bytes()
++    request_stat = request_path.stat()
++    request_identity = (request_stat.st_dev, request_stat.st_ino)
++    original_open, original_dup, original_close = os.open, os.dup, os.close
++    original_dup2, original_fstat = os.dup2, os.fstat
++    foreign_fd = original_open(foreign_path, os.O_RDONLY)
++    observed = set()
++    primary = recovery = reused = None
++    injected = False
++
++    def tracked_open(path, flags, *args, **kwargs):
++        nonlocal primary
++        fd = original_open(path, flags, *args, **kwargs)
++        observed.add(fd)
++        if Path(path) == output and flags & os.O_DIRECTORY and primary is None:
++            primary = fd
++        return fd
++
++    def tracked_dup(fd):
++        nonlocal recovery
++        duplicate = original_dup(fd)
++        observed.add(duplicate)
++        if fd == primary:
++            recovery = duplicate
++        return duplicate
++
++    def controlled_close(fd):
++        nonlocal injected, reused
++        if injected or not (output / "complete.json").is_file():
++            return original_close(fd)
++        current = original_fstat(fd)
++        is_request = (current.st_dev, current.st_ino) == request_identity
++        if fault in {"source_bytes", "source_fd_reuse"} and is_request:
++            injected = True
++            original_close(fd)
++            if fault == "source_bytes":
++                with request_path.open("r+b") as stream:
++                    stream.write(b"[")
++                return None
++            original_dup2(foreign_fd, fd)
++            reused = fd
++            raise OSError(errno.EIO, "injected source close refusal after foreign descriptor reuse")
++        if fault in {"primary_close", "foreign_output", "foreign_marker"} and fd == primary:
++            injected = True
++            if fault == "primary_close":
++                raise OSError(errno.EIO, "injected primary directory close refusal")
++            original_close(fd)
++            if fault == "foreign_output":
++                output.rename(moved)
++                output.mkdir()
++            else:
++                (output / "complete.json").unlink()
++            (output / "complete.json").write_bytes(foreign_bytes)
++            return None
++        if fault == "last_close" and fd == recovery:
++            injected = True
++            original_close(fd)
++            raise OSError(errno.EIO, "injected final directory close refusal after actual release")
++        return original_close(fd)
++
++    monkeypatch.setattr(os, "open", tracked_open)
++    monkeypatch.setattr(os, "dup", tracked_dup)
++    monkeypatch.setattr(os, "close", controlled_close)
++    before_modules = dict(sys.modules)
++    try:
++        with pytest.raises((OSError, RuntimeError, ValueError)):
++            public.run(request_path, output, max_seconds=900)
++        assert injected, "The refusal must occur after the genuine complete publication"
++        if fault == "foreign_output":
++            assert (output / "complete.json").read_bytes() == foreign_bytes
++            assert not (moved / "complete.json").exists()
++        elif fault == "foreign_marker":
++            assert (output / "complete.json").read_bytes() == foreign_bytes
++        else:
++            assert not (output / "complete.json").exists()
++        assert foreign_path.read_bytes() == foreign_bytes
++        assert os.pread(foreign_fd, len(foreign_bytes) + 1, 0) == foreign_bytes
++        if reused is not None:
++            assert os.pread(reused, len(foreign_bytes) + 1, 0) == foreign_bytes
++            assert original_fstat(reused).st_ino == original_fstat(foreign_fd).st_ino
++        for fd in observed - {reused}:
++            with pytest.raises(OSError) as failure:
++                original_fstat(fd)
++            assert failure.value.errno == errno.EBADF
++        assert not [
++            name
++            for name in sys.modules
++            if name.startswith(("_b3_authenticated_", "_b3_synthetic_preparation_")) and name not in before_modules
++        ]
++        for name, module in before_modules.items():
++            if name == "scripts" or name.startswith(("scripts.", "transcriptformer")):
++                assert sys.modules.get(name) is module
++        if fault != "source_bytes":
++            assert request_path.read_bytes() == request_bytes
++    finally:
++        if reused is not None:
++            original_close(reused)
++        original_close(foreign_fd)

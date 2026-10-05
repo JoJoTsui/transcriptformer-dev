@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="0.796" timestamp="2026-10-05T10:15:45.273692+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.full_context_synthetic_preparation_v01.test_b3_full_context_synthetic_fixture" name="test_public_run_refuses_changed_helper_before_creating_attempt_assets" time="0.001"><failure message="AssertionError: The genuine public preparation entrypoint is not implemented&#10;assert False&#10; +  where False = is_file()&#10; +    where is_file = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/scripts/prepare_b3_full_context_synthetic_fixture.py').is_file">tmp_path = PosixPath('/tmp/b3-synthetic_preparation_v01_public_absence_red_attempt01/test_public_run_refuses_change0')
+
+    def test_public_run_refuses_changed_helper_before_creating_attempt_assets(tmp_path):
+&gt;       public, request_path, body = _request(tmp_path)
+                                     ^^^^^^^^^^^^^^^^^^
+
+runs/b3_feasibility/20261005/full_context_synthetic_preparation_v01/test_b3_full_context_synthetic_fixture.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+runs/b3_feasibility/20261005/full_context_synthetic_preparation_v01/test_b3_full_context_synthetic_fixture.py:50: in _request
+    public = _module()
+             ^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _module():
+&gt;       assert PUBLIC_SOURCE.is_file(), "The genuine public preparation entrypoint is not implemented"
+E       AssertionError: The genuine public preparation entrypoint is not implemented
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/scripts/prepare_b3_full_context_synthetic_fixture.py').is_file
+
+runs/b3_feasibility/20261005/full_context_synthetic_preparation_v01/test_b3_full_context_synthetic_fixture.py:27: AssertionError</failure></testcase><testcase classname="runs.b3_feasibility.20261005.full_context_synthetic_preparation_v01.test_b3_full_context_synthetic_fixture" name="test_public_run_prepares_complete_original_synthetic_axes_without_outcomes" time="0.001"><failure message="AssertionError: The genuine public preparation entrypoint is not implemented&#10;assert False&#10; +  where False = is_file()&#10; +    where is_file = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/scripts/prepare_b3_full_context_synthetic_fixture.py').is_file">tmp_path = PosixPath('/tmp/b3-synthetic_preparation_v01_public_absence_red_attempt01/test_public_run_prepares_compl0')
+
+    def test_public_run_prepares_complete_original_synthetic_axes_without_outcomes(tmp_path):
+&gt;       public, request_path, _ = _request(tmp_path)
+                                  ^^^^^^^^^^^^^^^^^^
+
+runs/b3_feasibility/20261005/full_context_synthetic_preparation_v01/test_b3_full_context_synthetic_fixture.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+runs/b3_feasibility/20261005/full_context_synthetic_preparation_v01/test_b3_full_context_synthetic_fixture.py:50: in _request
+    public = _module()
+             ^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _module():
+&gt;       assert PUBLIC_SOURCE.is_file(), "The genuine public preparation entrypoint is not implemented"
+E       AssertionError: The genuine public preparation entrypoint is not implemented
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/scripts/prepare_b3_full_context_synthetic_fixture.py').is_file
+
+runs/b3_feasibility/20261005/full_context_synthetic_preparation_v01/test_b3_full_context_synthetic_fixture.py:27: AssertionError</failure></testcase></testsuite></testsuites>

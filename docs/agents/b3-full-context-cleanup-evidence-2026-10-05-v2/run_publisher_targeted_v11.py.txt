@@ -1,0 +1,86 @@
+"""Record one source-bound, supervised public publisher test slice."""
+
+import argparse
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--name", required=True)
+    parser.add_argument("--expected-cases", type=int, required=True)
+    parser.add_argument("targets", nargs="+")
+    args = parser.parse_args()
+    base = Path("runs/b3_feasibility/20261005")
+    prefix = base / args.name
+    invocation_path = Path(str(prefix) + "_invocation.json")
+    result_path = Path(str(prefix) + "_result.json")
+    archive = base / (args.name + "_sources")
+    supervisor = base / (args.name + "_supervisor")
+    for path in (invocation_path, result_path, archive, supervisor):
+        if path.exists():
+            raise FileExistsError(path)
+    archive.mkdir()
+    sources = {}
+    for name in (
+        "scripts/publish_b3_full_context_observed.py",
+        "test/test_b3_full_context_observed.py",
+    ):
+        source = Path(name).read_bytes()
+        sources[name] = hashlib.sha256(source).hexdigest()
+        (archive / (Path(name).name + ".txt")).write_bytes(source)
+    env_overrides = {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "TF_RUN_REAL_MODEL_TESTS": "0",
+    }
+    command = [
+        ".venv/bin/python", "scripts/supervise_b3_pilot.py",
+        "--run-dir", str(supervisor), "--max-wall-seconds", "950",
+        "--max-rss-gib", "4", "--min-host-ram-gib", "4", "--min-disk-gib", "20",
+        "--", "/usr/bin/time", "-v", "-o", str(prefix) + "_gnu_time.txt",
+        ".venv/bin/python", "-m", "pytest", *args.targets, "-q",
+        "--basetemp=/tmp/b3-" + args.name,
+        "--junitxml=" + str(prefix) + ".xml",
+    ]
+    head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    invocation = {
+        "command": command,
+        "environment_overrides": env_overrides,
+        "head": head,
+        "source_sha256": sources,
+        "expected_param_cases": args.expected_cases,
+        "complete_test_file_run": False,
+        "full_repository_run": False,
+        "model_forwards_authorized": False,
+        "milestone_accepted": False,
+        "retained_sources": str(archive),
+    }
+    invocation_path.write_text(json.dumps(invocation, indent=2) + "\n")
+    started = time.monotonic()
+    with Path(str(prefix) + "_driver_stdout.txt").open("xb") as stdout:
+        with Path(str(prefix) + "_driver_stderr.txt").open("xb") as stderr:
+            completed = subprocess.run(command, env={**os.environ, **env_overrides}, stdout=stdout, stderr=stderr)
+    after = {name: hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in sources}
+    result = {
+        "supervisor_exit_code": completed.returncode,
+        "driver_elapsed_seconds": time.monotonic() - started,
+        "source_sha256_after": after,
+        "sources_unchanged": after == sources,
+        "head_after": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+    }
+    result_path.write_text(json.dumps(result, indent=2) + "\n")
+    print(json.dumps(result, indent=2), flush=True)
+    return completed.returncode
+
+
+if __name__ == "__main__":
+    sys.exit(main())

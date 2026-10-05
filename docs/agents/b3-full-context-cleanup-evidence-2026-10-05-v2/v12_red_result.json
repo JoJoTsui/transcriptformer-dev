@@ -1,0 +1,10 @@
+{
+  "supervisor_exit_code": 1,
+  "driver_elapsed_seconds": 310.4582492450136,
+  "source_sha256_after": {
+    "scripts/publish_b3_full_context_observed.py": "2cec2e5b1635ec3e57e96878be93f0ca2475eb73ef5ef0402eefa98112c7f832",
+    "test/test_b3_full_context_observed.py": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62"
+  },
+  "sources_unchanged": true,
+  "head_after": "2505f7b0eaea28d0bdf131a26b6bddc440482de9"
+}

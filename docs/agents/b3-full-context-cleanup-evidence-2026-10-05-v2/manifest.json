@@ -1,0 +1,489 @@
+{
+  "schema": "b3_full_context_cleanup_evidence_v2",
+  "base_commit": "2505f7b0eaea28d0bdf131a26b6bddc440482de9",
+  "current_source_sha256": {
+    "scripts/publish_b3_full_context_observed.py": "a6316ae50c3ac94adc1e708dd6521bbc2bdc71d7a03835107f1cae0bf35c184f",
+    "test/test_b3_full_context_observed.py": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62"
+  },
+  "slices": [
+    {
+      "label": "v11_red",
+      "original_attempt": "publisher_v11_root_refusal_red_attempt01",
+      "invocation_head": "2505f7b0eaea28d0bdf131a26b6bddc440482de9",
+      "source_sha256": {
+        "scripts/publish_b3_full_context_observed.py": "b16ac039a4ece746c136c5451dca1d89a8291d6861c22908e4b6bcbe4371e8a5",
+        "test/test_b3_full_context_observed.py": "edcf0ad2d726dfbe7ba66db256e2820cfdea39281bc9d48a0e5841d28d244ba6"
+      },
+      "junit_suites": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "6",
+          "skipped": "0",
+          "tests": "6",
+          "time": "588.379",
+          "timestamp": "2026-10-05T09:53:01.259881+08:00",
+          "hostname": "Conundrum"
+        }
+      ],
+      "driver_elapsed_seconds": 591.6016552270157,
+      "supervisor_last_sampled_elapsed_seconds": 585.510233597015,
+      "supervisor_status": "stopped",
+      "supervisor_exit_code": 1,
+      "source_and_head_stable": true,
+      "resource_stop": null,
+      "complete_publisher_file_run": false,
+      "complete_repository_run": false
+    },
+    {
+      "label": "v11_green",
+      "original_attempt": "publisher_v11_root_refusal_green_attempt01",
+      "invocation_head": "2505f7b0eaea28d0bdf131a26b6bddc440482de9",
+      "source_sha256": {
+        "scripts/publish_b3_full_context_observed.py": "2cec2e5b1635ec3e57e96878be93f0ca2475eb73ef5ef0402eefa98112c7f832",
+        "test/test_b3_full_context_observed.py": "edcf0ad2d726dfbe7ba66db256e2820cfdea39281bc9d48a0e5841d28d244ba6"
+      },
+      "junit_suites": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "6",
+          "time": "580.083",
+          "timestamp": "2026-10-05T10:04:18.639593+08:00",
+          "hostname": "Conundrum"
+        }
+      ],
+      "driver_elapsed_seconds": 582.7841083240055,
+      "supervisor_last_sampled_elapsed_seconds": 570.6694359520043,
+      "supervisor_status": "completed",
+      "supervisor_exit_code": 0,
+      "source_and_head_stable": true,
+      "resource_stop": null,
+      "complete_publisher_file_run": false,
+      "complete_repository_run": false
+    },
+    {
+      "label": "v12_red",
+      "original_attempt": "publisher_v12_independent_routes_red_attempt01",
+      "invocation_head": "2505f7b0eaea28d0bdf131a26b6bddc440482de9",
+      "source_sha256": {
+        "scripts/publish_b3_full_context_observed.py": "2cec2e5b1635ec3e57e96878be93f0ca2475eb73ef5ef0402eefa98112c7f832",
+        "test/test_b3_full_context_observed.py": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62"
+      },
+      "junit_suites": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "3",
+          "skipped": "0",
+          "tests": "3",
+          "time": "307.066",
+          "timestamp": "2026-10-05T10:16:50.849780+08:00",
+          "hostname": "Conundrum"
+        }
+      ],
+      "driver_elapsed_seconds": 310.4582492450136,
+      "supervisor_last_sampled_elapsed_seconds": 300.34779858699767,
+      "supervisor_status": "stopped",
+      "supervisor_exit_code": 1,
+      "source_and_head_stable": true,
+      "resource_stop": null,
+      "complete_publisher_file_run": false,
+      "complete_repository_run": false
+    },
+    {
+      "label": "v12_oracle_green",
+      "original_attempt": "publisher_v12_independent_routes_and_oracle_green_attempt01",
+      "invocation_head": "2505f7b0eaea28d0bdf131a26b6bddc440482de9",
+      "source_sha256": {
+        "scripts/publish_b3_full_context_observed.py": "a6316ae50c3ac94adc1e708dd6521bbc2bdc71d7a03835107f1cae0bf35c184f",
+        "test/test_b3_full_context_observed.py": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62"
+      },
+      "junit_suites": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "8",
+          "time": "843.034",
+          "timestamp": "2026-10-05T10:26:10.749765+08:00",
+          "hostname": "Conundrum"
+        }
+      ],
+      "driver_elapsed_seconds": 846.204702381976,
+      "supervisor_last_sampled_elapsed_seconds": 841.0885720860097,
+      "supervisor_status": "completed",
+      "supervisor_exit_code": 0,
+      "source_and_head_stable": true,
+      "resource_stop": null,
+      "complete_publisher_file_run": false,
+      "complete_repository_run": false
+    },
+    {
+      "label": "v12_root_green",
+      "original_attempt": "publisher_v12_root_refusal_green_attempt01",
+      "invocation_head": "2505f7b0eaea28d0bdf131a26b6bddc440482de9",
+      "source_sha256": {
+        "scripts/publish_b3_full_context_observed.py": "a6316ae50c3ac94adc1e708dd6521bbc2bdc71d7a03835107f1cae0bf35c184f",
+        "test/test_b3_full_context_observed.py": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62"
+      },
+      "junit_suites": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "6",
+          "time": "587.297",
+          "timestamp": "2026-10-05T10:43:36.685108+08:00",
+          "hostname": "Conundrum"
+        }
+      ],
+      "driver_elapsed_seconds": 590.7884843320062,
+      "supervisor_last_sampled_elapsed_seconds": 585.6826316349907,
+      "supervisor_status": "completed",
+      "supervisor_exit_code": 0,
+      "source_and_head_stable": true,
+      "resource_stop": null,
+      "complete_publisher_file_run": false,
+      "complete_repository_run": false
+    }
+  ],
+  "files": [
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_red_attempt01_invocation.json",
+      "archive_file": "v11_red_invocation.json",
+      "sha256": "e43feff5896a8d9bd94859d550861b7acad3f698e9095bf3167c23f0951279dc",
+      "bytes": 1601
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_red_attempt01_result.json",
+      "archive_file": "v11_red_result.json",
+      "sha256": "13d3d768619c0fac6169a71176213abf9f1f8e1055182299ff9f78d316b80806",
+      "bytes": 431
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_red_attempt01_gnu_time.txt",
+      "archive_file": "v11_red_gnu_time.txt",
+      "sha256": "517e6deeb1ed6b8015f47ef9c8b7f719ec06568dcd6022d0c4175e8aca391448",
+      "bytes": 1066
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_red_attempt01_driver_stdout.txt",
+      "archive_file": "v11_red_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_red_attempt01_driver_stderr.txt",
+      "archive_file": "v11_red_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_red_attempt01.xml",
+      "archive_file": "v11_red.xml",
+      "sha256": "21496bd063bb643a9c1606bc48f9917d42c0035c25051b35571b645eb957ee0a",
+      "bytes": 41927
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_red_attempt01_supervisor/state.json",
+      "archive_file": "v11_red_state.json",
+      "sha256": "e372fb4d3e85dd79cf7ee412736a59b9246069ec0c541bc3a8d6136fafdc6116",
+      "bytes": 1140
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_red_attempt01_supervisor/producer.log",
+      "archive_file": "v11_red_producer.log",
+      "sha256": "ee18160589bcbf5e9ebcc2b48e447d4400c4f70d9c07e3e7858c195bb83029d0",
+      "bytes": 41586
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_red_attempt01_sources/publish_b3_full_context_observed.py.txt",
+      "archive_file": "v11_red_publish_b3_full_context_observed.py.txt",
+      "sha256": "b16ac039a4ece746c136c5451dca1d89a8291d6861c22908e4b6bcbe4371e8a5",
+      "bytes": 107860
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_red_attempt01_sources/test_b3_full_context_observed.py.txt",
+      "archive_file": "v11_red_test_b3_full_context_observed.py.txt",
+      "sha256": "edcf0ad2d726dfbe7ba66db256e2820cfdea39281bc9d48a0e5841d28d244ba6",
+      "bytes": 110419
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_green_attempt01_invocation.json",
+      "archive_file": "v11_green_invocation.json",
+      "sha256": "457aeeb23faf94c6f6d65779f64ec919036d3d935e42bf1176e1dd096f0d2495",
+      "bytes": 1611
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_green_attempt01_result.json",
+      "archive_file": "v11_green_result.json",
+      "sha256": "0c46e4775449303817fcf3db6c1caa70c7903d44a49a4933fde40a0d5083aaf9",
+      "bytes": 431
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_green_attempt01_gnu_time.txt",
+      "archive_file": "v11_green_gnu_time.txt",
+      "sha256": "565e03536f57bc5dfc65eca751fc8f25b2579cb1259952c1ac5fb7768d4f1587",
+      "bytes": 1032
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_green_attempt01_driver_stdout.txt",
+      "archive_file": "v11_green_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_green_attempt01_driver_stderr.txt",
+      "archive_file": "v11_green_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_green_attempt01.xml",
+      "archive_file": "v11_green.xml",
+      "sha256": "37727a7d66bd7be5096bca57a27665f04402104d6bae142d34b128fc24bd10d3",
+      "bytes": 1284
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_green_attempt01_supervisor/state.json",
+      "archive_file": "v11_green_state.json",
+      "sha256": "2094ed93033713e9bf2df50d02f8a3458b2efb78da393b182ef9d771475cfd58",
+      "bytes": 1147
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_green_attempt01_supervisor/producer.log",
+      "archive_file": "v11_green_producer.log",
+      "sha256": "843a42e40b397fb087139494418da6fcd61682b43903b90807547128a1c3ab9c",
+      "bytes": 1025
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_green_attempt01_sources/publish_b3_full_context_observed.py.txt",
+      "archive_file": "v11_green_publish_b3_full_context_observed.py.txt",
+      "sha256": "2cec2e5b1635ec3e57e96878be93f0ca2475eb73ef5ef0402eefa98112c7f832",
+      "bytes": 111052
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_root_refusal_green_attempt01_sources/test_b3_full_context_observed.py.txt",
+      "archive_file": "v11_green_test_b3_full_context_observed.py.txt",
+      "sha256": "edcf0ad2d726dfbe7ba66db256e2820cfdea39281bc9d48a0e5841d28d244ba6",
+      "bytes": 110419
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_invocation.json",
+      "archive_file": "v12_red_invocation.json",
+      "sha256": "8a92080733d7a4076f6b4d545ad1cab83c4ed45c26070cd26c54e1a7ae32a754",
+      "bytes": 1910
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_result.json",
+      "archive_file": "v12_red_result.json",
+      "sha256": "f536fbce4cea24608aebbf671cf291ae1a137f5e5827c8953154c2c5a6e1dce6",
+      "bytes": 431
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_gnu_time.txt",
+      "archive_file": "v12_red_gnu_time.txt",
+      "sha256": "346270228929d64fb003607bd12602456eea96dd557b2fe3ca5e8579f219b45e",
+      "bytes": 1342
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_driver_stdout.txt",
+      "archive_file": "v12_red_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_driver_stderr.txt",
+      "archive_file": "v12_red_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01.xml",
+      "archive_file": "v12_red.xml",
+      "sha256": "72887138b70670ac49dce1fdf4ac62a93a86b05e346876191eb6165256611560",
+      "bytes": 13644
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_supervisor/state.json",
+      "archive_file": "v12_red_state.json",
+      "sha256": "8c34903038e4c9479d174cac1dde4f134f8745437e823e394a39ad53448f4a11",
+      "bytes": 1439
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_supervisor/producer.log",
+      "archive_file": "v12_red_producer.log",
+      "sha256": "c8b9eba7c011fb67393819d41aa2757edf6d16a1dd6a085f6d9ffbaa40b96c8c",
+      "bytes": 13832
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_sources/publish_b3_full_context_observed.py.txt",
+      "archive_file": "v12_red_publish_b3_full_context_observed.py.txt",
+      "sha256": "2cec2e5b1635ec3e57e96878be93f0ca2475eb73ef5ef0402eefa98112c7f832",
+      "bytes": 111052
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_sources/test_b3_full_context_observed.py.txt",
+      "archive_file": "v12_red_test_b3_full_context_observed.py.txt",
+      "sha256": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62",
+      "bytes": 121893
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_and_oracle_green_attempt01_invocation.json",
+      "archive_file": "v12_oracle_green_invocation.json",
+      "sha256": "da158fe99f93bc725bbef9304ae40d1b369646cebd8a37292a7a50b0f5673c2b",
+      "bytes": 2227
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_and_oracle_green_attempt01_result.json",
+      "archive_file": "v12_oracle_green_result.json",
+      "sha256": "3457996a41e86386d1d77822e164e63f9c0cb3f53f482f9826bea8849824275e",
+      "bytes": 430
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_and_oracle_green_attempt01_gnu_time.txt",
+      "archive_file": "v12_oracle_green_gnu_time.txt",
+      "sha256": "5c039b5e5a611a9f62dd147410565bb94f6af41c00132075ea0eea2a37c3f5ae",
+      "bytes": 1571
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_and_oracle_green_attempt01_driver_stdout.txt",
+      "archive_file": "v12_oracle_green_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_and_oracle_green_attempt01_driver_stderr.txt",
+      "archive_file": "v12_oracle_green_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_and_oracle_green_attempt01.xml",
+      "archive_file": "v12_oracle_green.xml",
+      "sha256": "3e261eae4333f7c87022d7d7ae41c5ff53bb58da158f404f93a3a421c4a6b071",
+      "bytes": 1601
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_and_oracle_green_attempt01_supervisor/state.json",
+      "archive_file": "v12_oracle_green_state.json",
+      "sha256": "10ba035883dc4c866cc30546c3ef1ae038e96d87012923e8ee2b0a3eee72b856",
+      "bytes": 1729
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_and_oracle_green_attempt01_supervisor/producer.log",
+      "archive_file": "v12_oracle_green_producer.log",
+      "sha256": "8eab9c81b45c01101c8cd80f2b4982d3c85c37662dc5d2b1d5dc9875ea1a5e5a",
+      "bytes": 1042
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_and_oracle_green_attempt01_sources/publish_b3_full_context_observed.py.txt",
+      "archive_file": "v12_oracle_green_publish_b3_full_context_observed.py.txt",
+      "sha256": "a6316ae50c3ac94adc1e708dd6521bbc2bdc71d7a03835107f1cae0bf35c184f",
+      "bytes": 112946
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_and_oracle_green_attempt01_sources/test_b3_full_context_observed.py.txt",
+      "archive_file": "v12_oracle_green_test_b3_full_context_observed.py.txt",
+      "sha256": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62",
+      "bytes": 121893
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_root_refusal_green_attempt01_invocation.json",
+      "archive_file": "v12_root_green_invocation.json",
+      "sha256": "b0be4cbae4a91040cf4b5dca8af948af692322d273a380ba72134bb0fd9a790b",
+      "bytes": 1611
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_root_refusal_green_attempt01_result.json",
+      "archive_file": "v12_root_green_result.json",
+      "sha256": "af0c8f652e177d776ea3dda44ef50a5517deb0d3ac6239a36e142005d7d5d921",
+      "bytes": 431
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_root_refusal_green_attempt01_gnu_time.txt",
+      "archive_file": "v12_root_green_gnu_time.txt",
+      "sha256": "19956cca6721bddb858a776c3424db47626ed10595df63d1f983c85d52b67af1",
+      "bytes": 1032
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_root_refusal_green_attempt01_driver_stdout.txt",
+      "archive_file": "v12_root_green_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_root_refusal_green_attempt01_driver_stderr.txt",
+      "archive_file": "v12_root_green_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_root_refusal_green_attempt01.xml",
+      "archive_file": "v12_root_green.xml",
+      "sha256": "12e79b7f09708cc8aa809bfc1073022c6daac0a274e57951fc47a71823fe44f0",
+      "bytes": 1284
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_root_refusal_green_attempt01_supervisor/state.json",
+      "archive_file": "v12_root_green_state.json",
+      "sha256": "fb0158b03707b165fe1d7432e8fe90fc77bf8a28e2b0c5af24a7c07aa4c91188",
+      "bytes": 1150
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_root_refusal_green_attempt01_supervisor/producer.log",
+      "archive_file": "v12_root_green_producer.log",
+      "sha256": "96d861b59d586c715326df150f141604c53d785b33f1575bce04bb6add189d8a",
+      "bytes": 1025
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_root_refusal_green_attempt01_sources/publish_b3_full_context_observed.py.txt",
+      "archive_file": "v12_root_green_publish_b3_full_context_observed.py.txt",
+      "sha256": "a6316ae50c3ac94adc1e708dd6521bbc2bdc71d7a03835107f1cae0bf35c184f",
+      "bytes": 112946
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v12_root_refusal_green_attempt01_sources/test_b3_full_context_observed.py.txt",
+      "archive_file": "v12_root_green_test_b3_full_context_observed.py.txt",
+      "sha256": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62",
+      "bytes": 121893
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_ownership_repair_static12.json",
+      "archive_file": "publisher_ownership_repair_static12.json",
+      "sha256": "13383c9abdb7335c0d2c78f83ffb27e28177365f66574e3bd2a5996074e9b137",
+      "bytes": 2876
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/run_publisher_targeted_v11.py",
+      "archive_file": "run_publisher_targeted_v11.py.txt",
+      "sha256": "5a1f043c57df76ffe8f5ddeab13f7a6b4c524e200e2cee28c9801edc0bac498e",
+      "bytes": 3367
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/full_context_extension_source_baseline.json",
+      "archive_file": "full_context_extension_source_baseline.json",
+      "sha256": "217bcec28861209f83139d01be8131c99e6a41734fd551c7b956f2ab9c1c52fe",
+      "bytes": 111602
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/publisher_v11_implementation_plan.json",
+      "archive_file": "publisher_v11_implementation_plan.json",
+      "sha256": "810b0dc4d937c7a5fe38396e56f3652576b5ac7a973c303d4f2cf1233d266b1e",
+      "bytes": 1395
+    }
+  ],
+  "current_targeted_cases_passed_across_two_runs": 14,
+  "all_earlier_receipts_preserved": true,
+  "independent_final_reviews": "pending_agent_service_usage_limit",
+  "complete_integration_accepted": false,
+  "scientific_readiness": "unavailable",
+  "ticket_05": "open",
+  "ticket_11": "excluded",
+  "numeric_census_claim": false
+}

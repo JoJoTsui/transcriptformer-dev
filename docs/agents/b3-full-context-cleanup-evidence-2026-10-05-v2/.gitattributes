@@ -1,0 +1,3 @@
+*_producer.log -whitespace
+*.xml -whitespace
+committed_diff_*.patch -whitespace

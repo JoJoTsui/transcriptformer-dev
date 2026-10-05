@@ -1,0 +1,253 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_ test_refused_output_marker_lookup_still_invalidates_through_owned_staging_descriptor _
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher_v12_independent_routes_red_attempt01/full-context-observed-native0'), pa...set': 'raw_positive', 'sha256': '106eb4feabeb4460728fb72ccb83333fceb86761229870a0b3ae1a6e2196853d', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher_v12_independent_routes_red_attempt01/test_refused_output_marker_loo0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x75dc0c72dcd0>
+
+    def test_refused_output_marker_lookup_still_invalidates_through_owned_staging_descriptor(
+        stored_native, tmp_path, monkeypatch
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output, moved = tmp_path / "output", tmp_path / "moved-owned-output"
+        seal, invalidate = public._Publication.seal_published, public._Publication.invalidate
+        ordinary_fstat, ordinary_close = os.fstat, os.close
+        before = dict(sys.modules)
+        owned, active, injected, foreign_descriptors, relocated = [], [], [], [], []
+        foreign_bytes = b"foreign complete marker must survive owned invalidation refusal\n"
+    
+        def relocate_actual_owned_output_after_its_complete_seal(owner):
+            seal(owner)
+            if relocated:
+                return
+            assert (output / "summary.json").is_file()
+            for name in (
+                "workspace_publication_fd",
+                "workspace_context_fd",
+                "workspace_snapshot_fd",
+                "workspace_fd",
+                "parent_fd",
+                "claim_fd",
+                "output_fd",
+                "staging_fd",
+                "marker_fd",
+            ):
+                fd = getattr(owner, name)
+                assert fd is not None
+                opened = ordinary_fstat(fd)
+                owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+            output.rename(moved)
+            output.mkdir()
+            marker = output / "summary.json"
+            marker.write_bytes(foreign_bytes)
+            fd = os.open(marker, os.O_RDONLY | os.O_NOFOLLOW)
+            opened = ordinary_fstat(fd)
+            foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+            relocated.append(True)
+    
+        def during_actual_invalidation(owner):
+            active.append(owner)
+            try:
+                return invalidate(owner)
+            finally:
+                active.pop()
+    
+        def fail_first_actual_output_route_probe(fd):
+            if active and fd == active[-1].output_fd and not injected:
+                assert (moved / "summary.json").is_file()
+                injected.append(True)
+                raise OSError(errno.EIO, "owned output marker route metadata refusal")
+            return ordinary_fstat(fd)
+    
+        monkeypatch.setattr(public._Publication, "seal_published", relocate_actual_owned_output_after_its_complete_seal)
+        monkeypatch.setattr(public._Publication, "invalidate", during_actual_invalidation)
+        monkeypatch.setattr(os, "fstat", fail_first_actual_output_route_probe)
+        try:
+            with pytest.raises(OSError, match="owned output marker route metadata refusal"):
+                public.run(request, output)
+            assert relocated == injected == [True] and len(owned) == 9
+>           assert not (moved / "summary.json").exists()
+E           AssertionError: assert not True
+E            +  where True = exists()
+E            +    where exists = (PosixPath('/tmp/b3-publisher_v12_independent_routes_red_attempt01/test_refused_output_marker_loo0/moved-owned-output') / 'summary.json').exists
+
+test/test_b3_full_context_observed.py:1926: AssertionError
+_ test_owned_snapshot_unlink_refusal_drains_other_known_leaves_and_preserves_failed_original _
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher_v12_independent_routes_red_attempt01/full-context-observed-native0'), pa...set': 'raw_positive', 'sha256': '106eb4feabeb4460728fb72ccb83333fceb86761229870a0b3ae1a6e2196853d', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher_v12_independent_routes_red_attempt01/test_owned_snapshot_unlink_ref0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x75dc0c6578d0>
+
+    def test_owned_snapshot_unlink_refusal_drains_other_known_leaves_and_preserves_failed_original(
+        stored_native, tmp_path, monkeypatch
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        seal = public._Publication.seal_published
+        ordinary_unlink, ordinary_fstat, ordinary_close = os.unlink, os.fstat, os.close
+        before = dict(sys.modules)
+        owned, snapshots, failures, foreign_descriptors = [], [], [], []
+        foreign = tmp_path / "foreign-unlink-sentinel.bin"
+        foreign_bytes = b"unrelated foreign descriptor survives private cleanup refusal\n"
+        foreign.write_bytes(foreign_bytes)
+    
+        def record_actual_snapshot_before_private_cleanup(owner):
+            seal(owner)
+            if snapshots:
+                return
+            assert (output / "summary.json").is_file()
+            assert owner.workspace is not None and owner.workspace_snapshot_fd is not None
+            snapshot = owner.workspace / "snapshot"
+            copied = {path.name: path.read_bytes() for path in snapshot.iterdir()}
+            assert len(copied) == 5
+            snapshots.append((owner.workspace, snapshot, owner.workspace_snapshot_fd, copied))
+            for name in (
+                "workspace_publication_fd",
+                "workspace_context_fd",
+                "workspace_snapshot_fd",
+                "workspace_fd",
+                "parent_fd",
+                "claim_fd",
+                "output_fd",
+                "staging_fd",
+                "marker_fd",
+            ):
+                fd = getattr(owner, name)
+                assert fd is not None
+                opened = ordinary_fstat(fd)
+                owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+            fd = os.open(foreign, os.O_RDONLY | os.O_NOFOLLOW)
+            opened = ordinary_fstat(fd)
+            foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+    
+        def fail_one_actual_snapshot_leaf(path, *args, **kwargs):
+            if snapshots and kwargs.get("dir_fd") == snapshots[0][2] and not failures:
+                name = Path(path).name
+                if name in snapshots[0][3]:
+                    assert (snapshots[0][1] / name).read_bytes() == snapshots[0][3][name]
+                    failures.append(name)
+                    raise OSError(errno.EIO, "owned snapshot leaf unlink refusal")
+            return ordinary_unlink(path, *args, **kwargs)
+    
+        monkeypatch.setattr(public._Publication, "seal_published", record_actual_snapshot_before_private_cleanup)
+        monkeypatch.setattr(os, "unlink", fail_one_actual_snapshot_leaf)
+        try:
+            with pytest.raises(OSError, match="owned snapshot leaf unlink refusal"):
+                public.run(request, output)
+            assert len(snapshots) == len(failures) == 1 and len(owned) == 9
+            workspace, snapshot, _fd, copied = snapshots[0]
+            failed = snapshot / failures[0]
+            assert workspace.is_dir() and snapshot.is_dir()
+            assert failed.read_bytes() == copied[failed.name]
+>           assert list(snapshot.iterdir()) == [failed]
+E           AssertionError: assert [PosixPath('/.../metrics.h5')] == [PosixPath('/.../support.h5')]
+E             
+E             Left contains 4 more items, first extra item: PosixPath('/tmp/b3-publisher_v12_independent_routes_red_attempt01/test_owned_snapshot_unlink_ref0/.b3-full-context-observed-g1j3sxm1/snapshot/cell_index.u32')
+E             Use -v to get more diff
+
+test/test_b3_full_context_observed.py:2097: AssertionError
+_ test_refused_recovery_marker_probe_still_invalidates_through_verified_owned_fallback _
+
+stored_native = namespace(folder=PosixPath('/tmp/b3-publisher_v12_independent_routes_red_attempt01/full-context-observed-native0'), pa...set': 'raw_positive', 'sha256': '106eb4feabeb4460728fb72ccb83333fceb86761229870a0b3ae1a6e2196853d', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher_v12_independent_routes_red_attempt01/test_refused_recovery_marker_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x75dc0bcc20d0>
+
+    def test_refused_recovery_marker_probe_still_invalidates_through_verified_owned_fallback(
+        stored_native, tmp_path, monkeypatch
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        construct, close, invalidate = public._Recovery.__init__, public._Publication.close, public._Recovery.invalidate
+        ordinary_fstat, ordinary_close = os.fstat, os.close
+        before = dict(sys.modules)
+        owners, recovered, active, primary, injected = [], [], [], [], []
+    
+        def record_actual_independent_recovery(recovery, owner):
+            construct(recovery, owner)
+            assert (output / "summary.json").is_file()
+            for name in (
+                "workspace_publication_fd",
+                "workspace_context_fd",
+                "workspace_snapshot_fd",
+                "workspace_fd",
+                "parent_fd",
+                "claim_fd",
+                "output_fd",
+                "staging_fd",
+                "marker_fd",
+            ):
+                fd = getattr(owner, name)
+                assert fd is not None
+                opened = ordinary_fstat(fd)
+                owners.append((fd, (opened.st_dev, opened.st_ino)))
+            for name in ("parent_fd", "directory_fd", "marker_fd"):
+                fd = getattr(recovery, name)
+                assert fd is not None
+                opened = ordinary_fstat(fd)
+                recovered.append((fd, (opened.st_dev, opened.st_ino)))
+    
+        def fail_after_real_owner_release(owner):
+            close(owner)
+            if not primary:
+                assert len(recovered) == 3 and (output / "summary.json").is_file()
+                primary.append(True)
+                raise MemoryError("actual owner descriptor cleanup refusal with live independent recovery")
+    
+        def during_actual_recovery_invalidation(recovery):
+            active.append(recovery)
+            try:
+                return invalidate(recovery)
+            finally:
+                active.pop()
+    
+        def fail_first_actual_recovery_directory_probe(fd):
+            if active and fd == active[-1].directory_fd and not injected:
+                assert primary == [True] and (output / "summary.json").is_file()
+                injected.append(True)
+                raise OSError(errno.EIO, "owned recovery marker route metadata refusal")
+            return ordinary_fstat(fd)
+    
+        monkeypatch.setattr(public._Recovery, "__init__", record_actual_independent_recovery)
+        monkeypatch.setattr(public._Publication, "close", fail_after_real_owner_release)
+        monkeypatch.setattr(public._Recovery, "invalidate", during_actual_recovery_invalidation)
+        monkeypatch.setattr(os, "fstat", fail_first_actual_recovery_directory_probe)
+        try:
+            with pytest.raises(OSError, match="owned recovery marker route metadata refusal"):
+                public.run(request, output)
+            assert primary == injected == [True] and len(owners) == 9 and len(recovered) == 3
+>           _assert_no_complete_output(output)
+
+test/test_b3_full_context_observed.py:2018: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/b3-publisher_v12_independent_routes_red_attempt01/test_refused_recovery_marker_p0/output')
+
+    def _assert_no_complete_output(output):
+>       assert not (output / "summary.json").exists()
+E       AssertionError: assert not True
+E        +  where True = exists()
+E        +    where exists = (PosixPath('/tmp/b3-publisher_v12_independent_routes_red_attempt01/test_refused_recovery_marker_p0/output') / 'summary.json').exists
+
+test/test_b3_full_context_observed.py:110: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01.xml -
+=========================== short test summary info ============================
+FAILED test/test_b3_full_context_observed.py::test_refused_output_marker_lookup_still_invalidates_through_owned_staging_descriptor
+FAILED test/test_b3_full_context_observed.py::test_owned_snapshot_unlink_refusal_drains_other_known_leaves_and_preserves_failed_original
+FAILED test/test_b3_full_context_observed.py::test_refused_recovery_marker_probe_still_invalidates_through_verified_owned_fallback
+3 failed, 2 warnings in 307.08s (0:05:07)

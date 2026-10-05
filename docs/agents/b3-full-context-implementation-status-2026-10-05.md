@@ -16,51 +16,79 @@ Full 2,000-draw execution remains unadmitted. See the
 
 ## Observed publisher repair
 
-Publisher `b16ac039…` and tests `e353ed21…` pass Ruff check/format and configured
-mypy. **13 targeted cases pass**: eight new lifecycle regressions, one genuine
-64-gene finite public-scorer/TSV/fresh-replay check, and four existing late-cleanup
-controls. Source commit: `5fda729`. Complete publisher-file and new complete
-repository integration acceptance remain pending.
+Publisher `a6316ae5…` and tests `cfa0d0b9…`, source commit **`db4d88e`**, pass
+Ruff check/format and configured mypy. **14 targeted cases pass across two
+source-stable runs**: eight marker/leaf/scorer/replay/late-cleanup cases and
+six root-descriptor cases. Complete publisher-file and new complete repository
+integration acceptance remain pending. The earlier 13-case result belongs to
+`5fda729`; its source and review receipts remain preserved.
 
-The repair attempts independent descriptor releases, continues cleanup of
-other children after a refusal for one child, retains verified child birth
-through admission probe faults, and binds genuine context publication before
-its enclosing cleanup. Actual fallback context mkdir is
-captured before the frozen engine's later fstat/link/close operations; the
-owner-closed Path capability is scoped to its private authenticated engine
-clone and restored. Global pathlib and all original source buffers remain
-unchanged. Unknown or foreign bindings are preserved and completion refused.
+The repair drains independently bound children after a root refusal, continues
+known leaf cleanup after an unlink refusal and attempts independent owned
+marker-invalidation routes after a failed probe. First errors remain errors;
+foreign bindings remain preserved. The earlier birth, context-publication and
+descriptor-draining repairs are retained. Global pathlib and all original
+source buffers remain unchanged.
 
-### Standards
+### Current review status
 
-[Independent source review](b3-full-context-publisher-ownership-evidence-2026-10-05/standards_committed_review01.md):
-**one hard P2, zero optional**; tests: zero hard, zero optional. Reuse of the
-root workspace FD can still prevent cleanup of otherwise valid, independently
-retained context/snapshot children. Those child
-handles must support cleanup without trusting the uncertain root handle.
-This repair remains open. The previously recorded descriptor draining,
-child draining and actual fallback birth repairs are confirmed.
+Fresh final independent Spec and Standards reviews are **pending**: the three
+agent sessions reached the service usage limit. The earlier
+[Standards finding](b3-full-context-publisher-ownership-evidence-2026-10-05/standards_committed_review01.md)
+retains its historical verdict of one hard P2 on `5fda729`. Its root descriptor
+behavior is addressed by the current implementation and six passing
+regressions; no fresh zero-finding verdict is claimed for different bytes.
 
-### Spec
+The earlier [Spec verdict](b3-full-context-publisher-ownership-evidence-2026-10-05/spec_committed_review01.md)
+also remains source-bound to its recorded scope. Review axes stay separate.
 
-[Independent source and test reviews](b3-full-context-publisher-ownership-evidence-2026-10-05/spec_committed_review01.md):
-**zero hard, zero optional** at their recorded scope. The earlier context
-publication and child-birth findings are repaired. This axis remains separate from the Standards finding.
+The [new cleanup archive](b3-full-context-cleanup-evidence-2026-10-05-v2/manifest.json)
+preserves six original v11 failures, its intermediate green run, three v12
+failures and both current green runs. Separate pytest/JUnit/GNU/driver and
+supervisor sample clocks remain distinct. All prior ownership receipts remain
+unchanged; earlier successes are not transferred to different source bytes.
 
-Fresh failing regressions preserve seven original lifecycle failures, a
-six-pass/one-failure snapshot run, and a genuine fallback-publication cleanup
-failure. The current targeted result, exact source identities, separate
-pytest/JUnit/GNU/supervisor clocks and original failed receipts are retained
-verbatim in the [ownership evidence archive](b3-full-context-publisher-ownership-evidence-2026-10-05/manifest.json).
-No earlier successful result is transferred to different source bytes.
+## Genuine prospective toy preparation
+
+Source **`48ef611`**, entrypoint `412ff54a…` and tests `69f4e75d…`, passes the
+**complete eight-case preparation file** in 38.843 JUnit seconds, at
+756,320 KiB GNU peak process RSS. Six public late-cleanup cases cover source
+mutation, foreign descriptor reuse, primary/final close refusal and foreign
+directory/marker replacement. Source authentication and the genuine complete
+preparation/support/pair/plan/metric pipeline also pass. Configured static
+checks pass; CI coverage is added at `37d96f8`.
+
+A separate actual CLI invocation creates persistent labelled synthetic inputs
+in `runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v01`.
+It takes **27.21958 seconds** for the complete public return, preserves all
+70 source hashes and creates 60 cells, five simulated units, all 5,000 measured
+genes and ortholog rows per species, with 502 vocabulary-joined pairs. The
+4,498 exclusions remain explicit. The normalization oracle retains all
+4,999 measured counts before vocabulary filtering.
+
+The [preparation archive](b3-full-context-preparation-evidence-2026-10-05/manifest.json)
+retains exact failed/passing receipts and actual CLI metadata. The first genuine
+run failed its final path oracle because cold PyTorch JIT initialization adds
+its declared template path. A standalone third-party probe verifies that
+cause; the corrected oracle permits that exact addition and preserves the
+repository path/cache assertions. The original failed receipt stays failed.
+
+These are prospective inputs only: no model tensors, embeddings, forwards,
+native outcomes, registration, comparison, effects or authority are created.
+Tokenizer admission and a complete measured numeric allocation census remain
+unproven. The executed registry subset is separate from the retained mandatory
+70-path closure and is not an accepted SourceAdmission inventory. Fresh final
+independent source reviews and complete integration remain pending.
 
 ## Next dependencies and limits
 
-Repair the root workspace descriptor finding, complete source-bound integration
-checks and final independent reviews. The bridge/registration design retains
-zero hard findings on its independent review axes. Actual controlled issuer,
-producer hook, authority resolver, bridge/v4 integration and effect consumer
-implementations remain unfinished.
+Complete source-bound publisher integration checks and fresh independent
+source reviews, then the controlled producer/issuer/independent authority
+dependencies, prospective registration and bridge/v4 integration. The
+[archived issuer design v02](b3-full-context-controlled-execution-design-2026-10-05/manifest.json)
+has separate zero-hard/zero-optional design verdicts; implementation and
+runtime acceptance remain ungranted. Actual controlled runs, trustworthy
+authority/origin records and the project effect consumer remain unfinished.
 
 All 233 earlier Python files retain their original bytes. Public operations
 retain 900 seconds, 4 GiB RSS and 200 MiB numeric limits, one CPU thread and

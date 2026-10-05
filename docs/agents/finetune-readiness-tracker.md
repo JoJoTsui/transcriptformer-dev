@@ -1,6 +1,47 @@
 # Finetune readiness tracker
 
-## Implementation in progress — 2026-10-05
+## Current implementation checkpoint — 2026-10-05
+
+Publisher **`db4d88e`** (`a6316ae5…`, tests `cfa0d0b9…`) passes **14 targeted
+cases across two source-stable runs**. Independent child cleanup survives root
+refusal; known leaf cleanup and owned marker invalidation use independent
+routes. The earlier 13-case checkpoint belongs to different source bytes.
+Complete publisher-file and new repository integration remain pending.
+
+Prospective preparation **`48ef611`** (`412ff54a…`, tests `69f4e75d…`) passes its
+**complete eight-case file**, including the genuine pipeline, source authentication
+refusal and six late-cleanup/foreign-binding controls. Ruff check/format and
+configured mypy pass; CI coverage is committed at **`37d96f8`**. A separate
+actual CLI call creates persistent toy inputs in **27.21958 public seconds**,
+with 60 cells and five simulated units per species, all 5,000 measured genes
+and ortholog rows, 502 joined pairs and 4,498 explicit exclusions. Normalization
+uses all measured genes. The original failed path-oracle receipt and the
+verified third-party PyTorch cause remain retained.
+
+Fresh final independent Spec and Standards source reviews are **pending at
+the agent service usage limit**. Design v02 retains its separate zero-finding
+verdicts; those are not source or runtime acceptance. No complete numeric
+allocation census, SourceAdmission, RuntimeAdmission, AuthorityPin, model
+outcomes, registration, comparison or project effect evidence is created.
+Controlled producer/issuer/independent authority, registration, bridge/v4 and
+project effect-consumer dependencies remain unfinished. All 233 earlier
+Python files retain their original bytes. Public limits remain 900 seconds,
+4 GiB RSS, 200 MiB numeric, one math thread, CUDA off and 4 GiB/20 GiB host
+RAM/disk floors. **05 remains open, 11 excluded; ten tickets retain bounded
+engineering closure.** The genuine pilot's 32.54% coverage, 0/2,000 necessary
+jointly supported draws, reporting veto and null intervals are unchanged.
+
+See the [current status and exact evidence](b3-full-context-implementation-status-2026-10-05.md).
+
+- [x] Implement and exercise genuine prospective toy preparation without
+  model outcomes or authority records.
+- [ ] Complete publisher integration and fresh independent source reviews.
+- [ ] Implement/admit controlled producer, issuer and independent authority.
+- [ ] Complete prospective registration and full-context comparison/v4.
+- [ ] Supply project scored outcomes/effects, complete cost and reportable
+  uncertainty under the frozen scientific rules.
+
+## Previous publisher checkpoint — `5fda729`, 2026-10-05
 
 The complete-bootstrap metadata planner retains all **95 passing file tests**
 and a fresh negative plan over the actual ten-draw receipt graph. It launches

@@ -1,0 +1,13 @@
+{
+  "supervisor_exit_code": 1,
+  "driver_elapsed_seconds": 29.11521996499505,
+  "source_sha256_after": {
+    "scripts/publish_b3_full_context_observed.py": "a6316ae50c3ac94adc1e708dd6521bbc2bdc71d7a03835107f1cae0bf35c184f",
+    "test/test_b3_full_context_observed.py": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62",
+    "scripts/prepare_b3_full_context_synthetic_fixture.py": "412ff54a1203ea43ff492ffa3c8cbd933feb69237c4e3ee8bb826e3b09bfddcc",
+    "test/test_b3_full_context_synthetic_fixture.py": "3c146d83f4c966e5cf816ebbc85ca3ae2c2e620be625ab5eb2be131bb8fc7e8a"
+  },
+  "sources_unchanged": true,
+  "expected_absent_after": {},
+  "head_after": "2505f7b0eaea28d0bdf131a26b6bddc440482de9"
+}

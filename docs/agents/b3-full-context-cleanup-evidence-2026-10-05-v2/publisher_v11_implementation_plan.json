@@ -1,0 +1,25 @@
+{
+  "baseline_commit": "2505f7b0eaea28d0bdf131a26b6bddc440482de9",
+  "cpu_threads": 1,
+  "cuda_enabled": false,
+  "disk_floor_gib": 20,
+  "finding": "Retained child cleanup is blocked by root workspace FD or canonical inspection refusal.",
+  "host_ram_floor_gib": 4,
+  "numeric_mib": 200,
+  "preagreed_seam": "Existing public publisher.run request/output API and observable filesystem, descriptor and resource-refusal effects; genuine pre-cleanup fault injection as in approved lifecycle regressions.",
+  "project_model_forwards_authorized": false,
+  "public_call_seconds": 900,
+  "remote_gh_main": "2505f7b0eaea28d0bdf131a26b6bddc440482de9",
+  "root_is_only_execution_lane": true,
+  "rss_gib": 4,
+  "schema": "b3_publisher_independent_child_cleanup_implementation_plan_v1",
+  "scientific_changes_authorized": false,
+  "source_sha256": {
+    "scripts/orchestrate_b3_paged_native_common_source.py": "1282e86856c300f2b9c3c89fb7c940106957280c9bc57e323faf25def295a3c3",
+    "scripts/publish_b3_full_context_observed.py": "b16ac039a4ece746c136c5451dca1d89a8291d6861c22908e4b6bcbe4371e8a5",
+    "test/test_b3_full_context_observed.py": "e353ed218d745d82d4c75082661a4fde43bb8f28aabd7e964c8f78cdf7ade115",
+    "test/test_b3_paged_native_common_source_controller.py": "bb91b7c2359230272f4cae0673fff5ef2e85a6fc576f790885d39b19861d8410"
+  },
+  "test_aggregate_seconds": 950,
+  "zebrafish_excluded": true
+}

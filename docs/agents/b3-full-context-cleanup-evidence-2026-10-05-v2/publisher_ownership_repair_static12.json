@@ -1,0 +1,75 @@
+{
+  "changed_preexisting_python": [],
+  "checks": [
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "scripts/orchestrate_b3_paged_native_common_source.py",
+        "scripts/publish_b3_full_context_observed.py",
+        "test/test_b3_full_context_observed.py",
+        "test/test_b3_paged_native_common_source_controller.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "All checks passed!\n"
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--check",
+        "scripts/orchestrate_b3_paged_native_common_source.py",
+        "scripts/publish_b3_full_context_observed.py",
+        "test/test_b3_full_context_observed.py",
+        "test/test_b3_paged_native_common_source_controller.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "4 files already formatted\n"
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "scripts/orchestrate_b3_paged_native_common_source.py",
+        "scripts/publish_b3_full_context_observed.py",
+        "test/test_b3_full_context_observed.py",
+        "test/test_b3_paged_native_common_source_controller.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "Success: no issues found in 4 source files\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "final_independent_reviews": "pending_agent_service_usage_limit",
+  "mypy_environment": {
+    "MYPY_CACHE_DIR": "/tmp/b3-full-context-mypy-20261005",
+    "PYTHONPATH": "/home/joey/.cache/uv/archive-v0/xRyg4HEqkxLwm2OA:/home/joey/.cache/uv/archive-v0/0P1lZuvxYyZrbYlh16qWy:/home/joey/.cache/uv/archive-v0/erB5vv3vCnGbzwlL:/home/joey/.cache/uv/archive-v0/LH6ffABWhmcwoA1Tz2iL9:/home/joey/.cache/uv/archive-v0/WrO-Eo3zoRZ6ZiPi"
+  },
+  "pre_format_draft_source_sha256": "770ab1350acc0abece9e5681fb375ad90016baac04c9b516f971d7f399bd22a2",
+  "pre_format_draft_test_sha256": "64a376b0320ba8faa96978cd6f5df8f516f477637602c9e1de8a0ebea8792dbb",
+  "preexisting_233_python_unchanged": true,
+  "runtime_claim": false,
+  "schema": "b3_publisher_v12_static_v1",
+  "source_sha256": {
+    "scripts/orchestrate_b3_paged_native_common_source.py": "1282e86856c300f2b9c3c89fb7c940106957280c9bc57e323faf25def295a3c3",
+    "scripts/publish_b3_full_context_observed.py": "a6316ae50c3ac94adc1e708dd6521bbc2bdc71d7a03835107f1cae0bf35c184f",
+    "test/test_b3_full_context_observed.py": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62",
+    "test/test_b3_paged_native_common_source_controller.py": "bb91b7c2359230272f4cae0673fff5ef2e85a6fc576f790885d39b19861d8410"
+  }
+}

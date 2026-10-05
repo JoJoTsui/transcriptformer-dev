@@ -1,0 +1,50 @@
+{
+  "schema": "b3_full_context_controlled_dependency_implementation_plan_v1",
+  "authorized_scope": "Continue ticket05 bounded software dependencies using the accepted feasibility-first recommendation; exclude ticket11 zebrafish",
+  "push_completed": "gh/main at 2505f7b0eaea28d0bdf131a26b6bddc440482de9",
+  "accepted_static_design": {
+    "issuer_v02": "ba2d51feb89c577cea3d1aa67c6300cef6b55d0882a3f71eb32e29ca4957a58e",
+    "independent_spec": "2b64fb309af512893806a8522e72d2f9e07b3eb969e612fad067ec5cc9a85bb9",
+    "independent_standards": "f8da968e14bb55e4246a1d7d7205609df6453e936494e5e4a2b6ad5d3d8d0c2b",
+    "spec_hard": 0,
+    "spec_optional": 0,
+    "standards_hard": 0,
+    "standards_optional": 0,
+    "design_review_is_implementation_acceptance": false
+  },
+  "dependency_order": [
+    "independent owned publisher cleanup routes",
+    "genuine complete synthetic preparation/support/pair/plan/metrics",
+    "registered controlled producer/issuer and independent owner authority",
+    "prospective registration replay and complete observed comparison bridge",
+    "full-context v4 fixed-family traversal/replay",
+    "effect-proof consumer and remaining scientific/cost gates"
+  ],
+  "public_seams": [
+    "Existing publisher.run(request_path, output) and observable file/FD refusal effects",
+    "Preparation.run(request_path, output, max_seconds) and CLI actual referenced artifact outputs",
+    "Real producer Start/Permit process control and actual native public operations",
+    "Owner-held authority outside all untrusted public request fields"
+  ],
+  "testing": "Use source-bound public RED before GREEN at each meaningful vertical slice, real upstream operations, versioned immutable failed receipts and fresh exact source identities",
+  "root_only_execution_lane": true,
+  "agents_static_drafts_and_reviews_only": true,
+  "limits": {
+    "public_seconds": 900,
+    "supervisor_seconds": 950,
+    "rss_bytes": 4294967296,
+    "numeric_bytes": 209715200,
+    "min_available_ram_bytes": 4294967296,
+    "min_free_disk_bytes": 21474836480,
+    "cpu_threads": 1,
+    "cuda_enabled": false
+  },
+  "project_model_forwards_authorized": false,
+  "fresh_training_authorized": false,
+  "full_2000_draw_execution_authorized": false,
+  "scientific_rule_changes_authorized": false,
+  "resource_upper_bounds_are_measured_census": false,
+  "fake_json_receipts_or_allow_all_authority_accepted": false,
+  "ticket05_closed": false,
+  "ticket11_excluded": true
+}

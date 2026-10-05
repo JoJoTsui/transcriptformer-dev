@@ -1,0 +1,9 @@
+{
+  "schema": "b3_preparation_ci_yaml_static_v1",
+  "path": ".github/workflows/b3-full-context-and-planning-tests.yml",
+  "sha256": "d7e2eb13755c5f325ce9053c99b5fa3c5ac32d7c48214b23cb0336e91b2d48d2",
+  "valid_yaml": true,
+  "new_test_trigger_and_command_present": true,
+  "existing_time_threads_and_gpu_policy_preserved": true,
+  "github_execution_claim": false
+}

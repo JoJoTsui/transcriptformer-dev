@@ -1,0 +1,40 @@
+{
+  "schema": "b3_full_context_committed_source_capture_v1",
+  "base": "2505f7b0eaea28d0bdf131a26b6bddc440482de9",
+  "head": "37d96f8d71f817d2b84ec47d0300531e5cbe77b8",
+  "diff_command": "git diff 2505f7b...HEAD",
+  "diff_nonempty": true,
+  "patch_sha256": "1c686305b15a983cca68e933b5364be80362557a7e2204d8d170593ffa00298c",
+  "patch_bytes": 107199,
+  "files": {
+    ".github/workflows/b3-full-context-and-planning-tests.yml": {
+      "sha256": "d7e2eb13755c5f325ce9053c99b5fa3c5ac32d7c48214b23cb0336e91b2d48d2",
+      "bytes": 1789,
+      "committed_blob_matches_worktree": true
+    },
+    "scripts/prepare_b3_full_context_synthetic_fixture.py": {
+      "sha256": "412ff54a1203ea43ff492ffa3c8cbd933feb69237c4e3ee8bb826e3b09bfddcc",
+      "bytes": 48896,
+      "committed_blob_matches_worktree": true
+    },
+    "scripts/publish_b3_full_context_observed.py": {
+      "sha256": "a6316ae50c3ac94adc1e708dd6521bbc2bdc71d7a03835107f1cae0bf35c184f",
+      "bytes": 112946,
+      "committed_blob_matches_worktree": true
+    },
+    "test/test_b3_full_context_observed.py": {
+      "sha256": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62",
+      "bytes": 121893,
+      "committed_blob_matches_worktree": true
+    },
+    "test/test_b3_full_context_synthetic_fixture.py": {
+      "sha256": "69f4e75ddd372748830c2ba5eb0ff42f9f414c61f4e7226b39afea6c9bba1349",
+      "bytes": 15266,
+      "committed_blob_matches_worktree": true
+    }
+  },
+  "all_233_original_python_bytes_and_modes_unchanged": true,
+  "fresh_independent_spec_review": "pending_agent_service_usage_limit",
+  "fresh_independent_standards_review": "pending_agent_service_usage_limit",
+  "complete_integration_or_scientific_acceptance": false
+}

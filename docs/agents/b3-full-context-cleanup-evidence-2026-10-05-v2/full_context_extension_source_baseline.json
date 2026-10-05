@@ -1,0 +1,2542 @@
+{
+  "baseline_head": "058bab20d3f2e8ec45fe55f31eea69370d19e8de",
+  "full_git_index_path_mode_blob": {
+    ".github/workflows/b3-admission-tests.yml": {
+      "blob": "2024459758a36c069e7ac334b88a36d66f470749",
+      "mode": "100644"
+    },
+    ".github/workflows/b3-paged-native-bootstrap-tests.yml": {
+      "blob": "64eec73d428a40bc8c060aa7fadc65a44ac848ac",
+      "mode": "100644"
+    },
+    ".github/workflows/b3-paged-native-cache-tests.yml": {
+      "blob": "5102d108b692065df74ac5e69d596dc31dfdef76",
+      "mode": "100644"
+    },
+    ".github/workflows/b3-paged-native-common-source-tests.yml": {
+      "blob": "605ebaa351006ccb642a140b09f386d7a2a0c147",
+      "mode": "100644"
+    },
+    ".github/workflows/cli-tests.yml": {
+      "blob": "50f0aa630bfbf3eaefa1a2bf2a48ac493ab34bc0",
+      "mode": "100644"
+    },
+    ".github/workflows/conventional-commits.yml": {
+      "blob": "068808457ff0a66c1e2ee0dddfd337a34823ad7d",
+      "mode": "100644"
+    },
+    ".github/workflows/finetune-tests.yml": {
+      "blob": "027fa4e8f164b0cc0a773e4ad869cf21d57985b5",
+      "mode": "100644"
+    },
+    ".github/workflows/pre-commit.yml": {
+      "blob": "f8559a7f964ef7dbcddf34eb4943cfa1e49df796",
+      "mode": "100644"
+    },
+    ".github/workflows/publish-pypi.yml": {
+      "blob": "ee000cc22ac0a2f87482f12ef0253a7063b405c0",
+      "mode": "100644"
+    },
+    ".gitignore": {
+      "blob": "b568982be3f033b9f49a27896d45254ca0c0a45b",
+      "mode": "100644"
+    },
+    ".pre-commit-config.yaml": {
+      "blob": "802e08ed3d869d16ea1049d4fa282f2888d7bdce",
+      "mode": "100644"
+    },
+    ".scratch/check_tome_overlap.py": {
+      "blob": "e10cce67163418361f65e4855a54d61eac53f25f",
+      "mode": "100644"
+    },
+    ".scratch/drop_empty_wells.py": {
+      "blob": "565be4e693d1c68c507572e6968535acd45a2e0d",
+      "mode": "100644"
+    },
+    ".scratch/edit_manifest.py": {
+      "blob": "d029af7fd5b3e65ed377ca81873c0464d409b686",
+      "mode": "100644"
+    },
+    ".scratch/extract_prenatal_metadata.py": {
+      "blob": "aa2970d3b303705bf617c6e557a1d7d3f182bde0",
+      "mode": "100644"
+    },
+    ".scratch/h5py_tree_prenatal.py": {
+      "blob": "4dc672e5d72b77874b4a75d3cc028c1feeb754ca",
+      "mode": "100644"
+    },
+    ".scratch/inspect_files.py": {
+      "blob": "36b62918589d716d512324ae1a1e4690e58b8763",
+      "mode": "100644"
+    },
+    ".scratch/inspect_prenatal_timelapse.py": {
+      "blob": "5e42fc5fd224086b9b7ce07ae958c609328640df",
+      "mode": "100644"
+    },
+    ".scratch/join_drosophila.py": {
+      "blob": "cd2cd863c1bab49fcaa363a923d8417f812d2ef4",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/README.md": {
+      "blob": "5a89bb67c9be5b8f6e3ece474d2a7588c1ad8c45",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/01-terminal-resume-state.md": {
+      "blob": "0a73fcd3c54099b542da2245a14180eb117c8881",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/02-stochastic-resume-continuity.md": {
+      "blob": "63e45b2d87fd8d656a012ca57071ca21fbaf8ab9",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/03-post-qc-holdout-coverage.md": {
+      "blob": "398c9b911fbd8b67e148628b6b6297ce065f9cb6",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/04-ortholog-identifier-joins.md": {
+      "blob": "53705b4a97e69bfb7bfb81f0357f44b0ba5ecbce",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/05-statistic-specific-ortholog-eligibility.md": {
+      "blob": "08b2f6842cfc43abbc4c243b969c18f2fc9b4b0f",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/06-frozen-validation-cohort.md": {
+      "blob": "474525bc5ef0f8a5d5bcf782297307f06545cd71",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/07-baseline-relative-selection-score.md": {
+      "blob": "6b8ce48ea338d4257c0ddefed366df360b4fd452",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/08-selection-resume-and-export.md": {
+      "blob": "dc4c2fc6d38eb1af2cc6ede55a9ffadb07f1a919",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/09-representation-metric-eligibility.md": {
+      "blob": "d9c87dc4c4fea96e41cdaeb1ffa9969523a0da5f",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/10-hard-sampling-cap.md": {
+      "blob": "ac4ea2d52ecff206c98151280833ce44243cd513",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/11-zebrafish-readiness-and-intake.md": {
+      "blob": "ac06c97c6394fb6b3bdd788b5261643b83bc0b75",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/issues/12-readiness-evidence-and-ci.md": {
+      "blob": "1dfe429445528a52edef08eb91d39b8d4e46eb32",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/spec.md": {
+      "blob": "738a8fdb39b702cae9522072be2b4537effec916",
+      "mode": "100644"
+    },
+    ".scratch/multispecies-readiness-remediation/ticket-breakdown-proposal.md": {
+      "blob": "9c2883057d9e8bbb7c633990ccf57c61d7f3c069",
+      "mode": "100644"
+    },
+    ".scratch/prenatal_overlap.py": {
+      "blob": "bd8c0b3c6f8b45fbcc7ba174707cbc82c86d13f3",
+      "mode": "100644"
+    },
+    ".scratch/prenatal_overlap_normalized.py": {
+      "blob": "0c046a3424e50ab078eea77396d67d47c8fd5a34",
+      "mode": "100644"
+    },
+    ".scratch/regenerate_audit.py": {
+      "blob": "4c9cd3412c3fe4453fbecff7d9abc3f54348d0be",
+      "mode": "100644"
+    },
+    ".scratch/verify_e85b_vs_prenatal.py": {
+      "blob": "495c94fa21bc9b2aaabe23514b694883cceea96d",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/batch_memory_measurements.json": {
+      "blob": "e2f89980a4ef70c32ca7df70dba451266268769f",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/benchmark_dataloader.py": {
+      "blob": "0c4de9e27f516cb12ffdb17bec751da54793eda8",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/benchmark_pin_memory.py": {
+      "blob": "69e0e6d17fd4a35cdbb327eeba621f7157103c06",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/benchmark_results.json": {
+      "blob": "c5cafcee2382cebc3989215d950db49b0fb3e270",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/01-finetune-cli-skeleton.md": {
+      "blob": "f1296f4f59012aa30cb9e063f90303a0d98f4d08",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/02-model-ready-dataset-preparation.md": {
+      "blob": "d3c6fdfab8aa77abd0768e3189cf2cef13534d11",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/03-single-gpu-generative-finetune-smoke-path.md": {
+      "blob": "4fe1c9c30801c3604601f08732eb3a6a57cc9db0",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/04-shared-gpu-preflight-and-distributed-training.md": {
+      "blob": "9d15cc9a229326020202d9cbce59a7a6ff9f8149",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/05-resume-early-stopping-and-run-manifest.md": {
+      "blob": "67ab702cfbbd95f121c7cdd2c290e2e44c19d695",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/06-evaluation-harness-with-original-model-baseline.md": {
+      "blob": "783b54097aed24b5f9671ebfe933031387674912",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/07-end-to-end-synthetic-pipeline-verification.md": {
+      "blob": "95e8f05a4e4daf498b0724c099e043fac049b965",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/08-backed-streaming-dataset-for-large-scale-finetuning.md": {
+      "blob": "1e34fd18713811120196f9fa30f4301abe173e2b",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/09-real-data-smoke-run-on-rtx-3090.md": {
+      "blob": "cb23dcc6195673978d0f04641ca68b47807a9e70",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/10-wire-finetune-tests-into-ci.md": {
+      "blob": "a426585f01d370b859cbe2965b825db516c22317",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/11-interruption-resume-cli-test.md": {
+      "blob": "e3bb626e76f804dcfeaa68c54c80b4da87456099",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/12-data-versioning-in-run-manifest.md": {
+      "blob": "388697a24a54d70a4928b553baa230cf236d2bb4",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/13-real-data-scale-benchmarks.md": {
+      "blob": "69544a9b157bc6f37cfc785f10c6e60d3ef4f8cd",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/14-cpu-gloo-ddp-smoke-test.md": {
+      "blob": "d0d2a69a941f8b6c9547fd210ba4528ae851cdbe",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/15-measured-batch-plan-calibration.md": {
+      "blob": "abf6c5762ddb152e142d9b40d18222da75847304",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/16-preparation-report-completeness.md": {
+      "blob": "8d2a60143d19d9c6709465de219b9f20e7cc83b2",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/17-missing-unit-tests.md": {
+      "blob": "1891ef962fb97054499fa767800aa3dc60afb1a3",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/18-deeper-scale-evidence.md": {
+      "blob": "3251e82b38d01994955287ad20957eac7862bed9",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/issues/19-spatial-aux-token-prototype.md": {
+      "blob": "d33170be297c0a9bcfef0646c29d373c8d9ab57e",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/measure_batch_memory.py": {
+      "blob": "1bb13a8fc324ebe2b3801178be5f094600481330",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/pin_memory_results.json": {
+      "blob": "18fd99c81613099b98459c830dcd21cfec66f0d8",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/smoke_run/make_data.py": {
+      "blob": "db188a697f34f16c650dec67a4468445d0751e3c",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/smoke_run/manifest.json": {
+      "blob": "d7257b1602b10221a052dc103c55b8935219fc9e",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/spatial_check_run/vocabs/assay_vocab.json": {
+      "blob": "d0a52ab2b4cd7841fb1cb82c1ce79a58db1027e6",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/spatial_check_run/vocabs/spatial_bin_vocab.json": {
+      "blob": "5aad4cf8f3613820ecd9a295eb6d82f5c9ef858d",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/spatial_real_model_check.json": {
+      "blob": "d14d0e7db16165889bb880b7c41e7feb8b9d7777",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/spatial_real_model_check.py": {
+      "blob": "4c6108a6a6e6cd1c603c67b566829f3a161b3c6d",
+      "mode": "100644"
+    },
+    ".scratch/zebrafish-embryo-finetuning/spec.md": {
+      "blob": "db914f5049ed8e3ab1ad726dbd31dd6ef485f5b0",
+      "mode": "100644"
+    },
+    "CHANGELOG.md": {
+      "blob": "3125d61d3845a5b6c1d03c702cd0195da97d617e",
+      "mode": "100644"
+    },
+    "CODE_OF_CONDUCT.md": {
+      "blob": "67f7b25470a5ba9878c48f31efeae4b3c88efbda",
+      "mode": "100644"
+    },
+    "CONTEXT.md": {
+      "blob": "a5c864db84ac01f65b3cc797ad366c4bd645bde9",
+      "mode": "100644"
+    },
+    "LICENSE.md": {
+      "blob": "a5905cb0fd86a489dabc7499a1815d63d0e3a92e",
+      "mode": "100644"
+    },
+    "README.md": {
+      "blob": "26a20ce80cb439f156acd27c7e9f405294044be5",
+      "mode": "100644"
+    },
+    "SECURITY.md": {
+      "blob": "bf5fa13cefe0b2ef2d9290410d8f0b4a1c3dee9b",
+      "mode": "100644"
+    },
+    "assets/model_overview.png": {
+      "blob": "710a865eb162e15edca315895f1cdc6250c658ac",
+      "mode": "100644"
+    },
+    "conf/finetune_run_multispecies.json": {
+      "blob": "f2cbdb67206665e8330a610d477564db172f116b",
+      "mode": "100644"
+    },
+    "conf/inference_config.yaml": {
+      "blob": "9d5823a0cbe4ff51eaaf087eba82050591602595",
+      "mode": "100644"
+    },
+    "docs/adr/0001-zebrafish-embryo-finetuning.md": {
+      "blob": "06efb0f665c53f46f869b01230a80403946ce935",
+      "mode": "100644"
+    },
+    "docs/adr/0002-multi-species-embryogenesis-finetuning.md": {
+      "blob": "8862c1f21c77c1935cb2e4ba3172e7c1ad7e3fe4",
+      "mode": "100644"
+    },
+    "docs/adr/0003-adversarial-review-remediation.md": {
+      "blob": "6afdd43c5fedcc2510964415af519667fce49776",
+      "mode": "100644"
+    },
+    "docs/adr/0004-multispecies-checkpoint-selection.md": {
+      "blob": "611d4887d62a26f77286960b2ee39c586fe9550c",
+      "mode": "100644"
+    },
+    "docs/adr/0005-b3-feasibility-before-full-cohort-expansion.md": {
+      "blob": "843241cfbd0a1a87a9f9b0639320ef870053f610",
+      "mode": "100644"
+    },
+    "docs/agents/adversarial-review-2026-09-09.md": {
+      "blob": "544958361800458ff28a60434ce74511ce53023f",
+      "mode": "100644"
+    },
+    "docs/agents/adversarial-review-2026-09-28.md": {
+      "blob": "bcbd468596f8be2878f9e978de57db7dd4b4e9a0",
+      "mode": "100644"
+    },
+    "docs/agents/amphioxus-protein-bridge-2026-09-29.md": {
+      "blob": "2f6275fe6ee901fcc2951a84889b5dfc9d9f3166",
+      "mode": "100644"
+    },
+    "docs/agents/b1-owner-decision-2026-09-30.md": {
+      "blob": "86a769235f7db904c2f1859909ee3beb34c5eb75",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/README.md": {
+      "blob": "76451fcff8ca3f953975b98192133f97b8fc20a0",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/archive_manifest.json": {
+      "blob": "e591c9bf83983ff0e2eb506555d51e9e5a54c4df",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/capture_common_source_evidence_v3.py.txt": {
+      "blob": "14141e9cd20267586dbbcdfcc4cd79616682f336",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/capture_v3_gnu_time.txt": {
+      "blob": "f55c7d22fd6754f14dd29de6fae186a3ed3fc6d8",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/capture_v3_supervisor.json": {
+      "blob": "ad05275685e5847005137a1ebea675c60867d833",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/collection_first_gnu_time.txt": {
+      "blob": "55412ae96fc0515122958913dab9727734985f22",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/collection_first_result.json": {
+      "blob": "b9876ed1340252aed7ccfdbabe5ed331fa689544",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/collection_first_supervisor.json": {
+      "blob": "c27bb61cbed8afa01dcc25c936e236fa3414771b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/collection_v2_gnu_time.txt": {
+      "blob": "af225220d82b9afb22fed2b02f8098df15360856",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/collection_v2_result.json": {
+      "blob": "072ef20cb0be8876543b4074c4d673b9d741917a",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/collection_v2_supervisor.json": {
+      "blob": "38bb10aa4d5e8992b9b0a5488dbb4f5638fdcd76",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/common_source_10_capture_review_record.md": {
+      "blob": "c782d99bef3533eea9b916694e8a067b586d0fd0",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/common_source_public_review_record.md": {
+      "blob": "58f729f921c4822d14acdeb433514e35cd3a5331",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/final_capture_manifest_v3.json": {
+      "blob": "91c9e9bcc681b806017a4ed4066c958dfe385867",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/metadata_guard_standards_review_v3_20261004.md": {
+      "blob": "924a32afec3d59685d110ca3727a751df4e7c457",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/metadata_guard_standards_review_v3_final_20261004.md": {
+      "blob": "707a9f2a6e8548795b1797ba1a8ba2419cd1fc49",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/original_full.xml": {
+      "blob": "4486eee233da18af4e97b4385ad0c347334210a5",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/original_full_gnu_time.txt": {
+      "blob": "8207ca6c97814968929abfc5a032e1a987a60232",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/original_full_result.json": {
+      "blob": "fe9ecbc8f4e62271feadd293625ae84a8f6f27b6",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/original_full_supervisor.json": {
+      "blob": "7f60a3b204df426971af895ec8f75c70cce02093",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/public_static06.json": {
+      "blob": "2f86d1f6111a45e4bdbb534c33d5bdc96d00bdb6",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/reconcile_common_source_cpu_collection.py.txt": {
+      "blob": "095eb7dd6e7ee642f938b722daf3543a6e5ade84",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/reconcile_common_source_cpu_collection_v2.py.txt": {
+      "blob": "253d8e16047e40fe980b82cf38e0a926fa4bd0d6",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/run_common_source_complete_cpu.py.txt": {
+      "blob": "687f1462801b580c3d2047cbda57da016dbfcdbe",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/spec_cpu_reconciliation_v2_capture_v3_review01.md": {
+      "blob": "0af368167d2c6160861879bdce1faefc68d0720b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/spec_cpu_reconciliation_v2_capture_v3_review02.md": {
+      "blob": "d871da7501865b89b6b52d598766d375dfe1831c",
+      "mode": "100644"
+    },
+    "docs/agents/b3-common-source-evidence-archive-2026-10-04/spec_cpu_reconciliation_v2_capture_v3_review03.md": {
+      "blob": "4e5e7841db3718ef2e30ea63dc7df9d5c766fb86",
+      "mode": "100644"
+    },
+    "docs/agents/b3-complete-method-cost-2026-10-03.md": {
+      "blob": "ef67bdf71de6a5ee1e66bc525994052139d7f39d",
+      "mode": "100644"
+    },
+    "docs/agents/b3-complete-method-cost-evidence-2026-10-03.json": {
+      "blob": "8f86054ccb99a41c6b53aec72831a18836a5cef3",
+      "mode": "100644"
+    },
+    "docs/agents/b3-complete-method-cost-request-2026-10-03.json": {
+      "blob": "5460b95b4e5ea17e48e6dafbf9fa35fa94211cf2",
+      "mode": "100644"
+    },
+    "docs/agents/b3-data-sufficiency-2026-09-30.md": {
+      "blob": "9a204cedf540a826ca47645d28cdf1f7c505a7a5",
+      "mode": "100644"
+    },
+    "docs/agents/b3-deletion-score-decision-2026-09-30.md": {
+      "blob": "30037455c45c97a90a510d008ddb0e40c1c3ca8c",
+      "mode": "100644"
+    },
+    "docs/agents/b3-eligible-paged-prefix-FOLLOWON-md-2026-10-04.source.txt": {
+      "blob": "f02636fa799b61bcf709acde8c0b0117cb6ec918",
+      "mode": "100644"
+    },
+    "docs/agents/b3-eligible-paged-prefix-README-md-2026-10-04.source.txt": {
+      "blob": "9d72a461e51097b671e7fa94704f5eecd65f6d71",
+      "mode": "100644"
+    },
+    "docs/agents/b3-eligible-paged-prefix-continue_eligible_paged_prefix-py-2026-10-04.source.txt": {
+      "blob": "88c43cb301252e38daa0afa682091e783e5a3aae",
+      "mode": "100644"
+    },
+    "docs/agents/b3-eligible-paged-prefix-evidence-2026-10-04.json": {
+      "blob": "f72228f6257c112610eeb510f65e96a8f3ef81a6",
+      "mode": "100644"
+    },
+    "docs/agents/b3-eligible-paged-prefix-run_eligible_paged_prefix_sequence-py-2026-10-04.source.txt": {
+      "blob": "c2e6c84c286dbd02f253b11c2148b71364e34811",
+      "mode": "100644"
+    },
+    "docs/agents/b3-eligible-paged-prefix-run_eligible_prefix_acceptance-py-2026-10-04.source.txt": {
+      "blob": "fd40bc35d8c9be8a2ee8a42560de21bf885ad53a",
+      "mode": "100644"
+    },
+    "docs/agents/b3-eligible-paged-prefix-study_eligible_paged_prefix-py-2026-10-04.source.txt": {
+      "blob": "7d4d11f5c2a4b3f39b8385bab01435ac82eccbb8",
+      "mode": "100644"
+    },
+    "docs/agents/b3-eligible-paged-prefix-validation-2026-10-04.md": {
+      "blob": "82b14bb61f939140480b02228969d6c7c80e3b36",
+      "mode": "100644"
+    },
+    "docs/agents/b3-feasibility-continuation-2026-10-03.md": {
+      "blob": "da1f31db12cdea165da258bfa9a81c973552ea7a",
+      "mode": "100644"
+    },
+    "docs/agents/b3-feasibility-continuation-evidence-2026-10-03.json": {
+      "blob": "6c9c2124720c3944cb3b77c397ae5c3371c9a056",
+      "mode": "100644"
+    },
+    "docs/agents/b3-feasibility-implementation-2026-10-02.md": {
+      "blob": "19e2f946713c06616506cf4950b6ba3f855e65fc",
+      "mode": "100644"
+    },
+    "docs/agents/b3-feasibility-milestone-evidence-2026-10-02.json": {
+      "blob": "7a6db64e7a508deb1bdff67491550bc81866cd0b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-feasibility-support-and-cost-2026-10-02.json": {
+      "blob": "be6a6e348b62b5da7ff3907482dd755e6d865e9d",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-cohort-null-support-review-2026-09-30.md": {
+      "blob": "a9315bba89a17c1475756d340815d477ee78643e",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-cohort-support-2026-09-30.json": {
+      "blob": "acbfc4fcc8b6264ba3c1818801bb7bfc8f263311",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-cohort-uncertainty-support-bound-2026-10-03.json": {
+      "blob": "245d96dafaefa10de6bd976e2b87a6a55aaa05c4",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-cohort-uncertainty-support-bound-2026-10-03.md": {
+      "blob": "9156ca438ddd9f6d667fc1b44548652ed7fcbfd0",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-global-null-diagnostic-2026-10-02.md": {
+      "blob": "f5a87f00ac46532e9f37c44e0e03f4067d5ca29b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-global-null-planning-2026-10-02.json": {
+      "blob": "3b9558d4e9dae72333b6fe5b0fb309c44e3975ef",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-native-embryo-support-2026-10-03-request.json": {
+      "blob": "9776201b40d15cbc9004ff4aabfafff3c7de52d3",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-native-embryo-support-2026-10-03-summary.json": {
+      "blob": "5a4650f82aed92bbe82bf3f62c21a02d28fa74f4",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-native-embryo-support-2026-10-03-validation.json": {
+      "blob": "b9397eb7e91f2f96df57b4d18a72f8935cbe9e43",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-native-embryo-support-2026-10-03.md": {
+      "blob": "521f4732968fd8720f2a5c5c54238221b2e57090",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-shard-reconciliation-and-index-2026-10-02.md": {
+      "blob": "128777edc1d8d552d6ebdfa9c3395d551f333de5",
+      "mode": "100644"
+    },
+    "docs/agents/b3-full-sparse-index-estimates-2026-10-02.json": {
+      "blob": "986f9bafa004e68233674a022f8f5e318ab3c76d",
+      "mode": "100644"
+    },
+    "docs/agents/b3-human-pilot-approved-run-2026-10-01.md": {
+      "blob": "8d70a1700f1ec3c5c857966be213e9e778afe2ee",
+      "mode": "100644"
+    },
+    "docs/agents/b3-human-pilot-recovery-2026-10-01.md": {
+      "blob": "dc604e6fa48f105115f52aaa4ce632745c5beabd",
+      "mode": "100644"
+    },
+    "docs/agents/b3-human-pilot-validation-2026-10-02.json": {
+      "blob": "83a97fac69f06907498f828f865162b08735c46b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-human-pilot-validation-2026-10-02.md": {
+      "blob": "1ee03678f20426ef6fd71c30b205dde437849508",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-amendment-proposal-2026-09-30.md": {
+      "blob": "6231ffb4dd6b63184378648143333a95f2915099",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-certificate-example-2026-10-01.json": {
+      "blob": "dcf5d046e7d3c93582ffd80969497ecedbdb3f7b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-full-shard-plan-evidence-2026-10-01.json": {
+      "blob": "e484903ebab02696436d143b2df4f73fd260b6c8",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-implementation-2026-10-01.md": {
+      "blob": "1cf3be4ceeeabbf515dbef8ca3cbf3360c691886",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-owner-decision-2026-10-01.md": {
+      "blob": "19ae0cf38ca4d779354ee59853b0a1f59483396d",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-resource-evidence-2026-10-01.json": {
+      "blob": "6f7c4f8a10e1fe4df1a10ffee8f2048f04548c7b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-resource-evidence-final-2026-10-01.json": {
+      "blob": "3bb209ee42620313c0786c251dc6cc6c32d4d363",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-resource-evidence-optimized-2026-10-01.json": {
+      "blob": "db0d006fb605aa7b7a8c0455c3e926aeb2ebb99f",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-resource-evidence-restart-hardened-2026-10-01.json": {
+      "blob": "d62688ee913f24b02c6856cfb70cb88ca4a049c4",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-resource-gate-evidence-2026-10-01.md": {
+      "blob": "31e0bdad65269985ac2a9954883fef7c4d048b11",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-scoring-plan-2026-10-01.md": {
+      "blob": "d8d14787ab54aa2adf65df48e6a38422395dc72f",
+      "mode": "100644"
+    },
+    "docs/agents/b3-measured-zero-support-evidence-2026-10-01.json": {
+      "blob": "7958c84653c516513ff5b0b4e91fabb752105579",
+      "mode": "100644"
+    },
+    "docs/agents/b3-mouse-resource-probe-2026-10-02.json": {
+      "blob": "7704c612b4e8f9028b258798bc89153e95209b45",
+      "mode": "100644"
+    },
+    "docs/agents/b3-native-catalog-human-entries-2026-10-04.jsonl": {
+      "blob": "b7db325dc4dfbd924e06de2609a0cec399cba2d8",
+      "mode": "100644"
+    },
+    "docs/agents/b3-native-catalog-human-publish-request-2026-10-04.json": {
+      "blob": "3a8556db752d722a3f4125442e1efb84d14f0202",
+      "mode": "100644"
+    },
+    "docs/agents/b3-native-catalog-human-verify-request-2026-10-04.json": {
+      "blob": "e2a3ab015b0cbca2d8188b651c725f822babbd4b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-native-catalog-mouse-entries-2026-10-04.jsonl": {
+      "blob": "f7215d27ae3a1be03a27071acb5a76688a0f8cc9",
+      "mode": "100644"
+    },
+    "docs/agents/b3-native-catalog-mouse-publish-request-2026-10-04.json": {
+      "blob": "9fe5ad2a8917963699d3a29534bd3486959b8736",
+      "mode": "100644"
+    },
+    "docs/agents/b3-native-catalog-mouse-verify-request-2026-10-04.json": {
+      "blob": "8a9aae68d69a7c75851d727cdc73833d8f690d8f",
+      "mode": "100644"
+    },
+    "docs/agents/b3-native-certificate-catalog-contract-2026-10-04.md": {
+      "blob": "8b5359580442255b82a5abf4d0e21bb6058ef666",
+      "mode": "100644"
+    },
+    "docs/agents/b3-null-method-review-2026-09-30.md": {
+      "blob": "d5da1a025415a3f5b8150bcb4dab871a861a2096",
+      "mode": "100644"
+    },
+    "docs/agents/b3-observed-bootstrap-feasibility-2026-10-03-evidence.json": {
+      "blob": "c200b4ee783e7371659062a0b78b81ca13c31786",
+      "mode": "100644"
+    },
+    "docs/agents/b3-observed-bootstrap-feasibility-2026-10-03-family.json": {
+      "blob": "f2b5d6ee448dc2fa1f711cdf5ae2f37ba2c33bb5",
+      "mode": "100644"
+    },
+    "docs/agents/b3-observed-bootstrap-feasibility-2026-10-03-request.json": {
+      "blob": "ab78a343024ca2bac9ad6b294f3fb134e69643f9",
+      "mode": "100644"
+    },
+    "docs/agents/b3-observed-bootstrap-feasibility-2026-10-03.md": {
+      "blob": "78dfb374b31a81e3c472861584549ba940e2aeb6",
+      "mode": "100644"
+    },
+    "docs/agents/b3-observed-comparison-online-search-2026-09-30.md": {
+      "blob": "3756b85eb751b2b9c954a0b248b28ce1d06b9452",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-context-request-2026-10-04.json": {
+      "blob": "470f9b1a45732d99a6f48b33442be75048f6496e",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-admission-2026-10-04.md": {
+      "blob": "82fb46362d02cb943ada0e6b9662c59c85c003ba",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-admission-evidence-2026-10-04.json": {
+      "blob": "7f37df88d278749d3ec926f84342abed104733a2",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-admission-validation-2026-10-04.md": {
+      "blob": "9395cba815aa29c6120803ce87db00121541d313",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-assembly-2026-10-04.json": {
+      "blob": "fb1c285b30abbfbf6c80310e180ba5a07ead2261",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-block-page-000000-2026-10-04.json": {
+      "blob": "c249bd2408b872379e6712c9f6d1c8f2222df9e6",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-blocks-2026-10-04.json": {
+      "blob": "b7c90364ef5db82267a57caa09d4ff7c7204dc94",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-diagnostic_execute_01-request-2026-10-04.json": {
+      "blob": "ceeec7ef37311be1cd54e02d4786929a36ff0121",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-diagnostic_replay_01-execution-catalog-2026-10-04.json": {
+      "blob": "1600ca142abd4025a8608d0bd07627c8e9f0d822",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-diagnostic_replay_01-request-2026-10-04.json": {
+      "blob": "132f1614eb0890532d6ba92777b13a6301972b58",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-finalize_empty_01-empty-catalog-2026-10-04.json": {
+      "blob": "ec0da7dea598d438d0391415998e79876e6bab0d",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-finalize_empty_01-request-2026-10-04.json": {
+      "blob": "6fddacc7d2b7afe0c354fd3a69c8e6a7cb1d09bc",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-observed-2026-10-04.json": {
+      "blob": "05d5310c928e118c8716e162171cc6584c4c018d",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-prepare-request-2026-10-04.json": {
+      "blob": "4ca75ab28077fc2428af1075c6e9fba8314ca450",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-refusal_01-request-2026-10-04.json": {
+      "blob": "9341e47890c4f1f53ca43b51dd12c354c7502b99",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-actual-sources-2026-10-04.json": {
+      "blob": "c5cd8110610c740b76936de28bc2a64db749418e",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-contract-2026-10-04.md": {
+      "blob": "f84594689d909426172704b42236e6272d21be49",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-evidence-2026-10-04.json": {
+      "blob": "9001a278df4c6a860e948f5b8fc802bd08db44fc",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-reviews-2026-10-04.md": {
+      "blob": "4c6ab5ce38b3e8fd21a8a2be2f2af16040889299",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-bootstrap-validation-2026-10-04.md": {
+      "blob": "f6b6d5e3ee9d45a7b1c84c13761ddefcd19748ec",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-cache-allocation-ledger-2026-10-04.json": {
+      "blob": "c27b787dd5f19bd02201410efb8736c026934bd1",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-cache-context-request-2026-10-04.json": {
+      "blob": "939acfb257e7fce361407153ca530bc147f57d26",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-cache-contract-2026-10-04.md": {
+      "blob": "b5aa431f597ac5c46462d8a8e9724ffa84d05565",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-cache-evidence-2026-10-04.json": {
+      "blob": "9a0adcc7852d19617420733186bd171ec7f1c0d3",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-cache-human-request-2026-10-04.json": {
+      "blob": "4f7319488f336870eb4b31ac7e3e580afef684a4",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-cache-mouse-request-2026-10-04.json": {
+      "blob": "90c6d47e99416cf481f2ee3a79187f6cb312a5ee",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-cache-reviews-2026-10-04.md": {
+      "blob": "1e9f47392f25519cd0d4c49c77727394d701aa91",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-cache-validation-2026-10-04.md": {
+      "blob": "07494d2eb3d2c60b36fb810edebb40de1505d6f4",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-common-source-10-draw-evidence-2026-10-04.json": {
+      "blob": "d44210cccf6a3886aa786ebc73b59e6ba6c10fee",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-common-source-contract-2026-10-04.md": {
+      "blob": "a348e6a1e8f8a8be537dcd3b7bda9eeb56bdb152",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-common-source-docs-spec-review-2026-10-05.md": {
+      "blob": "e17e8b3b0d9bfaa37b8624239d0b77546333cea2",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-common-source-docs-standards-review-2026-10-05.md": {
+      "blob": "27e3827f616e6bd095a3714dd19108e74b5023bf",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-common-source-evidence-2026-10-04.json": {
+      "blob": "6fe8ba68b35808f1e94735f66ae8828a9bd6b50b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-common-source-proposal-2026-10-04.md": {
+      "blob": "6fc8410245fdc752ca913710a0bd9eea088df3af",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-common-source-validation-2026-10-04.md": {
+      "blob": "330c0fb99a2437880f05fa44b2b7a71ab7faa988",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paged-native-reviews-2026-10-04.md": {
+      "blob": "900bdf1d8ea15631d5e839b0eb36bb89e48ad2c7",
+      "mode": "100644"
+    },
+    "docs/agents/b3-paired-comparison-decision-proposal-2026-09-30.md": {
+      "blob": "a234813e171dd6da1aff0beb2bb90b74c744f299",
+      "mode": "100644"
+    },
+    "docs/agents/b3-pilot-completion-evidence-2026-10-02.json": {
+      "blob": "106d51327cb5bcb0165b5ba9dbef0df39e08c698",
+      "mode": "100644"
+    },
+    "docs/agents/b3-pilot-host-interruption-evidence-2026-10-01.json": {
+      "blob": "1497ce2ba10d035944e6b3e326598f21173a58d4",
+      "mode": "100644"
+    },
+    "docs/agents/b3-pilot-host-restart-diagnosis-2026-10-01.md": {
+      "blob": "8b8f75acbe99b1e9b50839b7dc94636081af9f50",
+      "mode": "100644"
+    },
+    "docs/agents/b3-pilot-progress-2026-10-02.md": {
+      "blob": "866a0fb4bc5ecb07250f9828c7027239b7b6d7d0",
+      "mode": "100644"
+    },
+    "docs/agents/b3-prepared-sparse-session-2026-10-03.md": {
+      "blob": "feef37f40d78a7ec3f8256897af36b3f9fc916e3",
+      "mode": "100644"
+    },
+    "docs/agents/b3-prepared-sparse-session-evidence-2026-10-03.json": {
+      "blob": "022056b04ca7a094705c1e317cd16ff325535846",
+      "mode": "100644"
+    },
+    "docs/agents/b3-prepared-sparse-session-request-2026-10-03.json": {
+      "blob": "daae06848da32a52a63b7ac1be06d613cc9506cc",
+      "mode": "100644"
+    },
+    "docs/agents/b3-producer-feasibility-2026-09-30.md": {
+      "blob": "bffacf45069d12fbc1df005083fdeea9f0a43bd6",
+      "mode": "100644"
+    },
+    "docs/agents/b3-prospective-candidate-6-cells-per-embryo-2026-10-02-evidence.json": {
+      "blob": "37771745dfea78ea351478de22534d3a97e2b481",
+      "mode": "100644"
+    },
+    "docs/agents/b3-prospective-candidate-6-cells-per-embryo-2026-10-02-request.json": {
+      "blob": "fd6f963e1ad09116d4f1328b26d5625d7acb9194",
+      "mode": "100644"
+    },
+    "docs/agents/b3-prospective-candidate-64-cells-per-embryo-2026-10-02-evidence.json": {
+      "blob": "c0635368a8d9a8c0e0237334dd34ec8285d866c3",
+      "mode": "100644"
+    },
+    "docs/agents/b3-prospective-candidate-64-cells-per-embryo-2026-10-02-request.json": {
+      "blob": "eb5ef250248f3801cc201fea19621a54655fcf7b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-prospective-feasibility-assessor-2026-10-02.md": {
+      "blob": "00cda989df151186ef6d00d3bca81253b389b114",
+      "mode": "100644"
+    },
+    "docs/agents/b3-real-organogenesis-preparation-2026-09-30.json": {
+      "blob": "fa4b812a2bae597c4fb416ce5dd82c42e9645798",
+      "mode": "100644"
+    },
+    "docs/agents/b3-recommendation-implementation-2026-09-30.md": {
+      "blob": "4eeb88c7867a2eeddafddd9394f5db30a3bd7960",
+      "mode": "100644"
+    },
+    "docs/agents/b3-score-producer-audit-2026-09-30.md": {
+      "blob": "592f877fc33c4da6606992f89f33b8b366e654e4",
+      "mode": "100644"
+    },
+    "docs/agents/b3-sparse-bootstrap-diagnostic-driver-2026-10-03.md": {
+      "blob": "e4856b4d73f138cc329cb3341ae1beca0713baf7",
+      "mode": "100644"
+    },
+    "docs/agents/b3-sparse-bootstrap-diagnostic-request-2026-10-03.json": {
+      "blob": "d28bf2f78206adbc6654884aaa031f205360c1a1",
+      "mode": "100644"
+    },
+    "docs/agents/b3-sparse-bootstrap-diagnostic-request-retry-2026-10-03.json": {
+      "blob": "7d140437f69f5a3cfa3d2bbd1954b25a20104823",
+      "mode": "100644"
+    },
+    "docs/agents/b3-sparse-bootstrap-evidence-2026-10-03.json": {
+      "blob": "1e0a3800e00d2f8c9631c0122c94ffe7993bde11",
+      "mode": "100644"
+    },
+    "docs/agents/b3-sparse-bootstrap-implementation-2026-10-03.md": {
+      "blob": "364f1046849d67bb19aa83c93ae3a59ca948dea3",
+      "mode": "100644"
+    },
+    "docs/agents/b3-sparse-null-backend-2026-10-03.md": {
+      "blob": "7af0825c2be70fdbb4e5cfbbfa39cf451dc68019",
+      "mode": "100644"
+    },
+    "docs/agents/b3-sparse-publication-recovery-2026-10-03.md": {
+      "blob": "8528a031cc2017729d06b3a62edd01d55660be32",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-bootstrap-block-catalog-2026-10-04.json": {
+      "blob": "6b3accc3c878d1725a5d104753275fcc3058e150",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-bootstrap-empty-artifacts-catalog-2026-10-04.json": {
+      "blob": "3a5cceda506827eaec81b539e09b7c21130d80fe",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-bootstrap-execute-request-2026-10-04.json": {
+      "blob": "41ccbf59487fc6229bc1e24bbe78264f0ee3e963",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-bootstrap-finalize-request-2026-10-04.json": {
+      "blob": "bbeb8df6510f4bcd4203cac6e645d9708df303b4",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-bootstrap-observed-catalog-2026-10-04.json": {
+      "blob": "6a5da7b9d7122ef14f688c05467faa999fd8ce8c",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-bootstrap-orchestration-2026-10-03.md": {
+      "blob": "14676942f7a657be8ceca33d6fb719503f2c3a22",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-bootstrap-prepare-request-2026-10-04.json": {
+      "blob": "a47d82997aa7253cfd9cc2ba020fd22145d71bd6",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-bootstrap-source-catalog-2026-10-04.json": {
+      "blob": "5008506c3ae12849014576e678eb3eeb08e88e58",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-draw-schedule-2026-10-03.md": {
+      "blob": "947d131265a5bf44a5f27e51fac30476e4a69ffc",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-fixed-family-reducer-2026-10-03.md": {
+      "blob": "1c377f8b1d73cfd070611f10bf569b4e498ef69c",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-fixed-family-reducer-catalog-2026-10-03.json": {
+      "blob": "41aa3192e741c68b8c1b47406aa45048bfbbe5a6",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-fixed-family-reducer-request-2026-10-03.json": {
+      "blob": "4dd798e60eabe62f416475f590214f035b00207b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-pipeline-evidence-2026-10-04.json": {
+      "blob": "8a50bc9cceabe04e0c9d2cc1b603517732b28006",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-pipeline-reviews-2026-10-04.json": {
+      "blob": "0a1e77e79e2f7a72225ed0bf6c0e39fdc627a1f9",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-pipeline-validation-2026-10-04.md": {
+      "blob": "bed3f1efc6a4bf68ab6081e39824660a1422aee9",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-sparse-blocks-2026-10-03.md": {
+      "blob": "e4aad83cc97983be9ef42e36a998351776e8c51b",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-sparse-blocks-evidence-2026-10-03.json": {
+      "blob": "6a6125be8e756d09c9f5fa36e1f4b48d2c2cac30",
+      "mode": "100644"
+    },
+    "docs/agents/b3-streamed-sparse-blocks-request-2026-10-03.json": {
+      "blob": "e294074e1c6d8bd7deb8858c65e8d5bb8e9f2eb7",
+      "mode": "100644"
+    },
+    "docs/agents/b3-windowed-native-snapshot-2026-10-04.md": {
+      "blob": "b50f70657c9ed20568a08b6fd5f9b9b31ad1da89",
+      "mode": "100644"
+    },
+    "docs/agents/b4-macaque-xenopus-symbol-bridges-2026-09-29.md": {
+      "blob": "8e7330ec0159258815021d414a934098833b20a9",
+      "mode": "100644"
+    },
+    "docs/agents/b4-vocabulary-join-audit-2026-09-29.md": {
+      "blob": "63787e035e07242305e3901ceef629143d689b1c",
+      "mode": "100644"
+    },
+    "docs/agents/chicken-closure-gate-2026-09-29.md": {
+      "blob": "ce07f102c5dbbc0a320d31aceed46506e9eb7b0a",
+      "mode": "100644"
+    },
+    "docs/agents/chicken-conflict-review-2026-09-29.md": {
+      "blob": "656fb265e4a07174bf0277ff98e29e6a5ea4b98d",
+      "mode": "100644"
+    },
+    "docs/agents/chicken-identifier-provenance-2026-09-28.md": {
+      "blob": "6beda6649898b06ae020a94cb4cc7ca63f6d5622",
+      "mode": "100644"
+    },
+    "docs/agents/chicken-online-followup-2026-09-29.md": {
+      "blob": "6a6cf15dd671ad247d828d6d12fa4920dde96208",
+      "mode": "100644"
+    },
+    "docs/agents/chicken-producer-search-2026-09-30.md": {
+      "blob": "8f4821209893ec98cda9bd4eae81e779bf86c817",
+      "mode": "100644"
+    },
+    "docs/agents/chicken-three-candidates-2026-09-29.md": {
+      "blob": "8377e316d2a7aee6254a3b250c94c179dbffd4bf",
+      "mode": "100644"
+    },
+    "docs/agents/ciona-ghost-bridge-2026-09-29.md": {
+      "blob": "7c5d3e2f74ab4a5e8f40b2f07691c74f181f88fb",
+      "mode": "100644"
+    },
+    "docs/agents/continuation-review-2026-09-22.md": {
+      "blob": "bf26a5f5e8fc84b03c9f8769db5212f58d4480c7",
+      "mode": "100644"
+    },
+    "docs/agents/corpus-b1-decision-provenance-2026-09-29.md": {
+      "blob": "93b2ff92c9ac4732f5cfdfe15b72dbe197f24b89",
+      "mode": "100644"
+    },
+    "docs/agents/corpus-b1-freeze-packet-2026-09-29.md": {
+      "blob": "cd420a6a73237e5cd53fb3796d7e54a908c1f3f0",
+      "mode": "100644"
+    },
+    "docs/agents/corpus-defaults-adoption-2026-09-30.md": {
+      "blob": "525ed898df731b42d60b69302a2b3ed41976e21c",
+      "mode": "100644"
+    },
+    "docs/agents/development-state-2026-09-23.md": {
+      "blob": "7fdd7f6e7252d76616e61f4455dfda99ba9dd85d",
+      "mode": "100644"
+    },
+    "docs/agents/domain.md": {
+      "blob": "3643269e06a18c0fff80bcb5314bc151e0ed61ab",
+      "mode": "100644"
+    },
+    "docs/agents/finetune-readiness-tracker.md": {
+      "blob": "1838b06b9f12e4cbfbb108c2b37985bbf1d10e72",
+      "mode": "100644"
+    },
+    "docs/agents/forgetting-reference-inventory-2026-09-29.md": {
+      "blob": "c3430fd7033d726a75e02d5024a00993f5924fcd",
+      "mode": "100644"
+    },
+    "docs/agents/fresh-implementation-review-2026-09-30.md": {
+      "blob": "57e015eb2edcba630e2cb3002eb0b020ad434111",
+      "mode": "100644"
+    },
+    "docs/agents/grill-with-docs-review-2026-10-02.md": {
+      "blob": "8d85faaf1bfae6876c019ea9dd9783d78a382527",
+      "mode": "100644"
+    },
+    "docs/agents/implementation-repairs-2026-09-30.md": {
+      "blob": "3db225fae1173f99b85285209284187b1c692779",
+      "mode": "100644"
+    },
+    "docs/agents/issue-tracker.md": {
+      "blob": "2bf3a8f6e478c4320c2df42efb0662ae9457560e",
+      "mode": "100644"
+    },
+    "docs/agents/mouse-embryo-identity-recovery-2026-09-30.json": {
+      "blob": "09912bf724e98cf2dcac075a4cf0f6fd74712e73",
+      "mode": "100644"
+    },
+    "docs/agents/mouse-embryo-identity-recovery-2026-09-30.md": {
+      "blob": "2b694ebcb385343d1608ae75ddfeb008ad0af0c7",
+      "mode": "100644"
+    },
+    "docs/agents/multispecies-remediation-evidence-2026-09-28.md": {
+      "blob": "0149529fed46c0d48fc7213baaf5cd0d0abddb63",
+      "mode": "100644"
+    },
+    "docs/agents/nature2019-assay-token-evidence-2026-09-30.md": {
+      "blob": "031c54fff3d80b28dd5a48829790c46d0a694cc9",
+      "mode": "100644"
+    },
+    "docs/agents/nature2019-cross-source-overlap-2026-09-30.md": {
+      "blob": "60f38bed4ba0304234b31d54a640d9bfe18111c3",
+      "mode": "100644"
+    },
+    "docs/agents/nature2019-embryo-identity-2026-09-30.md": {
+      "blob": "2dd701f6200c07609af45c119ca7e1be9993d68c",
+      "mode": "100644"
+    },
+    "docs/agents/nature2019-source-suitability-2026-09-29.md": {
+      "blob": "2f4464bee7ea1a718b1134c436520064c1195b0a",
+      "mode": "100644"
+    },
+    "docs/agents/non-zebrafish-gates-2026-09-29.md": {
+      "blob": "a964ab2c3b57d353e394d8744ed0e1963586d5a5",
+      "mode": "100644"
+    },
+    "docs/agents/non-zebrafish-online-followup-2026-09-29.md": {
+      "blob": "f4c2902571c82b37d8824dcbe4d3d6cfbde8dcd4",
+      "mode": "100644"
+    },
+    "docs/agents/register-review-2026-09-14.md": {
+      "blob": "dd729941f6d70b965fb92a5e671b3c81f3bf38d5",
+      "mode": "100644"
+    },
+    "docs/agents/review-remediation-plan-2026-09-28.md": {
+      "blob": "687d9631df77332182c5243afb3ce4583d58992f",
+      "mode": "100644"
+    },
+    "docs/agents/ticket05-checkpoint-discovery-2026-09-30.json": {
+      "blob": "2202ff0b5a0c40767b97a8c5aeb0012064aa8b97",
+      "mode": "100644"
+    },
+    "docs/agents/ticket05-checkpoint-discovery-2026-09-30.md": {
+      "blob": "1eb554518e12dd0a8b4ca1479bd2badf42e8dca1",
+      "mode": "100644"
+    },
+    "docs/agents/ticket12-gate-research-2026-09-30.md": {
+      "blob": "69e545899d225399bd71d9ff843ad2b94f371183",
+      "mode": "100644"
+    },
+    "docs/agents/triage-labels.md": {
+      "blob": "2629a428bc1bed50a113413e7e785f75c4eb1505",
+      "mode": "100644"
+    },
+    "docs/agents/zebrafish-intake.md": {
+      "blob": "fe2facb332d2a0836f3195b1f203be58aa8f847a",
+      "mode": "100644"
+    },
+    "docs/b1-criterion-proposal.md": {
+      "blob": "a0b2a3af36f8d67a6308f84186a5b0303e7805ad",
+      "mode": "100644"
+    },
+    "docs/chicken-geneid-bridge-audit.json": {
+      "blob": "de4bf1996da126c3f8f651a1d5106ca532ca1e58",
+      "mode": "100644"
+    },
+    "docs/chicken-published-table12-audit.json": {
+      "blob": "a9e3e46bb277401c9ee9068201ceb16c40809d4b",
+      "mode": "100644"
+    },
+    "docs/chicken-published-table12-candidates.tsv": {
+      "blob": "794ee2c25deec4d24663d23bb80ff27f5454c5eb",
+      "mode": "100644"
+    },
+    "docs/finetune-data-requirements.md": {
+      "blob": "27d9d78a8d3f690747020baeb1d3e92988aaa220",
+      "mode": "100644"
+    },
+    "docs/finetune-major-issues.md": {
+      "blob": "021c57ecf203eab1091eceb211a1a793441f0e04",
+      "mode": "100644"
+    },
+    "docs/finetune-readiness-tools.md": {
+      "blob": "ef4b245647e4c0ebe213e9c3cb25a66574ad430a",
+      "mode": "100644"
+    },
+    "docs/ortholog-eligibility-chicken-geneid-bridge.json": {
+      "blob": "908ad8f8876597bfeecedc9c4373e3980786eed1",
+      "mode": "100644"
+    },
+    "docs/ortholog-eligibility-report.md": {
+      "blob": "e6e2816406441522d003ffaf5c7b66dec6bd219b",
+      "mode": "100644"
+    },
+    "docs/perturbation-and-baseline-design.md": {
+      "blob": "fdcb39bad9996ba2c60fa675d2f90759a11f5a63",
+      "mode": "100644"
+    },
+    "docs/spatial-coordinate-and-split-design.md": {
+      "blob": "e190b67431132e795df249e0fbc28e06c9f80e82",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/b4_macaque_symbol_bridge.json": {
+      "blob": "bb0188e5965b3148622b64584875ae25e20bec9e",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/b4_vocab_join_audit.json": {
+      "blob": "23b79c79816325901f08dcf4d034fa53982f53cd",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/b4_xenopus_symbol_bridge.json": {
+      "blob": "4e8036b5f36f0626e502564d1af5fdfff844d5af",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/cells_and_spots.md": {
+      "blob": "bc6045dacb02de39ce288896edee3bbd65a03028",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/composition.md": {
+      "blob": "9b02a22562f68612737584962885ede3bbf4a34e",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/holdout_coverage.json": {
+      "blob": "f70fabd56d8f419ad37c7fde69157f113ca5a2e6",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/nature2019_candidate/candidate_h5ad_provenance.json": {
+      "blob": "15040f8b74801913bae17f7793b5abc2a4beae5d",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/nature2019_candidate/candidate_rows.tsv": {
+      "blob": "d25c9769036d56449479d41276ad5a54a035be95",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/nature2019_candidate/provenance.json": {
+      "blob": "ea87dd399922f39bceae8e5915704a79f1fc021d",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/orthologs/availability_report.json": {
+      "blob": "f36b15a1a353d3ccf0676ecceb5a84d469b0ce04",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/orthologs/coverage_report.json": {
+      "blob": "068c2be1d79e9f9f59b783b3bb70da3f74ac27c0",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/orthologs/crosscheck_report.json": {
+      "blob": "833d8502207ef74c1023403f47482e6085fb8c25",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/orthologs/join_audit.json": {
+      "blob": "1822a53df042cbd25372138e47adaed15f089e17",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/preparation_rehearsal.json": {
+      "blob": "e8e013148f1cb3175c8c1d45fe29f5fae465ac89",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/preparation_rehearsal_spatial_copies.json": {
+      "blob": "6a22c1a9a27647eaa801486e458b5c6ccff98fab",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/probe_b4_esm2_plan.md": {
+      "blob": "4abcb9e30813140b8b65ee032bf5322a8d7583ed",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/probe_readiness.json": {
+      "blob": "c504cbf9c4f7cf9103ac7d61bab8d97a6f01482b",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/report.json": {
+      "blob": "4ee7acaddcd6c108b67b3cfd7984a4e3fbaaa4db",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/sampling_audit.json": {
+      "blob": "d2d8cc7990f4cf6c73a34039142b2d963cccb5b0",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/spatial_coordinate_copies.json": {
+      "blob": "897e38c5d512add98a2a75f62062d0d346a01fa2",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/spatial_coordinates.json": {
+      "blob": "875a29d282f60336c0314aaa1f245aaa71fdcd11",
+      "mode": "100644"
+    },
+    "logs/dataset_audit/summary.txt": {
+      "blob": "b9324815bb36465ab04bee34da1d42e58c81bb77",
+      "mode": "100644"
+    },
+    "notebooks/celltype-classification-across-species.ipynb": {
+      "blob": "1fb04b46e741820db437eb9914cc531f04383e8c",
+      "mode": "100644"
+    },
+    "notebooks/contextual-gene-embeddings.ipynb": {
+      "blob": "7412158738a6efd5ecdd59fb4097f73cfd1ba13f",
+      "mode": "100644"
+    },
+    "preprocess/README.md": {
+      "blob": "823e0102a503ddd94b49218e44270820970b3680",
+      "mode": "100644"
+    },
+    "preprocess/fasta_manifest_pep.json": {
+      "blob": "209eb57841266b4daec6046d49f597a42a64efa4",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/REPORT.md": {
+      "blob": "13657cfb09eb1b591c052307fd47ef5c87ef89d1",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/REPORT_lytechinus.md": {
+      "blob": "301aa923c5b7b88597df86c2265d39a18f3e74c6",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/amphioxus_protein_bridge.tsv.gz": {
+      "blob": "d7ed6de15abaf672136cf419c5e4b9fab9f9a95f",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/amphioxus_protein_bridge.tsv.gz.json": {
+      "blob": "0a616820131f1ca230765ea9b14d4cf9d2ecaae6",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/celegans_name_to_wbgene.json": {
+      "blob": "0be812c1a52c0cc42bd1fa207d1508d5fbde52e0",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/drosophila_symbol_to_fbgn.json": {
+      "blob": "01bfa7e8985a550185a4e4034484496deb84a10a",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/human_symbol_to_ensg.json": {
+      "blob": "0d610181a5c7dad816010154df7a6d91594f833c",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/lytechinus_lvar_to_loc.json": {
+      "blob": "8d09bbe6007eea81180f8aea005d74b3c9cf1dd0",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/lytechinus_lvar_to_loc_base.json": {
+      "blob": "dfb74bb4a1fd5f239b42f2d11234d368258e9eb8",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/macaca_fascicularis_probe_symbol_to_ensmfag.json": {
+      "blob": "f3ada7ca91b4492c0b51be1ad7a6effb879ad9c1",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/mouse_symbol_to_ensmusg.json": {
+      "blob": "c0dadc8bbcae4c5873008c45f89b4559c3c1bcc8",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/xenopus_tropicalis_probe_symbol_to_ensxetg.json": {
+      "blob": "fbefd2bf24d671ca92f566cb29b9616e6a3b9010",
+      "mode": "100644"
+    },
+    "preprocess/gene_mappings/zebrafish_loc_to_ensdarg.json": {
+      "blob": "0183d7de6e31d78ef41a0d52d701bf7793fd9dbc",
+      "mode": "100644"
+    },
+    "preprocess/get_stable_id_mapping.py": {
+      "blob": "a3e41ff0d7f55618758cec25b439b071180e8ae2",
+      "mode": "100644"
+    },
+    "preprocess/orthologs/chicken_ncbi_geneid_bridge_r110_to_r106.tsv": {
+      "blob": "fa128c28d76c3dba9a3e9d84881d78f2db8481e9",
+      "mode": "100644"
+    },
+    "preprocess/orthologs/manifest.json": {
+      "blob": "361801efca3432a64cacb0660c83ebfe8ab9cd78",
+      "mode": "100644"
+    },
+    "preprocess/orthologs/ortholog_pairs.tsv.gz": {
+      "blob": "358834503184bcfe73d4a04b3004f3e368225d8f",
+      "mode": "100644"
+    },
+    "preprocess/probe_stage_mappings.json": {
+      "blob": "eec122eb70ba098431c62d84eefc34ec97547b80",
+      "mode": "100644"
+    },
+    "preprocess/protein_embedding.py": {
+      "blob": "fd0fe1d451708e321a36128e236f5abd6a146821",
+      "mode": "100644"
+    },
+    "preprocess/requirements.txt": {
+      "blob": "857175af799bf556ccf9d427eff941e51f23512e",
+      "mode": "100644"
+    },
+    "preprocess/stage_phase_mapping.md": {
+      "blob": "3387f1a4b9a7384bf4adeaccb4f23c4124cb4417",
+      "mode": "100644"
+    },
+    "pyproject.toml": {
+      "blob": "234cdd24f81d527b8b8a4542fd2ced45ebfe64e8",
+      "mode": "100644"
+    },
+    "scripts/aggregate_b3_measured_zero_full_scores.py": {
+      "blob": "2fb1ae1fb1598dddfc7a08472dc04495625d62b2",
+      "mode": "100644"
+    },
+    "scripts/assess_b3_full_native_embryo_support.py": {
+      "blob": "27b4767c963150dc00357ab9d04414b37f94eb65",
+      "mode": "100644"
+    },
+    "scripts/assess_b3_measured_zero_feasibility.py": {
+      "blob": "325abecb748894f893b0ed24254675a9d636c1d4",
+      "mode": "100644"
+    },
+    "scripts/assess_b3_observed_bootstrap_feasibility.py": {
+      "blob": "fbbac0c666fd0a025bd676f5e0b633035d603688",
+      "mode": "100644"
+    },
+    "scripts/audit_chicken_published_mapping.py": {
+      "blob": "ee755c129e6ca48c44d700efc5d70ee08a09c868",
+      "mode": "100644"
+    },
+    "scripts/audit_datasets.py": {
+      "blob": "8ea626758120851f022bc95e283a367ed1755f39",
+      "mode": "100644"
+    },
+    "scripts/audit_probe_vocab_joins.py": {
+      "blob": "c0496a0e75e1d2fce1fcfa76fa0775f8e85dd3fa",
+      "mode": "100644"
+    },
+    "scripts/audit_sampling.py": {
+      "blob": "020dca45027218370bf77994da528aa969c17026",
+      "mode": "100644"
+    },
+    "scripts/b3_authenticated_helpers.py": {
+      "blob": "47d54f52f4eb4f973e5343494fa6ef834a1a4601",
+      "mode": "100644"
+    },
+    "scripts/b3_h5_attribute_admission.py": {
+      "blob": "0e6faa87d4e35b95969f76cc407c6e34933a4314",
+      "mode": "100644"
+    },
+    "scripts/b3_native_catalog_pages.py": {
+      "blob": "ce7dd514417fe78690d6f67999f303cfe318b93b",
+      "mode": "100644"
+    },
+    "scripts/b3_pilot_checkpoints.py": {
+      "blob": "a6e8c302973384daaa6215222b54f152738b0c49",
+      "mode": "100644"
+    },
+    "scripts/b3_score_contract.py": {
+      "blob": "7d5182f0859fac1afde1b6bd3925c463fe9f5298",
+      "mode": "100644"
+    },
+    "scripts/b3_streamed_bootstrap.py": {
+      "blob": "e70fb31f08f1fbb494068078e378997956360cb8",
+      "mode": "100644"
+    },
+    "scripts/b3_streamed_draw_schedule.py": {
+      "blob": "9923e7d2e6c15a74169a96ea503781d3ec4bd37d",
+      "mode": "100644"
+    },
+    "scripts/b3_windowed_native.py": {
+      "blob": "ef092c8bbaca9bbf1f95a31323e0c7e8947559f9",
+      "mode": "100644"
+    },
+    "scripts/bootstrap_b3_family.py": {
+      "blob": "073d8f909544a5c4821957f2f5cddee114a36a74",
+      "mode": "100644"
+    },
+    "scripts/bootstrap_b3_measured_zero_v2.py": {
+      "blob": "e5e896f222915a4221756d571765f7de826454cb",
+      "mode": "100644"
+    },
+    "scripts/bootstrap_b3_paged_native.py": {
+      "blob": "b79511009dd9d3f163a44a1c07495ded10bbf305",
+      "mode": "100644"
+    },
+    "scripts/bootstrap_b3_paged_native_common_source.py": {
+      "blob": "aafe4dd4e5c3e4b1fb37cd9cbba840c9a6e3d1fa",
+      "mode": "100644"
+    },
+    "scripts/bootstrap_b3_streamed.py": {
+      "blob": "d9300ec6b8780641cb720ccd79dda67999cdae46",
+      "mode": "100644"
+    },
+    "scripts/build_amphioxus_protein_bridge.py": {
+      "blob": "adfe63f37e3ec00aa5fb6b9d676ee0610f66f086",
+      "mode": "100644"
+    },
+    "scripts/build_chicken_geneid_bridge.py": {
+      "blob": "09c0fc1840b7a53e4a864b0578c5fa916153977e",
+      "mode": "100644"
+    },
+    "scripts/build_gene_mappings.py": {
+      "blob": "e66e2312b2493779b59dc0ff03f9a65ac77d74fd",
+      "mode": "100644"
+    },
+    "scripts/build_lytechinus_mapping.py": {
+      "blob": "269ca8607e92e3ed16dd64b22468d3fd5859db7c",
+      "mode": "100644"
+    },
+    "scripts/build_ortholog_table.py": {
+      "blob": "24117b4f81cc97dd61f61b0c26a00aa3a49e2f24",
+      "mode": "100644"
+    },
+    "scripts/build_probe_symbol_bridges.py": {
+      "blob": "e636060028c66de22402b1a0609667e4730cbf61",
+      "mode": "100644"
+    },
+    "scripts/check_species_readiness.py": {
+      "blob": "ae488f1e479a13a98a8ee317460362d5c7928306",
+      "mode": "100644"
+    },
+    "scripts/compare_representations.py": {
+      "blob": "b2f4c3b165d62d477196a8ad819046a58f6cda79",
+      "mode": "100644"
+    },
+    "scripts/compare_validation_losses.py": {
+      "blob": "b0b9f9ea3bdd3c264e339d4b3cd8f7d27b12c3cf",
+      "mode": "100644"
+    },
+    "scripts/derive_nature2019_candidate_h5ad.py": {
+      "blob": "9b8894982bcf3cdef8cc95e23d9859abac732197",
+      "mode": "100644"
+    },
+    "scripts/derive_nature2019_candidate_metadata.py": {
+      "blob": "da1ed338483aea6851425b0cac36fa5460fde19c",
+      "mode": "100644"
+    },
+    "scripts/finetune.py": {
+      "blob": "b05d5a623ca8123bfebf43d986a2e693ea06ef44",
+      "mode": "100644"
+    },
+    "scripts/freeze_validation_cohort.py": {
+      "blob": "49ea1b875c19b743bebfb1b4b0047dd9f440ed78",
+      "mode": "100644"
+    },
+    "scripts/handoff_ortholog_scores.py": {
+      "blob": "f03c3f48f484c51aefa8559e1b5f610d9e6acc61",
+      "mode": "100644"
+    },
+    "scripts/import_b3_measured_zero_pilot_shard.py": {
+      "blob": "19094076202aa3e76daa3fb00faed079c7c80e87",
+      "mode": "100644"
+    },
+    "scripts/index_b3_measured_zero_full_scores.md": {
+      "blob": "466661891fbfa6db871ab1e0d5df8ec32e0e7f55",
+      "mode": "100644"
+    },
+    "scripts/index_b3_measured_zero_full_scores.py": {
+      "blob": "aed675ec11b40411ff778882e942d245d4a40440",
+      "mode": "100644"
+    },
+    "scripts/manage_b3_pilot.py": {
+      "blob": "8929ace42d164243af81cb08a58eee9bfee28906",
+      "mode": "100644"
+    },
+    "scripts/normalize_amphioxus_refseq.py": {
+      "blob": "b5d038c55fb5f885e975630461257363b97b3ad0",
+      "mode": "100644"
+    },
+    "scripts/normalize_ciona_ghost_kh2012.py": {
+      "blob": "dbabc72b1aacb3dc2a64810da08468db78d54eb0",
+      "mode": "100644"
+    },
+    "scripts/plan_b3_complete_method_cost.py": {
+      "blob": "d71ed5af5136c095ad2e75811d3d93884a776021",
+      "mode": "100644"
+    },
+    "scripts/plan_b3_measured_zero_shards.py": {
+      "blob": "b629d6055747e406e81c4b216ed198ea26e19924",
+      "mode": "100644"
+    },
+    "scripts/preflight_b3_full_cohort.py": {
+      "blob": "797ee787bd7f4889980329646cb5311be809eca6",
+      "mode": "100644"
+    },
+    "scripts/preflight_b3_measured_zero.py": {
+      "blob": "ff8085a1ff81b217657e6bce62e869538b07011d",
+      "mode": "100644"
+    },
+    "scripts/preflight_b3_measured_zero_full.py": {
+      "blob": "bbf6d3ea059e89ad085639863f6c9b0b30287eda",
+      "mode": "100644"
+    },
+    "scripts/preflight_b3_measured_zero_pair.py": {
+      "blob": "2864976c6ec4825ac484cbb85b4b5c58c1651668",
+      "mode": "100644"
+    },
+    "scripts/preflight_b3_pair.py": {
+      "blob": "5f53583af49438add9a475f20abaf21999fe963c",
+      "mode": "100644"
+    },
+    "scripts/preflight_b3_scores.py": {
+      "blob": "b48d161b6df01c41191d7c4abc9d4e69d11d0cd2",
+      "mode": "100644"
+    },
+    "scripts/prepare_b3_measured_zero_embryo_metrics.py": {
+      "blob": "6834640db7ac7943b0c9837d1fc6cf87361a80e2",
+      "mode": "100644"
+    },
+    "scripts/prepare_b3_organogenesis.py": {
+      "blob": "10a2dc8ab6bd965ff5427a2dcb399972993f01e2",
+      "mode": "100644"
+    },
+    "scripts/prepare_b3_paged_native_cache.py": {
+      "blob": "436171e59c429c921cfb2a066d8dfcb890749859",
+      "mode": "100644"
+    },
+    "scripts/prepare_b3_paged_native_common_source.py": {
+      "blob": "e49ba22e112abf3da937dfcdea5da53e2f934c4c",
+      "mode": "100644"
+    },
+    "scripts/prepare_b3_paged_native_context.py": {
+      "blob": "54abad05c7943756f25ea3cc7f5040fa30bb280e",
+      "mode": "100644"
+    },
+    "scripts/prepare_b3_pilot.py": {
+      "blob": "76facf42a9c9c155324baa2cf9ca685d25c61aff",
+      "mode": "100644"
+    },
+    "scripts/prepare_spatial_coordinates.py": {
+      "blob": "8538347b3739ac3fcafdc1a7a077558330af6b22",
+      "mode": "100644"
+    },
+    "scripts/probe_b3_measured_zero_resources.py": {
+      "blob": "33a066fdbed648b9e1b5b7a7784cf24f4460ee85",
+      "mode": "100644"
+    },
+    "scripts/produce_b3_measured_zero_scores.py": {
+      "blob": "8be02f06e8c1f1ad0af0ed5ee40a67723ae15edc",
+      "mode": "100644"
+    },
+    "scripts/produce_b3_scores.py": {
+      "blob": "644fc26393d542d4055cf6e287e2022a37b5c0c5",
+      "mode": "100644"
+    },
+    "scripts/reconcile_b3_measured_zero_full_shard.py": {
+      "blob": "15507ea7f82c0400c4714a32f5539c836eb9c45c",
+      "mode": "100644"
+    },
+    "scripts/recover_tome_embryo_ids.py": {
+      "blob": "486284697f22b8371b67614da1bf8c22c2d03d69",
+      "mode": "100644"
+    },
+    "scripts/reduce_b3_streamed_fixed_pairs.py": {
+      "blob": "3e3341e06a941013d345b8c964e9cf2165d81a1f",
+      "mode": "100644"
+    },
+    "scripts/rehearse_preparation.py": {
+      "blob": "992cddd240ebc4c4d2234afba0dc38abc6e788f7",
+      "mode": "100644"
+    },
+    "scripts/replay_b3_measured_zero_native_effects.py": {
+      "blob": "fc7915d913eb73a9af6adc5d185647cd6aaf1107",
+      "mode": "100644"
+    },
+    "scripts/replay_b3_prepared_sparse_session.py": {
+      "blob": "b14a3e6a742e65651f98d436ced90d90c69fd489",
+      "mode": "100644"
+    },
+    "scripts/replay_b3_sparse_bootstrap_draws.py": {
+      "blob": "70ef373950b0b3f2831211a4322feb50ad108fef",
+      "mode": "100644"
+    },
+    "scripts/replay_b3_sparse_null.py": {
+      "blob": "f47a241f8ec53d71a1b0847e73220814439d0c60",
+      "mode": "100644"
+    },
+    "scripts/replay_b3_streamed_sparse_blocks.py": {
+      "blob": "51392f06aa25833b4a79d2dea3d77bc0d81c332c",
+      "mode": "100644"
+    },
+    "scripts/report_holdout_coverage.py": {
+      "blob": "2e837ef4168a18c0fd1e392c76d7d7fcec330475",
+      "mode": "100644"
+    },
+    "scripts/report_ortholog_eligibility.py": {
+      "blob": "1719372c4cde26e783dc2f7e4ac0183ec43147a1",
+      "mode": "100644"
+    },
+    "scripts/run_b3_pilot_comparison.py": {
+      "blob": "6cc5b702c3f9c727bdb2db5426aa029bee2e69ce",
+      "mode": "100644"
+    },
+    "scripts/study_b3_scalar_cache.py": {
+      "blob": "b9345b312c694a5cb3b1283314c9e59b817b09ac",
+      "mode": "100644"
+    },
+    "scripts/summarize_b3_measured_zero_full_diagnostics.py": {
+      "blob": "66f09fc7bd6000b7c51bcfaed090a7c349d9ed21",
+      "mode": "100644"
+    },
+    "scripts/summarize_ortholog_full_universe.py": {
+      "blob": "418ce0b0b1c8876810e5225be15dfe73942f72ef",
+      "mode": "100644"
+    },
+    "scripts/summarize_ortholog_measured_zero_v2.py": {
+      "blob": "b3dce1b8fdc59713a80cc4e5bf43fc2035900454",
+      "mode": "100644"
+    },
+    "scripts/summarize_ortholog_paired_scores.py": {
+      "blob": "d7574521e383152a2f8b23f36ef8cd17d8b6b7cb",
+      "mode": "100644"
+    },
+    "scripts/supervise_b3_pilot.py": {
+      "blob": "8ea60fdb9a5f36ce64f99396c6deaefabde541ae",
+      "mode": "100644"
+    },
+    "scripts/validate_manifest.py": {
+      "blob": "8e43cae4d708ab98f27c57656e52222e7eeecc31",
+      "mode": "100644"
+    },
+    "scripts/validate_prepared_artifacts.py": {
+      "blob": "afd429587f597a85fc759567f0cd8c70271568f4",
+      "mode": "100644"
+    },
+    "scripts/validate_probes.py": {
+      "blob": "96d12cebaa4801f07fc447152252617f41629d2e",
+      "mode": "100644"
+    },
+    "scripts/verify_ortholog_topk_origin.py": {
+      "blob": "5d63144e4c08e0a545539e063c13876846072f6b",
+      "mode": "100644"
+    },
+    "src/transcriptformer/__init__.py": {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644"
+    },
+    "src/transcriptformer/cli/__init__.py": {
+      "blob": "79c3ebc39327987370381e7f62911c51958f0e17",
+      "mode": "100644"
+    },
+    "src/transcriptformer/cli/conf/inference_config.yaml": {
+      "blob": "37583ab036629eb79ac622a363d926e7b69348ba",
+      "mode": "100644"
+    },
+    "src/transcriptformer/cli/download_artifacts.py": {
+      "blob": "f424263dbeee4710c3fd59f2560b68aebb775ae8",
+      "mode": "100644"
+    },
+    "src/transcriptformer/cli/download_data.py": {
+      "blob": "a9094bbf5f958fd83c6f85e3802d0dd550c91502",
+      "mode": "100644"
+    },
+    "src/transcriptformer/cli/evaluate.py": {
+      "blob": "4f996a8b7fdef049ddcbabf4f22b0e4afc9b0b64",
+      "mode": "100644"
+    },
+    "src/transcriptformer/cli/finetune.py": {
+      "blob": "f26fa396c5b22c0ffcf11a918fee18c7dcbe2bd9",
+      "mode": "100644"
+    },
+    "src/transcriptformer/cli/inference.py": {
+      "blob": "39f6ecb99d9e74d37184e97ada4346f748fbb814",
+      "mode": "100644"
+    },
+    "src/transcriptformer/data/__init__.py": {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644"
+    },
+    "src/transcriptformer/data/bulk_download.py": {
+      "blob": "b01733b3f6b8a2027255c844ffa86a2f1cbfd81e",
+      "mode": "100644"
+    },
+    "src/transcriptformer/data/dataclasses.py": {
+      "blob": "b74e4ae6ea4e0f96d89ac7a3720bf6f7415415ca",
+      "mode": "100644"
+    },
+    "src/transcriptformer/data/dataloader.py": {
+      "blob": "c3f7250885614471777380c9e601b414f8f089bc",
+      "mode": "100644"
+    },
+    "src/transcriptformer/datasets.py": {
+      "blob": "7df0e40f4ea2667f72059ea2bba1c0fa005cfc86",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/__init__.py": {
+      "blob": "9ff7653068830b547a4a5a41b6d771c8d6ba1f04",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/artifacts.py": {
+      "blob": "c660888c993af92582cfb890ac7e2bb6677762d9",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_aggregation.py": {
+      "blob": "703f0617674d11ada6b2c0863cee9f7107e991c4",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_bins.py": {
+      "blob": "835b2b07255ad0382594e68db3f29f76fc4039dc",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_bootstrap.py": {
+      "blob": "137e516be39b74c9027b525c43e3424e129930bf",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_cell_stream.py": {
+      "blob": "50b93f062db0ebedc0af405b8053c1c188ec9c9c",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_gene_id.py": {
+      "blob": "e7cdc21ad3d84fed391e7b713ac2900cebfcdaaf",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_identifiers.py": {
+      "blob": "b5a1e9761033c999f87cbeeac9f5bd901e599db3",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_matched_null.py": {
+      "blob": "b446efc96010da25b744588897791990f2c6167b",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_measured_zero.py": {
+      "blob": "38f98cead312e1b2dd78b54065ce8ad066c9271c",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_measured_zero_bootstrap.py": {
+      "blob": "0ef74b9fc3ac58fc92cbbcd22d92ae092bd0b807",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_measured_zero_prepared.py": {
+      "blob": "72ed02ed206bb159e59856f1344d96274f53f420",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_measured_zero_scores.py": {
+      "blob": "48cabc45de44c2ff0f048fbbc00813de43f86774",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_measured_zero_shards.py": {
+      "blob": "e2eef23c14423e620713728ce4fdbea05864e761",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_pipeline.py": {
+      "blob": "9d59c84687bf72388b8d32afa6289dcc05f000e2",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_prepared.py": {
+      "blob": "8a9bcc59669a0d89805848aeaf75d980bbb587b5",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_raw_artifact.py": {
+      "blob": "1025f06253347a67980b4be918e8961c2757be24",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/b3_score_contract.py": {
+      "blob": "0ec5da615f20bb90b24ecd0e3ee97b6f8af1d014",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/coordinates.py": {
+      "blob": "e54a8ac283b20a372129ba192f0dc43a4f9ca989",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/coverage.py": {
+      "blob": "01cb4f7a69ea8772cc8c91e2129c2fa967d34fe3",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/early_stopping.py": {
+      "blob": "f9d0f09d81b66d8ade0b2d86f4a6e842a20cdeb8",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/embryo_identity.py": {
+      "blob": "acc98891b359d283694aff45c19f1aeef7ecd60c",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/evaluate.py": {
+      "blob": "2909f39600e46ce05eb4c912de1414949cc5fd96",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/gpu.py": {
+      "blob": "229bba32e35c3889846c6168944a7dbb68c27719",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/manifest.py": {
+      "blob": "47db9a7c6ceaff19baa8eb80187ecd535063e6bd",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/prepare.py": {
+      "blob": "4673e3eb7eaeefe1dfdf3ebbdbacbca4b953f200",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/probes.py": {
+      "blob": "65eba36857eaa18526967ab71c8f3a1d7cc426ed",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/representation.py": {
+      "blob": "ab40656abfb0b3bcf6b6a69d10d4ae0a98158fc8",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/resume.py": {
+      "blob": "0d3097c54d960af42e1869df075d7a77e273aff8",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/sampling_audit.py": {
+      "blob": "3ceac244f6c6516428225a3696dd1b9764bf65b9",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/selection.py": {
+      "blob": "49a37692b4ea865ada927d3061e6521224e4d6cf",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/spatial.py": {
+      "blob": "1e18528f32f3b8c71e634b203cb89aec65ee002c",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/species_readiness.py": {
+      "blob": "2c199dd9baf47033669c3ac784d2f3fdad7a087d",
+      "mode": "100644"
+    },
+    "src/transcriptformer/finetune/train.py": {
+      "blob": "a84d8eb616ee7647fe7929cfac50c9561e25f17d",
+      "mode": "100644"
+    },
+    "src/transcriptformer/model/__init__.py": {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644"
+    },
+    "src/transcriptformer/model/embedding_surgery.py": {
+      "blob": "609f52fc6eda037eb10cf2774342ac0822a4606f",
+      "mode": "100644"
+    },
+    "src/transcriptformer/model/inference.py": {
+      "blob": "f61e8a8466ff23b20619476fca17aa4dc3fcc65e",
+      "mode": "100644"
+    },
+    "src/transcriptformer/model/layers.py": {
+      "blob": "5fe7ca88878957a20ab31c4c74b38f88562846b5",
+      "mode": "100644"
+    },
+    "src/transcriptformer/model/losses.py": {
+      "blob": "957ff71d62a559a51d89ebaefd3ed02b908ffed1",
+      "mode": "100644"
+    },
+    "src/transcriptformer/model/masks.py": {
+      "blob": "e6a413c614add38874cc0b32552a11514e06787f",
+      "mode": "100644"
+    },
+    "src/transcriptformer/model/model.py": {
+      "blob": "be4f77c577122f05d4305fab9c81f4e0c607e28c",
+      "mode": "100644"
+    },
+    "src/transcriptformer/tokenizer/__init__.py": {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644"
+    },
+    "src/transcriptformer/tokenizer/tokenizer.py": {
+      "blob": "35f4bd3bd90048f73a889e920a66b8f589260763",
+      "mode": "100644"
+    },
+    "src/transcriptformer/tokenizer/vocab.py": {
+      "blob": "26d30d9ebc5bb3389c5e01feb658eab5f762cabf",
+      "mode": "100644"
+    },
+    "src/transcriptformer/utils/__init__.py": {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644"
+    },
+    "src/transcriptformer/utils/utils.py": {
+      "blob": "325d40614fbb32bdbcfb4d86e9a2ef6dd6ebbc54",
+      "mode": "100644"
+    },
+    "test/__init__.py": {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644"
+    },
+    "test/conftest.py": {
+      "blob": "b096656d4732de8970f829eee5c99b609329ecca",
+      "mode": "100644"
+    },
+    "test/data/chicken_val.h5ad": {
+      "blob": "0b9e7beabb964505b4d91a3b0a39b037682f5da3",
+      "mode": "100644"
+    },
+    "test/data/human_val.h5ad": {
+      "blob": "7be18b5f093c5e97731295dd4490a24b973922d6",
+      "mode": "100644"
+    },
+    "test/data/mouse_val.h5ad": {
+      "blob": "342d7772b1539f414c915aa7b2ebceb582dabc27",
+      "mode": "100644"
+    },
+    "test/data/reference_embeddings/embeddings_exemplar_mouse.h5ad": {
+      "blob": "abfd3dbdc460306b6768c73ddf8f58a05b28f4b9",
+      "mode": "100644"
+    },
+    "test/data/reference_embeddings/embeddings_metazoa_chicken.h5ad": {
+      "blob": "c63369c2f1c8c796eceb1fcfac30a24310dbe784",
+      "mode": "100644"
+    },
+    "test/data/reference_embeddings/embeddings_sapiens_human.h5ad": {
+      "blob": "3c37b161dc86d61172b03353d98e025ae6de6fe3",
+      "mode": "100644"
+    },
+    "test/ddp_gloo_driver.py": {
+      "blob": "04116ff0396dcd3e7ea975b82c02145522f14ba1",
+      "mode": "100644"
+    },
+    "test/ddp_resume_driver.py": {
+      "blob": "ef344c2e9dc649df80b2971a7348684e8fab6106",
+      "mode": "100644"
+    },
+    "test/fixtures.py": {
+      "blob": "21f67115fdf0b2508d4a3650eac80351080e7a68",
+      "mode": "100644"
+    },
+    "test/test_b3_aggregation.py": {
+      "blob": "36e7695fb7c491782ec973f73744a7381c91a85a",
+      "mode": "100644"
+    },
+    "test/test_b3_bins.py": {
+      "blob": "e50896c57b75e94b541b1421e25bc579d43cbf2b",
+      "mode": "100644"
+    },
+    "test/test_b3_bootstrap.py": {
+      "blob": "bbf19bb4ddb10ec3d35ea4ada1b64be469d7f781",
+      "mode": "100644"
+    },
+    "test/test_b3_cell_stream.py": {
+      "blob": "4624fac2155cba06afba6cdd32713eb1cee3b87f",
+      "mode": "100644"
+    },
+    "test/test_b3_complete_method_cost.py": {
+      "blob": "9e546ae2e776d3de31e01a566fbdcaeef141fd69",
+      "mode": "100644"
+    },
+    "test/test_b3_feasibility.py": {
+      "blob": "637ede5cdddd12bf1c25504f85003f7122d7c5e3",
+      "mode": "100644"
+    },
+    "test/test_b3_full_native_embryo_support.py": {
+      "blob": "fb352eb5ea21daed727ff1a9b657851bda8beb01",
+      "mode": "100644"
+    },
+    "test/test_b3_gene_id.py": {
+      "blob": "f991d32aef810c2ebce820239b9768051f36422f",
+      "mode": "100644"
+    },
+    "test/test_b3_h5_attribute_limits.py": {
+      "blob": "c591793cdc5e8d3ec432a3e34fb1b509922450ba",
+      "mode": "100644"
+    },
+    "test/test_b3_h5_axis_limits.py": {
+      "blob": "2d4cc3a4f4e8095c8a8df410a6643e32a1b174cb",
+      "mode": "100644"
+    },
+    "test/test_b3_matched_null.py": {
+      "blob": "6d7fb392a9bfa48dfccbba8498b9eab2a1921024",
+      "mode": "100644"
+    },
+    "test/test_b3_native_catalog_pages.py": {
+      "blob": "cf1659971712993223f889aea41032ca270b6870",
+      "mode": "100644"
+    },
+    "test/test_b3_observed_bootstrap_feasibility.py": {
+      "blob": "17e393ef9ffe215b22e878c4ca56cd9c9b7f53d1",
+      "mode": "100644"
+    },
+    "test/test_b3_paged_native_bootstrap.py": {
+      "blob": "199c2f1447fe5c515c9869296b700ddd5f2aecbd",
+      "mode": "100644"
+    },
+    "test/test_b3_paged_native_cache.py": {
+      "blob": "8a71c82cd813ed4a692599408d353b2f2d1356ad",
+      "mode": "100644"
+    },
+    "test/test_b3_paged_native_common_bootstrap.py": {
+      "blob": "e0a45a2447ec9ae2f7c1917defe5a8e3d46663d6",
+      "mode": "100644"
+    },
+    "test/test_b3_paged_native_common_source.py": {
+      "blob": "5d0e670289c6afe76922530d7a0bcaee64f3c789",
+      "mode": "100644"
+    },
+    "test/test_b3_paged_native_context.py": {
+      "blob": "5593de06f4a904dfd1a7bdda4aa60a50eb2bf294",
+      "mode": "100644"
+    },
+    "test/test_b3_pilot_shard_handoff.py": {
+      "blob": "8f11bb50a15ec0e26697820f2ed15210a3d775e5",
+      "mode": "100644"
+    },
+    "test/test_b3_pipeline.py": {
+      "blob": "4437f7294bec616f47d678586b7d75faa8ca435e",
+      "mode": "100644"
+    },
+    "test/test_b3_prepared_sparse_session.py": {
+      "blob": "453348818f2aed8a64d4803cf5f5e87fcfeb7876",
+      "mode": "100644"
+    },
+    "test/test_b3_raw_artifact.py": {
+      "blob": "36cb85586d24450926f3315ca723751fdf867c2c",
+      "mode": "100644"
+    },
+    "test/test_b3_scalar_cache.py": {
+      "blob": "87510658bc5f3425746a6b9aea28da6a046dcef4",
+      "mode": "100644"
+    },
+    "test/test_b3_scientific_handoff.py": {
+      "blob": "80e2237f742d82915b3cf00bc24817f1d48c6276",
+      "mode": "100644"
+    },
+    "test/test_b3_score_contract.py": {
+      "blob": "5c123366faacb40482e47a8238373adc4c34a7b6",
+      "mode": "100644"
+    },
+    "test/test_b3_sparse_bootstrap_draws.py": {
+      "blob": "6273138a13759454f4b03bd26fb488bc3e3bacce",
+      "mode": "100644"
+    },
+    "test/test_b3_sparse_null.py": {
+      "blob": "bb35658a306a3872de22fa3675061d149b9ce404",
+      "mode": "100644"
+    },
+    "test/test_b3_streamed_bootstrap.py": {
+      "blob": "4efae665c130a82c32b399bc8e2b78bc8fb55aca",
+      "mode": "100644"
+    },
+    "test/test_b3_streamed_draw_schedule.py": {
+      "blob": "d3d05a7b7bf45dc276b90216e60abb9c47826975",
+      "mode": "100644"
+    },
+    "test/test_b3_streamed_fixed_pairs.py": {
+      "blob": "0392a0322737754731ef216770d3a4ba5aba3d41",
+      "mode": "100644"
+    },
+    "test/test_b3_streamed_sparse_blocks.py": {
+      "blob": "15a607401c3bad7acfdf7ab9ee89dec325ceba8a",
+      "mode": "100644"
+    },
+    "test/test_b3_windowed_native.py": {
+      "blob": "51322a88decb54703c75521dff7b9996f7308783",
+      "mode": "100644"
+    },
+    "test/test_checkpoint_compatibility.py": {
+      "blob": "8c6d22f24c05ebf1f4c75fbd0999be0302d3670d",
+      "mode": "100644"
+    },
+    "test/test_cli.py": {
+      "blob": "428f73b462c49e7b1aaf2d2742e1f1560f638f00",
+      "mode": "100644"
+    },
+    "test/test_cli_integration.py": {
+      "blob": "1fc4589e0ab502e9263895060179b7fab3eaad31",
+      "mode": "100644"
+    },
+    "test/test_cli_process.py": {
+      "blob": "98b5cd432a8f081f27424db9aa65b2594279a991",
+      "mode": "100644"
+    },
+    "test/test_compare_emb.py": {
+      "blob": "5410d07dd1b06f675ba0c3b0821cabf495e8dc39",
+      "mode": "100644"
+    },
+    "test/test_compare_umap.py": {
+      "blob": "949c46644a513641d6ebba78cb510860f15cf73c",
+      "mode": "100644"
+    },
+    "test/test_coordinates.py": {
+      "blob": "6305275d7c0b6e3895b9748fb1ac6362621416ad",
+      "mode": "100644"
+    },
+    "test/test_dataprep.py": {
+      "blob": "d33b4a265e36b77172095ed48be58228dfc30ba1",
+      "mode": "100644"
+    },
+    "test/test_download_artifacts.py": {
+      "blob": "849345b15a3396192e9f750d8db726fd5434f190",
+      "mode": "100644"
+    },
+    "test/test_download_data.py": {
+      "blob": "532de65de4ee4e9f962817dfbfac552fecbf855a",
+      "mode": "100644"
+    },
+    "test/test_early_stopping.py": {
+      "blob": "07811591fa9a31631cf71a6e6f7aec97cd30f709",
+      "mode": "100644"
+    },
+    "test/test_end_to_end.py": {
+      "blob": "14112c6e82e5bc935e5546fa55220e1f8d4962f8",
+      "mode": "100644"
+    },
+    "test/test_evaluate.py": {
+      "blob": "fc3d24d8708c77e886afad55cce7c26ab2b62f63",
+      "mode": "100644"
+    },
+    "test/test_finetune_cli.py": {
+      "blob": "6cf2788117c33518560bb6ee8173a17288702e0f",
+      "mode": "100644"
+    },
+    "test/test_finetune_integration.py": {
+      "blob": "6d9ac03c60f6385840bfbb39aa5ec36d38879d8d",
+      "mode": "100644"
+    },
+    "test/test_finetune_metadata.py": {
+      "blob": "2f4da00e3ac8b4b3fe0d476eb1901119a575c3c1",
+      "mode": "100644"
+    },
+    "test/test_finetune_test_selection.py": {
+      "blob": "b5751b552146dc7f72ad5856a3caad368ea35d42",
+      "mode": "100644"
+    },
+    "test/test_gpu.py": {
+      "blob": "783f697d21f510f540c0d96d3b405d66cd49103b",
+      "mode": "100644"
+    },
+    "test/test_holdout_coverage.py": {
+      "blob": "2144323a2c47a69a5e345a261377dc1ef9299f7f",
+      "mode": "100644"
+    },
+    "test/test_inference.py": {
+      "blob": "30bdc13080818b9e59febccdc0e62e64384c2989",
+      "mode": "100644"
+    },
+    "test/test_missing_stage_evaluation.py": {
+      "blob": "19137a5a58ee4242149a3cc9067118b469d8b486",
+      "mode": "100644"
+    },
+    "test/test_ortholog_eligibility.py": {
+      "blob": "2877e6b8675a182ca0e8389ba5b44dae3437023b",
+      "mode": "100644"
+    },
+    "test/test_ortholog_full_universe_coverage.py": {
+      "blob": "51c72103127200078173e97e31de7db065544240",
+      "mode": "100644"
+    },
+    "test/test_orthologs.py": {
+      "blob": "8cb412b5dbeae11816b66b280852756298102266",
+      "mode": "100644"
+    },
+    "test/test_preparation_rehearsal.py": {
+      "blob": "c097255a9d5ce9b24cd9a198792bdab87dfd3f1a",
+      "mode": "100644"
+    },
+    "test/test_prepared_artifacts.py": {
+      "blob": "c44109c8c0f1072849ed351e6b5b411fb6a6f237",
+      "mode": "100644"
+    },
+    "test/test_probes.py": {
+      "blob": "9787abfb095975b4d8aa49dc4e11c35a1fab7759",
+      "mode": "100644"
+    },
+    "test/test_representation.py": {
+      "blob": "7c1be864c2b8a63ce4e017103c0350f8f058f062",
+      "mode": "100644"
+    },
+    "test/test_resume_contract.py": {
+      "blob": "6977bcaceecefb8f98ae1dfad5bd0694578595b3",
+      "mode": "100644"
+    },
+    "test/test_sampling_audit.py": {
+      "blob": "147cb1162269ecda64276b7644001a00d0126fcc",
+      "mode": "100644"
+    },
+    "test/test_selection_boundaries.py": {
+      "blob": "d03b69d95efe5ffab8b7b0b4f1c74f0952d39d92",
+      "mode": "100644"
+    },
+    "test/test_selection_cli.py": {
+      "blob": "6579e6088cf1e9d944284113001de30242c48990",
+      "mode": "100644"
+    },
+    "test/test_selection_training.py": {
+      "blob": "32140a8e957dd290d9c70396a1cb1c54a8ac1632",
+      "mode": "100644"
+    },
+    "test/test_small_group_evaluation.py": {
+      "blob": "37d7598fc404c67c28e87eafe23bdc3624c8f47d",
+      "mode": "100644"
+    },
+    "test/test_spatial.py": {
+      "blob": "03f48b7e846649a6e31d54bd63f040c4da2c3c17",
+      "mode": "100644"
+    },
+    "test/test_species_readiness.py": {
+      "blob": "0579d9ef1f6dc20252a758198092c781f1ec1e83",
+      "mode": "100644"
+    },
+    "test/test_split_safeguards.py": {
+      "blob": "3870283befa15e078faf5e6427fa0f6819af3c98",
+      "mode": "100644"
+    },
+    "test/test_train.py": {
+      "blob": "3ca471ba86df322376ddce353fe68fa7170a65ee",
+      "mode": "100644"
+    },
+    "test/test_worker_epochs.py": {
+      "blob": "a901893d8641f1294d9c4b0f6a085ef16b33fe86",
+      "mode": "100644"
+    },
+    "test_finetune.sh": {
+      "blob": "5c1e44d8afd0d8deecf4c95dae93fe658254d675",
+      "mode": "100644"
+    },
+    "test_inference.sh": {
+      "blob": "811c7513e8264119d801242ef0eb26d7a50d07e0",
+      "mode": "100644"
+    },
+    "uv.lock": {
+      "blob": "97f8732a016aa215fb37e17479d98bba38ff7db3",
+      "mode": "100644"
+    }
+  },
+  "python_file_sha256": {
+    ".scratch/check_tome_overlap.py": "1912a93f2b3da7ffc46e75a03b930d281863be612230f652c65d2483264a4b3f",
+    ".scratch/drop_empty_wells.py": "8cd726c5ca09d0cb777451151b710b9db6a654348c8181e7519ed69f8e078d47",
+    ".scratch/edit_manifest.py": "4947c55f1c2514dc607106dfb190e542cab8532f93d8c758a109c72556c74ad5",
+    ".scratch/extract_prenatal_metadata.py": "3cb8428d78bd2976c423921783b402cb4e932444f1a23d2e69490bb05d753bbf",
+    ".scratch/h5py_tree_prenatal.py": "c986909d277cc403edf9af81605dad5ac290e03d887b598ebcd7685e6321dec8",
+    ".scratch/inspect_files.py": "c1085ad56d6e8d65ba231875b4e4fa2586b930e213973586e93bf6d746a2ec1c",
+    ".scratch/inspect_prenatal_timelapse.py": "f30cc5216858daf152e36415f31764c4d8940ce8d37edd227bfbeec16b2f63d4",
+    ".scratch/join_drosophila.py": "63354f0d58e886206841b014f7ad4a763b1e62dd3d5c354dee5a946579670fa2",
+    ".scratch/prenatal_overlap.py": "4d91a3743c659dc973fac84e8bd5389fda9545bb7439dff8ec519bedc8a417bd",
+    ".scratch/prenatal_overlap_normalized.py": "796899aed5977831ee6b26ef34d20c83b5fa440efe2d446982e0e1aa8b57e30f",
+    ".scratch/regenerate_audit.py": "a398eb4abff08bdc85b4111357631e558627e5b13c4189dba4686727155a4bb4",
+    ".scratch/verify_e85b_vs_prenatal.py": "7331e0f3279259acbbae7fdcf432dddd79f572871550f023ec646d7d6eb167bd",
+    ".scratch/zebrafish-embryo-finetuning/benchmark_dataloader.py": "9335f1cdf55fb2a3d261ee497bf2b15a6b81c33de832fbe6da20cb7e1656a583",
+    ".scratch/zebrafish-embryo-finetuning/benchmark_pin_memory.py": "9b3e655327155f36eed70fdfa1deb6a4a56aa101a9364b0b1469ec250da75b32",
+    ".scratch/zebrafish-embryo-finetuning/measure_batch_memory.py": "8fe5186e19eff523bc10860ca04105624b02ba19990fed8ab9c6538b41323a24",
+    ".scratch/zebrafish-embryo-finetuning/smoke_run/make_data.py": "5315fde9a5e20dde6ca78c73cbda407eff8c996cc80115f9b21885525da9e02f",
+    ".scratch/zebrafish-embryo-finetuning/spatial_real_model_check.py": "fb61ccb8f11f5955168cffc99cfea999c53d65530c1f31d5d8e60157caced837",
+    "preprocess/get_stable_id_mapping.py": "d9327fa8787e5b3ed64156ba7d887c12ab5e4c3eec584ff8dd6be442aeadec6a",
+    "preprocess/protein_embedding.py": "c4ab56f6096d54671226096549f398a4c6618aae3cf876690d920114a509ac21",
+    "scripts/aggregate_b3_measured_zero_full_scores.py": "a8c12b5ae41487d8ff4f1366286212da328852da82db98b799186b7c666f6b62",
+    "scripts/assess_b3_full_native_embryo_support.py": "866709f80498f69dbb08a07f0b4718f8270d0e984ee8025345eab36e7cf3504e",
+    "scripts/assess_b3_measured_zero_feasibility.py": "0500d6ba0e8ce2ded89628966507016e5941df4d5d28f667c55a3e71eb96064b",
+    "scripts/assess_b3_observed_bootstrap_feasibility.py": "5e7250b53c843712223a70e578608e1970620081a7f4c00cf6f947b9fb4bbb34",
+    "scripts/audit_chicken_published_mapping.py": "a5cec7c96cb385f742f02baecc43aeb62c3a2eddc7a5981274f1d5ea1453f397",
+    "scripts/audit_datasets.py": "9fd070c15ee3625207bea09f36b7830c5c97ca47456023f2356594da7fa7b4b5",
+    "scripts/audit_probe_vocab_joins.py": "e397590321ba8be7a422760cc8e6b7e94f58a905bf1d5a44a38d6707c838dc0c",
+    "scripts/audit_sampling.py": "41e5a4a4c6563c428ea82da26d7067be8436af24c9a559502d3eecf42b43a161",
+    "scripts/b3_authenticated_helpers.py": "a931e9d2ee1a35a13d2e7659fa71ff6e1565e289d5ab6c6f15170701525487f3",
+    "scripts/b3_h5_attribute_admission.py": "a210e52d3de1f4657f4af305d45c0da4394b8f5f0f5171ddde25bffd7ba4f19d",
+    "scripts/b3_native_catalog_pages.py": "c5eb352512b4b2aa6627424c4268a6c4c32c518042bf1978e62f5a497e87336d",
+    "scripts/b3_pilot_checkpoints.py": "85d747712c5b0ed18bb1b64bb7eb503cd4b350640fb5844503ad3ff1a037bcab",
+    "scripts/b3_score_contract.py": "860cba957c54e97fd7e1cebf1894f9ad7391f7680fe4e3bb1284e045a4ff95a9",
+    "scripts/b3_streamed_bootstrap.py": "44ca30c4622e567b2cf374156377198387e3d5df247a86c92abcd910aa96e404",
+    "scripts/b3_streamed_draw_schedule.py": "3ad8fe2beb60635d019cd7df08989cdb6d40d8dfbff9c740f2bea6e75c31e7dd",
+    "scripts/b3_windowed_native.py": "58356eb02db905774ab0dfd712b1efad060d64d115a2f14c14f01be476a96458",
+    "scripts/bootstrap_b3_family.py": "1ea4f9fab44fd33b6604a1a009a9132213274c6f9bdf074b97ec48fdef82c5d1",
+    "scripts/bootstrap_b3_measured_zero_v2.py": "2574a09d9df28c4ecc4abd23e363d0dce2d3adb5f4f6dcc25e9dfcf227f57381",
+    "scripts/bootstrap_b3_paged_native.py": "caa2b8b3f54dda7405a0708c16fc00003dcab9f5a1d9f4404e7f0e57e969859e",
+    "scripts/bootstrap_b3_paged_native_common_source.py": "9d32e5d187388b68649fe7d6ae54b2765367bb5ce335ad0f3e452e7788593bbd",
+    "scripts/bootstrap_b3_streamed.py": "b701ddb466029efe557a3b55808ff71f81dbd6f5d31906ddd18ff82e8f0cd213",
+    "scripts/build_amphioxus_protein_bridge.py": "07bb19711cd665d98307b034e4d7164146d43971c96f975d618da55a00e9c8a7",
+    "scripts/build_chicken_geneid_bridge.py": "72d4d50aa002f1faba346b10c5f9f3a98f1f253067d92cb10f5f0e0392d57364",
+    "scripts/build_gene_mappings.py": "fe48d648402e53bb14a947c19edf48ac8b333c9a4b2e5f74c3264656505e94f5",
+    "scripts/build_lytechinus_mapping.py": "d622d9f85b5d15142d941eb05f5393f6cffb2690cc8888feae8263a28c4e4f7c",
+    "scripts/build_ortholog_table.py": "4db48bbe940764eebb1f5d61e4269797dfcfb8947009862f737892711043a76f",
+    "scripts/build_probe_symbol_bridges.py": "50fc6768358ebeddbf53b9e46b92e8c65d05c2d518855b5de3691e51b70e01b0",
+    "scripts/check_species_readiness.py": "c01ebfd061fef829c900c312845e00adcfb4e4ec46affc6a2b264aa2b8f0d490",
+    "scripts/compare_representations.py": "4e69982acf24a8271fa5dcb386fcfce331937d18576e0bf58fa902f0a4844ddf",
+    "scripts/compare_validation_losses.py": "c6b9892c4add4141fbc9850159f888b510e124664da205d9da36a8223a6d31cc",
+    "scripts/derive_nature2019_candidate_h5ad.py": "611d1382795f195af4bea3028f4103727813251d74a202d8abf47178d066341a",
+    "scripts/derive_nature2019_candidate_metadata.py": "4ca36ce990c71744b5573cb9899f375923f071138750c07893868e8f705e0a39",
+    "scripts/finetune.py": "733fe3fcb1084a49c0e1f0807da82887ddfd8986c8d90bd17128747ab4cb8dbf",
+    "scripts/freeze_validation_cohort.py": "fc0c5b1413f1346cd3d509bb5b23632804cf426036bc0826eb785269b3481dd5",
+    "scripts/handoff_ortholog_scores.py": "1cb11322639a005fcde9bfeb1aa372235c2e1188dbea8b1ac2b2947fe9a53f96",
+    "scripts/import_b3_measured_zero_pilot_shard.py": "b9fddac7251e219c1a27dd3c3ba5b74ff02d60d6ae70cec028b3fca58b20e482",
+    "scripts/index_b3_measured_zero_full_scores.py": "c4b08b7042753220675e319e0388ccd319d3aa1a08d79884b70336598cb5f5dd",
+    "scripts/manage_b3_pilot.py": "3b854e5f562ec295074726abceb11267d4efcb541ce69d4b56c75e44fa8c1569",
+    "scripts/normalize_amphioxus_refseq.py": "109428503f9c1e7ad3d3a58c26c13b3da61b0f066bcb46bdecae1c81f2c6b60e",
+    "scripts/normalize_ciona_ghost_kh2012.py": "1936d2c55fa64d6db859b287f34c0e79e56c897bc8560493fadb7c7fa8198a1d",
+    "scripts/plan_b3_complete_method_cost.py": "bb216b4c4a7cca62a7fec2cd9b65f65a7c0f0bcef3c3f543b142529e6a272b14",
+    "scripts/plan_b3_measured_zero_shards.py": "bf65af4bd4c02010d5140c672b5cfd23b5b947c23f195599da390754d375d800",
+    "scripts/preflight_b3_full_cohort.py": "9451c9aa51a3075f7e78d91cc4b6b497ce273e39b8a456d437409dee7bb2fa4a",
+    "scripts/preflight_b3_measured_zero.py": "2863b53baa2e55e0f78c6dabacd7bfc0b9de637c67fc86eb62035bdf2f9977ba",
+    "scripts/preflight_b3_measured_zero_full.py": "20304ceda81d53ad064d32b6ccad5b0db2c5e45728cfee9cdca3bd5d5783d901",
+    "scripts/preflight_b3_measured_zero_pair.py": "8897a84b605fe4e63c14f55c7da062103f1d8ee2ee148e4a5a926c7fc817be71",
+    "scripts/preflight_b3_pair.py": "bddbf9745bf6c2fe0b01cdb033416d95adcf2223599b9bbfcee553741a8d2227",
+    "scripts/preflight_b3_scores.py": "4d87fe507bc4fde0f9f150966e3da0948370463f582819b3184322116fc2e0cd",
+    "scripts/prepare_b3_measured_zero_embryo_metrics.py": "8393edd2cbe897f325a8985ac87b63c6de088a11069bafa551d08a7142c4a097",
+    "scripts/prepare_b3_organogenesis.py": "774345876c5942fd14d26b22e94c66e7943d2e81c693a322039caa022b60106a",
+    "scripts/prepare_b3_paged_native_cache.py": "572e3e9e8b01e728cce24ba49d9bce1ac58e0ab89c14e37621c336426e8e9a0b",
+    "scripts/prepare_b3_paged_native_common_source.py": "ac14388571b878a69c20ac3f452eaf7f529ac9c77f829f64fbced59ddeb15086",
+    "scripts/prepare_b3_paged_native_context.py": "35e17f2472022b1ea66a572acba9d30421159d5c65dc43b675e6ae0c1c822f2a",
+    "scripts/prepare_b3_pilot.py": "5206021067d54111fdefbb2bb9467e732cbf93fdbd11a9ee05c10cd6d9946acd",
+    "scripts/prepare_spatial_coordinates.py": "7df4764fe85454b54a4d503942303c2f3daadc1ba50883f28925fd39bf7d5326",
+    "scripts/probe_b3_measured_zero_resources.py": "26d14dc4bc1b2716efbabfb633c366e6561b63646a0db27e6cee451f54b74a18",
+    "scripts/produce_b3_measured_zero_scores.py": "55b4e428fc9cc8c0b575ac7e1c2d26942f244c5349feb45c1f6f448a551e0550",
+    "scripts/produce_b3_scores.py": "f65b215f5701e7dab377e317c78e05187ae1d180898366ba6314e362cf7a2c3d",
+    "scripts/reconcile_b3_measured_zero_full_shard.py": "0cce7b724b91323dd46782bbe9cdc328ba0864c651b27b51b3bfda5d8d0c8517",
+    "scripts/recover_tome_embryo_ids.py": "33b0246d07248105827d845ae836d3720c0cfa52e4036d90ac6ed34b6d6fcbd6",
+    "scripts/reduce_b3_streamed_fixed_pairs.py": "de1223d94ee63708526aaf2584e055b3ee50a9af7141af53884b4005fd71f7f8",
+    "scripts/rehearse_preparation.py": "24afb7702083776ab7a7ee521dd725ce1f21ddfb96e69a4a54552d9363d3022a",
+    "scripts/replay_b3_measured_zero_native_effects.py": "19ed054613de9f122a5d5e825497105e626b5a6d3b25d1b530dfa3586921978e",
+    "scripts/replay_b3_prepared_sparse_session.py": "906ee69a71aa1f6ccd9e55ecf54ec15c0bc2d6042fe3c09c8e5ebd801ba42e48",
+    "scripts/replay_b3_sparse_bootstrap_draws.py": "28a47d2e604b3a9492f33da3fd92948dd50d56aed79736e350f2f3b1f0278842",
+    "scripts/replay_b3_sparse_null.py": "d061d134908a38b90fa6d23d2ae56da2609237e4d2f5d2c62e07da60f8306dc6",
+    "scripts/replay_b3_streamed_sparse_blocks.py": "3d29c1f49e7575c4b2201a963c050f4e758c250f6d55748b06af23589ae7a762",
+    "scripts/report_holdout_coverage.py": "0a997e5fba2f96bb09ebc6073203eada6afd6eaa81e14916aff42b102a3176a8",
+    "scripts/report_ortholog_eligibility.py": "ebd2fa2ed3d646b41f9445b4bd007f83a9ec2d2c2603653e956ad02a32932428",
+    "scripts/run_b3_pilot_comparison.py": "5cc75d50c69dab7374d9b754a25acab9488ff21a686726ca2ba261534b484217",
+    "scripts/study_b3_scalar_cache.py": "ff3507bf175ca9b6dd00ef497da91ad68ad5ee8be90b5047e9601a34113e95f9",
+    "scripts/summarize_b3_measured_zero_full_diagnostics.py": "4c1b3a645d01dbf09b7827c237c4e4c8b90650783ba6163fed947e6d52bf4c95",
+    "scripts/summarize_ortholog_full_universe.py": "2b54ec968fbe92aaa1dc1a4d55b6561b8f1a4ecb2c15d527fb340de2e4ec2d58",
+    "scripts/summarize_ortholog_measured_zero_v2.py": "5222c8431947e73c2fd8eb997fa762007d155bfd3c21947b31888afbcad9fe21",
+    "scripts/summarize_ortholog_paired_scores.py": "2ebc7004ead25d88d4122c94f7b06913c0b0c4a79389cb187b39054b375803f7",
+    "scripts/supervise_b3_pilot.py": "19ad86b77895878cf7e3d609586da61f511498506ab13f1cf800381705a02afe",
+    "scripts/validate_manifest.py": "ae65b1dd88315a1cf6cde71354d6a21958b14858172953842f99ef611927c77c",
+    "scripts/validate_prepared_artifacts.py": "165462345713a95f979e3afb49478573f665593668500b79c3d8ebb686c5ecd7",
+    "scripts/validate_probes.py": "49d3a1dd55dba33445148dfd347e2be487fbbec6fff2953c4bcd28115964594d",
+    "scripts/verify_ortholog_topk_origin.py": "701d85c1e974e21e957446a8a87a119d4664d1205c7ea2cab84b6785a267394b",
+    "src/transcriptformer/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/transcriptformer/cli/__init__.py": "8173662ae3ee09cac7f8a9e46f5fc6817d13908b05926373eade4e740e7a9e09",
+    "src/transcriptformer/cli/download_artifacts.py": "45f51bbcb76fcc6a1454fd8f249c814070b05020bee16ab9dc6f823e24ed4c29",
+    "src/transcriptformer/cli/download_data.py": "6b7839d924ec54c1b1fbdc4642d9aaff175721a9a589380d0eab2fafb3a376dc",
+    "src/transcriptformer/cli/evaluate.py": "514205f44b5fbc47cd9839259c52061b33a04890b8ab2d292e2e0bb2773b456e",
+    "src/transcriptformer/cli/finetune.py": "2cc67b11d642a670a35e823a341039166b2e48514c151adfb0a4d133798605ff",
+    "src/transcriptformer/cli/inference.py": "aeaa66a6f58ab8b452f37b62d3ad37d548eafbadcfea6926de5349e5ac8308c5",
+    "src/transcriptformer/data/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/transcriptformer/data/bulk_download.py": "6f4f2ad5be69363190e5ffa8699c48e30e66ce1648a3a0aba560518d77b98517",
+    "src/transcriptformer/data/dataclasses.py": "29ac8a4f45b77cf919cbd0a377b0008668c6fbcce90939d970c9cae56a66b8ae",
+    "src/transcriptformer/data/dataloader.py": "685dc3c80e6e5cd792659045e176036affef9a92032337cbe00e555e4412e617",
+    "src/transcriptformer/datasets.py": "d9f92726b108824a075035aa9ae4ccd8b5a8c02bbac4facb136e7e12c51b7fcb",
+    "src/transcriptformer/finetune/__init__.py": "8dd33a458684e04325cfe1be6391dea796c945feff3a0e2051fb345a1e8135a6",
+    "src/transcriptformer/finetune/artifacts.py": "7533d7a27942a554c17cc62be1be97025670304fb5d7872899d54d968479ace8",
+    "src/transcriptformer/finetune/b3_aggregation.py": "a5f815e76481539506ca6366d46391fdd186ae00b5c1d4a4395280278cb8a178",
+    "src/transcriptformer/finetune/b3_bins.py": "59074199f5f74c4f34528438c9fbd281a0c14d45d03706ec654a458ae4621dca",
+    "src/transcriptformer/finetune/b3_bootstrap.py": "c42e8070fd48b9142a7d50274f838426990bea4c03b4c618b028be6801ff756d",
+    "src/transcriptformer/finetune/b3_cell_stream.py": "d62d0fd30de25dde4866ff551c43dfd876b742d6dcdb4d19372de3b4e8894bef",
+    "src/transcriptformer/finetune/b3_gene_id.py": "94d680baeb6b5315a7f6d775b701968518271d3c757abfc9b05fef563cfa34a4",
+    "src/transcriptformer/finetune/b3_identifiers.py": "3b9d9d5462e447e0a4d8d3eb3f7bceb125010d8cb68219d76215a92bc8046247",
+    "src/transcriptformer/finetune/b3_matched_null.py": "5cb3095ba497a18cf4c4cbc4cfbdb42f416938bd57404fa7fc9e4172fecee283",
+    "src/transcriptformer/finetune/b3_measured_zero.py": "18115a2780965c9b258ff06fa52367ad819192668b300c320feaf2bf8733484d",
+    "src/transcriptformer/finetune/b3_measured_zero_bootstrap.py": "a3a5f740a7e3521e61f0076baca10c4256ae839c4887a5f4f50ffaafc19d2683",
+    "src/transcriptformer/finetune/b3_measured_zero_prepared.py": "537bae6885198585940cf0c9a4a8818bc6c8935f7679f87d674c4df2f45611d4",
+    "src/transcriptformer/finetune/b3_measured_zero_scores.py": "8a6f23d7b0fdc761258c0922dc0d7ba19471bc5a6696d7191ec3da04b0fd8c65",
+    "src/transcriptformer/finetune/b3_measured_zero_shards.py": "08ce6479fbd2658d88caad83c0bb32c3047e75b30d0248382e5d1ecfffada66e",
+    "src/transcriptformer/finetune/b3_pipeline.py": "8720c1f081d9acb61673931a00d9ec5196870a7adf2cf08301f7ae66e233b7a8",
+    "src/transcriptformer/finetune/b3_prepared.py": "d261c760d29dd7b50ec652b4c70d81f42a15c3c6ca1b2ff1a71f018e76bbcc57",
+    "src/transcriptformer/finetune/b3_raw_artifact.py": "fc4e2ac7f42d5fa3a19fcf2eadfa2c27a301282528681e3caaed0fe043338159",
+    "src/transcriptformer/finetune/b3_score_contract.py": "f8da0dc0a37f46916e2503a5d3e92b011f682132113846c201b538b17cbc96ec",
+    "src/transcriptformer/finetune/coordinates.py": "6b62faa663e03e67812dccf7537163dacba59ffdffc141c35ac2278404b315af",
+    "src/transcriptformer/finetune/coverage.py": "4b6bae38aecaa74824af15d5864962b0a372aae8bab7d9fb28e73bb9d1404b81",
+    "src/transcriptformer/finetune/early_stopping.py": "73b1ec0c841bae457aea1289160c813a0f5f00b3cc587277bedee2e9b11a7996",
+    "src/transcriptformer/finetune/embryo_identity.py": "9904fa2770d502afb9daac0452b42bb138b7dcb609dcc36c9c32fdb7097cdaba",
+    "src/transcriptformer/finetune/evaluate.py": "c840c846b2b3d1748de108271954224eae30b9b0a7b61296f52e5a0f6b176f3e",
+    "src/transcriptformer/finetune/gpu.py": "7f25833d2dd616da68ce78d1f6945dc0176490d881faa243797e3d91bf8a6b30",
+    "src/transcriptformer/finetune/manifest.py": "c8e2e3d821ebffc3c5472a9d6507873db23b0898567ca0b77dbecf18e273a9f3",
+    "src/transcriptformer/finetune/prepare.py": "0cd93a0d9925fded3a6dc6f636eae81bf389020695de3e480998ac4e5ae61096",
+    "src/transcriptformer/finetune/probes.py": "539ff82c6e4529004fb937c475f71e8019fbe93498579e834556a83e243b9fa8",
+    "src/transcriptformer/finetune/representation.py": "86442e4ae797e85feff34b6904c6c2b707e37aa4a0f930f448409e0ab6d21cde",
+    "src/transcriptformer/finetune/resume.py": "b3532adcb79f8da6fd16298e6614794578136ef6f763c57d9b31fb37563676ad",
+    "src/transcriptformer/finetune/sampling_audit.py": "69fa5387b4c0886ad647e8baedda4ada396911a948a4b419dd33fca5ebadf397",
+    "src/transcriptformer/finetune/selection.py": "e67b1fc5848149f707386abb26323945c2a646925a5cb622445ab92c28422b87",
+    "src/transcriptformer/finetune/spatial.py": "d8479c86b266fd5d2818efa5ed0aaeacb91307f4205b75bbac3ddf4c8a914e68",
+    "src/transcriptformer/finetune/species_readiness.py": "c3a5a9316217a0b72b0caa1f620f6edfc55328ac910e086206533b668e512d39",
+    "src/transcriptformer/finetune/train.py": "be73585f49e9947a183f3762ab545522d1661d68aca4c22df4af658fb432bec4",
+    "src/transcriptformer/model/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/transcriptformer/model/embedding_surgery.py": "3cf345ffc3318af096dc4022e77b932aae374788874ba32c10d36324a2c9f9ec",
+    "src/transcriptformer/model/inference.py": "16c54023070262a6884019e737a14de5c95496f9c536aca49ff93fcfc3ecbbc2",
+    "src/transcriptformer/model/layers.py": "b77161f4c1a8c83fbcbbd322adf98bf37277b023c11f56ce20e8a4e0691973b0",
+    "src/transcriptformer/model/losses.py": "cf16887090984b10f2b8bb1eddec4d50e4acebac575d63cacd09670cf6abbb81",
+    "src/transcriptformer/model/masks.py": "7e3e032a14aae9c88731ca68f778022590a4f371836b804d187cd89d2a935280",
+    "src/transcriptformer/model/model.py": "ad015ff76f093ad38e2394429d72468158da648f971b0a5993a3498767508c96",
+    "src/transcriptformer/tokenizer/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/transcriptformer/tokenizer/tokenizer.py": "be0215d924a7e1404be65390d29dd03514f3d136ee67bf0841b9f44eecabb1fc",
+    "src/transcriptformer/tokenizer/vocab.py": "73c29984b727a29340383b93b6899c8bc4435b826f464f8eafcf123fc50878d1",
+    "src/transcriptformer/utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/transcriptformer/utils/utils.py": "1d21d047147f6a99efbb5dc6ed9ab86044c55c11c1593e8a7fa98dc039c85348",
+    "test/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test/conftest.py": "61d86085e304debb49259a6ea067d5b55d8bcef9dd67e0b29ff860666500fcae",
+    "test/ddp_gloo_driver.py": "772b81020b4eaa5879e48eb00fd89b7a4ea22740d5e14597b163c180bd641149",
+    "test/ddp_resume_driver.py": "53ea634817b90e5b96f055960049ce80c563e074ce617f74cb1ca9c2ac843d4e",
+    "test/fixtures.py": "fefcb56f2886f040e785f9b5cc015b0c393da77dbaa3c88462722e5470b6370c",
+    "test/test_b3_aggregation.py": "94fc22dc677bdbdc5de461ac131b17a40480f1bb1e97fa226220aa3e89015c8d",
+    "test/test_b3_bins.py": "496f9e8d2981f8d10aa9667b29c355a1d7fc60002dddfa3c2713a16b2b5914b9",
+    "test/test_b3_bootstrap.py": "5b22d3b80820caf77f6aa364b7a514dfb8b6b135f9f43313afaaa07c9da8dc8a",
+    "test/test_b3_cell_stream.py": "27c7ddb31de5ab3c9450e271af5e1a77daf1700f03caf4181ef7276d54efbd0c",
+    "test/test_b3_complete_method_cost.py": "252c43eef331bc48984458630fa8269447a8e1ec3f739e1b3bdbcd9a4bbfae52",
+    "test/test_b3_feasibility.py": "009135078d701a5d4badc66fc656153b842e78ec2cb4361bc44744eebadda0fb",
+    "test/test_b3_full_native_embryo_support.py": "ac1ef6410ca1c20876cc84f4d669b15dbf9403a0abfb9fa4979045fa238af62b",
+    "test/test_b3_gene_id.py": "70917ef9f8d6716d71b66609905bb1795e66511ddb3f869b3c4c2d59468d9acc",
+    "test/test_b3_h5_attribute_limits.py": "4e53a6f2ce5160d1b4154f72b810cf03eb62231f9cb1b1326749817192207077",
+    "test/test_b3_h5_axis_limits.py": "2438da5d99b6627b147179b61f4f85b943f8079a9393278172b56559e9e86711",
+    "test/test_b3_matched_null.py": "0119f99daaf63e95bf1431d7165446d1b8882f5a558e032cadc4a19dfbef036b",
+    "test/test_b3_native_catalog_pages.py": "badff62681da4e79a66105c9754f716228c3fc972daba439fcfb65d5cddfc6b8",
+    "test/test_b3_observed_bootstrap_feasibility.py": "5c61b1695c063504e90ab783f420b8398e130f6d0d0eb85502191eabf784ab1f",
+    "test/test_b3_paged_native_bootstrap.py": "d91e9d78012e8d5f23d37f5184989e7ecc5259a3f76a26eaaf6040bc70a94fd0",
+    "test/test_b3_paged_native_cache.py": "45f9c2873c109a5334d8187139788c3dd57483ecf552da18e1fa0be7ac351297",
+    "test/test_b3_paged_native_common_bootstrap.py": "2990e97a362d0f97ce2c228a56bf08728fb06ae0b1abbb0f1fbf0a8902564bad",
+    "test/test_b3_paged_native_common_source.py": "fb079ae9fd2c84b0c2f855c9a05d1338dfda8ca1e95c14caed1a7c236b808729",
+    "test/test_b3_paged_native_context.py": "d5daf13360672a680af3ad838e4e9d627002bf8fe4e538cceb93b7d745b45d2e",
+    "test/test_b3_pilot_shard_handoff.py": "8f10a62feed565d7cd0886b091f8dd08ef4e4aa351326313c59b382ad6e3dfba",
+    "test/test_b3_pipeline.py": "60e890a5b8581097cd54db4a5fe4d93f3890e9c9fae99e8b6a284af7512ff477",
+    "test/test_b3_prepared_sparse_session.py": "8d5e7386dfda2d002f38e7faa7f2880984a9410920ac35df84fa39cfe559e3aa",
+    "test/test_b3_raw_artifact.py": "0ac63e6a727b18033f843e301d8e77cf2ee03db7e0b5e45db813f5b9116ae93b",
+    "test/test_b3_scalar_cache.py": "88df1df6f144a258493cb50842a037e8775f93c59d61502e28eabb7e0c7fa401",
+    "test/test_b3_scientific_handoff.py": "0af7423fed7f2f01c990f20d01e8725d9c467370103bcc3051539f358ad813c8",
+    "test/test_b3_score_contract.py": "6735c66cb301156cf858ac4665162e2baff1d0ae650695766127a283d589ef17",
+    "test/test_b3_sparse_bootstrap_draws.py": "7a44cc77f38b274b875729678ad4db3edf559495155d64742d312587a1103878",
+    "test/test_b3_sparse_null.py": "85b432b55a76ca1ab418c0834495325bb81e5f5f7c2713bbde66a9dc504a0917",
+    "test/test_b3_streamed_bootstrap.py": "c52ff0fb23d1d4640967448ba6fd9ba1c90094aada75c37ecc533670d6bef306",
+    "test/test_b3_streamed_draw_schedule.py": "79fd2936a803bc7dbf00b84308c5c2e5c3aaa301de99fd9b2edbc2b05178c80f",
+    "test/test_b3_streamed_fixed_pairs.py": "0b742e0f98383c0eb6ae1109724294611ac2ae67c2ed77ef22e44d2a6774e4c2",
+    "test/test_b3_streamed_sparse_blocks.py": "15b45873c598a861e0495fdf1f3596771c42dfff71d8a188714ba66190016811",
+    "test/test_b3_windowed_native.py": "6ade7ea86ba9ccf4a88c94a27ee0520252657f4c000e5f74a3359fd94bb0e0aa",
+    "test/test_checkpoint_compatibility.py": "8d78d7f059b216ec5b95aca27101efc5e3f9541d14fd8dd1ef3425309eb6bf39",
+    "test/test_cli.py": "45dfae44437092c9a32b8158a7a85ea7a27937a90da96d4424091c5cb42a36e0",
+    "test/test_cli_integration.py": "cf7fdd3e6766b1da80b473ddb48256081ed943eab185693bb6b85649273aa8d1",
+    "test/test_cli_process.py": "682cfee0a12ed6722ca9d651d80ae5ac30d10d9a9564519cd123b5e14900bc4e",
+    "test/test_compare_emb.py": "8815d62f9e48d70ce101a365205015c2e02e20d265e7086436c031c686b18b82",
+    "test/test_compare_umap.py": "01051d2d9809018f6dc0710d00874317bfaf71973e09d6261016367335cb5afd",
+    "test/test_coordinates.py": "2bc0c38a54041106ff8ad2ab8743906f1166633272cc02cb907204ffe2647116",
+    "test/test_dataprep.py": "fdcfda0fd8056b53dd9ecbbd43337d41eeeb3b3a12b997894462fbd0cb3aa39b",
+    "test/test_download_artifacts.py": "9ea114c024fdb5aae76032067d3e49667644a4c82613c5f101d1222afd8e4795",
+    "test/test_download_data.py": "cac2bf189dff56980806da9d08f85fef4391b113b25c3375c242d8fdcefafb4a",
+    "test/test_early_stopping.py": "5b20b34e8eec7c4d23e5318aea5e1333356499a03e1413a90b3aef7847b7e17b",
+    "test/test_end_to_end.py": "d9776411ea574a7e3ff093ca8f3666bd2b91a4c8381e599bdc12dd28592c6c9f",
+    "test/test_evaluate.py": "0cdc23931f7f7b260df29dbbfb8c70239f1e235a906256732d9b4ec46c67faa3",
+    "test/test_finetune_cli.py": "8139085c8c6a2e3cbb0087656e7dec1b69c390035b485cf737ccd34f77650331",
+    "test/test_finetune_integration.py": "85b7104516cdf44a9c1fdd6f69c39c1ae5975d78fd32cd9171c105531b7cf0f7",
+    "test/test_finetune_metadata.py": "f109a29b158a3ef4b9ceaa6e36b0d8e64a620b4e4f72272e205a8d4be1216b34",
+    "test/test_finetune_test_selection.py": "a211e7c4789e2c8485949bffa20048e461bbaeef80bf23496b8e51a6a6e77976",
+    "test/test_gpu.py": "b6ce496e5d339fe2ef8b5b7967fa46a184f6d528de7896e0f445b37ca5174ef0",
+    "test/test_holdout_coverage.py": "d6c365d44a3ce8d0e34af275e06c648ff945f31cf07011962dd45df2b863beac",
+    "test/test_inference.py": "94560fe6b59d3ea248fdbb1cd87bdfa0a37834a19de3ee65a7f87a77fcabd4ee",
+    "test/test_missing_stage_evaluation.py": "9d813253be56e085c6bc3000ad27594f42d2fc91d0f47a6b5b724989d8964a77",
+    "test/test_ortholog_eligibility.py": "9647afa14d30b999b39e630d27d8923482c7f794477a7fc357df68de8c1afee6",
+    "test/test_ortholog_full_universe_coverage.py": "e310fb73e6514569e15b24ad57a3081b9db31eedf1695e9f15a0ed11ad0c3e53",
+    "test/test_orthologs.py": "2136683036d25da688a18df106f8da906d58dc493c3213bfff7820e029a946f2",
+    "test/test_preparation_rehearsal.py": "115d1ed6b16a88a7946def79352ad1d2b4baa5bfbe893ca5b43008436055bb29",
+    "test/test_prepared_artifacts.py": "661863b2c6059b7588867e35874da4818132adf6c52282a192f96d8ffe491bc9",
+    "test/test_probes.py": "3756c5012bd0566fa41ea06aeaf8b5ca9531a49d2947b9585acd34c376c5386e",
+    "test/test_representation.py": "5a035a7b8bf7104a4c8de97c40bd8b51b4e636361eb18f5f3f0facbb9027e001",
+    "test/test_resume_contract.py": "c8d4b7dba5d66a38cc21abdaf2b55f4cdee383cf045c30c916d0cfbebe7e8438",
+    "test/test_sampling_audit.py": "79a002edd7bd8ecd99cd882e104b561e2f74c7034a256131a9a3321520d9d15d",
+    "test/test_selection_boundaries.py": "8016998d4d05952d3ad446d8e1bc23d550e3e755fb0139c2940082fb4bd56edc",
+    "test/test_selection_cli.py": "ce0451a89611176fba3b56ef37f429c464489384bc8bd73fd776bfc9344081ef",
+    "test/test_selection_training.py": "96ad0393507252695b2017fbbb0789ea3df79fe94dd673b87407ba3fb1c9d516",
+    "test/test_small_group_evaluation.py": "92044d5a1b6fe41e8af784e2fb2c2fce3ec2baf26459720329b06a5e285585be",
+    "test/test_spatial.py": "ff2a6d9859966938e2d93e8d527c0eb62b26702cb405b55925e2e950e023f217",
+    "test/test_species_readiness.py": "ebd0840129142c0cbb33f1c97c89948cdd1f6406e76e087b9566cdc09447d71e",
+    "test/test_split_safeguards.py": "2be84c3966dd6da0f51dad2030d70adbe0bcbaf12d0d283fd3d02d05bd5b0088",
+    "test/test_train.py": "c44358b501b5ec0f4a829a1cfcd08c699b3cb6c9064827acad14700f7e4c1a00",
+    "test/test_worker_epochs.py": "298c649db2ae12cffdc2ad05b367c58e8f51fb39025f0b15cbb1b5a46890dd0c"
+  },
+  "schema": "b3_full_context_extension_source_baseline_v1",
+  "scope": "Pre-installation snapshot for separately versioned full-context publisher/controller. All233preexistingPython files preserve their bytes/modes; old69/82consumer closures separate. New archive.py.txt files are metadata, not executable sources."
+}

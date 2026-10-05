@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="6" time="588.379" timestamp="2026-10-05T09:53:01.259881+08:00" hostname="Conundrum"><testcase classname="test.test_b3_full_context_observed" name="test_workspace_root_refusal_drains_each_independently_bound_private_child[foreign_file_fd]" time="99.344"><failure message="AssertionError: assert not True&#10; +  where True = exists()&#10; +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr0/.b3-full-context-observed-q8ya4k2t/context').exists">stored_native = namespace(folder=PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/full-context-observed-native0'), path=Pos...set': 'raw_positive', 'sha256': 'bc544b7a12ea3998b9f20bd43de68b57e8c1d5344f473fd60c1a8a22e4de2b6c', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x74dd105afdd0&gt;
+failure = 'foreign_file_fd'
+
+    @pytest.mark.parametrize(
+        "failure",
+        [
+            "foreign_file_fd",
+            "foreign_directory_fd",
+            "descriptor_probe",
+            "canonical_lstat",
+            "canonical_resolve",
+            "descriptor_address",
+        ],
+    )
+    def test_workspace_root_refusal_drains_each_independently_bound_private_child(
+        stored_native, tmp_path, monkeypatch, failure
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        seal = public._Publication.seal_published
+        ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
+        ordinary_lstat, ordinary_resolve, ordinary_readlink = Path.lstat, Path.resolve, os.readlink
+        before = dict(sys.modules)
+        owned, children, roots, foreign_descriptors, foreign_files, injected = [], [], [], [], [], []
+        foreign = tmp_path / "foreign-workspace-root"
+        foreign_bytes = b"foreign root descriptor and sentinel must remain owned by the caller\n"
+        if failure == "foreign_directory_fd":
+            foreign.mkdir()
+            sentinel = foreign / "sentinel.bin"
+            sentinel.write_bytes(foreign_bytes)
+        else:
+            sentinel = foreign
+            sentinel.write_bytes(foreign_bytes)
+    
+        def record_actual_publication_and_arm_root_failure(owner):
+            seal(owner)
+            if roots:
+                return
+            assert (output / "summary.json").is_file()
+            assert owner.workspace is not None and owner.workspace_fd is not None
+            roots.append((owner.workspace, owner.workspace_fd))
+            for name in (
+                "workspace_publication_fd",
+                "workspace_context_fd",
+                "workspace_snapshot_fd",
+                "workspace_fd",
+                "parent_fd",
+                "claim_fd",
+                "output_fd",
+                "staging_fd",
+                "marker_fd",
+            ):
+                fd = getattr(owner, name)
+                assert fd is not None
+                opened = ordinary_fstat(fd)
+                owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+            for name in ("context", "snapshot"):
+                path = owner.workspace / name
+                copied = list(path.iterdir())
+                assert copied and all(leaf.is_file() for leaf in copied)
+                if name == "snapshot":
+                    assert len(copied) == 5
+                else:
+                    assert (path / "summary.json").is_file()
+                children.append((path, copied))
+            if failure in {"foreign_file_fd", "foreign_directory_fd"}:
+                fd = owner.workspace_fd
+                ordinary_close(fd)
+                flags = os.O_RDONLY | os.O_NOFOLLOW | (os.O_DIRECTORY if failure == "foreign_directory_fd" else 0)
+                replacement = ordinary_open(foreign, flags)
+                if replacement != fd:
+                    ordinary_dup2(replacement, fd)
+                    ordinary_close(replacement)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                injected.append(failure)
+                if failure == "foreign_file_fd":
+                    foreign_files.append(fd)
+            if not foreign_files:
+                fd = ordinary_open(sentinel, os.O_RDONLY | os.O_NOFOLLOW)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                foreign_files.append(fd)
+    
+        def root_metadata_refusal(kind):
+            if roots and failure == kind and not injected:
+                injected.append(kind)
+                raise OSError(errno.EIO, "injected root metadata refusal")
+    
+        def fail_root_fstat(fd):
+            if roots and fd == roots[0][1]:
+                root_metadata_refusal("descriptor_probe")
+            return ordinary_fstat(fd)
+    
+        def fail_canonical_root_lstat(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_lstat")
+            return ordinary_lstat(path, *args, **kwargs)
+    
+        def fail_canonical_root_resolve(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_resolve")
+            return ordinary_resolve(path, *args, **kwargs)
+    
+        def fail_root_descriptor_address(path, *args, **kwargs):
+            if roots and path == f"/proc/self/fd/{roots[0][1]}":
+                root_metadata_refusal("descriptor_address")
+            return ordinary_readlink(path, *args, **kwargs)
+    
+        monkeypatch.setattr(public._Publication, "seal_published", record_actual_publication_and_arm_root_failure)
+        monkeypatch.setattr(os, "fstat", fail_root_fstat)
+        monkeypatch.setattr(Path, "lstat", fail_canonical_root_lstat)
+        monkeypatch.setattr(Path, "resolve", fail_canonical_root_resolve)
+        monkeypatch.setattr(os, "readlink", fail_root_descriptor_address)
+        try:
+            expected = RuntimeError if failure in {"foreign_file_fd", "foreign_directory_fd"} else OSError
+            with pytest.raises(expected):
+                public.run(request, output)
+            assert injected == [failure] and len(owned) == 9 and len(children) == 2
+            for path, copied in children:
+                # Their original live directory handles remain owned even when
+                # the root descriptor or canonical root inspection is refused.
+&gt;               assert not path.exists()
+E               AssertionError: assert not True
+E                +  where True = exists()
+E                +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr0/.b3-full-context-observed-q8ya4k2t/context').exists
+
+test/test_b3_full_context_observed.py:1828: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_observed" name="test_workspace_root_refusal_drains_each_independently_bound_private_child[foreign_directory_fd]" time="96.776"><failure message="AssertionError: assert not True&#10; +  where True = exists()&#10; +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr1/.b3-full-context-observed-668c3dm6/context').exists">stored_native = namespace(folder=PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/full-context-observed-native0'), path=Pos...set': 'raw_positive', 'sha256': 'bc544b7a12ea3998b9f20bd43de68b57e8c1d5344f473fd60c1a8a22e4de2b6c', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x74dd1046b2d0&gt;
+failure = 'foreign_directory_fd'
+
+    @pytest.mark.parametrize(
+        "failure",
+        [
+            "foreign_file_fd",
+            "foreign_directory_fd",
+            "descriptor_probe",
+            "canonical_lstat",
+            "canonical_resolve",
+            "descriptor_address",
+        ],
+    )
+    def test_workspace_root_refusal_drains_each_independently_bound_private_child(
+        stored_native, tmp_path, monkeypatch, failure
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        seal = public._Publication.seal_published
+        ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
+        ordinary_lstat, ordinary_resolve, ordinary_readlink = Path.lstat, Path.resolve, os.readlink
+        before = dict(sys.modules)
+        owned, children, roots, foreign_descriptors, foreign_files, injected = [], [], [], [], [], []
+        foreign = tmp_path / "foreign-workspace-root"
+        foreign_bytes = b"foreign root descriptor and sentinel must remain owned by the caller\n"
+        if failure == "foreign_directory_fd":
+            foreign.mkdir()
+            sentinel = foreign / "sentinel.bin"
+            sentinel.write_bytes(foreign_bytes)
+        else:
+            sentinel = foreign
+            sentinel.write_bytes(foreign_bytes)
+    
+        def record_actual_publication_and_arm_root_failure(owner):
+            seal(owner)
+            if roots:
+                return
+            assert (output / "summary.json").is_file()
+            assert owner.workspace is not None and owner.workspace_fd is not None
+            roots.append((owner.workspace, owner.workspace_fd))
+            for name in (
+                "workspace_publication_fd",
+                "workspace_context_fd",
+                "workspace_snapshot_fd",
+                "workspace_fd",
+                "parent_fd",
+                "claim_fd",
+                "output_fd",
+                "staging_fd",
+                "marker_fd",
+            ):
+                fd = getattr(owner, name)
+                assert fd is not None
+                opened = ordinary_fstat(fd)
+                owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+            for name in ("context", "snapshot"):
+                path = owner.workspace / name
+                copied = list(path.iterdir())
+                assert copied and all(leaf.is_file() for leaf in copied)
+                if name == "snapshot":
+                    assert len(copied) == 5
+                else:
+                    assert (path / "summary.json").is_file()
+                children.append((path, copied))
+            if failure in {"foreign_file_fd", "foreign_directory_fd"}:
+                fd = owner.workspace_fd
+                ordinary_close(fd)
+                flags = os.O_RDONLY | os.O_NOFOLLOW | (os.O_DIRECTORY if failure == "foreign_directory_fd" else 0)
+                replacement = ordinary_open(foreign, flags)
+                if replacement != fd:
+                    ordinary_dup2(replacement, fd)
+                    ordinary_close(replacement)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                injected.append(failure)
+                if failure == "foreign_file_fd":
+                    foreign_files.append(fd)
+            if not foreign_files:
+                fd = ordinary_open(sentinel, os.O_RDONLY | os.O_NOFOLLOW)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                foreign_files.append(fd)
+    
+        def root_metadata_refusal(kind):
+            if roots and failure == kind and not injected:
+                injected.append(kind)
+                raise OSError(errno.EIO, "injected root metadata refusal")
+    
+        def fail_root_fstat(fd):
+            if roots and fd == roots[0][1]:
+                root_metadata_refusal("descriptor_probe")
+            return ordinary_fstat(fd)
+    
+        def fail_canonical_root_lstat(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_lstat")
+            return ordinary_lstat(path, *args, **kwargs)
+    
+        def fail_canonical_root_resolve(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_resolve")
+            return ordinary_resolve(path, *args, **kwargs)
+    
+        def fail_root_descriptor_address(path, *args, **kwargs):
+            if roots and path == f"/proc/self/fd/{roots[0][1]}":
+                root_metadata_refusal("descriptor_address")
+            return ordinary_readlink(path, *args, **kwargs)
+    
+        monkeypatch.setattr(public._Publication, "seal_published", record_actual_publication_and_arm_root_failure)
+        monkeypatch.setattr(os, "fstat", fail_root_fstat)
+        monkeypatch.setattr(Path, "lstat", fail_canonical_root_lstat)
+        monkeypatch.setattr(Path, "resolve", fail_canonical_root_resolve)
+        monkeypatch.setattr(os, "readlink", fail_root_descriptor_address)
+        try:
+            expected = RuntimeError if failure in {"foreign_file_fd", "foreign_directory_fd"} else OSError
+            with pytest.raises(expected):
+                public.run(request, output)
+            assert injected == [failure] and len(owned) == 9 and len(children) == 2
+            for path, copied in children:
+                # Their original live directory handles remain owned even when
+                # the root descriptor or canonical root inspection is refused.
+&gt;               assert not path.exists()
+E               AssertionError: assert not True
+E                +  where True = exists()
+E                +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr1/.b3-full-context-observed-668c3dm6/context').exists
+
+test/test_b3_full_context_observed.py:1828: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_observed" name="test_workspace_root_refusal_drains_each_independently_bound_private_child[descriptor_probe]" time="95.967"><failure message="AssertionError: assert not True&#10; +  where True = exists()&#10; +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr2/.b3-full-context-observed-sg88d34q/context').exists">stored_native = namespace(folder=PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/full-context-observed-native0'), path=Pos...set': 'raw_positive', 'sha256': 'bc544b7a12ea3998b9f20bd43de68b57e8c1d5344f473fd60c1a8a22e4de2b6c', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr2')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x74dd10291210&gt;
+failure = 'descriptor_probe'
+
+    @pytest.mark.parametrize(
+        "failure",
+        [
+            "foreign_file_fd",
+            "foreign_directory_fd",
+            "descriptor_probe",
+            "canonical_lstat",
+            "canonical_resolve",
+            "descriptor_address",
+        ],
+    )
+    def test_workspace_root_refusal_drains_each_independently_bound_private_child(
+        stored_native, tmp_path, monkeypatch, failure
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        seal = public._Publication.seal_published
+        ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
+        ordinary_lstat, ordinary_resolve, ordinary_readlink = Path.lstat, Path.resolve, os.readlink
+        before = dict(sys.modules)
+        owned, children, roots, foreign_descriptors, foreign_files, injected = [], [], [], [], [], []
+        foreign = tmp_path / "foreign-workspace-root"
+        foreign_bytes = b"foreign root descriptor and sentinel must remain owned by the caller\n"
+        if failure == "foreign_directory_fd":
+            foreign.mkdir()
+            sentinel = foreign / "sentinel.bin"
+            sentinel.write_bytes(foreign_bytes)
+        else:
+            sentinel = foreign
+            sentinel.write_bytes(foreign_bytes)
+    
+        def record_actual_publication_and_arm_root_failure(owner):
+            seal(owner)
+            if roots:
+                return
+            assert (output / "summary.json").is_file()
+            assert owner.workspace is not None and owner.workspace_fd is not None
+            roots.append((owner.workspace, owner.workspace_fd))
+            for name in (
+                "workspace_publication_fd",
+                "workspace_context_fd",
+                "workspace_snapshot_fd",
+                "workspace_fd",
+                "parent_fd",
+                "claim_fd",
+                "output_fd",
+                "staging_fd",
+                "marker_fd",
+            ):
+                fd = getattr(owner, name)
+                assert fd is not None
+                opened = ordinary_fstat(fd)
+                owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+            for name in ("context", "snapshot"):
+                path = owner.workspace / name
+                copied = list(path.iterdir())
+                assert copied and all(leaf.is_file() for leaf in copied)
+                if name == "snapshot":
+                    assert len(copied) == 5
+                else:
+                    assert (path / "summary.json").is_file()
+                children.append((path, copied))
+            if failure in {"foreign_file_fd", "foreign_directory_fd"}:
+                fd = owner.workspace_fd
+                ordinary_close(fd)
+                flags = os.O_RDONLY | os.O_NOFOLLOW | (os.O_DIRECTORY if failure == "foreign_directory_fd" else 0)
+                replacement = ordinary_open(foreign, flags)
+                if replacement != fd:
+                    ordinary_dup2(replacement, fd)
+                    ordinary_close(replacement)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                injected.append(failure)
+                if failure == "foreign_file_fd":
+                    foreign_files.append(fd)
+            if not foreign_files:
+                fd = ordinary_open(sentinel, os.O_RDONLY | os.O_NOFOLLOW)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                foreign_files.append(fd)
+    
+        def root_metadata_refusal(kind):
+            if roots and failure == kind and not injected:
+                injected.append(kind)
+                raise OSError(errno.EIO, "injected root metadata refusal")
+    
+        def fail_root_fstat(fd):
+            if roots and fd == roots[0][1]:
+                root_metadata_refusal("descriptor_probe")
+            return ordinary_fstat(fd)
+    
+        def fail_canonical_root_lstat(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_lstat")
+            return ordinary_lstat(path, *args, **kwargs)
+    
+        def fail_canonical_root_resolve(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_resolve")
+            return ordinary_resolve(path, *args, **kwargs)
+    
+        def fail_root_descriptor_address(path, *args, **kwargs):
+            if roots and path == f"/proc/self/fd/{roots[0][1]}":
+                root_metadata_refusal("descriptor_address")
+            return ordinary_readlink(path, *args, **kwargs)
+    
+        monkeypatch.setattr(public._Publication, "seal_published", record_actual_publication_and_arm_root_failure)
+        monkeypatch.setattr(os, "fstat", fail_root_fstat)
+        monkeypatch.setattr(Path, "lstat", fail_canonical_root_lstat)
+        monkeypatch.setattr(Path, "resolve", fail_canonical_root_resolve)
+        monkeypatch.setattr(os, "readlink", fail_root_descriptor_address)
+        try:
+            expected = RuntimeError if failure in {"foreign_file_fd", "foreign_directory_fd"} else OSError
+            with pytest.raises(expected):
+                public.run(request, output)
+            assert injected == [failure] and len(owned) == 9 and len(children) == 2
+            for path, copied in children:
+                # Their original live directory handles remain owned even when
+                # the root descriptor or canonical root inspection is refused.
+&gt;               assert not path.exists()
+E               AssertionError: assert not True
+E                +  where True = exists()
+E                +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr2/.b3-full-context-observed-sg88d34q/context').exists
+
+test/test_b3_full_context_observed.py:1828: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_observed" name="test_workspace_root_refusal_drains_each_independently_bound_private_child[canonical_lstat]" time="95.167"><failure message="AssertionError: assert not True&#10; +  where True = exists()&#10; +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr3/.b3-full-context-observed-0dk6ufqm/context').exists">stored_native = namespace(folder=PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/full-context-observed-native0'), path=Pos...set': 'raw_positive', 'sha256': 'bc544b7a12ea3998b9f20bd43de68b57e8c1d5344f473fd60c1a8a22e4de2b6c', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr3')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x74dd0fb6bd50&gt;
+failure = 'canonical_lstat'
+
+    @pytest.mark.parametrize(
+        "failure",
+        [
+            "foreign_file_fd",
+            "foreign_directory_fd",
+            "descriptor_probe",
+            "canonical_lstat",
+            "canonical_resolve",
+            "descriptor_address",
+        ],
+    )
+    def test_workspace_root_refusal_drains_each_independently_bound_private_child(
+        stored_native, tmp_path, monkeypatch, failure
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        seal = public._Publication.seal_published
+        ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
+        ordinary_lstat, ordinary_resolve, ordinary_readlink = Path.lstat, Path.resolve, os.readlink
+        before = dict(sys.modules)
+        owned, children, roots, foreign_descriptors, foreign_files, injected = [], [], [], [], [], []
+        foreign = tmp_path / "foreign-workspace-root"
+        foreign_bytes = b"foreign root descriptor and sentinel must remain owned by the caller\n"
+        if failure == "foreign_directory_fd":
+            foreign.mkdir()
+            sentinel = foreign / "sentinel.bin"
+            sentinel.write_bytes(foreign_bytes)
+        else:
+            sentinel = foreign
+            sentinel.write_bytes(foreign_bytes)
+    
+        def record_actual_publication_and_arm_root_failure(owner):
+            seal(owner)
+            if roots:
+                return
+            assert (output / "summary.json").is_file()
+            assert owner.workspace is not None and owner.workspace_fd is not None
+            roots.append((owner.workspace, owner.workspace_fd))
+            for name in (
+                "workspace_publication_fd",
+                "workspace_context_fd",
+                "workspace_snapshot_fd",
+                "workspace_fd",
+                "parent_fd",
+                "claim_fd",
+                "output_fd",
+                "staging_fd",
+                "marker_fd",
+            ):
+                fd = getattr(owner, name)
+                assert fd is not None
+                opened = ordinary_fstat(fd)
+                owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+            for name in ("context", "snapshot"):
+                path = owner.workspace / name
+                copied = list(path.iterdir())
+                assert copied and all(leaf.is_file() for leaf in copied)
+                if name == "snapshot":
+                    assert len(copied) == 5
+                else:
+                    assert (path / "summary.json").is_file()
+                children.append((path, copied))
+            if failure in {"foreign_file_fd", "foreign_directory_fd"}:
+                fd = owner.workspace_fd
+                ordinary_close(fd)
+                flags = os.O_RDONLY | os.O_NOFOLLOW | (os.O_DIRECTORY if failure == "foreign_directory_fd" else 0)
+                replacement = ordinary_open(foreign, flags)
+                if replacement != fd:
+                    ordinary_dup2(replacement, fd)
+                    ordinary_close(replacement)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                injected.append(failure)
+                if failure == "foreign_file_fd":
+                    foreign_files.append(fd)
+            if not foreign_files:
+                fd = ordinary_open(sentinel, os.O_RDONLY | os.O_NOFOLLOW)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                foreign_files.append(fd)
+    
+        def root_metadata_refusal(kind):
+            if roots and failure == kind and not injected:
+                injected.append(kind)
+                raise OSError(errno.EIO, "injected root metadata refusal")
+    
+        def fail_root_fstat(fd):
+            if roots and fd == roots[0][1]:
+                root_metadata_refusal("descriptor_probe")
+            return ordinary_fstat(fd)
+    
+        def fail_canonical_root_lstat(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_lstat")
+            return ordinary_lstat(path, *args, **kwargs)
+    
+        def fail_canonical_root_resolve(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_resolve")
+            return ordinary_resolve(path, *args, **kwargs)
+    
+        def fail_root_descriptor_address(path, *args, **kwargs):
+            if roots and path == f"/proc/self/fd/{roots[0][1]}":
+                root_metadata_refusal("descriptor_address")
+            return ordinary_readlink(path, *args, **kwargs)
+    
+        monkeypatch.setattr(public._Publication, "seal_published", record_actual_publication_and_arm_root_failure)
+        monkeypatch.setattr(os, "fstat", fail_root_fstat)
+        monkeypatch.setattr(Path, "lstat", fail_canonical_root_lstat)
+        monkeypatch.setattr(Path, "resolve", fail_canonical_root_resolve)
+        monkeypatch.setattr(os, "readlink", fail_root_descriptor_address)
+        try:
+            expected = RuntimeError if failure in {"foreign_file_fd", "foreign_directory_fd"} else OSError
+            with pytest.raises(expected):
+                public.run(request, output)
+            assert injected == [failure] and len(owned) == 9 and len(children) == 2
+            for path, copied in children:
+                # Their original live directory handles remain owned even when
+                # the root descriptor or canonical root inspection is refused.
+&gt;               assert not path.exists()
+E               AssertionError: assert not True
+E                +  where True = exists()
+E                +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr3/.b3-full-context-observed-0dk6ufqm/context').exists
+
+test/test_b3_full_context_observed.py:1828: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_observed" name="test_workspace_root_refusal_drains_each_independently_bound_private_child[canonical_resolve]" time="94.461"><failure message="AssertionError: assert not True&#10; +  where True = exists()&#10; +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr4/.b3-full-context-observed-nqoc84n3/context').exists">stored_native = namespace(folder=PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/full-context-observed-native0'), path=Pos...set': 'raw_positive', 'sha256': 'bc544b7a12ea3998b9f20bd43de68b57e8c1d5344f473fd60c1a8a22e4de2b6c', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr4')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x74dd0fec4e50&gt;
+failure = 'canonical_resolve'
+
+    @pytest.mark.parametrize(
+        "failure",
+        [
+            "foreign_file_fd",
+            "foreign_directory_fd",
+            "descriptor_probe",
+            "canonical_lstat",
+            "canonical_resolve",
+            "descriptor_address",
+        ],
+    )
+    def test_workspace_root_refusal_drains_each_independently_bound_private_child(
+        stored_native, tmp_path, monkeypatch, failure
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        seal = public._Publication.seal_published
+        ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
+        ordinary_lstat, ordinary_resolve, ordinary_readlink = Path.lstat, Path.resolve, os.readlink
+        before = dict(sys.modules)
+        owned, children, roots, foreign_descriptors, foreign_files, injected = [], [], [], [], [], []
+        foreign = tmp_path / "foreign-workspace-root"
+        foreign_bytes = b"foreign root descriptor and sentinel must remain owned by the caller\n"
+        if failure == "foreign_directory_fd":
+            foreign.mkdir()
+            sentinel = foreign / "sentinel.bin"
+            sentinel.write_bytes(foreign_bytes)
+        else:
+            sentinel = foreign
+            sentinel.write_bytes(foreign_bytes)
+    
+        def record_actual_publication_and_arm_root_failure(owner):
+            seal(owner)
+            if roots:
+                return
+            assert (output / "summary.json").is_file()
+            assert owner.workspace is not None and owner.workspace_fd is not None
+            roots.append((owner.workspace, owner.workspace_fd))
+            for name in (
+                "workspace_publication_fd",
+                "workspace_context_fd",
+                "workspace_snapshot_fd",
+                "workspace_fd",
+                "parent_fd",
+                "claim_fd",
+                "output_fd",
+                "staging_fd",
+                "marker_fd",
+            ):
+                fd = getattr(owner, name)
+                assert fd is not None
+                opened = ordinary_fstat(fd)
+                owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+            for name in ("context", "snapshot"):
+                path = owner.workspace / name
+                copied = list(path.iterdir())
+                assert copied and all(leaf.is_file() for leaf in copied)
+                if name == "snapshot":
+                    assert len(copied) == 5
+                else:
+                    assert (path / "summary.json").is_file()
+                children.append((path, copied))
+            if failure in {"foreign_file_fd", "foreign_directory_fd"}:
+                fd = owner.workspace_fd
+                ordinary_close(fd)
+                flags = os.O_RDONLY | os.O_NOFOLLOW | (os.O_DIRECTORY if failure == "foreign_directory_fd" else 0)
+                replacement = ordinary_open(foreign, flags)
+                if replacement != fd:
+                    ordinary_dup2(replacement, fd)
+                    ordinary_close(replacement)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                injected.append(failure)
+                if failure == "foreign_file_fd":
+                    foreign_files.append(fd)
+            if not foreign_files:
+                fd = ordinary_open(sentinel, os.O_RDONLY | os.O_NOFOLLOW)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                foreign_files.append(fd)
+    
+        def root_metadata_refusal(kind):
+            if roots and failure == kind and not injected:
+                injected.append(kind)
+                raise OSError(errno.EIO, "injected root metadata refusal")
+    
+        def fail_root_fstat(fd):
+            if roots and fd == roots[0][1]:
+                root_metadata_refusal("descriptor_probe")
+            return ordinary_fstat(fd)
+    
+        def fail_canonical_root_lstat(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_lstat")
+            return ordinary_lstat(path, *args, **kwargs)
+    
+        def fail_canonical_root_resolve(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_resolve")
+            return ordinary_resolve(path, *args, **kwargs)
+    
+        def fail_root_descriptor_address(path, *args, **kwargs):
+            if roots and path == f"/proc/self/fd/{roots[0][1]}":
+                root_metadata_refusal("descriptor_address")
+            return ordinary_readlink(path, *args, **kwargs)
+    
+        monkeypatch.setattr(public._Publication, "seal_published", record_actual_publication_and_arm_root_failure)
+        monkeypatch.setattr(os, "fstat", fail_root_fstat)
+        monkeypatch.setattr(Path, "lstat", fail_canonical_root_lstat)
+        monkeypatch.setattr(Path, "resolve", fail_canonical_root_resolve)
+        monkeypatch.setattr(os, "readlink", fail_root_descriptor_address)
+        try:
+            expected = RuntimeError if failure in {"foreign_file_fd", "foreign_directory_fd"} else OSError
+            with pytest.raises(expected):
+                public.run(request, output)
+            assert injected == [failure] and len(owned) == 9 and len(children) == 2
+            for path, copied in children:
+                # Their original live directory handles remain owned even when
+                # the root descriptor or canonical root inspection is refused.
+&gt;               assert not path.exists()
+E               AssertionError: assert not True
+E                +  where True = exists()
+E                +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr4/.b3-full-context-observed-nqoc84n3/context').exists
+
+test/test_b3_full_context_observed.py:1828: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_observed" name="test_workspace_root_refusal_drains_each_independently_bound_private_child[descriptor_address]" time="95.946"><failure message="AssertionError: assert not True&#10; +  where True = exists()&#10; +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr5/.b3-full-context-observed-r01a2het/context').exists">stored_native = namespace(folder=PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/full-context-observed-native0'), path=Pos...set': 'raw_positive', 'sha256': 'bc544b7a12ea3998b9f20bd43de68b57e8c1d5344f473fd60c1a8a22e4de2b6c', 'shape': [4, 17]}})
+tmp_path = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr5')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x74dd10290e50&gt;
+failure = 'descriptor_address'
+
+    @pytest.mark.parametrize(
+        "failure",
+        [
+            "foreign_file_fd",
+            "foreign_directory_fd",
+            "descriptor_probe",
+            "canonical_lstat",
+            "canonical_resolve",
+            "descriptor_address",
+        ],
+    )
+    def test_workspace_root_refusal_drains_each_independently_bound_private_child(
+        stored_native, tmp_path, monkeypatch, failure
+    ):
+        public = _module()
+        request = _request(stored_native.path, tmp_path / "request")
+        output = tmp_path / "output"
+        seal = public._Publication.seal_published
+        ordinary_fstat, ordinary_close, ordinary_open, ordinary_dup2 = os.fstat, os.close, os.open, os.dup2
+        ordinary_lstat, ordinary_resolve, ordinary_readlink = Path.lstat, Path.resolve, os.readlink
+        before = dict(sys.modules)
+        owned, children, roots, foreign_descriptors, foreign_files, injected = [], [], [], [], [], []
+        foreign = tmp_path / "foreign-workspace-root"
+        foreign_bytes = b"foreign root descriptor and sentinel must remain owned by the caller\n"
+        if failure == "foreign_directory_fd":
+            foreign.mkdir()
+            sentinel = foreign / "sentinel.bin"
+            sentinel.write_bytes(foreign_bytes)
+        else:
+            sentinel = foreign
+            sentinel.write_bytes(foreign_bytes)
+    
+        def record_actual_publication_and_arm_root_failure(owner):
+            seal(owner)
+            if roots:
+                return
+            assert (output / "summary.json").is_file()
+            assert owner.workspace is not None and owner.workspace_fd is not None
+            roots.append((owner.workspace, owner.workspace_fd))
+            for name in (
+                "workspace_publication_fd",
+                "workspace_context_fd",
+                "workspace_snapshot_fd",
+                "workspace_fd",
+                "parent_fd",
+                "claim_fd",
+                "output_fd",
+                "staging_fd",
+                "marker_fd",
+            ):
+                fd = getattr(owner, name)
+                assert fd is not None
+                opened = ordinary_fstat(fd)
+                owned.append((name, fd, (opened.st_dev, opened.st_ino)))
+            for name in ("context", "snapshot"):
+                path = owner.workspace / name
+                copied = list(path.iterdir())
+                assert copied and all(leaf.is_file() for leaf in copied)
+                if name == "snapshot":
+                    assert len(copied) == 5
+                else:
+                    assert (path / "summary.json").is_file()
+                children.append((path, copied))
+            if failure in {"foreign_file_fd", "foreign_directory_fd"}:
+                fd = owner.workspace_fd
+                ordinary_close(fd)
+                flags = os.O_RDONLY | os.O_NOFOLLOW | (os.O_DIRECTORY if failure == "foreign_directory_fd" else 0)
+                replacement = ordinary_open(foreign, flags)
+                if replacement != fd:
+                    ordinary_dup2(replacement, fd)
+                    ordinary_close(replacement)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                injected.append(failure)
+                if failure == "foreign_file_fd":
+                    foreign_files.append(fd)
+            if not foreign_files:
+                fd = ordinary_open(sentinel, os.O_RDONLY | os.O_NOFOLLOW)
+                opened = ordinary_fstat(fd)
+                foreign_descriptors.append((fd, (opened.st_dev, opened.st_ino)))
+                foreign_files.append(fd)
+    
+        def root_metadata_refusal(kind):
+            if roots and failure == kind and not injected:
+                injected.append(kind)
+                raise OSError(errno.EIO, "injected root metadata refusal")
+    
+        def fail_root_fstat(fd):
+            if roots and fd == roots[0][1]:
+                root_metadata_refusal("descriptor_probe")
+            return ordinary_fstat(fd)
+    
+        def fail_canonical_root_lstat(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_lstat")
+            return ordinary_lstat(path, *args, **kwargs)
+    
+        def fail_canonical_root_resolve(path, *args, **kwargs):
+            if roots and path == roots[0][0]:
+                root_metadata_refusal("canonical_resolve")
+            return ordinary_resolve(path, *args, **kwargs)
+    
+        def fail_root_descriptor_address(path, *args, **kwargs):
+            if roots and path == f"/proc/self/fd/{roots[0][1]}":
+                root_metadata_refusal("descriptor_address")
+            return ordinary_readlink(path, *args, **kwargs)
+    
+        monkeypatch.setattr(public._Publication, "seal_published", record_actual_publication_and_arm_root_failure)
+        monkeypatch.setattr(os, "fstat", fail_root_fstat)
+        monkeypatch.setattr(Path, "lstat", fail_canonical_root_lstat)
+        monkeypatch.setattr(Path, "resolve", fail_canonical_root_resolve)
+        monkeypatch.setattr(os, "readlink", fail_root_descriptor_address)
+        try:
+            expected = RuntimeError if failure in {"foreign_file_fd", "foreign_directory_fd"} else OSError
+            with pytest.raises(expected):
+                public.run(request, output)
+            assert injected == [failure] and len(owned) == 9 and len(children) == 2
+            for path, copied in children:
+                # Their original live directory handles remain owned even when
+                # the root descriptor or canonical root inspection is refused.
+&gt;               assert not path.exists()
+E               AssertionError: assert not True
+E                +  where True = exists()
+E                +    where exists = PosixPath('/tmp/b3-publisher_v11_root_refusal_red_attempt01/test_workspace_root_refusal_dr5/.b3-full-context-observed-r01a2het/context').exists
+
+test/test_b3_full_context_observed.py:1828: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,16 @@
+{
+  "schema": "third_party_torch_jit_path_probe_v1",
+  "operation": "import third-party torch.distributed.nn.jit.instantiator only",
+  "added_paths": [
+    "/tmp/tmpfe2eqor7"
+  ],
+  "removed_paths": [],
+  "actual_declared_template_path": "/tmp/tmpfe2eqor7",
+  "source_path": "/mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/torch/distributed/nn/jit/instantiator.py",
+  "source_sha256": "440a619c764e4133564d7956ba060a7223e94664854b94a4a2074d095756db7e",
+  "elapsed_seconds": 5.755555477982853,
+  "math_threads": 1,
+  "cuda_visible_devices": "",
+  "model_forwards": 0,
+  "checkpoint_tensors_loaded": false
+}

@@ -1,0 +1,49 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "scripts/supervise_b3_pilot.py",
+    "--run-dir",
+    "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_supervisor",
+    "--max-wall-seconds",
+    "950",
+    "--max-rss-gib",
+    "4",
+    "--min-host-ram-gib",
+    "4",
+    "--min-disk-gib",
+    "20",
+    "--",
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_gnu_time.txt",
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "test/test_b3_full_context_observed.py::test_refused_output_marker_lookup_still_invalidates_through_owned_staging_descriptor",
+    "test/test_b3_full_context_observed.py::test_owned_snapshot_unlink_refusal_drains_other_known_leaves_and_preserves_failed_original",
+    "test/test_b3_full_context_observed.py::test_refused_recovery_marker_probe_still_invalidates_through_verified_owned_fallback",
+    "-q",
+    "--basetemp=/tmp/b3-publisher_v12_independent_routes_red_attempt01",
+    "--junitxml=runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01.xml"
+  ],
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "CUDA_VISIBLE_DEVICES": "",
+    "TF_RUN_REAL_MODEL_TESTS": "0"
+  },
+  "head": "2505f7b0eaea28d0bdf131a26b6bddc440482de9",
+  "source_sha256": {
+    "scripts/publish_b3_full_context_observed.py": "2cec2e5b1635ec3e57e96878be93f0ca2475eb73ef5ef0402eefa98112c7f832",
+    "test/test_b3_full_context_observed.py": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62"
+  },
+  "expected_param_cases": 3,
+  "complete_test_file_run": false,
+  "full_repository_run": false,
+  "model_forwards_authorized": false,
+  "milestone_accepted": false,
+  "retained_sources": "runs/b3_feasibility/20261005/publisher_v12_independent_routes_red_attempt01_sources"
+}

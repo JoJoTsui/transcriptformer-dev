@@ -1,0 +1,23 @@
+	Command being timed: ".venv/bin/python -m pytest test/test_b3_full_context_observed.py::test_workspace_root_refusal_drains_each_independently_bound_private_child -q --basetemp=/tmp/b3-publisher_v11_root_refusal_green_attempt01 --junitxml=runs/b3_feasibility/20261005/publisher_v11_root_refusal_green_attempt01.xml"
+	User time (seconds): 26.42
+	System time (seconds): 34.39
+	Percent of CPU this job got: 10%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 9:42.54
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 521072
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 5403
+	Minor (reclaiming a frame) page faults: 100404
+	Voluntary context switches: 9786887
+	Involuntary context switches: 1201
+	Swaps: 0
+	File system inputs: 252087
+	File system outputs: 11384
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

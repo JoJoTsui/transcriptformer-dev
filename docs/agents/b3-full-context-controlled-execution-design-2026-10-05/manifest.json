@@ -1,0 +1,61 @@
+{
+  "schema": "b3_full_context_controlled_execution_design_archive_v1",
+  "files": [
+    {
+      "source_path": "runs/b3_feasibility/20261004/common_source_draft/full_context_comparison_bridge_design_draft_v02.md",
+      "archive_file": "bridge_design_v02.md",
+      "sha256": "5d2e163836db641f19b1e3984250e30f313369cd002eb48ccedbdf017f2124b8",
+      "bytes": 71071
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261004/common_source_draft/full_context_registration_contract_draft_v02.md",
+      "archive_file": "registration_contract_v02.md",
+      "sha256": "5347353fb5fc1e9a8b0e0f62a3492deca547533abd849e0eba8e9a5f667db6de",
+      "bytes": 66236
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/full_context_controlled_issuer_authority_design_v01.md",
+      "archive_file": "issuer_authority_design_v01.md",
+      "sha256": "4b78fad59bc3f1e4c82c9832f711e3913d5f50c229ae4fb8605bb2a2cb0e1416",
+      "bytes": 18031
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/full_context_controlled_issuer_authority_design_v02.md",
+      "archive_file": "issuer_authority_design_v02.md",
+      "sha256": "ba2d51feb89c577cea3d1aa67c6300cef6b55d0882a3f71eb32e29ca4957a58e",
+      "bytes": 25709
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/full_context_controlled_issuer_authority_design_v02_spec_review01.md",
+      "archive_file": "issuer_design_v02_spec_review01.md",
+      "sha256": "2b64fb309af512893806a8522e72d2f9e07b3eb969e612fad067ec5cc9a85bb9",
+      "bytes": 3070
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/full_context_controlled_issuer_standards_review02.md",
+      "archive_file": "issuer_design_v02_standards_review02.md",
+      "sha256": "f8da968e14bb55e4246a1d7d7205609df6453e936494e5e4a2b6ad5d3d8d0c2b",
+      "bytes": 3399
+    },
+    {
+      "source_path": "runs/b3_feasibility/20261005/full_context_controlled_dependency_implementation_plan_v01.json",
+      "archive_file": "implementation_dependency_plan_v01.json",
+      "sha256": "712038edb17c9c4acd822fbeef004b4f07d34c5939e64398eba832c4da86393e",
+      "bytes": 2464
+    }
+  ],
+  "design_only": true,
+  "issuer_authority_v02_spec": {
+    "hard": 0,
+    "optional": 0
+  },
+  "issuer_authority_v02_standards": {
+    "hard": 0,
+    "optional": 0
+  },
+  "implementation_acceptance": false,
+  "authority_or_production_permission_granted": false,
+  "current_implementation_source_final_reviews": "pending_agent_service_usage_limit",
+  "ticket_05": "open",
+  "ticket_11": "excluded"
+}
