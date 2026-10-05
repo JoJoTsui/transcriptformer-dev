@@ -48,7 +48,28 @@ failures and both current green runs. Separate pytest/JUnit/GNU/driver and
 supervisor sample clocks remain distinct. All prior ownership receipts remain
 unchanged; earlier successes are not transferred to different source bytes.
 
-## Genuine prospective toy preparation
+## Genuine native input tokenization — current
+
+Source **`276eaa6`**, entrypoint `816de814…` and tests `c9daddd5…`, passes the
+**complete nine-case preparation file**. The additional public regression
+first fails on the absent native `unknown` token. The repair uses the unchanged
+vocabulary constructor and genuinely tokenizes all 60 prepared rows per species
+through `configured_prepared_cells`, retaining five simulated units and 502
+positions. Independent literal byte oracles verify counts, token IDs and empty
+auxiliary tensors. Model compatibility, outcomes and effects remain unproved.
+
+JUnit is **43.667 seconds**, GNU **46.81 seconds** at **765,764 KiB** peak process
+RSS, and driver time **47.14613 seconds**. Configured static checks pass; all
+233 earlier Python files remain unchanged. A separate persistent v02 CLI run
+completes in **28.21496 public seconds**, preserving all 70 source hashes.
+Its inputs are retained under
+`runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02`.
+The [native input archive](b3-full-context-native-input-evidence-2026-10-05/manifest.json)
+preserves the failed regression, current complete file result and actual CLI
+captures. Source/runtime authority, complete numeric census, independent final
+source reviews and complete repository integration remain pending.
+
+## Previous prospective preparation checkpoint — `48ef611`
 
 Source **`48ef611`**, entrypoint `412ff54a…` and tests `69f4e75d…`, passes the
 **complete eight-case preparation file** in 38.843 JUnit seconds, at

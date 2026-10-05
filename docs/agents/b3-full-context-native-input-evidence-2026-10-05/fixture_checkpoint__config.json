@@ -1,0 +1,1 @@
+{"model":{"data_config":{"filter_outliers":0,"gene_pad_token":"[PAD]","min_expressed_genes":0,"pad_zeros":true},"model_config":{"seq_len":502}}}

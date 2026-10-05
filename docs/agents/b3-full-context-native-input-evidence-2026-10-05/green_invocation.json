@@ -1,0 +1,50 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "scripts/supervise_b3_pilot.py",
+    "--run-dir",
+    "runs/b3_feasibility/20261005/synthetic_preparation_native_tokenization_green_attempt01_supervisor",
+    "--max-wall-seconds",
+    "950",
+    "--max-rss-gib",
+    "4",
+    "--min-host-ram-gib",
+    "4",
+    "--min-disk-gib",
+    "20",
+    "--",
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/synthetic_preparation_native_tokenization_green_attempt01_gnu_time.txt",
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "test/test_b3_full_context_synthetic_fixture.py",
+    "-q",
+    "--basetemp=/tmp/b3-synthetic_preparation_native_tokenization_green_attempt01",
+    "--junitxml=runs/b3_feasibility/20261005/synthetic_preparation_native_tokenization_green_attempt01.xml"
+  ],
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "CUDA_VISIBLE_DEVICES": "",
+    "TF_RUN_REAL_MODEL_TESTS": "0"
+  },
+  "head": "f0b3831415a630704a03446042f3b58ca32a4b68",
+  "source_sha256": {
+    "scripts/publish_b3_full_context_observed.py": "a6316ae50c3ac94adc1e708dd6521bbc2bdc71d7a03835107f1cae0bf35c184f",
+    "test/test_b3_full_context_observed.py": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62",
+    "scripts/prepare_b3_full_context_synthetic_fixture.py": "816de8143886bae2b819f0a3b10e6029f00e13649b8d49d54f479a526eea4078",
+    "test/test_b3_full_context_synthetic_fixture.py": "c9daddd5cb98e08321cdccdbca7e33adf5a204080abd97ab124bb3ecca007ba6"
+  },
+  "expected_absent": [],
+  "expected_param_cases": 9,
+  "complete_test_file_run": false,
+  "full_repository_run": false,
+  "model_forwards_authorized": false,
+  "milestone_accepted": false,
+  "retained_sources": "runs/b3_feasibility/20261005/synthetic_preparation_native_tokenization_green_attempt01_sources"
+}

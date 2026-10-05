@@ -1,0 +1,36 @@
+{
+  "status": "completed",
+  "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+  "supervisor_pid": 4,
+  "producer_pid": 5,
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/synthetic_preparation_native_tokenization_green_attempt01_gnu_time.txt",
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "test/test_b3_full_context_synthetic_fixture.py",
+    "-q",
+    "--basetemp=/tmp/b3-synthetic_preparation_native_tokenization_green_attempt01",
+    "--junitxml=runs/b3_feasibility/20261005/synthetic_preparation_native_tokenization_green_attempt01.xml"
+  ],
+  "started_unix": 1791171193.6407077,
+  "limits": {
+    "max_wall_seconds": 950.0,
+    "max_rss_gib": 4.0,
+    "min_host_ram_gib": 4.0,
+    "min_disk_gib": 20.0,
+    "max_gpu_temperature_c": null,
+    "gpu_index": 0
+  },
+  "producer_start_ticks": 16889457,
+  "heartbeat_unix": 1791171238.6816792,
+  "elapsed_seconds": 45.04176698697847,
+  "producer_rss_gib": 0.001331329345703125,
+  "host_available_ram_gib": 28.168354034423828,
+  "disk_available_gib": 382.92036056518555,
+  "return_code": 0,
+  "finished_unix": 1791171240.6907685
+}

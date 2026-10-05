@@ -1,0 +1,23 @@
+	Command being timed: ".venv/bin/python scripts/prepare_b3_full_context_synthetic_fixture.py --request runs/b3_feasibility/20261005/full_context_prospective_synthetic_preparation_request_v02.json --output runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02 --max-seconds 900"
+	User time (seconds): 4.96
+	System time (seconds): 2.16
+	Percent of CPU this job got: 24%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:28.96
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 748360
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 7256
+	Minor (reclaiming a frame) page faults: 166071
+	Voluntary context switches: 360163
+	Involuntary context switches: 169
+	Swaps: 0
+	File system inputs: 683235
+	File system outputs: 72
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

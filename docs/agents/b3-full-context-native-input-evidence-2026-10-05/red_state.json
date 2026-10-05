@@ -1,0 +1,36 @@
+{
+  "status": "stopped",
+  "boot_id": "6466673a-b61c-4b9a-b0e8-bd91850c6fd3",
+  "supervisor_pid": 4,
+  "producer_pid": 5,
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "runs/b3_feasibility/20261005/synthetic_preparation_native_tokenization_red_attempt01_gnu_time.txt",
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "test/test_b3_full_context_synthetic_fixture.py::test_public_preparation_verifies_complete_native_input_tokenization_without_model_outcomes",
+    "-q",
+    "--basetemp=/tmp/b3-synthetic_preparation_native_tokenization_red_attempt01",
+    "--junitxml=runs/b3_feasibility/20261005/synthetic_preparation_native_tokenization_red_attempt01.xml"
+  ],
+  "started_unix": 1791170830.4857414,
+  "limits": {
+    "max_wall_seconds": 950.0,
+    "max_rss_gib": 4.0,
+    "min_host_ram_gib": 4.0,
+    "min_disk_gib": 20.0,
+    "max_gpu_temperature_c": null,
+    "gpu_index": 0
+  },
+  "producer_start_ticks": 16853142,
+  "heartbeat_unix": 1791170845.4950476,
+  "elapsed_seconds": 15.010346030001529,
+  "producer_rss_gib": 0.0013885498046875,
+  "host_available_ram_gib": 28.318363189697266,
+  "disk_available_gib": 382.9207420349121,
+  "return_code": 1,
+  "finished_unix": 1791170859.5090423
+}

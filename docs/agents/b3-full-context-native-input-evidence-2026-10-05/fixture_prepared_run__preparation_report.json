@@ -1,0 +1,167 @@
+{
+  "artifact_schema_version": 1,
+  "preparation_fingerprint": "5146849899db7fd269c2587b15a2f457f5266e56e9e6df4a6d593259f94bfcd8",
+  "datasets": [
+    {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/prepared_run/prepared/homo_sapiens_prepared_train.h5ad",
+      "source_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad",
+      "prepared_sha256": "67d831da84660d10e67dd90c5543a48448c776882b4b24f19d01f8e432147dba",
+      "survivor_count": 60,
+      "survivor_digest": "3f3ffcf42accae1591be118baf57efb9b8d7c78028dc566674c809f210ad796a",
+      "sha256": "749a9308bef468b682246d099a01038135637ebe0b85fc8ecc1b570e8607d497",
+      "size_bytes": 2926512,
+      "dataset_type": "single_cell",
+      "embryo_id": null,
+      "embryo_ids": [
+        "homo_sapiens_simulated_unit_0",
+        "homo_sapiens_simulated_unit_1",
+        "homo_sapiens_simulated_unit_2",
+        "homo_sapiens_simulated_unit_3",
+        "homo_sapiens_simulated_unit_4"
+      ],
+      "species": "homo_sapiens",
+      "section_id": null,
+      "n_obs": 60,
+      "n_genes": 5000,
+      "removed_obs": {},
+      "duplicate_genes_collapsed": 0,
+      "unmapped_genes": {
+        "count": 0,
+        "gene_ids": [],
+        "truncated": false
+      },
+      "split": "train"
+    },
+    {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/prepared_run/prepared/mus_musculus_prepared_train.h5ad",
+      "source_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad",
+      "prepared_sha256": "147270cd8d9a89ef194ce3ae2bafd0fa91190dd55596d33bcc04e66c4f2dfbb0",
+      "survivor_count": 60,
+      "survivor_digest": "3f3ffcf42accae1591be118baf57efb9b8d7c78028dc566674c809f210ad796a",
+      "sha256": "f08e83b266f98d5b6d6155eaf8daf7e64d641173aec6fc9e907c65955cc6f22b",
+      "size_bytes": 3000240,
+      "dataset_type": "single_cell",
+      "embryo_id": null,
+      "embryo_ids": [
+        "mus_musculus_simulated_unit_0",
+        "mus_musculus_simulated_unit_1",
+        "mus_musculus_simulated_unit_2",
+        "mus_musculus_simulated_unit_3",
+        "mus_musculus_simulated_unit_4"
+      ],
+      "species": "mus_musculus",
+      "section_id": null,
+      "n_obs": 60,
+      "n_genes": 5000,
+      "removed_obs": {},
+      "duplicate_genes_collapsed": 0,
+      "unmapped_genes": {
+        "count": 0,
+        "gene_ids": [],
+        "truncated": false
+      },
+      "split": "train"
+    }
+  ],
+  "splits": {
+    "seed": 20260930,
+    "assignments": [
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad",
+        "dataset_type": "single_cell",
+        "species": "homo_sapiens",
+        "embryo_id": "homo_sapiens_simulated_unit_0",
+        "split": "train",
+        "reason": "train_only"
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad",
+        "dataset_type": "single_cell",
+        "species": "homo_sapiens",
+        "embryo_id": "homo_sapiens_simulated_unit_1",
+        "split": "train",
+        "reason": "train_only"
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad",
+        "dataset_type": "single_cell",
+        "species": "homo_sapiens",
+        "embryo_id": "homo_sapiens_simulated_unit_2",
+        "split": "train",
+        "reason": "train_only"
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad",
+        "dataset_type": "single_cell",
+        "species": "homo_sapiens",
+        "embryo_id": "homo_sapiens_simulated_unit_3",
+        "split": "train",
+        "reason": "train_only"
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad",
+        "dataset_type": "single_cell",
+        "species": "homo_sapiens",
+        "embryo_id": "homo_sapiens_simulated_unit_4",
+        "split": "train",
+        "reason": "train_only"
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad",
+        "dataset_type": "single_cell",
+        "species": "mus_musculus",
+        "embryo_id": "mus_musculus_simulated_unit_0",
+        "split": "train",
+        "reason": "train_only"
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad",
+        "dataset_type": "single_cell",
+        "species": "mus_musculus",
+        "embryo_id": "mus_musculus_simulated_unit_1",
+        "split": "train",
+        "reason": "train_only"
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad",
+        "dataset_type": "single_cell",
+        "species": "mus_musculus",
+        "embryo_id": "mus_musculus_simulated_unit_2",
+        "split": "train",
+        "reason": "train_only"
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad",
+        "dataset_type": "single_cell",
+        "species": "mus_musculus",
+        "embryo_id": "mus_musculus_simulated_unit_3",
+        "split": "train",
+        "reason": "train_only"
+      },
+      {
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad",
+        "dataset_type": "single_cell",
+        "species": "mus_musculus",
+        "embryo_id": "mus_musculus_simulated_unit_4",
+        "split": "train",
+        "reason": "train_only"
+      }
+    ],
+    "embryo_splits": {
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad::homo_sapiens_simulated_unit_0": "train",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad::homo_sapiens_simulated_unit_1": "train",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad::homo_sapiens_simulated_unit_2": "train",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad::homo_sapiens_simulated_unit_3": "train",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad::homo_sapiens_simulated_unit_4": "train",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad::mus_musculus_simulated_unit_0": "train",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad::mus_musculus_simulated_unit_1": "train",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad::mus_musculus_simulated_unit_2": "train",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad::mus_musculus_simulated_unit_3": "train",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad::mus_musculus_simulated_unit_4": "train"
+    },
+    "splits": {
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/homo_sapiens.h5ad": "train",
+      "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v02/raw/mus_musculus.h5ad": "train"
+    }
+  }
+}

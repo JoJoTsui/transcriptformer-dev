@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="25.653" timestamp="2026-10-05T11:27:12.365430+08:00" hostname="Conundrum"><testcase classname="test.test_b3_full_context_synthetic_fixture" name="test_public_preparation_verifies_complete_native_input_tokenization_without_model_outcomes" time="25.432"><failure message="AssertionError: The genuine batch gene tokenizer requires its unknown token&#10;assert 'unknown' in {'ENSG00000000001': 1, 'ENSG00000000002': 2, 'ENSG00000000003': 3, 'ENSG00000000004': 4, ...}">tmp_path = PosixPath('/tmp/b3-synthetic_preparation_native_tokenization_red_attempt01/test_public_preparation_verifi0')
+
+    def test_public_preparation_verifies_complete_native_input_tokenization_without_model_outcomes(tmp_path):
+        public, request_path, _ = _request(tmp_path)
+        result = public.run(request_path, tmp_path / "attempt", max_seconds=900)
+        vocabulary = _read(result["checkpoint"]["gene_vocabulary"])
+&gt;       assert "unknown" in vocabulary, "The genuine batch gene tokenizer requires its unknown token"
+E       AssertionError: The genuine batch gene tokenizer requires its unknown token
+E       assert 'unknown' in {'ENSG00000000001': 1, 'ENSG00000000002': 2, 'ENSG00000000003': 3, 'ENSG00000000004': 4, ...}
+
+test/test_b3_full_context_synthetic_fixture.py:327: AssertionError</failure></testcase></testsuite></testsuites>

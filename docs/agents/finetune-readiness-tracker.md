@@ -1,6 +1,34 @@
 # Finetune readiness tracker
 
-## Current implementation checkpoint — 2026-10-05
+## Current native input checkpoint — 2026-10-05
+
+Preparation **`276eaa6`** (`816de814…`, tests `c9daddd5…`) passes its complete
+**nine-case file**. The new regression exposes the earlier vocabulary's missing
+native `unknown` token. The repair uses the frozen vocabulary constructor and
+verifies actual backed tokenization of every prepared cell: 60 rows, five
+simulated units, 502 positions, 501 positive tokens, one pad and empty auxiliary
+input per species. Independent literal byte oracles match. No model or native
+outcomes are generated; full model/producer compatibility remains unproved.
+
+A separate persistent v02 CLI call completes in **28.21496 public seconds**,
+with all 70 source hashes unchanged. JUnit is 43.667 seconds; GNU peak process
+RSS is 765,764 KiB. Static checks pass; all 233 previous Python files and the
+WSL resource limits remain unchanged. Original failed and earlier successful
+receipts stay scoped to their own bytes in the
+[native input evidence](b3-full-context-native-input-evidence-2026-10-05/manifest.json).
+
+**05 stays open; 11 excluded; ten bounded engineering closures unchanged.**
+Fresh independent source reviews remain pending at the agent service usage
+limit. Complete publisher/repository integration, controlled producer/issuer/
+independent authority, registration, comparison/v4, numeric census, project
+outcomes/effects, full cost and reportable uncertainty remain unfinished. The
+actual pilot still has 32.54% coverage, 0/2,000 necessary jointly supported
+draws, a reporting veto and null intervals.
+
+- [x] Verify complete prospective native input tokenization without model
+  forwards or scoring outcomes.
+
+## Previous implementation checkpoint — `db4d88e` / `48ef611`, 2026-10-05
 
 Publisher **`db4d88e`** (`a6316ae5…`, tests `cfa0d0b9…`) passes **14 targeted
 cases across two source-stable runs**. Independent child cleanup survives root
