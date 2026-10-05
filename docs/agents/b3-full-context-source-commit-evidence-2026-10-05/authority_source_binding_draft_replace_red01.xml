@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.772" timestamp="2026-10-05T15:18:56.817020+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_authority_source_binding_draft_v01" name="test_git_replacement_ref_cannot_relabel_a_different_committed_tree" time="0.029"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-58/test_git_replacement_ref_canno0')
+
+    def test_git_replacement_ref_cannot_relabel_a_different_committed_tree(tmp_path):
+        root = tmp_path / "repository"
+        root.mkdir()
+        _git(root, "init", "--quiet")
+        path = root / "source.py"
+        path.write_bytes(b"VALUE = 7\n")
+        _git(root, "add", "--", "source.py")
+        _git(root, "-c", "user.name=Source Binding Test", "-c", "user.email=source-binding@example.invalid",
+             "commit", "--quiet", "--no-gpg-sign", "-m", "Original genuine source")
+        original_commit = _git(root, "rev-parse", "HEAD").decode().strip()
+        path.write_bytes(b"VALUE = 8\n")
+        _git(root, "add", "--", "source.py")
+        _git(root, "-c", "user.name=Source Binding Test", "-c", "user.email=source-binding@example.invalid",
+             "commit", "--quiet", "--no-gpg-sign", "-m", "Different genuine source")
+        different_commit = _git(root, "rev-parse", "HEAD").decode().strip()
+        _git(root, "replace", original_commit, different_commit)
+        expected = {str(path.resolve()): sha256(b"VALUE = 8\n").hexdigest()}
+    
+&gt;       with pytest.raises(ValueError, match="Git blob"):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+runs/b3_feasibility/20261005/test_authority_source_binding_draft_v01.py:457: Failed</failure></testcase></testsuite></testsuites>

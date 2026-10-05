@@ -1,0 +1,115 @@
+{
+  "schema": "b3_full_context_three_file_validation_evidence_v1",
+  "scope": "Complete three-file source-stable runtime only; not full repository, source/runtime authority or scientific acceptance",
+  "frozen_head": "157e8fb75b3a28900f97cf69fb8c5b49cad70381",
+  "actual_cases": 207,
+  "cases_by_file": {
+    "publisher": 102,
+    "preparation": 10,
+    "planner": 95
+  },
+  "artifacts": [
+    {
+      "path": "full_context_corrected_three_file_ci_v02.xml",
+      "sha256": "a3295274f7ab8c145666b399ab30ab6a5ef5edf1892ca02411c8b03fa36607d1",
+      "bytes": 34449,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_three_file_ci_v02.xml"
+    },
+    {
+      "path": "full_context_corrected_three_file_ci_v02_case_events.jsonl",
+      "sha256": "1359a61fff4750932ea3c10010d124ce75d763848021b0b361be7f59c0b748ae",
+      "bytes": 180497,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_three_file_ci_v02_case_events.jsonl"
+    },
+    {
+      "path": "full_context_corrected_three_file_ci_v02_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_three_file_ci_v02_driver_stderr.txt"
+    },
+    {
+      "path": "full_context_corrected_three_file_ci_v02_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_three_file_ci_v02_driver_stdout.txt"
+    },
+    {
+      "path": "full_context_corrected_three_file_ci_v02_gnu_time.txt",
+      "sha256": "28439c21e30dc18f07a36e5062895131ecebfc844a41b4e51504ab816890a86c",
+      "bytes": 1123,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_three_file_ci_v02_gnu_time.txt"
+    },
+    {
+      "path": "full_context_corrected_three_file_ci_v02_invocation.json",
+      "sha256": "24ab39d197cca7dbf6de65d1a1df6c001cc220c8f03cd3dac0672e10bfc4aaf8",
+      "bytes": 71301,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_three_file_ci_v02_invocation.json"
+    },
+    {
+      "path": "full_context_corrected_three_file_ci_v02_result.json",
+      "sha256": "faaae1c86df006b6248a938f3314b4bf298ceaf920da90359df1284c28d0e6a4",
+      "bytes": 945,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_three_file_ci_v02_result.json"
+    },
+    {
+      "path": "full_context_corrected_three_file_ci_v02_supervisor_producer.log",
+      "sha256": "5494b865012c1a96e0781e3482f255e503c765869c57901fefd066fb69a8c4ff",
+      "bytes": 1494,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_three_file_ci_v02_supervisor/producer.log"
+    },
+    {
+      "path": "full_context_corrected_three_file_ci_v02_supervisor_state.json",
+      "sha256": "1df6762173d7fa83d8ee03b79a5321bc5a4237aee06b5361f81b3e1a3a7e52b5",
+      "bytes": 1326,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_three_file_ci_v02_supervisor/state.json"
+    },
+    {
+      "path": "full_context_corrected_three_file_ci_v02_worker.json",
+      "sha256": "93799e2398fc92b9fd276fc855a29bc489d6750c60a6b385c8fec4ee0686eefd",
+      "bytes": 197313,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_three_file_ci_v02_worker.json"
+    },
+    {
+      "path": "run_full_context_bound_checks_v03.py.txt",
+      "sha256": "cee8b99cf25eb3154aaecb9f5d161a2f2280c861ccabb3d6f811dc2090c1cb98",
+      "bytes": 10850,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_full_context_bound_checks_v03.py"
+    },
+    {
+      "path": "scripts__orchestrate_b3_paged_native_common_source.py.txt",
+      "sha256": "1282e86856c300f2b9c3c89fb7c940106957280c9bc57e323faf25def295a3c3",
+      "bytes": 79702,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/scripts/orchestrate_b3_paged_native_common_source.py"
+    },
+    {
+      "path": "scripts__prepare_b3_full_context_synthetic_fixture.py.txt",
+      "sha256": "e1728af2a5509a33d7f74beb7c3a9522d99245ee9ba3ecc300b0e09504a7fb19",
+      "bytes": 60715,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/scripts/prepare_b3_full_context_synthetic_fixture.py"
+    },
+    {
+      "path": "scripts__publish_b3_full_context_observed.py.txt",
+      "sha256": "a6316ae50c3ac94adc1e708dd6521bbc2bdc71d7a03835107f1cae0bf35c184f",
+      "bytes": 112946,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/scripts/publish_b3_full_context_observed.py"
+    },
+    {
+      "path": "test__test_b3_full_context_observed.py.txt",
+      "sha256": "c310ee60ac5c56393db1bacd517bad40bfccd21276995da7920b2508b1ebfee6",
+      "bytes": 122280,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_observed.py"
+    },
+    {
+      "path": "test__test_b3_full_context_synthetic_fixture.py.txt",
+      "sha256": "c2290ba74debc3b890e0035ffcb944bcf6ec204a5cd16d07db440d80a0efc2e7",
+      "bytes": 20251,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_synthetic_fixture.py"
+    },
+    {
+      "path": "test__test_b3_paged_native_common_source_controller.py.txt",
+      "sha256": "bb91b7c2359230272f4cae0673fff5ef2e85a6fc576f790885d39b19861d8410",
+      "bytes": 68846,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_paged_native_common_source_controller.py"
+    }
+  ]
+}

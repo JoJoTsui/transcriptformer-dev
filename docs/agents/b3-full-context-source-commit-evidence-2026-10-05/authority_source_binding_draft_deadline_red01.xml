@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.701" timestamp="2026-10-05T14:58:18.991104+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_authority_source_binding_draft_v01" name="test_public_deadline_includes_initial_canonical_path_admission" time="0.020"><failure message="Failed: DID NOT RAISE &lt;class 'TimeoutError'&gt;">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-48/test_public_deadline_includes_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7c15be84c690&gt;
+
+    def test_public_deadline_includes_initial_canonical_path_admission(tmp_path, monkeypatch):
+        root = tmp_path / "repository"
+        root.mkdir()
+        _git(root, "init", "--quiet")
+        path = root / "source.py"
+        data = b"VALUE = 7\n"
+        path.write_bytes(data)
+        _git(root, "add", "--", "source.py")
+        _git(root, "-c", "user.name=Source Binding Test", "-c", "user.email=source-binding@example.invalid",
+             "commit", "--quiet", "--no-gpg-sign", "-m", "Genuine source fixture")
+        commit = _git(root, "rev-parse", "HEAD").decode().strip()
+        expected = {str(path.resolve()): sha256(data).hexdigest()}
+        real_resolve, real_clock = Path.resolve, time.monotonic
+        elapsed = 0
+    
+        def initial_path_admission_exhausts_original_deadline(self, *args, **kwargs):
+            nonlocal elapsed
+            result = real_resolve(self, *args, **kwargs)
+            if self == root and elapsed == 0:
+                elapsed = 901
+            return result
+    
+        public = _source()
+        # This is an injected clock refusal check, never a resource-cost receipt.
+        # Restore the real clock before pytest records this test's actual duration.
+        with monkeypatch.context() as injection:
+            injection.setattr(Path, "resolve", initial_path_admission_exhausts_original_deadline)
+            injection.setattr(time, "monotonic", lambda: real_clock() + elapsed)
+&gt;           with pytest.raises(TimeoutError, match="deadline"):
+E           Failed: DID NOT RAISE &lt;class 'TimeoutError'&gt;
+
+runs/b3_feasibility/20261005/test_authority_source_binding_draft_v01.py:272: Failed</failure></testcase></testsuite></testsuites>

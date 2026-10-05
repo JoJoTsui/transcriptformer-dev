@@ -1,0 +1,364 @@
+"""Exercise genuine Git/live-byte binding without constructing any admission."""
+
+from hashlib import sha256
+import importlib.util
+import os
+from pathlib import Path
+import subprocess
+import time
+
+import pytest
+
+
+def _git(root, *arguments):
+    return subprocess.check_output(
+        ["git", "-c", "core.hooksPath=/dev/null", "-C", str(root), *arguments],
+        stderr=subprocess.STDOUT,
+    )
+
+
+def _source():
+    path = Path(__file__).with_name("b3_full_context_runtime_authority_draft_v01.py")
+    spec = importlib.util.spec_from_file_location("b3_authority_source_binding_draft", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_genuine_committed_source_binding_refuses_changed_live_bytes(tmp_path):
+    root = tmp_path / "repository"
+    root.mkdir()
+    _git(root, "init", "--quiet")
+    originals = {"alpha.py": b"VALUE = 7\n", "beta.py": b"VALUE = 11\n"}
+    for name, data in originals.items():
+        (root / name).write_bytes(data)
+    _git(root, "add", "--", "alpha.py", "beta.py")
+    _git(
+        root,
+        "-c",
+        "user.name=Source Binding Test",
+        "-c",
+        "user.email=source-binding@example.invalid",
+        "commit",
+        "--quiet",
+        "--no-gpg-sign",
+        "-m",
+        "Genuine source fixture",
+    )
+    commit = _git(root, "rev-parse", "HEAD").decode().strip()
+    expected = {str((root / name).resolve()): sha256(data).hexdigest() for name, data in originals.items()}
+    public = _source()
+
+    result = public.verify_committed_source_map(root, commit, expected)
+
+    assert result["schema"] == "b3_full_context_source_commit_verification_v1"
+    assert result["software_commit_actual"] == commit
+    assert result["source_admission_granted"] is False
+    assert result["runtime_admission_granted"] is False
+    assert result["authority_activated"] is False
+    assert [row["file"]["path"] for row in result["files"]] == list(expected)
+    for row, (name, data) in zip(result["files"], originals.items(), strict=True):
+        assert row["git_mode"] == "100644"
+        assert row["file"] == {
+            "path": str((root / name).resolve()),
+            "sha256": expected[str((root / name).resolve())],
+            "bytes": len(data),
+        }
+        assert _git(root, "cat-file", "blob", row["git_blob"]) == data
+
+    (root / "beta.py").write_bytes(b"VALUE = 12\n")
+    with pytest.raises(ValueError, match="source|Source|live|Live"):
+        public.verify_committed_source_map(root, commit, expected)
+    expected[str((root / "beta.py").resolve())] = sha256(b"VALUE = 12\n").hexdigest()
+    with pytest.raises(ValueError, match="Git blob"):
+        public.verify_committed_source_map(root, commit, expected)
+
+
+def test_changed_source_size_refuses_and_releases_its_owned_descriptor(tmp_path, monkeypatch):
+    root = tmp_path / "repository"
+    root.mkdir()
+    _git(root, "init", "--quiet")
+    path = root / "source.py"
+    data = b"VALUE = 7\n"
+    path.write_bytes(data)
+    _git(root, "add", "--", "source.py")
+    _git(
+        root,
+        "-c",
+        "user.name=Source Binding Test",
+        "-c",
+        "user.email=source-binding@example.invalid",
+        "commit",
+        "--quiet",
+        "--no-gpg-sign",
+        "-m",
+        "Genuine source fixture",
+    )
+    commit = _git(root, "rev-parse", "HEAD").decode().strip()
+    expected = {str(path.resolve()): sha256(data).hexdigest()}
+    source_identity = (path.stat().st_dev, path.stat().st_ino)
+    real_read = os.read
+    changed = False
+
+    def mutate_during_actual_source_read(fd, count):
+        nonlocal changed
+        chunk = real_read(fd, count)
+        info = os.fstat(fd)
+        if not changed and (info.st_dev, info.st_ino) == source_identity:
+            changed = True
+            with path.open("ab") as handle:
+                handle.write(b"# actual size mutation\n")
+        return chunk
+
+    public = _source()
+    monkeypatch.setattr(os, "read", mutate_during_actual_source_read)
+    with pytest.raises(ValueError, match="source|Source|live|Live"):
+        public.verify_committed_source_map(root, commit, expected)
+    assert changed
+    owned = []
+    for entry in Path("/proc/self/fd").iterdir():
+        try:
+            if os.readlink(entry) == str(path):
+                owned.append(int(entry.name))
+        except FileNotFoundError:
+            pass
+    try:
+        assert owned == []
+    finally:
+        for fd in owned:
+            os.close(fd)
+
+
+def test_ambient_git_directory_cannot_replace_the_named_repository(tmp_path, monkeypatch):
+    root = tmp_path / "repository"
+    foreign = tmp_path / "foreign"
+    root.mkdir()
+    foreign.mkdir()
+    _git(root, "init", "--quiet")
+    _git(foreign, "init", "--quiet")
+    path = root / "source.py"
+    data = b"VALUE = 7\n"
+    path.write_bytes(data)
+    _git(root, "add", "--", "source.py")
+    _git(
+        root,
+        "-c",
+        "user.name=Source Binding Test",
+        "-c",
+        "user.email=source-binding@example.invalid",
+        "commit",
+        "--quiet",
+        "--no-gpg-sign",
+        "-m",
+        "Genuine source fixture",
+    )
+    commit = _git(root, "rev-parse", "HEAD").decode().strip()
+    expected = {str(path.resolve()): sha256(data).hexdigest()}
+    monkeypatch.setenv("GIT_DIR", str(foreign / ".git"))
+
+    result = _source().verify_committed_source_map(root, commit, expected)
+
+    assert result["software_commit_actual"] == commit
+    assert result["files"][0]["file"]["path"] == str(path)
+    assert result["source_admission_granted"] is False
+
+
+def test_owned_source_close_refusal_remains_error_and_drains_descriptors(tmp_path, monkeypatch):
+    root = tmp_path / "repository"
+    root.mkdir()
+    _git(root, "init", "--quiet")
+    originals = {"alpha.py": b"VALUE = 7\n", "beta.py": b"VALUE = 11\n"}
+    for name, data in originals.items():
+        (root / name).write_bytes(data)
+    _git(root, "add", "--", "alpha.py", "beta.py")
+    _git(
+        root,
+        "-c",
+        "user.name=Source Binding Test",
+        "-c",
+        "user.email=source-binding@example.invalid",
+        "commit",
+        "--quiet",
+        "--no-gpg-sign",
+        "-m",
+        "Genuine source fixture",
+    )
+    commit = _git(root, "rev-parse", "HEAD").decode().strip()
+    expected = {str((root / name).resolve()): sha256(data).hexdigest() for name, data in originals.items()}
+    first = (root / "alpha.py").stat()
+    source_identity = (first.st_dev, first.st_ino)
+    real_close = os.close
+    refused = False
+
+    def refuse_owned_release_once(fd):
+        nonlocal refused
+        info = os.fstat(fd)
+        if not refused and (info.st_dev, info.st_ino) == source_identity:
+            refused = True
+            raise OSError("Actual owned source close refusal")
+        return real_close(fd)
+
+    public = _source()
+    monkeypatch.setattr(os, "close", refuse_owned_release_once)
+    with pytest.raises(OSError, match="Actual owned source close refusal"):
+        public.verify_committed_source_map(root, commit, expected)
+    assert refused
+    owned = []
+    for entry in Path("/proc/self/fd").iterdir():
+        try:
+            if os.readlink(entry) in expected:
+                owned.append(int(entry.name))
+        except FileNotFoundError:
+            pass
+    try:
+        assert owned == []
+    finally:
+        for fd in owned:
+            real_close(fd)
+
+
+def test_original_source_map_is_frozen_before_fallible_reads(tmp_path, monkeypatch):
+    root = tmp_path / "repository"
+    root.mkdir()
+    _git(root, "init", "--quiet")
+    path = root / "source.py"
+    data = b"VALUE = 7\n"
+    path.write_bytes(data)
+    _git(root, "add", "--", "source.py")
+    _git(
+        root,
+        "-c",
+        "user.name=Source Binding Test",
+        "-c",
+        "user.email=source-binding@example.invalid",
+        "commit",
+        "--quiet",
+        "--no-gpg-sign",
+        "-m",
+        "Genuine source fixture",
+    )
+    commit = _git(root, "rev-parse", "HEAD").decode().strip()
+    original_sha = sha256(data).hexdigest()
+    expected = {str(path.resolve()): original_sha}
+    source_identity = (path.stat().st_dev, path.stat().st_ino)
+    real_read = os.read
+    changed = False
+
+    def mutate_caller_map_during_read(fd, count):
+        nonlocal changed
+        chunk = real_read(fd, count)
+        info = os.fstat(fd)
+        if not changed and (info.st_dev, info.st_ino) == source_identity:
+            changed = True
+            expected[str(path)] = sha256(b"different caller choice").hexdigest()
+        return chunk
+
+    public = _source()
+    monkeypatch.setattr(os, "read", mutate_caller_map_during_read)
+
+    result = public.verify_committed_source_map(root, commit, expected)
+
+    assert changed
+    assert expected[str(path)] != original_sha
+    assert result["files"][0]["file"]["sha256"] == original_sha
+    assert result["source_admission_granted"] is False
+
+
+def test_public_deadline_includes_initial_canonical_path_admission(tmp_path, monkeypatch):
+    root = tmp_path / "repository"
+    root.mkdir()
+    _git(root, "init", "--quiet")
+    path = root / "source.py"
+    data = b"VALUE = 7\n"
+    path.write_bytes(data)
+    _git(root, "add", "--", "source.py")
+    _git(
+        root,
+        "-c",
+        "user.name=Source Binding Test",
+        "-c",
+        "user.email=source-binding@example.invalid",
+        "commit",
+        "--quiet",
+        "--no-gpg-sign",
+        "-m",
+        "Genuine source fixture",
+    )
+    commit = _git(root, "rev-parse", "HEAD").decode().strip()
+    expected = {str(path.resolve()): sha256(data).hexdigest()}
+    real_resolve, real_clock = Path.resolve, time.monotonic
+    elapsed = 0
+
+    def initial_path_admission_exhausts_original_deadline(self, *args, **kwargs):
+        nonlocal elapsed
+        result = real_resolve(self, *args, **kwargs)
+        if self == root and elapsed == 0:
+            elapsed = 901
+        return result
+
+    public = _source()
+    # This is an injected clock refusal check, never a resource-cost receipt.
+    # Restore the real clock before pytest records this test's actual duration.
+    with monkeypatch.context() as injection:
+        injection.setattr(Path, "resolve", initial_path_admission_exhausts_original_deadline)
+        injection.setattr(time, "monotonic", lambda: real_clock() + elapsed)
+        with pytest.raises(TimeoutError, match="deadline"):
+            public.verify_committed_source_map(root, commit, expected)
+    assert elapsed == 901
+
+
+def test_foreign_descriptor_reuse_refuses_and_preserves_the_foreign_file(tmp_path, monkeypatch):
+    root = tmp_path / "repository"
+    root.mkdir()
+    _git(root, "init", "--quiet")
+    path = root / "source.py"
+    data = b"VALUE = 7\n"
+    path.write_bytes(data)
+    _git(root, "add", "--", "source.py")
+    _git(
+        root,
+        "-c",
+        "user.name=Source Binding Test",
+        "-c",
+        "user.email=source-binding@example.invalid",
+        "commit",
+        "--quiet",
+        "--no-gpg-sign",
+        "-m",
+        "Genuine source fixture",
+    )
+    commit = _git(root, "rev-parse", "HEAD").decode().strip()
+    expected = {str(path.resolve()): sha256(data).hexdigest()}
+    original = path.stat()
+    source_identity = (original.st_dev, original.st_ino)
+    foreign = tmp_path / "foreign.txt"
+    foreign.write_bytes(b"foreign caller-owned bytes\n")
+    real_read, real_close = os.read, os.close
+    replaced_fd = None
+
+    def replace_original_descriptor_after_read(fd, count):
+        nonlocal replaced_fd
+        chunk = real_read(fd, count)
+        info = os.fstat(fd)
+        if replaced_fd is None and (info.st_dev, info.st_ino) == source_identity:
+            real_close(fd)
+            fresh = os.open(foreign, os.O_RDONLY)
+            if fresh != fd:
+                os.dup2(fresh, fd)
+                real_close(fresh)
+            replaced_fd = fd
+        return chunk
+
+    public = _source()
+    monkeypatch.setattr(os, "read", replace_original_descriptor_after_read)
+    try:
+        with pytest.raises(ValueError, match="source|Source|live|Live"):
+            public.verify_committed_source_map(root, commit, expected)
+        assert replaced_fd is not None
+        info = os.fstat(replaced_fd)
+        assert (info.st_dev, info.st_ino) == (foreign.stat().st_dev, foreign.stat().st_ino)
+        os.lseek(replaced_fd, 0, os.SEEK_SET)
+        assert real_read(replaced_fd, 128) == b"foreign caller-owned bytes\n"
+    finally:
+        if replaced_fd is not None:
+            real_close(replaced_fd)

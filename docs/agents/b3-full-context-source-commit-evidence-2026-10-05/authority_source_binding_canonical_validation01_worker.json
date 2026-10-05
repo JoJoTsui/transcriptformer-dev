@@ -1,0 +1,27 @@
+{
+  "pytest_exit_code": 0,
+  "complete_pytest_call_seconds": 0.573586702987086,
+  "actual_source_inspection_public_return_seconds": 2.4969450309872627,
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/b3_full_context_runtime_authority.py": "e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d",
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_runtime_authority.py": "5dae27d24d415de8ce35f21af21a6c67322d8cdeec111c470ee70c32b2a2c5bf",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_authority_source_binding_canonical_v01.py": "ed464883e2164a0fbacb224313d05c4f19ef2dd0c93035066f385c95c11d38c8"
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/b3_full_context_runtime_authority.py": "e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d",
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_runtime_authority.py": "5dae27d24d415de8ce35f21af21a6c67322d8cdeec111c470ee70c32b2a2c5bf",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_authority_source_binding_canonical_v01.py": "ed464883e2164a0fbacb224313d05c4f19ef2dd0c93035066f385c95c11d38c8"
+  },
+  "canonical_sources_stable": true,
+  "actual_preparation_source_count": 70,
+  "actual_preparation_source_commit": "80ba78b30a427e7612d60fb925d679ccb1bfd163",
+  "actual_live_git_executable_mode_mismatches": 70,
+  "strict_live_git_mode_verification_admitted": false,
+  "git_blob_and_live_bytes_verified": true,
+  "numerical_packages_present_after_operation": [],
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "authority_activated": false,
+  "full_repository_run": false,
+  "independent_reviews": "pending_agent_service_usage_limit"
+}

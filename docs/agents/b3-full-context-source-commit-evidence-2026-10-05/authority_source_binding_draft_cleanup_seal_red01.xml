@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.713" timestamp="2026-10-05T15:14:51.467649+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_authority_source_binding_draft_v01" name="test_source_mutation_during_primary_release_precedes_final_byte_seal" time="0.022"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-56/test_source_mutation_during_pr0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x70871a9354d0&gt;
+
+    def test_source_mutation_during_primary_release_precedes_final_byte_seal(tmp_path, monkeypatch):
+        root = tmp_path / "repository"
+        root.mkdir()
+        _git(root, "init", "--quiet")
+        path = root / "source.py"
+        data = b"VALUE = 7\n"
+        path.write_bytes(data)
+        _git(root, "add", "--", "source.py")
+        _git(root, "-c", "user.name=Source Binding Test", "-c", "user.email=source-binding@example.invalid",
+             "commit", "--quiet", "--no-gpg-sign", "-m", "Genuine source fixture")
+        commit = _git(root, "rev-parse", "HEAD").decode().strip()
+        expected = {str(path.resolve()): sha256(data).hexdigest()}
+        original = path.stat()
+        identity = (original.st_dev, original.st_ino)
+        real_close = os.close
+        changed = False
+    
+        def mutate_after_actual_primary_release(fd):
+            nonlocal changed
+            info = os.fstat(fd)
+            owned = (info.st_dev, info.st_ino) == identity
+            result = real_close(fd)
+            if owned and not changed:
+                changed = True
+                path.write_bytes(b"VALUE = 8\n")
+            return result
+    
+        public = _source()
+        monkeypatch.setattr(os, "close", mutate_after_actual_primary_release)
+&gt;       with pytest.raises(ValueError, match="source|Source|live|Live"):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+runs/b3_feasibility/20261005/test_authority_source_binding_draft_v01.py:434: Failed</failure></testcase></testsuite></testsuites>

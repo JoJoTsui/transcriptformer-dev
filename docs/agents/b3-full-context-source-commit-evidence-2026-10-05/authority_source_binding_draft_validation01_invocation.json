@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "-o",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/authority_source_binding_draft_validation01_gnu_time.txt",
+    ".venv/bin/python",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_authority_source_binding_draft_v01.py",
+    "--worker"
+  ],
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/b3_full_context_runtime_authority_draft_v01.py": "e2ff21e2faecffbd13d10bacd0c0af1f903f2b99c317a03adf8eea7e01283c86",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_authority_source_binding_draft_v01.py": "bc0ce5a0c12d36722111896ab1c6ccc716170ca95504f5f31db2bbb23c3b9b2a",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_authority_source_binding_draft_v01.py": "004c865c8db958b898a5d9a57e99e2d6b7c94908250a7fc8c267afeb98e79bc3"
+  },
+  "environment_overrides": {
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "CUDA_VISIBLE_DEVICES": "",
+    "TF_RUN_REAL_MODEL_TESTS": "0"
+  },
+  "metadata_diagnostic_only": true,
+  "source_or_runtime_admission": false,
+  "scientific_acceptance": false
+}

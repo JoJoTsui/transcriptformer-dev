@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.705" timestamp="2026-10-05T14:54:21.070236+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_authority_source_binding_draft_v01" name="test_owned_source_close_refusal_remains_error_and_drains_descriptors" time="0.030"><failure message="assert [12] == []&#10;  &#10;  Left contains one more item: 12&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-44/test_owned_source_close_refusa0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7242b12afa50&gt;
+
+    def test_owned_source_close_refusal_remains_error_and_drains_descriptors(tmp_path, monkeypatch):
+        root = tmp_path / "repository"
+        root.mkdir()
+        _git(root, "init", "--quiet")
+        originals = {"alpha.py": b"VALUE = 7\n", "beta.py": b"VALUE = 11\n"}
+        for name, data in originals.items():
+            (root / name).write_bytes(data)
+        _git(root, "add", "--", "alpha.py", "beta.py")
+        _git(root, "-c", "user.name=Source Binding Test", "-c", "user.email=source-binding@example.invalid",
+             "commit", "--quiet", "--no-gpg-sign", "-m", "Genuine source fixture")
+        commit = _git(root, "rev-parse", "HEAD").decode().strip()
+        expected = {str((root / name).resolve()): sha256(data).hexdigest() for name, data in originals.items()}
+        first = (root / "alpha.py").stat()
+        source_identity = (first.st_dev, first.st_ino)
+        real_close = os.close
+        refused = False
+    
+        def refuse_owned_release_once(fd):
+            nonlocal refused
+            info = os.fstat(fd)
+            if not refused and (info.st_dev, info.st_ino) == source_identity:
+                refused = True
+                raise OSError("Actual owned source close refusal")
+            return real_close(fd)
+    
+        public = _source()
+        monkeypatch.setattr(os, "close", refuse_owned_release_once)
+        with pytest.raises(OSError, match="Actual owned source close refusal"):
+            public.verify_committed_source_map(root, commit, expected)
+        assert refused
+        owned = []
+        for entry in Path("/proc/self/fd").iterdir():
+            try:
+                if os.readlink(entry) in expected:
+                    owned.append(int(entry.name))
+            except FileNotFoundError:
+                pass
+        try:
+&gt;           assert owned == []
+E           assert [12] == []
+E             
+E             Left contains one more item: 12
+E             Use -v to get more diff
+
+runs/b3_feasibility/20261005/test_authority_source_binding_draft_v01.py:200: AssertionError</failure></testcase></testsuite></testsuites>

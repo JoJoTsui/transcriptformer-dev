@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.720" timestamp="2026-10-05T14:56:33.046540+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_authority_source_binding_draft_v01" name="test_original_source_map_is_frozen_before_fallible_reads" time="0.017"><failure message="ValueError: Live source SHA256 differs from its explicit frozen map">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-46/test_original_source_map_is_fr0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x798c14f4ba50&gt;
+
+    def test_original_source_map_is_frozen_before_fallible_reads(tmp_path, monkeypatch):
+        root = tmp_path / "repository"
+        root.mkdir()
+        _git(root, "init", "--quiet")
+        path = root / "source.py"
+        data = b"VALUE = 7\n"
+        path.write_bytes(data)
+        _git(root, "add", "--", "source.py")
+        _git(root, "-c", "user.name=Source Binding Test", "-c", "user.email=source-binding@example.invalid",
+             "commit", "--quiet", "--no-gpg-sign", "-m", "Genuine source fixture")
+        commit = _git(root, "rev-parse", "HEAD").decode().strip()
+        original_sha = sha256(data).hexdigest()
+        expected = {str(path.resolve()): original_sha}
+        source_identity = (path.stat().st_dev, path.stat().st_ino)
+        real_read = os.read
+        changed = False
+    
+        def mutate_caller_map_during_read(fd, count):
+            nonlocal changed
+            chunk = real_read(fd, count)
+            info = os.fstat(fd)
+            if not changed and (info.st_dev, info.st_ino) == source_identity:
+                changed = True
+                expected[str(path)] = sha256(b"different caller choice").hexdigest()
+            return chunk
+    
+        public = _source()
+        monkeypatch.setattr(os, "read", mutate_caller_map_during_read)
+    
+&gt;       result = public.verify_committed_source_map(root, commit, expected)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+runs/b3_feasibility/20261005/test_authority_source_binding_draft_v01.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+runs/b3_feasibility/20261005/b3_full_context_runtime_authority_draft_v01.py:250: in verify_committed_source_map
+    raise first_error
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+repository = PosixPath('/tmp/pytest-of-joey/pytest-46/test_original_source_map_is_fr0/repository')
+software_commit_actual = 'c39b043f0b1b43a0ee407296432b545ee3823569'
+file_sha256 = {'/tmp/pytest-of-joey/pytest-46/test_original_source_map_is_fr0/repository/source.py': 'fb6fa523907225bc133e4bdf224f661c6f5976291c2b0ff818585b08b2ae2605'}
+
+    def verify_committed_source_map(
+        repository: Path,
+        software_commit_actual: str,
+        file_sha256: dict[str, str],
+        *,
+        max_seconds: float = 900,
+    ) -&gt; dict:
+        """Verify actual commit/tree/blob/live bytes; grant no source or run trust."""
+        root = Path(repository).absolute()
+        if root.resolve(strict=True) != root or not root.is_dir():
+            raise ValueError("Source repository must be its canonical existing directory")
+        if type(software_commit_actual) is not str or re.fullmatch(r"[0-9a-f]{40}", software_commit_actual) is None:
+            raise ValueError("Require the actual full SHA-1 source commit")
+        if type(file_sha256) is not dict or not 1 &lt;= len(file_sha256) &lt;= MAX_FILES:
+            raise ValueError("Require a bounded explicit source FileMap")
+        if any(
+            type(p) is not str or type(h) is not str or re.fullmatch(r"[0-9a-f]{64}", h) is None
+            for p, h in file_sha256.items()
+        ) or list(file_sha256) != sorted(file_sha256):
+            raise ValueError("Source FileMap must contain canonically sorted paths and SHA256 values")
+        relative = []
+        for name in file_sha256:
+            path = Path(name)
+            if not path.is_absolute() or str(path) != name or path.resolve(strict=True) != path or path.suffix != ".py":
+                raise ValueError("Require canonical original Python source paths")
+            try:
+                local = path.relative_to(root)
+            except ValueError as error:
+                raise ValueError("Source path is outside its actual repository") from error
+            if ".git" in local.parts or len(name.encode()) &gt; 4096:
+                raise ValueError("Source path is not an admitted repository Python path")
+            relative.append(local.as_posix())
+        if sum(len(path.encode()) for path in relative) &gt; 512 * 1024:
+            raise ValueError("Source path inventory exceeds its argument bound")
+    
+        budget = _Budget(root, max_seconds)
+        if _git(root, ["rev-parse", "--show-toplevel"], budget, 8192).decode().strip() != str(root):
+            raise ValueError("Require the original repository root")
+        if _git(root, ["rev-parse", "--show-object-format"], budget, 64).strip() != b"sha1":
+            raise ValueError("This source-commit contract requires actual SHA-1 Git objects")
+        if (
+            _git(root, ["rev-parse", "--verify", software_commit_actual + "^{commit}"], budget, 64).decode().strip()
+            != software_commit_actual
+        ):
+            raise ValueError("Actual source commit is unavailable or differs")
+        raw_tree = _git(root, ["ls-tree", "-rz", "--full-tree", software_commit_actual, "--", *relative], budget, 1024**2)
+        entries = {}
+        for row in raw_tree.split(b"\0"):
+            if not row:
+                continue
+            header, tree_name = row.split(b"\t", 1)
+            mode, kind, blob = header.decode().split()
+            tree_path = tree_name.decode()
+            if (
+                tree_path in entries
+                or mode not in ("100644", "100755")
+                or kind != "blob"
+                or not re.fullmatch(r"[0-9a-f]{40}", blob)
+            ):
+                raise ValueError("Git source tree contains invalid or repeated regular-file bindings")
+            entries[tree_path] = (mode, blob)
+        if set(entries) != set(relative):
+            raise ValueError("Source inventory is not the exact committed tree closure requested")
+    
+        pins, rows, seen, total = [], [], set(), 0
+        first_error = None
+        try:
+            for name, relative_path in zip(file_sha256, relative, strict=True):
+                budget.check()
+                path = Path(name)
+                info = path.lstat()
+                if not stat.S_ISREG(info.st_mode) or info.st_size &gt; MAX_FILE_BYTES:
+                    raise ValueError("Require an admitted bounded regular source file")
+                identity = _identity(info)
+                if identity[:2] in seen:
+                    raise ValueError("Source paths cannot alias the same live file")
+                seen.add(identity[:2])
+                total += info.st_size
+                if total &gt; MAX_SOURCE_BYTES:
+                    raise ValueError("Complete source bytes exceed the admission bound")
+                fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+                pins.append((path, fd, identity, file_sha256[name]))
+                mode, blob = entries[relative_path]
+                if bool(info.st_mode &amp; stat.S_IXUSR) != (mode == "100755"):
+                    raise ValueError("Live source executable mode differs from its actual Git mode")
+                if _live_digest(path, fd, identity, budget) != file_sha256[name]:
+&gt;                   raise ValueError("Live source SHA256 differs from its explicit frozen map")
+E                   ValueError: Live source SHA256 differs from its explicit frozen map
+
+runs/b3_feasibility/20261005/b3_full_context_runtime_authority_draft_v01.py:211: ValueError</failure></testcase></testsuite></testsuites>

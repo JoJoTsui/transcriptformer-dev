@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.711" timestamp="2026-10-05T15:07:57.652983+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_authority_source_binding_draft_v01" name="test_mode_inspection_reports_mismatch_without_weakening_strict_verification" time="0.012"><failure message="AttributeError: module 'b3_authority_source_binding_draft' has no attribute 'inspect_committed_source_map'">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-53/test_mode_inspection_reports_m0')
+
+    def test_mode_inspection_reports_mismatch_without_weakening_strict_verification(tmp_path):
+        root = tmp_path / "repository"
+        root.mkdir()
+        _git(root, "init", "--quiet")
+        path = root / "source.py"
+        data = b"VALUE = 7\n"
+        path.write_bytes(data)
+        _git(root, "add", "--", "source.py")
+        _git(root, "-c", "user.name=Source Binding Test", "-c", "user.email=source-binding@example.invalid",
+             "commit", "--quiet", "--no-gpg-sign", "-m", "Genuine source fixture")
+        commit = _git(root, "rev-parse", "HEAD").decode().strip()
+        expected = {str(path.resolve()): sha256(data).hexdigest()}
+        path.chmod(path.stat().st_mode | stat.S_IXUSR)
+        public = _source()
+    
+&gt;       result = public.inspect_committed_source_map(root, commit, expected)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'b3_authority_source_binding_draft' has no attribute 'inspect_committed_source_map'
+
+runs/b3_feasibility/20261005/test_authority_source_binding_draft_v01.py:383: AttributeError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.706" timestamp="2026-10-05T14:50:13.353664+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_authority_source_binding_draft_v01" name="test_changed_source_size_refuses_and_releases_its_owned_descriptor" time="0.018"><failure message="assert [12] == []&#10;  &#10;  Left contains one more item: 12&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-40/test_changed_source_size_refus0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x795cc2348e10&gt;
+
+    def test_changed_source_size_refuses_and_releases_its_owned_descriptor(tmp_path, monkeypatch):
+        root = tmp_path / "repository"
+        root.mkdir()
+        _git(root, "init", "--quiet")
+        path = root / "source.py"
+        data = b"VALUE = 7\n"
+        path.write_bytes(data)
+        _git(root, "add", "--", "source.py")
+        _git(root, "-c", "user.name=Source Binding Test", "-c", "user.email=source-binding@example.invalid",
+             "commit", "--quiet", "--no-gpg-sign", "-m", "Genuine source fixture")
+        commit = _git(root, "rev-parse", "HEAD").decode().strip()
+        expected = {str(path.resolve()): sha256(data).hexdigest()}
+        source_identity = (path.stat().st_dev, path.stat().st_ino)
+        real_read = os.read
+        changed = False
+    
+        def mutate_during_actual_source_read(fd, count):
+            nonlocal changed
+            chunk = real_read(fd, count)
+            info = os.fstat(fd)
+            if not changed and (info.st_dev, info.st_ino) == source_identity:
+                changed = True
+                with path.open("ab") as handle:
+                    handle.write(b"# actual size mutation\n")
+            return chunk
+    
+        public = _source()
+        monkeypatch.setattr(os, "read", mutate_during_actual_source_read)
+        with pytest.raises(ValueError, match="source|Source|live|Live"):
+            public.verify_committed_source_map(root, commit, expected)
+        assert changed
+        owned = []
+        for entry in Path("/proc/self/fd").iterdir():
+            try:
+                if os.readlink(entry) == str(path):
+                    owned.append(int(entry.name))
+            except FileNotFoundError:
+                pass
+        try:
+&gt;           assert owned == []
+E           assert [12] == []
+E             
+E             Left contains one more item: 12
+E             Use -v to get more diff
+
+runs/b3_feasibility/20261005/test_authority_source_binding_draft_v01.py:108: AssertionError</failure></testcase></testsuite></testsuites>

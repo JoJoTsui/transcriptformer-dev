@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_authority_source_binding_draft_v01.py", line 162, in <module>
+    raise SystemExit(worker() if sys.argv[1:] == ["--worker"] else capture())
+                     ^^^^^^^^
+  File "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_authority_source_binding_draft_v01.py", line 49, in worker
+    proof = public.verify_committed_source_map(ROOT, commit, inventory)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/b3_full_context_runtime_authority_draft_v01.py", line 255, in verify_committed_source_map
+    raise first_error
+  File "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/b3_full_context_runtime_authority_draft_v01.py", line 214, in verify_committed_source_map
+    raise ValueError("Live source executable mode differs from its actual Git mode")
+ValueError: Live source executable mode differs from its actual Git mode

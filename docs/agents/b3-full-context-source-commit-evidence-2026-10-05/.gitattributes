@@ -1,0 +1,2 @@
+*.xml -whitespace
+authority_source_binding_*_stdout.txt -whitespace

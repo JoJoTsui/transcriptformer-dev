@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.715" timestamp="2026-10-05T14:51:55.850417+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_authority_source_binding_draft_v01" name="test_ambient_git_directory_cannot_replace_the_named_repository" time="0.024"><failure message="ValueError: Actual Git source verification failed">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-42/test_ambient_git_directory_can0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x713ad3d52950&gt;
+
+    def test_ambient_git_directory_cannot_replace_the_named_repository(tmp_path, monkeypatch):
+        root = tmp_path / "repository"
+        foreign = tmp_path / "foreign"
+        root.mkdir()
+        foreign.mkdir()
+        _git(root, "init", "--quiet")
+        _git(foreign, "init", "--quiet")
+        path = root / "source.py"
+        data = b"VALUE = 7\n"
+        path.write_bytes(data)
+        _git(root, "add", "--", "source.py")
+        _git(root, "-c", "user.name=Source Binding Test", "-c", "user.email=source-binding@example.invalid",
+             "commit", "--quiet", "--no-gpg-sign", "-m", "Genuine source fixture")
+        commit = _git(root, "rev-parse", "HEAD").decode().strip()
+        expected = {str(path.resolve()): sha256(data).hexdigest()}
+        monkeypatch.setenv("GIT_DIR", str(foreign / ".git"))
+    
+&gt;       result = _source().verify_committed_source_map(root, commit, expected)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+runs/b3_feasibility/20261005/test_authority_source_binding_draft_v01.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+runs/b3_feasibility/20261005/b3_full_context_runtime_authority_draft_v01.py:155: in verify_committed_source_map
+    _git(root, ["rev-parse", "--verify", software_commit_actual + "^{commit}"], budget, 64).decode().strip()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+repository = PosixPath('/tmp/pytest-of-joey/pytest-42/test_ambient_git_directory_can0/repository')
+arguments = ['rev-parse', '--verify', '293444e835dc02437568eb72852928181819322e^{commit}']
+budget = &lt;b3_authority_source_binding_draft._Budget object at 0x713ad3e2bdd0&gt;
+limit = 64, consume = None
+
+    def _git(repository: Path, arguments: list[str], budget: _Budget, limit: int, consume=None) -&gt; bytes:
+        """Read bounded actual Git output while retaining one original deadline."""
+        budget.check()
+        command = [GIT, "--literal-pathspecs", "-c", "core.hooksPath=/dev/null", "-C", str(repository), *arguments]
+        output, errors = bytearray(), bytearray()
+        total = 0
+        with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=0) as child:
+            try:
+                with selectors.DefaultSelector() as selector:
+                    selector.register(child.stdout, selectors.EVENT_READ, "stdout")
+                    selector.register(child.stderr, selectors.EVENT_READ, "stderr")
+                    while selector.get_map():
+                        budget.check()
+                        for key, _ in selector.select(min(0.1, max(0, budget.deadline - time.monotonic()))):
+                            chunk = os.read(key.fd, CHUNK_BYTES)
+                            if not chunk:
+                                selector.unregister(key.fileobj)
+                            elif key.data == "stderr":
+                                if len(errors) + len(chunk) &gt; CHUNK_BYTES:
+                                    raise ValueError("Git source verification error output exceeds its bound")
+                                errors.extend(chunk)
+                            else:
+                                total += len(chunk)
+                                if total &gt; limit:
+                                    raise ValueError("Git source verification output exceeds its admitted size")
+                                if consume is None:
+                                    output.extend(chunk)
+                                else:
+                                    consume(chunk)
+                    budget.check()
+                    child.wait(timeout=max(0.001, budget.deadline - time.monotonic()))
+                if child.returncode != 0:
+&gt;                   raise ValueError("Actual Git source verification failed")
+E                   ValueError: Actual Git source verification failed
+
+runs/b3_feasibility/20261005/b3_full_context_runtime_authority_draft_v01.py:83: ValueError</failure></testcase></testsuite></testsuites>

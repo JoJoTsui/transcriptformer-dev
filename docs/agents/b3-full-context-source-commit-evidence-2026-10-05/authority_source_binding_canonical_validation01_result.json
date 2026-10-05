@@ -1,0 +1,78 @@
+{
+  "actual_gnu_wrapper_exit_code": 0,
+  "driver_elapsed_seconds": 3.763231447985163,
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/b3_full_context_runtime_authority.py": "e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d",
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_runtime_authority.py": "5dae27d24d415de8ce35f21af21a6c67322d8cdeec111c470ee70c32b2a2c5bf",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_authority_source_binding_canonical_v01.py": "ed464883e2164a0fbacb224313d05c4f19ef2dd0c93035066f385c95c11d38c8"
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/b3_full_context_runtime_authority.py": "e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d",
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_runtime_authority.py": "5dae27d24d415de8ce35f21af21a6c67322d8cdeec111c470ee70c32b2a2c5bf",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_authority_source_binding_canonical_v01.py": "ed464883e2164a0fbacb224313d05c4f19ef2dd0c93035066f385c95c11d38c8"
+  },
+  "junit_suites": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "11",
+      "time": "0.463",
+      "timestamp": "2026-10-05T15:59:19.838677+08:00",
+      "hostname": "Conundrum"
+    }
+  ],
+  "junit_case_identities": [
+    [
+      "test.test_b3_full_context_runtime_authority",
+      "test_genuine_committed_source_binding_refuses_changed_live_bytes"
+    ],
+    [
+      "test.test_b3_full_context_runtime_authority",
+      "test_changed_source_size_refuses_and_releases_its_owned_descriptor"
+    ],
+    [
+      "test.test_b3_full_context_runtime_authority",
+      "test_ambient_git_directory_cannot_replace_the_named_repository"
+    ],
+    [
+      "test.test_b3_full_context_runtime_authority",
+      "test_owned_source_close_refusal_remains_error_and_drains_descriptors"
+    ],
+    [
+      "test.test_b3_full_context_runtime_authority",
+      "test_original_source_map_is_frozen_before_fallible_reads"
+    ],
+    [
+      "test.test_b3_full_context_runtime_authority",
+      "test_public_deadline_includes_initial_canonical_path_admission"
+    ],
+    [
+      "test.test_b3_full_context_runtime_authority",
+      "test_foreign_descriptor_reuse_refuses_and_preserves_the_foreign_file"
+    ],
+    [
+      "test.test_b3_full_context_runtime_authority",
+      "test_mode_inspection_reports_mismatch_without_weakening_strict_verification"
+    ],
+    [
+      "test.test_b3_full_context_runtime_authority",
+      "test_source_mutation_during_primary_release_precedes_final_byte_seal"
+    ],
+    [
+      "test.test_b3_full_context_runtime_authority",
+      "test_git_replacement_ref_cannot_relabel_a_different_committed_tree"
+    ],
+    [
+      "test.test_b3_full_context_runtime_authority",
+      "test_missing_promisor_blob_is_refused_without_fetching_or_restoring_it"
+    ]
+  ],
+  "canonical_metadata_checks_complete": true,
+  "full_repository_run": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "authority_activated": false,
+  "capture_exit_code": 0
+}

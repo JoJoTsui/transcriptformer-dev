@@ -1,0 +1,64 @@
+{
+  "schema": "b3_authority_source_canonical_static_v1",
+  "sources": {
+    "scripts/b3_full_context_runtime_authority.py": "e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d",
+    "test/test_b3_full_context_runtime_authority.py": "5dae27d24d415de8ce35f21af21a6c67322d8cdeec111c470ee70c32b2a2c5bf"
+  },
+  "checks": [
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "scripts/b3_full_context_runtime_authority.py",
+        "test/test_b3_full_context_runtime_authority.py"
+      ],
+      "return_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--check",
+        "scripts/b3_full_context_runtime_authority.py",
+        "test/test_b3_full_context_runtime_authority.py"
+      ],
+      "return_code": 0,
+      "stdout": "2 files already formatted\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "scripts/b3_full_context_runtime_authority.py",
+        "test/test_b3_full_context_runtime_authority.py"
+      ],
+      "return_code": 0,
+      "stdout": "Success: no issues found in 2 source files\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "return_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "original_233_python_bytes_unchanged": true,
+  "original_233_git_modes_and_blobs_unchanged": true,
+  "changed_original_python": [],
+  "changed_original_git_bindings": [],
+  "fresh_independent_reviews": "pending_agent_service_usage_limit",
+  "source_admission_granted": false,
+  "runtime_admission_granted": false
+}

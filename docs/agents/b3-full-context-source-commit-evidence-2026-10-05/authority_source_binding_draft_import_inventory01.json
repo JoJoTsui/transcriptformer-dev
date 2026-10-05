@@ -1,0 +1,37 @@
+{
+  "schema": "b3_full_context_authority_draft_import_inventory_v1",
+  "repository_source_candidates": [
+    {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/b3_full_context_runtime_authority_draft_v01.py",
+      "sha256": "e65a1a04f512ca031b41c46c7195748ac620ce90cb24d1011f719a2335043e0d",
+      "bytes": 14573
+    }
+  ],
+  "statically_declared_top_level_modules": [
+    "__future__",
+    "collections",
+    "hashlib",
+    "math",
+    "os",
+    "pathlib",
+    "re",
+    "resource",
+    "selectors",
+    "shutil",
+    "stat",
+    "subprocess",
+    "time"
+  ],
+  "all_statically_declared_modules_are_stdlib": true,
+  "repository_imports_statically_declared": [],
+  "subprocess_executable": {
+    "path": "/usr/bin/git",
+    "sha256": "2a8c18fbf43da9f692d75474c72bea9dfd796c260b0f3dfe456376abc3bbd668",
+    "bytes": 4066232,
+    "actual_version": "git version 2.43.0"
+  },
+  "runtime_import_audit_complete": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "independent_source_reviews": "pending_agent_service_usage_limit"
+}

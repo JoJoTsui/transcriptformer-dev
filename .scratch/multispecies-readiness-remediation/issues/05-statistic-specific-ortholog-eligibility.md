@@ -1,6 +1,48 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-## Current execution audit checkpoint — 2026-10-05
+## Current complete three-file and source prerequisite milestone — 2026-10-05
+
+At frozen **`157e8fb`**, the fresh complete three-file run passes **207 cases**:
+publisher **102**, preparation **10**, planner **95**. No failures, errors,
+skips or deselection; actual collection/JUnit identities and before/after
+Python/HEAD/index/runner hashes agree. The current formatted publisher tests
+`c310ee60…`, publisher `a6316ae5…`, preparation `e1728af2…` / `c2290ba7…`
+and planner `1282e868…` / `bb91b7c2…` are verified together.
+
+All raw exits are 0. JUnit is **5,540.217 seconds**, complete pytest call
+**5,541.84823**, driver **5,545.38313**, last supervisor sample **5,541.28145**;
+raw GNU wall **1:31:48** and peak process RSS **776,648 KiB** remain their
+separate scopes. No clock reconciliation, aggregate RSS or complete numeric
+allocation census is inferred. See the [exact validation](../../../docs/agents/b3-full-context-three-file-validation-2026-10-05/manifest.json).
+
+The read-only source prerequisite is committed at **`3cc47c3`**, source
+`e65a1a04…`, canonical tests `5dae27d2…`, with **11 passing canonical tests**
+and passing Ruff check/format/configured mypy. It authenticates actual Git
+commit/tree/blob and live bytes, freezes the caller map, prevents replacement
+objects and implicit fetching, and seals sources after fallible primary
+cleanup while preserving foreign descriptors. All 233 original Python bytes
+and Git modes/blobs remain unchanged.
+
+[WSL source inspection](../../../docs/agents/b3-full-context-source-commit-inspection-2026-10-05.md) verifies 70 preparation byte bindings
+against actual commit `80ba78b`, recording every Git/filesystem executable-mode
+disagreement separately. Strict verification continues to refuse disagreement;
+no host permissions or mount/Git settings change. This prerequisite grants no
+SourceAdmission, RuntimeAdmission, owner session or trusted resolver.
+
+Complete repository integration and fresh independent source reviews remain
+pending; the latter are limited by agent service quota. Controlled issuer,
+producer, supervisor/owner authority, registration, comparison/v4, measured
+numeric census, project effects, complete cost and reportable uncertainty are
+unfinished. **05 remains open; 11 excluded; ten bounded engineering closures
+unchanged.** Real pilot coverage stays **32.54%**, necessary jointly supported
+draws **0/2,000**, with reporting veto and null intervals.
+
+- [x] Complete source-stable publisher/preparation/planner file integration.
+- [x] Implement the read-only committed-source prerequisite with actual Git
+  object and live-file verification.
+- [ ] Complete fresh whole-repository integration and independent reviews.
+
+## Previous execution audit checkpoint — 2026-10-05
 
 Preparation **`80ba78b`** (`e1728af2…`, tests `c2290ba7…`) passes its complete
 **ten-case file** after a genuine missing-field RED. Actual private helper

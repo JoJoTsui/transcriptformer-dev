@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.703" timestamp="2026-10-05T14:45:29.977363+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_authority_source_binding_draft_v01" name="test_genuine_committed_source_binding_refuses_changed_live_bytes" time="0.022"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/b3_full_context_runtime_authority_draft_v01.py'">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-38/test_genuine_committed_source_0')
+
+    def test_genuine_committed_source_binding_refuses_changed_live_bytes(tmp_path):
+        root = tmp_path / "repository"
+        root.mkdir()
+        _git(root, "init", "--quiet")
+        originals = {"alpha.py": b"VALUE = 7\n", "beta.py": b"VALUE = 11\n"}
+        for name, data in originals.items():
+            (root / name).write_bytes(data)
+        _git(root, "add", "--", "alpha.py", "beta.py")
+        _git(
+            root,
+            "-c",
+            "user.name=Source Binding Test",
+            "-c",
+            "user.email=source-binding@example.invalid",
+            "commit",
+            "--quiet",
+            "--no-gpg-sign",
+            "-m",
+            "Genuine source fixture",
+        )
+        commit = _git(root, "rev-parse", "HEAD").decode().strip()
+        expected = {str((root / name).resolve()): sha256(data).hexdigest() for name, data in originals.items()}
+&gt;       public = _source()
+                 ^^^^^^^^^
+
+runs/b3_feasibility/20261005/test_authority_source_binding_draft_v01.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+runs/b3_feasibility/20261005/test_authority_source_binding_draft_v01.py:22: in _source
+    spec.loader.exec_module(module)
+&lt;frozen importlib._bootstrap_external&gt;:936: in exec_module
+    ???
+&lt;frozen importlib._bootstrap_external&gt;:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_frozen_importlib_external.SourceFileLoader object at 0x7d6e4e5f7110&gt;
+path = '/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/b3_full_context_runtime_authority_draft_v01.py'
+
+&gt;   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/b3_full_context_runtime_authority_draft_v01.py'
+
+&lt;frozen importlib._bootstrap_external&gt;:1130: FileNotFoundError</failure></testcase></testsuite></testsuites>

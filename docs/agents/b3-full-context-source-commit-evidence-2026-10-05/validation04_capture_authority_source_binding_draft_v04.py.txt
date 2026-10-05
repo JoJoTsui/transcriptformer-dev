@@ -1,0 +1,167 @@
+"""Retain actual metadata-only diagnostic/test evidence; grant no admission."""
+
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+import xml.etree.ElementTree as ET
+
+ROOT = Path.cwd().resolve()
+BASE = ROOT / "runs/b3_feasibility/20261005"
+SOURCE = BASE / "b3_full_context_runtime_authority_draft_v01.py"
+TEST = BASE / "test_authority_source_binding_draft_v01.py"
+PREFIX = BASE / "authority_source_binding_draft_validation04"
+
+
+def sources():
+    return {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in (SOURCE, TEST, Path(__file__).resolve())}
+
+
+def write(path, value):
+    with path.open("x") as handle:
+        json.dump(value, handle, indent=2, allow_nan=False)
+        handle.write("\n")
+
+
+def worker():
+    before = sources()
+    import pytest
+
+    began = time.monotonic()
+    result = pytest.main(["--noconftest", "-q", str(TEST), "--junitxml=" + str(PREFIX) + ".xml"])
+    elapsed = time.monotonic() - began
+    if result:
+        raise SystemExit(int(result))
+    spec = importlib.util.spec_from_file_location("b3_source_binding_draft", SOURCE)
+    public = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(public)
+    audit_path = BASE / "full_context_prospective_synthetic_fixture_v03/helper_execution_audit.json"
+    audit = json.loads(audit_path.read_bytes())
+    inventory = {row["path"]: row["sha256"] for row in audit["retained_repository_sources"]}
+    if len(inventory) != 70 or list(inventory) != sorted(inventory):
+        raise ValueError("Expected actual retained 70-path preparation inventory")
+    commit = "80ba78b30a427e7612d60fb925d679ccb1bfd163"
+    began = time.monotonic()
+    proof = public.inspect_committed_source_map(ROOT, commit, inventory)
+    public_elapsed = time.monotonic() - began
+    write(Path(str(PREFIX) + "_actual_preparation_source_proof.json"), proof)
+    after = sources()
+    numeric = [name for name in ("numpy", "torch", "h5py", "scipy", "anndata") if name in sys.modules]
+    write(
+        Path(str(PREFIX) + "_worker.json"),
+        {
+            "pytest_exit_code": int(result),
+            "complete_pytest_call_seconds": elapsed,
+            "actual_source_inspection_public_return_seconds": public_elapsed,
+            "source_before": before,
+            "source_after": after,
+            "draft_sources_stable": before == after,
+            "actual_preparation_source_count": len(proof["files"]),
+            "actual_preparation_source_commit": commit,
+            "actual_live_git_executable_mode_mismatches": sum(
+                not row["live_executable_mode_matches_git"] for row in proof["files"]
+            ),
+            "strict_live_git_mode_verification_admitted": proof["live_executable_modes_match_git"],
+            "git_blob_and_live_bytes_verified": proof["git_blob_and_live_bytes_verified"],
+            "numerical_packages_present_after_operation": numeric,
+            "source_admission_granted": False,
+            "runtime_admission_granted": False,
+            "authority_activated": False,
+            "full_repository_run": False,
+            "independent_reviews": "pending_agent_service_usage_limit",
+        },
+    )
+    return 0 if before == after and not numeric else 1
+
+
+def capture():
+    for suffix in (
+        "_invocation.json",
+        "_stdout.txt",
+        "_stderr.txt",
+        "_worker.json",
+        "_result.json",
+        "_gnu_time.txt",
+        ".xml",
+        "_actual_preparation_source_proof.json",
+    ):
+        if os.path.lexists(str(PREFIX) + suffix):
+            raise FileExistsError(str(PREFIX) + suffix)
+    environment = {
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "TF_RUN_REAL_MODEL_TESTS": "0",
+    }
+    command = [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        str(PREFIX) + "_gnu_time.txt",
+        ".venv/bin/python",
+        str(Path(__file__).resolve()),
+        "--worker",
+    ]
+    before = sources()
+    write(
+        Path(str(PREFIX) + "_invocation.json"),
+        {
+            "command": command,
+            "source_before": before,
+            "environment_overrides": environment,
+            "metadata_diagnostic_only": True,
+            "source_or_runtime_admission": False,
+            "scientific_acceptance": False,
+        },
+    )
+    began = time.monotonic()
+    with Path(str(PREFIX) + "_stdout.txt").open("xb") as stdout:
+        with Path(str(PREFIX) + "_stderr.txt").open("xb") as stderr:
+            actual = subprocess.run(command, env={**os.environ, **environment}, stdout=stdout, stderr=stderr)
+    elapsed = time.monotonic() - began
+    after = sources()
+    proof = (
+        json.loads(Path(str(PREFIX) + "_worker.json").read_bytes())
+        if Path(str(PREFIX) + "_worker.json").exists()
+        else None
+    )
+    suites = [row.attrib for row in ET.parse(str(PREFIX) + ".xml").getroot().iter("testsuite")]
+    cases = [
+        (row.get("classname"), row.get("name")) for row in ET.parse(str(PREFIX) + ".xml").getroot().iter("testcase")
+    ]
+    complete = (
+        bool(proof)
+        and actual.returncode == 0
+        and len(cases) == len(set(cases)) == 11
+        and all(int(row[k]) == 0 for row in suites for k in ("failures", "errors", "skipped"))
+        and before == after == proof["source_before"] == proof["source_after"]
+        and not proof["numerical_packages_present_after_operation"]
+    )
+    result = {
+        "actual_gnu_wrapper_exit_code": actual.returncode,
+        "driver_elapsed_seconds": elapsed,
+        "source_before": before,
+        "source_after": after,
+        "junit_suites": suites,
+        "junit_case_identities": cases,
+        "draft_metadata_checks_complete": complete,
+        "full_repository_run": False,
+        "source_admission_granted": False,
+        "runtime_admission_granted": False,
+        "authority_activated": False,
+        "capture_exit_code": actual.returncode if complete else actual.returncode or 1,
+    }
+    write(Path(str(PREFIX) + "_result.json"), result)
+    print(json.dumps(result, indent=2))
+    return result["capture_exit_code"]
+
+
+if __name__ == "__main__":
+    raise SystemExit(worker() if sys.argv[1:] == ["--worker"] else capture())
