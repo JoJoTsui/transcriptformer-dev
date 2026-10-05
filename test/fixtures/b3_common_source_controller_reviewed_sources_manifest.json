@@ -1,0 +1,22 @@
+{
+  "schema": "b3_common_source_controller_test_source_archive_v1",
+  "archive": {
+    "name": "b3_common_source_controller_reviewed_sources.tar.xz",
+    "bytes": 29080,
+    "sha256": "931eb034af2679ce713e8c202d9591020cd2cccf7c4021be6d755fd20f11f3ce"
+  },
+  "members": [
+    {"name": "capture_common_source_10_evidence.py", "bytes": 30999, "sha256": "78aa621e7604a4caa5ca851852de72048d479f77ed097f61330904f0ba1d6d42"},
+    {"name": "capture_common_source_evidence.py", "bytes": 40098, "sha256": "b049e3ac98e588c4dcbe3ddaddf39728232ec194fb4dbae941bad3723ab61866"},
+    {"name": "continue_common_source_10.py", "bytes": 46499, "sha256": "e799a6ee3c06d610d99d0e9127296e577f6c926e58521a58aa77f1794897b077"},
+    {"name": "COMMON_SOURCE_10_PROBE.md", "bytes": 6836, "sha256": "653bd452bd0581414cfa1107fdbea6a1b3b60bdc3995fc6b2d8c3065a5bd90c8"},
+    {"name": "common_source_10_review_record.md", "bytes": 1736, "sha256": "f3a2a5c7981fc3b0a1c00d40692c5a48b9641f475a866d42bd6e9e1660b96ed9"},
+    {"name": "continue_common_source_50.py", "bytes": 40113, "sha256": "779d36fa820d1773cebc0c104220ecc21ab4fde5a23b7eab9429756636355780"},
+    {"name": "COMMON_SOURCE_50_PROBE.md", "bytes": 5086, "sha256": "fb78175d7d7f7695284c92775ead175f3fcc9ce418bac89370ca3c0c6d38d870"}
+  ],
+  "scope": "Verbatim source text for metadata-only public planning protocol fixtures",
+  "extraction": "Exactly seven bounded regular basename members, no links, traversal, duplicates or unrestricted extractall; each SHA and size checked before writing",
+  "numeric_h5_checkpoint_payloads_included": false,
+  "native_execution_or_runtime_acceptance_proven": false,
+  "intended_canonical_archive_path": "test/fixtures/b3_common_source_controller_reviewed_sources.tar.xz"
+}
