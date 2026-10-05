@@ -1,0 +1,756 @@
+{
+  "schema": "b3_full_context_integration_and_execution_audit_evidence_archive_v1",
+  "source_feature_commit": "80ba78b30a427e7612d60fb925d679ccb1bfd163",
+  "test_fix_commit": "b6bda9cfed321b428f405fee215cef41cfb82f3e",
+  "files": [
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_reproduction_red01_invocation.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_reproduction_red01_invocation.json",
+      "sha256": "bef2fe63c9a60a3e791730699eb8c78bd2027886f3402ea4f9b67208e6889006",
+      "bytes": 71440,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_reproduction_red01_worker.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_reproduction_red01_worker.json",
+      "sha256": "7abcebd1f0fd44ee4a6ee173dbce4c27e2645321ae56123735542b5cffc37328",
+      "bytes": 139860,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_reproduction_red01_result.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_reproduction_red01_result.json",
+      "sha256": "e03bd56ef97281e551fb05503f800ce65f9c17af16da8ecff53666a767d36b67",
+      "bytes": 745,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_reproduction_red01_gnu_time.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_reproduction_red01_gnu_time.txt",
+      "sha256": "ec2f10276ce1f7338e9216ac5c29ff9e5a27086b14c03cbd0880a5975a1bd321",
+      "bytes": 1229,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_reproduction_red01_driver_stdout.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_reproduction_red01_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_reproduction_red01_driver_stderr.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_reproduction_red01_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_reproduction_red01_case_events.jsonl",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_reproduction_red01_case_events.jsonl",
+      "sha256": "695cf3dde702fd73e44853d41622829730ec19c0c06164ab89deb9e199cb061f",
+      "bytes": 8060,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_reproduction_red01.xml",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_reproduction_red01.xml",
+      "sha256": "b8c8346ddd06c195d06a3214734c1eafd748a6d626e50234dd797937390078af",
+      "bytes": 7108,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_reproduction_red01_supervisor_state.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_reproduction_red01_supervisor/state.json",
+      "sha256": "2a4414708d59bb675968aea6e500aea33c644cb9441f0353adbffe87c1f64b0c",
+      "bytes": 1379,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_reproduction_red01_supervisor_producer.log",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_reproduction_red01_supervisor/producer.log",
+      "sha256": "3e042a91765aa33bd2a673998d0b4e4a11f8fb1837e290cafaaedd873dac8499",
+      "bytes": 7757,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_genuine_green01_invocation.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_genuine_green01_invocation.json",
+      "sha256": "10479cd8b18bfddc43f5fd8cb67a75516a94ea24b6720fba90f361c5aa8666ef",
+      "bytes": 71196,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_genuine_green01_worker.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_genuine_green01_worker.json",
+      "sha256": "177a5203480f36dc3a10acfc4b129e8365f41ddc3925ba58772d55f72e6ad8c4",
+      "bytes": 139983,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_genuine_green01_result.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_genuine_green01_result.json",
+      "sha256": "abf612ac71b3c678c9837de8e62dd4a1b284d2d30551844aca64be798f64d84d",
+      "bytes": 822,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_genuine_green01_gnu_time.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_genuine_green01_gnu_time.txt",
+      "sha256": "3dc246e9206d6333d9d46bf2873248dffc551eecd55262c7288db1129591fb39",
+      "bytes": 1078,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_genuine_green01_driver_stdout.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_genuine_green01_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_genuine_green01_driver_stderr.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_genuine_green01_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_genuine_green01_case_events.jsonl",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_genuine_green01_case_events.jsonl",
+      "sha256": "124286cf0963a0690ff46355c660daa6c2ba5796d10fbf2f507930deb6735150",
+      "bytes": 2521,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_genuine_green01.xml",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_genuine_green01.xml",
+      "sha256": "2f8ac2264b31a26b60d335dcbb2441c511a08bb34256f67cc5aca747fc6da327",
+      "bytes": 712,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_genuine_green01_supervisor_state.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_genuine_green01_supervisor/state.json",
+      "sha256": "01f57fe726751532b30aac70fb69340c140958ff48af7596e651eb879d85fabb",
+      "bytes": 1275,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/publisher_fsync_callback_genuine_green01_supervisor_producer.log",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_genuine_green01_supervisor/producer.log",
+      "sha256": "55353c976d9b48e261a6d4e2b99b7be9141f7349a6e4e6f15ad3272df0ebb82b",
+      "bytes": 1023,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_red01_invocation.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_red01_invocation.json",
+      "sha256": "01a606df9f7c0292e5cee22cc0cd1d2cb4eabd379778e50681c14d7f6c74d40a",
+      "bytes": 71275,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_red01_worker.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_red01_worker.json",
+      "sha256": "fc399f18c6e11d8baad58341320d9cac2a96c2353148f9f96d7ba6c538cb303a",
+      "bytes": 139548,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_red01_result.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_red01_result.json",
+      "sha256": "b64561771c48088400e506433d5cf2a2e1ffa97514789f159bf7a7691a8819d9",
+      "bytes": 831,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_red01_gnu_time.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_red01_gnu_time.txt",
+      "sha256": "c58ee3d4e20a9077379f0fa9371142a58ab52b6448277c7730d9c1efbdf700c6",
+      "bytes": 1151,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_red01_driver_stdout.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_red01_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_red01_driver_stderr.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_red01_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_red01_case_events.jsonl",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_red01_case_events.jsonl",
+      "sha256": "628336770853a999665a3d5f5e7570cc2be758b7300fb9e177a5ed8559b10daf",
+      "bytes": 1512,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_red01.xml",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_red01.xml",
+      "sha256": "6eb50b4a1a815013d09dc17838ee9776febc5fd93bb23afb573b2a547941fbb4",
+      "bytes": 1084,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_red01_supervisor_state.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_red01_supervisor/state.json",
+      "sha256": "5c08723aed282b2b5b0f52b58e79cbda0eaeac6d9e8a2e2257625125f23f97b1",
+      "bytes": 1311,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_red01_supervisor_producer.log",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_red01_supervisor/producer.log",
+      "sha256": "122cf106d26d7ec6a33020101950de94e6f9225314451249836cb0f3aebd6540",
+      "bytes": 5677,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_green01_invocation.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_green01_invocation.json",
+      "sha256": "436c77ef1967311e0805d5c591468083d8879988c162febafedae3dda1c95a37",
+      "bytes": 71281,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_green01_worker.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_green01_worker.json",
+      "sha256": "8e92eac863f25351bb307ca7f59e0f1bc6af1340fa7768afa8cd73b9c4e4ff9b",
+      "bytes": 139549,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_green01_result.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_green01_result.json",
+      "sha256": "cdffa016a89a04c0ec62ba1e0e207366009929c3d0c5a361b257b5bb9b1f8b47",
+      "bytes": 828,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_green01_gnu_time.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_green01_gnu_time.txt",
+      "sha256": "a8e27bea9b7c75b6312492d7bf00cf7746a48b47e67ad0a50c35f56bf499031d",
+      "bytes": 1115,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_green01_driver_stdout.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_green01_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_green01_driver_stderr.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_green01_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_green01_case_events.jsonl",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_green01_case_events.jsonl",
+      "sha256": "79cdf9480d88b27eabae074a9ccf9e907dc15af588f4ab1d8e76947351e0aec2",
+      "bytes": 920,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_green01.xml",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_green01.xml",
+      "sha256": "cf1c4ed4a6eb65eba91d11d20cbc1e2d98f0ee2946c2bfd23fa8f03226ef8d76",
+      "bytes": 427,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_green01_supervisor_state.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_green01_supervisor/state.json",
+      "sha256": "ebb095736ae09b033d53c479594828e1863bc8d75be345b2ddb2ea35b6270624",
+      "bytes": 1320,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_green01_supervisor_producer.log",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_green01_supervisor/producer.log",
+      "sha256": "7650bb6aca3725393f594cdd3aeac9640a94198511fd0c069610872d66a89409",
+      "bytes": 1544,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_file_green01_invocation.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_file_green01_invocation.json",
+      "sha256": "457b8f7731529108a3723ebdc37a8245cc5a965b909385f593bb87d9726147dc",
+      "bytes": 71112,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_file_green01_worker.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_file_green01_worker.json",
+      "sha256": "1cfaf103f9bf46c5884b46d411d4e871207dc9769b4f3d20417ef2f6abadaba3",
+      "bytes": 142264,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_file_green01_result.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_file_green01_result.json",
+      "sha256": "41b38731800253e901df84b7f559d11e7c65700ab035d44986636b83b0cd1938",
+      "bytes": 831,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_file_green01_gnu_time.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_file_green01_gnu_time.txt",
+      "sha256": "c3dca36800c4b8adcc2e8dc0231b81169014fae2398af3a1041855092238546f",
+      "bytes": 1030,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_file_green01_driver_stdout.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_file_green01_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_file_green01_driver_stderr.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_file_green01_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_file_green01_case_events.jsonl",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_file_green01_case_events.jsonl",
+      "sha256": "fb07d15042587764516114a1437e64e94ff8651fc373f7e9dbca71243f9159cb",
+      "bytes": 9192,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_file_green01.xml",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_file_green01.xml",
+      "sha256": "8ecafea6238cf48828af7146767aa7f9644875537c6f1102c10c0488c03814f9",
+      "bytes": 2044,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_file_green01_supervisor_state.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_file_green01_supervisor/state.json",
+      "sha256": "b57b2f4b19e1b93d13b8b3e8b2660316e2277bdc3f4f809ebe0bbb79801d17bb",
+      "bytes": 1237,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_file_green01_supervisor_producer.log",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_file_green01_supervisor/producer.log",
+      "sha256": "a43e56703eaf8baca1c618c5870c8bbbd7440e5697c40d83fb2cec382f0b0170",
+      "bytes": 1331,
+      "scope": "actual_source_bound_test_capture"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_bound_ci_slice_v01_invocation.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_bound_ci_slice_v01_invocation.json",
+      "sha256": "4cb869a6c5d1c3f01cc15bf655c46706cf58a3bbd1c3de6982ef28558cae8c70",
+      "bytes": 70578,
+      "scope": "interrupted_capture_no_junit_no_acceptance"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_bound_ci_slice_v01_gnu_time.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_bound_ci_slice_v01_gnu_time.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "interrupted_capture_no_junit_no_acceptance"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_bound_ci_slice_v01_driver_stdout.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_bound_ci_slice_v01_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "interrupted_capture_no_junit_no_acceptance"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_bound_ci_slice_v01_driver_stderr.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_bound_ci_slice_v01_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "interrupted_capture_no_junit_no_acceptance"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_bound_ci_slice_v01_author_interrupt_intent.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_bound_ci_slice_v01_author_interrupt_intent.json",
+      "sha256": "f845309006ca5318188cd7a0b6a0986a8e1ca4401d736f5aab26dfe64456b02d",
+      "bytes": 1312,
+      "scope": "interrupted_capture_no_junit_no_acceptance"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_bound_ci_slice_v01_author_interruption_observation.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_bound_ci_slice_v01_author_interruption_observation.json",
+      "sha256": "b6511009aa00fa3d4a1399c2cedd7d1995212727ebe493e47d13b8ff2f656448",
+      "bytes": 1001,
+      "scope": "interrupted_capture_no_junit_no_acceptance"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_bound_ci_slice_v01_supervisor_state.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_bound_ci_slice_v01_supervisor/state.json",
+      "sha256": "770156a48ed07f2f9889884746e505d9449e72967404cf832533d38e76c46d62",
+      "bytes": 897,
+      "scope": "interrupted_capture_raw_stale_state_preserved"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_bound_ci_slice_v01_supervisor_producer.log",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_bound_ci_slice_v01_supervisor/producer.log",
+      "sha256": "c23b604f480902370a502f845d41b4463736f7300a213fd56ba88868b04ec606",
+      "bytes": 52,
+      "scope": "interrupted_capture_raw_stale_state_preserved"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_prospective_synthetic_preparation_v03_invocation.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_preparation_v03_invocation.json",
+      "sha256": "db2947b04600143e979a1ba7e2d2235965671f21dfae4db6555944a57c3c1d13",
+      "bytes": 12757,
+      "scope": "actual_genuine_preparation_cli_no_authority"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_prospective_synthetic_preparation_v03_result.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_preparation_v03_result.json",
+      "sha256": "3b1ac428b316604ada3e9a748715eaf06f31040f6327a6339efd7982dbc5d530",
+      "bytes": 16072,
+      "scope": "actual_genuine_preparation_cli_no_authority"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_prospective_synthetic_preparation_v03_gnu_time.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_preparation_v03_gnu_time.txt",
+      "sha256": "79f396b24836c19f00af8d0673d416bfaf5be638213e284b14679c6d99fe92ff",
+      "bytes": 1009,
+      "scope": "actual_genuine_preparation_cli_no_authority"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_prospective_synthetic_preparation_v03_driver_stdout.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_preparation_v03_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_genuine_preparation_cli_no_authority"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_prospective_synthetic_preparation_v03_driver_stderr.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_preparation_v03_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "actual_genuine_preparation_cli_no_authority"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_prospective_synthetic_preparation_v03_supervisor_state.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_preparation_v03_supervisor/state.json",
+      "sha256": "bb16efb72ca3a74dccbb08343a7c93e723f22c208c51ba5bb15c37ef31a7cbc4",
+      "bytes": 1150,
+      "scope": "actual_genuine_preparation_cli_no_authority"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_prospective_synthetic_preparation_v03_supervisor_producer.log",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_preparation_v03_supervisor/producer.log",
+      "sha256": "e7614403132c651a95c4f044d6bff25f6c13cd312a4ed85a10ce2b2c06dcaedf",
+      "bytes": 30650,
+      "scope": "actual_genuine_preparation_cli_no_authority"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/checkpoint/config.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/checkpoint/config.json",
+      "sha256": "2757107a2dac6d4b9ea35176cb921b9dde102a1fa5f04e425c62997d45f7e56b",
+      "bytes": 145,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/checkpoint/vocabs/aux_vocabulary.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/checkpoint/vocabs/aux_vocabulary.json",
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "bytes": 3,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/checkpoint/vocabs/gene_vocabulary.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/checkpoint/vocabs/gene_vocabulary.json",
+      "sha256": "b8fd16d21fd088bfb72bc0e561b3fa70f94a8404e6fd6c7d3295ce2ced08ea73",
+      "bytes": 23586,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/complete.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/complete.json",
+      "sha256": "03b1946b6a75cbd834e5d0dd2bf878a228a4950baef342a811fdab5fbc840193",
+      "bytes": 25150,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/helper_execution_audit.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/helper_execution_audit.json",
+      "sha256": "767d535b54bdcce01494385ff5f56b2995e44869c1f42d796c33719eb5f16099",
+      "bytes": 194098,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/homo_sapiens_config.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/homo_sapiens_config.json",
+      "sha256": "7a22713ee4383bbe4eeaf632242c4e2a5f3616d24a2e5efd9df42f18ce9c9a81",
+      "bytes": 10123,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/homo_sapiens_metrics/metadata.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/homo_sapiens_metrics/metadata.json",
+      "sha256": "1111f7465072bce2719302d214ed70b645c2c420149bf57c59cab088b5255c4b",
+      "bytes": 4539,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/homo_sapiens_native_input_tokenization.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/homo_sapiens_native_input_tokenization.json",
+      "sha256": "8e9536ead8c08633a4d778e2bd2fd30dae3f2e6ed55a1d5d00f1dcb573e594c8",
+      "bytes": 18376,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/homo_sapiens_plan.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/homo_sapiens_plan.json",
+      "sha256": "99cb0a7050a3f432f73f36a91a3a3301a7793550eac17b2d55f78eae5cb79a82",
+      "bytes": 2671,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/homo_sapiens_support/support_preflight.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/homo_sapiens_support/support_preflight.json",
+      "sha256": "3ba27c66f190f5f59a8084b07e644851c68e1e1b4994973181174ca1e62fe222",
+      "bytes": 368972,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/identity/homo_sapiens_assignments.csv",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/identity/homo_sapiens_assignments.csv",
+      "sha256": "a2541c5f6387ee1ccdb1a13d71f01918cfe132b66b06cedbb3623419a94a0538",
+      "bytes": 3925,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/identity/homo_sapiens_preparation.csv",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/identity/homo_sapiens_preparation.csv",
+      "sha256": "02218a9a0eeb7bf6baa839944bfc6b1d04b4725002560e0d1f4da6bdfa61ed45",
+      "bytes": 6041,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/identity/mus_musculus_assignments.csv",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/identity/mus_musculus_assignments.csv",
+      "sha256": "add1310f93ff43e74cfdb0b45b5a63b0897789de805c0a0f5f1d4a82501d3214",
+      "bytes": 3925,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/identity/mus_musculus_preparation.csv",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/identity/mus_musculus_preparation.csv",
+      "sha256": "768954664062fa04b7b79052080e992da93e622ed5f500382fdfc510a19d3d95",
+      "bytes": 6041,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/identity_audit.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/identity_audit.json",
+      "sha256": "4c6731b59b308a63958c4ff7282908fcbd4360942068695b56e3cab4ee162c0f",
+      "bytes": 2501,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/manifest.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/manifest.json",
+      "sha256": "afd1843f709d6f62edf41829cb47f50e655a963336010dce6a698b98feec31f0",
+      "bytes": 1277,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/mus_musculus_config.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/mus_musculus_config.json",
+      "sha256": "3e7e8fdb6897ae88628d0f51c724c7723cca3360486096348cb59727f2ce26f2",
+      "bytes": 11629,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/mus_musculus_metrics/metadata.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/mus_musculus_metrics/metadata.json",
+      "sha256": "88881d4424091c62105bcbf9a60c2cd37170222ca161f71cfb7be6085ca5542f",
+      "bytes": 4538,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/mus_musculus_native_input_tokenization.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/mus_musculus_native_input_tokenization.json",
+      "sha256": "b14361adb290a10879bb57bde65781a24c48d8fb43e8fca3d202c3b03e6c8e48",
+      "bytes": 18376,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/mus_musculus_plan.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/mus_musculus_plan.json",
+      "sha256": "bb38cc3570be2354ba62874c0926f926fc3e8227f50bad9d6bd9c9c9f4937400",
+      "bytes": 2671,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/mus_musculus_support/support_preflight.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/mus_musculus_support/support_preflight.json",
+      "sha256": "4fae45eefa610de1b1b6d36158baca695742d70f887d61990d2663b72d458898",
+      "bytes": 373489,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/paired_support.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/paired_support.json",
+      "sha256": "bc8437fbf347157f84a9d0d0c95e457e51195bc3abb7e4ac072a7f2eeefcc869",
+      "bytes": 66979,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/prepared_run/preparation_report.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/prepared_run/preparation_report.json",
+      "sha256": "54076b379ff809f43859af5fb877d216ace808eed960fa86b8b71e506984f7ef",
+      "bytes": 8706,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/cli_fixture_metadata/prepared_run/split_assignments.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_fixture_v03/prepared_run/split_assignments.json",
+      "sha256": "04e827f149269e59d06212bbe97265d8662f286cc2ccdd30a717df653e324ab1",
+      "bytes": 5765,
+      "scope": "actual_constructed_prospective_inputs_only_no_outcomes"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_prospective_synthetic_preparation_request_v03.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_prospective_synthetic_preparation_request_v03.json",
+      "sha256": "f4061d94e8e1f9ca2ba3cd2bc1fc91a8ead83f6a217baac84b27383cbeaeea7a",
+      "bytes": 11807,
+      "scope": "runtime_accounting_or_static_capture_no_independent_review"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/run_full_context_prospective_preparation_capture_v03.py.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_full_context_prospective_preparation_capture_v03.py",
+      "sha256": "f5d547463bb3257475c6a1522b2df04c528e83bcf0521e7baa8a0cb6c0447a97",
+      "bytes": 4133,
+      "scope": "runtime_accounting_or_static_capture_no_independent_review"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/run_full_context_bound_ci_slice_v01.py.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_full_context_bound_ci_slice_v01.py",
+      "sha256": "bc9b811742345dfa16916956fb325b81a4fe8e2a40a057806d108c3194d56750",
+      "bytes": 6350,
+      "scope": "runtime_accounting_or_static_capture_no_independent_review"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/run_full_context_bound_checks_v02.py.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_full_context_bound_checks_v02.py",
+      "sha256": "ab7476e654854aa0263d684d0508c69e183c88eadc21388a337b27761845d674",
+      "bytes": 10537,
+      "scope": "runtime_accounting_or_static_capture_no_independent_review"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/run_full_context_bound_checks_v03.py.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/run_full_context_bound_checks_v03.py",
+      "sha256": "cee8b99cf25eb3154aaecb9f5d161a2f2280c861ccabb3d6f811dc2090c1cb98",
+      "bytes": 10850,
+      "scope": "runtime_accounting_or_static_capture_no_independent_review"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_static01.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_static01.json",
+      "sha256": "0190d6156f460ca56feffe0463d57d93a27a6a0d51f34abcfe2b4e35d94a8ec1",
+      "bytes": 3214,
+      "scope": "runtime_accounting_or_static_capture_no_independent_review"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/synthetic_preparation_execution_audit_baseline_check01.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_baseline_check01.json",
+      "sha256": "42d77914b219bacd213f05ceabcb83d151676665c416bfe2ee0a400ce38d9bfe",
+      "bytes": 359,
+      "scope": "runtime_accounting_or_static_capture_no_independent_review"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_corrected_ci_collect01.json",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_ci_collect01.json",
+      "sha256": "34d97990ac7ff70d76681b7a49c49e9efbaa413b17b9abfd95e19c09d315a554",
+      "bytes": 27767,
+      "scope": "runtime_accounting_or_static_capture_no_independent_review"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_corrected_ci_collect01_stdout.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_ci_collect01_stdout.txt",
+      "sha256": "ab44290d6bc5b5f488bd121f02fe92363b5fbd7344f29ac75a2fc5a2139f2500",
+      "bytes": 26390,
+      "scope": "runtime_accounting_or_static_capture_no_independent_review"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/full_context_corrected_ci_collect01_stderr.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/full_context_corrected_ci_collect01_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "scope": "runtime_accounting_or_static_capture_no_independent_review"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/source_versions/publish_b3_full_context_observed.py.green_preformat.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_source_retention01/publish_b3_full_context_observed.py.green_preformat.txt",
+      "sha256": "a6316ae50c3ac94adc1e708dd6521bbc2bdc71d7a03835107f1cae0bf35c184f",
+      "bytes": 112946,
+      "scope": "exact_source_buffer_for_original_red_or_preformat_green"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/source_versions/test_b3_full_context_observed.py.green_preformat.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_source_retention01/test_b3_full_context_observed.py.green_preformat.txt",
+      "sha256": "68ff0e56c0184c5e8ab312a7885270df70f4cc2de710e6915d546f0c50c1eaef",
+      "bytes": 122310,
+      "scope": "exact_source_buffer_for_original_red_or_preformat_green"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/source_versions/test_b3_full_context_observed.py.original_red.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_source_retention01/test_b3_full_context_observed.py.original_red.txt",
+      "sha256": "cfa0d0b9eff46a208c0b026462cafe0641d9b65038f5ec25ca1562828257cb62",
+      "bytes": 121893,
+      "scope": "exact_source_buffer_for_original_red_or_preformat_green"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/source_versions/prepare_b3_full_context_synthetic_fixture.py.committed.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/scripts/prepare_b3_full_context_synthetic_fixture.py",
+      "sha256": "e1728af2a5509a33d7f74beb7c3a9522d99245ee9ba3ecc300b0e09504a7fb19",
+      "bytes": 60715,
+      "scope": "current_committed_source"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/source_versions/test_b3_full_context_synthetic_fixture.py.committed.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_synthetic_fixture.py",
+      "sha256": "c2290ba74debc3b890e0035ffcb944bcf6ec204a5cd16d07db440d80a0efc2e7",
+      "bytes": 20251,
+      "scope": "current_committed_source"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/source_versions/test_b3_full_context_observed.py.committed.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_observed.py",
+      "sha256": "c310ee60ac5c56393db1bacd517bad40bfccd21276995da7920b2508b1ebfee6",
+      "bytes": 122280,
+      "scope": "current_committed_source"
+    },
+    {
+      "archive_path": "docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/source_versions/prepare_b3_full_context_synthetic_fixture.py.audit_red.txt",
+      "original_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_old_source_buffer01.txt",
+      "sha256": "816de8143886bae2b819f0a3b10e6029f00e13649b8d49d54f479a526eea4078",
+      "bytes": 53205,
+      "scope": "exact_old_source_for_missing_audit_red"
+    }
+  ],
+  "original_failed_receipts_rewritten": false,
+  "full_repository_acceptance": false,
+  "complete_publisher_file_acceptance": false,
+  "source_admission_granted": false,
+  "runtime_authority_granted": false,
+  "scientific_acceptance": false,
+  "independent_reviews": "pending_agent_service_usage_limit"
+}

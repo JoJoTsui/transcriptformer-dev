@@ -1,0 +1,9 @@
+{
+  "schema": "b3_full_context_extension_baseline_check_v1",
+  "original_python_files": 233,
+  "baseline_sha256": "217bcec28861209f83139d01be8131c99e6a41734fd551c7b956f2ab9c1c52fe",
+  "changed_original_python": [],
+  "changed_original_git_modes": [],
+  "preexisting_233_python_bytes_and_modes_unchanged": true,
+  "authority_or_scientific_acceptance": false
+}

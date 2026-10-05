@@ -1,0 +1,28 @@
+{
+  "supervisor_exit_code": 1,
+  "driver_elapsed_seconds": 146.2432648119866,
+  "junit_suites": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "2",
+      "skipped": "0",
+      "tests": "2",
+      "time": "142.518",
+      "timestamp": "2026-10-05T12:40:56.606601+08:00",
+      "hostname": "Conundrum"
+    }
+  ],
+  "exact_collected_junit_identities": true,
+  "expected_case_count_matches": true,
+  "distinct_collected_node_ids": true,
+  "source_and_head_and_index_stable": true,
+  "no_deselection": true,
+  "complete_supplied_file_run": false,
+  "actual_cases_by_file": {
+    "test/test_b3_full_context_observed.py": 2
+  },
+  "complete_accounting_valid": true,
+  "all_junit_cases_passed": false,
+  "capture_exit_code": 1
+}

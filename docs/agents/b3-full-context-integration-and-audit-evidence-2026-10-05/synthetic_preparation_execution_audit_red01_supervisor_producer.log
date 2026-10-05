@@ -1,0 +1,82 @@
+F
+=================================== FAILURES ===================================
+_ test_public_preparation_retains_actual_private_execution_and_import_audit_without_admission _
+
+tmp_path = PosixPath('/tmp/b3-synthetic_preparation_execution_audit_red01/test_public_preparation_retain0')
+
+    def test_public_preparation_retains_actual_private_execution_and_import_audit_without_admission(tmp_path):
+        public, request_path, request = _request(tmp_path)
+        output = tmp_path / "attempt"
+        result = public.run(request_path, output)
+>       audit = _read(result["helper_execution_audit"])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'helper_execution_audit'
+
+test/test_b3_full_context_synthetic_fixture.py:89: KeyError
+----------------------------- Captured stdout call -----------------------------
+Validating prepared artifacts and source provenance before support scans
+Counting exact selected phase membership and validating CSR/gene features
+Membership source homo_sapiens_prepared_train.h5ad: 60 selected cells; cumulative 60
+Measured-zero support homo_sapiens_prepared_train.h5ad rows 0:8; selected 8/60; attempts 4008
+Measured-zero support homo_sapiens_prepared_train.h5ad rows 8:16; selected 16/60; attempts 8016
+Measured-zero support homo_sapiens_prepared_train.h5ad rows 16:24; selected 24/60; attempts 12024
+Measured-zero support homo_sapiens_prepared_train.h5ad rows 24:32; selected 32/60; attempts 16032
+Measured-zero support homo_sapiens_prepared_train.h5ad rows 32:40; selected 40/60; attempts 20040
+Measured-zero support homo_sapiens_prepared_train.h5ad rows 40:48; selected 48/60; attempts 24048
+Measured-zero support homo_sapiens_prepared_train.h5ad rows 48:56; selected 56/60; attempts 28056
+Measured-zero support homo_sapiens_prepared_train.h5ad rows 56:60; selected 60/60; attempts 30060
+Counting per-gene physical embryo support from packed native support
+Physical support 502/502 genes
+Checking exact peer containment in bins; candidate batches <= 128 genes
+Matched-peer bin 1/1 (501 supported genes); necessary finite upper bound 500
+Validating prepared artifacts and source provenance before support scans
+Counting exact selected phase membership and validating CSR/gene features
+Membership source mus_musculus_prepared_train.h5ad: 60 selected cells; cumulative 60
+Measured-zero support mus_musculus_prepared_train.h5ad rows 0:8; selected 8/60; attempts 4008
+Measured-zero support mus_musculus_prepared_train.h5ad rows 8:16; selected 16/60; attempts 8016
+Measured-zero support mus_musculus_prepared_train.h5ad rows 16:24; selected 24/60; attempts 12024
+Measured-zero support mus_musculus_prepared_train.h5ad rows 24:32; selected 32/60; attempts 16032
+Measured-zero support mus_musculus_prepared_train.h5ad rows 32:40; selected 40/60; attempts 20040
+Measured-zero support mus_musculus_prepared_train.h5ad rows 40:48; selected 48/60; attempts 24048
+Measured-zero support mus_musculus_prepared_train.h5ad rows 48:56; selected 56/60; attempts 28056
+Measured-zero support mus_musculus_prepared_train.h5ad rows 56:60; selected 60/60; attempts 30060
+Counting per-gene physical embryo support from packed native support
+Physical support 502/502 genes
+Checking exact peer containment in bins; candidate batches <= 128 genes
+Matched-peer bin 1/1 (501 supported genes); necessary finite upper bound 500
+{
+  "status": "potential_coverage_only_unproven",
+  "n_vocabulary_joined_pairs": 502,
+  "possible_finite_pair_upper_bound": 500,
+  "upper_bound_coverage": {
+    "status": "sufficient_coverage",
+    "minimum_paired_scores": 500,
+    "minimum_joined_score_fraction": 0.8,
+    "paired_score_floor_pass": true,
+    "joined_score_fraction_floor_pass": true,
+    "joined_score_fraction": 0.9960159362549801,
+    "basis": "Approved B3 reporting floors; independent of registered 60% statistic-input and 5,000 genome-wide-pair eligibility floors"
+  }
+}
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+test/test_b3_full_context_synthetic_fixture.py::test_public_preparation_retains_actual_private_execution_and_import_audit_without_admission
+test/test_b3_full_context_synthetic_fixture.py::test_public_preparation_retains_actual_private_execution_and_import_audit_without_admission
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/anndata/_core/aligned_df.py:68: ImplicitModificationWarning: Transforming to str index.
+    warnings.warn("Transforming to str index.", ImplicitModificationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_red01.xml -
+=========================== short test summary info ============================
+FAILED test/test_b3_full_context_synthetic_fixture.py::test_public_preparation_retains_actual_private_execution_and_import_audit_without_admission
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 4 warnings in 25.45s

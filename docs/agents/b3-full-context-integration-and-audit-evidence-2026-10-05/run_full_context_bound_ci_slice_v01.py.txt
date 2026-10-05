@@ -1,0 +1,176 @@
+"""Capture one complete source-frozen CI test slice; never grant authority."""
+
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+import xml.etree.ElementTree as ET
+
+BASE = Path("runs/b3_feasibility/20261005")
+PREFIX = BASE / "full_context_bound_ci_slice_v01"
+FILES = [
+    "test/test_b3_full_context_observed.py",
+    "test/test_b3_full_context_synthetic_fixture.py",
+    "test/test_b3_paged_native_common_source_controller.py",
+]
+
+
+def snapshot():
+    head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    index = subprocess.check_output(["git", "ls-files", "--stage", "-z", "--", "*.py"])
+    sources = {}
+    for row in index.split(b"\0"):
+        if row:
+            _, name = row.split(b"\t", 1)
+            path = name.decode()
+            sources[path] = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    return {"head": head, "python_index_hex": index.hex(), "python_file_sha256": sources}
+
+
+def write_json(path, data):
+    with path.open("x") as handle:
+        json.dump(data, handle, indent=2)
+        handle.write("\n")
+
+
+def worker():
+    # Match python -m pytest's repository import root in this recorded worker.
+    sys.path.insert(0, str(Path.cwd()))
+    import pytest
+    from _pytest.junitxml import bin_xml_escape, mangle_test_address
+
+    class Collection:
+        def __init__(self):
+            self.selected, self.deselected, self.xml_ids = [], [], []
+
+        def pytest_collection_finish(self, session):
+            self.selected = [item.nodeid for item in session.items]
+            for item in session.items:
+                address = mangle_test_address(item.nodeid)
+                self.xml_ids.append([".".join(address[:-1]), bin_xml_escape(address[-1])])
+
+        def pytest_deselected(self, items):
+            self.deselected.extend(item.nodeid for item in items)
+
+    frozen = snapshot()
+    plugin = Collection()
+    began = time.monotonic()
+    result = pytest.main(
+        [
+            *FILES,
+            "-q",
+            "--basetemp=/tmp/b3-full-context-bound-ci-slice-v01-20261005",
+            "--junitxml=" + str(PREFIX) + ".xml",
+        ],
+        plugins=[plugin],
+    )
+    elapsed = time.monotonic() - began
+    after = snapshot()
+    write_json(
+        Path(str(PREFIX) + "_worker.json"),
+        {
+            "pytest_exit_code": int(result),
+            "complete_pytest_call_seconds": elapsed,
+            "snapshot_before": frozen,
+            "snapshot_after": after,
+            "source_and_head_and_index_stable": after == frozen,
+            "selected_node_ids": plugin.selected,
+            "deselected_node_ids": plugin.deselected,
+            "expected_junit_case_identities": plugin.xml_ids,
+            "supplied_files": FILES,
+            "full_repository_run": False,
+        },
+    )
+    return int(result) if after == frozen else 1
+
+
+def capture():
+    frozen = snapshot()
+    supervisor = Path(str(PREFIX) + "_supervisor")
+    env = {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "TF_RUN_REAL_MODEL_TESTS": "0",
+        "MPLCONFIGDIR": "/tmp/b3-bound-ci-slice-matplotlib-20261005",
+    }
+    command = [
+        ".venv/bin/python",
+        "scripts/supervise_b3_pilot.py",
+        "--run-dir",
+        str(supervisor),
+        "--max-wall-seconds",
+        "14400",
+        "--max-rss-gib",
+        "4",
+        "--min-host-ram-gib",
+        "4",
+        "--min-disk-gib",
+        "20",
+        "--",
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        str(PREFIX) + "_gnu_time.txt",
+        ".venv/bin/python",
+        str(Path(__file__)),
+        "--worker",
+    ]
+    write_json(
+        Path(str(PREFIX) + "_invocation.json"),
+        {
+            "command": command,
+            "environment_overrides": env,
+            "snapshot": frozen,
+            "supplied_files": FILES,
+            "aggregate_test_wall_limit_seconds": 14400,
+            "public_operation_wall_limit_seconds": 900,
+            "model_forwards_authorized": False,
+            "full_repository_run": False,
+            "scientific_acceptance": False,
+            "fresh_independent_reviews": "pending_agent_service_usage_limit",
+        },
+    )
+    began = time.monotonic()
+    with Path(str(PREFIX) + "_driver_stdout.txt").open("xb") as stdout:
+        with Path(str(PREFIX) + "_driver_stderr.txt").open("xb") as stderr:
+            result = subprocess.run(command, env={**os.environ, **env}, stdout=stdout, stderr=stderr)
+    elapsed = time.monotonic() - began
+    record = {"supervisor_exit_code": result.returncode, "driver_elapsed_seconds": elapsed}
+    worker_path = Path(str(PREFIX) + "_worker.json")
+    if worker_path.exists():
+        proof = json.loads(worker_path.read_bytes())
+        suites = [s.attrib for s in ET.parse(str(PREFIX) + ".xml").getroot().iter("testsuite")]
+        cases = [[c.get("classname"), c.get("name")] for c in ET.parse(str(PREFIX) + ".xml").getroot().iter("testcase")]
+        expected = proof["expected_junit_case_identities"]
+        exact = len(cases) == len(expected) and {tuple(x) for x in cases} == {tuple(x) for x in expected}
+        record.update(
+            {
+                "junit_suites": suites,
+                "exact_collected_junit_identities": exact,
+                "source_and_head_and_index_stable": proof["snapshot_before"]
+                == frozen
+                == proof["snapshot_after"]
+                == snapshot(),
+                "no_deselection": not proof["deselected_node_ids"],
+                "actual_cases_by_file": {
+                    p: sum(n.startswith(p + "::") for n in proof["selected_node_ids"]) for p in FILES
+                },
+            }
+        )
+        if result.returncode == 0:
+            assert exact and record["source_and_head_and_index_stable"] and record["no_deselection"]
+            assert all(record["actual_cases_by_file"].values())
+            assert all(int(s[k]) == 0 for s in suites for k in ("failures", "errors", "skipped"))
+    write_json(Path(str(PREFIX) + "_result.json"), record)
+    print(json.dumps(record, indent=2))
+    return result.returncode
+
+
+if __name__ == "__main__":
+    sys.exit(worker() if sys.argv[1:] == ["--worker"] else capture())

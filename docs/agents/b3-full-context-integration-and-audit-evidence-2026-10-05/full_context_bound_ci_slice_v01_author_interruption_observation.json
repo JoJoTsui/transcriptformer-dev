@@ -1,0 +1,21 @@
+{
+  "schema": "b3_full_context_author_interruption_observation_v1",
+  "observed_unix": 1791175254.045952,
+  "tool_session_exit_code": 130,
+  "exact_owned_worker_processes_after_host_inspection": 0,
+  "supervisor_lock_free": true,
+  "raw_supervisor_state_status": "running",
+  "raw_supervisor_state_is_stale_after_interruption": true,
+  "raw_supervisor_last_sample_seconds": 2778.0999113560247,
+  "raw_progress_success_symbols": 50,
+  "raw_progress_failure_symbols": 2,
+  "raw_log_sha256": "c23b604f480902370a502f845d41b4463736f7300a213fd56ba88868b04ec606",
+  "raw_junit_present": false,
+  "raw_worker_receipt_present": false,
+  "raw_driver_result_present": false,
+  "tracked_python_hashes_unchanged": true,
+  "complete_file_or_repository_acceptance": false,
+  "interruption_reason": "author stopped already failing capture before completion to correct mis-targeted fsync callback",
+  "original_receipts_rewritten": false,
+  "following_run": "fresh named reproduction with live per-case diagnostics"
+}

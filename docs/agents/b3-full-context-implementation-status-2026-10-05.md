@@ -4,6 +4,44 @@ This is a work-in-progress checkpoint. Ticket 05 remains open, zebrafish ticket
 11 remains excluded, and ten other tickets retain bounded engineering closure.
 The previously accepted common-source milestone is unchanged.
 
+## Actual helper execution audit and fsync seam repair — current
+
+Preparation **`80ba78b`**, source `e1728af2…` and tests `c2290ba7…`, passes its
+**complete ten-case file**. A genuine missing-audit-field RED precedes the
+passing public regression. The bounded private observer captures actual
+compiled object identity, full-buffer execution and top-level/deferred import
+sites. Its scope excludes ordinary import bodies, the public caller and
+cleanup; it grants no source or runtime admission.
+
+A separate persistent v03 CLI operation completes in **27.52854 public
+seconds**, preserving all 70 source hashes. Its audit records **45 executed
+source bodies, 587 import calls and 360 sites** (318 top-level, 42 deferred).
+The retained 70-path set remains distinct. Complete-file JUnit is 46.018
+seconds; GNU wall is 49.10 at **769,332 KiB** peak process RSS; complete pytest
+call and driver are 47.43319 and 50.12969 seconds. Ruff check/format,
+configured mypy and diff checks pass. Original 233 Python bytes and Git modes
+remain unchanged; numeric allocation census remains unavailable.
+
+Test commit **`b6bda9c`** corrects the fsync callback's accidental match on an
+inner streamed-bootstrap summary. Fresh original cases fail on a missing inner
+file and a no-op marker mutation. The schema-admitted actual observed seam
+passes all three controls. That targeted result binds its preserved preformat
+buffer; complete current publisher-file acceptance remains pending. Publisher
+source `a6316ae5…` itself is unchanged.
+
+The initial broader capture is author-interrupted after 50 success/two failure
+symbols, with tool exit 130 and no JUnit/worker/result. Its stale `running`
+supervisor sample stays original; separate process/lock inspection confirms
+termination. A new collection identifies **207 distinct cases**: publisher
+102, preparation 10, planner 95. Complete fresh three-file runtime and whole
+repository integration remain pending. The [exact archive](b3-full-context-integration-and-audit-evidence-2026-10-05/manifest.json)
+preserves failed, passing, interrupted and actual CLI captures separately.
+
+Fresh independent Spec/Standards source reviews remain pending at the agent
+service usage limit. Controlled producer/issuer/authority, registration,
+comparison/v4, measured numeric census, effects and full cost remain open.
+Ticket 05 remains open, 11 excluded; pilot coverage/support/veto remain unchanged.
+
 ## Metadata planner
 
 The metadata-only complete-bootstrap planner and its public tests retain their
@@ -14,7 +52,7 @@ invocations, aggregation, finalization, seals and storage cost unmeasured.
 Full 2,000-draw execution remains unadmitted. See the
 [planning evidence](b3-full-context-review-archive-2026-10-05/manifest.json).
 
-## Observed publisher repair
+## Previous focused observed publisher repair — `db4d88e`
 
 Publisher `a6316ae5…` and tests `cfa0d0b9…`, source commit **`db4d88e`**, pass
 Ruff check/format and configured mypy. **14 targeted cases pass across two
@@ -48,7 +86,7 @@ failures and both current green runs. Separate pytest/JUnit/GNU/driver and
 supervisor sample clocks remain distinct. All prior ownership receipts remain
 unchanged; earlier successes are not transferred to different source bytes.
 
-## Genuine native input tokenization — current
+## Previous genuine native input tokenization — `276eaa6`
 
 Source **`276eaa6`**, entrypoint `816de814…` and tests `c9daddd5…`, passes the
 **complete nine-case preparation file**. The additional public regression

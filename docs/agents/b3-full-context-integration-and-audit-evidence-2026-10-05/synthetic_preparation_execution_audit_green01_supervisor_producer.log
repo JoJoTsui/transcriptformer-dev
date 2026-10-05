@@ -1,0 +1,20 @@
+.                                                                        [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+test/test_b3_full_context_synthetic_fixture.py::test_public_preparation_retains_actual_private_execution_and_import_audit_without_admission
+test/test_b3_full_context_synthetic_fixture.py::test_public_preparation_retains_actual_private_execution_and_import_audit_without_admission
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/anndata/_core/aligned_df.py:68: ImplicitModificationWarning: Transforming to str index.
+    warnings.warn("Transforming to str index.", ImplicitModificationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/synthetic_preparation_execution_audit_green01.xml -
+1 passed, 4 warnings in 25.84s

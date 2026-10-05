@@ -1,0 +1,273 @@
+"""Capture source-bound tests with live diagnostics; grant no admission."""
+
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+import time
+import xml.etree.ElementTree as ET
+
+ROOT = Path.cwd().resolve()
+BASE = ROOT / "runs/b3_feasibility/20261005"
+FILES = {
+    "test/test_b3_full_context_observed.py",
+    "test/test_b3_full_context_synthetic_fixture.py",
+    "test/test_b3_paged_native_common_source_controller.py",
+}
+
+
+def snapshot():
+    head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    index = subprocess.check_output(["git", "ls-files", "--stage", "-z", "--", "*.py"])
+    sources, matching = {}, True
+    for row in index.split(b"\0"):
+        if row:
+            header, name = row.split(b"\t", 1)
+            _, blob, stage = header.decode().split()
+            if stage != "0":
+                raise ValueError("Unmerged tracked Python source")
+            path = name.decode()
+            data = (ROOT / path).read_bytes()
+            sources[path] = hashlib.sha256(data).hexdigest()
+            actual_blob = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
+            matching = matching and actual_blob == blob
+    return {
+        "head": head,
+        "python_index_hex": index.hex(),
+        "python_file_sha256": sources,
+        "worktree_python_bytes_match_index": matching,
+        "capture_runner_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+    }
+
+
+def write_json(path, value):
+    with path.open("x") as handle:
+        json.dump(value, handle, indent=2)
+        handle.write("\n")
+
+
+def worker(args, prefix):
+    sys.path.insert(0, str(ROOT))
+    import pytest
+    from _pytest.junitxml import bin_xml_escape, mangle_test_address
+
+    class Collection:
+        def __init__(self, events):
+            self.selected, self.deselected, self.xml_ids = [], [], []
+            self.events = events
+
+        def pytest_collection_finish(self, session):
+            self.selected = [item.nodeid for item in session.items]
+            for item in session.items:
+                address = mangle_test_address(item.nodeid)
+                self.xml_ids.append([".".join(address[:-1]), bin_xml_escape(address[-1])])
+
+        def pytest_deselected(self, items):
+            self.deselected.extend(item.nodeid for item in items)
+
+        def pytest_runtest_logreport(self, report):
+            row = {
+                "node_id": report.nodeid,
+                "phase": report.when,
+                "outcome": report.outcome,
+                "pytest_phase_seconds": report.duration,
+                "observed_monotonic_seconds": time.monotonic(),
+                "longrepr": str(report.longrepr) if report.failed else None,
+            }
+            self.events.write(json.dumps(row, allow_nan=False) + "\n")
+            self.events.flush()
+
+    frozen = snapshot()
+    with Path(str(prefix) + "_case_events.jsonl").open("x") as events:
+        plugin = Collection(events)
+        began = time.monotonic()
+        result = pytest.main(
+            [
+                *args.targets,
+                "-q",
+                "--basetemp=/tmp/b3-" + args.name,
+                "--junitxml=" + str(prefix) + ".xml",
+            ],
+            plugins=[plugin],
+        )
+        elapsed = time.monotonic() - began
+    after = snapshot()
+    write_json(
+        Path(str(prefix) + "_worker.json"),
+        {
+            "pytest_exit_code": int(result),
+            "complete_pytest_call_seconds": elapsed,
+            "snapshot_before": frozen,
+            "snapshot_after": after,
+            "source_and_head_and_index_stable": after == frozen,
+            "selected_node_ids": plugin.selected,
+            "deselected_node_ids": plugin.deselected,
+            "expected_junit_case_identities": plugin.xml_ids,
+            "supplied_targets": args.targets,
+            "complete_supplied_file_run": all("::" not in target for target in args.targets),
+            "full_repository_run": False,
+        },
+    )
+    return int(result) if after == frozen else 1
+
+
+def capture(args, prefix):
+    for suffix in (
+        "_invocation.json",
+        "_driver_stdout.txt",
+        "_driver_stderr.txt",
+        "_gnu_time.txt",
+        "_worker.json",
+        "_result.json",
+        "_case_events.jsonl",
+        "_supervisor",
+        ".xml",
+    ):
+        if os.path.lexists(str(prefix) + suffix):
+            raise FileExistsError(str(prefix) + suffix)
+    frozen = snapshot()
+    supervisor = Path(str(prefix) + "_supervisor")
+    env = {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "TF_RUN_REAL_MODEL_TESTS": "0",
+        "MPLCONFIGDIR": "/tmp/b3-bound-checks-matplotlib-20261005",
+    }
+    command = [
+        ".venv/bin/python",
+        "scripts/supervise_b3_pilot.py",
+        "--run-dir",
+        str(supervisor),
+        "--max-wall-seconds",
+        str(args.wall_seconds),
+        "--max-rss-gib",
+        "4",
+        "--min-host-ram-gib",
+        "4",
+        "--min-disk-gib",
+        "20",
+        "--",
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        str(prefix) + "_gnu_time.txt",
+        ".venv/bin/python",
+        str(Path(__file__).resolve()),
+        "--worker",
+        "--name",
+        args.name,
+        "--wall-seconds",
+        str(args.wall_seconds),
+        "--expected-cases",
+        str(args.expected_cases),
+        *args.targets,
+    ]
+    write_json(
+        Path(str(prefix) + "_invocation.json"),
+        {
+            "command": command,
+            "environment_overrides": env,
+            "snapshot": frozen,
+            "supplied_targets": args.targets,
+            "expected_cases": args.expected_cases,
+            "aggregate_test_wall_limit_seconds": args.wall_seconds,
+            "public_operation_wall_limit_seconds": 900,
+            "supervisor_sampled_rss_scope": "gnu_wrapper_only_not_worker_or_process_group",
+            "model_forwards_authorized": False,
+            "full_repository_run": False,
+            "source_admission_or_runtime_authority": False,
+            "scientific_acceptance": False,
+            "fresh_independent_reviews": "pending_agent_service_usage_limit",
+        },
+    )
+    began = time.monotonic()
+    with Path(str(prefix) + "_driver_stdout.txt").open("xb") as stdout:
+        with Path(str(prefix) + "_driver_stderr.txt").open("xb") as stderr:
+            result = subprocess.run(command, env={**os.environ, **env}, stdout=stdout, stderr=stderr)
+    elapsed = time.monotonic() - began
+    record = {"supervisor_exit_code": result.returncode, "driver_elapsed_seconds": elapsed}
+    worker_path = Path(str(prefix) + "_worker.json")
+    if worker_path.exists():
+        proof = json.loads(worker_path.read_bytes())
+        tree = ET.parse(str(prefix) + ".xml")
+        suites = [s.attrib for s in tree.getroot().iter("testsuite")]
+        cases = [[c.get("classname"), c.get("name")] for c in tree.getroot().iter("testcase")]
+        expected = proof["expected_junit_case_identities"]
+        expected_set, cases_set = {tuple(x) for x in expected}, {tuple(x) for x in cases}
+        exact = len(cases) == len(expected) == len(expected_set) == len(cases_set) and expected_set == cases_set
+        selected = proof["selected_node_ids"]
+        files = sorted({target.split("::", 1)[0] for target in args.targets})
+        record.update(
+            {
+                "junit_suites": suites,
+                "exact_collected_junit_identities": exact,
+                "expected_case_count_matches": len(selected) == args.expected_cases,
+                "distinct_collected_node_ids": len(selected) == len(set(selected)),
+                "source_and_head_and_index_stable": proof["snapshot_before"]
+                == frozen
+                == proof["snapshot_after"]
+                == snapshot(),
+                "no_deselection": not proof["deselected_node_ids"],
+                "complete_supplied_file_run": proof["complete_supplied_file_run"],
+                "actual_cases_by_file": {p: sum(n.startswith(p + "::") for n in selected) for p in files},
+            }
+        )
+        record["complete_accounting_valid"] = (
+            all(
+                record[field]
+                for field in (
+                    "exact_collected_junit_identities",
+                    "expected_case_count_matches",
+                    "distinct_collected_node_ids",
+                    "source_and_head_and_index_stable",
+                    "no_deselection",
+                )
+            )
+            and bool(suites)
+            and all(record["actual_cases_by_file"].values())
+        )
+        record["all_junit_cases_passed"] = bool(suites) and all(
+            int(s[k]) == 0 for s in suites for k in ("failures", "errors", "skipped")
+        )
+        capture_exit = result.returncode
+        if not record["complete_accounting_valid"] or not record["all_junit_cases_passed"]:
+            capture_exit = capture_exit or 1
+        record["capture_exit_code"] = capture_exit
+        write_json(Path(str(prefix) + "_result.json"), record)
+    else:
+        record["complete_accounting_valid"] = False
+        record["capture_exit_code"] = result.returncode or 1
+        write_json(Path(str(prefix) + "_result.json"), record)
+    print(json.dumps(record, indent=2))
+    return record["capture_exit_code"]
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--worker", action="store_true")
+    parser.add_argument("--name", required=True)
+    parser.add_argument("--wall-seconds", type=int, default=950)
+    parser.add_argument("--expected-cases", type=int, required=True)
+    parser.add_argument("targets", nargs="+")
+    args = parser.parse_args()
+    if not re.fullmatch(r"[a-z0-9_]{1,100}", args.name) or not 1 <= args.wall_seconds <= 14400:
+        raise ValueError("Invalid exclusive test capture name or aggregate test cap")
+    if any(target.split("::", 1)[0] not in FILES for target in args.targets) or len(set(args.targets)) != len(
+        args.targets
+    ):
+        raise ValueError("Require distinct targets from the three explicit full-context test files")
+    if args.expected_cases < 1:
+        raise ValueError("Require a positive actual collection target")
+    prefix = BASE / args.name
+    return worker(args, prefix) if args.worker else capture(args, prefix)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

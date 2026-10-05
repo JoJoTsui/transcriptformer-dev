@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="25.441" timestamp="2026-10-05T12:53:16.594481+08:00" hostname="Conundrum"><testcase classname="test.test_b3_full_context_synthetic_fixture" name="test_public_preparation_retains_actual_private_execution_and_import_audit_without_admission" time="25.190"><failure message="KeyError: 'helper_execution_audit'">tmp_path = PosixPath('/tmp/b3-synthetic_preparation_execution_audit_red01/test_public_preparation_retain0')
+
+    def test_public_preparation_retains_actual_private_execution_and_import_audit_without_admission(tmp_path):
+        public, request_path, request = _request(tmp_path)
+        output = tmp_path / "attempt"
+        result = public.run(request_path, output)
+&gt;       audit = _read(result["helper_execution_audit"])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'helper_execution_audit'
+
+test/test_b3_full_context_synthetic_fixture.py:89: KeyError</failure></testcase></testsuite></testsuites>

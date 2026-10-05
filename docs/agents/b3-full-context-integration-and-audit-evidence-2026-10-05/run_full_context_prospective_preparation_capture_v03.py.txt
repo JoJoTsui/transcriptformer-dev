@@ -1,0 +1,106 @@
+"""Capture a genuine zero-outcome preparation CLI operation, without authority."""
+
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+
+
+def main():
+    base = Path("runs/b3_feasibility/20261005")
+    prefix = base / "full_context_prospective_synthetic_preparation_v03"
+    output = base / "full_context_prospective_synthetic_fixture_v03"
+    request = base / "full_context_prospective_synthetic_preparation_request_v03.json"
+    body = json.loads(request.read_bytes())
+    sources = dict(body["consumer_file_sha256"])
+    env = {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "TF_RUN_REAL_MODEL_TESTS": "0",
+        "MPLCONFIGDIR": "/tmp/b3-preparation-matplotlib-20261005",
+    }
+    supervisor = Path(str(prefix) + "_supervisor")
+    command = [
+        ".venv/bin/python",
+        "scripts/supervise_b3_pilot.py",
+        "--run-dir",
+        str(supervisor),
+        "--max-wall-seconds",
+        "950",
+        "--max-rss-gib",
+        "4",
+        "--min-host-ram-gib",
+        "4",
+        "--min-disk-gib",
+        "20",
+        "--",
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        str(prefix) + "_gnu_time.txt",
+        ".venv/bin/python",
+        "scripts/prepare_b3_full_context_synthetic_fixture.py",
+        "--request",
+        str(request),
+        "--output",
+        str(output),
+        "--max-seconds",
+        "900",
+    ]
+    head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    invocation = {
+        "command": command,
+        "environment_overrides": env,
+        "head": head,
+        "source_sha256": sources,
+        "request_sha256": hashlib.sha256(request.read_bytes()).hexdigest(),
+        "operation": "genuine_prospective_synthetic_inputs_only",
+        "source_admission_or_runtime_authority_granted": False,
+        "scientific_acceptance": False,
+    }
+    with Path(str(prefix) + "_invocation.json").open("x") as handle:
+        json.dump(invocation, handle, indent=2)
+        handle.write("\n")
+    assert not output.exists() and not supervisor.exists()
+    began = time.monotonic()
+    with Path(str(prefix) + "_driver_stdout.txt").open("xb") as stdout:
+        with Path(str(prefix) + "_driver_stderr.txt").open("xb") as stderr:
+            result = subprocess.run(command, env={**os.environ, **env}, stdout=stdout, stderr=stderr)
+    elapsed = time.monotonic() - began
+    after = {path: hashlib.sha256(Path(path).read_bytes()).hexdigest() for path in sources}
+    record = {
+        "supervisor_exit_code": result.returncode,
+        "driver_elapsed_seconds": elapsed,
+        "source_sha256_after": after,
+        "sources_unchanged": after == sources,
+        "head_after": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+        "complete_source_admission_or_runtime_authority": False,
+    }
+    if result.returncode == 0:
+        final = json.loads((supervisor / "producer.log").read_text().splitlines()[-1])
+        actual = json.loads((output / "complete.json").read_bytes())
+        assert final["result"] == actual
+        record["complete_public_return_seconds"] = final["complete_public_return_seconds"]
+        record["prepared_complete_marker"] = {
+            "path": str((output / "complete.json").resolve()),
+            "sha256": hashlib.sha256((output / "complete.json").read_bytes()).hexdigest(),
+            "bytes": (output / "complete.json").stat().st_size,
+        }
+        record["executed_repository_sources"] = actual["executed_repository_sources"]
+        assert after == sources and head == record["head_after"]
+        assert actual["status"] == "complete_synthetic_prospective_inputs_only"
+    with Path(str(prefix) + "_result.json").open("x") as handle:
+        json.dump(record, handle, indent=2)
+        handle.write("\n")
+    print(json.dumps({k: v for k, v in record.items() if k != "source_sha256_after"}, indent=2))
+    return result.returncode
+
+
+if __name__ == "__main__":
+    sys.exit(main())

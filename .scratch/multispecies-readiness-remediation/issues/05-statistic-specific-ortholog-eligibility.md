@@ -1,6 +1,35 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
-## Current native input checkpoint — 2026-10-05
+## Current execution audit checkpoint — 2026-10-05
+
+Preparation **`80ba78b`** (`e1728af2…`, tests `c2290ba7…`) passes its complete
+**ten-case file** after a genuine missing-field RED. Actual private helper
+execution and import observations remain separate from the retained source set.
+The persistent v03 CLI completes in **27.52854 public seconds**, preserving
+70 source hashes, and records 45 executed bodies / 587 import calls / 360 sites
+(318 top-level, 42 deferred). The audit excludes ordinary import bodies, caller
+and cleanup; source/runtime admission and numeric census remain unavailable.
+
+Ruff check/format, configured mypy and diff checks pass. JUnit is 46.018 seconds,
+GNU peak process RSS 769,332 KiB; all 233 prior Python bytes and Git modes stay
+unchanged. Test commit **`b6bda9c`** targets the actual observed fsync summary;
+three corrected controls pass at their retained preformat test bytes. The
+publisher source remains `a6316ae5…`. The earlier broader capture is interrupted,
+not a complete result. Fresh collection confirms 207 cases (102/10/95); complete
+current publisher/three-file/repository runtime acceptance remains pending.
+
+See the [exact new evidence](../../../docs/agents/b3-full-context-integration-and-audit-evidence-2026-10-05/manifest.json). Fresh independent source review remains
+pending at the agent service usage limit. Controlled producer/issuer/authority,
+registration, comparison/v4, effects, complete cost and reportable uncertainty
+remain unfinished. **05 stays open; 11 excluded; ten bounded engineering
+closures unchanged.** Actual pilot coverage remains 32.54%, necessary jointly
+supported draws 0/2,000, with reporting veto and null intervals.
+
+- [x] Capture actual private preparation helper execution/import observations
+  without granting source or runtime authority.
+
+
+## Previous native input checkpoint — 2026-10-05
 
 Preparation **`276eaa6`** (`816de814…`, tests `c9daddd5…`) passes its complete
 **nine-case file**. The new regression exposes the earlier vocabulary's missing

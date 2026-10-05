@@ -1,0 +1,140 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_real_summary_fsync_mutation_seam_has_no_complete_publication[generated] _
+
+tmp_path = PosixPath('/tmp/b3-publisher_fsync_callback_reproduction_red01/test_real_summary_fsync_mutati0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdb9e3b6b50>
+target = 'generated'
+
+    @pytest.mark.parametrize("target", ["source", "generated", "marker"])
+    def test_real_summary_fsync_mutation_seam_has_no_complete_publication(tmp_path, monkeypatch, target):
+        native_path, native, _entries, _full = fixture(tmp_path / "input", n_cells=129)
+        request = _request(native_path, tmp_path / "request")
+        public = _module()
+        original_fsync = os.fsync
+        changed = []
+    
+        def mutate_after_fsync(fd):
+            original_fsync(fd)
+            path = Path(os.readlink(f"/proc/self/fd/{fd}"))
+            if path.name == "summary.json" and path.parent.name == "publication" and not changed:
+                changed.append(True)
+                if target == "source":
+                    source = Path(native["csr_arrays"]["impact_bits.f64"]["path"])
+                    data = bytearray(source.read_bytes())
+                    data[7] ^= 0x80
+                    source.write_bytes(data)
+                elif target == "generated":
+                    generated = path.parent / "unit-state.json"
+                    data = bytearray(generated.read_bytes())
+                    data[0] = ord("[")
+                    generated.write_bytes(data)
+                else:
+                    path.write_bytes(
+                        path.read_bytes().replace(
+                            b'"scientific_readiness":"unavailable"', b'"scientific_readiness":"ready"'
+                        )
+                    )
+    
+        monkeypatch.setattr(os, "fsync", mutate_after_fsync)
+        output = tmp_path / "output"
+        with pytest.raises(ValueError):
+>           public.run(request, output)
+
+test/test_b3_full_context_observed.py:1050: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/publish_b3_full_context_observed.py:2337: in run
+    result = _run(request_path, output, ledger, max_seconds=max_seconds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/publish_b3_full_context_observed.py:2079: in _run
+    source = common._source_admission(request, modules, consumers, original, workspace, output, budget)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/prepare_b3_paged_native_common_source.py:658: in _source_admission
+    admitted = modules["context"].run(
+scripts/prepare_b3_paged_native_context.py:408: in run
+    _write(staging / "summary.json", summary, inputs)
+scripts/bootstrap_b3_streamed.py:194: in _write
+    os.fsync(stream.fileno())
+test/test_b3_full_context_observed.py:1037: in mutate_after_fsync
+    data = bytearray(generated.read_bytes())
+                     ^^^^^^^^^^^^^^^^^^^^^^
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/pathlib.py:1050: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/b3-publisher_fsync_callback_reproduction_red01/test_real_summary_fsync_mutati0/.b3-full-context-observed-bjtpfplp/.b3-streamed-bootstrap-26ngpv_g/publication/unit-state.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/b3-publisher_fsync_callback_reproduction_red01/test_real_summary_fsync_mutati0/.b3-full-context-observed-bjtpfplp/.b3-streamed-bootstrap-26ngpv_g/publication/unit-state.json'
+
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/pathlib.py:1044: FileNotFoundError
+__ test_real_summary_fsync_mutation_seam_has_no_complete_publication[marker] ___
+
+tmp_path = PosixPath('/tmp/b3-publisher_fsync_callback_reproduction_red01/test_real_summary_fsync_mutati1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdb9cdf1510>
+target = 'marker'
+
+    @pytest.mark.parametrize("target", ["source", "generated", "marker"])
+    def test_real_summary_fsync_mutation_seam_has_no_complete_publication(tmp_path, monkeypatch, target):
+        native_path, native, _entries, _full = fixture(tmp_path / "input", n_cells=129)
+        request = _request(native_path, tmp_path / "request")
+        public = _module()
+        original_fsync = os.fsync
+        changed = []
+    
+        def mutate_after_fsync(fd):
+            original_fsync(fd)
+            path = Path(os.readlink(f"/proc/self/fd/{fd}"))
+            if path.name == "summary.json" and path.parent.name == "publication" and not changed:
+                changed.append(True)
+                if target == "source":
+                    source = Path(native["csr_arrays"]["impact_bits.f64"]["path"])
+                    data = bytearray(source.read_bytes())
+                    data[7] ^= 0x80
+                    source.write_bytes(data)
+                elif target == "generated":
+                    generated = path.parent / "unit-state.json"
+                    data = bytearray(generated.read_bytes())
+                    data[0] = ord("[")
+                    generated.write_bytes(data)
+                else:
+                    path.write_bytes(
+                        path.read_bytes().replace(
+                            b'"scientific_readiness":"unavailable"', b'"scientific_readiness":"ready"'
+                        )
+                    )
+    
+        monkeypatch.setattr(os, "fsync", mutate_after_fsync)
+        output = tmp_path / "output"
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+test/test_b3_full_context_observed.py:1049: Failed
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/publisher_fsync_callback_reproduction_red01.xml -
+=========================== short test summary info ============================
+FAILED test/test_b3_full_context_observed.py::test_real_summary_fsync_mutation_seam_has_no_complete_publication[generated]
+FAILED test/test_b3_full_context_observed.py::test_real_summary_fsync_mutation_seam_has_no_complete_publication[marker]
+2 failed, 2 warnings in 142.52s (0:02:22)
