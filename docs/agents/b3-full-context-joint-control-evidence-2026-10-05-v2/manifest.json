@@ -1,0 +1,211 @@
+{
+  "schema": "b3_full_context_joint_control_source_key_supplement_v1",
+  "scope": "Actual strict source-key refusal and complete current 56-case transport prerequisites; no normative producer/source/run/science acceptance",
+  "predecessor_manifest_sha256": "035225e5a62369a59b035fddc72bde2a5629a704be77b4d3d8622e9a9e0e7654",
+  "current_same_capture_cases": 56,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "complete_numeric_guard_or_census": false,
+  "ticket05_closed": false,
+  "ticket11_excluded": true,
+  "artifacts": [
+    {
+      "path": "capture_start_permit_joint_draft_v05.py.txt",
+      "sha256": "a35537b875e4b21a8e7e49efdddf846eb93a2a46d3fa034c7064233fd2c59681",
+      "bytes": 5716,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v05.py"
+    },
+    {
+      "path": "issue_b3_full_context_controlled_draft_v06.py.txt",
+      "sha256": "02679d1fa334dd62c8d4b7f49fdef785e68c75754a906517414363dd84a9370d",
+      "bytes": 24083,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v06.py"
+    },
+    {
+      "path": "issuer_key_green01.xml",
+      "sha256": "4b72e03dc1a82f56cb39dd36982abd9e73fec6442c2fcc5d42563763877c66bf",
+      "bytes": 418,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_key_green01.xml"
+    },
+    {
+      "path": "issuer_key_red01.xml",
+      "sha256": "ddf199b0ffcc2e4786e4b25d8dee4df15e75558057885a677bfbe365d53a1560",
+      "bytes": 1174,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_key_red01.xml"
+    },
+    {
+      "path": "issuer_key_red01_issue_b3_full_context_controlled_draft_v06.py.txt",
+      "sha256": "643ce745aaf1a97f4c43f354ff76cd5d08baee394e3667a61e9d28c2eba14613",
+      "bytes": 24052,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_key_red01_issue_b3_full_context_controlled_draft_v06.py.txt"
+    },
+    {
+      "path": "issuer_key_red01_sources.json",
+      "sha256": "664b6c5c01aca42cdb7fbdcc5df635fd275ae8142ea205ea50dbdef345d7965e",
+      "bytes": 515,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_key_red01_sources.json"
+    },
+    {
+      "path": "issuer_key_red01_test_issuer_source_key_draft_v01.py.txt",
+      "sha256": "9069dcfa4b72c733913b231b93fe5bfba5db85863c124845f0e32d9f7a976c0c",
+      "bytes": 915,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issuer_key_red01_test_issuer_source_key_draft_v01.py.txt"
+    },
+    {
+      "path": "produce_b3_synthetic_native_stored_draft_v03.py.txt",
+      "sha256": "600af1f7494b5d1314564d1f11fecc79c0e529198b57c899ce37b2117edf8d0a",
+      "bytes": 8421,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v03.py"
+    },
+    {
+      "path": "source_key_fields02.xml",
+      "sha256": "36129a0cf831a6505add0aae52b616bdd26df6928107df47834b02dc31de1efc",
+      "bytes": 1054,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_key_fields02.xml"
+    },
+    {
+      "path": "source_key_green01.xml",
+      "sha256": "433b071daef3d5da30ea155045297598cd15e83fef2c27166bc307bfdec489bc",
+      "bytes": 434,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_key_green01.xml"
+    },
+    {
+      "path": "source_key_green01_produce_b3_synthetic_native_stored_draft_v03.py.txt",
+      "sha256": "600af1f7494b5d1314564d1f11fecc79c0e529198b57c899ce37b2117edf8d0a",
+      "bytes": 8421,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_key_green01_produce_b3_synthetic_native_stored_draft_v03.py.txt"
+    },
+    {
+      "path": "source_key_green01_sources.json",
+      "sha256": "439d745571fd9a631a191531d53a962c7937d9b30f403c832852ca816f3f2b5d",
+      "bytes": 547,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_key_green01_sources.json"
+    },
+    {
+      "path": "source_key_green01_test_producer_source_key_transport_draft_v01.py.txt",
+      "sha256": "b0d6de105a93eb4cb730900f2931c2ac7717c58efe86b80d22405538839df51d",
+      "bytes": 1460,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_key_green01_test_producer_source_key_transport_draft_v01.py.txt"
+    },
+    {
+      "path": "source_key_red01.xml",
+      "sha256": "94fc51ca98fcea16e8ad73bbbb4fa55f61430b695c2d7d28c96e8aec36a8d926",
+      "bytes": 1363,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_key_red01.xml"
+    },
+    {
+      "path": "source_key_red01_produce_b3_synthetic_native_stored_draft_v03.py.txt",
+      "sha256": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+      "bytes": 8189,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_key_red01_produce_b3_synthetic_native_stored_draft_v03.py.txt"
+    },
+    {
+      "path": "source_key_red01_sources.json",
+      "sha256": "f2f898ca4febef091a6e61ff758c70bc5d669f97cd8e73250a9b6c54e8ffb6d3",
+      "bytes": 543,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_key_red01_sources.json"
+    },
+    {
+      "path": "source_key_red01_test_producer_source_key_transport_draft_v01.py.txt",
+      "sha256": "b0d6de105a93eb4cb730900f2931c2ac7717c58efe86b80d22405538839df51d",
+      "bytes": 1460,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/source_key_red01_test_producer_source_key_transport_draft_v01.py.txt"
+    },
+    {
+      "path": "start_permit_joint_draft_final05.xml",
+      "sha256": "b2041e49571d40c9b3e2c023904db7575c6feacc4549b4bcadd3b127b447a9f0",
+      "bytes": 11178,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_joint_draft_final05.xml"
+    },
+    {
+      "path": "start_permit_joint_draft_final05_gnu_time.txt",
+      "sha256": "b18b34f1b6c94332e5e3f806b4b3402225037d27594eb2f9a3c0708c2ec1fd2a",
+      "bytes": 908,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_joint_draft_final05_gnu_time.txt"
+    },
+    {
+      "path": "start_permit_joint_draft_final05_invocation.json",
+      "sha256": "4c79908cd821374a1bd9ed369c67ea35df2b5fd4ae271811b5ecbcfeca5c0533",
+      "bytes": 2968,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_joint_draft_final05_invocation.json"
+    },
+    {
+      "path": "start_permit_joint_draft_final05_result.json",
+      "sha256": "fa362987be1dc1b044e2e8b104e32e59a96f39ee5033b4504a3865e74fa214ba",
+      "bytes": 15035,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_joint_draft_final05_result.json"
+    },
+    {
+      "path": "start_permit_joint_draft_final05_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_joint_draft_final05_stderr.txt"
+    },
+    {
+      "path": "start_permit_joint_draft_final05_stdout.txt",
+      "sha256": "5e670b26c8c4ddbdbf752cf2cbd9305ed89904bd16b7fb33ef932aad546fd7f8",
+      "bytes": 1004,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_joint_draft_final05_stdout.txt"
+    },
+    {
+      "path": "start_permit_joint_draft_final05_worker.json",
+      "sha256": "fc140d0c7281a652873338853a2d65bbde70511f69e7d5631bec742a74a9efd2",
+      "bytes": 4626,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_joint_draft_final05_worker.json"
+    },
+    {
+      "path": "start_permit_joint_static05.json",
+      "sha256": "d0c321c12fc55312aadcac08c324f33082ab83ba3625d433fc97538ade0929d7",
+      "bytes": 7116,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/start_permit_joint_static05.json"
+    },
+    {
+      "path": "test_bound_deadline_transport_draft_v02.py.txt",
+      "sha256": "bc95b3e176446ed9682854cc0499ff7eb8ba0ea924c5ce4f781c74a81cdd3f14",
+      "bytes": 4169,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_bound_deadline_transport_draft_v02.py"
+    },
+    {
+      "path": "test_issuer_bound_exchange_draft_v03.py.txt",
+      "sha256": "45d5b81ba8a2bc5135b9b97ddba78acd437b01761e5d2728bbe12a3d00a74e2a",
+      "bytes": 6941,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_bound_exchange_draft_v03.py"
+    },
+    {
+      "path": "test_issuer_process_binding_draft_v04.py.txt",
+      "sha256": "e3776fd9fd66d7f5b6f65fc1b6c1dcf90e073e92f8c3837da1724ef0f7e25e61",
+      "bytes": 6415,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v04.py"
+    },
+    {
+      "path": "test_issuer_reservation_draft_v06.py.txt",
+      "sha256": "11e5ff70113fc5323b022598caef52c856f0a085129bda82a7a96d523c7f5c00",
+      "bytes": 15913,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v06.py"
+    },
+    {
+      "path": "test_issuer_source_key_draft_v01.py.txt",
+      "sha256": "d76df4314ff8a9f7aa0d534332207b982a0fcbec0791a6ff71a9afb50563c7ff",
+      "bytes": 1060,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_source_key_draft_v01.py"
+    },
+    {
+      "path": "test_producer_source_key_transport_draft_v01.py.txt",
+      "sha256": "7d5bcda1666be1ca224906820e1a8d05daaff2b8c083c457eb6e2b8a0e7fe752",
+      "bytes": 2210,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_producer_source_key_transport_draft_v01.py"
+    },
+    {
+      "path": "test_start_permit_joint_draft_v05.py.txt",
+      "sha256": "dd7a297bde47027a85daa5bf08765c63639ec5bb11fc914874466d3aea26c5b4",
+      "bytes": 10637,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_joint_draft_v05.py"
+    },
+    {
+      "path": "test_start_permit_transport_draft_v03.py.txt",
+      "sha256": "5511d67356bfaa4e253ec9016b96029e4f96964b76ac9254f0d1376b0e6d5f86",
+      "bytes": 16231,
+      "original_local_path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v03.py"
+    }
+  ]
+}

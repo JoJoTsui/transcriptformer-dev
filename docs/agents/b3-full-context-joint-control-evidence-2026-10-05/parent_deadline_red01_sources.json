@@ -1,0 +1,12 @@
+[
+  {
+    "path": "issue_b3_full_context_controlled_draft_v05.py",
+    "sha256": "7025adeaf2bc965154684e58e63f27b0c1ef1ecf9a3fa8e63ae058e83280124a",
+    "snapshot": "runs/b3_feasibility/20261005/parent_deadline_red01_issue_b3_full_context_controlled_draft_v05.py.txt"
+  },
+  {
+    "path": "test_bound_deadline_transport_draft_v01.py",
+    "sha256": "c54f1f53f5858d2c37cf00f1f7a2102e06d299bcd2bed50a72c79bd3752a08b1",
+    "snapshot": "runs/b3_feasibility/20261005/parent_deadline_red01_test_bound_deadline_transport_draft_v01.py.txt"
+  }
+]

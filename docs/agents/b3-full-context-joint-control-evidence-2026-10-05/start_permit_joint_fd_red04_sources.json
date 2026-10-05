@@ -1,0 +1,17 @@
+[
+  {
+    "path": "issue_b3_full_context_controlled_draft_v02.py",
+    "sha256": "16ac5ae5037ba67ed8b83031a02acfbb5dfbb5bc513deb98f5e02d72f731d6bd",
+    "snapshot": "runs/b3_feasibility/20261005/joint_fd_red04_issue_b3_full_context_controlled_draft_v02.py.txt"
+  },
+  {
+    "path": "test_start_permit_joint_draft_v01.py",
+    "sha256": "39509c1e7e975e96bade4233ff07b2c339d1966094b33bdd25f27b5eac14a616",
+    "snapshot": "runs/b3_feasibility/20261005/joint_fd_red04_test_start_permit_joint_draft_v01.py.txt"
+  },
+  {
+    "path": "produce_b3_synthetic_native_stored_draft_v02.py",
+    "sha256": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "snapshot": "runs/b3_feasibility/20261005/joint_fd_red04_produce_b3_synthetic_native_stored_draft_v02.py.txt"
+  }
+]

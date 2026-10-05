@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="3.282" timestamp="2026-10-05T20:28:25.085359+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_start_permit_joint_draft_v01" name="test_foreign_socket_replacement_at_duplicate_is_never_sent_to_or_closed" time="2.007"><failure message="TimeoutError: Original joint transport deadline reached before acknowledgement">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-120/test_foreign_socket_replacemen0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7852f64fe7d0&gt;
+
+    def test_foreign_socket_replacement_at_duplicate_is_never_sent_to_or_closed(tmp_path, monkeypatch):
+        attempt = tmp_path / "duplicate-replacement-attempt"
+        attempt.mkdir()
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        foreign_sender, foreign_receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        real_dup, real_close, real_stat = os.dup, os.close, os.fstat
+        replacement = None
+    
+        def replace_channel_duplicate(fd):
+            nonlocal replacement
+            if fd != sender.fileno():
+                return real_dup(fd)
+            born = real_dup(fd)
+            real_close(born)
+            replacement = real_dup(foreign_sender.fileno())
+            assert replacement == born
+            return replacement
+    
+        try:
+            public = issuer()
+            with monkeypatch.context() as patch:
+                patch.setattr(public.os, "dup", replace_channel_duplicate)
+                with pytest.raises(ValueError, match="descriptor|channel|socket"):
+&gt;                   public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **arguments(tmp_path, os.getpid()))
+
+runs/b3_feasibility/20261005/test_start_permit_joint_draft_v01.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v02.py:331: in reserve_and_exchange_transport_probe
+    raise first_error
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+attempt_directory = PosixPath('/tmp/pytest-of-joey/pytest-120/test_foreign_socket_replacemen0/duplicate-replacement-attempt')
+control_fd = 12
+
+    def reserve_and_exchange_transport_probe(
+        attempt_directory,
+        control_fd,
+        *,
+        attempt_id,
+        source_key,
+        registration_sha256,
+        start_sha256,
+        producer_pid,
+        start_nonce,
+        permit_nonce,
+        max_seconds=900,
+    ):
+        """Reserve then exchange a real transport-only message; grant no authority."""
+        started = time.monotonic()
+        if type(max_seconds) not in (int, float) or not math.isfinite(max_seconds) or not 0 &lt; max_seconds &lt;= 900:
+            raise ValueError("Joint transport deadline must be positive and at most 900 seconds")
+        deadline = started + max_seconds
+        if type(control_fd) is not int or control_fd &lt; 0:
+            raise ValueError("Require the original issuer-owned socket channel")
+        original = os.fstat(control_fd)
+        if not stat.S_ISSOCK(original.st_mode):
+            raise ValueError("Require the original issuer-owned socket channel")
+        remaining = deadline - time.monotonic()
+        if remaining &lt;= 0:
+            raise TimeoutError("Original joint transport deadline reached before reservation")
+        reservation = reserve_one_use_transport_probe(
+            attempt_directory,
+            attempt_id=attempt_id,
+            source_key=source_key,
+            registration_sha256=registration_sha256,
+            start_sha256=start_sha256,
+            producer_pid=producer_pid,
+            start_nonce=start_nonce,
+            permit_nonce=permit_nonce,
+            max_seconds=remaining,
+        )
+        # The durable file remains consumed on every later refusal; no rollback,
+        # success marker or computation transition is supplied by this probe.
+        def remaining_time():
+            value = deadline - time.monotonic()
+            if value &lt;= 0:
+                raise TimeoutError("Original joint transport deadline reached")
+            return value
+    
+        remaining_time()
+        duplicate = os.dup(control_fd)
+        try:
+            channel = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET, fileno=duplicate)
+        except BaseException:
+            try:
+                current = _BIRTH_FSTAT(duplicate)
+                if (current.st_dev, current.st_ino) == (original.st_dev, original.st_ino):
+                    _TERMINAL_CLOSE(duplicate)
+            except BaseException:
+                pass
+            raise
+        first_error = None
+        try:
+            if channel.getsockopt(socket.SOL_SOCKET, socket.SO_TYPE) != socket.SOCK_SEQPACKET:
+                raise ValueError("Require the original sequenced issuer socket channel")
+            message = {
+                "schema": "b3_full_context_live_permit_channel_v1",
+                "attempt_id": attempt_id,
+                "source_key": source_key,
+                "start_nonce": start_nonce,
+                "registration_sha256": registration_sha256,
+                "start_sha256": start_sha256,
+                "producer_pid": producer_pid,
+                "permit_nonce": permit_nonce,
+            }
+            raw = json.dumps(message, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+            if len(raw) &gt; 8192:
+                raise ValueError("Joint channel message exceeds metadata bound")
+            with selectors.DefaultSelector() as selector:
+                selector.register(channel, selectors.EVENT_WRITE)
+                if not selector.select(remaining_time()):
+                    raise TimeoutError("Original joint transport deadline reached before send")
+                remaining_time()
+                if channel.send(raw, socket.MSG_DONTWAIT) != len(raw):
+                    raise ValueError("Joint channel message was not sent completely")
+                selector.modify(channel, selectors.EVENT_READ)
+                if not selector.select(remaining_time()):
+&gt;                   raise TimeoutError("Original joint transport deadline reached before acknowledgement")
+E                   TimeoutError: Original joint transport deadline reached before acknowledgement
+
+runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v02.py:274: TimeoutError</failure></testcase></testsuite></testsuites>

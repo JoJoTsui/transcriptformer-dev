@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.349" timestamp="2026-10-05T20:40:16.717960+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_issuer_bound_exchange_draft_v01" name="test_actual_original_child_binding_is_checked_before_one_use_exchange" time="0.041"><failure message="AttributeError: module 'issuer_bound_exchange_draft' has no attribute 'inspect_then_exchange_transport_probe'">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-129/test_actual_original_child_bin0')
+
+    def test_actual_original_child_binding_is_checked_before_one_use_exchange(tmp_path):
+        attempt = tmp_path / "bound-attempt"
+        attempt.mkdir()
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        program = """
+    import importlib.util,json,os,sys
+    s=importlib.util.spec_from_file_location('bound_producer',sys.argv[1])
+    p=importlib.util.module_from_spec(s);s.loader.exec_module(p)
+    print('ready',flush=True)
+    r=p.await_computation_permit(int(sys.argv[2]),attempt_id='bound-attempt',source_key=sys.argv[3],
+     start_nonce='bound-start',registration_sha256='a'*64,start_sha256='b'*64,
+     expected_issuer_pid=int(sys.argv[4]),max_seconds=2)
+    print(json.dumps({'pid':os.getpid(),'native_operation_authorized':r['native_operation_authorized']}))
+    """
+        argv=[sys.executable,'-u','-c',program,str(BASE/'produce_b3_synthetic_native_stored_draft_v02.py'),
+              str(receiver.fileno()),str(tmp_path/'native-source'),str(os.getpid())]
+        child=None
+        try:
+            child=subprocess.Popen(argv,cwd=tmp_path,pass_fds=(receiver.fileno(),),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            receiver.close()
+            assert child.stdout.readline()==b'ready\n'
+&gt;           record=issuer().inspect_then_exchange_transport_probe(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                attempt,sender.fileno(),attempt_id='bound-attempt',source_key=str(tmp_path/'native-source'),
+                registration_sha256='a'*64,start_sha256='b'*64,producer_pid=child.pid,
+                start_nonce='bound-start',permit_nonce='bound-permit',expected_argv=argv,expected_cwd=str(tmp_path),max_seconds=2,
+            )
+E           AttributeError: module 'issuer_bound_exchange_draft' has no attribute 'inspect_then_exchange_transport_probe'
+
+runs/b3_feasibility/20261005/test_issuer_bound_exchange_draft_v01.py:42: AttributeError</failure></testcase></testsuite></testsuites>

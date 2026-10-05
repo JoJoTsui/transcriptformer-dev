@@ -1,0 +1,172 @@
+{
+  "actual_gnu_exit_code": 0,
+  "driver_command_and_raw_stdio_close_seconds": 2.8205757930118125,
+  "driver_elapsed_scope": "supervised command and raw stdout/stderr close only; excludes post-command source checks, result IO and final driver return",
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v02.py": "ddaacb2a137dee4af66e3ce5a8aabe537127dce448e28070787534ae2c7747d9",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_joint_draft_v01.py": "8257a3d7570dec2408d31714355f8a64b7080a552b2579aba494977fda70ac24",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v02.py": "6727b1321501612f6e167767ee30c3fdf4149573939f10df964b2ab54e10f039",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v01.py": "45aa018d19b26481b3b4d69ba9f7ae83ec1808c86fd3865b07186ba75d3244ec"
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v02.py": "ddaacb2a137dee4af66e3ce5a8aabe537127dce448e28070787534ae2c7747d9",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_joint_draft_v01.py": "8257a3d7570dec2408d31714355f8a64b7080a552b2579aba494977fda70ac24",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v02.py": "6727b1321501612f6e167767ee30c3fdf4149573939f10df964b2ab54e10f039",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v01.py": "45aa018d19b26481b3b4d69ba9f7ae83ec1808c86fd3865b07186ba75d3244ec"
+  },
+  "junit_suites": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "32",
+      "time": "2.276",
+      "timestamp": "2026-10-05T20:31:47.794434+08:00",
+      "hostname": "Conundrum"
+    }
+  ],
+  "junit_case_identities": [
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_joint_draft_v01",
+      "test_real_reservation_precedes_single_child_handshake_and_remains_consumed"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_joint_draft_v01",
+      "test_missing_acknowledgement_refuses_and_keeps_reservation_consumed"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_joint_draft_v01",
+      "test_foreign_duplicate_or_wrong_type_acknowledgement_is_refused[{\"schema\":\"b3_full_context_live_permit_ack_v1\",\"attempt_id\":\"other-attempt\",\"start_nonce\":\"joint-start-01\",\"producer_pid\":1,\"permit_nonce\":\"joint-permit-01\"}]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_joint_draft_v01",
+      "test_foreign_duplicate_or_wrong_type_acknowledgement_is_refused[{\"schema\":\"b3_full_context_live_permit_ack_v1\",\"attempt_id\":\"joint-attempt-01\",\"attempt_id\":\"joint-attempt-01\",\"start_nonce\":\"joint-start-01\",\"producer_pid\":1,\"permit_nonce\":\"joint-permit-01\"}]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_joint_draft_v01",
+      "test_foreign_duplicate_or_wrong_type_acknowledgement_is_refused[{\"schema\":\"b3_full_context_live_permit_ack_v1\",\"attempt_id\":\"joint-attempt-01\",\"start_nonce\":\"joint-start-01\",\"producer_pid\":true,\"permit_nonce\":\"joint-permit-01\"}]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_joint_draft_v01",
+      "test_original_joint_deadline_includes_durable_reservation_and_never_releases_late"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_joint_draft_v01",
+      "test_foreign_socket_replacement_at_duplicate_is_never_sent_to_or_closed"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_joint_draft_v01",
+      "test_joint_close_error_is_retained_and_owned_duplicate_is_drained"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_issuer_reservation_draft_v02",
+      "test_crash_after_actual_reservation_does_not_enable_a_second_release"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_issuer_reservation_draft_v02",
+      "test_failed_reservation_remains_consumed_preserves_first_error_and_drains_owned_fds"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_issuer_reservation_draft_v02",
+      "test_reservation_bytes_changed_during_primary_close_are_refused_and_stay_consumed"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_issuer_reservation_draft_v02",
+      "test_original_reservation_deadline_includes_attempt_directory_admission"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_issuer_reservation_draft_v02",
+      "test_concurrent_actual_issuers_cannot_reserve_one_attempt_twice"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_issuer_reservation_draft_v02",
+      "test_foreign_attempt_directory_replacement_is_preserved_and_refused"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_issuer_reservation_draft_v02",
+      "test_attempt_replaced_during_open_refuses_before_writing_and_closes_its_new_fd"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_issuer_reservation_draft_v02",
+      "test_initial_descriptor_check_refusal_closes_its_new_directory_fd"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_issuer_reservation_draft_v02",
+      "test_returned_reservation_digest_binds_bytes_after_all_fallible_resource_checks"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_issuer_reservation_draft_v02",
+      "test_noncanonical_source_key_refuses_before_caller_string_conversion"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_copied_permit_bytes_in_regular_file_cannot_enable_computation"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_real_channel_without_issuer_release_times_out_and_preserves_borrowed_fd"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_actual_channel_message_from_another_attempt_is_refused"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_actual_child_acknowledges_one_live_release_before_transport_probe_transition"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_consumed_channel_cannot_accept_another_copied_release"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_original_transport_deadline_includes_fd_admission"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_malformed_actual_channel_bytes_never_emit_acknowledgement[duplicate_field]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_malformed_actual_channel_bytes_never_emit_acknowledgement[nonfinite_value]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_malformed_actual_channel_bytes_never_emit_acknowledgement[oversized_message]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_constructor_refusal_drains_only_its_owned_duplicate[owned_duplicate]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_constructor_refusal_drains_only_its_owned_duplicate[foreign_reuse]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_completed_channel_cleanup_preserves_ownership_and_first_error[owned_close_refusal]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_completed_channel_cleanup_preserves_ownership_and_first_error[foreign_reuse_on_close]"
+    ],
+    [
+      "runs.b3_feasibility.20261005.test_start_permit_transport_draft_v02",
+      "test_completed_channel_cleanup_preserves_ownership_and_first_error[first_timeout_preserved]"
+    ]
+  ],
+  "complete_joint_transport_and_reservation_probe_checks": true,
+  "durable_start_verified": false,
+  "power_loss_durability_verified": false,
+  "channel_release_performed": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "native_operation_performed": false,
+  "model_forwards_performed": false,
+  "capture_exit_code": 0
+}

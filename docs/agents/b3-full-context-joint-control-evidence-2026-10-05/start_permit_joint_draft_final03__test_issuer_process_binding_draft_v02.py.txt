@@ -1,0 +1,158 @@
+"""Actual child argv/cwd identity before the transport seam; no authority."""
+
+import importlib.util
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+import pytest
+
+BASE = Path(__file__).resolve().parent
+
+
+def issuer():
+    spec = importlib.util.spec_from_file_location(
+        "issuer_process_binding_draft", BASE / "issue_b3_full_context_controlled_draft_v04.py"
+    )
+    public = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(public)
+    return public
+
+
+def test_original_live_child_argv_cwd_and_birth_are_observed_without_wrapper_substitution(tmp_path):
+    argv = [
+        sys.executable,
+        "-u",
+        "-c",
+        "import sys;print('child-ready',flush=True);sys.stdin.buffer.read(1)",
+        "original-literal-argument",
+    ]
+    child = subprocess.Popen(argv, cwd=tmp_path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    try:
+        assert child.stdout.readline() == b"child-ready\n"
+        observed = issuer().inspect_child_process_transport_probe(
+            child.pid, expected_argv=argv, expected_cwd=str(tmp_path), max_seconds=2
+        )
+        assert observed["pid"] == child.pid
+        assert observed["pid"] != os.getpid()
+        assert observed["argv"] == argv
+        assert observed["cwd"] == str(tmp_path)
+        assert type(observed["start_ticks"]) is int and observed["start_ticks"] > 0
+        assert observed["transport_only"] is True
+        assert observed["native_operation_authorized"] is False
+        assert observed["source_admission_granted"] is False
+        assert observed["runtime_admission_granted"] is False
+        child.stdin.write(b"x")
+        child.stdin.flush()
+        child.communicate(timeout=2)
+        assert child.returncode == 0
+    finally:
+        if child.poll() is None:
+            child.kill()
+            child.communicate()
+
+
+@pytest.mark.parametrize("different", ["argv", "cwd", "parent", "birth"])
+def test_wrong_original_child_binding_is_refused(tmp_path, different):
+    argv = [sys.executable, "-u", "-c", "import sys;print('ready',flush=True);sys.stdin.buffer.read(1)", "original"]
+    child = subprocess.Popen(argv, cwd=tmp_path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    try:
+        assert child.stdout.readline() == b"ready\n"
+        kw = dict(expected_argv=argv, expected_cwd=str(tmp_path), max_seconds=2)
+        if different == "argv":
+            kw["expected_argv"] = argv[:-1] + ["changed"]
+        elif different == "cwd":
+            other = tmp_path / "different-cwd"
+            other.mkdir()
+            kw["expected_cwd"] = str(other)
+        elif different == "parent":
+            kw["expected_parent_pid"] = child.pid
+        else:
+            kw["expected_start_ticks"] = 1
+        with pytest.raises(ValueError, match="(argv|cwd|parent|birth).*differs"):
+            issuer().inspect_child_process_transport_probe(child.pid, **kw)
+        assert child.poll() is None
+    finally:
+        if child.poll() is None:
+            child.kill()
+        child.communicate(timeout=2)
+
+
+def test_completed_child_cannot_supply_live_identity(tmp_path):
+    argv = [sys.executable, "-c", "pass"]
+    child = subprocess.Popen(argv, cwd=tmp_path)
+    child.wait(timeout=2)
+    with pytest.raises((FileNotFoundError, ProcessLookupError, ValueError)):
+        issuer().inspect_child_process_transport_probe(
+            child.pid, expected_argv=argv, expected_cwd=str(tmp_path), max_seconds=2
+        )
+
+
+def test_process_metadata_reads_cannot_reset_original_deadline(tmp_path, monkeypatch):
+    import time
+
+    argv = [sys.executable, "-u", "-c", "import sys;print('ready',flush=True);sys.stdin.buffer.read(1)"]
+    child = subprocess.Popen(argv, cwd=tmp_path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    real_open, real_clock = Path.open, time.monotonic
+    elapsed = 0
+
+    def overdue_metadata_open(path, *args, **kwargs):
+        nonlocal elapsed
+        handle = real_open(path, *args, **kwargs)
+        if str(path) == "/proc/" + str(child.pid) + "/cmdline":
+            elapsed = 901
+        return handle
+
+    try:
+        assert child.stdout.readline() == b"ready\n"
+        public = issuer()
+        with monkeypatch.context() as patch:
+            patch.setattr(Path, "open", overdue_metadata_open)
+            patch.setattr(time, "monotonic", lambda: real_clock() + elapsed)
+            with pytest.raises(TimeoutError, match="deadline"):
+                public.inspect_child_process_transport_probe(
+                    child.pid, expected_argv=argv, expected_cwd=str(tmp_path), max_seconds=2
+                )
+        assert elapsed == 901
+        assert child.poll() is None
+    finally:
+        if child.poll() is None:
+            child.kill()
+        child.communicate(timeout=2)
+
+
+def test_child_changes_cwd_during_observation_is_refused(tmp_path, monkeypatch):
+    other = tmp_path / "changed"
+    other.mkdir()
+    program = "import os,sys;print('ready',flush=True);sys.stdin.buffer.read(1);os.chdir(sys.argv[1]);print('moved',flush=True);sys.stdin.buffer.read(1)"
+    argv = [sys.executable, "-u", "-c", program, str(other)]
+    child = subprocess.Popen(argv, cwd=tmp_path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    real_readlink = os.readlink
+    changed = False
+
+    def change_child_after_first_cwd_observation(path, *args, **kwargs):
+        nonlocal changed
+        value = real_readlink(path, *args, **kwargs)
+        if str(path) == "/proc/" + str(child.pid) + "/cwd" and not changed:
+            child.stdin.write(b"x")
+            child.stdin.flush()
+            assert child.stdout.readline() == b"moved\n"
+            changed = True
+        return value
+
+    try:
+        assert child.stdout.readline() == b"ready\n"
+        public = issuer()
+        with monkeypatch.context() as patch:
+            patch.setattr(public.os, "readlink", change_child_after_first_cwd_observation)
+            with pytest.raises(ValueError, match="cwd|binding"):
+                public.inspect_child_process_transport_probe(
+                    child.pid, expected_argv=argv, expected_cwd=str(tmp_path), max_seconds=2
+                )
+        assert changed
+        assert real_readlink("/proc/" + str(child.pid) + "/cwd") == str(other)
+    finally:
+        if child.poll() is None:
+            child.kill()
+        child.communicate(timeout=2)

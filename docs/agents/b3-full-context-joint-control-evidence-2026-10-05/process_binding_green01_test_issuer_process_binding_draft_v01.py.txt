@@ -1,0 +1,41 @@
+"""Actual child argv/cwd identity before the transport seam; no authority."""
+
+import importlib.util
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+BASE = Path(__file__).resolve().parent
+
+
+def issuer():
+    spec = importlib.util.spec_from_file_location("issuer_process_binding_draft", BASE / "issue_b3_full_context_controlled_draft_v03.py")
+    public = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(public)
+    return public
+
+
+def test_original_live_child_argv_cwd_and_birth_are_observed_without_wrapper_substitution(tmp_path):
+    argv = [sys.executable, "-u", "-c", "import sys;print('child-ready',flush=True);sys.stdin.buffer.read(1)", "original-literal-argument"]
+    child = subprocess.Popen(argv, cwd=tmp_path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    try:
+        assert child.stdout.readline() == b"child-ready\n"
+        observed = issuer().inspect_child_process_transport_probe(child.pid, expected_argv=argv, expected_cwd=str(tmp_path), max_seconds=2)
+        assert observed["pid"] == child.pid
+        assert observed["pid"] != os.getpid()
+        assert observed["argv"] == argv
+        assert observed["cwd"] == str(tmp_path)
+        assert type(observed["start_ticks"]) is int and observed["start_ticks"] > 0
+        assert observed["transport_only"] is True
+        assert observed["native_operation_authorized"] is False
+        assert observed["source_admission_granted"] is False
+        assert observed["runtime_admission_granted"] is False
+        child.stdin.write(b"x")
+        child.stdin.flush()
+        child.communicate(timeout=2)
+        assert child.returncode == 0
+    finally:
+        if child.poll() is None:
+            child.kill()
+            child.communicate()

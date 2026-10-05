@@ -1,0 +1,33 @@
+"""Refuse source-key aliases through the actual public channel interface."""
+import importlib.util
+import json
+import os
+from pathlib import Path
+import socket
+
+import pytest
+
+BASE=Path(__file__).resolve().parent
+
+
+def producer():
+    spec=importlib.util.spec_from_file_location("producer_key_transport",BASE/"produce_b3_synthetic_native_stored_draft_v03.py")
+    public=importlib.util.module_from_spec(spec);spec.loader.exec_module(public)
+    return public
+
+
+def test_parent_component_source_key_cannot_emit_transport_acknowledgement(tmp_path):
+    sender,receiver=socket.socketpair(socket.AF_UNIX,socket.SOCK_SEQPACKET)
+    key=str(tmp_path)+"/unresolved/../source"
+    try:
+        sender.send(json.dumps({"schema":"b3_full_context_live_permit_channel_v1","attempt_id":"attempt",
+            "source_key":key,"start_nonce":"start","registration_sha256":"a"*64,"start_sha256":"b"*64,
+            "producer_pid":os.getpid(),"permit_nonce":"permit"}).encode())
+        with pytest.raises(ValueError,match="source key|canonical"):
+            producer().await_computation_permit(receiver.fileno(),attempt_id="attempt",source_key=key,start_nonce="start",
+                registration_sha256="a"*64,start_sha256="b"*64,expected_issuer_pid=os.getpid(),max_seconds=1)
+        sender.settimeout(0.03)
+        with pytest.raises(TimeoutError):sender.recv(8192)
+        assert os.fstat(receiver.fileno()).st_ino>0
+    finally:
+        sender.close();receiver.close()

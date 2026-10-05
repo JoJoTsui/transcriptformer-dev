@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.332" timestamp="2026-10-05T20:48:35.426685+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_bound_deadline_transport_draft_v01" name="test_expired_parent_deadline_refuses_before_process_or_reservation_io" time="0.010"><failure message="TypeError: inspect_then_exchange_transport_probe() got an unexpected keyword argument 'parent_deadline'">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-133/test_expired_parent_deadline_r0')
+
+    def test_expired_parent_deadline_refuses_before_process_or_reservation_io(tmp_path):
+        sender,receiver=socket.socketpair(socket.AF_UNIX,socket.SOCK_SEQPACKET)
+        attempt=tmp_path/'unused-attempt'
+        attempt.mkdir()
+        try:
+            with pytest.raises(TimeoutError,match='deadline'):
+&gt;               issuer().inspect_then_exchange_transport_probe(
+                    attempt,sender.fileno(),attempt_id='late-attempt',source_key=str(tmp_path/'source'),
+                    registration_sha256='a'*64,start_sha256='b'*64,producer_pid=os.getpid(),
+                    start_nonce='start',permit_nonce='permit',expected_argv=['uninspected'],expected_cwd=str(tmp_path),
+                    max_seconds=900,parent_deadline=time.monotonic()-1,
+                )
+E               TypeError: inspect_then_exchange_transport_probe() got an unexpected keyword argument 'parent_deadline'
+
+runs/b3_feasibility/20261005/test_bound_deadline_transport_draft_v01.py:27: TypeError</failure></testcase></testsuite></testsuites>

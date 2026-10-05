@@ -1,0 +1,12 @@
+[
+  {
+    "path": "issue_b3_full_context_controlled_draft_v03.py",
+    "sha256": "ccab5bef1b77f81699267b239112f63f0bca67a878e7b7d5be48d4792359a5d8",
+    "snapshot": "runs/b3_feasibility/20261005/process_binding_green01_issue_b3_full_context_controlled_draft_v03.py.txt"
+  },
+  {
+    "path": "test_issuer_process_binding_draft_v01.py",
+    "sha256": "2331ecbb00d07a7f7655a9ad7c624c17204878ccf29476de0f661ac8bcc89616",
+    "snapshot": "runs/b3_feasibility/20261005/process_binding_green01_test_issuer_process_binding_draft_v01.py.txt"
+  }
+]

@@ -1,5 +1,39 @@
 # Author check of control prerequisites — 2026-10-05
 
+
+## Current author check — exact 56-case source capture
+
+This remains author work. `/home/joey/.agents/skills/code-review/SKILL.md`
+explicitly requires “Both axes run as **parallel sub-agents** so they don't
+pollute each other's context”. Spec and Standards agents remain unavailable
+at their service usage limit. No independent zero-finding verdict is claimed.
+
+Current issuer `02679d1f…` and producer transport `600af1f7…` pass all 56 cases
+in one source-stable capture. Ruff check/format and configured mypy pass for
+eleven actual source/test/capture files. Real child argv/cwd/birth/parent
+observations, durable one-use reservation/ACK, foreign FD-before-send refusal,
+original absolute deadline propagation and canonical bounded source keys are
+implemented as isolated prerequisites. The FD-reuse and alias REDs remain
+original; repaired paths preserve first errors and foreign/borrowed handles.
+
+These primitives do not supply source admission, owner-created trusted attempt
+capability, normative Start/Permit adoption, whole-operation final artifact
+seals or continuous/native resource guard. Registration, computational
+transition, all-range native output/capture, complete numeric census, runtime
+acceptance/pin/Origin and bridge/v4 remain unfinished. They are still retained
+as `.py.txt` outside the canonical native execution inventory.
+
+The complete current canonical CPU suite at frozen `32f9426` now passes
+1,310/five existing skips, with all 75 files/241 source bytes and six subsets
+accounted in one fresh Linux/host-IPC run. This tests unchanged canonical code;
+it is not independent source or scientific admission. All scientific/public
+limits stay frozen, ticket05 open/ticket11 excluded and pilot veto unchanged.
+
+Evidence: [current control capture](b3-full-context-joint-control-evidence-2026-10-05-v2/manifest.json),
+[complete regression](b3-full-context-complete-cpu-evidence-2026-10-05-v5/manifest.json).
+
+## Previous author checkpoint
+
 This is an author check, not an independent Spec or Standards verdict. The
 code-review skill at `/home/joey/.agents/skills/code-review/SKILL.md` explicitly
 requires: “Both axes run as **parallel sub-agents** so they don't pollute each

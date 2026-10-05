@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.403" timestamp="2026-10-05T21:44:54.948714+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_producer_source_key_transport_draft_v01" name="test_parent_component_source_key_cannot_emit_transport_acknowledgement" time="0.010"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-137/test_parent_component_source_k0')
+
+    def test_parent_component_source_key_cannot_emit_transport_acknowledgement(tmp_path):
+        sender,receiver=socket.socketpair(socket.AF_UNIX,socket.SOCK_SEQPACKET)
+        key=str(tmp_path)+"/unresolved/../source"
+        try:
+            sender.send(json.dumps({"schema":"b3_full_context_live_permit_channel_v1","attempt_id":"attempt",
+                "source_key":key,"start_nonce":"start","registration_sha256":"a"*64,"start_sha256":"b"*64,
+                "producer_pid":os.getpid(),"permit_nonce":"permit"}).encode())
+&gt;           with pytest.raises(ValueError,match="source key|canonical"):
+E           Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+runs/b3_feasibility/20261005/test_producer_source_key_transport_draft_v01.py:26: Failed</failure></testcase></testsuite></testsuites>

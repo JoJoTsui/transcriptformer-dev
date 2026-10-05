@@ -1,0 +1,61 @@
+"""Real child identity and persistent one-use exchange in one bounded call."""
+
+import importlib.util
+import json
+import os
+from pathlib import Path
+import socket
+import subprocess
+import sys
+
+BASE = Path(__file__).resolve().parent
+
+
+def issuer():
+    spec = importlib.util.spec_from_file_location("issuer_bound_exchange_draft", BASE / "issue_b3_full_context_controlled_draft_v04.py")
+    public = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(public)
+    return public
+
+
+def test_actual_original_child_binding_is_checked_before_one_use_exchange(tmp_path):
+    attempt = tmp_path / "bound-attempt"
+    attempt.mkdir()
+    sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    program = """
+import importlib.util,json,os,sys
+s=importlib.util.spec_from_file_location('bound_producer',sys.argv[1])
+p=importlib.util.module_from_spec(s);s.loader.exec_module(p)
+print('ready',flush=True)
+r=p.await_computation_permit(int(sys.argv[2]),attempt_id='bound-attempt',source_key=sys.argv[3],
+ start_nonce='bound-start',registration_sha256='a'*64,start_sha256='b'*64,
+ expected_issuer_pid=int(sys.argv[4]),max_seconds=2)
+print(json.dumps({'pid':os.getpid(),'native_operation_authorized':r['native_operation_authorized']}))
+"""
+    argv=[sys.executable,'-u','-c',program,str(BASE/'produce_b3_synthetic_native_stored_draft_v02.py'),
+          str(receiver.fileno()),str(tmp_path/'native-source'),str(os.getpid())]
+    child=None
+    try:
+        child=subprocess.Popen(argv,cwd=tmp_path,pass_fds=(receiver.fileno(),),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        receiver.close()
+        assert child.stdout.readline()==b'ready\n'
+        record=issuer().inspect_then_exchange_transport_probe(
+            attempt,sender.fileno(),attempt_id='bound-attempt',source_key=str(tmp_path/'native-source'),
+            registration_sha256='a'*64,start_sha256='b'*64,producer_pid=child.pid,
+            start_nonce='bound-start',permit_nonce='bound-permit',expected_argv=argv,expected_cwd=str(tmp_path),max_seconds=2,
+        )
+        stdout,stderr=child.communicate(timeout=2)
+        assert child.returncode==0,stderr.decode()
+        assert json.loads(stdout)=={'pid':child.pid,'native_operation_authorized':False}
+        assert record['process_observation']['pid']==child.pid
+        assert record['process_observation']['argv']==argv
+        assert record['process_observation']['cwd']==str(tmp_path)
+        assert record['child_acknowledgement_verified'] is True
+        assert record['native_operation_authorized'] is False
+        assert record['source_admission_granted'] is False
+        assert record['runtime_admission_granted'] is False
+        assert (attempt/'permit-reservation.json').is_file()
+    finally:
+        sender.close();receiver.close()
+        if child is not None and child.poll() is None:
+            child.kill();child.communicate()

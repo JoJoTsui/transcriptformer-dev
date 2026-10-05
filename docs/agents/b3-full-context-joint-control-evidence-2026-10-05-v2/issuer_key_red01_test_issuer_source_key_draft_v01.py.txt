@@ -1,0 +1,19 @@
+"""Issuer source-key syntax agrees with the original producer seam."""
+import importlib.util
+import os
+from pathlib import Path
+
+import pytest
+
+BASE=Path(__file__).resolve().parent
+
+
+def test_double_root_source_key_is_refused_before_any_reservation_file(tmp_path):
+    source=BASE/'issue_b3_full_context_controlled_draft_v06.py'
+    spec=importlib.util.spec_from_file_location('issuer_source_key_draft',source)
+    public=importlib.util.module_from_spec(spec);spec.loader.exec_module(public)
+    attempt=tmp_path/'attempt';attempt.mkdir()
+    with pytest.raises(ValueError,match='source key|canonical'):
+        public.reserve_one_use_transport_probe(attempt,attempt_id='attempt',source_key='//tmp/future-source',
+            registration_sha256='a'*64,start_sha256='b'*64,producer_pid=os.getpid(),start_nonce='start',permit_nonce='permit',max_seconds=1)
+    assert not (attempt/'permit-reservation.json').exists()

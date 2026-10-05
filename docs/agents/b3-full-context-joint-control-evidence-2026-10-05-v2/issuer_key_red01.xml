@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.392" timestamp="2026-10-05T21:47:37.426161+08:00" hostname="Conundrum"><testcase classname="runs.b3_feasibility.20261005.test_issuer_source_key_draft_v01" name="test_double_root_source_key_is_refused_before_any_reservation_file" time="0.015"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('/tmp/pytest-of-joey/pytest-140/test_double_root_source_key_is0')
+
+    def test_double_root_source_key_is_refused_before_any_reservation_file(tmp_path):
+        source=BASE/'issue_b3_full_context_controlled_draft_v06.py'
+        spec=importlib.util.spec_from_file_location('issuer_source_key_draft',source)
+        public=importlib.util.module_from_spec(spec);spec.loader.exec_module(public)
+        attempt=tmp_path/'attempt';attempt.mkdir()
+&gt;       with pytest.raises(ValueError,match='source key|canonical'):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+runs/b3_feasibility/20261005/test_issuer_source_key_draft_v01.py:16: Failed</failure></testcase></testsuite></testsuites>

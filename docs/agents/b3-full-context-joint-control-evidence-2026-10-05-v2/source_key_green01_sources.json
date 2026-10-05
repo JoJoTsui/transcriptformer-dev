@@ -1,0 +1,12 @@
+[
+  {
+    "path": "produce_b3_synthetic_native_stored_draft_v03.py",
+    "sha256": "600af1f7494b5d1314564d1f11fecc79c0e529198b57c899ce37b2117edf8d0a",
+    "snapshot": "runs/b3_feasibility/20261005/source_key_green01_produce_b3_synthetic_native_stored_draft_v03.py.txt"
+  },
+  {
+    "path": "test_producer_source_key_transport_draft_v01.py",
+    "sha256": "b0d6de105a93eb4cb730900f2931c2ac7717c58efe86b80d22405538839df51d",
+    "snapshot": "runs/b3_feasibility/20261005/source_key_green01_test_producer_source_key_transport_draft_v01.py.txt"
+  }
+]

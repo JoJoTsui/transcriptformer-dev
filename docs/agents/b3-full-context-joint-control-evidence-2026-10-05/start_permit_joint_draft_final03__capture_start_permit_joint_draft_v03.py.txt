@@ -1,0 +1,152 @@
+"""Capture transport-only host checks without native operation or admission."""
+
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+import xml.etree.ElementTree as ET
+
+BASE = Path(__file__).resolve().parent
+PREFIX = BASE / "start_permit_joint_draft_final03"
+SOURCE = BASE / "issue_b3_full_context_controlled_draft_v04.py"
+PRODUCER = BASE / "produce_b3_synthetic_native_stored_draft_v02.py"
+TESTS = [
+    BASE / "test_start_permit_joint_draft_v03.py",
+    BASE / "test_issuer_reservation_draft_v04.py",
+    BASE / "test_start_permit_transport_draft_v02.py",
+    BASE / "test_issuer_process_binding_draft_v02.py",
+    BASE / "test_issuer_bound_exchange_draft_v01.py",
+]
+
+
+def pins():
+    return {
+        str(path): sha256(path.read_bytes()).hexdigest()
+        for path in (SOURCE, PRODUCER, *TESTS, Path(__file__).resolve())
+    }
+
+
+def write(path, value):
+    with path.open("x") as handle:
+        json.dump(value, handle, indent=2, allow_nan=False)
+        handle.write("\n")
+
+
+def worker():
+    before = pins()
+    import pytest
+
+    began = time.monotonic()
+    code = int(pytest.main(["--noconftest", "-q", *(str(p) for p in TESTS), "--junitxml=" + str(PREFIX) + ".xml"]))
+    elapsed = time.monotonic() - began
+    after = pins()
+    write(
+        Path(str(PREFIX) + "_worker.json"),
+        {
+            "pytest_exit_code": code,
+            "complete_pytest_call_seconds": elapsed,
+            "source_before": before,
+            "source_after": after,
+            "source_stable": before == after,
+            "numerical_modules_loaded": [
+                name for name in ("numpy", "torch", "h5py", "scipy", "anndata") if name in sys.modules
+            ],
+            "durable_start_verified": False,
+            "power_loss_durability_verified": False,
+            "channel_release_performed": False,
+            "source_admission_granted": False,
+            "runtime_admission_granted": False,
+            "native_operation_performed": False,
+            "model_forwards_performed": False,
+        },
+    )
+    return code if before == after else 1
+
+
+def capture():
+    for suffix in (
+        "_invocation.json",
+        "_stdout.txt",
+        "_stderr.txt",
+        "_gnu_time.txt",
+        "_worker.json",
+        "_result.json",
+        ".xml",
+    ):
+        if os.path.lexists(str(PREFIX) + suffix):
+            raise FileExistsError(str(PREFIX) + suffix)
+    before = pins()
+    env = {
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "TF_RUN_REAL_MODEL_TESTS": "0",
+    }
+    command = [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        str(PREFIX) + "_gnu_time.txt",
+        sys.executable,
+        str(Path(__file__).resolve()),
+        "--worker",
+    ]
+    write(
+        Path(str(PREFIX) + "_invocation.json"),
+        {
+            "command": command,
+            "source_before": before,
+            "environment_overrides": env,
+            "scope": "real local joint transport, file/child reservation and standalone transport probes only; real probe messages sent, no normative Start/Permit, source/runtime admission or native producer",
+        },
+    )
+    began = time.monotonic()
+    with Path(str(PREFIX) + "_stdout.txt").open("xb") as stdout:
+        with Path(str(PREFIX) + "_stderr.txt").open("xb") as stderr:
+            actual = subprocess.run(command, env={**os.environ, **env}, stdout=stdout, stderr=stderr, timeout=60)
+    elapsed = time.monotonic() - began
+    after = pins()
+    worker_path = Path(str(PREFIX) + "_worker.json")
+    evidence = json.loads(worker_path.read_bytes()) if worker_path.exists() else None
+    root = ET.parse(str(PREFIX) + ".xml").getroot()
+    suites = [row.attrib for row in root.iter("testsuite")]
+    identities = [(row.get("classname"), row.get("name")) for row in root.iter("testcase")]
+    complete = (
+        bool(evidence)
+        and actual.returncode == 0
+        and len(identities) == len(set(identities)) == 43
+        and all(int(row[key]) == 0 for row in suites for key in ("failures", "errors", "skipped"))
+        and before == after == evidence["source_before"] == evidence["source_after"]
+        and not evidence["numerical_modules_loaded"]
+    )
+    record = {
+        "actual_gnu_exit_code": actual.returncode,
+        "driver_command_and_raw_stdio_close_seconds": elapsed,
+        "driver_elapsed_scope": "supervised command and raw stdout/stderr close only; excludes post-command source checks, result IO and final driver return",
+        "source_before": before,
+        "source_after": after,
+        "junit_suites": suites,
+        "junit_case_identities": identities,
+        "complete_joint_transport_and_reservation_probe_checks": complete,
+        "durable_start_verified": False,
+        "power_loss_durability_verified": False,
+        "channel_release_performed": False,
+        "source_admission_granted": False,
+        "runtime_admission_granted": False,
+        "native_operation_performed": False,
+        "model_forwards_performed": False,
+        "capture_exit_code": actual.returncode if complete else actual.returncode or 1,
+    }
+    write(Path(str(PREFIX) + "_result.json"), record)
+    print(json.dumps(record, indent=2))
+    return record["capture_exit_code"]
+
+
+if __name__ == "__main__":
+    raise SystemExit(worker() if sys.argv[1:] == ["--worker"] else capture())

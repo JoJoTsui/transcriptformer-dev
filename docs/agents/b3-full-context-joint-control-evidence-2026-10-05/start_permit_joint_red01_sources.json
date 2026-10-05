@@ -1,0 +1,20 @@
+[
+  {
+    "path": "issue_b3_full_context_controlled_draft_v02.py",
+    "sha256": "9b76e09a64fadee9541b4672ea1b31336e78e76410110d27b7a0bd28b70264eb",
+    "bytes": 8618,
+    "snapshot": "runs/b3_feasibility/20261005/joint_red01_issue_b3_full_context_controlled_draft_v02.py.txt"
+  },
+  {
+    "path": "test_start_permit_joint_draft_v01.py",
+    "sha256": "90fa58659491500b2c06be461c22d1e076fae77169b99491a2a5c8c6028512c5",
+    "bytes": 3330,
+    "snapshot": "runs/b3_feasibility/20261005/joint_red01_test_start_permit_joint_draft_v01.py.txt"
+  },
+  {
+    "path": "produce_b3_synthetic_native_stored_draft_v02.py",
+    "sha256": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "bytes": 8189,
+    "snapshot": "runs/b3_feasibility/20261005/joint_red01_produce_b3_synthetic_native_stored_draft_v02.py.txt"
+  }
+]

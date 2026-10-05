@@ -1,0 +1,35 @@
+{
+  "pytest_exit_code": 0,
+  "complete_pytest_call_seconds": 5.008280151989311,
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v05.py": "643ce745aaf1a97f4c43f354ff76cd5d08baee394e3667a61e9d28c2eba14613",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_joint_draft_v04.py": "a901ff4f2fd7c0d244ea00713003883b589a35d1d9b8dd6559f64924defb3ea8",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v05.py": "82b41f0cd75262e25afee3af9a4ea6e600b1690e366852034c6a255a0ae12979",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v03.py": "8d53cca302036c8c6bf3d9ecd8a407eac0673552eeda7f24c2d9eed7980752ac",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_bound_exchange_draft_v02.py": "4dc9dad46c3d77d70362c83bf99c9b04fd763adb0040ac89e68ba4aaca846014",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_bound_deadline_transport_draft_v01.py": "b1d9ecbec092eb0d8d29959e56afcff64c61d84da46c4436c299c4cac0dd9566",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v04.py": "051022a884e937c3368d75d8c249221d0e4380cd67de27f3992479513f49f446"
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v05.py": "643ce745aaf1a97f4c43f354ff76cd5d08baee394e3667a61e9d28c2eba14613",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_joint_draft_v04.py": "a901ff4f2fd7c0d244ea00713003883b589a35d1d9b8dd6559f64924defb3ea8",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v05.py": "82b41f0cd75262e25afee3af9a4ea6e600b1690e366852034c6a255a0ae12979",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v03.py": "8d53cca302036c8c6bf3d9ecd8a407eac0673552eeda7f24c2d9eed7980752ac",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_bound_exchange_draft_v02.py": "4dc9dad46c3d77d70362c83bf99c9b04fd763adb0040ac89e68ba4aaca846014",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_bound_deadline_transport_draft_v01.py": "b1d9ecbec092eb0d8d29959e56afcff64c61d84da46c4436c299c4cac0dd9566",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v04.py": "051022a884e937c3368d75d8c249221d0e4380cd67de27f3992479513f49f446"
+  },
+  "source_stable": true,
+  "numerical_modules_loaded": [],
+  "durable_start_verified": false,
+  "power_loss_durability_verified": false,
+  "channel_release_performed": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "native_operation_performed": false,
+  "model_forwards_performed": false
+}

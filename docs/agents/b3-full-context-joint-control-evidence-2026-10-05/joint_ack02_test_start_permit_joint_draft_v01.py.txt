@@ -1,0 +1,107 @@
+"""Real reservation/channel integration at the approved transport seam."""
+
+import importlib.util
+import json
+import os
+from pathlib import Path
+import socket
+import subprocess
+import sys
+
+import pytest
+
+BASE = Path(__file__).resolve().parent
+
+
+def issuer():
+    source = BASE / "issue_b3_full_context_controlled_draft_v02.py"
+    spec = importlib.util.spec_from_file_location("joint_issuer_transport_draft", source)
+    public = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(public)
+    return public
+
+
+def arguments(tmp_path, child_pid):
+    return dict(
+        attempt_id="joint-attempt-01",
+        source_key=str(tmp_path / "future-native-source"),
+        registration_sha256="a" * 64,
+        start_sha256="b" * 64,
+        producer_pid=child_pid,
+        start_nonce="joint-start-01",
+        permit_nonce="joint-permit-01",
+        max_seconds=2,
+    )
+
+
+def test_real_reservation_precedes_single_child_handshake_and_remains_consumed(tmp_path):
+    attempt = tmp_path / "joint-attempt"
+    attempt.mkdir()
+    sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    child = None
+    program = """
+import importlib.util, json, os, sys
+s=importlib.util.spec_from_file_location('joint_producer_transport',sys.argv[1])
+p=importlib.util.module_from_spec(s); s.loader.exec_module(p)
+r=p.await_computation_permit(int(sys.argv[2]),attempt_id='joint-attempt-01',source_key=sys.argv[3],
+ start_nonce='joint-start-01',registration_sha256='a'*64,start_sha256='b'*64,
+ expected_issuer_pid=int(sys.argv[4]),max_seconds=2)
+print(json.dumps({'pid':os.getpid(),'result':r}))
+"""
+    try:
+        child = subprocess.Popen(
+            [sys.executable, "-c", program, str(BASE / "produce_b3_synthetic_native_stored_draft_v02.py"),
+             str(receiver.fileno()), str(tmp_path / "future-native-source"), str(os.getpid())],
+            pass_fds=(receiver.fileno(),), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        )
+        receiver.close()
+        public = issuer()
+        result = public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **arguments(tmp_path, child.pid))
+        stdout, stderr = child.communicate(timeout=2)
+        assert child.returncode == 0, stderr.decode()
+        assert json.loads(stdout) == {
+            "pid": child.pid,
+            "result": {"permit_nonce":"joint-permit-01","transport_only":True,"native_operation_authorized":False},
+        }
+        assert result["child_acknowledgement_verified"] is True
+        assert result["channel_message_sent"] is True
+        assert result["native_operation_authorized"] is False
+        assert result["source_admission_granted"] is False
+        assert result["runtime_admission_granted"] is False
+        journal = attempt / "permit-reservation.json"
+        original = journal.read_bytes()
+        assert json.loads(original)["producer_pid"] == child.pid
+        with pytest.raises(FileExistsError):
+            public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **arguments(tmp_path, child.pid))
+        assert journal.read_bytes() == original
+        assert os.fstat(sender.fileno()).st_ino > 0
+    finally:
+        sender.close()
+        receiver.close()
+        if child is not None and child.poll() is None:
+            child.kill()
+            child.communicate()
+
+
+def test_missing_acknowledgement_refuses_and_keeps_reservation_consumed(tmp_path):
+    attempt = tmp_path / "no-ack-attempt"
+    attempt.mkdir()
+    sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    public = issuer()
+    kw = arguments(tmp_path, os.getpid())
+    kw["max_seconds"] = 0.03
+    try:
+        with pytest.raises(TimeoutError, match="deadline|acknowledgement"):
+            public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **kw)
+        journal = attempt / "permit-reservation.json"
+        original = journal.read_bytes()
+        receiver.settimeout(1)
+        assert json.loads(receiver.recv(8192))["permit_nonce"] == "joint-permit-01"
+        kw["max_seconds"] = 1
+        with pytest.raises(FileExistsError):
+            public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **kw)
+        assert journal.read_bytes() == original
+        assert os.fstat(sender.fileno()).st_ino > 0
+    finally:
+        sender.close()
+        receiver.close()

@@ -1,0 +1,71 @@
+{
+  "scope": "isolated control prerequisites only; no source/runtime admission",
+  "mypy_environment": {
+    "MYPY_CACHE_DIR": "/tmp/b3-full-context-mypy-20261005",
+    "PYTHONPATH": "/home/joey/.cache/uv/archive-v0/xRyg4HEqkxLwm2OA:/home/joey/.cache/uv/archive-v0/0P1lZuvxYyZrbYlh16qWy:/home/joey/.cache/uv/archive-v0/erB5vv3vCnGbzwlL:/home/joey/.cache/uv/archive-v0/LH6ffABWhmcwoA1Tz2iL9:/home/joey/.cache/uv/archive-v0/WrO-Eo3zoRZ6ZiPi"
+  },
+  "before": {
+    "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v03.py": "9f90e57447de99add0a2666b2f7993c58e71b96faee09b00a1b7fda9d261053b",
+    "runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v01.py": "dae91bac44a44f551247cf48b513ff6f7624afb181cdeb7faaca9f73c186b483",
+    "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v02.py": "8ed845cf268e3b779b5b6974f30c6380b3e9ea2ac6bcedd910679bbd812f2cb5",
+    "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v03.py": "bc32b14543fcaed9c63f87c213770b956bae80fb4b7996155b08fcd48dd9a86a",
+    "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v02.py": "916c1410fdd305dd34c56a394b629e296c4793745a07744ee992c2d8231301e8"
+  },
+  "after": {
+    "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v03.py": "9f90e57447de99add0a2666b2f7993c58e71b96faee09b00a1b7fda9d261053b",
+    "runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v01.py": "dae91bac44a44f551247cf48b513ff6f7624afb181cdeb7faaca9f73c186b483",
+    "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v02.py": "8ed845cf268e3b779b5b6974f30c6380b3e9ea2ac6bcedd910679bbd812f2cb5",
+    "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v03.py": "bc32b14543fcaed9c63f87c213770b956bae80fb4b7996155b08fcd48dd9a86a",
+    "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v02.py": "916c1410fdd305dd34c56a394b629e296c4793745a07744ee992c2d8231301e8"
+  },
+  "source_stable": true,
+  "checks": [
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v01.py",
+        "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v02.py",
+        "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v03.py",
+        "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v02.py"
+      ],
+      "exit_code": 0,
+      "stdout": "Success: no issues found in 5 source files\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v01.py",
+        "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v02.py",
+        "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v03.py",
+        "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v02.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--check",
+        "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v01.py",
+        "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v02.py",
+        "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v03.py",
+        "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v02.py"
+      ],
+      "exit_code": 0,
+      "stdout": "5 files already formatted\n",
+      "stderr": ""
+    }
+  ]
+}

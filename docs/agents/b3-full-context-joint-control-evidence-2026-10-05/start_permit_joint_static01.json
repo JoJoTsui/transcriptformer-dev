@@ -1,0 +1,66 @@
+{
+  "scope": "isolated drafts only; source/runtime admission false",
+  "mypy_environment": {
+    "MYPY_CACHE_DIR": "/tmp/b3-full-context-mypy-20261005",
+    "PYTHONPATH": "/home/joey/.cache/uv/archive-v0/xRyg4HEqkxLwm2OA:/home/joey/.cache/uv/archive-v0/0P1lZuvxYyZrbYlh16qWy:/home/joey/.cache/uv/archive-v0/erB5vv3vCnGbzwlL:/home/joey/.cache/uv/archive-v0/LH6ffABWhmcwoA1Tz2iL9:/home/joey/.cache/uv/archive-v0/WrO-Eo3zoRZ6ZiPi"
+  },
+  "before": {
+    "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v02.py": "ddaacb2a137dee4af66e3ce5a8aabe537127dce448e28070787534ae2c7747d9",
+    "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v01.py": "8257a3d7570dec2408d31714355f8a64b7080a552b2579aba494977fda70ac24",
+    "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v02.py": "6727b1321501612f6e167767ee30c3fdf4149573939f10df964b2ab54e10f039",
+    "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v01.py": "45aa018d19b26481b3b4d69ba9f7ae83ec1808c86fd3865b07186ba75d3244ec"
+  },
+  "after": {
+    "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v02.py": "ddaacb2a137dee4af66e3ce5a8aabe537127dce448e28070787534ae2c7747d9",
+    "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v01.py": "8257a3d7570dec2408d31714355f8a64b7080a552b2579aba494977fda70ac24",
+    "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v02.py": "6727b1321501612f6e167767ee30c3fdf4149573939f10df964b2ab54e10f039",
+    "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v01.py": "45aa018d19b26481b3b4d69ba9f7ae83ec1808c86fd3865b07186ba75d3244ec"
+  },
+  "source_stable": true,
+  "checks": [
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v02.py",
+        "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v01.py",
+        "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v02.py",
+        "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v01.py"
+      ],
+      "exit_code": 0,
+      "stdout": "Success: no issues found in 4 source files\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v02.py",
+        "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v01.py",
+        "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v02.py",
+        "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v01.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--check",
+        "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v02.py",
+        "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v01.py",
+        "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v02.py",
+        "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v01.py"
+      ],
+      "exit_code": 0,
+      "stdout": "4 files already formatted\n",
+      "stderr": ""
+    }
+  ]
+}

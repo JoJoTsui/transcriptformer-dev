@@ -1,0 +1,101 @@
+{
+  "scope": "isolated control prerequisites only; no source/runtime admission",
+  "mypy_environment": {
+    "MYPY_CACHE_DIR": "/tmp/b3-full-context-mypy-20261005",
+    "PYTHONPATH": "/home/joey/.cache/uv/archive-v0/xRyg4HEqkxLwm2OA:/home/joey/.cache/uv/archive-v0/0P1lZuvxYyZrbYlh16qWy:/home/joey/.cache/uv/archive-v0/erB5vv3vCnGbzwlL:/home/joey/.cache/uv/archive-v0/LH6ffABWhmcwoA1Tz2iL9:/home/joey/.cache/uv/archive-v0/WrO-Eo3zoRZ6ZiPi"
+  },
+  "before": {
+    "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v06.py": "02679d1fa334dd62c8d4b7f49fdef785e68c75754a906517414363dd84a9370d",
+    "runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v03.py": "600af1f7494b5d1314564d1f11fecc79c0e529198b57c899ce37b2117edf8d0a",
+    "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v05.py": "dd7a297bde47027a85daa5bf08765c63639ec5bb11fc914874466d3aea26c5b4",
+    "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v06.py": "11e5ff70113fc5323b022598caef52c856f0a085129bda82a7a96d523c7f5c00",
+    "runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v04.py": "e3776fd9fd66d7f5b6f65fc1b6c1dcf90e073e92f8c3837da1724ef0f7e25e61",
+    "runs/b3_feasibility/20261005/test_issuer_bound_exchange_draft_v03.py": "45d5b81ba8a2bc5135b9b97ddba78acd437b01761e5d2728bbe12a3d00a74e2a",
+    "runs/b3_feasibility/20261005/test_bound_deadline_transport_draft_v02.py": "bc95b3e176446ed9682854cc0499ff7eb8ba0ea924c5ce4f781c74a81cdd3f14",
+    "runs/b3_feasibility/20261005/test_start_permit_transport_draft_v03.py": "5511d67356bfaa4e253ec9016b96029e4f96964b76ac9254f0d1376b0e6d5f86",
+    "runs/b3_feasibility/20261005/test_producer_source_key_transport_draft_v01.py": "7d5bcda1666be1ca224906820e1a8d05daaff2b8c083c457eb6e2b8a0e7fe752",
+    "runs/b3_feasibility/20261005/test_issuer_source_key_draft_v01.py": "d76df4314ff8a9f7aa0d534332207b982a0fcbec0791a6ff71a9afb50563c7ff",
+    "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v05.py": "a35537b875e4b21a8e7e49efdddf846eb93a2a46d3fa034c7064233fd2c59681"
+  },
+  "after": {
+    "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v06.py": "02679d1fa334dd62c8d4b7f49fdef785e68c75754a906517414363dd84a9370d",
+    "runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v03.py": "600af1f7494b5d1314564d1f11fecc79c0e529198b57c899ce37b2117edf8d0a",
+    "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v05.py": "dd7a297bde47027a85daa5bf08765c63639ec5bb11fc914874466d3aea26c5b4",
+    "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v06.py": "11e5ff70113fc5323b022598caef52c856f0a085129bda82a7a96d523c7f5c00",
+    "runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v04.py": "e3776fd9fd66d7f5b6f65fc1b6c1dcf90e073e92f8c3837da1724ef0f7e25e61",
+    "runs/b3_feasibility/20261005/test_issuer_bound_exchange_draft_v03.py": "45d5b81ba8a2bc5135b9b97ddba78acd437b01761e5d2728bbe12a3d00a74e2a",
+    "runs/b3_feasibility/20261005/test_bound_deadline_transport_draft_v02.py": "bc95b3e176446ed9682854cc0499ff7eb8ba0ea924c5ce4f781c74a81cdd3f14",
+    "runs/b3_feasibility/20261005/test_start_permit_transport_draft_v03.py": "5511d67356bfaa4e253ec9016b96029e4f96964b76ac9254f0d1376b0e6d5f86",
+    "runs/b3_feasibility/20261005/test_producer_source_key_transport_draft_v01.py": "7d5bcda1666be1ca224906820e1a8d05daaff2b8c083c457eb6e2b8a0e7fe752",
+    "runs/b3_feasibility/20261005/test_issuer_source_key_draft_v01.py": "d76df4314ff8a9f7aa0d534332207b982a0fcbec0791a6ff71a9afb50563c7ff",
+    "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v05.py": "a35537b875e4b21a8e7e49efdddf846eb93a2a46d3fa034c7064233fd2c59681"
+  },
+  "source_stable": true,
+  "checks": [
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v06.py",
+        "runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v05.py",
+        "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v06.py",
+        "runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v04.py",
+        "runs/b3_feasibility/20261005/test_issuer_bound_exchange_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_bound_deadline_transport_draft_v02.py",
+        "runs/b3_feasibility/20261005/test_start_permit_transport_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_producer_source_key_transport_draft_v01.py",
+        "runs/b3_feasibility/20261005/test_issuer_source_key_draft_v01.py",
+        "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v05.py"
+      ],
+      "exit_code": 0,
+      "stdout": "Success: no issues found in 11 source files\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v06.py",
+        "runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v05.py",
+        "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v06.py",
+        "runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v04.py",
+        "runs/b3_feasibility/20261005/test_issuer_bound_exchange_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_bound_deadline_transport_draft_v02.py",
+        "runs/b3_feasibility/20261005/test_start_permit_transport_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_producer_source_key_transport_draft_v01.py",
+        "runs/b3_feasibility/20261005/test_issuer_source_key_draft_v01.py",
+        "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v05.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--check",
+        "runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v06.py",
+        "runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_start_permit_joint_draft_v05.py",
+        "runs/b3_feasibility/20261005/test_issuer_reservation_draft_v06.py",
+        "runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v04.py",
+        "runs/b3_feasibility/20261005/test_issuer_bound_exchange_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_bound_deadline_transport_draft_v02.py",
+        "runs/b3_feasibility/20261005/test_start_permit_transport_draft_v03.py",
+        "runs/b3_feasibility/20261005/test_producer_source_key_transport_draft_v01.py",
+        "runs/b3_feasibility/20261005/test_issuer_source_key_draft_v01.py",
+        "runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v05.py"
+      ],
+      "exit_code": 0,
+      "stdout": "11 files already formatted\n",
+      "stderr": ""
+    }
+  ]
+}

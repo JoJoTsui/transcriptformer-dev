@@ -1,0 +1,29 @@
+{
+  "pytest_exit_code": 0,
+  "complete_pytest_call_seconds": 2.358950196998194,
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v02.py": "ddaacb2a137dee4af66e3ce5a8aabe537127dce448e28070787534ae2c7747d9",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_joint_draft_v01.py": "8257a3d7570dec2408d31714355f8a64b7080a552b2579aba494977fda70ac24",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v02.py": "6727b1321501612f6e167767ee30c3fdf4149573939f10df964b2ab54e10f039",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v01.py": "45aa018d19b26481b3b4d69ba9f7ae83ec1808c86fd3865b07186ba75d3244ec"
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v02.py": "ddaacb2a137dee4af66e3ce5a8aabe537127dce448e28070787534ae2c7747d9",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_joint_draft_v01.py": "8257a3d7570dec2408d31714355f8a64b7080a552b2579aba494977fda70ac24",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v02.py": "6727b1321501612f6e167767ee30c3fdf4149573939f10df964b2ab54e10f039",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v01.py": "45aa018d19b26481b3b4d69ba9f7ae83ec1808c86fd3865b07186ba75d3244ec"
+  },
+  "source_stable": true,
+  "numerical_modules_loaded": [],
+  "durable_start_verified": false,
+  "power_loss_durability_verified": false,
+  "channel_release_performed": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "native_operation_performed": false,
+  "model_forwards_performed": false
+}

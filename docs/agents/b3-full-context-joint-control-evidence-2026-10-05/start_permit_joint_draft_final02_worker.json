@@ -1,0 +1,31 @@
+{
+  "pytest_exit_code": 0,
+  "complete_pytest_call_seconds": 3.433105889998842,
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v03.py": "9f90e57447de99add0a2666b2f7993c58e71b96faee09b00a1b7fda9d261053b",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_joint_draft_v02.py": "8ed845cf268e3b779b5b6974f30c6380b3e9ea2ac6bcedd910679bbd812f2cb5",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v03.py": "bc32b14543fcaed9c63f87c213770b956bae80fb4b7996155b08fcd48dd9a86a",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v01.py": "dae91bac44a44f551247cf48b513ff6f7624afb181cdeb7faaca9f73c186b483",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v02.py": "916c1410fdd305dd34c56a394b629e296c4793745a07744ee992c2d8231301e8"
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/issue_b3_full_context_controlled_draft_v03.py": "9f90e57447de99add0a2666b2f7993c58e71b96faee09b00a1b7fda9d261053b",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/produce_b3_synthetic_native_stored_draft_v02.py": "d0eafea3f89cb6715561463b5263b719a3f6fc8baecc6db84a8194f74a4d7b57",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_joint_draft_v02.py": "8ed845cf268e3b779b5b6974f30c6380b3e9ea2ac6bcedd910679bbd812f2cb5",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_reservation_draft_v03.py": "bc32b14543fcaed9c63f87c213770b956bae80fb4b7996155b08fcd48dd9a86a",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_start_permit_transport_draft_v02.py": "6ec36639976f345d434e448a1c23a6cc55b8fa15523d21a693bde47b59e0379f",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/test_issuer_process_binding_draft_v01.py": "dae91bac44a44f551247cf48b513ff6f7624afb181cdeb7faaca9f73c186b483",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261005/capture_start_permit_joint_draft_v02.py": "916c1410fdd305dd34c56a394b629e296c4793745a07744ee992c2d8231301e8"
+  },
+  "source_stable": true,
+  "numerical_modules_loaded": [],
+  "durable_start_verified": false,
+  "power_loss_durability_verified": false,
+  "channel_release_performed": false,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "native_operation_performed": false,
+  "model_forwards_performed": false
+}

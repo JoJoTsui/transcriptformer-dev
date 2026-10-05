@@ -1,0 +1,264 @@
+"""Real reservation/channel integration at the approved transport seam."""
+
+import importlib.util
+import json
+import os
+from pathlib import Path
+import socket
+import subprocess
+import sys
+
+import pytest
+
+BASE = Path(__file__).resolve().parent
+
+
+def issuer():
+    source = BASE / "issue_b3_full_context_controlled_draft_v04.py"
+    spec = importlib.util.spec_from_file_location("joint_issuer_transport_draft", source)
+    public = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(public)
+    return public
+
+
+def arguments(tmp_path, child_pid):
+    return dict(
+        attempt_id="joint-attempt-01",
+        source_key=str(tmp_path / "future-native-source"),
+        registration_sha256="a" * 64,
+        start_sha256="b" * 64,
+        producer_pid=child_pid,
+        start_nonce="joint-start-01",
+        permit_nonce="joint-permit-01",
+        max_seconds=2,
+    )
+
+
+def test_real_reservation_precedes_single_child_handshake_and_remains_consumed(tmp_path):
+    attempt = tmp_path / "joint-attempt"
+    attempt.mkdir()
+    sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    child = None
+    program = """
+import importlib.util, json, os, sys
+s=importlib.util.spec_from_file_location('joint_producer_transport',sys.argv[1])
+p=importlib.util.module_from_spec(s); s.loader.exec_module(p)
+r=p.await_computation_permit(int(sys.argv[2]),attempt_id='joint-attempt-01',source_key=sys.argv[3],
+ start_nonce='joint-start-01',registration_sha256='a'*64,start_sha256='b'*64,
+ expected_issuer_pid=int(sys.argv[4]),max_seconds=2)
+print(json.dumps({'pid':os.getpid(),'result':r}))
+"""
+    try:
+        child = subprocess.Popen(
+            [
+                sys.executable,
+                "-c",
+                program,
+                str(BASE / "produce_b3_synthetic_native_stored_draft_v02.py"),
+                str(receiver.fileno()),
+                str(tmp_path / "future-native-source"),
+                str(os.getpid()),
+            ],
+            pass_fds=(receiver.fileno(),),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        receiver.close()
+        public = issuer()
+        result = public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **arguments(tmp_path, child.pid))
+        stdout, stderr = child.communicate(timeout=2)
+        assert child.returncode == 0, stderr.decode()
+        assert json.loads(stdout) == {
+            "pid": child.pid,
+            "result": {"permit_nonce": "joint-permit-01", "transport_only": True, "native_operation_authorized": False},
+        }
+        assert result["child_acknowledgement_verified"] is True
+        assert result["channel_message_sent"] is True
+        assert result["native_operation_authorized"] is False
+        assert result["source_admission_granted"] is False
+        assert result["runtime_admission_granted"] is False
+        journal = attempt / "permit-reservation.json"
+        original = journal.read_bytes()
+        assert json.loads(original)["producer_pid"] == child.pid
+        with pytest.raises(FileExistsError):
+            public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **arguments(tmp_path, child.pid))
+        assert journal.read_bytes() == original
+        assert os.fstat(sender.fileno()).st_ino > 0
+    finally:
+        sender.close()
+        receiver.close()
+        if child is not None and child.poll() is None:
+            child.kill()
+            child.communicate()
+
+
+def test_missing_acknowledgement_refuses_and_keeps_reservation_consumed(tmp_path):
+    attempt = tmp_path / "no-ack-attempt"
+    attempt.mkdir()
+    sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    public = issuer()
+    kw = arguments(tmp_path, os.getpid())
+    kw["max_seconds"] = 0.03
+    try:
+        with pytest.raises(TimeoutError, match="deadline|acknowledgement"):
+            public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **kw)
+        journal = attempt / "permit-reservation.json"
+        original = journal.read_bytes()
+        receiver.settimeout(1)
+        assert json.loads(receiver.recv(8192))["permit_nonce"] == "joint-permit-01"
+        kw["max_seconds"] = 1
+        with pytest.raises(FileExistsError):
+            public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **kw)
+        assert journal.read_bytes() == original
+        assert os.fstat(sender.fileno()).st_ino > 0
+    finally:
+        sender.close()
+        receiver.close()
+
+
+@pytest.mark.parametrize(
+    "malformed",
+    [
+        b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"other-attempt","start_nonce":"joint-start-01","producer_pid":1,"permit_nonce":"joint-permit-01"}',
+        b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"joint-attempt-01","attempt_id":"joint-attempt-01","start_nonce":"joint-start-01","producer_pid":1,"permit_nonce":"joint-permit-01"}',
+        b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"joint-attempt-01","start_nonce":"joint-start-01","producer_pid":true,"permit_nonce":"joint-permit-01"}',
+    ],
+)
+def test_foreign_duplicate_or_wrong_type_acknowledgement_is_refused(tmp_path, malformed):
+    attempt = tmp_path / "malformed-ack-attempt"
+    attempt.mkdir()
+    sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    try:
+        receiver.send(malformed)
+        with pytest.raises(ValueError, match="acknowledgement|Duplicate"):
+            issuer().reserve_and_exchange_transport_probe(attempt, sender.fileno(), **arguments(tmp_path, os.getpid()))
+        assert (attempt / "permit-reservation.json").is_file()
+        assert os.fstat(sender.fileno()).st_ino > 0
+    finally:
+        sender.close()
+        receiver.close()
+
+
+def test_original_joint_deadline_includes_durable_reservation_and_never_releases_late(tmp_path, monkeypatch):
+    import time
+
+    attempt = tmp_path / "deadline-attempt"
+    attempt.mkdir()
+    sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    real_clock, real_fsync = time.monotonic, os.fsync
+    elapsed = 0
+
+    def exhaust_deadline(fd):
+        nonlocal elapsed
+        result = real_fsync(fd)
+        elapsed = 901
+        return result
+
+    try:
+        public = issuer()
+        with monkeypatch.context() as patch:
+            patch.setattr(public.os, "fsync", exhaust_deadline)
+            patch.setattr(time, "monotonic", lambda: real_clock() + elapsed)
+            with pytest.raises(TimeoutError, match="deadline"):
+                public.reserve_and_exchange_transport_probe(
+                    attempt, sender.fileno(), **arguments(tmp_path, os.getpid())
+                )
+        receiver.settimeout(0.03)
+        with pytest.raises(TimeoutError):
+            receiver.recv(8192)
+        assert (attempt / "permit-reservation.json").is_file()
+        with pytest.raises(FileExistsError):
+            public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **arguments(tmp_path, os.getpid()))
+    finally:
+        sender.close()
+        receiver.close()
+
+
+def test_foreign_socket_replacement_at_duplicate_is_never_sent_to_or_closed(tmp_path, monkeypatch):
+    attempt = tmp_path / "duplicate-replacement-attempt"
+    attempt.mkdir()
+    sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    foreign_sender, foreign_receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    real_dup, real_close, real_stat = os.dup, os.close, os.fstat
+    replacement = None
+
+    def replace_channel_duplicate(fd):
+        nonlocal replacement
+        if fd != sender.fileno():
+            return real_dup(fd)
+        born = real_dup(fd)
+        real_close(born)
+        replacement = real_dup(foreign_sender.fileno())
+        assert replacement == born
+        return replacement
+
+    try:
+        public = issuer()
+        with monkeypatch.context() as patch:
+            patch.setattr(public.os, "dup", replace_channel_duplicate)
+            with pytest.raises(ValueError, match="descriptor|channel|socket"):
+                public.reserve_and_exchange_transport_probe(
+                    attempt, sender.fileno(), **arguments(tmp_path, os.getpid())
+                )
+        foreign_receiver.settimeout(0.03)
+        with pytest.raises(TimeoutError):
+            foreign_receiver.recv(8192)
+        assert replacement is not None
+        assert real_stat(replacement).st_ino == real_stat(foreign_sender.fileno()).st_ino
+        assert (attempt / "permit-reservation.json").is_file()
+    finally:
+        if replacement is not None:
+            try:
+                if real_stat(replacement).st_ino == real_stat(foreign_sender.fileno()).st_ino:
+                    real_close(replacement)
+            except OSError:
+                pass
+        sender.close()
+        receiver.close()
+        foreign_sender.close()
+        foreign_receiver.close()
+
+
+def test_joint_close_error_is_retained_and_owned_duplicate_is_drained(tmp_path, monkeypatch):
+    attempt = tmp_path / "close-refused-attempt"
+    attempt.mkdir()
+    sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+    first = OSError("joint original socket close refused")
+    real_close, real_stat = socket.socket.close, os.fstat
+    refused = []
+    kw = arguments(tmp_path, os.getpid())
+    receiver.send(
+        json.dumps(
+            {
+                "schema": "b3_full_context_live_permit_ack_v1",
+                "attempt_id": "joint-attempt-01",
+                "start_nonce": "joint-start-01",
+                "producer_pid": os.getpid(),
+                "permit_nonce": "joint-permit-01",
+            }
+        ).encode()
+    )
+
+    def refuse_owned_close(channel):
+        fd = channel.fileno()
+        if fd not in (sender.fileno(), receiver.fileno()) and real_stat(fd).st_ino == real_stat(sender.fileno()).st_ino:
+            refused.append(fd)
+            raise first
+        return real_close(channel)
+
+    try:
+        public = issuer()
+        with monkeypatch.context() as patch:
+            patch.setattr(socket.socket, "close", refuse_owned_close)
+            with pytest.raises(OSError) as observed:
+                public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **kw)
+        assert observed.value is first
+        assert len(refused) == 1
+        with pytest.raises(OSError):
+            real_stat(refused[0])
+        assert real_stat(sender.fileno()).st_ino > 0
+        with pytest.raises(FileExistsError):
+            public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **kw)
+    finally:
+        sender.close()
+        receiver.close()

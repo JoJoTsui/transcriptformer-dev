@@ -1,0 +1,359 @@
+"""Isolated issuer reservation draft; no permit release, admission or native work."""
+
+from hashlib import sha256
+import json
+import math
+import os
+from pathlib import Path
+import re
+import selectors
+import socket
+import stat
+import shutil
+import time
+
+_TERMINAL_CLOSE = os.close
+_BIRTH_FSTAT = os.fstat
+_TERMINAL_SOCKET_DETACH = socket.socket.detach
+
+
+def reserve_one_use_transport_probe(
+    attempt_directory,
+    *,
+    attempt_id,
+    source_key,
+    registration_sha256,
+    start_sha256,
+    producer_pid,
+    start_nonce,
+    permit_nonce,
+    max_seconds=900,
+):
+    """Persist one conservative reservation; its JSON never authorizes work."""
+    started = time.monotonic()
+    if type(max_seconds) not in (int, float) or not math.isfinite(max_seconds) or not 0 < max_seconds <= 900:
+        raise ValueError("Original reservation deadline must be positive and at most 900 seconds")
+    deadline = started + max_seconds
+    if type(attempt_directory) is str:
+        if not 1 <= len(attempt_directory) <= 4096 or len(attempt_directory.encode()) > 4096:
+            raise ValueError("Require a bounded original attempt directory")
+    elif type(attempt_directory) is type(Path()):
+        if len(attempt_directory.parts) > 512 or sum(len(part) + 1 for part in attempt_directory.parts) > 4096:
+            raise ValueError("Require a bounded original attempt directory")
+    else:
+        raise ValueError("Require a canonical string or owned Path attempt directory")
+    directory = Path(attempt_directory).absolute()
+
+    def check():
+        if time.monotonic() >= deadline:
+            raise TimeoutError("Original reservation deadline reached")
+        available = None
+        for row in Path("/proc/meminfo").read_text().splitlines():
+            if row.startswith("MemAvailable:"):
+                available = int(row.split()[1]) * 1024
+        rss = None
+        for row in Path("/proc/self/status").read_text().splitlines():
+            if row.startswith("VmRSS:"):
+                rss = int(row.split()[1]) * 1024
+        if available is None or available < 4 * 1024**3:
+            raise MemoryError("Reservation available host RAM floor is 4 GiB")
+        if rss is None or rss > 4 * 1024**3:
+            raise MemoryError("Reservation process RSS limit is 4 GiB")
+        if shutil.disk_usage(directory).free < 20 * 1024**3:
+            raise OSError("Reservation available disk floor is 20 GiB")
+        if time.monotonic() >= deadline:
+            raise TimeoutError("Original reservation deadline reached during resource admission")
+
+    check()
+    if directory.resolve(strict=True) != directory or not directory.is_dir():
+        raise ValueError("Require the original canonical attempt directory")
+    for name, value in (("attempt_id", attempt_id), ("start_nonce", start_nonce), ("permit_nonce", permit_nonce)):
+        if type(value) is not str or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", value) is None:
+            raise ValueError("Require a canonical original " + name)
+    if type(source_key) is not str or not 1 <= len(source_key) <= 4096 or len(source_key.encode()) > 4096:
+        raise ValueError("Require a bounded canonical original source key")
+    key = Path(source_key)
+    if not key.is_absolute() or str(key) != source_key or ".." in key.parts:
+        raise ValueError("Require the original canonical source key syntax")
+    if any(type(v) is not str or re.fullmatch(r"[0-9a-f]{64}", v) is None for v in (registration_sha256, start_sha256)):
+        raise ValueError("Require canonical original registration/Start SHA256 values")
+    if type(producer_pid) is not int or not 0 < producer_pid <= 2**31 - 1:
+        raise ValueError("Require the original positive producer PID")
+    document = {
+        "schema": "b3_full_context_transport_probe_reservation_v1",
+        "attempt_id": attempt_id,
+        "source_key": source_key,
+        "registration_sha256": registration_sha256,
+        "start_sha256": start_sha256,
+        "producer_pid": producer_pid,
+        "start_nonce": start_nonce,
+        "permit_nonce": permit_nonce,
+        "issuer_pid": os.getpid(),
+    }
+    raw = json.dumps(document, sort_keys=True, separators=(",", ":"), allow_nan=False).encode() + b"\n"
+    if len(raw) > 8192:
+        raise ValueError("Probe reservation exceeds its metadata bound")
+    check()
+    original_directory = directory.lstat()
+    directory_fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    pins = [(directory_fd, _BIRTH_FSTAT(directory_fd))]
+    verification_pins = []
+    first_error = None
+    try:
+        check()
+        current = os.fstat(directory_fd)
+        if (current.st_dev, current.st_ino) != (original_directory.st_dev, original_directory.st_ino):
+            raise ValueError("Original reservation directory changed before creation")
+        verification_pins.append((os.dup(directory_fd), original_directory))
+        fd = os.open(
+            "permit-reservation.json", os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=directory_fd
+        )
+        original_file = _BIRTH_FSTAT(fd)
+        pins.append((fd, original_file))
+        verification_pins.append((os.dup(fd), original_file))
+        offset = 0
+        while offset < len(raw):
+            check()
+            count = os.write(fd, raw[offset:])
+            if count <= 0:
+                raise OSError("Probe reservation write did not advance")
+            offset += count
+        check()
+        os.fsync(fd)
+        check()
+        os.fsync(directory_fd)
+    except BaseException as error:
+        first_error = error
+    finally:
+        for owned_fd, identity in reversed(pins):
+            try:
+                current = os.fstat(owned_fd)
+                if (current.st_dev, current.st_ino) != (identity.st_dev, identity.st_ino):
+                    raise ValueError("Reservation descriptor changed before cleanup")
+                os.close(owned_fd)
+            except BaseException as error:
+                if first_error is None:
+                    first_error = error
+                try:
+                    current = os.fstat(owned_fd)
+                    if (current.st_dev, current.st_ino) == (identity.st_dev, identity.st_ino):
+                        _TERMINAL_CLOSE(owned_fd)
+                except OSError:
+                    pass
+    try:
+        if first_error is None:
+            check()
+            directory_pin, file_pin = (row[0] for row in verification_pins)
+            current_directory = directory.lstat()
+            if directory.resolve(strict=True) != directory or (current_directory.st_dev, current_directory.st_ino) != (
+                original_directory.st_dev,
+                original_directory.st_ino,
+            ):
+                raise ValueError("Original reservation directory changed during cleanup")
+            current_file = os.stat("permit-reservation.json", dir_fd=directory_pin, follow_symlinks=False)
+            live_file = os.fstat(file_pin)
+            if (current_file.st_dev, current_file.st_ino) != (original_file.st_dev, original_file.st_ino) or (
+                live_file.st_dev,
+                live_file.st_ino,
+            ) != (original_file.st_dev, original_file.st_ino):
+                raise ValueError("Original reservation file changed during cleanup")
+            # All resource I/O precedes the final artifact byte seal. Only
+            # captured, ownership-checked terminal descriptor releases follow.
+            check()
+            if current_file.st_size != len(raw) or live_file.st_size != len(raw) or os.pread(file_pin, 8193, 0) != raw:
+                raise ValueError("Original reservation bytes changed during cleanup")
+            if time.monotonic() >= deadline:
+                raise TimeoutError("Original reservation deadline reached at the final byte seal")
+    except BaseException as error:
+        if first_error is None:
+            first_error = error
+    finally:
+        for owned_fd, identity in reversed(verification_pins):
+            try:
+                current = _BIRTH_FSTAT(owned_fd)
+                if (current.st_dev, current.st_ino) != (identity.st_dev, identity.st_ino):
+                    raise ValueError("Verification reservation descriptor was replaced")
+                _TERMINAL_CLOSE(owned_fd)
+            except BaseException as error:
+                if first_error is None:
+                    first_error = error
+    if first_error is not None:
+        raise first_error
+    return {
+        "reservation_sha256": sha256(raw).hexdigest(),
+        "transport_only": True,
+        "native_operation_authorized": False,
+        "channel_release_performed": False,
+        "source_admission_granted": False,
+    }
+
+
+def reserve_and_exchange_transport_probe(
+    attempt_directory,
+    control_fd,
+    *,
+    attempt_id,
+    source_key,
+    registration_sha256,
+    start_sha256,
+    producer_pid,
+    start_nonce,
+    permit_nonce,
+    max_seconds=900,
+):
+    """Reserve then exchange a real transport-only message; grant no authority."""
+    started = time.monotonic()
+    if type(max_seconds) not in (int, float) or not math.isfinite(max_seconds) or not 0 < max_seconds <= 900:
+        raise ValueError("Joint transport deadline must be positive and at most 900 seconds")
+    deadline = started + max_seconds
+    if type(control_fd) is not int or control_fd < 0:
+        raise ValueError("Require the original issuer-owned socket channel")
+    original = os.fstat(control_fd)
+    if not stat.S_ISSOCK(original.st_mode):
+        raise ValueError("Require the original issuer-owned socket channel")
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise TimeoutError("Original joint transport deadline reached before reservation")
+    reservation = reserve_one_use_transport_probe(
+        attempt_directory,
+        attempt_id=attempt_id,
+        source_key=source_key,
+        registration_sha256=registration_sha256,
+        start_sha256=start_sha256,
+        producer_pid=producer_pid,
+        start_nonce=start_nonce,
+        permit_nonce=permit_nonce,
+        max_seconds=remaining,
+    )
+
+    # The durable file remains consumed on every later refusal; no rollback,
+    # success marker or computation transition is supplied by this probe.
+    def remaining_time():
+        value = deadline - time.monotonic()
+        if value <= 0:
+            raise TimeoutError("Original joint transport deadline reached")
+        return value
+
+    remaining_time()
+    duplicate = os.dup(control_fd)
+    try:
+        current = _BIRTH_FSTAT(duplicate)
+        if (current.st_dev, current.st_ino) != (original.st_dev, original.st_ino):
+            raise ValueError("Original joint channel descriptor changed during duplication")
+        channel = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET, fileno=duplicate)
+    except BaseException:
+        try:
+            current = _BIRTH_FSTAT(duplicate)
+            if (current.st_dev, current.st_ino) == (original.st_dev, original.st_ino):
+                _TERMINAL_CLOSE(duplicate)
+        except BaseException:
+            pass
+        raise
+    first_error = None
+    try:
+
+        def channel_owned():
+            current = _BIRTH_FSTAT(duplicate)
+            borrowed = _BIRTH_FSTAT(control_fd)
+            expected_identity = (original.st_dev, original.st_ino)
+            if (current.st_dev, current.st_ino) != expected_identity or (
+                borrowed.st_dev,
+                borrowed.st_ino,
+            ) != expected_identity:
+                raise ValueError("Original joint socket descriptor changed before channel IO")
+
+        channel_owned()
+        if channel.getsockopt(socket.SOL_SOCKET, socket.SO_TYPE) != socket.SOCK_SEQPACKET:
+            raise ValueError("Require the original sequenced issuer socket channel")
+        message = {
+            "schema": "b3_full_context_live_permit_channel_v1",
+            "attempt_id": attempt_id,
+            "source_key": source_key,
+            "start_nonce": start_nonce,
+            "registration_sha256": registration_sha256,
+            "start_sha256": start_sha256,
+            "producer_pid": producer_pid,
+            "permit_nonce": permit_nonce,
+        }
+        raw = json.dumps(message, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+        if len(raw) > 8192:
+            raise ValueError("Joint channel message exceeds metadata bound")
+        with selectors.DefaultSelector() as selector:
+            selector.register(channel, selectors.EVENT_WRITE)
+            if not selector.select(remaining_time()):
+                raise TimeoutError("Original joint transport deadline reached before send")
+            remaining_time()
+            channel_owned()
+            if channel.send(raw, socket.MSG_DONTWAIT) != len(raw):
+                raise ValueError("Joint channel message was not sent completely")
+            selector.modify(channel, selectors.EVENT_READ)
+            if not selector.select(remaining_time()):
+                raise TimeoutError("Original joint transport deadline reached before acknowledgement")
+            remaining_time()
+            channel_owned()
+            data = channel.recv(8193, socket.MSG_DONTWAIT)
+        if not data or len(data) > 8192:
+            raise ValueError("Joint acknowledgement must be present and bounded")
+
+        def unique(pairs):
+            record = {}
+            for name, value in pairs:
+                if name in record:
+                    raise ValueError("Duplicate joint acknowledgement field")
+                record[name] = value
+            return record
+
+        def invalid(value):
+            raise ValueError("Nonfinite joint acknowledgement value: " + value)
+
+        acknowledgement = json.loads(data, object_pairs_hook=unique, parse_constant=invalid)
+        expected = {
+            "schema": "b3_full_context_live_permit_ack_v1",
+            "attempt_id": attempt_id,
+            "start_nonce": start_nonce,
+            "producer_pid": producer_pid,
+            "permit_nonce": permit_nonce,
+        }
+        if (
+            type(acknowledgement) is not dict
+            or set(acknowledgement) != set(expected)
+            or any(type(acknowledgement[k]) is not type(v) or acknowledgement[k] != v for k, v in expected.items())
+        ):
+            raise ValueError("Original child attempt/process acknowledgement binding differs")
+        remaining_time()
+    except BaseException as error:
+        first_error = error
+    finally:
+        try:
+            current = os.fstat(duplicate)
+            if (current.st_dev, current.st_ino) != (original.st_dev, original.st_ino):
+                raise ValueError("Joint socket descriptor changed before primary cleanup")
+            channel.close()
+        except BaseException as error:
+            if first_error is None:
+                first_error = error
+        finally:
+            try:
+                detached = _TERMINAL_SOCKET_DETACH(channel)
+                if detached not in (-1, duplicate):
+                    raise ValueError("Joint socket wrapper detached a foreign number")
+                if detached == duplicate:
+                    current = _BIRTH_FSTAT(duplicate)
+                    if (current.st_dev, current.st_ino) != (original.st_dev, original.st_ino):
+                        raise ValueError("Joint socket descriptor was replaced")
+                    _TERMINAL_CLOSE(duplicate)
+            except BaseException as error:
+                if first_error is None:
+                    first_error = error
+    if first_error is not None:
+        raise first_error
+    remaining_time()
+    return {
+        "reservation_sha256": reservation["reservation_sha256"],
+        "channel_message_sent": True,
+        "child_acknowledgement_verified": True,
+        "transport_only": True,
+        "native_operation_authorized": False,
+        "source_admission_granted": False,
+        "runtime_admission_granted": False,
+    }
