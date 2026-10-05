@@ -1,0 +1,50 @@
+name: B3 Full Context and Planning Tests
+
+on:
+  push:
+    branches: [main]
+    paths: &full-context-paths
+      - "scripts/**"
+      - "src/transcriptformer/**"
+      - "test/test_b3_full_context_observed.py"
+      - "test/test_b3_paged_native_common_source_controller.py"
+      - "test/test_b3_paged_native_common_source.py"
+      - "test/test_b3_paged_native_cache.py"
+      - "test/test_b3_paged_native_bootstrap.py"
+      - "test/test_b3_observed_bootstrap_feasibility.py"
+      - "test/test_b3_paged_native_context.py"
+      - "test/fixtures/**"
+      - "test/conftest.py"
+      - "docs/agents/b3-full-context-observed-*.md"
+      - "docs/agents/b3-paged-native-common-source-controller-*.md"
+      - ".github/workflows/b3-full-context-and-planning-tests.yml"
+      - "pyproject.toml"
+      - "uv.lock"
+  pull_request:
+    paths: *full-context-paths
+  workflow_dispatch:
+
+jobs:
+  bounded-stored-arithmetic-and-planning:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      CUDA_VISIBLE_DEVICES: ""
+      TF_RUN_REAL_MODEL_TESTS: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Run stored arithmetic and metadata planning tests
+        run: >-
+          python -m pytest
+          test/test_b3_full_context_observed.py
+          test/test_b3_paged_native_common_source_controller.py
+          -q --junitxml=b3-full-context-and-planning-tests.xml
