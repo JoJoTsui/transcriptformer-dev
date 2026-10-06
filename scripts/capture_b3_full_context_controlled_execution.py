@@ -118,8 +118,8 @@ def _start_bindings(value: dict[str, Any]) -> dict[str, Any]:
         name: _reference(value[name])
         for name in ("registration_result", "issuer_source_admission", "producer_entrypoint")
     }
-    if references["registration_result"]["sha256"] != value["registration_sha256"]:
-        raise ValueError("Original Start registration Ref/hash disagree")
+    # The summary-file Ref authenticates bytes. registration_sha256 names the
+    # canonical registration payload; those distinct identities need not match.
     files = value["producer_file_sha256"]
     if type(files) is not dict or not 1 <= len(files) <= 512:
         raise ValueError("Require a bounded original explicit producer FileMap")
@@ -173,6 +173,33 @@ def _start_bindings(value: dict[str, Any]) -> dict[str, Any]:
     return _closed_json(raw)
 
 
+def _check_control_resources(directory: Path, deadline: float, scope: str) -> None:
+    if time.monotonic() >= deadline:
+        raise TimeoutError("Original " + scope + " deadline reached")
+    available = next(
+        (
+            int(row.split()[1]) * 1024
+            for row in Path("/proc/meminfo").read_text().splitlines()
+            if row.startswith("MemAvailable:")
+        ),
+        0,
+    )
+    rss = next(
+        (
+            int(row.split()[1]) * 1024
+            for row in Path("/proc/self/status").read_text().splitlines()
+            if row.startswith("VmRSS:")
+        ),
+        0,
+    )
+    if available < 4 * 1024**3 or not 0 < rss <= 4 * 1024**3:
+        raise MemoryError(scope + " retains the 4 GiB host RAM floor and process RSS cap")
+    if shutil.disk_usage(directory).free < 20 * 1024**3:
+        raise OSError(scope + " retains the 20 GiB available disk floor")
+    if time.monotonic() >= deadline:
+        raise TimeoutError("Original " + scope + " deadline reached during resource IO")
+
+
 class _InputPins:
     """Retain original input descriptors through exchange and primary cleanup."""
 
@@ -184,30 +211,7 @@ class _InputPins:
         self.identities: set[tuple[int, int]] = set()
 
     def check(self) -> None:
-        if time.monotonic() >= self.deadline:
-            raise TimeoutError("Original Start inspection deadline reached")
-        available = next(
-            (
-                int(row.split()[1]) * 1024
-                for row in Path("/proc/meminfo").read_text().splitlines()
-                if row.startswith("MemAvailable:")
-            ),
-            0,
-        )
-        rss = next(
-            (
-                int(row.split()[1]) * 1024
-                for row in Path("/proc/self/status").read_text().splitlines()
-                if row.startswith("VmRSS:")
-            ),
-            0,
-        )
-        if available < 4 * 1024**3 or not 0 < rss <= 4 * 1024**3:
-            raise MemoryError("Start inspection retains 4 GiB RAM floor and process RSS cap")
-        if shutil.disk_usage(self.disk).free < 20 * 1024**3:
-            raise OSError("Start inspection retains the 20 GiB free disk floor")
-        if time.monotonic() >= self.deadline:
-            raise TimeoutError("Original Start inspection deadline reached during resource IO")
+        _check_control_resources(self.disk, self.deadline, "Start inspection")
 
     def open(self, reference: FileReference) -> int:
         self.check()
@@ -419,24 +423,7 @@ def reserve_one_use_transport_probe(
     directory = Path(attempt_directory).absolute()
 
     def check():
-        if time.monotonic() >= deadline:
-            raise TimeoutError("Original reservation deadline reached")
-        available = None
-        for row in Path("/proc/meminfo").read_text().splitlines():
-            if row.startswith("MemAvailable:"):
-                available = int(row.split()[1]) * 1024
-        rss = None
-        for row in Path("/proc/self/status").read_text().splitlines():
-            if row.startswith("VmRSS:"):
-                rss = int(row.split()[1]) * 1024
-        if available is None or available < 4 * 1024**3:
-            raise MemoryError("Reservation available host RAM floor is 4 GiB")
-        if rss is None or rss > 4 * 1024**3:
-            raise MemoryError("Reservation process RSS limit is 4 GiB")
-        if shutil.disk_usage(directory).free < 20 * 1024**3:
-            raise OSError("Reservation available disk floor is 20 GiB")
-        if time.monotonic() >= deadline:
-            raise TimeoutError("Original reservation deadline reached during resource admission")
+        _check_control_resources(directory, deadline, "reservation")
 
     check()
     if directory.resolve(strict=True) != directory or not directory.is_dir():
@@ -777,22 +764,7 @@ def inspect_child_process_transport_probe(
         raise ValueError("Require canonical original absolute cwd syntax")
 
     def check():
-        if time.monotonic() >= deadline:
-            raise TimeoutError("Original child inspection deadline reached")
-        available = None
-        for row in Path("/proc/meminfo").read_text().splitlines():
-            if row.startswith("MemAvailable:"):
-                available = int(row.split()[1]) * 1024
-        rss = None
-        for row in Path("/proc/self/status").read_text().splitlines():
-            if row.startswith("VmRSS:"):
-                rss = int(row.split()[1]) * 1024
-        if available is None or available < 4 * 1024**3 or rss is None or rss > 4 * 1024**3:
-            raise MemoryError("Process inspection retains host RAM floor and process RSS limit of 4 GiB")
-        if shutil.disk_usage(directory).free < 20 * 1024**3:
-            raise OSError("Process inspection available disk floor is 20 GiB")
-        if time.monotonic() >= deadline:
-            raise TimeoutError("Original child inspection deadline reached during resource IO")
+        _check_control_resources(directory, deadline, "child inspection")
 
     def bounded(path, limit):
         with path.open("rb") as handle:

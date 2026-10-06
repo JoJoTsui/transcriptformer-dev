@@ -8,6 +8,8 @@ import sys
 
 import pytest
 
+from test.b3_control_test_support import read_control_line
+
 BASE = Path(__file__).resolve().parents[1] / "scripts"
 
 
@@ -30,7 +32,7 @@ def test_original_live_child_argv_cwd_and_birth_are_observed_without_wrapper_sub
     ]
     child = subprocess.Popen(argv, cwd=tmp_path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
-        assert child.stdout.readline() == b"child-ready\n"
+        assert read_control_line(child.stdout) == b"child-ready\n"
         observed = issuer().inspect_child_process_transport_probe(
             child.pid, expected_argv=argv, expected_cwd=str(tmp_path), max_seconds=2
         )
@@ -58,7 +60,7 @@ def test_wrong_original_child_binding_is_refused(tmp_path, different):
     argv = [sys.executable, "-u", "-c", "import sys;print('ready',flush=True);sys.stdin.buffer.read(1)", "original"]
     child = subprocess.Popen(argv, cwd=tmp_path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
-        assert child.stdout.readline() == b"ready\n"
+        assert read_control_line(child.stdout) == b"ready\n"
         kw = dict(expected_argv=argv, expected_cwd=str(tmp_path), max_seconds=2)
         if different == "argv":
             kw["expected_argv"] = argv[:-1] + ["changed"]
@@ -105,7 +107,7 @@ def test_process_metadata_reads_cannot_reset_original_deadline(tmp_path, monkeyp
         return handle
 
     try:
-        assert child.stdout.readline() == b"ready\n"
+        assert read_control_line(child.stdout) == b"ready\n"
         public = issuer()
         with monkeypatch.context() as patch:
             patch.setattr(Path, "open", overdue_metadata_open)
@@ -137,12 +139,12 @@ def test_child_changes_cwd_during_observation_is_refused(tmp_path, monkeypatch):
         if str(path) == "/proc/" + str(child.pid) + "/cwd" and not changed:
             child.stdin.write(b"x")
             child.stdin.flush()
-            assert child.stdout.readline() == b"moved\n"
+            assert read_control_line(child.stdout) == b"moved\n"
             changed = True
         return value
 
     try:
-        assert child.stdout.readline() == b"ready\n"
+        assert read_control_line(child.stdout) == b"ready\n"
         public = issuer()
         with monkeypatch.context() as patch:
             patch.setattr(public.os, "readlink", change_child_after_first_cwd_observation)

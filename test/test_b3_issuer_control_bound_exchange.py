@@ -10,6 +10,8 @@ import sys
 
 import pytest
 
+from test.b3_control_test_support import read_control_line
+
 BASE = Path(__file__).resolve().parents[1] / "scripts"
 
 
@@ -52,7 +54,7 @@ print(json.dumps({'pid':os.getpid(),'native_operation_authorized':r['native_oper
             argv, cwd=tmp_path, pass_fds=(receiver.fileno(),), stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         receiver.close()
-        assert child.stdout.readline() == b"ready\n"
+        assert read_control_line(child.stdout) == b"ready\n"
         record = issuer().inspect_then_exchange_transport_probe(
             attempt,
             sender.fileno(),
@@ -96,7 +98,7 @@ def test_wrong_bound_child_invocation_cannot_reserve_or_send(tmp_path):
         child = subprocess.Popen(
             argv, cwd=tmp_path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
-        assert child.stdout.readline() == b"ready\n"
+        assert read_control_line(child.stdout) == b"ready\n"
         with pytest.raises(ValueError, match="argv.*differs"):
             issuer().inspect_then_exchange_transport_probe(
                 attempt,
@@ -147,7 +149,7 @@ def test_bound_exchange_original_deadline_includes_child_metadata(tmp_path, monk
         child = subprocess.Popen(
             argv, cwd=tmp_path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
-        assert child.stdout.readline() == b"ready\n"
+        assert read_control_line(child.stdout) == b"ready\n"
         public = issuer()
         with monkeypatch.context() as patch:
             patch.setattr(Path, "open", overdue)

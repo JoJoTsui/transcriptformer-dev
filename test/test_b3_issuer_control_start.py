@@ -1,11 +1,19 @@
 """Adopt actual Start/input bytes through the public Start/Permit seam."""
 
+from contextlib import contextmanager
 from hashlib import sha256
 import importlib.util
 import json
+import os
 from pathlib import Path
+import socket
+import subprocess
+import sys
+import time
 
 import pytest
+
+from test.b3_control_test_support import read_control_line
 
 
 def issuer():
@@ -36,7 +44,7 @@ def fixture(tmp_path):
         "attempt_id": "start-attempt",
         "source_key": str(tmp_path / "future-native-source"),
         "registration_result": ref(registration),
-        "registration_sha256": ref(registration)["sha256"],
+        "registration_sha256": "a" * 64,
         "issuer_source_admission": ref(admission),
         "producer_intent_sha256": "c" * 64,
         "source_binding_sha256": "d" * 64,
@@ -162,12 +170,8 @@ def test_late_resource_io_cannot_mutate_an_already_checked_start(tmp_path, monke
     assert mutated is True
 
 
-def test_start_bound_real_child_exchange_preserves_consumption_without_granting_authority(tmp_path):
-    import os
-    import socket
-    import subprocess
-    import sys
-
+@contextmanager
+def live_child_control(tmp_path):
     start, expected, inputs = fixture(tmp_path)
     producer_path = Path(__file__).resolve().parents[1] / "scripts/produce_b3_synthetic_native_stored.py"
     old_entrypoint = expected["producer_entrypoint"]["path"]
@@ -210,87 +214,97 @@ print(json.dumps({'pid':os.getpid(),'native_operation_authorized':r['native_oper
             argv, cwd=tmp_path, pass_fds=(receiver.fileno(),), stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         receiver.close()
-        assert child.stdout.readline() == b"ready\n"
+        assert read_control_line(child.stdout) == b"ready\n"
+        yield {
+            "attempt": attempt,
+            "sender": sender,
+            "child": child,
+            "argv": argv,
+            "start": start,
+            "original_start": original_start,
+            "expected_start": expected,
+            "input_refs": inputs,
+        }
+    finally:
+        sender.close()
+        receiver.close()
+        if child is not None:
+            if child.poll() is None:
+                child.kill()
+            child.communicate(timeout=2)
+
+
+def exchange_arguments(control, tmp_path):
+    return {
+        "expected_start": control["expected_start"],
+        "input_refs": control["input_refs"],
+        "producer_pid": control["child"].pid,
+        "start_nonce": "start-bound",
+        "permit_nonce": "permit-bound",
+        "expected_argv": control["argv"],
+        "expected_cwd": str(tmp_path),
+        "max_seconds": 5,
+    }
+
+
+def test_start_bound_real_child_exchange_preserves_consumption_without_granting_authority(tmp_path):
+    with live_child_control(tmp_path) as control:
         result = issuer().adopt_start_then_exchange_transport_probe(
-            attempt,
-            sender.fileno(),
-            original_start,
-            expected_start=expected,
-            input_refs=inputs,
-            producer_pid=child.pid,
-            start_nonce="start-bound",
-            permit_nonce="permit-bound",
-            expected_argv=argv,
-            expected_cwd=str(tmp_path),
-            max_seconds=5,
+            control["attempt"],
+            control["sender"].fileno(),
+            control["original_start"],
+            **exchange_arguments(control, tmp_path),
         )
-        stdout, stderr = child.communicate(timeout=5)
-        assert child.returncode == 0, stderr.decode()
-        assert json.loads(stdout) == {"pid": child.pid, "native_operation_authorized": False}
+        stdout, stderr = control["child"].communicate(timeout=5)
+        assert control["child"].returncode == 0, stderr.decode()
+        assert json.loads(stdout) == {"pid": control["child"].pid, "native_operation_authorized": False}
         assert result["start_bindings_verified"] is True
-        assert result["producer_start"] == original_start
-        assert result["source_freeze"]["files"] == inputs
+        assert result["producer_start"] == control["original_start"]
+        assert result["source_freeze"]["files"] == control["input_refs"]
         assert result["child_acknowledgement_verified"] is True
         assert result["durable_start_verified"] is False
         assert result["native_operation_authorized"] is False
         assert result["source_admission_granted"] is False
         assert result["runtime_admission_granted"] is False
-        assert (attempt / "permit-reservation.json").is_file()
-    finally:
-        sender.close()
-        receiver.close()
-        if child is not None and child.poll() is None:
-            child.kill()
-            child.communicate()
+        assert (control["attempt"] / "permit-reservation.json").is_file()
 
 
 @pytest.mark.parametrize(
-    "fault", ["changed_start", "missing_input", "wrong_attempt", "wrong_entrypoint", "expired_deadline"]
+    "fault,reason",
+    [
+        ("changed_start", "bytes"),
+        ("missing_input", "closure"),
+        ("wrong_attempt", "bindings"),
+        ("wrong_entrypoint", "FileMap"),
+        ("expired_deadline", "deadline"),
+    ],
 )
-def test_invalid_start_refuses_before_one_use_reservation_or_channel_release(tmp_path, fault):
-    import os
-    import socket
-    import time
-
-    start, expected, inputs = fixture(tmp_path)
-    original = ref(start)
-    attempt = tmp_path / "unreleased-attempt"
-    attempt.mkdir()
-    sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-    deadline = time.monotonic() + 2
-    if fault == "changed_start":
-        start.write_bytes(start.read_bytes().replace(b"start-attempt", b"other-attempt"))
-    elif fault == "missing_input":
-        inputs.pop()
-    elif fault == "wrong_attempt":
-        expected["attempt_id"] = "other-attempt"
-    elif fault == "wrong_entrypoint":
-        expected["producer_entrypoint"]["sha256"] = "f" * 64
-    elif fault == "expired_deadline":
-        deadline = time.monotonic() - 1
-    try:
-        with pytest.raises((ValueError, TimeoutError)):
+def test_invalid_start_refuses_before_one_use_reservation_or_channel_release(tmp_path, fault, reason):
+    with live_child_control(tmp_path) as control:
+        deadline = time.monotonic() + 5
+        if fault == "changed_start":
+            control["start"].write_bytes(control["start"].read_bytes().replace(b"start-attempt", b"other-attempt"))
+        elif fault == "missing_input":
+            control["input_refs"].pop()
+        elif fault == "wrong_attempt":
+            control["expected_start"]["attempt_id"] = "other-attempt"
+        elif fault == "wrong_entrypoint":
+            control["expected_start"]["producer_entrypoint"]["sha256"] = "f" * 64
+        elif fault == "expired_deadline":
+            deadline = time.monotonic() - 1
+        with pytest.raises((ValueError, TimeoutError), match=reason):
             issuer().adopt_start_then_exchange_transport_probe(
-                attempt,
-                sender.fileno(),
-                original,
-                expected_start=expected,
-                input_refs=inputs,
-                producer_pid=os.getpid(),
-                start_nonce="start-bound",
-                permit_nonce="permit-bound",
-                expected_argv=["not-inspected"],
-                expected_cwd=str(tmp_path),
-                max_seconds=2,
+                control["attempt"],
+                control["sender"].fileno(),
+                control["original_start"],
+                **exchange_arguments(control, tmp_path),
                 parent_deadline=deadline,
             )
-        assert not (attempt / "permit-reservation.json").exists()
-        receiver.settimeout(0.01)
+        assert not (control["attempt"] / "permit-reservation.json").exists()
+        control["sender"].settimeout(0.01)
         with pytest.raises(TimeoutError):
-            receiver.recv(8192)
-    finally:
-        sender.close()
-        receiver.close()
+            control["sender"].recv(8192)
+        assert control["child"].poll() is None
 
 
 def test_primary_cleanup_error_keeps_first_error_and_drains_original_inputs(tmp_path, monkeypatch):
@@ -324,3 +338,31 @@ def test_primary_cleanup_error_keeps_first_error_and_drains_original_inputs(tmp_
     for fd in opened:
         with pytest.raises(OSError):
             os.fstat(fd)
+
+
+def test_registration_summary_file_hash_and_payload_digest_are_separate_bindings(tmp_path):
+    start, expected, inputs = fixture(tmp_path)
+    expected["registration_sha256"] = "a" * 64
+    assert expected["registration_result"]["sha256"] != expected["registration_sha256"]
+    start.write_text(json.dumps(expected, sort_keys=True, separators=(",", ":")) + "\n")
+    result = issuer().inspect_producer_start_transport_probe(
+        ref(start),
+        expected_start=expected,
+        input_refs=inputs,
+        max_seconds=2,
+    )
+    assert result["start_bindings_verified"] is True
+    assert result["input_closure_admitted"] is False
+    assert result["native_operation_authorized"] is False
+
+
+def test_partial_child_readiness_has_a_deadline_and_preserves_borrowed_stream():
+    read_fd, write_fd = os.pipe()
+    with os.fdopen(read_fd, "rb", buffering=0) as stream:
+        try:
+            os.write(write_fd, b"partial")
+            with pytest.raises(TimeoutError, match="readiness deadline"):
+                read_control_line(stream, max_seconds=0.01)
+            assert os.fstat(stream.fileno()).st_ino > 0
+        finally:
+            os.close(write_fd)
