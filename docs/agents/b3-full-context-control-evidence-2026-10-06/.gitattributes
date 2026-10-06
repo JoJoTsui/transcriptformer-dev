@@ -1,4 +1,6 @@
+* -text
 *.xml -whitespace
-*.log -whitespace
+*.log -whitespace -diff
 *.txt -whitespace
 *.py.txt -whitespace
+*.json -whitespace
