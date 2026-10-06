@@ -28,6 +28,9 @@ jobs:
       OPENBLAS_NUM_THREADS: "1"
       OMP_NUM_THREADS: "1"
       MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      CUDA_VISIBLE_DEVICES: ""
+      TF_RUN_REAL_MODEL_TESTS: "0"
     strategy:
       matrix:
         python-version: ["3.11"]
@@ -99,6 +102,12 @@ jobs:
             test/test_b3_issuer_control_start.py \
             test/test_b3_producer_control_source_key.py \
             test/test_b3_producer_control_transport.py \
+            test/test_b3_native_catalog_pages.py \
+            test/test_b3_paged_native_bootstrap.py \
+            test/test_b3_paged_native_cache.py \
+            test/test_b3_paged_native_common_bootstrap.py \
+            test/test_b3_paged_native_common_source.py \
+            test/test_b3_paged_native_context.py \
             test/test_b3_streamed_sparse_blocks.py \
             test/test_b3_streamed_draw_schedule.py \
             test/test_b3_streamed_fixed_pairs.py \

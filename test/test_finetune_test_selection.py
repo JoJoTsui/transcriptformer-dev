@@ -54,6 +54,12 @@ SUITES = (
     "b3_issuer_control_start",
     "b3_producer_control_source_key",
     "b3_producer_control_transport",
+    "b3_native_catalog_pages",
+    "b3_paged_native_bootstrap",
+    "b3_paged_native_cache",
+    "b3_paged_native_common_bootstrap",
+    "b3_paged_native_common_source",
+    "b3_paged_native_context",
     "end_to_end",
     "finetune_metadata",
     "spatial",
@@ -88,6 +94,7 @@ def test_ci_runs_all_cpu_finetune_suites(workflow):
     tokens = shlex.split(command.replace("\\\n", " "))
     assert tokens[:3] == ["python", "-m", "pytest"]
     expected = {f"test/test_{name}.py" for name in SUITES}
+    expected |= {path.relative_to(ROOT).as_posix() for path in (ROOT / "test").glob("test_b3_*.py")}
     assert expected <= set(tokens)
     assert all((ROOT / path).is_file() for path in expected)
 
