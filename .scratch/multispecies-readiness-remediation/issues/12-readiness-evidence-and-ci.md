@@ -181,3 +181,19 @@ The [checkpoint inventory](../../../docs/agents/ticket05-checkpoint-discovery-20
 also corrects the blanket missing-checkpoint claim: pretrained weights and a
 distinct nominal candidate are present; candidate training provenance and
 actual prepared/B3 artifacts are not established.
+
+
+### 2026-10-06 continuation — canonical B3 CI and host storage failure
+
+The bounded CI selection now includes the thirteen current control/metadata
+suites plus six previously omitted native B3 suites. Its guard requires all
+canonical B3 test modules. True metadata RED1/2 and GREEN3 receipts are retained;
+math threads remain one, CUDA/real-model opt-in are off. Exact source reviews
+are separate from CI runtime; remote run status is not yet known.
+
+Current local full regression fails at frozen997519f on C: storage exhaustion
+and Ubuntu emergency-ro/EIO (889 passes/one call failure/one teardown error;
+GNU signal11). All failed receipts and source maps are preserved. No full
+current pass or scientific readiness is inferred. The bounded closure remains
+limited to engineering/record keeping; ticket05 is open and11 excluded.
+See [host incident and next admission requirement](../../../docs/agents/b3-wsl-host-storage-incident-2026-10-06.md).

@@ -1,5 +1,47 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
+Category: correctness and readiness
+Status: Open — canonical controls 78/78 and exact reviews pass; current full CPU validation blocked by C: full / WSL emergency-ro. Physical storage gate, prospective split plan, registration/native/authority/census, bridge/v4 and scientific comparison remain open; zebrafish 11 excluded.
+Priority: P1
+Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
+Depends on: 04
+Traceability: R3; stale post-filter counts; register 4.3; tracker N
+Spec: [Multispecies readiness remediation](../spec.md)
+
+## Current implementation and host gate — 2026-10-06
+
+Canonical issuer/producer control prerequisites are committed at `997519f`:
+**78 control cases plus 95 unchanged planner cases pass**. Exact independent
+Spec/Standards reviews each report **zero hard/zero optional findings** after
+repairing the original summary/payload digest conflation and three test/resource
+concerns. The real Start-bound exchange authenticates supplied bytes/pins; it
+still denies registration, durable original Start and native/source/runtime
+admission. Native allocator coverage remains unavailable.
+
+The fresh full CPU v7 attempt fails at **889 passes/one call failure/one teardown
+error** on WSL EROFS/EIO and later signal11; its aggregate accounting is rejected.
+**Windows C: has zero free bytes**, Ubuntu's VHD directory is on C:, and ext4 is
+`emergency_ro`. D: remains about 383 GiB free. Complete current-source CPU
+coverage is unverified; prior `32f9426` 1,310/5 coverage remains historical.
+Numerical jobs are stopped pending backing storage/filesystem recovery and
+physical host-volume admission. Limits and failed receipts are preserved.
+
+CI now selects the thirteen current suites plus six omitted bounded B3 suites,
+and its guard requires every canonical B3 test module. Three metadata selection
+checks pass with capture/scratch on D:. The only original Python change is this
+CI guard; original scientific/runtime bytes are unchanged. Final CI Spec/Standards reviews each pass at zero hard/zero optional findings,
+recorded separately from full runtime. The prospective split-plan prerequisite is discovered
+but unimplemented; its unexecuted assertion draft is preserved outside canonical
+execution. Registration/owner/native/memory/Origin/bridge/v4, project effects,
+whole-method cost and reportable comparison remain open.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Real pilot
+coverage stays **32.54%**, necessary jointly supported draws **0/2,000** and
+reporting veto/null intervals stay unchanged.
+
+Evidence: [implementation and reviews](../../../docs/agents/b3-full-context-control-implementation-2026-10-06.md),
+[host incident and failed raw capture](../../../docs/agents/b3-wsl-host-storage-incident-2026-10-06.md).
+
 ## Complete current-source CPU regression — 2026-10-05
 
 The fresh v5 full repository invocation at frozen **`32f9426`** passes
@@ -604,13 +646,6 @@ see the [execution record](../../../docs/agents/b3-human-pilot-approved-run-2026
 The eight-hour producer budget retains memory/storage guards. Actual completion
 is pending and this pilot cannot meet the paired 80% reporting floor.
 
-Category: correctness and readiness
-Status: Open — full unchanged-source CPU coverage passes 1,310/5 skips; 56 control prerequisites and Linux source-mode route verified. Independent reviews, controlled native/authority, complete numeric census/guard, bridge/v4, real effects/full cost/reportable comparison remain unfinished; zebrafish 11 excluded.
-Priority: P1
-Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
-Depends on: 04
-Traceability: R3; stale post-filter counts; register 4.3; tracker N
-Spec: [Multispecies readiness remediation](../spec.md)
 
 ## Current evidence — 2026-09-30 v1
 
