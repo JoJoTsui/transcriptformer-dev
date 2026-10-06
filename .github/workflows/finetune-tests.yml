@@ -86,6 +86,19 @@ jobs:
             test/test_b3_sparse_null.py \
             test/test_b3_sparse_bootstrap_draws.py \
             test/test_b3_prepared_sparse_session.py \
+            test/test_b3_full_context_observed.py \
+            test/test_b3_full_context_synthetic_fixture.py \
+            test/test_b3_full_context_runtime_authority.py \
+            test/test_b3_paged_native_common_source_controller.py \
+            test/test_b3_issuer_control_bound_exchange.py \
+            test/test_b3_issuer_control_deadline.py \
+            test/test_b3_issuer_control_exchange.py \
+            test/test_b3_issuer_control_process.py \
+            test/test_b3_issuer_control_reservation.py \
+            test/test_b3_issuer_control_source_key.py \
+            test/test_b3_issuer_control_start.py \
+            test/test_b3_producer_control_source_key.py \
+            test/test_b3_producer_control_transport.py \
             test/test_b3_streamed_sparse_blocks.py \
             test/test_b3_streamed_draw_schedule.py \
             test/test_b3_streamed_fixed_pairs.py \
