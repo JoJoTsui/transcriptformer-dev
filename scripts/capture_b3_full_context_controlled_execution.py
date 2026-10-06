@@ -1,0 +1,981 @@
+"""Issuer control prerequisites for bounded B3 stored arithmetic.
+
+These public transport probes reserve and exchange real channels. They do not
+replay registration or admit normative Start, source, runtime or native work.
+"""
+
+from hashlib import sha256
+import json
+import math
+import os
+from pathlib import Path
+import re
+import selectors
+import socket
+import stat
+import shutil
+import time
+from typing import Any, TypedDict
+
+_TERMINAL_CLOSE = os.close
+_BIRTH_FSTAT = os.fstat
+_TERMINAL_SOCKET_DETACH = socket.socket.detach
+
+
+class FileReference(TypedDict):
+    """Bounded file identity metadata; its presence grants no trust."""
+
+    path: str
+    sha256: str
+    bytes: int
+
+
+_START_FIELDS = {
+    "schema",
+    "status",
+    "method",
+    "registration_profile",
+    "attempt_id",
+    "source_key",
+    "registration_result",
+    "registration_sha256",
+    "issuer_source_admission",
+    "producer_intent_sha256",
+    "source_binding_sha256",
+    "producer_entrypoint",
+    "producer_file_sha256",
+    "software_commit_actual",
+    "execution_context",
+    "checkpoint_tensors_loaded",
+    "model_forwards_performed",
+}
+_START_BYTES = 1024**2
+_HASH_CHUNK = 64 * 1024
+
+
+def _canonical_path(value: str) -> Path:
+    if type(value) is not str or not 1 <= len(value) <= 4096 or len(value.encode()) > 4096 or "\0" in value:
+        raise ValueError("Require a bounded canonical original path")
+    path = Path(value)
+    if not path.is_absolute() or str(path) != value or ".." in path.parts or value.startswith("//"):
+        raise ValueError("Require canonical original absolute path syntax")
+    return path
+
+
+def _reference(value: dict[str, Any]) -> FileReference:
+    if type(value) is not dict or set(value) != {"path", "sha256", "bytes"}:
+        raise ValueError("Require an exact original file Ref")
+    path = _canonical_path(value["path"])
+    if type(value["sha256"]) is not str or re.fullmatch(r"[0-9a-f]{64}", value["sha256"]) is None:
+        raise ValueError("Require an original canonical file SHA256")
+    if type(value["bytes"]) is not int or not 0 <= value["bytes"] <= 64 * 1024**3:
+        raise ValueError("Require a bounded original strict file size")
+    return {"path": str(path), "sha256": value["sha256"], "bytes": value["bytes"]}
+
+
+def _closed_json(raw: bytes) -> dict[str, Any]:
+    def unique(pairs):
+        record = {}
+        for key, value in pairs:
+            if key in record:
+                raise ValueError("Duplicate original Start field")
+            record[key] = value
+        return record
+
+    def invalid(value):
+        raise ValueError("Nonfinite original Start value: " + value)
+
+    return json.loads(raw, object_pairs_hook=unique, parse_constant=invalid)
+
+
+def _start_bindings(value: dict[str, Any]) -> dict[str, Any]:
+    if type(value) is not dict or set(value) != _START_FIELDS:
+        raise ValueError("Require the exact closed original ProducerStart schema")
+    if (
+        value["schema"] != "b3_full_context_producer_start_v2"
+        or value["status"] != "ready_for_synthetic_stored_arithmetic"
+        or value["registration_profile"] != "synthetic_stored_arithmetic_v1"
+        or value["method"] != "b3_measured_zero_peer_null_v2"
+        or value["checkpoint_tensors_loaded"] is not False
+        or value["model_forwards_performed"] is not False
+    ):
+        raise ValueError("Start inspection supports only pre-computation synthetic stored arithmetic")
+    if (
+        type(value["attempt_id"]) is not str
+        or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", value["attempt_id"]) is None
+    ):
+        raise ValueError("Require a canonical original Start attempt ID")
+    _canonical_path(value["source_key"])
+    for field in ("registration_sha256", "producer_intent_sha256", "source_binding_sha256"):
+        if type(value[field]) is not str or re.fullmatch(r"[0-9a-f]{64}", value[field]) is None:
+            raise ValueError("Require the original canonical Start binding digests")
+    if (
+        type(value["software_commit_actual"]) is not str
+        or re.fullmatch(r"[0-9a-f]{40}", value["software_commit_actual"]) is None
+    ):
+        raise ValueError("Require the original actual source commit syntax")
+    references = {
+        name: _reference(value[name])
+        for name in ("registration_result", "issuer_source_admission", "producer_entrypoint")
+    }
+    if references["registration_result"]["sha256"] != value["registration_sha256"]:
+        raise ValueError("Original Start registration Ref/hash disagree")
+    files = value["producer_file_sha256"]
+    if type(files) is not dict or not 1 <= len(files) <= 512:
+        raise ValueError("Require a bounded original explicit producer FileMap")
+    if any(type(key) is not str for key in files) or list(files) != sorted(files):
+        raise ValueError("Original producer FileMap must be canonically sorted")
+    if sum(len(key) for key in files) > 512 * 1024:
+        raise ValueError("Original producer FileMap paths exceed their aggregate bound")
+    for name, digest in files.items():
+        if (
+            _canonical_path(name).suffix != ".py"
+            or type(digest) is not str
+            or re.fullmatch(r"[0-9a-f]{64}", digest) is None
+        ):
+            raise ValueError("Require canonical original Python source/hash bindings")
+    entrypoint = references["producer_entrypoint"]
+    if files.get(entrypoint["path"]) != entrypoint["sha256"]:
+        raise ValueError("Original producer FileMap does not bind its entrypoint")
+    context = value["execution_context"]
+    fields = {
+        "torch_version",
+        "numpy_version",
+        "execution_device",
+        "cublas_workspace_config",
+        "normalization_chunk_rows",
+        "deterministic_algorithms_required",
+        "deterministic_eval",
+        "stochastic_layers_disabled",
+    }
+    if type(context) is not dict or set(context) != fields:
+        raise ValueError("Require the closed original Start execution context")
+    if any(
+        type(context[key]) is not str or not 1 <= len(context[key]) <= 128 or context[key].strip() != context[key]
+        for key in ("torch_version", "numpy_version", "execution_device", "cublas_workspace_config")
+    ):
+        raise ValueError("Require bounded original execution context strings")
+    if (
+        context["execution_device"] != "cpu"
+        or type(context["normalization_chunk_rows"]) is not int
+        or context["normalization_chunk_rows"] != 8
+        or any(
+            context[key] is not True
+            for key in ("deterministic_algorithms_required", "deterministic_eval", "stochastic_layers_disabled")
+        )
+    ):
+        raise ValueError("Original Start inspection retains CPU and deterministic normalization policy")
+    # Copy only this bounded closed structure, before any caller-owned dict can
+    # be changed by fallible filesystem operations.
+    raw = json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    if len(raw) > _START_BYTES:
+        raise ValueError("Original Start metadata exceeds its inspection bound")
+    return _closed_json(raw)
+
+
+class _InputPins:
+    """Retain original input descriptors through exchange and primary cleanup."""
+
+    def __init__(self, deadline: float, disk: Path) -> None:
+        self.deadline = deadline
+        self.disk = disk
+        self.pins: list[tuple[FileReference, int, tuple[int, int, int, int]]] = []
+        self.terminal_pins: list[tuple[FileReference, int, tuple[int, int, int, int]]] = []
+        self.identities: set[tuple[int, int]] = set()
+
+    def check(self) -> None:
+        if time.monotonic() >= self.deadline:
+            raise TimeoutError("Original Start inspection deadline reached")
+        available = next(
+            (
+                int(row.split()[1]) * 1024
+                for row in Path("/proc/meminfo").read_text().splitlines()
+                if row.startswith("MemAvailable:")
+            ),
+            0,
+        )
+        rss = next(
+            (
+                int(row.split()[1]) * 1024
+                for row in Path("/proc/self/status").read_text().splitlines()
+                if row.startswith("VmRSS:")
+            ),
+            0,
+        )
+        if available < 4 * 1024**3 or not 0 < rss <= 4 * 1024**3:
+            raise MemoryError("Start inspection retains 4 GiB RAM floor and process RSS cap")
+        if shutil.disk_usage(self.disk).free < 20 * 1024**3:
+            raise OSError("Start inspection retains the 20 GiB free disk floor")
+        if time.monotonic() >= self.deadline:
+            raise TimeoutError("Original Start inspection deadline reached during resource IO")
+
+    def open(self, reference: FileReference) -> int:
+        self.check()
+        path = _canonical_path(reference["path"])
+        info = path.lstat()
+        if path.resolve(strict=True) != path or not stat.S_ISREG(info.st_mode) or info.st_size != reference["bytes"]:
+            raise ValueError("Original input path, regular file or size differs")
+        identity = (info.st_dev, info.st_ino, info.st_size, info.st_mode)
+        if identity[:2] in self.identities:
+            raise ValueError("Independent original input files may not alias")
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        opened = _BIRTH_FSTAT(fd)
+        # Birth ownership is registered before later fallible comparisons.
+        born = (opened.st_dev, opened.st_ino, opened.st_size, opened.st_mode)
+        self.pins.append((reference, fd, born))
+        if born != identity:
+            raise ValueError("Original input descriptor changed before adoption")
+        duplicate = os.dup(fd)
+        duplicated = _BIRTH_FSTAT(duplicate)
+        if (duplicated.st_dev, duplicated.st_ino) != identity[:2]:
+            raise ValueError("Original input verification descriptor changed during duplication")
+        self.terminal_pins.append((reference, duplicate, identity))
+        self.identities.add(identity[:2])
+        return fd
+
+    def seal(
+        self, reference: FileReference, fd: int, identity: tuple[int, int, int, int], *, resource_io: bool = True
+    ) -> None:
+        def guard():
+            if resource_io:
+                self.check()
+            elif time.monotonic() >= self.deadline:
+                raise TimeoutError("Original Start inspection deadline reached at the final byte seal")
+
+        guard()
+        path = _canonical_path(reference["path"])
+
+        def binding():
+            current = path.lstat()
+            opened = _BIRTH_FSTAT(fd)
+            if (
+                path.resolve(strict=True) != path
+                or (current.st_dev, current.st_ino, current.st_size, current.st_mode) != identity
+                or (opened.st_dev, opened.st_ino, opened.st_size, opened.st_mode) != identity
+            ):
+                raise ValueError("Original input ownership, mode, path or size changed")
+
+        binding()
+        digest = sha256()
+        offset = 0
+        while offset < reference["bytes"]:
+            guard()
+            chunk = os.pread(fd, min(_HASH_CHUNK, reference["bytes"] - offset), offset)
+            if not chunk:
+                raise ValueError("Original input read ended before its admitted size")
+            digest.update(chunk)
+            offset += len(chunk)
+        if os.pread(fd, 1, offset) or digest.hexdigest() != reference["sha256"]:
+            raise ValueError("Original input bytes changed from their exact supplied Ref")
+        binding()
+        if time.monotonic() >= self.deadline:
+            raise TimeoutError("Original Start inspection deadline reached at the input byte seal")
+
+    def finish(self, first_error: BaseException | None) -> None:
+        for _, fd, identity in reversed(self.pins):
+            try:
+                info = _BIRTH_FSTAT(fd)
+                if (info.st_dev, info.st_ino) != identity[:2]:
+                    raise ValueError("Original input descriptor changed before primary cleanup")
+                os.close(fd)
+            except BaseException as error:
+                if first_error is None:
+                    first_error = error
+                try:
+                    info = _BIRTH_FSTAT(fd)
+                    if (info.st_dev, info.st_ino) == identity[:2]:
+                        _TERMINAL_CLOSE(fd)
+                except OSError:
+                    pass
+        try:
+            if first_error is None:
+                for reference, fd, identity in self.terminal_pins:
+                    self.seal(reference, fd, identity)
+                # Fallible resource observations finish before the final byte
+                # pass. Their callbacks may have changed an earlier artifact.
+                self.check()
+                for reference, fd, identity in self.terminal_pins:
+                    self.seal(reference, fd, identity, resource_io=False)
+        except BaseException as error:
+            first_error = error
+        finally:
+            for _, fd, identity in reversed(self.terminal_pins):
+                try:
+                    info = _BIRTH_FSTAT(fd)
+                    if (info.st_dev, info.st_ino) != identity[:2]:
+                        raise ValueError("Original input verification descriptor was replaced")
+                    _TERMINAL_CLOSE(fd)
+                except BaseException as error:
+                    if first_error is None:
+                        first_error = error
+        if first_error is not None:
+            raise first_error
+
+
+def _adopt_start(
+    pins: _InputPins,
+    start_ref: dict[str, Any],
+    expected_start: dict[str, Any],
+    input_refs: list[dict[str, Any]] | tuple[dict[str, Any], ...],
+) -> tuple[FileReference, dict[str, Any], list[FileReference]]:
+    reference = _reference(start_ref)
+    if reference["bytes"] > _START_BYTES:
+        raise ValueError("Original Start exceeds its bounded metadata inspection size")
+    expected = _start_bindings(expected_start)
+    if type(input_refs) not in (list, tuple) or not 1 <= len(input_refs) <= 512:
+        raise ValueError("Require a bounded explicit original input Ref closure")
+    inputs = [_reference(item) for item in input_refs]
+    names = [item["path"] for item in inputs]
+    if names != sorted(set(names)) or sum(len(name.encode()) for name in names) > 512 * 1024:
+        raise ValueError("Require sorted unique bounded original input Ref paths")
+    by_path = {item["path"]: item for item in inputs}
+    if reference["path"] in by_path or expected["source_key"] in by_path or reference["path"] == expected["source_key"]:
+        raise ValueError("Generated Start/outcome paths cannot replace original inputs")
+    if sum(item["bytes"] for item in inputs) > 64 * 1024**3:
+        raise ValueError("Original input streaming size exceeds its operation bound")
+    for field in ("registration_result", "issuer_source_admission", "producer_entrypoint"):
+        if by_path.get(expected[field]["path"]) != expected[field]:
+            raise ValueError("Original input closure lacks an exact Start predecessor Ref")
+    for name, digest in expected["producer_file_sha256"].items():
+        if name not in by_path or by_path[name]["sha256"] != digest:
+            raise ValueError("Original input closure lacks exact producer source bytes")
+    start_fd = pins.open(reference)
+    raw = os.pread(start_fd, reference["bytes"] + 1, 0)
+    if len(raw) != reference["bytes"] or sha256(raw).hexdigest() != reference["sha256"]:
+        raise ValueError("Original Start file bytes differ from the supplied Ref")
+    actual = _start_bindings(_closed_json(raw))
+    if actual != expected:
+        raise ValueError("Original Start differs from its frozen expected bindings")
+    for item in inputs:
+        fd = pins.open(item)
+        pins.seal(item, fd, pins.pins[-1][2])
+    return reference, expected, inputs
+
+
+def inspect_producer_start_transport_probe(
+    start_ref, *, expected_start, input_refs, max_seconds=900, parent_deadline=None
+):
+    """Inspect supplied original Start/input bytes; grant no registration trust."""
+    deadline = _original_deadline(time.monotonic(), max_seconds, parent_deadline)
+    reference = _reference(start_ref)
+    pins = _InputPins(deadline, Path(reference["path"]).parent)
+    first_error = None
+    result = None
+    try:
+        reference, _, inputs = _adopt_start(pins, reference, expected_start, input_refs)
+        result = {
+            "producer_start": reference,
+            "source_freeze": {"schema": "b3_full_context_controlled_source_freeze_v1", "files": inputs},
+            "start_bindings_verified": True,
+            "input_closure_admitted": False,
+            "transport_only": True,
+            "native_operation_authorized": False,
+            "source_admission_granted": False,
+            "runtime_admission_granted": False,
+        }
+    except BaseException as error:
+        first_error = error
+    pins.finish(first_error)
+    return result
+
+
+def _original_deadline(started, max_seconds, parent_deadline):
+    if type(max_seconds) not in (int, float) or not math.isfinite(max_seconds) or not 0 < max_seconds <= 900:
+        raise ValueError("Original transport deadline must be positive and at most 900 seconds")
+    deadline = started + max_seconds
+    if parent_deadline is not None:
+        if type(parent_deadline) not in (int, float) or not math.isfinite(parent_deadline):
+            raise ValueError("Original parent deadline must be a finite clock value")
+        deadline = min(deadline, parent_deadline)
+    if time.monotonic() >= deadline:
+        raise TimeoutError("Original transport deadline reached before admission")
+    return deadline
+
+
+def reserve_one_use_transport_probe(
+    attempt_directory,
+    *,
+    attempt_id,
+    source_key,
+    registration_sha256,
+    start_sha256,
+    producer_pid,
+    start_nonce,
+    permit_nonce,
+    max_seconds=900,
+    parent_deadline=None,
+):
+    """Persist one conservative reservation; its JSON never authorizes work."""
+    started = time.monotonic()
+    deadline = _original_deadline(started, max_seconds, parent_deadline)
+    if type(attempt_directory) is str:
+        if not 1 <= len(attempt_directory) <= 4096 or len(attempt_directory.encode()) > 4096:
+            raise ValueError("Require a bounded original attempt directory")
+    elif type(attempt_directory) is type(Path()):
+        if len(attempt_directory.parts) > 512 or sum(len(part) + 1 for part in attempt_directory.parts) > 4096:
+            raise ValueError("Require a bounded original attempt directory")
+    else:
+        raise ValueError("Require a canonical string or owned Path attempt directory")
+    directory = Path(attempt_directory).absolute()
+
+    def check():
+        if time.monotonic() >= deadline:
+            raise TimeoutError("Original reservation deadline reached")
+        available = None
+        for row in Path("/proc/meminfo").read_text().splitlines():
+            if row.startswith("MemAvailable:"):
+                available = int(row.split()[1]) * 1024
+        rss = None
+        for row in Path("/proc/self/status").read_text().splitlines():
+            if row.startswith("VmRSS:"):
+                rss = int(row.split()[1]) * 1024
+        if available is None or available < 4 * 1024**3:
+            raise MemoryError("Reservation available host RAM floor is 4 GiB")
+        if rss is None or rss > 4 * 1024**3:
+            raise MemoryError("Reservation process RSS limit is 4 GiB")
+        if shutil.disk_usage(directory).free < 20 * 1024**3:
+            raise OSError("Reservation available disk floor is 20 GiB")
+        if time.monotonic() >= deadline:
+            raise TimeoutError("Original reservation deadline reached during resource admission")
+
+    check()
+    if directory.resolve(strict=True) != directory or not directory.is_dir():
+        raise ValueError("Require the original canonical attempt directory")
+    for name, value in (("attempt_id", attempt_id), ("start_nonce", start_nonce), ("permit_nonce", permit_nonce)):
+        if type(value) is not str or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", value) is None:
+            raise ValueError("Require a canonical original " + name)
+    if type(source_key) is not str or not 1 <= len(source_key) <= 4096 or len(source_key.encode()) > 4096:
+        raise ValueError("Require a bounded canonical original source key")
+    key = Path(source_key)
+    if not key.is_absolute() or str(key) != source_key or ".." in key.parts or source_key.startswith("//"):
+        raise ValueError("Require the original canonical source key syntax")
+    if any(type(v) is not str or re.fullmatch(r"[0-9a-f]{64}", v) is None for v in (registration_sha256, start_sha256)):
+        raise ValueError("Require canonical original registration/Start SHA256 values")
+    if type(producer_pid) is not int or not 0 < producer_pid <= 2**31 - 1:
+        raise ValueError("Require the original positive producer PID")
+    document = {
+        "schema": "b3_full_context_transport_probe_reservation_v1",
+        "attempt_id": attempt_id,
+        "source_key": source_key,
+        "registration_sha256": registration_sha256,
+        "start_sha256": start_sha256,
+        "producer_pid": producer_pid,
+        "start_nonce": start_nonce,
+        "permit_nonce": permit_nonce,
+        "issuer_pid": os.getpid(),
+    }
+    raw = json.dumps(document, sort_keys=True, separators=(",", ":"), allow_nan=False).encode() + b"\n"
+    if len(raw) > 8192:
+        raise ValueError("Probe reservation exceeds its metadata bound")
+    check()
+    original_directory = directory.lstat()
+    directory_fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    pins = [(directory_fd, _BIRTH_FSTAT(directory_fd))]
+    verification_pins = []
+    first_error = None
+    try:
+        check()
+        current = os.fstat(directory_fd)
+        if (current.st_dev, current.st_ino) != (original_directory.st_dev, original_directory.st_ino):
+            raise ValueError("Original reservation directory changed before creation")
+        verification_pins.append((os.dup(directory_fd), original_directory))
+        fd = os.open(
+            "permit-reservation.json", os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=directory_fd
+        )
+        original_file = _BIRTH_FSTAT(fd)
+        pins.append((fd, original_file))
+        verification_pins.append((os.dup(fd), original_file))
+        offset = 0
+        while offset < len(raw):
+            check()
+            count = os.write(fd, raw[offset:])
+            if count <= 0:
+                raise OSError("Probe reservation write did not advance")
+            offset += count
+        check()
+        os.fsync(fd)
+        check()
+        os.fsync(directory_fd)
+    except BaseException as error:
+        first_error = error
+    finally:
+        for owned_fd, identity in reversed(pins):
+            try:
+                current = os.fstat(owned_fd)
+                if (current.st_dev, current.st_ino) != (identity.st_dev, identity.st_ino):
+                    raise ValueError("Reservation descriptor changed before cleanup")
+                os.close(owned_fd)
+            except BaseException as error:
+                if first_error is None:
+                    first_error = error
+                try:
+                    current = os.fstat(owned_fd)
+                    if (current.st_dev, current.st_ino) == (identity.st_dev, identity.st_ino):
+                        _TERMINAL_CLOSE(owned_fd)
+                except OSError:
+                    pass
+    try:
+        if first_error is None:
+            check()
+            directory_pin, file_pin = (row[0] for row in verification_pins)
+            current_directory = directory.lstat()
+            if directory.resolve(strict=True) != directory or (current_directory.st_dev, current_directory.st_ino) != (
+                original_directory.st_dev,
+                original_directory.st_ino,
+            ):
+                raise ValueError("Original reservation directory changed during cleanup")
+            current_file = os.stat("permit-reservation.json", dir_fd=directory_pin, follow_symlinks=False)
+            live_file = os.fstat(file_pin)
+            if (current_file.st_dev, current_file.st_ino) != (original_file.st_dev, original_file.st_ino) or (
+                live_file.st_dev,
+                live_file.st_ino,
+            ) != (original_file.st_dev, original_file.st_ino):
+                raise ValueError("Original reservation file changed during cleanup")
+            # All resource I/O precedes the final artifact byte seal. Only
+            # captured, ownership-checked terminal descriptor releases follow.
+            check()
+            if current_file.st_size != len(raw) or live_file.st_size != len(raw) or os.pread(file_pin, 8193, 0) != raw:
+                raise ValueError("Original reservation bytes changed during cleanup")
+            if time.monotonic() >= deadline:
+                raise TimeoutError("Original reservation deadline reached at the final byte seal")
+    except BaseException as error:
+        if first_error is None:
+            first_error = error
+    finally:
+        for owned_fd, identity in reversed(verification_pins):
+            try:
+                current = _BIRTH_FSTAT(owned_fd)
+                if (current.st_dev, current.st_ino) != (identity.st_dev, identity.st_ino):
+                    raise ValueError("Verification reservation descriptor was replaced")
+                _TERMINAL_CLOSE(owned_fd)
+            except BaseException as error:
+                if first_error is None:
+                    first_error = error
+    if first_error is not None:
+        raise first_error
+    return {
+        "reservation_sha256": sha256(raw).hexdigest(),
+        "transport_only": True,
+        "native_operation_authorized": False,
+        "channel_release_performed": False,
+        "source_admission_granted": False,
+    }
+
+
+def reserve_and_exchange_transport_probe(
+    attempt_directory,
+    control_fd,
+    *,
+    attempt_id,
+    source_key,
+    registration_sha256,
+    start_sha256,
+    producer_pid,
+    start_nonce,
+    permit_nonce,
+    max_seconds=900,
+    parent_deadline=None,
+):
+    """Reserve then exchange a real transport-only message; grant no authority."""
+    started = time.monotonic()
+    deadline = _original_deadline(started, max_seconds, parent_deadline)
+    if type(control_fd) is not int or control_fd < 0:
+        raise ValueError("Require the original issuer-owned socket channel")
+    original = os.fstat(control_fd)
+    if not stat.S_ISSOCK(original.st_mode):
+        raise ValueError("Require the original issuer-owned socket channel")
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise TimeoutError("Original joint transport deadline reached before reservation")
+    reservation = reserve_one_use_transport_probe(
+        attempt_directory,
+        attempt_id=attempt_id,
+        source_key=source_key,
+        registration_sha256=registration_sha256,
+        start_sha256=start_sha256,
+        producer_pid=producer_pid,
+        start_nonce=start_nonce,
+        permit_nonce=permit_nonce,
+        max_seconds=remaining,
+        parent_deadline=deadline,
+    )
+
+    # The durable file remains consumed on every later refusal; no rollback,
+    # success marker or computation transition is supplied by this probe.
+    def remaining_time():
+        value = deadline - time.monotonic()
+        if value <= 0:
+            raise TimeoutError("Original joint transport deadline reached")
+        return value
+
+    remaining_time()
+    duplicate = os.dup(control_fd)
+    try:
+        current = _BIRTH_FSTAT(duplicate)
+        if (current.st_dev, current.st_ino) != (original.st_dev, original.st_ino):
+            raise ValueError("Original joint channel descriptor changed during duplication")
+        channel = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET, fileno=duplicate)
+    except BaseException:
+        try:
+            current = _BIRTH_FSTAT(duplicate)
+            if (current.st_dev, current.st_ino) == (original.st_dev, original.st_ino):
+                _TERMINAL_CLOSE(duplicate)
+        except BaseException:
+            pass
+        raise
+    first_error = None
+    try:
+
+        def channel_owned():
+            current = _BIRTH_FSTAT(duplicate)
+            borrowed = _BIRTH_FSTAT(control_fd)
+            expected_identity = (original.st_dev, original.st_ino)
+            if (current.st_dev, current.st_ino) != expected_identity or (
+                borrowed.st_dev,
+                borrowed.st_ino,
+            ) != expected_identity:
+                raise ValueError("Original joint socket descriptor changed before channel IO")
+
+        channel_owned()
+        if channel.getsockopt(socket.SOL_SOCKET, socket.SO_TYPE) != socket.SOCK_SEQPACKET:
+            raise ValueError("Require the original sequenced issuer socket channel")
+        message = {
+            "schema": "b3_full_context_live_permit_channel_v1",
+            "attempt_id": attempt_id,
+            "source_key": source_key,
+            "start_nonce": start_nonce,
+            "registration_sha256": registration_sha256,
+            "start_sha256": start_sha256,
+            "producer_pid": producer_pid,
+            "permit_nonce": permit_nonce,
+        }
+        raw = json.dumps(message, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+        if len(raw) > 8192:
+            raise ValueError("Joint channel message exceeds metadata bound")
+        with selectors.DefaultSelector() as selector:
+            selector.register(channel, selectors.EVENT_WRITE)
+            if not selector.select(remaining_time()):
+                raise TimeoutError("Original joint transport deadline reached before send")
+            remaining_time()
+            channel_owned()
+            if channel.send(raw, socket.MSG_DONTWAIT) != len(raw):
+                raise ValueError("Joint channel message was not sent completely")
+            selector.modify(channel, selectors.EVENT_READ)
+            if not selector.select(remaining_time()):
+                raise TimeoutError("Original joint transport deadline reached before acknowledgement")
+            remaining_time()
+            channel_owned()
+            data = channel.recv(8193, socket.MSG_DONTWAIT)
+        if not data or len(data) > 8192:
+            raise ValueError("Joint acknowledgement must be present and bounded")
+
+        def unique(pairs):
+            record = {}
+            for name, value in pairs:
+                if name in record:
+                    raise ValueError("Duplicate joint acknowledgement field")
+                record[name] = value
+            return record
+
+        def invalid(value):
+            raise ValueError("Nonfinite joint acknowledgement value: " + value)
+
+        acknowledgement = json.loads(data, object_pairs_hook=unique, parse_constant=invalid)
+        expected = {
+            "schema": "b3_full_context_live_permit_ack_v1",
+            "attempt_id": attempt_id,
+            "start_nonce": start_nonce,
+            "producer_pid": producer_pid,
+            "permit_nonce": permit_nonce,
+        }
+        if (
+            type(acknowledgement) is not dict
+            or set(acknowledgement) != set(expected)
+            or any(type(acknowledgement[k]) is not type(v) or acknowledgement[k] != v for k, v in expected.items())
+        ):
+            raise ValueError("Original child attempt/process acknowledgement binding differs")
+        remaining_time()
+    except BaseException as error:
+        first_error = error
+    finally:
+        try:
+            current = os.fstat(duplicate)
+            if (current.st_dev, current.st_ino) != (original.st_dev, original.st_ino):
+                raise ValueError("Joint socket descriptor changed before primary cleanup")
+            channel.close()
+        except BaseException as error:
+            if first_error is None:
+                first_error = error
+        finally:
+            try:
+                detached = _TERMINAL_SOCKET_DETACH(channel)
+                if detached not in (-1, duplicate):
+                    raise ValueError("Joint socket wrapper detached a foreign number")
+                if detached == duplicate:
+                    current = _BIRTH_FSTAT(duplicate)
+                    if (current.st_dev, current.st_ino) != (original.st_dev, original.st_ino):
+                        raise ValueError("Joint socket descriptor was replaced")
+                    _TERMINAL_CLOSE(duplicate)
+            except BaseException as error:
+                if first_error is None:
+                    first_error = error
+    if first_error is not None:
+        raise first_error
+    remaining_time()
+    return {
+        "reservation_sha256": reservation["reservation_sha256"],
+        "channel_message_sent": True,
+        "child_acknowledgement_verified": True,
+        "transport_only": True,
+        "native_operation_authorized": False,
+        "source_admission_granted": False,
+        "runtime_admission_granted": False,
+    }
+
+
+def inspect_child_process_transport_probe(
+    producer_pid,
+    *,
+    expected_argv,
+    expected_cwd,
+    expected_parent_pid=None,
+    expected_start_ticks=None,
+    max_seconds=900,
+    parent_deadline=None,
+):
+    """Observe a bounded live Linux child binding; supplied expectations grant no trust."""
+    started = time.monotonic()
+    deadline = _original_deadline(started, max_seconds, parent_deadline)
+    if type(producer_pid) is not int or not 0 < producer_pid <= 2**31 - 1:
+        raise ValueError("Require the original strict positive child PID")
+    if expected_parent_pid is None:
+        expected_parent_pid = os.getpid()
+    if type(expected_parent_pid) is not int or not 0 < expected_parent_pid <= 2**31 - 1:
+        raise ValueError("Require the original strict positive parent PID")
+    if expected_start_ticks is not None and (type(expected_start_ticks) is not int or expected_start_ticks <= 0):
+        raise ValueError("Require original positive process birth ticks")
+    if type(expected_argv) not in (list, tuple) or not 1 <= len(expected_argv) <= 128:
+        raise ValueError("Require a bounded literal original argv")
+    argv = []
+    total = 0
+    for item in expected_argv:
+        if type(item) is not str or len(item) > 4096 or "\0" in item:
+            raise ValueError("Require bounded literal argv strings")
+        raw = item.encode("utf-8", "surrogateescape")
+        if len(raw) > 4096:
+            raise ValueError("Original argv item exceeds byte bound")
+        total += len(raw) + 1
+        if total > 65536:
+            raise ValueError("Original argv exceeds aggregate byte bound")
+        argv.append(item)
+    if not argv[0]:
+        raise ValueError("Original executable argv must be present")
+    if type(expected_cwd) is not str or not 1 <= len(expected_cwd) <= 4096 or len(expected_cwd.encode()) > 4096:
+        raise ValueError("Require bounded canonical original cwd")
+    directory = Path(expected_cwd)
+    if not directory.is_absolute() or str(directory) != expected_cwd or ".." in directory.parts:
+        raise ValueError("Require canonical original absolute cwd syntax")
+
+    def check():
+        if time.monotonic() >= deadline:
+            raise TimeoutError("Original child inspection deadline reached")
+        available = None
+        for row in Path("/proc/meminfo").read_text().splitlines():
+            if row.startswith("MemAvailable:"):
+                available = int(row.split()[1]) * 1024
+        rss = None
+        for row in Path("/proc/self/status").read_text().splitlines():
+            if row.startswith("VmRSS:"):
+                rss = int(row.split()[1]) * 1024
+        if available is None or available < 4 * 1024**3 or rss is None or rss > 4 * 1024**3:
+            raise MemoryError("Process inspection retains host RAM floor and process RSS limit of 4 GiB")
+        if shutil.disk_usage(directory).free < 20 * 1024**3:
+            raise OSError("Process inspection available disk floor is 20 GiB")
+        if time.monotonic() >= deadline:
+            raise TimeoutError("Original child inspection deadline reached during resource IO")
+
+    def bounded(path, limit):
+        with path.open("rb") as handle:
+            raw = handle.read(limit + 1)
+        if len(raw) > limit:
+            raise ValueError("Original child metadata exceeds bound")
+        return raw
+
+    process = Path("/proc") / str(producer_pid)
+
+    def observation():
+        state = bounded(process / "stat", 8192)
+        split = state.rfind(b") ")
+        if split < 0 or state.partition(b" ")[0] != str(producer_pid).encode():
+            raise ValueError("Original process stat identity is malformed")
+        fields = state[split + 2 :].split()
+        if len(fields) < 22 or fields[0] in (b"Z", b"X", b"x"):
+            raise ValueError("Original child is not a live inspectable process")
+        parent, ticks = int(fields[1]), int(fields[19])
+        if (
+            parent != expected_parent_pid
+            or ticks <= 0
+            or (expected_start_ticks is not None and ticks != expected_start_ticks)
+        ):
+            raise ValueError("Original child parent or birth binding differs")
+        raw_argv = bounded(process / "cmdline", 65536)
+        if not raw_argv or not raw_argv.endswith(b"\0"):
+            raise ValueError("Original child argv is absent or malformed")
+        actual_argv = [arg.decode("utf-8", "surrogateescape") for arg in raw_argv[:-1].split(b"\0")]
+        if actual_argv != argv:
+            raise ValueError("Original child literal argv differs")
+        cwd = os.readlink(process / "cwd")
+        if cwd != expected_cwd:
+            raise ValueError("Original child literal cwd differs")
+        executable = os.readlink(process / "exe")
+        if len(executable) > 4096 or executable.endswith(" (deleted)"):
+            raise ValueError("Original child executable binding is unavailable")
+        boot = bounded(Path("/proc/sys/kernel/random/boot_id"), 128).decode("ascii").strip()
+        if re.fullmatch(r"[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}", boot) is None:
+            raise ValueError("Original boot identity is malformed")
+        return {
+            "pid": producer_pid,
+            "parent_pid": parent,
+            "start_ticks": ticks,
+            "boot_id": boot,
+            "argv": actual_argv,
+            "cwd": cwd,
+            "executable_path_observed": executable,
+        }
+
+    check()
+    if directory.resolve(strict=True) != directory or not directory.is_dir():
+        raise ValueError("Original child cwd path has an alias or changed binding")
+    before = observation()
+    check()
+    after = observation()
+    if before != after:
+        raise ValueError("Original child binding changed during process inspection")
+    if time.monotonic() >= deadline:
+        raise TimeoutError("Original child inspection deadline reached at final observation")
+    return {
+        **after,
+        "transport_only": True,
+        "native_operation_authorized": False,
+        "source_admission_granted": False,
+        "runtime_admission_granted": False,
+    }
+
+
+def inspect_then_exchange_transport_probe(
+    attempt_directory,
+    control_fd,
+    *,
+    attempt_id,
+    source_key,
+    registration_sha256,
+    start_sha256,
+    producer_pid,
+    start_nonce,
+    permit_nonce,
+    expected_argv,
+    expected_cwd,
+    expected_parent_pid=None,
+    expected_start_ticks=None,
+    max_seconds=900,
+    parent_deadline=None,
+):
+    """Bind the actual child before a one-use probe exchange; grant no authority."""
+    started = time.monotonic()
+    deadline = _original_deadline(started, max_seconds, parent_deadline)
+
+    def remaining():
+        seconds = deadline - time.monotonic()
+        if seconds <= 0:
+            raise TimeoutError("Original bound exchange deadline reached")
+        return seconds
+
+    observation = inspect_child_process_transport_probe(
+        producer_pid,
+        expected_argv=expected_argv,
+        expected_cwd=expected_cwd,
+        expected_parent_pid=expected_parent_pid,
+        expected_start_ticks=expected_start_ticks,
+        max_seconds=remaining(),
+        parent_deadline=deadline,
+    )
+    result = reserve_and_exchange_transport_probe(
+        attempt_directory,
+        control_fd,
+        attempt_id=attempt_id,
+        source_key=source_key,
+        registration_sha256=registration_sha256,
+        start_sha256=start_sha256,
+        producer_pid=producer_pid,
+        start_nonce=start_nonce,
+        permit_nonce=permit_nonce,
+        max_seconds=remaining(),
+        parent_deadline=deadline,
+    )
+    remaining()
+    return {**result, "process_observation": observation}
+
+
+def adopt_start_then_exchange_transport_probe(
+    attempt_directory,
+    control_fd,
+    start_ref,
+    *,
+    expected_start,
+    input_refs,
+    producer_pid,
+    start_nonce,
+    permit_nonce,
+    expected_argv,
+    expected_cwd,
+    expected_parent_pid=None,
+    expected_start_ticks=None,
+    max_seconds=900,
+    parent_deadline=None,
+):
+    """Keep original Start/input pins through a real transport-only exchange.
+
+    The supplied expected closure is not registration replay or owner admission.
+    This probe cannot attest the producer's original durable Start event.
+    """
+    deadline = _original_deadline(time.monotonic(), max_seconds, parent_deadline)
+    reference = _reference(start_ref)
+    pins = _InputPins(deadline, Path(reference["path"]).parent)
+    first_error = None
+    result = None
+    try:
+        reference, expected, inputs = _adopt_start(pins, reference, expected_start, input_refs)
+        if type(expected_argv) not in (list, tuple) or expected["producer_entrypoint"]["path"] not in expected_argv:
+            raise ValueError("Original child argv does not contain its frozen producer entrypoint")
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError("Original Start-bound exchange deadline reached before child inspection")
+        exchanged = inspect_then_exchange_transport_probe(
+            attempt_directory,
+            control_fd,
+            attempt_id=expected["attempt_id"],
+            source_key=expected["source_key"],
+            registration_sha256=expected["registration_sha256"],
+            start_sha256=reference["sha256"],
+            producer_pid=producer_pid,
+            start_nonce=start_nonce,
+            permit_nonce=permit_nonce,
+            expected_argv=expected_argv,
+            expected_cwd=expected_cwd,
+            expected_parent_pid=expected_parent_pid,
+            expected_start_ticks=expected_start_ticks,
+            max_seconds=remaining,
+            parent_deadline=deadline,
+        )
+        result = {
+            **exchanged,
+            "producer_start": reference,
+            "source_freeze": {"schema": "b3_full_context_controlled_source_freeze_v1", "files": inputs},
+            "start_bindings_verified": True,
+            "input_closure_admitted": False,
+            "durable_start_verified": False,
+        }
+    except BaseException as error:
+        first_error = error
+    pins.finish(first_error)
+    return result
