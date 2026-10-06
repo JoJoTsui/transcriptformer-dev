@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.932" timestamp="2026-10-06T11:18:08.684505+08:00" hostname="Conundrum"><testcase classname="test.test_b3_producer_control_transport" name="test_foreign_duplicate_is_refused_before_receiving_or_acknowledging" time="0.006"><failure message="Failed: DID NOT RAISE &lt;class 'TimeoutError'&gt;">tmp_path = PosixPath('/tmp/b3-producer-fd-red-20261006/test_foreign_duplicate_is_refu0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7bb1078565d0&gt;
+
+    def test_foreign_duplicate_is_refused_before_receiving_or_acknowledging(tmp_path, monkeypatch):
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        foreign_sender, foreign_receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        public = _producer()
+        real_dup = os.dup
+        replaced = []
+        message = {
+            "schema": "b3_full_context_live_permit_channel_v1", "attempt_id": "foreign-dup",
+            "source_key": str(tmp_path / "source"), "start_nonce": "start", "registration_sha256": "a" * 64,
+            "start_sha256": "b" * 64, "producer_pid": os.getpid(), "permit_nonce": "permit",
+        }
+        raw = json.dumps(message).encode()
+        foreign_sender.send(raw)
+    
+        def duplicate_with_foreign_binding(fd):
+            duplicate = real_dup(fd)
+            os.dup2(foreign_receiver.fileno(), duplicate)
+            replaced.append(duplicate)
+            return duplicate
+    
+        monkeypatch.setattr(public.os, "dup", duplicate_with_foreign_binding)
+        try:
+            with pytest.raises(ValueError, match="descriptor|duplication|binding"):
+                public.await_computation_permit(
+                    receiver.fileno(), attempt_id="foreign-dup", source_key=str(tmp_path / "source"),
+                    start_nonce="start", registration_sha256="a" * 64, start_sha256="b" * 64,
+                    expected_issuer_pid=os.getpid(), max_seconds=1,
+                )
+            assert len(replaced) == 1
+            assert os.fstat(replaced[0]).st_ino == os.fstat(foreign_receiver.fileno()).st_ino
+            foreign_sender.settimeout(0.01)
+&gt;           with pytest.raises(TimeoutError):
+E           Failed: DID NOT RAISE &lt;class 'TimeoutError'&gt;
+
+test/test_b3_producer_control_transport.py:471: Failed</failure></testcase></testsuite></testsuites>

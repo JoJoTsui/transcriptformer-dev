@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="3" failures="0" skipped="0" tests="3" time="1.252" timestamp="2026-10-06T11:34:02.424177+08:00" hostname="Conundrum"><testcase classname="" name="test.test_b3_issuer_control_start" time="0.000"><error message="collection failure">ImportError while importing test module '/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_issuer_control_start.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/test_b3_issuer_control_start.py:16: in &lt;module&gt;
+    from b3_control_test_support import read_control_line
+E   ModuleNotFoundError: No module named 'b3_control_test_support'</error></testcase><testcase classname="" name="test.test_b3_issuer_control_process" time="0.000"><error message="collection failure">ImportError while importing test module '/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_issuer_control_process.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/test_b3_issuer_control_process.py:11: in &lt;module&gt;
+    from b3_control_test_support import read_control_line
+E   ModuleNotFoundError: No module named 'b3_control_test_support'</error></testcase><testcase classname="" name="test.test_b3_issuer_control_bound_exchange" time="0.000"><error message="collection failure">ImportError while importing test module '/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_issuer_control_bound_exchange.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/test_b3_issuer_control_bound_exchange.py:13: in &lt;module&gt;
+    from b3_control_test_support import read_control_line
+E   ModuleNotFoundError: No module named 'b3_control_test_support'</error></testcase></testsuite></testsuites>

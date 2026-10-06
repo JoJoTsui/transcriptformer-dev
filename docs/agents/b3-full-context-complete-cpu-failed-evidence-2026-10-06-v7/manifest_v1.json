@@ -1,0 +1,111 @@
+{
+  "schema": "b3_full_cpu_host_storage_failure_evidence_v1",
+  "frozen_source_commit": "997519fdd73e34777129a6f6ec617597f74d4011",
+  "status": "failed_or_unverified",
+  "pytest_reported_passes": 889,
+  "failed_calls": 1,
+  "teardown_errors": 1,
+  "distinct_reported_calls": 890,
+  "junit_accounting_accepted": false,
+  "peak_main_process_rss_bytes": 926158848,
+  "largest_completed_child_rss_bytes": 926158848,
+  "rss_scope": "separate process maxima; not aggregate or complete numeric peak",
+  "windows_C_free_bytes": 0,
+  "windows_D_free_bytes": 411085393920,
+  "wsl_ext4_emergency_readonly_observed": true,
+  "runtime_admission_granted": false,
+  "source_admission_granted": false,
+  "scientific_acceptance": false,
+  "artifacts": [
+    {
+      "path": "capture_full_context_complete_cpu_v7.py",
+      "sha256": "bf2720723cf2905504bdc918f20b3771cd00dc2c614be236b7342371c7d7f6cf",
+      "bytes": 4525
+    },
+    {
+      "path": "full_context_complete_cpu_v7.xml",
+      "sha256": "61d946afa884dce345c23c0175510932dc2102ee678007adb518d7fecffdeef0",
+      "bytes": 172688
+    },
+    {
+      "path": "full_context_complete_cpu_v7_capture_result.json",
+      "sha256": "ee11aa70e2fd3980d292f0da4763545542633c0cd37add9c60329df5885c0c17",
+      "bytes": 558
+    },
+    {
+      "path": "full_context_complete_cpu_v7_case_events.jsonl",
+      "sha256": "257e51e63d1d5dd7cced5ecfe07a44dc6a6e9c99a0ea99732180a6391e5259d5",
+      "bytes": 781470
+    },
+    {
+      "path": "full_context_complete_cpu_v7_driver_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "full_context_complete_cpu_v7_driver_stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "full_context_complete_cpu_v7_freeze_manifest.json",
+      "sha256": "ec8a502d49bdd81ec5de3fa6d1083aee7e636891ebe1eca076a18335efeff079",
+      "bytes": 132742
+    },
+    {
+      "path": "full_context_complete_cpu_v7_gnu_time.txt",
+      "sha256": "ca84141aa060db999ac01c14f91e61b526393ad6d35a910da18b1e2fd19bdf6d",
+      "bytes": 1225
+    },
+    {
+      "path": "full_context_complete_cpu_v7_invocation.json",
+      "sha256": "954239394e884c6e42e42e531280ab3aee3153adb66b9489622b99705b57abbf",
+      "bytes": 1973
+    },
+    {
+      "path": "full_context_complete_cpu_v7_result.json",
+      "sha256": "f0d474df32d2c97e5dd4bab1d7d4216c66f4f9a10deba77362766ee3f6c1619c",
+      "bytes": 864335
+    },
+    {
+      "path": "full_context_complete_cpu_v7_supervisor_producer.log",
+      "sha256": "b3ed2439734502e34210ccfba21ec11a919a8941f34eaaac5ef2ecbb2d3fd9bf",
+      "bytes": 155897
+    },
+    {
+      "path": "full_context_complete_cpu_v7_supervisor_state.json",
+      "sha256": "0cf308dfb9823f8a6864af30d2562e68fbdc1b1f60e745ebbf9e15a4d99eef4f",
+      "bytes": 1354
+    },
+    {
+      "path": "full_context_complete_cpu_v7_supervisor_supervisor.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "prospective_plan_assertions_not_executed.py.txt",
+      "sha256": "e1aa26ed209fd2fdda1fdcb01fa2df76d5383e2fc53bd10699dc5f9fc9aacaa7",
+      "bytes": 20498
+    },
+    {
+      "path": "run_full_context_complete_cpu_v7.py",
+      "sha256": "d16d7727279b042ef52791d92f5143e95c22af8b71f63bb3a1cac2dabd240935",
+      "bytes": 22157
+    },
+    {
+      "path": "windows_drive_space.json",
+      "sha256": "b2aa684662feacad0db40ad0e468290b377e469af62ed2049c6ada4939ec39e5",
+      "bytes": 98
+    },
+    {
+      "path": "wsl_distribution_backing.json",
+      "sha256": "613eeee69129de8a6b4bee281b6b7875844e58744f35d9a9affd4301f3aad563",
+      "bytes": 121
+    },
+    {
+      "path": "wsl_mount_health.txt",
+      "sha256": "4c9ed2f2edd057d52fef5e5f2fd00d7849504110d565ffc98523efc1f3456844",
+      "bytes": 606
+    }
+  ]
+}

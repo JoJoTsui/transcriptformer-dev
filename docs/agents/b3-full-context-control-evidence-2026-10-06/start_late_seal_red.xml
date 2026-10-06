@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="11" time="0.954" timestamp="2026-10-06T11:23:35.798878+08:00" hostname="Conundrum"><testcase classname="test.test_b3_issuer_control_start" name="test_original_start_and_complete_supplied_input_bytes_are_inspected_without_authority" time="0.008" /><testcase classname="test.test_b3_issuer_control_start" name="test_start_or_predecessor_disagreement_is_refused[changed_start]" time="0.005" /><testcase classname="test.test_b3_issuer_control_start" name="test_start_or_predecessor_disagreement_is_refused[changed_input]" time="0.005" /><testcase classname="test.test_b3_issuer_control_start" name="test_start_or_predecessor_disagreement_is_refused[duplicate_field]" time="0.004" /><testcase classname="test.test_b3_issuer_control_start" name="test_start_or_predecessor_disagreement_is_refused[extra_field]" time="0.005" /><testcase classname="test.test_b3_issuer_control_start" name="test_start_or_predecessor_disagreement_is_refused[missing_input]" time="0.004" /><testcase classname="test.test_b3_issuer_control_start" name="test_start_or_predecessor_disagreement_is_refused[wrong_commit]" time="0.004" /><testcase classname="test.test_b3_issuer_control_start" name="test_start_or_predecessor_disagreement_is_refused[project_profile]" time="0.004" /><testcase classname="test.test_b3_issuer_control_start" name="test_start_or_predecessor_disagreement_is_refused[boolean_size]" time="0.004" /><testcase classname="test.test_b3_issuer_control_start" name="test_start_or_predecessor_disagreement_is_refused[aliased_input]" time="0.005" /><testcase classname="test.test_b3_issuer_control_start" name="test_late_resource_io_cannot_mutate_an_already_checked_start" time="0.005"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('/tmp/b3-start-late-seal-red-20261006/test_late_resource_io_cannot_m0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7cd175fc6010&gt;
+
+    def test_late_resource_io_cannot_mutate_an_already_checked_start(tmp_path, monkeypatch):
+        start, expected, inputs = fixture(tmp_path)
+        original = ref(start)
+        public = issuer()
+        start_identity = (start.stat().st_dev, start.stat().st_ino)
+        real_close, real_disk = public.os.close, public.shutil.disk_usage
+        primary_closed = False
+        later_checks = 0
+        mutated = False
+    
+        def close(fd):
+            nonlocal primary_closed
+            info = public.os.fstat(fd)
+            real_close(fd)
+            if (info.st_dev, info.st_ino) == start_identity:
+                primary_closed = True
+    
+        def disk(path):
+            nonlocal later_checks, mutated
+            result = real_disk(path)
+            if primary_closed:
+                later_checks += 1
+                if later_checks == 3:
+                    start.write_bytes(start.read_bytes().replace(b"start-attempt", b"other-attempt"))
+                    mutated = True
+            return result
+    
+        monkeypatch.setattr(public.os, "close", close)
+        monkeypatch.setattr(public.shutil, "disk_usage", disk)
+&gt;       with pytest.raises(ValueError, match="bytes|ownership|size|changed"):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+test/test_b3_issuer_control_start.py:143: Failed</failure></testcase></testsuite></testsuites>

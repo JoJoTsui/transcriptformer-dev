@@ -1,5 +1,12 @@
 # Author check of control prerequisites — 2026-10-05
 
+## Later canonical integration — 2026-10-06
+
+The later canonical control slice997519f has fresh independent Spec/Standards
+reviews, each zero hard/zero optional findings; earlier quota-limited entries
+remain historical. Source/runtime admission stays false. Current full CPU
+validation is host-storage failed, and physical backing-volume admission plus
+WSL recovery remain required. [Exact implementation and evidence](b3-full-context-control-implementation-2026-10-06.md).
 
 ## Current author check — exact 56-case source capture
 

@@ -1,0 +1,14 @@
+{
+  "actual_supervisor_exit_code": 1,
+  "driver_elapsed_seconds": 408.791250269016,
+  "driver_elapsed_scope": "Supervisor command and raw stdio-close window; excludes post-command source checks, capture-result IO and final driver return",
+  "actual_full_cpu_runner_result_present": true,
+  "complete_cpu_accounting_passed": false,
+  "runner_sha256_stable": true,
+  "freeze_manifest_sha256_stable": true,
+  "counts": null,
+  "capture_exit_code": 1,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "scientific_acceptance": false
+}

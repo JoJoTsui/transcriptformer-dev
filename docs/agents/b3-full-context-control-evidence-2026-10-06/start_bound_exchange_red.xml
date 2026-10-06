@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.020" timestamp="2026-10-06T11:25:04.823171+08:00" hostname="Conundrum"><testcase classname="test.test_b3_issuer_control_start" name="test_start_bound_real_child_exchange_preserves_consumption_without_granting_authority" time="0.060"><failure message="AttributeError: module 'issuer_start_public' has no attribute 'adopt_start_then_exchange_transport_probe'">tmp_path = PosixPath('/tmp/b3-start-bound-red-20261006/test_start_bound_real_child_ex0')
+
+    def test_start_bound_real_child_exchange_preserves_consumption_without_granting_authority(tmp_path):
+        import os
+        import socket
+        import subprocess
+        import sys
+    
+        start, expected, inputs = fixture(tmp_path)
+        producer_path = Path(__file__).resolve().parents[1] / "scripts/produce_b3_synthetic_native_stored.py"
+        old_entrypoint = expected["producer_entrypoint"]["path"]
+        expected["producer_entrypoint"] = ref(producer_path)
+        expected["producer_file_sha256"] = {str(producer_path): ref(producer_path)["sha256"]}
+        inputs = sorted([item for item in inputs if item["path"] != old_entrypoint] + [ref(producer_path)], key=lambda item: item["path"])
+        start.write_text(json.dumps(expected, sort_keys=True, separators=(",", ":")) + "\n")
+        original_start = ref(start)
+        attempt = tmp_path / "attempt"
+        attempt.mkdir()
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        program = """
+    import importlib.util,json,os,sys
+    s=importlib.util.spec_from_file_location('start_bound_child',sys.argv[1])
+    p=importlib.util.module_from_spec(s);s.loader.exec_module(p)
+    print('ready',flush=True)
+    r=p.await_computation_permit(int(sys.argv[2]),attempt_id='start-attempt',source_key=sys.argv[3],
+     start_nonce='start-bound',registration_sha256=sys.argv[4],start_sha256=sys.argv[5],
+     expected_issuer_pid=int(sys.argv[6]),max_seconds=5)
+    print(json.dumps({'pid':os.getpid(),'native_operation_authorized':r['native_operation_authorized']}))
+    """
+        argv = [sys.executable, "-u", "-c", program, str(producer_path), str(receiver.fileno()), expected["source_key"],
+                expected["registration_sha256"], original_start["sha256"], str(os.getpid())]
+        child = None
+        try:
+            child = subprocess.Popen(argv, cwd=tmp_path, pass_fds=(receiver.fileno(),), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            receiver.close()
+            assert child.stdout.readline() == b"ready\n"
+&gt;           result = issuer().adopt_start_then_exchange_transport_probe(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                attempt, sender.fileno(), original_start, expected_start=expected, input_refs=inputs,
+                producer_pid=child.pid, start_nonce="start-bound", permit_nonce="permit-bound",
+                expected_argv=argv, expected_cwd=str(tmp_path), max_seconds=5,
+            )
+E           AttributeError: module 'issuer_start_public' has no attribute 'adopt_start_then_exchange_transport_probe'
+
+test/test_b3_issuer_control_start.py:182: AttributeError</failure></testcase></testsuite></testsuites>

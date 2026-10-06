@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.908" timestamp="2026-10-06T11:32:00.701093+08:00" hostname="Conundrum"><testcase classname="test.test_b3_issuer_control_start" name="test_registration_summary_file_hash_and_payload_digest_are_separate_bindings" time="0.014"><failure message="ValueError: Original Start registration Ref/hash disagree">tmp_path = PosixPath('/tmp/b3-start-digest-red-20261006/test_registration_summary_file0')
+
+    def test_registration_summary_file_hash_and_payload_digest_are_separate_bindings(tmp_path):
+        start, expected, inputs = fixture(tmp_path)
+        expected["registration_sha256"] = "a" * 64
+        assert expected["registration_result"]["sha256"] != expected["registration_sha256"]
+        start.write_text(json.dumps(expected, sort_keys=True, separators=(",", ":")) + "\n")
+&gt;       result = issuer().inspect_producer_start_transport_probe(
+            ref(start), expected_start=expected, input_refs=inputs, max_seconds=2,
+        )
+
+test/test_b3_issuer_control_start.py:334: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/capture_b3_full_context_controlled_execution.py:378: in inspect_producer_start_transport_probe
+    pins.finish(first_error)
+scripts/capture_b3_full_context_controlled_execution.py:312: in finish
+    raise first_error
+scripts/capture_b3_full_context_controlled_execution.py:365: in inspect_producer_start_transport_probe
+    reference, _, inputs = _adopt_start(pins, reference, expected_start, input_refs)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/capture_b3_full_context_controlled_execution.py:324: in _adopt_start
+    expected = _start_bindings(expected_start)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = {'attempt_id': 'start-attempt', 'checkpoint_tensors_loaded': False, 'execution_context': {'cublas_workspace_config': '...mmary_file0/source-admission.json', 'sha256': '57d26f21be20807a8a17bed938620e5a4532ffdd949493c15952d543a4ce515d'}, ...}
+
+    def _start_bindings(value: dict[str, Any]) -&gt; dict[str, Any]:
+        if type(value) is not dict or set(value) != _START_FIELDS:
+            raise ValueError("Require the exact closed original ProducerStart schema")
+        if (
+            value["schema"] != "b3_full_context_producer_start_v2"
+            or value["status"] != "ready_for_synthetic_stored_arithmetic"
+            or value["registration_profile"] != "synthetic_stored_arithmetic_v1"
+            or value["method"] != "b3_measured_zero_peer_null_v2"
+            or value["checkpoint_tensors_loaded"] is not False
+            or value["model_forwards_performed"] is not False
+        ):
+            raise ValueError("Start inspection supports only pre-computation synthetic stored arithmetic")
+        if (
+            type(value["attempt_id"]) is not str
+            or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", value["attempt_id"]) is None
+        ):
+            raise ValueError("Require a canonical original Start attempt ID")
+        _canonical_path(value["source_key"])
+        for field in ("registration_sha256", "producer_intent_sha256", "source_binding_sha256"):
+            if type(value[field]) is not str or re.fullmatch(r"[0-9a-f]{64}", value[field]) is None:
+                raise ValueError("Require the original canonical Start binding digests")
+        if (
+            type(value["software_commit_actual"]) is not str
+            or re.fullmatch(r"[0-9a-f]{40}", value["software_commit_actual"]) is None
+        ):
+            raise ValueError("Require the original actual source commit syntax")
+        references = {
+            name: _reference(value[name])
+            for name in ("registration_result", "issuer_source_admission", "producer_entrypoint")
+        }
+        if references["registration_result"]["sha256"] != value["registration_sha256"]:
+&gt;           raise ValueError("Original Start registration Ref/hash disagree")
+E           ValueError: Original Start registration Ref/hash disagree
+
+scripts/capture_b3_full_context_controlled_execution.py:122: ValueError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,514 @@
+"""Run the source-frozen repository CPU suite once, including two empty CLI files.
+
+The manifest pins a concrete committed source snapshot,
+all tracked Python bytes and the full supplied test-file list. This runner
+does not reuse historical JUnit, collection, preparation or execution results.
+
+The predecessor independent runner reviews remain scoped to v1. Fresh v7
+independent review is pending at the agent service usage limit; this runner
+grants no SourceAdmission, RuntimeAdmission or scientific acceptance.
+"""
+
+from __future__ import annotations
+
+import argparse
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import resource
+import stat
+import subprocess
+import time
+import xml.etree.ElementTree as ET
+
+_OBSERVATION_CLOCK = time.monotonic
+
+ROOT = Path("/tmp/b3-control-linux-regression-20261006")
+BASE = Path(__file__).resolve().parent
+XML = BASE / "full_context_complete_cpu_v7.xml"
+RESULT = BASE / "full_context_complete_cpu_v7_result.json"
+EVENTS = BASE / "full_context_complete_cpu_v7_case_events.jsonl"
+BASETEMP = Path("/tmp/b3-control-full-cpu-20261006-v7")
+KNOWN_EMPTY = {"test/test_compare_emb.py", "test/test_compare_umap.py"}
+NEW_TESTS = {
+    "test/test_b3_full_context_observed.py",
+    "test/test_b3_paged_native_common_source_controller.py",
+    "test/test_b3_full_context_synthetic_fixture.py",
+    "test/test_b3_full_context_runtime_authority.py",
+    "test/test_b3_issuer_control_bound_exchange.py",
+    "test/test_b3_issuer_control_deadline.py",
+    "test/test_b3_issuer_control_exchange.py",
+    "test/test_b3_issuer_control_process.py",
+    "test/test_b3_issuer_control_reservation.py",
+    "test/test_b3_issuer_control_source_key.py",
+    "test/test_b3_issuer_control_start.py",
+    "test/test_b3_producer_control_source_key.py",
+    "test/test_b3_producer_control_transport.py",
+}
+SUBSET_MODULES = {
+    "native": "test_b3_paged_native_common_source",
+    "application": "test_b3_paged_native_common_bootstrap",
+    "observed": "test_b3_full_context_observed",
+    "planner": "test_b3_paged_native_common_source_controller",
+    "preparation": "test_b3_full_context_synthetic_fixture",
+    "source_verification": "test_b3_full_context_runtime_authority",
+    "issuer_control_bound_exchange": "test_b3_issuer_control_bound_exchange",
+    "issuer_control_deadline": "test_b3_issuer_control_deadline",
+    "issuer_control_exchange": "test_b3_issuer_control_exchange",
+    "issuer_control_process": "test_b3_issuer_control_process",
+    "issuer_control_reservation": "test_b3_issuer_control_reservation",
+    "issuer_control_source_key": "test_b3_issuer_control_source_key",
+    "issuer_control_start": "test_b3_issuer_control_start",
+    "producer_control_source_key": "test_b3_producer_control_source_key",
+    "producer_control_transport": "test_b3_producer_control_transport",
+}
+
+
+def need(condition, reason):
+    if not condition:
+        raise ValueError(reason)
+
+
+def bounded_file(path, maximum):
+    path = Path(path).resolve(strict=True)
+    initial = path.stat()
+    need(
+        stat.S_ISREG(initial.st_mode) and 0 < initial.st_size <= maximum, "Require a bounded regular source or manifest"
+    )
+    fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK | os.O_NOFOLLOW)
+    with os.fdopen(fd, "rb") as stream:
+        opened = os.fstat(stream.fileno())
+        identity = initial.st_dev, initial.st_ino, initial.st_size
+        need(
+            stat.S_ISREG(opened.st_mode) and (opened.st_dev, opened.st_ino, opened.st_size) == identity,
+            "Source or manifest changed before byte admission",
+        )
+        data = stream.read(maximum + 1)
+        after = os.fstat(stream.fileno())
+        need(
+            len(data) == initial.st_size and (after.st_dev, after.st_ino, after.st_size) == identity,
+            "Source or manifest changed during byte admission",
+        )
+    return {"path": str(path), "sha256": sha256(data).hexdigest(), "bytes": len(data)}, data
+
+
+def command(*args):
+    return subprocess.check_output(args, cwd=ROOT)
+
+
+def python_index():
+    result = {}
+    for row in command("git", "ls-files", "--stage", "-z", "--", "*.py").split(b"\0"):
+        if not row:
+            continue
+        header, name = row.split(b"\t", 1)
+        mode, blob, stage = header.decode().split()
+        need(stage == "0", "Unmerged Python source in Git index")
+        result[name.decode()] = {"mode": mode, "blob": blob}
+    return result
+
+
+def python_tree(head):
+    result = {}
+    for row in command("git", "ls-tree", "-r", "-z", head).split(b"\0"):
+        if not row:
+            continue
+        header, name = row.split(b"\t", 1)
+        mode, kind, blob = header.decode().split()
+        path = name.decode()
+        if path.endswith(".py"):
+            need(kind == "blob", "Unexpected Python Git tree object")
+            result[path] = {"mode": mode, "blob": blob}
+    return result
+
+
+def snapshot():
+    head = command("git", "rev-parse", "HEAD").decode().strip()
+    index = python_index()
+    modules = sorted(
+        name
+        for name in command("rg", "--files", "test").decode().splitlines()
+        if Path(name).name.startswith("test_") and name.endswith(".py")
+    )
+    return {
+        "head": head,
+        "python_index_path_mode_blob": index,
+        "python_head_path_mode_blob": python_tree(head),
+        "python_file_sha256": {name: sha256((ROOT / name).read_bytes()).hexdigest() for name in index},
+        "sorted_rg_test_modules": modules,
+    }
+
+
+def validate_manifest(manifest):
+    need(
+        set(manifest) == {"schema", "snapshot", "baseline", "known_empty_cli_files", "new_test_modules"}
+        and manifest["schema"] == "b3_full_context_cpu_freeze_manifest_v2",
+        "Require the closed current CPU freeze manifest",
+    )
+    frozen = manifest["snapshot"]
+    need(
+        set(frozen)
+        == {
+            "head",
+            "python_index_path_mode_blob",
+            "python_head_path_mode_blob",
+            "python_file_sha256",
+            "sorted_rg_test_modules",
+        },
+        "Freeze snapshot schema differs",
+    )
+    need(
+        manifest["known_empty_cli_files"] == sorted(KNOWN_EMPTY) and manifest["new_test_modules"] == sorted(NEW_TESTS),
+        "Freeze must explicitly account for the two known CLI utilities and all thirteen test additions",
+    )
+    modules = frozen["sorted_rg_test_modules"]
+    index = frozen["python_index_path_mode_blob"]
+    need(
+        modules == sorted(set(modules))
+        and len(modules) == 84
+        and KNOWN_EMPTY | NEW_TESTS <= set(modules)
+        and set(modules) <= set(index)
+        and len(index) == 253
+        and index == frozen["python_head_path_mode_blob"],
+        "Require the committed 253 Python sources and all 84 supplied test files",
+    )
+    baseline = manifest["baseline"]
+    need(
+        set(baseline) == {"reference", "head", "python_file_sha256"}
+        and baseline["head"] == "058bab20d3f2e8ec45fe55f31eea69370d19e8de"
+        and len(baseline["python_file_sha256"]) == 233,
+        "Require the original 233-source extension baseline",
+    )
+    ref = baseline["reference"]
+    need(set(ref) == {"path", "sha256", "bytes"}, "Baseline reference schema differs")
+    actual, data = bounded_file(Path(ref["path"]), 4 * 1024**2)
+    need(actual == ref, "Original extension baseline bytes changed")
+    original = json.loads(data)
+    need(
+        original["baseline_head"] == baseline["head"]
+        and original["python_file_sha256"] == baseline["python_file_sha256"]
+        and all(
+            frozen["python_file_sha256"].get(name) == digest for name, digest in baseline["python_file_sha256"].items()
+        ),
+        "A preexisting Python source differs from the preserved baseline",
+    )
+    need(
+        all(
+            index.get(name) == original["full_git_index_path_mode_blob"].get(name)
+            for name in baseline["python_file_sha256"]
+        ),
+        "A preexisting Python Git mode or blob differs from the preserved baseline",
+    )
+
+
+class CollectionProof:
+    def __init__(self, supplied_files):
+        self.supplied_files = set(supplied_files)
+        self.file_collect_reports = {}
+        self.selected_node_ids = []
+        self.deselected_node_ids = []
+        self.items_by_test_file = {}
+        self.xml_ids_by_test_file = {}
+        self.reported_node_ids = set()
+
+    def pytest_collectreport(self, report):
+        if report.nodeid in self.supplied_files:
+            need(report.nodeid not in self.file_collect_reports, "Duplicate test-file collection report")
+            self.file_collect_reports[report.nodeid] = {
+                "outcome": report.outcome,
+                "direct_children": len(report.result),
+            }
+
+    def pytest_deselected(self, items):
+        self.deselected_node_ids.extend(item.nodeid for item in items)
+
+    def pytest_collection_finish(self, session):
+        # Use the installed JUnit plugin's actual address/character conversion;
+        # class members and parameter IDs need its exact encoding.
+        from _pytest.junitxml import bin_xml_escape, mangle_test_address
+
+        self.selected_node_ids = [item.nodeid for item in session.items]
+        for item in session.items:
+            name = Path(item.path).resolve().relative_to(ROOT).as_posix()
+            self.items_by_test_file.setdefault(name, []).append(item.nodeid)
+            address = mangle_test_address(item.nodeid)
+            self.xml_ids_by_test_file.setdefault(name, []).append([".".join(address[:-1]), bin_xml_escape(address[-1])])
+
+    def pytest_runtest_logreport(self, report):
+        self.reported_node_ids.add(report.nodeid)
+        with EVENTS.open("a") as events:
+            events.write(
+                json.dumps(
+                    {
+                        "node_id": report.nodeid,
+                        "phase": report.when,
+                        "outcome": report.outcome,
+                        "pytest_phase_seconds": report.duration,
+                        "observed_monotonic_seconds": _OBSERVATION_CLOCK(),
+                        "longrepr": str(report.longrepr) if report.failed else None,
+                    },
+                    allow_nan=False,
+                )
+                + "\n"
+            )
+            events.flush()
+
+    def evidence(self, supplied_files, xml):
+        actual_nonempty = set(self.items_by_test_file)
+        actual_empty = set(supplied_files) - actual_nonempty
+        selected = self.selected_node_ids
+        xml_count = None if xml is None else xml["counts"]["tests"]
+        expected_xml_ids = [tuple(row) for rows in self.xml_ids_by_test_file.values() for row in rows]
+        actual_xml_ids = [] if xml is None else [tuple(row) for row in xml["xml_case_identities"]]
+        exact_xml = (
+            len(expected_xml_ids) == len(set(expected_xml_ids))
+            and len(actual_xml_ids) == len(set(actual_xml_ids))
+            and set(expected_xml_ids) == set(actual_xml_ids)
+        )
+        subset_matches = {}
+        for key, module in SUBSET_MODULES.items():
+            expected_ids = self.xml_ids_by_test_file.get("test/" + module + ".py", [])
+            actual_rows = [] if xml is None else xml["case_subsets"][key]
+            actual_ids = [[row["classname"], row["name"]] for row in actual_rows]
+            subset_matches[key] = (
+                bool(expected_ids)
+                and len(expected_ids) == len(actual_ids)
+                and {tuple(row) for row in expected_ids} == {tuple(row) for row in actual_ids}
+            )
+        collected_files = (
+            set(self.file_collect_reports) == set(supplied_files)
+            and all(row["outcome"] == "passed" for row in self.file_collect_reports.values())
+            and all(self.file_collect_reports[name]["direct_children"] == 0 for name in KNOWN_EMPTY)
+            and all(self.file_collect_reports[name]["direct_children"] > 0 for name in actual_nonempty)
+        )
+        covered = (
+            not self.deselected_node_ids
+            and actual_nonempty == set(supplied_files) - KNOWN_EMPTY
+            and actual_empty == KNOWN_EMPTY
+            and all(self.items_by_test_file[name] for name in actual_nonempty)
+            and len(selected) == len(set(selected)) == xml_count
+            and set(selected) == self.reported_node_ids
+            and collected_files
+            and exact_xml
+            and all(subset_matches.values())
+        )
+        return {
+            "supplied_test_files": supplied_files,
+            "actual_nonempty_test_files": sorted(actual_nonempty),
+            "actual_empty_test_files": sorted(actual_empty),
+            "selected_node_ids": selected,
+            "deselected_node_ids": self.deselected_node_ids,
+            "items_by_test_file": self.items_by_test_file,
+            "actual_file_collect_reports": self.file_collect_reports,
+            "xml_ids_by_test_file": self.xml_ids_by_test_file,
+            "all_supplied_files_have_distinct_successful_collect_reports": collected_files,
+            "all_xml_case_identities_match_actual_collected_nodes": exact_xml,
+            "subset_xml_case_identity_matches": subset_matches,
+            "reported_node_ids": sorted(self.reported_node_ids),
+            "all_supplied_test_files_accounted_for_without_deselection": covered,
+        }
+
+
+def junit_evidence(path):
+    ref, data = bounded_file(path, 64 * 1024**2)
+    root = ET.fromstring(data)
+    suites = [root] if root.tag == "testsuite" else list(root.iter("testsuite"))
+    need(bool(suites), "JUnit contains no test suites")
+    counts = {
+        name: sum(int(suite.get(name, "0")) for suite in suites) for name in ("tests", "errors", "failures", "skipped")
+    }
+    cases = list(root.iter("testcase"))
+    need(counts["tests"] == len(cases), "JUnit aggregate and actual test-case counts differ")
+    counts["passed"] = counts["tests"] - counts["errors"] - counts["failures"] - counts["skipped"]
+    need(counts["passed"] >= 0, "Invalid JUnit counts")
+    subsets = {key: [] for key in SUBSET_MODULES}
+    for case in cases:
+        class_name, name = case.get("classname"), case.get("name")
+        for key, module in SUBSET_MODULES.items():
+            if (class_name or "").endswith(module):
+                subsets[key].append(
+                    {
+                        "classname": class_name,
+                        "name": name,
+                        "passed": not any(child.tag in {"failure", "error", "skipped"} for child in case),
+                    }
+                )
+    unique_pass = all(
+        rows
+        and len(rows) == len({(row["classname"], row["name"]) for row in rows})
+        and all(row["passed"] for row in rows)
+        for rows in subsets.values()
+    )
+    need(
+        len(subsets["native"]) == 45 and len(subsets["application"]) == 30,
+        "Frozen common-source 45/30 test subsets differ",
+    )
+    return {
+        "artifact": ref,
+        "xml_case_identities": [[case.get("classname"), case.get("name")] for case in cases],
+        "counts": counts,
+        "junit_suite_seconds": sum(float(suite.get("time", "0")) for suite in suites),
+        "case_subsets": subsets,
+        "case_subset_counts": {key: len(rows) for key, rows in subsets.items()},
+        "all_requested_subsets_distinct_and_passed": unique_pass,
+        "case_proof_scope": "Subsets of this same complete-suite JUnit, not independent targeted runs.",
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--expected-runner-sha256", required=True)
+    parser.add_argument("--freeze-manifest", type=Path, required=True)
+    parser.add_argument("--expected-manifest-sha256", required=True)
+    args = parser.parse_args()
+    runner_before, _ = bounded_file(Path(__file__), 4 * 1024**2)
+    manifest_ref, data = bounded_file(args.freeze_manifest, 4 * 1024**2)
+    need(
+        runner_before["sha256"] == args.expected_runner_sha256,
+        "Runner bytes differ from the pinned current capture source",
+    )
+    need(
+        manifest_ref["sha256"] == args.expected_manifest_sha256,
+        "Freeze manifest differs from its independently recorded SHA",
+    )
+    manifest = json.loads(data)
+    validate_manifest(manifest)
+    need(
+        not os.path.lexists(XML)
+        and not os.path.lexists(RESULT)
+        and not os.path.lexists(EVENTS)
+        and not os.path.lexists(BASETEMP),
+        "Require fresh dedicated CPU regression outputs and basetemp",
+    )
+    with EVENTS.open("x"):
+        pass
+    before = snapshot()
+    need(before == manifest["snapshot"], "Current commit/index/Python/test files differ from the pinned freeze")
+    need(
+        subprocess.run(["git", "diff", "--quiet", "HEAD", "--", "*.py"], cwd=ROOT, check=False).returncode == 0,
+        "Tracked Python worktree differs from its commit",
+    )
+    removed_environment = []
+    for name in ("B3_PAGED_APP_PREPARED_ROOT", "B3_PAGED_APP_EXECUTED_ROOT", "PYTEST_ADDOPTS", "PYTEST_PLUGINS"):
+        if name in os.environ:
+            removed_environment.append(name)
+            os.environ.pop(name)
+    need("B3_PAGED_NATIVE_FIXTURE_ROOT" not in os.environ, "Unset native fixture reuse before the complete suite")
+    for key in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+        os.environ[key] = "1"
+    os.environ["CUDA_VISIBLE_DEVICES"] = ""
+    os.environ["TF_RUN_REAL_MODEL_TESTS"] = "0"
+    argv = before["sorted_rg_test_modules"] + [
+        "-v",
+        "--maxfail=1",
+        "--basetemp=" + str(BASETEMP),
+        "--junitxml=" + str(XML),
+    ]
+    collection = CollectionProof(before["sorted_rg_test_modules"])
+    pytest_exit, pytest_exception = None, None
+    os.chdir(ROOT)
+    began = _OBSERVATION_CLOCK()
+    try:
+        import pytest
+
+        pytest_exit = int(pytest.main(argv, plugins=[collection]))
+    except BaseException as error:
+        pytest_exception = {"type": type(error).__name__, "message": str(error)}
+    elapsed = _OBSERVATION_CLOCK() - began
+    after, runner_after, manifest_after, xml = None, None, None, None
+    exceptions = {}
+    for name, action in (
+        ("snapshot", snapshot),
+        ("runner", lambda: bounded_file(Path(__file__), 4 * 1024**2)[0]),
+        ("manifest", lambda: bounded_file(args.freeze_manifest, 4 * 1024**2)[0]),
+        ("junit", lambda: junit_evidence(XML)),
+    ):
+        try:
+            value = action()
+        except BaseException as error:
+            exceptions[name] = {"type": type(error).__name__, "message": str(error)}
+            continue
+        if name == "snapshot":
+            after = value
+        elif name == "runner":
+            runner_after = value
+        elif name == "manifest":
+            manifest_after = value
+        else:
+            xml = value
+    clean_after = (
+        subprocess.run(["git", "diff", "--quiet", "HEAD", "--", "*.py"], cwd=ROOT, check=False).returncode == 0
+    )
+    proof = collection.evidence(before["sorted_rg_test_modules"], xml)
+    stable = before == after and clean_after and runner_before == runner_after and manifest_ref == manifest_after
+    success = (
+        pytest_exit == 0
+        and pytest_exception is None
+        and not exceptions
+        and stable
+        and xml is not None
+        and xml["counts"]["errors"] == xml["counts"]["failures"] == 0
+        and xml["all_requested_subsets_distinct_and_passed"] is True
+        and proof["all_supplied_test_files_accounted_for_without_deselection"] is True
+    )
+    report = {
+        "schema": "b3_full_context_complete_cpu_regression_v2",
+        "status": "passed" if success else "failed_or_unverified",
+        "exit_code": 0 if success else 1,
+        "pytest_exit_code": pytest_exit,
+        "pytest_exception": pytest_exception,
+        "pytest_complete_monotonic_seconds": elapsed,
+        "counts": None if xml is None else xml["counts"],
+        "argv": argv,
+        "supplied_test_file_count": len(before["sorted_rg_test_modules"]),
+        "nonempty_test_file_count": len(proof["actual_nonempty_test_files"]),
+        "known_empty_cli_file_count": len(proof["actual_empty_test_files"]),
+        "all_repository_test_files_accounted_for_once": success,
+        "snapshot_before": before,
+        "snapshot_after": after,
+        "python_source_stable_before_after": stable,
+        "tracked_python_worktree_clean_after": clean_after,
+        "junit": xml,
+        "collection_proof": proof,
+        "postrun_exceptions": exceptions,
+        "cleared_environment_variable_names": removed_environment,
+        "peak_main_process_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+        "largest_completed_child_rss_bytes": resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss * 1024,
+        "rss_scope": "Main and largest completed child separately; not aggregate process-tree memory.",
+        "clock_scope": "Pytest runner, JUnit, GNU and supervisor clocks remain separate; no reconciliation is inferred.",
+        "model_forward_scope": "Synthetic CPU fixtures only; no real project model/checkpoint job requested.",
+        "runner_source_before": runner_before,
+        "runner_source_after": runner_after,
+        "freeze_manifest_before": manifest_ref,
+        "freeze_manifest_after": manifest_after,
+        "spawn_safe_main_guard": True,
+        "fresh_independent_reviews": "not_an_admission_capture",
+        "source_admission_granted": False,
+        "runtime_admission_granted": False,
+        "scientific_acceptance": False,
+    }
+    with RESULT.open("xb") as output:
+        output.write(json.dumps(report, indent=2, sort_keys=True, allow_nan=False).encode() + b"\n")
+        output.flush()
+        os.fsync(output.fileno())
+    print(
+        json.dumps(
+            {
+                key: report[key]
+                for key in (
+                    "status",
+                    "exit_code",
+                    "counts",
+                    "supplied_test_file_count",
+                    "nonempty_test_file_count",
+                    "known_empty_cli_file_count",
+                )
+            }
+        )
+    )
+    return report["exit_code"]
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

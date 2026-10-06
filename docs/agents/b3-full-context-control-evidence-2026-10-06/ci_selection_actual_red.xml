@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="0.730" timestamp="2026-10-06T11:55:45.968513+08:00" hostname="Conundrum"><testcase classname="test.test_finetune_test_selection" name="test_ci_runs_all_cpu_finetune_suites" time="0.008"><failure message="AssertionError: assert {'test/test_b...lity.py', ...} &lt;= {'-m', '-v', ...bins.py', ...}&#10;  &#10;  Extra items in the left set:&#10;  'test/test_b3_producer_control_transport.py'&#10;  'test/test_b3_issuer_control_exchange.py'&#10;  'test/test_b3_issuer_control_source_key.py'&#10;  'test/test_b3_producer_control_source_key.py'&#10;  'test/test_b3_full_context_observed.py'...&#10;  &#10;  ...Full output truncated (8 lines hidden), use '-vv' to show">workflow = {'jobs': {'finetune-unit-tests': {'env': {'MKL_NUM_THREADS': '1', 'OMP_NUM_THREADS': '1', 'OPENBLAS_NUM_THREADS': '1'}...former/data/**', 'src/transcriptformer/model/**', 'src/transcriptformer/tokenizer/**', ...]}, 'workflow_dispatch': ''}}
+
+    def test_ci_runs_all_cpu_finetune_suites(workflow):
+        steps = workflow["jobs"]["finetune-unit-tests"]["steps"]
+        command = next(step["run"] for step in steps if step["name"] == "Run finetune pipeline tests")
+        tokens = shlex.split(command.replace("\\\n", " "))
+        assert tokens[:3] == ["python", "-m", "pytest"]
+        expected = {f"test/test_{name}.py" for name in SUITES}
+&gt;       assert expected &lt;= set(tokens)
+E       AssertionError: assert {'test/test_b...lity.py', ...} &lt;= {'-m', '-v', ...bins.py', ...}
+E         
+E         Extra items in the left set:
+E         'test/test_b3_producer_control_transport.py'
+E         'test/test_b3_issuer_control_exchange.py'
+E         'test/test_b3_issuer_control_source_key.py'
+E         'test/test_b3_producer_control_source_key.py'
+E         'test/test_b3_full_context_observed.py'...
+E         
+E         ...Full output truncated (8 lines hidden), use '-vv' to show
+
+test/test_finetune_test_selection.py:91: AssertionError</failure></testcase><testcase classname="test.test_finetune_test_selection" name="test_ci_triggers_on_finetune_dependencies_and_every_test[push]" time="0.001" /><testcase classname="test.test_finetune_test_selection" name="test_ci_triggers_on_finetune_dependencies_and_every_test[pull_request]" time="0.000" /></testsuite></testsuites>

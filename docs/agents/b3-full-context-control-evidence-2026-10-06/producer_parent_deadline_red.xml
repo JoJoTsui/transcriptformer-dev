@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.964" timestamp="2026-10-06T11:16:44.882706+08:00" hostname="Conundrum"><testcase classname="test.test_b3_producer_control_transport" name="test_expired_original_parent_deadline_refuses_before_channel_io" time="0.006"><failure message="TypeError: await_computation_permit() got an unexpected keyword argument 'parent_deadline'">tmp_path = PosixPath('/tmp/b3-producer-parent-red-20261006/test_expired_original_parent_d0')
+
+    def test_expired_original_parent_deadline_refuses_before_channel_io(tmp_path):
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        try:
+            with pytest.raises(TimeoutError, match="deadline"):
+&gt;               _producer().await_computation_permit(
+                    receiver.fileno(), attempt_id="expired-parent", source_key=str(tmp_path / "source"),
+                    start_nonce="start", registration_sha256="a" * 64, start_sha256="b" * 64,
+                    expected_issuer_pid=os.getpid(), max_seconds=900, parent_deadline=time.monotonic() - 1,
+                )
+E               TypeError: await_computation_permit() got an unexpected keyword argument 'parent_deadline'
+
+test/test_b3_producer_control_transport.py:426: TypeError</failure></testcase></testsuite></testsuites>

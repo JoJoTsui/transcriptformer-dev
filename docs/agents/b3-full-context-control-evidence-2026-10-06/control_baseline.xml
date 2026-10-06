@@ -1,0 +1,804 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="22" skipped="0" tests="56" time="3.542" timestamp="2026-10-06T11:16:13.153100+08:00" hostname="Conundrum"><testcase classname="test.test_b3_producer_control_transport" name="test_copied_permit_bytes_in_regular_file_cannot_enable_computation" time="0.011" /><testcase classname="test.test_b3_producer_control_transport" name="test_real_channel_without_issuer_release_times_out_and_preserves_borrowed_fd" time="0.004"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_real_channel_without_issu0')
+
+    def test_real_channel_without_issuer_release_times_out_and_preserves_borrowed_fd(tmp_path):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        try:
+            with pytest.raises(TimeoutError, match="permit|deadline"):
+&gt;               _producer().await_computation_permit(
+                    producer.fileno(),
+                    attempt_id="attempt-01",
+                    source_key=str(tmp_path / "future-native-source"),
+                    start_nonce="issuer-start-01",
+                    registration_sha256="a" * 64,
+                    start_sha256="b" * 64,
+                    expected_issuer_pid=os.getpid(),
+                    max_seconds=0.02,
+                )
+
+test/test_b3_producer_control_transport.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/produce_b3_synthetic_native_stored.py:53: in await_computation_permit
+    channel = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET, fileno=duplicate)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;socket.socket fd=-1, family=0, type=0, proto=0&gt;
+family = &lt;AddressFamily.AF_UNIX: 1&gt;, type = &lt;SocketKind.SOCK_SEQPACKET: 5&gt;
+proto = -1, fileno = 14
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+&gt;       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/socket.py:232: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_transport" name="test_actual_channel_message_from_another_attempt_is_refused" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_actual_channel_message_fr0')
+
+    def test_actual_channel_message_from_another_attempt_is_refused(tmp_path):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        try:
+&gt;           issuer.send(
+                json.dumps(
+                    {
+                        "schema": "b3_full_context_live_permit_channel_v1",
+                        "attempt_id": "other-attempt",
+                        "source_key": str(tmp_path / "future-native-source"),
+                        "start_nonce": "issuer-start-01",
+                        "registration_sha256": "a" * 64,
+                        "start_sha256": "b" * 64,
+                        "producer_pid": os.getpid(),
+                        "permit_nonce": "live-issuer-release-01",
+                    }
+                ).encode()
+            )
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_transport.py:68: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_transport" name="test_actual_child_acknowledges_one_live_release_before_transport_probe_transition" time="0.003"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_actual_child_acknowledges0')
+
+    def test_actual_child_acknowledges_one_live_release_before_transport_probe_transition(tmp_path):
+        source = Path(__file__).resolve().parents[1] / "scripts/produce_b3_synthetic_native_stored.py"
+        key = str(tmp_path / "future-native-source")
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        child = None
+        program = """
+    import importlib.util, json, os, sys
+    spec=importlib.util.spec_from_file_location('producer_transport_probe',sys.argv[1])
+    public=importlib.util.module_from_spec(spec); spec.loader.exec_module(public)
+    result=public.await_computation_permit(int(sys.argv[2]), attempt_id='attempt-01', source_key=sys.argv[3],
+     start_nonce='issuer-start-01', registration_sha256='a'*64, start_sha256='b'*64,
+     expected_issuer_pid=int(sys.argv[4]), max_seconds=2)
+    print(json.dumps({'transport_probe_transition_reached':True,'pid':os.getpid(),'permit_nonce':result['permit_nonce'],
+     'native_operation_performed':False,'runtime_admission_granted':False}))
+    """
+        try:
+            child = subprocess.Popen(
+                [sys.executable, "-c", program, str(source), str(producer.fileno()), key, str(os.getpid())],
+                pass_fds=(producer.fileno(),),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            producer.close()
+            message = {
+                "schema": "b3_full_context_live_permit_channel_v1",
+                "attempt_id": "attempt-01",
+                "source_key": key,
+                "start_nonce": "issuer-start-01",
+                "registration_sha256": "a" * 64,
+                "start_sha256": "b" * 64,
+                "producer_pid": child.pid,
+                "permit_nonce": "live-issuer-release-01",
+            }
+&gt;           issuer.send(json.dumps(message).encode())
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_transport.py:131: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_transport" name="test_consumed_channel_cannot_accept_another_copied_release" time="0.005"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_consumed_channel_cannot_a0')
+
+    def test_consumed_channel_cannot_accept_another_copied_release(tmp_path):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        key = str(tmp_path / "future-native-source")
+        public = _producer()
+        arguments = dict(
+            attempt_id="attempt-01",
+            source_key=key,
+            start_nonce="issuer-start-01",
+            registration_sha256="a" * 64,
+            start_sha256="b" * 64,
+            expected_issuer_pid=os.getpid(),
+            max_seconds=1,
+        )
+        release = json.dumps(
+            {
+                "schema": "b3_full_context_live_permit_channel_v1",
+                "attempt_id": "attempt-01",
+                "source_key": key,
+                "start_nonce": "issuer-start-01",
+                "registration_sha256": "a" * 64,
+                "start_sha256": "b" * 64,
+                "producer_pid": os.getpid(),
+                "permit_nonce": "live-release-01",
+            }
+        ).encode()
+        try:
+&gt;           issuer.send(release)
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_transport.py:185: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_transport" name="test_original_transport_deadline_includes_fd_admission" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_original_transport_deadli0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x714e6ee38610&gt;
+
+    def test_original_transport_deadline_includes_fd_admission(tmp_path, monkeypatch):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        key = str(tmp_path / "future-native-source")
+        real_stat, real_clock = os.fstat, time.monotonic
+        elapsed = 0
+    
+        def fd_admission_exhausts_original_deadline(fd):
+            nonlocal elapsed
+            result = real_stat(fd)
+            if fd == producer.fileno() and elapsed == 0:
+                elapsed = 901
+            return result
+    
+        try:
+&gt;           issuer.send(
+                json.dumps(
+                    {
+                        "schema": "b3_full_context_live_permit_channel_v1",
+                        "attempt_id": "attempt-01",
+                        "source_key": key,
+                        "start_nonce": "issuer-start-01",
+                        "registration_sha256": "a" * 64,
+                        "start_sha256": "b" * 64,
+                        "producer_pid": os.getpid(),
+                        "permit_nonce": "live-release-01",
+                    }
+                ).encode()
+            )
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_transport.py:211: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_transport" name="test_malformed_actual_channel_bytes_never_emit_acknowledgement[duplicate_field]" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_malformed_actual_channel_0')
+payload = b'{"schema":"first","schema":"second"}', reason = 'Duplicate'
+
+    @pytest.mark.parametrize(
+        "payload, reason",
+        [
+            (b'{"schema":"first","schema":"second"}', "Duplicate"),
+            (b'{"unexpected":NaN}', "Nonfinite"),
+            (b"x" * 8193, "bounded"),
+        ],
+        ids=("duplicate_field", "nonfinite_value", "oversized_message"),
+    )
+    def test_malformed_actual_channel_bytes_never_emit_acknowledgement(tmp_path, payload, reason):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        try:
+&gt;           issuer.send(payload)
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_transport.py:258: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_transport" name="test_malformed_actual_channel_bytes_never_emit_acknowledgement[nonfinite_value]" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_malformed_actual_channel_1')
+payload = b'{"unexpected":NaN}', reason = 'Nonfinite'
+
+    @pytest.mark.parametrize(
+        "payload, reason",
+        [
+            (b'{"schema":"first","schema":"second"}', "Duplicate"),
+            (b'{"unexpected":NaN}', "Nonfinite"),
+            (b"x" * 8193, "bounded"),
+        ],
+        ids=("duplicate_field", "nonfinite_value", "oversized_message"),
+    )
+    def test_malformed_actual_channel_bytes_never_emit_acknowledgement(tmp_path, payload, reason):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        try:
+&gt;           issuer.send(payload)
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_transport.py:258: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_transport" name="test_malformed_actual_channel_bytes_never_emit_acknowledgement[oversized_message]" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_malformed_actual_channel_2')
+payload = b'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+reason = 'bounded'
+
+    @pytest.mark.parametrize(
+        "payload, reason",
+        [
+            (b'{"schema":"first","schema":"second"}', "Duplicate"),
+            (b'{"unexpected":NaN}', "Nonfinite"),
+            (b"x" * 8193, "bounded"),
+        ],
+        ids=("duplicate_field", "nonfinite_value", "oversized_message"),
+    )
+    def test_malformed_actual_channel_bytes_never_emit_acknowledgement(tmp_path, payload, reason):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        try:
+&gt;           issuer.send(payload)
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_transport.py:258: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_transport" name="test_constructor_refusal_drains_only_its_owned_duplicate[owned_duplicate]" time="0.004" /><testcase classname="test.test_b3_producer_control_transport" name="test_constructor_refusal_drains_only_its_owned_duplicate[foreign_reuse]" time="0.004" /><testcase classname="test.test_b3_producer_control_transport" name="test_completed_channel_cleanup_preserves_ownership_and_first_error[owned_close_refusal]" time="0.003"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_completed_channel_cleanup0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x714e6ee409d0&gt;
+release = True, replacement = False
+
+    @pytest.mark.parametrize(
+        "release, replacement",
+        [(True, False), (True, True), (False, False)],
+        ids=("owned_close_refusal", "foreign_reuse_on_close", "first_timeout_preserved"),
+    )
+    def test_completed_channel_cleanup_preserves_ownership_and_first_error(tmp_path, monkeypatch, release, replacement):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        foreign = tmp_path / "foreign-during-channel-close"
+        foreign.write_bytes(b"foreign close binding")
+        public = _producer()
+        real_close, real_socket_close, real_dup = os.close, socket.socket.close, os.dup
+        captured = []
+        failure = RuntimeError("primary channel close refused")
+        key = str(tmp_path / "future-native-source")
+    
+        def observe_dup(fd):
+            duplicate = real_dup(fd)
+            if fd == producer.fileno():
+                captured.append(duplicate)
+            return duplicate
+    
+        def refused_channel_close(channel):
+            fd = channel.fileno()
+            if captured and fd == captured[0]:
+                if replacement:
+                    real_close(fd)
+                    foreign_fd = os.open(foreign, os.O_RDONLY)
+                    if foreign_fd != fd:
+                        os.dup2(foreign_fd, fd)
+                        real_close(foreign_fd)
+                raise failure
+            return real_socket_close(channel)
+    
+        try:
+            if release:
+&gt;               issuer.send(
+                    json.dumps(
+                        {
+                            "schema": "b3_full_context_live_permit_channel_v1",
+                            "attempt_id": "attempt-01",
+                            "source_key": key,
+                            "start_nonce": "issuer-start-01",
+                            "registration_sha256": "a" * 64,
+                            "start_sha256": "b" * 64,
+                            "producer_pid": os.getpid(),
+                            "permit_nonce": "live-release-01",
+                        }
+                    ).encode()
+                )
+E               PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_transport.py:374: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_transport" name="test_completed_channel_cleanup_preserves_ownership_and_first_error[foreign_reuse_on_close]" time="0.004"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_completed_channel_cleanup1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x714e6f05cbd0&gt;
+release = True, replacement = True
+
+    @pytest.mark.parametrize(
+        "release, replacement",
+        [(True, False), (True, True), (False, False)],
+        ids=("owned_close_refusal", "foreign_reuse_on_close", "first_timeout_preserved"),
+    )
+    def test_completed_channel_cleanup_preserves_ownership_and_first_error(tmp_path, monkeypatch, release, replacement):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        foreign = tmp_path / "foreign-during-channel-close"
+        foreign.write_bytes(b"foreign close binding")
+        public = _producer()
+        real_close, real_socket_close, real_dup = os.close, socket.socket.close, os.dup
+        captured = []
+        failure = RuntimeError("primary channel close refused")
+        key = str(tmp_path / "future-native-source")
+    
+        def observe_dup(fd):
+            duplicate = real_dup(fd)
+            if fd == producer.fileno():
+                captured.append(duplicate)
+            return duplicate
+    
+        def refused_channel_close(channel):
+            fd = channel.fileno()
+            if captured and fd == captured[0]:
+                if replacement:
+                    real_close(fd)
+                    foreign_fd = os.open(foreign, os.O_RDONLY)
+                    if foreign_fd != fd:
+                        os.dup2(foreign_fd, fd)
+                        real_close(foreign_fd)
+                raise failure
+            return real_socket_close(channel)
+    
+        try:
+            if release:
+&gt;               issuer.send(
+                    json.dumps(
+                        {
+                            "schema": "b3_full_context_live_permit_channel_v1",
+                            "attempt_id": "attempt-01",
+                            "source_key": key,
+                            "start_nonce": "issuer-start-01",
+                            "registration_sha256": "a" * 64,
+                            "start_sha256": "b" * 64,
+                            "producer_pid": os.getpid(),
+                            "permit_nonce": "live-release-01",
+                        }
+                    ).encode()
+                )
+E               PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_transport.py:374: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_transport" name="test_completed_channel_cleanup_preserves_ownership_and_first_error[first_timeout_preserved]" time="0.004"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_completed_channel_cleanup2')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x714e6ef17dd0&gt;
+release = False, replacement = False
+
+    @pytest.mark.parametrize(
+        "release, replacement",
+        [(True, False), (True, True), (False, False)],
+        ids=("owned_close_refusal", "foreign_reuse_on_close", "first_timeout_preserved"),
+    )
+    def test_completed_channel_cleanup_preserves_ownership_and_first_error(tmp_path, monkeypatch, release, replacement):
+        issuer, producer = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        foreign = tmp_path / "foreign-during-channel-close"
+        foreign.write_bytes(b"foreign close binding")
+        public = _producer()
+        real_close, real_socket_close, real_dup = os.close, socket.socket.close, os.dup
+        captured = []
+        failure = RuntimeError("primary channel close refused")
+        key = str(tmp_path / "future-native-source")
+    
+        def observe_dup(fd):
+            duplicate = real_dup(fd)
+            if fd == producer.fileno():
+                captured.append(duplicate)
+            return duplicate
+    
+        def refused_channel_close(channel):
+            fd = channel.fileno()
+            if captured and fd == captured[0]:
+                if replacement:
+                    real_close(fd)
+                    foreign_fd = os.open(foreign, os.O_RDONLY)
+                    if foreign_fd != fd:
+                        os.dup2(foreign_fd, fd)
+                        real_close(foreign_fd)
+                raise failure
+            return real_socket_close(channel)
+    
+        try:
+            if release:
+                issuer.send(
+                    json.dumps(
+                        {
+                            "schema": "b3_full_context_live_permit_channel_v1",
+                            "attempt_id": "attempt-01",
+                            "source_key": key,
+                            "start_nonce": "issuer-start-01",
+                            "registration_sha256": "a" * 64,
+                            "start_sha256": "b" * 64,
+                            "producer_pid": os.getpid(),
+                            "permit_nonce": "live-release-01",
+                        }
+                    ).encode()
+                )
+            with monkeypatch.context() as injection:
+                injection.setattr(public.os, "dup", observe_dup)
+                injection.setattr(socket.socket, "close", refused_channel_close)
+                with pytest.raises(RuntimeError if release else TimeoutError) as observed:
+&gt;                   public.await_computation_permit(
+                        producer.fileno(),
+                        attempt_id="attempt-01",
+                        source_key=key,
+                        start_nonce="issuer-start-01",
+                        registration_sha256="a" * 64,
+                        start_sha256="b" * 64,
+                        expected_issuer_pid=os.getpid(),
+                        max_seconds=0.05,
+                    )
+
+test/test_b3_producer_control_transport.py:392: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/produce_b3_synthetic_native_stored.py:53: in await_computation_permit
+    channel = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET, fileno=duplicate)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;socket.socket fd=-1, family=0, type=0, proto=0&gt;
+family = &lt;AddressFamily.AF_UNIX: 1&gt;, type = &lt;SocketKind.SOCK_SEQPACKET: 5&gt;
+proto = -1, fileno = 14
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+&gt;       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/socket.py:232: PermissionError</failure></testcase><testcase classname="test.test_b3_issuer_control_reservation" name="test_crash_after_actual_reservation_does_not_enable_a_second_release" time="0.070" /><testcase classname="test.test_b3_issuer_control_reservation" name="test_failed_reservation_remains_consumed_preserves_first_error_and_drains_owned_fds" time="0.008" /><testcase classname="test.test_b3_issuer_control_reservation" name="test_reservation_bytes_changed_during_primary_close_are_refused_and_stay_consumed" time="0.012" /><testcase classname="test.test_b3_issuer_control_reservation" name="test_original_reservation_deadline_includes_attempt_directory_admission" time="0.005" /><testcase classname="test.test_b3_issuer_control_reservation" name="test_concurrent_actual_issuers_cannot_reserve_one_attempt_twice" time="0.053" /><testcase classname="test.test_b3_issuer_control_reservation" name="test_foreign_attempt_directory_replacement_is_preserved_and_refused" time="0.010" /><testcase classname="test.test_b3_issuer_control_reservation" name="test_attempt_replaced_during_open_refuses_before_writing_and_closes_its_new_fd" time="0.006" /><testcase classname="test.test_b3_issuer_control_reservation" name="test_initial_descriptor_check_refusal_closes_its_new_directory_fd" time="0.005" /><testcase classname="test.test_b3_issuer_control_reservation" name="test_returned_reservation_digest_binds_bytes_after_all_fallible_resource_checks" time="0.008" /><testcase classname="test.test_b3_issuer_control_reservation" name="test_noncanonical_source_key_refuses_before_caller_string_conversion" time="0.006" /><testcase classname="test.test_b3_issuer_control_exchange" name="test_real_reservation_precedes_single_child_handshake_and_remains_consumed" time="0.009"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_real_reservation_precedes0')
+
+    def test_real_reservation_precedes_single_child_handshake_and_remains_consumed(tmp_path):
+        attempt = tmp_path / "joint-attempt"
+        attempt.mkdir()
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        child = None
+        program = """
+    import importlib.util, json, os, sys
+    s=importlib.util.spec_from_file_location('joint_producer_transport',sys.argv[1])
+    p=importlib.util.module_from_spec(s); s.loader.exec_module(p)
+    r=p.await_computation_permit(int(sys.argv[2]),attempt_id='joint-attempt-01',source_key=sys.argv[3],
+     start_nonce='joint-start-01',registration_sha256='a'*64,start_sha256='b'*64,
+     expected_issuer_pid=int(sys.argv[4]),max_seconds=2)
+    print(json.dumps({'pid':os.getpid(),'result':r}))
+    """
+        try:
+            child = subprocess.Popen(
+                [
+                    sys.executable,
+                    "-c",
+                    program,
+                    str(BASE / "produce_b3_synthetic_native_stored.py"),
+                    str(receiver.fileno()),
+                    str(tmp_path / "future-native-source"),
+                    str(os.getpid()),
+                ],
+                pass_fds=(receiver.fileno(),),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            receiver.close()
+            public = issuer()
+&gt;           result = public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **arguments(tmp_path, child.pid))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_b3_issuer_control_exchange.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/capture_b3_full_context_controlled_execution.py:259: in reserve_and_exchange_transport_probe
+    channel = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET, fileno=duplicate)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;socket.socket fd=-1, family=0, type=0, proto=0&gt;
+family = &lt;AddressFamily.AF_UNIX: 1&gt;, type = &lt;SocketKind.SOCK_SEQPACKET: 5&gt;
+proto = -1, fileno = 13
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+&gt;       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/socket.py:232: PermissionError</failure></testcase><testcase classname="test.test_b3_issuer_control_exchange" name="test_missing_acknowledgement_refuses_and_keeps_reservation_consumed" time="0.008"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_missing_acknowledgement_r0')
+
+    def test_missing_acknowledgement_refuses_and_keeps_reservation_consumed(tmp_path):
+        attempt = tmp_path / "no-ack-attempt"
+        attempt.mkdir()
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        public = issuer()
+        kw = arguments(tmp_path, os.getpid())
+        kw["max_seconds"] = 0.03
+        try:
+            with pytest.raises(TimeoutError, match="deadline|acknowledgement"):
+&gt;               public.reserve_and_exchange_transport_probe(attempt, sender.fileno(), **kw)
+
+test/test_b3_issuer_control_exchange.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/capture_b3_full_context_controlled_execution.py:259: in reserve_and_exchange_transport_probe
+    channel = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET, fileno=duplicate)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;socket.socket fd=-1, family=0, type=0, proto=0&gt;
+family = &lt;AddressFamily.AF_UNIX: 1&gt;, type = &lt;SocketKind.SOCK_SEQPACKET: 5&gt;
+proto = -1, fileno = 14
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+&gt;       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/socket.py:232: PermissionError</failure></testcase><testcase classname="test.test_b3_issuer_control_exchange" name="test_foreign_duplicate_or_wrong_type_acknowledgement_is_refused[{&quot;schema&quot;:&quot;b3_full_context_live_permit_ack_v1&quot;,&quot;attempt_id&quot;:&quot;other-attempt&quot;,&quot;start_nonce&quot;:&quot;joint-start-01&quot;,&quot;producer_pid&quot;:1,&quot;permit_nonce&quot;:&quot;joint-permit-01&quot;}]" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_foreign_duplicate_or_wron0')
+malformed = b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"other-attempt","start_nonce":"joint-start-01","producer_pid":1,"permit_nonce":"joint-permit-01"}'
+
+    @pytest.mark.parametrize(
+        "malformed",
+        [
+            b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"other-attempt","start_nonce":"joint-start-01","producer_pid":1,"permit_nonce":"joint-permit-01"}',
+            b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"joint-attempt-01","attempt_id":"joint-attempt-01","start_nonce":"joint-start-01","producer_pid":1,"permit_nonce":"joint-permit-01"}',
+            b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"joint-attempt-01","start_nonce":"joint-start-01","producer_pid":true,"permit_nonce":"joint-permit-01"}',
+        ],
+    )
+    def test_foreign_duplicate_or_wrong_type_acknowledgement_is_refused(tmp_path, malformed):
+        attempt = tmp_path / "malformed-ack-attempt"
+        attempt.mkdir()
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        try:
+&gt;           receiver.send(malformed)
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_issuer_control_exchange.py:132: PermissionError</failure></testcase><testcase classname="test.test_b3_issuer_control_exchange" name="test_foreign_duplicate_or_wrong_type_acknowledgement_is_refused[{&quot;schema&quot;:&quot;b3_full_context_live_permit_ack_v1&quot;,&quot;attempt_id&quot;:&quot;joint-attempt-01&quot;,&quot;attempt_id&quot;:&quot;joint-attempt-01&quot;,&quot;start_nonce&quot;:&quot;joint-start-01&quot;,&quot;producer_pid&quot;:1,&quot;permit_nonce&quot;:&quot;joint-permit-01&quot;}]" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_foreign_duplicate_or_wron1')
+malformed = b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"joint-attempt-01","attempt_id":"joint-attempt-01","start_nonce":"joint-start-01","producer_pid":1,"permit_nonce":"joint-permit-01"}'
+
+    @pytest.mark.parametrize(
+        "malformed",
+        [
+            b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"other-attempt","start_nonce":"joint-start-01","producer_pid":1,"permit_nonce":"joint-permit-01"}',
+            b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"joint-attempt-01","attempt_id":"joint-attempt-01","start_nonce":"joint-start-01","producer_pid":1,"permit_nonce":"joint-permit-01"}',
+            b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"joint-attempt-01","start_nonce":"joint-start-01","producer_pid":true,"permit_nonce":"joint-permit-01"}',
+        ],
+    )
+    def test_foreign_duplicate_or_wrong_type_acknowledgement_is_refused(tmp_path, malformed):
+        attempt = tmp_path / "malformed-ack-attempt"
+        attempt.mkdir()
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        try:
+&gt;           receiver.send(malformed)
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_issuer_control_exchange.py:132: PermissionError</failure></testcase><testcase classname="test.test_b3_issuer_control_exchange" name="test_foreign_duplicate_or_wrong_type_acknowledgement_is_refused[{&quot;schema&quot;:&quot;b3_full_context_live_permit_ack_v1&quot;,&quot;attempt_id&quot;:&quot;joint-attempt-01&quot;,&quot;start_nonce&quot;:&quot;joint-start-01&quot;,&quot;producer_pid&quot;:true,&quot;permit_nonce&quot;:&quot;joint-permit-01&quot;}]" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_foreign_duplicate_or_wron2')
+malformed = b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"joint-attempt-01","start_nonce":"joint-start-01","producer_pid":true,"permit_nonce":"joint-permit-01"}'
+
+    @pytest.mark.parametrize(
+        "malformed",
+        [
+            b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"other-attempt","start_nonce":"joint-start-01","producer_pid":1,"permit_nonce":"joint-permit-01"}',
+            b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"joint-attempt-01","attempt_id":"joint-attempt-01","start_nonce":"joint-start-01","producer_pid":1,"permit_nonce":"joint-permit-01"}',
+            b'{"schema":"b3_full_context_live_permit_ack_v1","attempt_id":"joint-attempt-01","start_nonce":"joint-start-01","producer_pid":true,"permit_nonce":"joint-permit-01"}',
+        ],
+    )
+    def test_foreign_duplicate_or_wrong_type_acknowledgement_is_refused(tmp_path, malformed):
+        attempt = tmp_path / "malformed-ack-attempt"
+        attempt.mkdir()
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        try:
+&gt;           receiver.send(malformed)
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_issuer_control_exchange.py:132: PermissionError</failure></testcase><testcase classname="test.test_b3_issuer_control_exchange" name="test_original_joint_deadline_includes_durable_reservation_and_never_releases_late" time="0.037" /><testcase classname="test.test_b3_issuer_control_exchange" name="test_foreign_socket_replacement_at_duplicate_is_never_sent_to_or_closed" time="0.038" /><testcase classname="test.test_b3_issuer_control_exchange" name="test_joint_close_error_is_retained_and_owned_duplicate_is_drained" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_joint_close_error_is_reta0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x714e6ee72d10&gt;
+
+    def test_joint_close_error_is_retained_and_owned_duplicate_is_drained(tmp_path, monkeypatch):
+        attempt = tmp_path / "close-refused-attempt"
+        attempt.mkdir()
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        first = OSError("joint original socket close refused")
+        real_close, real_stat = socket.socket.close, os.fstat
+        refused = []
+        kw = arguments(tmp_path, os.getpid())
+&gt;       receiver.send(
+            json.dumps(
+                {
+                    "schema": "b3_full_context_live_permit_ack_v1",
+                    "attempt_id": "joint-attempt-01",
+                    "start_nonce": "joint-start-01",
+                    "producer_pid": os.getpid(),
+                    "permit_nonce": "joint-permit-01",
+                }
+            ).encode()
+        )
+E       PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_issuer_control_exchange.py:230: PermissionError</failure></testcase><testcase classname="test.test_b3_issuer_control_process" name="test_original_live_child_argv_cwd_and_birth_are_observed_without_wrapper_substitution" time="0.034" /><testcase classname="test.test_b3_issuer_control_process" name="test_wrong_original_child_binding_is_refused[argv]" time="0.035" /><testcase classname="test.test_b3_issuer_control_process" name="test_wrong_original_child_binding_is_refused[cwd]" time="0.034" /><testcase classname="test.test_b3_issuer_control_process" name="test_wrong_original_child_binding_is_refused[parent]" time="0.033" /><testcase classname="test.test_b3_issuer_control_process" name="test_wrong_original_child_binding_is_refused[birth]" time="0.035" /><testcase classname="test.test_b3_issuer_control_process" name="test_completed_child_cannot_supply_live_identity" time="0.067" /><testcase classname="test.test_b3_issuer_control_process" name="test_process_metadata_reads_cannot_reset_original_deadline" time="0.032" /><testcase classname="test.test_b3_issuer_control_process" name="test_child_changes_cwd_during_observation_is_refused" time="0.033" /><testcase classname="test.test_b3_issuer_control_bound_exchange" name="test_actual_original_child_binding_is_checked_before_one_use_exchange" time="0.056"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_actual_original_child_bin0')
+
+    def test_actual_original_child_binding_is_checked_before_one_use_exchange(tmp_path):
+        attempt = tmp_path / "bound-attempt"
+        attempt.mkdir()
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        program = """
+    import importlib.util,json,os,sys
+    s=importlib.util.spec_from_file_location('bound_producer',sys.argv[1])
+    p=importlib.util.module_from_spec(s);s.loader.exec_module(p)
+    print('ready',flush=True)
+    r=p.await_computation_permit(int(sys.argv[2]),attempt_id='bound-attempt',source_key=sys.argv[3],
+     start_nonce='bound-start',registration_sha256='a'*64,start_sha256='b'*64,
+     expected_issuer_pid=int(sys.argv[4]),max_seconds=2)
+    print(json.dumps({'pid':os.getpid(),'native_operation_authorized':r['native_operation_authorized']}))
+    """
+        argv = [
+            sys.executable,
+            "-u",
+            "-c",
+            program,
+            str(BASE / "produce_b3_synthetic_native_stored.py"),
+            str(receiver.fileno()),
+            str(tmp_path / "native-source"),
+            str(os.getpid()),
+        ]
+        child = None
+        try:
+            child = subprocess.Popen(
+                argv, cwd=tmp_path, pass_fds=(receiver.fileno(),), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
+            receiver.close()
+            assert child.stdout.readline() == b"ready\n"
+&gt;           record = issuer().inspect_then_exchange_transport_probe(
+                attempt,
+                sender.fileno(),
+                attempt_id="bound-attempt",
+                source_key=str(tmp_path / "native-source"),
+                registration_sha256="a" * 64,
+                start_sha256="b" * 64,
+                producer_pid=child.pid,
+                start_nonce="bound-start",
+                permit_nonce="bound-permit",
+                expected_argv=argv,
+                expected_cwd=str(tmp_path),
+                max_seconds=2,
+            )
+
+test/test_b3_issuer_control_bound_exchange.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/capture_b3_full_context_controlled_execution.py:544: in inspect_then_exchange_transport_probe
+    result = reserve_and_exchange_transport_probe(
+scripts/capture_b3_full_context_controlled_execution.py:259: in reserve_and_exchange_transport_probe
+    channel = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET, fileno=duplicate)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;socket.socket fd=-1, family=0, type=0, proto=0&gt;
+family = &lt;AddressFamily.AF_UNIX: 1&gt;, type = &lt;SocketKind.SOCK_SEQPACKET: 5&gt;
+proto = -1, fileno = 15
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+&gt;       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/home/joey/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/socket.py:232: PermissionError</failure></testcase><testcase classname="test.test_b3_issuer_control_bound_exchange" name="test_wrong_bound_child_invocation_cannot_reserve_or_send" time="0.065" /><testcase classname="test.test_b3_issuer_control_bound_exchange" name="test_bound_exchange_original_deadline_includes_child_metadata" time="0.068" /><testcase classname="test.test_b3_issuer_control_deadline" name="test_expired_parent_deadline_refuses_before_process_or_reservation_io" time="0.034" /><testcase classname="test.test_b3_issuer_control_deadline" name="test_each_nested_seam_refuses_expired_parent_without_fresh_time[reservation]" time="0.006" /><testcase classname="test.test_b3_issuer_control_deadline" name="test_each_nested_seam_refuses_expired_parent_without_fresh_time[exchange]" time="0.002" /><testcase classname="test.test_b3_issuer_control_deadline" name="test_each_nested_seam_refuses_expired_parent_without_fresh_time[process]" time="0.002" /><testcase classname="test.test_b3_issuer_control_deadline" name="test_parent_deadline_requires_strict_finite_clock_value[True]" time="0.002" /><testcase classname="test.test_b3_issuer_control_deadline" name="test_parent_deadline_requires_strict_finite_clock_value[nan]" time="0.003" /><testcase classname="test.test_b3_issuer_control_deadline" name="test_parent_deadline_requires_strict_finite_clock_value[inf]" time="0.002" /><testcase classname="test.test_b3_issuer_control_deadline" name="test_parent_deadline_requires_strict_finite_clock_value[copied-deadline]" time="0.003" /><testcase classname="test.test_b3_producer_control_source_key" name="test_noncanonical_source_key_cannot_emit_transport_acknowledgement[parent_component]" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_noncanonical_source_key_c0')
+kind = 'parent_component'
+
+    @pytest.mark.parametrize("kind", ["parent_component", "double_root", "oversized_characters", "oversized_utf8"])
+    def test_noncanonical_source_key_cannot_emit_transport_acknowledgement(tmp_path, kind):
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        key = {
+            "parent_component": str(tmp_path) + "/unresolved/../source",
+            "double_root": "//tmp/source",
+            "oversized_characters": "/" + "a" * 4096,
+            "oversized_utf8": "/" + "€" * 1380,
+        }[kind]
+        try:
+&gt;           sender.send(
+                json.dumps(
+                    {
+                        "schema": "b3_full_context_live_permit_channel_v1",
+                        "attempt_id": "attempt",
+                        "source_key": key,
+                        "start_nonce": "start",
+                        "registration_sha256": "a" * 64,
+                        "start_sha256": "b" * 64,
+                        "producer_pid": os.getpid(),
+                        "permit_nonce": "permit",
+                    },
+                    ensure_ascii=False,
+                ).encode()
+            )
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_source_key.py:33: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_source_key" name="test_noncanonical_source_key_cannot_emit_transport_acknowledgement[double_root]" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_noncanonical_source_key_c1')
+kind = 'double_root'
+
+    @pytest.mark.parametrize("kind", ["parent_component", "double_root", "oversized_characters", "oversized_utf8"])
+    def test_noncanonical_source_key_cannot_emit_transport_acknowledgement(tmp_path, kind):
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        key = {
+            "parent_component": str(tmp_path) + "/unresolved/../source",
+            "double_root": "//tmp/source",
+            "oversized_characters": "/" + "a" * 4096,
+            "oversized_utf8": "/" + "€" * 1380,
+        }[kind]
+        try:
+&gt;           sender.send(
+                json.dumps(
+                    {
+                        "schema": "b3_full_context_live_permit_channel_v1",
+                        "attempt_id": "attempt",
+                        "source_key": key,
+                        "start_nonce": "start",
+                        "registration_sha256": "a" * 64,
+                        "start_sha256": "b" * 64,
+                        "producer_pid": os.getpid(),
+                        "permit_nonce": "permit",
+                    },
+                    ensure_ascii=False,
+                ).encode()
+            )
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_source_key.py:33: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_source_key" name="test_noncanonical_source_key_cannot_emit_transport_acknowledgement[oversized_characters]" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_noncanonical_source_key_c2')
+kind = 'oversized_characters'
+
+    @pytest.mark.parametrize("kind", ["parent_component", "double_root", "oversized_characters", "oversized_utf8"])
+    def test_noncanonical_source_key_cannot_emit_transport_acknowledgement(tmp_path, kind):
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        key = {
+            "parent_component": str(tmp_path) + "/unresolved/../source",
+            "double_root": "//tmp/source",
+            "oversized_characters": "/" + "a" * 4096,
+            "oversized_utf8": "/" + "€" * 1380,
+        }[kind]
+        try:
+&gt;           sender.send(
+                json.dumps(
+                    {
+                        "schema": "b3_full_context_live_permit_channel_v1",
+                        "attempt_id": "attempt",
+                        "source_key": key,
+                        "start_nonce": "start",
+                        "registration_sha256": "a" * 64,
+                        "start_sha256": "b" * 64,
+                        "producer_pid": os.getpid(),
+                        "permit_nonce": "permit",
+                    },
+                    ensure_ascii=False,
+                ).encode()
+            )
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_source_key.py:33: PermissionError</failure></testcase><testcase classname="test.test_b3_producer_control_source_key" name="test_noncanonical_source_key_cannot_emit_transport_acknowledgement[oversized_utf8]" time="0.001"><failure message="PermissionError: [Errno 1] Operation not permitted">tmp_path = PosixPath('/tmp/b3-canonical-control-20261006-baseline/test_noncanonical_source_key_c3')
+kind = 'oversized_utf8'
+
+    @pytest.mark.parametrize("kind", ["parent_component", "double_root", "oversized_characters", "oversized_utf8"])
+    def test_noncanonical_source_key_cannot_emit_transport_acknowledgement(tmp_path, kind):
+        sender, receiver = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        key = {
+            "parent_component": str(tmp_path) + "/unresolved/../source",
+            "double_root": "//tmp/source",
+            "oversized_characters": "/" + "a" * 4096,
+            "oversized_utf8": "/" + "€" * 1380,
+        }[kind]
+        try:
+&gt;           sender.send(
+                json.dumps(
+                    {
+                        "schema": "b3_full_context_live_permit_channel_v1",
+                        "attempt_id": "attempt",
+                        "source_key": key,
+                        "start_nonce": "start",
+                        "registration_sha256": "a" * 64,
+                        "start_sha256": "b" * 64,
+                        "producer_pid": os.getpid(),
+                        "permit_nonce": "permit",
+                    },
+                    ensure_ascii=False,
+                ).encode()
+            )
+E           PermissionError: [Errno 1] Operation not permitted
+
+test/test_b3_producer_control_source_key.py:33: PermissionError</failure></testcase><testcase classname="test.test_b3_issuer_control_source_key" name="test_double_root_source_key_is_refused_before_any_reservation_file" time="0.004" /></testsuite></testsuites>

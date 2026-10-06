@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.864" timestamp="2026-10-06T11:19:53.263534+08:00" hostname="Conundrum"><testcase classname="test.test_b3_issuer_control_start" name="test_original_start_and_complete_supplied_input_bytes_are_inspected_without_authority" time="0.006"><failure message="AttributeError: module 'issuer_start_public' has no attribute 'inspect_producer_start_transport_probe'">tmp_path = PosixPath('/tmp/b3-start-inspection-red-20261006/test_original_start_and_comple0')
+
+    def test_original_start_and_complete_supplied_input_bytes_are_inspected_without_authority(tmp_path):
+        start, expected, inputs = fixture(tmp_path)
+&gt;       result = issuer().inspect_producer_start_transport_probe(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            ref(start), expected_start=expected, input_refs=inputs, max_seconds=2,
+        )
+E       AttributeError: module 'issuer_start_public' has no attribute 'inspect_producer_start_transport_probe'
+
+test/test_b3_issuer_control_start.py:63: AttributeError</failure></testcase></testsuite></testsuites>
