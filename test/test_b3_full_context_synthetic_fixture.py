@@ -152,6 +152,9 @@ def test_public_run_prepares_complete_original_synthetic_axes_without_outcomes(t
     manifest = _read(result["preparation"]["manifest"])
     report = _read(result["preparation"]["report"])
     splits = _read(result["preparation"]["split_assignments"])
+    prospective = _read(result["preparation"]["prospective_split_plan"])
+    assert prospective == report["splits"] == splits
+    assert result["preparation"]["prospective_split_plan"]["path"] != result["preparation"]["split_assignments"]["path"]
     assert {item["species"] for item in manifest["datasets"]} == set(SPECIES)
     assert all(item["train_only"] is True for item in manifest["datasets"])
     assert len(splits["assignments"]) == 10

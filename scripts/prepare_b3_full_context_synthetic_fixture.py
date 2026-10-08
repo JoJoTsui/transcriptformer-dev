@@ -1136,8 +1136,20 @@ def _genuine_inputs(owner, pins, registry, request_ref):
         ),
     )
     owner.check()
-    report = _load(registry, "src/transcriptformer/finetune/prepare.py").prepare_run(manifest, prepared_root)
+    prepare = _load(registry, "src/transcriptformer/finetune/prepare.py")
+    prospective = prepare.assign_splits(
+        [prepare._read_split_metadata(dataset) for dataset in manifest["datasets"]],
+        seed=manifest["seed"],
+    )
     owner.check()
+    prospective_path = owner.write("prospective_split_plan.json", _canonical(prospective) + b"\n")
+    os.fsync(owner.fd)
+    prospective_ref = pins.bind(prospective_path)
+    owner.check()
+    report = prepare.prepare_run(manifest, prepared_root)
+    owner.check()
+    if report["splits"] != prospective:
+        raise ValueError("Genuine preparation changed the original prospective split plan")
     owner.adopt_directory(prepared_root / "prepared")
     report_path = prepared_root / "preparation_report.json"
     split_path = prepared_root / "split_assignments.json"
@@ -1153,6 +1165,7 @@ def _genuine_inputs(owner, pins, registry, request_ref):
     preparation = {
         "manifest": pins.bind(manifest_path),
         "report": pins.bind(report_path),
+        "prospective_split_plan": prospective_ref,
         "split_assignments": pins.bind(split_path),
         "raw": raw_refs,
         "prepared": prepared_refs,
