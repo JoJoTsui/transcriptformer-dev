@@ -1,0 +1,11 @@
+{
+  "driver_command_seconds": 1.5952324809995844,
+  "head": "84838a6b4e952b4edf04b5bdec47e5a0b1f6042f",
+  "junit_created": false,
+  "return_code": 1,
+  "runtime_admission_granted": false,
+  "scientific_admission_granted": false,
+  "source_admission_granted": false,
+  "sources_unchanged": true,
+  "supervisor_directory_created": false
+}

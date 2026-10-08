@@ -1,0 +1,38 @@
+{
+  "artifacts": {
+    "full_suite_guarded_invocation_v3.json": {
+      "bytes": 31205,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/paused_handoff_v1/full_suite_guarded_invocation_v3.json",
+      "sha256": "8410da8afd82ca334a6f9df20892989876a196cc1be1ef5bffc48d99fa934eb9"
+    },
+    "full_suite_guarded_result_v3.json": {
+      "bytes": 337,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/paused_handoff_v1/full_suite_guarded_result_v3.json",
+      "sha256": "1e213d7749200a43844b74face0ef7e68099e46425af8e4aa2fbb4a3d4972d7e"
+    },
+    "full_suite_guarded_stderr_v3.txt": {
+      "bytes": 620,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/paused_handoff_v1/full_suite_guarded_stderr_v3.txt",
+      "sha256": "e15f83deea12c523b8816690383b4b59f8aa2706b4f9ddfb5afa5fb964f27d63"
+    },
+    "full_suite_guarded_stdout_v3.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/paused_handoff_v1/full_suite_guarded_stdout_v3.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "candidate_commit": "84838a6b4e952b4edf04b5bdec47e5a0b1f6042f",
+  "latest_observed_remote_state": {
+    "b3": "in_progress",
+    "final_results_verified": false,
+    "finetune": "in_progress",
+    "pre_commit": "success"
+  },
+  "local_full_suite_launched": false,
+  "move_execution_authorized": false,
+  "owner_requested_pause": true,
+  "runtime_admission_granted": false,
+  "schema": "b3_paused_handoff_v1",
+  "scientific_admission_granted": false,
+  "source_admission_granted": false
+}
