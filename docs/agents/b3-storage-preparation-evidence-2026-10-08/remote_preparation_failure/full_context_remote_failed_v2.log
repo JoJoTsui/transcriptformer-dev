@@ -1,0 +1,155 @@
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	﻿2026-10-08T03:01:22.8044581Z ##[group]Run python -m pytest test/test_b3_full_context_observed.py test/test_b3_full_context_synthetic_fixture.py test/test_b3_paged_native_common_source_controller.py -q --junitxml=b3-full-context-and-planning-tests.xml
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8046559Z ^[[36;1mpython -m pytest test/test_b3_full_context_observed.py test/test_b3_full_context_synthetic_fixture.py test/test_b3_paged_native_common_source_controller.py -q --junitxml=b3-full-context-and-planning-tests.xml^[[0m
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8151482Z shell: /usr/bin/bash -e {0}
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8151752Z env:
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8151942Z   OMP_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8152162Z   OPENBLAS_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8152384Z   MKL_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8152598Z   NUMEXPR_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8152825Z   CUDA_VISIBLE_DEVICES: 
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8153053Z   TF_RUN_REAL_MODEL_TESTS: 0
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8153542Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8153975Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8154441Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8154837Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8155234Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8155617Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:01:22.8155947Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:05:24.4941038Z ........................................................................ [ 34%]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:04.5435352Z ........................................F............................... [ 68%]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9093944Z ..................................................................       [100%]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9094748Z =================================== FAILURES ===================================
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9095566Z ____ test_prospective_plan_is_persistent_before_genuine_preparation_starts _____
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9096630Z 
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9097064Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_prospective_plan_is_persi0')
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9097926Z monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2c24bb6910>
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9098389Z 
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9098844Z     def test_prospective_plan_is_persistent_before_genuine_preparation_starts(tmp_path, monkeypatch):
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9099641Z         public, request_path, _ = _request(tmp_path)
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9100108Z         output = tmp_path / "attempt"
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9100521Z         original_mkdir = Path.mkdir
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9100900Z         observed = []
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9101205Z     
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9101493Z         def mkdir(path, *args, **kwargs):
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9101971Z             if path == output / "prepared_run" / "prepared":
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9102514Z                 plan = output / "prospective_split_plan.json"
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9102994Z                 observed.append(_ref(plan))
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9103505Z                 assignments = _read(observed[-1])["assignments"]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9103993Z                 assert len(assignments) == 10
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9104659Z                 assert all(item["split"] == "train" and item["reason"] == "train_only" for item in assignments)
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9105388Z             return original_mkdir(path, *args, **kwargs)
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9105806Z     
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9106293Z         monkeypatch.setattr(Path, "mkdir", mkdir)
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9106791Z         result = public.run(request_path, output)
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9107377Z >       assert observed == [result["preparation"]["prospective_split_plan"]]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9108154Z E       AssertionError: assert [{'bytes': 40...77c52e46305'}] == [{'bytes': 40...77c52e46305'}]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9108769Z E         
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9110163Z E         Left contains 2 more items, first extra item: {'bytes': 4009, 'path': '/tmp/pytest-of-runner/pytest-0/test_prospective_plan_is_persi0/attempt/prospective_split_plan.json', 'sha256': '09ea55ac318e5f22f525d18718bae135b02f8fccf59b7d22b559777c52e46305'}
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9112066Z E         
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9112355Z E         Full diff:
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9112650Z E           [
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9112917Z E               {
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9113205Z E                   'bytes': 4009,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9113975Z E                   'path': '/tmp/pytest-of-runner/pytest-0/test_prospective_plan_is_persi0/attempt/prospective_split_plan.json',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9115003Z E                   'sha256': '09ea55ac318e5f22f525d18718bae135b02f8fccf59b7d22b559777c52e46305',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9115616Z E               },
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9115892Z E         +     {
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9116403Z E         +         'bytes': 4009,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9117174Z E         +         'path': '/tmp/pytest-of-runner/pytest-0/test_prospective_plan_is_persi0/attempt/prospective_split_plan.json',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9118451Z E         +         'sha256': '09ea55ac318e5f22f525d18718bae135b02f8fccf59b7d22b559777c52e46305',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9119101Z E         +     },
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9119371Z E         +     {
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9119656Z E         +         'bytes': 4009,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9120403Z E         +         'path': '/tmp/pytest-of-runner/pytest-0/test_prospective_plan_is_persi0/attempt/prospective_split_plan.json',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9121425Z E         +         'sha256': '09ea55ac318e5f22f525d18718bae135b02f8fccf59b7d22b559777c52e46305',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9122043Z E         +     },
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9122312Z E           ]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9122476Z 
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9122730Z test/test_b3_full_context_synthetic_fixture.py:424: AssertionError
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9123402Z ----------------------------- Captured stdout call -----------------------------
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9124135Z Validating prepared artifacts and source provenance before support scans
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9124910Z Counting exact selected phase membership and validating CSR/gene features
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9125710Z Membership source homo_sapiens_prepared_train.h5ad: 60 selected cells; cumulative 60
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9126814Z Measured-zero support homo_sapiens_prepared_train.h5ad rows 0:8; selected 8/60; attempts 4008
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9127763Z Measured-zero support homo_sapiens_prepared_train.h5ad rows 8:16; selected 16/60; attempts 8016
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9128725Z Measured-zero support homo_sapiens_prepared_train.h5ad rows 16:24; selected 24/60; attempts 12024
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9129699Z Measured-zero support homo_sapiens_prepared_train.h5ad rows 24:32; selected 32/60; attempts 16032
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9130693Z Measured-zero support homo_sapiens_prepared_train.h5ad rows 32:40; selected 40/60; attempts 20040
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9131663Z Measured-zero support homo_sapiens_prepared_train.h5ad rows 40:48; selected 48/60; attempts 24048
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9132652Z Measured-zero support homo_sapiens_prepared_train.h5ad rows 48:56; selected 56/60; attempts 28056
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9133625Z Measured-zero support homo_sapiens_prepared_train.h5ad rows 56:60; selected 60/60; attempts 30060
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9134492Z Counting per-gene physical embryo support from packed native support
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9135069Z Physical support 502/502 genes
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9135581Z Checking exact peer containment in bins; candidate batches <= 128 genes
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9136492Z Matched-peer bin 1/1 (501 supported genes); necessary finite upper bound 500
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9137268Z Validating prepared artifacts and source provenance before support scans
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9138016Z Counting exact selected phase membership and validating CSR/gene features
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9138838Z Membership source mus_musculus_prepared_train.h5ad: 60 selected cells; cumulative 60
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9139783Z Measured-zero support mus_musculus_prepared_train.h5ad rows 0:8; selected 8/60; attempts 4008
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9140851Z Measured-zero support mus_musculus_prepared_train.h5ad rows 8:16; selected 16/60; attempts 8016
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9142058Z Measured-zero support mus_musculus_prepared_train.h5ad rows 16:24; selected 24/60; attempts 12024
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9143025Z Measured-zero support mus_musculus_prepared_train.h5ad rows 24:32; selected 32/60; attempts 16032
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9144004Z Measured-zero support mus_musculus_prepared_train.h5ad rows 32:40; selected 40/60; attempts 20040
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9144974Z Measured-zero support mus_musculus_prepared_train.h5ad rows 40:48; selected 48/60; attempts 24048
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9145959Z Measured-zero support mus_musculus_prepared_train.h5ad rows 48:56; selected 56/60; attempts 28056
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9147121Z Measured-zero support mus_musculus_prepared_train.h5ad rows 56:60; selected 60/60; attempts 30060
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9147969Z Counting per-gene physical embryo support from packed native support
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9148745Z Physical support 502/502 genes
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9149295Z Checking exact peer containment in bins; candidate batches <= 128 genes
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9150076Z Matched-peer bin 1/1 (501 supported genes); necessary finite upper bound 500
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9150667Z {
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9150988Z   "status": "potential_coverage_only_unproven",
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9151438Z   "n_vocabulary_joined_pairs": 502,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9151970Z   "possible_finite_pair_upper_bound": 500,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9152422Z   "upper_bound_coverage": {
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9152792Z     "status": "sufficient_coverage",
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9153208Z     "minimum_paired_scores": 500,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9153591Z     "minimum_joined_score_fraction": 0.8,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9154068Z     "paired_score_floor_pass": true,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9154542Z     "joined_score_fraction_floor_pass": true,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9154990Z     "joined_score_fraction": 0.9960159362549801,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9155909Z     "basis": "Approved B3 reporting floors; independent of registered 60% statistic-input and 5,000 genome-wide-pair eligibility floors"
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9156969Z   }
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9157216Z }
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9157545Z =============================== warnings summary ===============================
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9158368Z ../../../../../opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9159706Z   /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9160687Z   
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9161077Z     self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9161484Z 
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9161959Z ../../../../../opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9163302Z   /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9164245Z   
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9164643Z     self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9165045Z 
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9165274Z test/test_b3_full_context_synthetic_fixture.py: 22 warnings
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9166555Z   /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/anndata/_core/aligned_df.py:68: ImplicitModificationWarning: Transforming to str index.
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9167772Z     warnings.warn("Transforming to str index.", ImplicitModificationWarning)
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9168279Z 
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9168588Z -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9169636Z - generated xml file: /home/runner/work/transcriptformer-dev/transcriptformer-dev/b3-full-context-and-planning-tests.xml -
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9170636Z =========================== short test summary info ============================
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9172151Z FAILED test/test_b3_full_context_synthetic_fixture.py::test_prospective_plan_is_persistent_before_genuine_preparation_starts - AssertionError: assert [{'bytes': 40...77c52e46305'}] == [{'bytes': 40...77c52e46305'}]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9173624Z   
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9175006Z   Left contains 2 more items, first extra item: {'bytes': 4009, 'path': '/tmp/pytest-of-runner/pytest-0/test_prospective_plan_is_persi0/attempt/prospective_split_plan.json', 'sha256': '09ea55ac318e5f22f525d18718bae135b02f8fccf59b7d22b559777c52e46305'}
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9176759Z   
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9177015Z   Full diff:
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9177289Z     [
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9177547Z         {
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9177810Z             'bytes': 4009,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9178542Z             'path': '/tmp/pytest-of-runner/pytest-0/test_prospective_plan_is_persi0/attempt/prospective_split_plan.json',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9179524Z             'sha256': '09ea55ac318e5f22f525d18718bae135b02f8fccf59b7d22b559777c52e46305',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9180307Z         },
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9180557Z   +     {
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9180819Z   +         'bytes': 4009,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9181521Z   +         'path': '/tmp/pytest-of-runner/pytest-0/test_prospective_plan_is_persi0/attempt/prospective_split_plan.json',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9182505Z   +         'sha256': '09ea55ac318e5f22f525d18718bae135b02f8fccf59b7d22b559777c52e46305',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9183088Z   +     },
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9183341Z   +     {
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9183602Z   +         'bytes': 4009,
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9184297Z   +         'path': '/tmp/pytest-of-runner/pytest-0/test_prospective_plan_is_persi0/attempt/prospective_split_plan.json',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9185284Z   +         'sha256': '09ea55ac318e5f22f525d18718bae135b02f8fccf59b7d22b559777c52e46305',
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:16.9185872Z   +     },
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:17.6094868Z     ]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:17.6095377Z 1 failed, 209 passed, 24 warnings in 353.31s (0:05:53)
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:07:18.3543805Z ##[error]Process completed with exit code 1.

@@ -1,0 +1,42 @@
+{
+  "checks": [
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "test/test_b3_full_context_synthetic_fixture.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "All checks passed!\n"
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--check",
+        "test/test_b3_full_context_synthetic_fixture.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "1 file already formatted\n"
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-B",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "test/test_b3_full_context_synthetic_fixture.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "Success: no issues found in 1 source file\n"
+    }
+  ],
+  "local_numerical_run": "not_performed",
+  "source_sha256": "c8f0de9bf4c2a38d3eb330d0aded17174f3008e1cd3fc5d94a7c2f7992206c93"
+}

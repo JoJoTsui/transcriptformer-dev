@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="7" time="1.172" timestamp="2026-10-08T11:03:03.172641+08:00" hostname="Conundrum"><testcase classname="test.test_finetune_test_selection" name="test_ci_runs_all_cpu_finetune_suites" time="0.043" /><testcase classname="test.test_finetune_test_selection" name="test_ci_triggers_on_finetune_dependencies_and_every_test[push]" time="0.001" /><testcase classname="test.test_finetune_test_selection" name="test_ci_triggers_on_finetune_dependencies_and_every_test[pull_request]" time="0.000" /><testcase classname="test.test_finetune_test_selection" name="test_precommit_preserves_frozen_evidence_without_excluding_ordinary_sources[end-of-file-fixer]" time="0.129"><failure message="AssertionError: Frozen byte-bound receipts must not be rewritten or scanned as source merge markers&#10;assert 'exclude' in {'id': 'end-of-file-fixer'}">hook_id = 'end-of-file-fixer'
+
+    @pytest.mark.parametrize("hook_id", ["end-of-file-fixer", "mixed-line-ending", "trailing-whitespace", "check-merge-conflict"])
+    def test_precommit_preserves_frozen_evidence_without_excluding_ordinary_sources(hook_id):
+        config = yaml.safe_load((ROOT / ".pre-commit-config.yaml").read_text())
+        hook = next(hook for repo in config["repos"] for hook in repo["hooks"] if hook["id"] == hook_id)
+        archives = (
+            ROOT / "docs/agents/b3-full-context-control-evidence-2026-10-06",
+            ROOT / "docs/agents/b3-full-context-complete-cpu-failed-evidence-2026-10-06-v7",
+            ROOT / "docs/agents/b3-storage-preparation-evidence-2026-10-08",
+        )
+        frozen = [path.relative_to(ROOT).as_posix() for archive in archives for path in archive.rglob("*") if path.is_file()]
+        assert frozen
+&gt;       assert "exclude" in hook, "Frozen byte-bound receipts must not be rewritten or scanned as source merge markers"
+E       AssertionError: Frozen byte-bound receipts must not be rewritten or scanned as source merge markers
+E       assert 'exclude' in {'id': 'end-of-file-fixer'}
+
+test/test_finetune_test_selection.py:140: AssertionError</failure></testcase><testcase classname="test.test_finetune_test_selection" name="test_precommit_preserves_frozen_evidence_without_excluding_ordinary_sources[mixed-line-ending]" time="0.117"><failure message="AssertionError: Frozen byte-bound receipts must not be rewritten or scanned as source merge markers&#10;assert 'exclude' in {'args': ['--fix=lf'], 'id': 'mixed-line-ending'}">hook_id = 'mixed-line-ending'
+
+    @pytest.mark.parametrize("hook_id", ["end-of-file-fixer", "mixed-line-ending", "trailing-whitespace", "check-merge-conflict"])
+    def test_precommit_preserves_frozen_evidence_without_excluding_ordinary_sources(hook_id):
+        config = yaml.safe_load((ROOT / ".pre-commit-config.yaml").read_text())
+        hook = next(hook for repo in config["repos"] for hook in repo["hooks"] if hook["id"] == hook_id)
+        archives = (
+            ROOT / "docs/agents/b3-full-context-control-evidence-2026-10-06",
+            ROOT / "docs/agents/b3-full-context-complete-cpu-failed-evidence-2026-10-06-v7",
+            ROOT / "docs/agents/b3-storage-preparation-evidence-2026-10-08",
+        )
+        frozen = [path.relative_to(ROOT).as_posix() for archive in archives for path in archive.rglob("*") if path.is_file()]
+        assert frozen
+&gt;       assert "exclude" in hook, "Frozen byte-bound receipts must not be rewritten or scanned as source merge markers"
+E       AssertionError: Frozen byte-bound receipts must not be rewritten or scanned as source merge markers
+E       assert 'exclude' in {'args': ['--fix=lf'], 'id': 'mixed-line-ending'}
+
+test/test_finetune_test_selection.py:140: AssertionError</failure></testcase><testcase classname="test.test_finetune_test_selection" name="test_precommit_preserves_frozen_evidence_without_excluding_ordinary_sources[trailing-whitespace]" time="0.123"><failure message="AssertionError: Frozen byte-bound receipts must not be rewritten or scanned as source merge markers&#10;assert 'exclude' in {'id': 'trailing-whitespace'}">hook_id = 'trailing-whitespace'
+
+    @pytest.mark.parametrize("hook_id", ["end-of-file-fixer", "mixed-line-ending", "trailing-whitespace", "check-merge-conflict"])
+    def test_precommit_preserves_frozen_evidence_without_excluding_ordinary_sources(hook_id):
+        config = yaml.safe_load((ROOT / ".pre-commit-config.yaml").read_text())
+        hook = next(hook for repo in config["repos"] for hook in repo["hooks"] if hook["id"] == hook_id)
+        archives = (
+            ROOT / "docs/agents/b3-full-context-control-evidence-2026-10-06",
+            ROOT / "docs/agents/b3-full-context-complete-cpu-failed-evidence-2026-10-06-v7",
+            ROOT / "docs/agents/b3-storage-preparation-evidence-2026-10-08",
+        )
+        frozen = [path.relative_to(ROOT).as_posix() for archive in archives for path in archive.rglob("*") if path.is_file()]
+        assert frozen
+&gt;       assert "exclude" in hook, "Frozen byte-bound receipts must not be rewritten or scanned as source merge markers"
+E       AssertionError: Frozen byte-bound receipts must not be rewritten or scanned as source merge markers
+E       assert 'exclude' in {'id': 'trailing-whitespace'}
+
+test/test_finetune_test_selection.py:140: AssertionError</failure></testcase><testcase classname="test.test_finetune_test_selection" name="test_precommit_preserves_frozen_evidence_without_excluding_ordinary_sources[check-merge-conflict]" time="0.117"><failure message="AssertionError: Frozen byte-bound receipts must not be rewritten or scanned as source merge markers&#10;assert 'exclude' in {'args': ['--assume-in-merge'], 'id': 'check-merge-conflict'}">hook_id = 'check-merge-conflict'
+
+    @pytest.mark.parametrize("hook_id", ["end-of-file-fixer", "mixed-line-ending", "trailing-whitespace", "check-merge-conflict"])
+    def test_precommit_preserves_frozen_evidence_without_excluding_ordinary_sources(hook_id):
+        config = yaml.safe_load((ROOT / ".pre-commit-config.yaml").read_text())
+        hook = next(hook for repo in config["repos"] for hook in repo["hooks"] if hook["id"] == hook_id)
+        archives = (
+            ROOT / "docs/agents/b3-full-context-control-evidence-2026-10-06",
+            ROOT / "docs/agents/b3-full-context-complete-cpu-failed-evidence-2026-10-06-v7",
+            ROOT / "docs/agents/b3-storage-preparation-evidence-2026-10-08",
+        )
+        frozen = [path.relative_to(ROOT).as_posix() for archive in archives for path in archive.rglob("*") if path.is_file()]
+        assert frozen
+&gt;       assert "exclude" in hook, "Frozen byte-bound receipts must not be rewritten or scanned as source merge markers"
+E       AssertionError: Frozen byte-bound receipts must not be rewritten or scanned as source merge markers
+E       assert 'exclude' in {'args': ['--assume-in-merge'], 'id': 'check-merge-conflict'}
+
+test/test_finetune_test_selection.py:140: AssertionError</failure></testcase></testsuite></testsuites>

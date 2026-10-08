@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-B",
+    "-m",
+    "mypy",
+    "--follow-imports=silent",
+    "--ignore-missing-imports",
+    "--explicit-package-bases",
+    "test/test_finetune_test_selection.py"
+  ],
+  "return_code": 0,
+  "stderr": "",
+  "stdout": "Success: no issues found in 1 source file\n"
+}

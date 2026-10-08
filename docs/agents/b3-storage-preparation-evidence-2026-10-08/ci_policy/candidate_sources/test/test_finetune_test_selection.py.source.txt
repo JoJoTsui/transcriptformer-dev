@@ -105,7 +105,6 @@ def test_ci_triggers_on_finetune_dependencies_and_every_test(workflow, event):
     paths = workflow["on"][event]["paths"]
     changed_files = [
         WORKFLOW,
-        ".pre-commit-config.yaml",
         "src/transcriptformer/finetune/train.py",
         "src/transcriptformer/cli/finetune.py",
         "src/transcriptformer/cli/evaluate.py",

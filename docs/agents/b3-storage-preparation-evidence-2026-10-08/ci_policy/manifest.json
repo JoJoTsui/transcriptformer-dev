@@ -1,0 +1,74 @@
+{
+  "artifacts": {
+    "ci_evidence_spec_v1.md": {
+      "bytes": 2861,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/ci_policy/ci_evidence_spec_v1.md",
+      "sha256": "3457817dcc3e8a9c54d47260d5e2de2866973bc4f7f6aa3b128a005527bd2495"
+    },
+    "ci_evidence_standards_v1.md": {
+      "bytes": 2203,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/ci_policy/ci_evidence_standards_v1.md",
+      "sha256": "d2babcc33d44d68dc5d76c1040695927fb880da4aa15e6efbcccd760a46d1bf3"
+    },
+    "evidence_policy_green.xml": {
+      "bytes": 1347,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/ci_policy/evidence_policy_green.xml",
+      "sha256": "5c53a519f47f6c7e0668742851a16c08a6997a4bae9e166c5b2f974c85c8226f"
+    },
+    "evidence_policy_red.xml": {
+      "bytes": 7076,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/ci_policy/evidence_policy_red.xml",
+      "sha256": "5b48002719a989fad160a3ca527062b2ed1a5076bb280bb28c1b2ec55f41a4af"
+    },
+    "evidence_policy_static_v1.json": {
+      "bytes": 312,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/ci_policy/evidence_policy_static_v1.json",
+      "sha256": "14f63725bb7030efaebb575d9c14983320bd43d33734d39d05d82628046d5011"
+    },
+    "pre_commit_failed_v1.log": {
+      "bytes": 379038,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/ci_policy/pre_commit_failed_v1.log",
+      "sha256": "944c2be3da56df4f8d224ff791feb98af7f5593c006779b2db71868c7be08898"
+    },
+    "tracking_review_v1.md": {
+      "bytes": 2434,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/ci_policy/tracking_review_v1.md",
+      "sha256": "6ad08b0102addf0ff5189318ba87081d65e86c9ae46fc6733049facae7971866"
+    }
+  },
+  "baseline_commit": "5dde8767fffa89c42977ab8c97fcee4b7c1505a1",
+  "candidate_commit": "212209a23d025a102cc96db1b649c201750b0266",
+  "green": {
+    "errors": 0,
+    "failures": 0,
+    "passed": 7,
+    "skips": 0
+  },
+  "red": {
+    "failed": 4,
+    "passed": 3
+  },
+  "remote_original_failure_url": "https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/37720536253",
+  "remote_post_fix_acceptance": "pending",
+  "runtime_admission_granted": false,
+  "schema": "b3_evidence_hook_policy_evidence_v1",
+  "scientific_admission_granted": false,
+  "source_files": {
+    ".pre-commit-config.yaml": {
+      "bytes": 1429,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/ci_policy/candidate_sources/.pre-commit-config.yaml.source.txt",
+      "sha256": "f4a31d5436ad54400bab97545346de7339a8a26d142a93e283ad52553bbd4a9d"
+    },
+    "test/test_finetune_test_selection.py": {
+      "bytes": 5625,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/ci_policy/candidate_sources/test/test_finetune_test_selection.py.source.txt",
+      "sha256": "95df709c4774d1cf1346ccf01b193a6a3ea162a619ba9ec29d375fae4e024552"
+    }
+  },
+  "static_source_reviews": {
+    "spec_hard": 0,
+    "spec_optional": 0,
+    "standards_hard": 0,
+    "standards_optional": 0
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "artifacts": {
+    "ci_evidence_spec_v2.md": {
+      "bytes": 2985,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/ci_evidence_spec_v2.md",
+      "sha256": "4efabf9d76e5daa7fa658b9588a284e7768b4f7d3c4baa645654cab01a8c1406"
+    },
+    "ci_evidence_standards_v2.md": {
+      "bytes": 2643,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/ci_evidence_standards_v2.md",
+      "sha256": "f2c7b8f4d58b5ca770175418e280b99447194f17fde6e8d1534a205378e1a048"
+    }
+  },
+  "baseline_commit": "5dde8767fffa89c42977ab8c97fcee4b7c1505a1",
+  "candidate_commit": "fc5477078ff537eaad758997184c67237d3b83ef",
+  "local_numerical_validation": "not_run_C_backing_below_floor",
+  "repaired_remote_validation": "pending",
+  "reviews": {
+    "spec_hard": 0,
+    "spec_optional": 0,
+    "standards_hard": 0,
+    "standards_optional": 0
+  },
+  "schema": "b3_remote_preparation_repair_review_v1",
+  "source_files": {
+    ".pre-commit-config.yaml": {
+      "bytes": 1429,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/repair_sources/.pre-commit-config.yaml.source.txt",
+      "sha256": "f4a31d5436ad54400bab97545346de7339a8a26d142a93e283ad52553bbd4a9d"
+    },
+    "test/test_b3_full_context_synthetic_fixture.py": {
+      "bytes": 23586,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/repair_sources/test/test_b3_full_context_synthetic_fixture.py.source.txt",
+      "sha256": "c8f0de9bf4c2a38d3eb330d0aded17174f3008e1cd3fc5d94a7c2f7992206c93"
+    },
+    "test/test_finetune_test_selection.py": {
+      "bytes": 5625,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/repair_sources/test/test_finetune_test_selection.py.source.txt",
+      "sha256": "95df709c4774d1cf1346ccf01b193a6a3ea162a619ba9ec29d375fae4e024552"
+    }
+  }
+}
