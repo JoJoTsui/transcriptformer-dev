@@ -63,8 +63,42 @@ explicitly unclaimed.
   hashes remain stable. These are storage refusals, not completed test runs.
 
 [Exact source buffers, reviews and raw receipts](b3-storage-preparation-evidence-2026-10-08/manifest.json)
-retain their separate scopes. The original full CPU v7 remains failed; the
+retain their separate scopes. Citation line numbers in the exact review reports
+refer to their reviewed candidate document snapshots; later dated tracking
+insertions can shift those lines. The original full CPU v7 remains failed; the
 1,310-pass/five-skip v5 at `32f9426` remains historical.
+
+## Subsequent GitHub CI failures and repairs
+
+The first pushed GitHub B3 run at `5dde876` executes genuine preparation,
+stored arithmetic and planning: **209 passed, one failed in 353.31 seconds**.
+The sole failure is the new ordering observer expecting one directory call;
+real preparation makes one at entry and one for each of two datasets. The
+`fc54770` test-only repair observes the first call and injects each filesystem
+fault once. Production preparation, scientific axes and resource floors are
+unchanged. The separate explicit finetune CPU selection returns **1,389
+passed/one identical observer failure in 820.97 seconds**; this is selected CI
+coverage, not complete whole-repository accounting.
+[Original failed finetune CPU run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/37720536220).
+[Original failed B3 run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/37720536176).
+
+The same push's formatting workflow tries to normalize exact frozen receipts
+and misidentifies a pytest separator as a merge marker. `212209a` excludes only
+three specific byte-bound archives from the four whitespace/separator hooks;
+ordinary source/tracking checks and private-key scanning continue. Actual
+policy RED has four failures/three passes, then **seven metadata checks pass**;
+`b301d67` also adds config-only push/PR trigger coverage (two failing trigger
+cases before the fix, two passes after it).
+Ruff/format/mypy pass. Independent final policy source reviews have zero
+findings. The original logs and byte hashes are preserved, and post-repair
+remote acceptance is still pending at this checkpoint.
+[Original failed formatting run](https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/37720536253),
+[policy evidence](b3-storage-preparation-evidence-2026-10-08/ci_policy/manifest.json),
+[original numerical failure and repair](b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/manifest.json),
+[final exact source reviews](b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/final_review_manifest_v3.json).
+The initial copied v2 report preceded the reviewer's late optional trigger
+finding; its committed bytes remain unchanged, alongside the final v2 and v3
+reports. Final v3 reviews have zero findings.
 
 ## Remaining dependency gates
 

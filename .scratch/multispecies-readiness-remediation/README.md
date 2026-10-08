@@ -31,6 +31,18 @@ reporting veto, null intervals and frozen scientific/resource limits remain.
 Evidence: [storage/preparation implementation](../../docs/agents/b3-storage-preparation-implementation-2026-10-08.md),
 [exact current and failed receipts](../../docs/agents/b3-storage-preparation-evidence-2026-10-08/manifest.json).
 
+### Subsequent GitHub CI — 2026-10-08
+
+The first remote B3 run executes genuine preparation/stored arithmetic/planning:
+**209 pass/one new observer test failure (353.31 s)**. Genuine preparation makes
+three directory calls; `fc54770` repairs the test to observe the first and
+inject faults once. Production behavior and frozen rules are unchanged.
+`212209a` repairs formatting hooks that rewrote byte-bound receipts and flagged
+a pytest separator; seven metadata policy checks and exact reviews pass.
+Original remote failures are preserved; post-repair remote acceptance is
+pending. These remote attempts are separate from the local WSL storage refusal.
+See the [implementation and original remote receipts](../../docs/agents/b3-storage-preparation-implementation-2026-10-08.md).
+
 **Previous common-source milestone — acceptance recorded 2026-10-05.**
 The native batch/v3 application at `71c1254` passes bounded engineering
 acceptance: **1,092 passed, 5 skipped**, zero failures/errors. All **75 new

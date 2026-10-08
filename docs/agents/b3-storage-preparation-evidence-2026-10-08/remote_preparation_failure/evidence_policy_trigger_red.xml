@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="0.534" timestamp="2026-10-08T11:20:25.115946+08:00" hostname="Conundrum"><testcase classname="test.test_finetune_test_selection" name="test_ci_triggers_on_finetune_dependencies_and_every_test[push]" time="0.006"><failure message="assert False&#10; +  where False = all(&lt;generator object test_ci_triggers_on_finetune_dependencies_and_every_test.&lt;locals&gt;.&lt;genexpr&gt; at 0x7117f3327b50&gt;)">workflow = {'jobs': {'finetune-unit-tests': {'env': {'CUDA_VISIBLE_DEVICES': '', 'MKL_NUM_THREADS': '1', 'NUMEXPR_NUM_THREADS': '...former/data/**', 'src/transcriptformer/model/**', 'src/transcriptformer/tokenizer/**', ...]}, 'workflow_dispatch': ''}}
+event = 'push'
+
+    @pytest.mark.parametrize("event", ["push", "pull_request"])
+    def test_ci_triggers_on_finetune_dependencies_and_every_test(workflow, event):
+        paths = workflow["on"][event]["paths"]
+        changed_files = [
+            WORKFLOW,
+            ".pre-commit-config.yaml",
+            "src/transcriptformer/finetune/train.py",
+            "src/transcriptformer/cli/finetune.py",
+            "src/transcriptformer/cli/evaluate.py",
+            "src/transcriptformer/data/dataloader.py",
+            "src/transcriptformer/model/model.py",
+            "src/transcriptformer/tokenizer/tokenizer.py",
+            "test/conftest.py",
+            "test/fixtures.py",
+            "test/test_future_finetune_regression.py",
+            "scripts/validate_prepared.py",
+            "conf/data_manifest.json",
+            "preprocess/probe_config.json",
+            "preprocess/probe_stage_mappings.json",
+            "pyproject.toml",
+            "uv.lock",
+            *(f"test/test_{name}.py" for name in SUITES),
+        ]
+&gt;       assert all(any(fnmatch.fnmatchcase(path, pattern) for pattern in paths) for path in changed_files)
+E       assert False
+E        +  where False = all(&lt;generator object test_ci_triggers_on_finetune_dependencies_and_every_test.&lt;locals&gt;.&lt;genexpr&gt; at 0x7117f3327b50&gt;)
+
+test/test_finetune_test_selection.py:126: AssertionError</failure></testcase><testcase classname="test.test_finetune_test_selection" name="test_ci_triggers_on_finetune_dependencies_and_every_test[pull_request]" time="0.000"><failure message="assert False&#10; +  where False = all(&lt;generator object test_ci_triggers_on_finetune_dependencies_and_every_test.&lt;locals&gt;.&lt;genexpr&gt; at 0x7117f31d4130&gt;)">workflow = {'jobs': {'finetune-unit-tests': {'env': {'CUDA_VISIBLE_DEVICES': '', 'MKL_NUM_THREADS': '1', 'NUMEXPR_NUM_THREADS': '...former/data/**', 'src/transcriptformer/model/**', 'src/transcriptformer/tokenizer/**', ...]}, 'workflow_dispatch': ''}}
+event = 'pull_request'
+
+    @pytest.mark.parametrize("event", ["push", "pull_request"])
+    def test_ci_triggers_on_finetune_dependencies_and_every_test(workflow, event):
+        paths = workflow["on"][event]["paths"]
+        changed_files = [
+            WORKFLOW,
+            ".pre-commit-config.yaml",
+            "src/transcriptformer/finetune/train.py",
+            "src/transcriptformer/cli/finetune.py",
+            "src/transcriptformer/cli/evaluate.py",
+            "src/transcriptformer/data/dataloader.py",
+            "src/transcriptformer/model/model.py",
+            "src/transcriptformer/tokenizer/tokenizer.py",
+            "test/conftest.py",
+            "test/fixtures.py",
+            "test/test_future_finetune_regression.py",
+            "scripts/validate_prepared.py",
+            "conf/data_manifest.json",
+            "preprocess/probe_config.json",
+            "preprocess/probe_stage_mappings.json",
+            "pyproject.toml",
+            "uv.lock",
+            *(f"test/test_{name}.py" for name in SUITES),
+        ]
+&gt;       assert all(any(fnmatch.fnmatchcase(path, pattern) for pattern in paths) for path in changed_files)
+E       assert False
+E        +  where False = all(&lt;generator object test_ci_triggers_on_finetune_dependencies_and_every_test.&lt;locals&gt;.&lt;genexpr&gt; at 0x7117f31d4130&gt;)
+
+test/test_finetune_test_selection.py:126: AssertionError</failure></testcase></testsuite></testsuites>

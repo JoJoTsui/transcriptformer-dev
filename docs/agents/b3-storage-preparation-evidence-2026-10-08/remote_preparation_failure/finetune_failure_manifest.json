@@ -1,0 +1,22 @@
+{
+  "artifacts": {
+    "finetune_remote_failed_v2.log": {
+      "bytes": 322211,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/finetune_remote_failed_v2.log",
+      "sha256": "219f525af5d77599298970fd4ec69d5e2683de17c95c47b7c5afcd76337937ce"
+    }
+  },
+  "candidate_commit": "5dde8767fffa89c42977ab8c97fcee4b7c1505a1",
+  "complete_all_repository_accounting": "not_claimed",
+  "failed": 1,
+  "failure": "same new first-preparation observer recorded all three mkdir calls",
+  "passed": 1389,
+  "pytest_reported_seconds": 820.97,
+  "repair_commit": "fc5477078ff537eaad758997184c67237d3b83ef",
+  "repaired_runtime": "pending",
+  "runtime_admission_granted": false,
+  "schema": "b3_remote_finetune_failure_v1",
+  "scientific_admission_granted": false,
+  "selected_cpu_cases": 1390,
+  "url": "https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/37720536220"
+}

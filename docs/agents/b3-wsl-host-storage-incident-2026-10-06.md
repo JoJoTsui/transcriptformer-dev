@@ -67,7 +67,7 @@ scientific admission.
 
 [Exact failed raw closure and storage observations](b3-full-context-complete-cpu-failed-evidence-2026-10-06-v7/manifest.json).
 
-## Recovery gate and subsequent work
+## Original recovery gate and subsequent work — 2026-10-06
 
 Free at least the existing **20 GiB** floor on C:, then restart Ubuntu WSL and
 check that ext4 is writable with no emergency/read I/O failures. If the VHD

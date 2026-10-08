@@ -1,0 +1,75 @@
+{
+  "artifacts": {
+    "ci_evidence_spec_v3.md": {
+      "bytes": 3279,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/ci_evidence_spec_v3.md",
+      "sha256": "f2131f70bdd0c98d9b9cb4892378cdeb4c6ffed349bc9dd2c50567d7201a9e3c"
+    },
+    "ci_evidence_standards_v2_final.md": {
+      "bytes": 3061,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/ci_evidence_standards_v2_final.md",
+      "sha256": "a584c0536e09ce67bdd97d550dc9be585fbca70b40b04f57d026fc8cc1a97c7b"
+    },
+    "ci_evidence_standards_v2_initial.md": {
+      "bytes": 2643,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/ci_evidence_standards_v2_initial.md",
+      "sha256": "f2c7b8f4d58b5ca770175418e280b99447194f17fde6e8d1534a205378e1a048"
+    },
+    "ci_evidence_standards_v3.md": {
+      "bytes": 2989,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/ci_evidence_standards_v3.md",
+      "sha256": "cc8ea1a4fbf386ee4e9fd85e202c99fc2d01ce8857e48a6365744e5986afedcc"
+    },
+    "evidence_policy_trigger_green.xml": {
+      "bytes": 535,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/evidence_policy_trigger_green.xml",
+      "sha256": "4617204b3200beeae812984b43dcc380218ceff47fdb25743a1bba8a7824c08a"
+    },
+    "evidence_policy_trigger_red.xml": {
+      "bytes": 4243,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/evidence_policy_trigger_red.xml",
+      "sha256": "6a7b87a4f80532f4f431d2a41d3af148355864b5e6e14b227f666d0c6d0e593d"
+    }
+  },
+  "baseline_commit": "5dde8767fffa89c42977ab8c97fcee4b7c1505a1",
+  "candidate_commit": "b301d67f75155af67bd7778fc0d469577f437040",
+  "final_reviews": {
+    "spec_hard": 0,
+    "spec_optional": 0,
+    "standards_hard": 0,
+    "standards_optional": 0
+  },
+  "local_current_numerical_run": "not_performed",
+  "prior_final_v2": {
+    "resolution": "Config-only push and PR trigger coverage added with true RED2/GREEN2.",
+    "standards_hard": 0,
+    "standards_optional": 1
+  },
+  "provisional_v2_copy": "The original v2 report/manifest frozen in b301d67 captured the initial zero-finding report before the reviewer published a late optional trigger finding; their exact bytes are retained and superseded by this version. Both the final v2 report and v3 reports are preserved separately.",
+  "remote_repaired_acceptance": "pending",
+  "runtime_admission_granted": false,
+  "schema": "b3_ci_preparation_final_source_review_v3",
+  "scientific_admission_granted": false,
+  "source_files": {
+    ".github/workflows/finetune-tests.yml": {
+      "bytes": 5365,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/final_review_sources/.github/workflows/finetune-tests.yml.source.txt",
+      "sha256": "036d033fc8e4a65b5c1d78e41cf341fd47d0e898f6e7a6af52fe9e8d4cd35526"
+    },
+    ".pre-commit-config.yaml": {
+      "bytes": 1429,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/final_review_sources/.pre-commit-config.yaml.source.txt",
+      "sha256": "f4a31d5436ad54400bab97545346de7339a8a26d142a93e283ad52553bbd4a9d"
+    },
+    "test/test_b3_full_context_synthetic_fixture.py": {
+      "bytes": 23586,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/final_review_sources/test/test_b3_full_context_synthetic_fixture.py.source.txt",
+      "sha256": "c8f0de9bf4c2a38d3eb330d0aded17174f3008e1cd3fc5d94a7c2f7992206c93"
+    },
+    "test/test_finetune_test_selection.py": {
+      "bytes": 5660,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_preparation_failure/final_review_sources/test/test_finetune_test_selection.py.source.txt",
+      "sha256": "57d9751316b85efd6a23b0982c307715a821487b4ed89be7b5c194603f91764c"
+    }
+  }
+}

@@ -210,3 +210,12 @@ is implemented in source and still awaits genuine numerical validation.
 [Current implementation and exact preserved receipts](../../../docs/agents/b3-storage-preparation-implementation-2026-10-08.md)
 synchronize ticket 05 and the readiness index; this ticket retains bounded
 engineering closure without scientific or runtime admission.
+
+The first October 8 remote B3/formatting checks fail on new observer
+instrumentation and normalization of frozen receipts respectively. The former
+has 209 passes/one failure in 353.31 seconds; `fc54770` repairs first-call
+observation. `212209a` protects only the three byte-bound archives from four
+formatting/separator hooks, with seven passing metadata checks and zero-finding
+source reviews. Original failures remain preserved and repaired remote
+acceptance is pending; no complete current-source runtime/scientific acceptance
+is claimed.
