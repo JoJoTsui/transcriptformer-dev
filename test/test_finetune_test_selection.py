@@ -1,6 +1,7 @@
 """Keep the CPU finetune CI suite and its change triggers complete."""
 
 import fnmatch
+import re
 import shlex
 from pathlib import Path
 
@@ -123,3 +124,36 @@ def test_ci_triggers_on_finetune_dependencies_and_every_test(workflow, event):
     ]
     assert all(any(fnmatch.fnmatchcase(path, pattern) for pattern in paths) for path in changed_files)
     assert "workflow_dispatch" in workflow["on"]
+
+
+@pytest.mark.parametrize(
+    "hook_id", ["end-of-file-fixer", "mixed-line-ending", "trailing-whitespace", "check-merge-conflict"]
+)
+def test_precommit_preserves_frozen_evidence_without_excluding_ordinary_sources(hook_id):
+    config = yaml.safe_load((ROOT / ".pre-commit-config.yaml").read_text())
+    hook = next(hook for repo in config["repos"] for hook in repo["hooks"] if hook["id"] == hook_id)
+    archives = (
+        ROOT / "docs/agents/b3-full-context-control-evidence-2026-10-06",
+        ROOT / "docs/agents/b3-full-context-complete-cpu-failed-evidence-2026-10-06-v7",
+        ROOT / "docs/agents/b3-storage-preparation-evidence-2026-10-08",
+    )
+    frozen = [
+        path.relative_to(ROOT).as_posix() for archive in archives for path in archive.rglob("*") if path.is_file()
+    ]
+    assert frozen
+    assert "exclude" in hook, "Frozen byte-bound receipts must not be rewritten or scanned as source merge markers"
+    excluded = re.compile(hook["exclude"])
+    assert all(excluded.search(path) for path in frozen)
+    assert not any(
+        excluded.search(path)
+        for path in (
+            "scripts/supervise_b3_pilot.py",
+            "test/test_finetune_test_selection.py",
+            "docs/agents/finetune-readiness-tracker.md",
+            ".pre-commit-config.yaml",
+            "docs/agents/unregistered-evidence/ordinary.md",
+        )
+    )
+    scanner = next(hook for repo in config["repos"] for hook in repo["hooks"] if hook["id"] == "detect-private-key")
+    security_exclusion = scanner.get("exclude")
+    assert security_exclusion is None or not any(re.search(security_exclusion, path) for path in frozen)
