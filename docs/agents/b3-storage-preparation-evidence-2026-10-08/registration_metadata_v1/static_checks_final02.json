@@ -1,0 +1,80 @@
+{
+  "checks": [
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "--no-cache",
+        "scripts/bridge_b3_full_context_observed.py",
+        "test/test_b3_full_context_registration.py"
+      ],
+      "return_code": 0,
+      "elapsed_seconds": 0.017160891000457923,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--no-cache",
+        "--check",
+        "scripts/bridge_b3_full_context_observed.py",
+        "test/test_b3_full_context_registration.py"
+      ],
+      "return_code": 0,
+      "elapsed_seconds": 0.01764216599985957,
+      "stdout": "2 files already formatted\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/mnt/d/sc/transcriptformer/transcriptformer/.venv/bin/python",
+        "-B",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "scripts/bridge_b3_full_context_observed.py",
+        "test/test_b3_full_context_registration.py"
+      ],
+      "return_code": 0,
+      "elapsed_seconds": 1.1296058570005698,
+      "stdout": "Success: no issues found in 2 source files\n",
+      "stderr": ""
+    }
+  ],
+  "mypy_environment": {
+    "PYTHONPATH": "/home/joey/.cache/uv/archive-v0/xRyg4HEqkxLwm2OA:/home/joey/.cache/uv/archive-v0/0P1lZuvxYyZrbYlh16qWy:/home/joey/.cache/uv/archive-v0/erB5vv3vCnGbzwlL:/home/joey/.cache/uv/archive-v0/LH6ffABWhmcwoA1Tz2iL9:/home/joey/.cache/uv/archive-v0/WrO-Eo3zoRZ6ZiPi",
+    "MYPY_CACHE_DIR": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/mypy-cache-final"
+  },
+  "source_before": {
+    "scripts/bridge_b3_full_context_observed.py": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py",
+      "bytes": 30534,
+      "sha256": "571c34b65b2f0e5c5a156e2f808f6db8c35fb83267d1b0dce04dda8029b1371f"
+    },
+    "test/test_b3_full_context_registration.py": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py",
+      "bytes": 16572,
+      "sha256": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346"
+    }
+  },
+  "source_after": {
+    "scripts/bridge_b3_full_context_observed.py": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py",
+      "bytes": 30534,
+      "sha256": "571c34b65b2f0e5c5a156e2f808f6db8c35fb83267d1b0dce04dda8029b1371f"
+    },
+    "test/test_b3_full_context_registration.py": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py",
+      "bytes": 16572,
+      "sha256": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346"
+    }
+  },
+  "source_bytes_stable": true,
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "numerical_validation_performed": false
+}

@@ -1,0 +1,46 @@
+{
+  "artifacts": {
+    "finetune_remote_green_v1.log": {
+      "bytes": 350439,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_accepted_b301d67/finetune_remote_green_v1.log",
+      "sha256": "729d0ea967c3814302c0a4a40618889d79054209ee0b1cd4ef4473e7d0aa9c7a"
+    },
+    "full_context_remote_green_v1.log": {
+      "bytes": 111728,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_accepted_b301d67/full_context_remote_green_v1.log",
+      "sha256": "52027e708f005a86d6831e02b9b7ac41c57ee095b2147551e7ece0bb9fe19b09"
+    },
+    "pre_commit_remote_green_v1.json": {
+      "bytes": 1768,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/remote_accepted_b301d67/pre_commit_remote_green_v1.json",
+      "sha256": "b27c2f459cceb81bc1cd94bf396e452d08f20430e8cdde966e4826339f441988"
+    }
+  },
+  "candidate_commit": "b301d67f75155af67bd7778fc0d469577f437040",
+  "complete_all_repository_source_accounting": false,
+  "finetune": {
+    "failed": 0,
+    "passed": 1394,
+    "pytest_seconds": 505.48,
+    "scope": "explicit_selected_CPU_suites",
+    "url": "https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/37722981496"
+  },
+  "full_context": {
+    "failed": 0,
+    "passed": 210,
+    "pytest_seconds": 366.16,
+    "scope": "three_explicit_stored_arithmetic_preparation_planning_suites",
+    "url": "https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/37722981319"
+  },
+  "local_WSL_numerical_storage_gate": "still_unmet",
+  "new_registration_parser_in_this_run": false,
+  "original_failures_retained": true,
+  "pre_commit": {
+    "conclusion": "success",
+    "url": "https://github.com/JoJoTsui/transcriptformer-dev/actions/runs/37722981320"
+  },
+  "runtime_admission_granted": false,
+  "schema": "b3_remote_ci_acceptance_v1",
+  "scientific_admission_granted": false,
+  "source_admission_granted": false
+}

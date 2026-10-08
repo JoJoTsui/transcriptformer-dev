@@ -1,0 +1,225 @@
+"""Public registration refusals use real files; no preparation/origin is forged."""
+
+from importlib import util
+from hashlib import sha256
+import json
+from pathlib import Path
+import sys
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+PUBLIC_SOURCE = ROOT / "scripts/bridge_b3_full_context_observed.py"
+
+
+def public():
+    spec = util.spec_from_file_location("b3_registration_public", PUBLIC_SOURCE)
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def request_document():
+    return {
+        "schema": "b3_full_context_family_registration_request_v2",
+        "phase": "register",
+        "registration_profile": "synthetic_stored_arithmetic_v1",
+        "family": None,
+        "family_sha256": None,
+        "decision_evidence": None,
+        "preparation": None,
+        "source_bindings": None,
+        "producer_intent": None,
+        "issuer_source_admission": None,
+        "rng_contract": None,
+        "execution_catalog": None,
+        "consumer_file_sha256": None,
+    }
+
+
+def ref(path):
+    raw = path.read_bytes()
+    return {"path": str(path), "sha256": sha256(raw).hexdigest(), "bytes": len(raw)}
+
+
+def family_request(tmp_path):
+    table = tmp_path / "orthologs.tsv"
+    table.write_bytes(b"human_gene\tmouse_gene\n")
+    paired = tmp_path / "paired_metadata.json"
+    paired.write_bytes(b'{"scope":"unadmitted_refusal_fixture"}\n')
+    family = {
+        "schema": "b3_measured_zero_bootstrap_family_v1",
+        "family_id": "prospective_refusal_fixture",
+        "model_arm": "base",
+        "comparisons": [{
+            "comparison_id": "human_mouse",
+            "bundle_a": str(tmp_path / "future_human"),
+            "bundle_b": str(tmp_path / "future_mouse"),
+            "table": str(table),
+            "paired_preflight": str(paired),
+            "table_sha256": ref(table)["sha256"],
+            "paired_preflight_sha256": ref(paired)["sha256"],
+        }],
+    }
+    family_path = tmp_path / "family.json"
+    family_path.write_text(json.dumps(family))
+    body = request_document()
+    body["family"] = ref(family_path)
+    body["family_sha256"] = sha256(json.dumps(family, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    return body, family, family_path
+
+
+def source_request(tmp_path):
+    body, family, family_path = family_request(tmp_path)
+    script_names = (
+        "prepare_b3_paged_native_cache.py", "b3_native_catalog_pages.py", "prepare_b3_paged_native_context.py",
+        "bootstrap_b3_streamed.py", "reduce_b3_streamed_fixed_pairs.py", "replay_b3_sparse_null.py", "b3_windowed_native.py",
+        "b3_h5_attribute_admission.py", "replay_b3_prepared_sparse_session.py", "prepare_b3_paged_native_common_source.py",
+        "b3_authenticated_helpers.py", "publish_b3_full_context_observed.py", "summarize_ortholog_measured_zero_v2.py",
+        "summarize_ortholog_paired_scores.py", "build_ortholog_table.py", "handoff_ortholog_scores.py",
+        "report_ortholog_eligibility.py", "summarize_ortholog_full_universe.py", "b3_score_contract.py",
+        "b3_streamed_bootstrap.py", "b3_streamed_draw_schedule.py", "bridge_b3_full_context_observed.py",
+    )
+    paths = [*sorted((ROOT / "src/transcriptformer").rglob("*.py")), *(ROOT / "scripts" / name for name in script_names)]
+    assert len(paths) == 80
+    body["consumer_file_sha256"] = {str(path): ref(path)["sha256"] for path in sorted(paths)}
+    keys = sorted([str(tmp_path / "future_human"), str(tmp_path / "future_mouse")])
+    body["source_bindings"] = dict.fromkeys(keys)
+    body["producer_intent"] = dict.fromkeys(keys)
+    return body, family, family_path
+
+
+def test_duplicate_request_keys_refuse_without_creating_completion(tmp_path):
+    request = tmp_path / "request.json"
+    request.write_bytes(b'{"schema":"first","schema":"second"}\n')
+    output = tmp_path / "registration"
+    before = set(sys.modules)
+    with pytest.raises(ValueError, match="Duplicate"):
+        public().run(request, output)
+    assert not output.exists()
+    assert not any(name.split(".")[0] in {"numpy", "torch", "h5py", "anndata"} for name in set(sys.modules) - before)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("schema", "old_registration", "schema"),
+        ("phase", "compare", "phase"),
+        ("registration_profile", "zebrafish", "profile"),
+        ("trusted_authority", True, "closed request"),
+    ],
+)
+def test_closed_request_refusals_preserve_foreign_completion(tmp_path, field, value, message):
+    body = request_document()
+    body[field] = value
+    request = tmp_path / "request.json"
+    request.write_text(json.dumps(body))
+    output = tmp_path / "foreign_registration"
+    output.mkdir()
+    marker = output / "complete.json"
+    marker.write_bytes(b"foreign completion; caller owned\n")
+    before = marker.stat()
+    with pytest.raises(ValueError, match=message):
+        public().run(request, output)
+    after = marker.stat()
+    assert marker.read_bytes() == b"foreign completion; caller owned\n"
+    assert (after.st_dev, after.st_ino) == (before.st_dev, before.st_ino)
+
+
+@pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "directory"])
+def test_family_references_require_original_regular_bytes(tmp_path, fault):
+    body, _, family_path = family_request(tmp_path)
+    if fault == "boolean_size":
+        body["family"]["bytes"] = True
+        message = "strict.*size"
+    elif fault == "wrong_hash":
+        body["family"]["sha256"] = "0" * 64
+        message = "hash"
+    elif fault == "wrong_size":
+        body["family"]["bytes"] += 1
+        message = "size|bytes"
+    elif fault == "unknown_ref_field":
+        body["family"]["approved"] = True
+        message = "closed.*Ref"
+    elif fault == "symlink":
+        alias = tmp_path / "family_alias.json"
+        alias.symlink_to(family_path)
+        body["family"]["path"] = str(alias)
+        message = "alias"
+    else:
+        family_path.unlink()
+        family_path.mkdir()
+        message = "regular"
+    request = tmp_path / "request.json"
+    request.write_text(json.dumps(body))
+    output = tmp_path / "registration"
+    with pytest.raises(ValueError, match=message):
+        public().run(request, output)
+    assert not output.exists()
+
+
+def test_real_family_and_consumer_sources_report_missing_predecessors_without_admission(tmp_path):
+    body, _, _ = source_request(tmp_path)
+    request = tmp_path / "request.json"
+    request.write_text(json.dumps(body))
+    output = tmp_path / "registration"
+    module = public()
+    before = set(sys.modules)
+    with pytest.raises(module.RegistrationUnavailable) as caught:
+        module.run(request, output)
+    inspection = caught.value.inspection
+    assert inspection["consumer_file_count"] == 80
+    assert inspection["comparison_ids"] == ["human_mouse"]
+    assert inspection["source_keys"] == [str(tmp_path / "future_human"), str(tmp_path / "future_mouse")]
+    assert inspection["source_admission_granted"] is False
+    assert inspection["runtime_admission_granted"] is False
+    assert inspection["complete_execution_inventory_verified"] is False
+    assert {"genuine_preparation", "accepted_issuer_source_admission"} <= set(caught.value.missing_gates)
+    assert not output.exists()
+    assert not any(name.split(".")[0] in {"numpy", "torch", "pandas", "scipy", "h5py", "anndata"} for name in set(sys.modules) - before)
+
+
+@pytest.mark.parametrize("fault", ["same_count_substitution", "wrong_source_hash", "unordered"])
+def test_consumer_inventory_requires_exact_sorted_original_source_bytes(tmp_path, fault):
+    body, _, _ = source_request(tmp_path)
+    mapping = body["consumer_file_sha256"]
+    if fault == "same_count_substitution":
+        del mapping[str(ROOT / "src/transcriptformer/__init__.py")]
+        foreign = tmp_path / "foreign.py"
+        foreign.write_bytes(b"raise AssertionError('unreviewed source must never execute')\n")
+        mapping[str(foreign)] = ref(foreign)["sha256"]
+        body["consumer_file_sha256"] = dict(sorted(mapping.items()))
+        assert len(mapping) == 80
+        message = "exact.*80.*source paths"
+    elif fault == "wrong_source_hash":
+        mapping[str(PUBLIC_SOURCE)] = "0" * 64
+        message = "consumer.*hash"
+    else:
+        body["consumer_file_sha256"] = dict(reversed(list(mapping.items())))
+        message = "sorted"
+    request = tmp_path / "request.json"
+    request.write_text(json.dumps(body))
+    output = tmp_path / "registration"
+    with pytest.raises(ValueError, match=message):
+        public().run(request, output)
+    assert not output.exists()
+
+
+@pytest.mark.parametrize(
+    ("field", "message"),
+    [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+     ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+     ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+)
+def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+    body, _, _ = source_request(tmp_path)
+    if field in {"source_bindings", "producer_intent"}:
+        body[field][str(tmp_path / "future_human")] = {"approved": True}
+    else:
+        body[field] = {"approved": True}
+    request = tmp_path / "request.json"
+    request.write_text(json.dumps(body))
+    output = tmp_path / "registration"
+    with pytest.raises(ValueError, match=message):
+        public().run(request, output)
+    assert not output.exists()

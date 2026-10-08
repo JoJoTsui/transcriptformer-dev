@@ -1,0 +1,653 @@
+bounded-stored-arithmetic-and-planning	Set up job	﻿2026-10-08T03:29:48.3982808Z Current runner version: '2.337.0'
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4009922Z ##[group]Runner Image Provisioner
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4010917Z Hosted Compute Agent
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4011547Z Version: 20260901.588
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4012164Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4012977Z Build Date: 2026-09-01T19:56:44Z
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4013677Z Worker ID: {197e3db2-0256-4b3e-9bc3-e7728e10df5c}
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4014450Z Azure Region: northcentralus
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4015121Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4016611Z ##[group]Operating System
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4017354Z Ubuntu
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4017868Z 24.04.5
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4018624Z LTS
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4019209Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4019740Z ##[group]Runner Image
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4020808Z Image: ubuntu-24.04
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4021380Z Version: 20260927.320.1
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4022515Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4024468Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4025520Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4026685Z ##[group]GITHUB_TOKEN Permissions
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4029130Z Contents: read
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4029755Z Metadata: read
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4030390Z Packages: read
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4030967Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4033285Z Secret source: Actions
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4034426Z Cache mode: write
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4035381Z Prepare workflow directory
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4614295Z Prepare all required actions
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.4685489Z Getting action download info
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.6805493Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.7767707Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+bounded-stored-arithmetic-and-planning	Set up job	2026-10-08T03:29:48.9661326Z Complete job name: bounded-stored-arithmetic-and-planning
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	﻿2026-10-08T03:29:49.0459227Z ##[group]Run actions/checkout@v4
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0460297Z with:
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0460789Z   repository: JoJoTsui/transcriptformer-dev
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0464993Z   token: ***
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0465439Z   ssh-strict: true
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0465883Z   ssh-user: git
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0466332Z   persist-credentials: true
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0466818Z   clean: true
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0467259Z   sparse-checkout-cone-mode: true
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0467775Z   fetch-depth: 1
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0468205Z   fetch-tags: false
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0468868Z   show-progress: true
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0469365Z   lfs: false
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0469782Z   submodules: false
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0470241Z   set-safe-directory: true
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0470750Z   allow-unsafe-pr-checkout: false
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0471534Z env:
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0471948Z   OMP_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0472433Z   OPENBLAS_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0472916Z   MKL_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0473401Z   NUMEXPR_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0473907Z   CUDA_VISIBLE_DEVICES: 
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0474383Z   TF_RUN_REAL_MODEL_TESTS: 0
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.0474858Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1569281Z Syncing repository: JoJoTsui/transcriptformer-dev
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1571434Z ##[group]Getting Git version info
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1572339Z Working directory is '/home/runner/work/transcriptformer-dev/transcriptformer-dev'
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1573609Z [command]/usr/bin/git version
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1656721Z git version 2.55.0
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1682776Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1702605Z Temporarily overriding HOME='/home/runner/work/_temp/e26b81ea-0ac6-48bf-add6-15f17d050eb2' before making global git config changes
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1705443Z Adding repository directory to the temporary git global config as a safe directory
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1710468Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/transcriptformer-dev/transcriptformer-dev
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1764045Z Deleting the contents of '/home/runner/work/transcriptformer-dev/transcriptformer-dev'
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1768146Z ##[group]Initializing the repository
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1774271Z [command]/usr/bin/git init /home/runner/work/transcriptformer-dev/transcriptformer-dev
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1896975Z hint: Using 'master' as the name for the initial branch. This default branch name
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1899920Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1901807Z hint: to use in all of your new repositories, which will suppress this warning,
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1903214Z hint: call:
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1903940Z hint:
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1904876Z hint: 	git config --global init.defaultBranch <name>
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1906088Z hint:
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1907267Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1909418Z hint: 'development'. The just-created branch can be renamed via this command:
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1910818Z hint:
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1911658Z hint: 	git branch -m <name>
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1912519Z hint:
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1913670Z hint: Disable this message with "git config set advice.defaultBranchName false"
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1915749Z Initialized empty Git repository in /home/runner/work/transcriptformer-dev/transcriptformer-dev/.git/
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1919165Z [command]/usr/bin/git remote add origin https://github.com/JoJoTsui/transcriptformer-dev
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1972899Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1974212Z ##[group]Disabling automatic garbage collection
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.1979309Z [command]/usr/bin/git config --local gc.auto 0
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.2013721Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.2015047Z ##[group]Setting up auth
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.2021129Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.2056903Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.2469339Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.2513334Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.2748134Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.2785808Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.3023929Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.3067617Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.3068810Z ##[group]Fetching the repository
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:49.3078964Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b301d67f75155af67bd7778fc0d469577f437040:refs/remotes/origin/main
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:51.4576712Z From https://github.com/JoJoTsui/transcriptformer-dev
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:51.4579091Z  * [new ref]         b301d67f75155af67bd7778fc0d469577f437040 -> origin/main
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:51.4585523Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:51.4587207Z ##[group]Determining the checkout info
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:51.4588822Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:51.4592492Z [command]/usr/bin/git sparse-checkout disable
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:51.4649381Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:51.4684072Z ##[group]Checking out the ref
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:51.4687644Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:52.0311833Z Switched to a new branch 'main'
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:52.0318609Z branch 'main' set up to track 'origin/main'.
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:52.0343192Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:52.0394908Z [command]/usr/bin/git log -1 --format=%H
+bounded-stored-arithmetic-and-planning	Run actions/checkout@v4	2026-10-08T03:29:52.0424547Z b301d67f75155af67bd7778fc0d469577f437040
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	﻿2026-10-08T03:29:52.0702484Z ##[group]Run actions/setup-python@v5
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0702933Z with:
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0703189Z   python-version: 3.11
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0703471Z   check-latest: false
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0706470Z   token: ***
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0706760Z   update-environment: true
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0707065Z   allow-prereleases: false
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0707350Z   freethreaded: false
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0707606Z env:
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0707845Z   OMP_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0708119Z   OPENBLAS_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0708773Z   MKL_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0709061Z   NUMEXPR_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0709340Z   CUDA_VISIBLE_DEVICES: 
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0709628Z   TF_RUN_REAL_MODEL_TESTS: 0
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.0709931Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.2092468Z ##[group]Installed versions
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.2179137Z (node:2309) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.2180413Z (Use `node --trace-deprecation ...` to show where the warning was created)
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.2181399Z Successfully set up CPython (3.11.16)
+bounded-stored-arithmetic-and-planning	Run actions/setup-python@v5	2026-10-08T03:29:52.2182360Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Install dependencies	﻿2026-10-08T03:29:52.2382978Z ##[group]Run python -m pip install -e '.[dev]'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2383555Z ^[[36;1mpython -m pip install -e '.[dev]'^[[0m
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2766913Z shell: /usr/bin/bash -e {0}
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2767463Z env:
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2767756Z   OMP_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2768058Z   OPENBLAS_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2768537Z   MKL_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2768828Z   NUMEXPR_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2769163Z   CUDA_VISIBLE_DEVICES: 
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2769468Z   TF_RUN_REAL_MODEL_TESTS: 0
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2769827Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.16/x64
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2770353Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib/pkgconfig
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2770903Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2771342Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2771773Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2772209Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:52.2772633Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:53.0970102Z Obtaining file:///home/runner/work/transcriptformer-dev/transcriptformer-dev
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:53.0989474Z   Installing build dependencies: started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:53.8503437Z   Installing build dependencies: finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:53.8509944Z   Checking if build backend supports build_editable: started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:53.9035917Z   Checking if build backend supports build_editable: finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:53.9044032Z   Getting requirements to build editable: started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:54.0416691Z   Getting requirements to build editable: finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:54.0428645Z   Installing backend dependencies: started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:54.5226006Z   Installing backend dependencies: finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:54.5232729Z   Preparing editable metadata (pyproject.toml): started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:54.7468083Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:54.8434884Z Collecting anndata==0.11.4 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:54.9080118Z   Downloading anndata-0.11.4-py3-none-any.whl.metadata (9.3 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.1084224Z Collecting boto3==1.38.27 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.1341306Z   Downloading boto3-1.38.27-py3-none-any.whl.metadata (6.6 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.1496887Z Collecting cellxgene-census==1.17 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.1548523Z   Downloading cellxgene_census-1.17.0-py3-none-any.whl.metadata (5.2 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.1969766Z Collecting h5py==3.14 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.2244344Z   Downloading h5py-3.14.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.7 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.2399356Z Collecting hydra-core==1.3.2 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.2462399Z   Downloading hydra_core-1.3.2-py3-none-any.whl.metadata (5.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.4532433Z Collecting numpy==2.2.6 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.4571686Z   Downloading numpy-2.2.6-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (62 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.5790601Z Collecting pandas==2.2.2 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.5831300Z   Downloading pandas-2.2.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (19 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.6582097Z Collecting psutil==5.9 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.6638168Z   Downloading psutil-5.9.0.tar.gz (478 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:55.7290577Z   Installing build dependencies: started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:56.4037077Z   Installing build dependencies: finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:56.4043224Z   Getting requirements to build wheel: started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.0502580Z   Getting requirements to build wheel: finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.0514312Z   Preparing metadata (pyproject.toml): started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.2864335Z   Preparing metadata (pyproject.toml): finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.2968693Z Collecting pynvml==12 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.3034281Z   Downloading pynvml-12.0.0-py3-none-any.whl.metadata (5.4 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.3274540Z Collecting pytest==8.4 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.3536597Z   Downloading pytest-8.4.0-py3-none-any.whl.metadata (7.7 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.3829225Z Collecting pytorch-lightning==2.5.1 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.3877465Z   Downloading pytorch_lightning-2.5.1-py3-none-any.whl.metadata (20 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.4147476Z Collecting requests==2.32.3 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.4183077Z   Downloading requests-2.32.3-py3-none-any.whl.metadata (4.6 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.4370952Z Collecting scanpy==1.11.2 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.4416074Z   Downloading scanpy-1.11.2-py3-none-any.whl.metadata (9.1 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.5737538Z Collecting scipy==1.15.3 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.5783663Z   Downloading scipy-1.15.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.5997375Z Collecting timeout-decorator==0.5 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.6033841Z   Downloading timeout-decorator-0.5.0.tar.gz (4.8 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:57.6095941Z   Installing build dependencies: started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.1358532Z   Installing build dependencies: finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.1364612Z   Getting requirements to build wheel: started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.4572384Z   Getting requirements to build wheel: finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.4581338Z   Preparing metadata (pyproject.toml): started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.6262752Z   Preparing metadata (pyproject.toml): finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.7031247Z Collecting torch==2.5.1 (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.7074713Z   Downloading torch-2.5.1-cp311-cp311-manylinux1_x86_64.whl.metadata (28 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.7450735Z Collecting pre-commit (from transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.7489423Z   Downloading pre_commit-4.6.2-py2.py3-none-any.whl.metadata (1.2 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.7628042Z Collecting array-api-compat!=1.5,>1.4 (from anndata==0.11.4->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.7674442Z   Downloading array_api_compat-1.15.0-py3-none-any.whl.metadata (1.4 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.7861301Z Collecting natsort (from anndata==0.11.4->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.7896185Z   Downloading natsort-8.4.0-py3-none-any.whl.metadata (21 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.8020383Z Collecting packaging>=24.2 (from anndata==0.11.4->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:58.8036747Z   Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.0133438Z Collecting botocore<1.39.0,>=1.38.27 (from boto3==1.38.27->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.0175887Z   Downloading botocore-1.38.46-py3-none-any.whl.metadata (5.7 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.0302742Z Collecting jmespath<2.0.0,>=0.7.1 (from boto3==1.38.27->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.0340330Z   Downloading jmespath-1.1.0-py3-none-any.whl.metadata (7.6 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.0502915Z Collecting s3transfer<0.14.0,>=0.13.0 (from boto3==1.38.27->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.0539397Z   Downloading s3transfer-0.13.1-py3-none-any.whl.metadata (1.7 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.0963307Z Collecting tiledbsoma>=1.15.3 (from cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.1023464Z   Downloading tiledbsoma-2.3.0-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (7.0 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.1213564Z Collecting typing_extensions (from cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.1249407Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.1443003Z Collecting s3fs>=2021.06.1 (from cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.1479317Z   Downloading s3fs-2026.9.0-py3-none-any.whl.metadata (1.2 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.2145693Z Collecting omegaconf<2.4,>=2.2 (from hydra-core==1.3.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.2184972Z   Downloading omegaconf-2.3.1-py3-none-any.whl.metadata (4.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.2304137Z Collecting antlr4-python3-runtime==4.9.* (from hydra-core==1.3.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.2356061Z   Downloading antlr4-python3-runtime-4.9.3.tar.gz (117 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.2604685Z   Installing build dependencies: started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.7858848Z   Installing build dependencies: finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:29:59.7864441Z   Getting requirements to build wheel: started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.1149854Z   Getting requirements to build wheel: finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.1159016Z   Preparing metadata (pyproject.toml): started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.2889736Z   Preparing metadata (pyproject.toml): finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.3018917Z Collecting python-dateutil>=2.8.2 (from pandas==2.2.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.3055166Z   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.3389950Z Collecting pytz>=2020.1 (from pandas==2.2.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.3428079Z   Downloading pytz-2026.5-py2.py3-none-any.whl.metadata (22 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.3577430Z Collecting tzdata>=2022.7 (from pandas==2.2.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.3614437Z   Downloading tzdata-2026.5-py2.py3-none-any.whl.metadata (1.4 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.3760687Z Collecting nvidia-ml-py<13.0.0a0,>=12.0.0 (from pynvml==12->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.3810189Z   Downloading nvidia_ml_py-12.575.51-py3-none-any.whl.metadata (9.3 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.3920548Z Collecting iniconfig>=1 (from pytest==8.4->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.3955928Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.4036027Z Collecting pluggy<2,>=1.5 (from pytest==8.4->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.4051411Z   Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.4199606Z Collecting pygments>=2.7.2 (from pytest==8.4->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.4235854Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.4523079Z Collecting tqdm>=4.57.0 (from pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.4559750Z   Downloading tqdm-4.70.1-py3-none-any.whl.metadata (57 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.4942003Z Collecting PyYAML>=5.4 (from pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.4980206Z   Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.5164206Z Collecting fsspec>=2022.5.0 (from fsspec[http]>=2022.5.0->pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.5199287Z   Downloading fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.5524110Z Collecting torchmetrics>=0.7.0 (from pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.5560823Z   Downloading torchmetrics-1.9.0-py3-none-any.whl.metadata (23 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.5881546Z Collecting lightning-utilities>=0.10.0 (from pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.5916141Z   Downloading lightning_utilities-0.15.3-py3-none-any.whl.metadata (5.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.7157244Z Collecting charset-normalizer<4,>=2 (from requests==2.32.3->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.7197170Z   Downloading charset_normalizer-3.5.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.7358977Z Collecting idna<4,>=2.5 (from requests==2.32.3->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.7395359Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.7609101Z Collecting urllib3<3,>=1.21.1 (from requests==2.32.3->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.7645935Z   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.7831719Z Collecting certifi>=2017.4.17 (from requests==2.32.3->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.7868145Z   Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.8075057Z Collecting joblib (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.8120385Z   Downloading joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.8248137Z Collecting legacy-api-wrap>=1.4.1 (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:00.8289370Z   Downloading legacy_api_wrap-1.5-py3-none-any.whl.metadata (2.2 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.0250163Z Collecting matplotlib>=3.7.5 (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.0290148Z   Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.0625864Z Collecting networkx>=2.7.1 (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.0666019Z   Downloading networkx-3.6.1-py3-none-any.whl.metadata (6.8 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.1685892Z Collecting numba>=0.57.1 (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.1724717Z   Downloading numba-0.68.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (2.8 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.1870521Z Collecting patsy!=1.0.0 (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.1906687Z   Downloading patsy-1.0.3-py2.py3-none-any.whl.metadata (3.7 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.2024477Z Collecting pynndescent>=0.5.13 (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.2060943Z   Downloading pynndescent-0.6.0-py3-none-any.whl.metadata (6.9 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.2856453Z Collecting scikit-learn>=1.1.3 (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.2898227Z   Downloading scikit_learn-1.9.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.3 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.3031479Z Collecting seaborn>=0.13.2 (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.3068099Z   Downloading seaborn-0.13.2-py3-none-any.whl.metadata (5.4 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.3200336Z Collecting session-info2 (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.3258366Z   Downloading session_info2-0.4.1-py3-none-any.whl.metadata (2.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.3693976Z Collecting statsmodels>=0.14.4 (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.3733024Z   Downloading statsmodels-0.15.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.6 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.3877022Z Collecting umap-learn>=0.5.6 (from scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.3913259Z   Downloading umap_learn-0.5.12-py3-none-any.whl.metadata (24 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.4190719Z Collecting filelock (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.4227557Z   Downloading filelock-4.0.12-py3-none-any.whl.metadata (2.0 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.4384619Z Collecting jinja2 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.4425845Z   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.4549330Z Collecting nvidia-cuda-nvrtc-cu12==12.4.127 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.4586129Z   Downloading nvidia_cuda_nvrtc_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.4706818Z Collecting nvidia-cuda-runtime-cu12==12.4.127 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.4742332Z   Downloading nvidia_cuda_runtime_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.4870190Z Collecting nvidia-cuda-cupti-cu12==12.4.127 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.4905271Z   Downloading nvidia_cuda_cupti_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl.metadata (1.6 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5091858Z Collecting nvidia-cudnn-cu12==9.1.0.70 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5128059Z   Downloading nvidia_cudnn_cu12-9.1.0.70-py3-none-manylinux2014_x86_64.whl.metadata (1.6 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5253275Z Collecting nvidia-cublas-cu12==12.4.5.8 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5290749Z   Downloading nvidia_cublas_cu12-12.4.5.8-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5417140Z Collecting nvidia-cufft-cu12==11.2.1.3 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5455132Z   Downloading nvidia_cufft_cu12-11.2.1.3-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5589102Z Collecting nvidia-curand-cu12==10.3.5.147 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5627913Z   Downloading nvidia_curand_cu12-10.3.5.147-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5753684Z Collecting nvidia-cusolver-cu12==11.6.1.9 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5791830Z   Downloading nvidia_cusolver_cu12-11.6.1.9-py3-none-manylinux2014_x86_64.whl.metadata (1.6 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5925744Z Collecting nvidia-cusparse-cu12==12.3.1.170 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.5964887Z   Downloading nvidia_cusparse_cu12-12.3.1.170-py3-none-manylinux2014_x86_64.whl.metadata (1.6 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.6096303Z Collecting nvidia-nccl-cu12==2.21.5 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.6136711Z   Downloading nvidia_nccl_cu12-2.21.5-py3-none-manylinux2014_x86_64.whl.metadata (1.8 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.6267649Z Collecting nvidia-nvtx-cu12==12.4.127 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.6305714Z   Downloading nvidia_nvtx_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl.metadata (1.7 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.6424984Z Collecting nvidia-nvjitlink-cu12==12.4.127 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.6462598Z   Downloading nvidia_nvjitlink_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.6642210Z Collecting triton==3.1.0 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.6687310Z   Downloading triton-3.1.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.3 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.6844812Z Collecting sympy==1.13.1 (from torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.6885785Z   Downloading sympy-1.13.1-py3-none-any.whl.metadata (12 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.7127193Z Collecting mpmath<1.4,>=1.1.0 (from sympy==1.13.1->torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.7162146Z   Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.7415536Z Collecting six>=1.5 (from python-dateutil>=2.8.2->pandas==2.2.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:01.7453040Z   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.3013965Z Collecting aiohttp!=4.0.0a0,!=4.0.0a1 (from fsspec[http]>=2022.5.0->pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.3054269Z   Downloading aiohttp-3.14.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.3 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.3221656Z Collecting aiohappyeyeballs>=2.5.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2022.5.0->pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.3256039Z   Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.3354935Z Collecting aiosignal>=1.4.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2022.5.0->pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.3389786Z   Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.3523964Z Collecting attrs>=17.3.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2022.5.0->pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.3558123Z   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.4149992Z Collecting frozenlist>=1.1.1 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2022.5.0->pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.4189105Z   Downloading frozenlist-1.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (20 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.7179521Z Collecting multidict<7.0,>=4.5 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2022.5.0->pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.7220018Z   Downloading multidict-6.9.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.3 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.7892924Z Collecting propcache>=0.2.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2022.5.0->pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:02.7933826Z   Downloading propcache-0.5.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.1085924Z Collecting yarl<2.0,>=1.25.1 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2022.5.0->pytorch-lightning==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.1123774Z   Downloading yarl-1.25.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (111 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.1965694Z Collecting contourpy>=1.0.1 (from matplotlib>=3.7.5->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.2003860Z   Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.2115758Z Collecting cycler>=0.10 (from matplotlib>=3.7.5->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.2148959Z   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.3596587Z Collecting fonttools>=4.28.2 (from matplotlib>=3.7.5->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.3644146Z   Downloading fonttools-4.66.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (130 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.4405943Z Collecting kiwisolver>=1.3.1 (from matplotlib>=3.7.5->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.4447238Z   Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.6039845Z Collecting pillow>=9 (from matplotlib>=3.7.5->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.6079086Z   Downloading pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.6323839Z Collecting pyparsing>=3 (from matplotlib>=3.7.5->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.6362682Z   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.6986336Z Collecting llvmlite<0.51,>=0.50.0dev0 (from numba>=0.57.1->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.7026416Z   Downloading llvmlite-0.50.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.7307715Z Collecting cloudpickle>=3.0 (from joblib->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.7343964Z   Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.7596318Z Collecting aiobotocore<4.0.0,>=2.19.0 (from s3fs>=2021.06.1->cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.7633642Z   Downloading aiobotocore-3.9.2-py3-none-any.whl.metadata (32 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.7852466Z Collecting aioitertools<1.0.0,>=0.5.1 (from aiobotocore<4.0.0,>=2.19.0->s3fs>=2021.06.1->cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.7894754Z   Downloading aioitertools-0.13.0-py3-none-any.whl.metadata (3.3 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.8109380Z INFO: pip is looking at multiple versions of aiobotocore to determine which version is compatible with other requirements. This could take a while.
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.8115550Z Collecting aiobotocore<4.0.0,>=2.19.0 (from s3fs>=2021.06.1->cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.8153834Z   Downloading aiobotocore-3.9.1-py3-none-any.whl.metadata (31 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.8437092Z   Downloading aiobotocore-3.9.0-py3-none-any.whl.metadata (30 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.8715502Z   Downloading aiobotocore-3.8.0-py3-none-any.whl.metadata (29 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.9019690Z   Downloading aiobotocore-3.7.0-py3-none-any.whl.metadata (28 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.9299559Z   Downloading aiobotocore-3.6.0-py3-none-any.whl.metadata (27 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.9404152Z   Downloading aiobotocore-3.5.0-py3-none-any.whl.metadata (27 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.9686984Z   Downloading aiobotocore-3.4.0-py3-none-any.whl.metadata (27 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.9921639Z INFO: pip is still looking at multiple versions of aiobotocore to determine which version is compatible with other requirements. This could take a while.
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:03.9986712Z   Downloading aiobotocore-3.3.0-py3-none-any.whl.metadata (26 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.0269635Z   Downloading aiobotocore-3.2.1-py3-none-any.whl.metadata (26 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.0559780Z   Downloading aiobotocore-3.2.0-py3-none-any.whl.metadata (26 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.0835256Z   Downloading aiobotocore-3.1.3-py3-none-any.whl.metadata (26 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.1111168Z   Downloading aiobotocore-3.1.2-py3-none-any.whl.metadata (26 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.1341278Z INFO: This is taking longer than usual. You might need to provide the dependency resolver with stricter constraints to reduce runtime. See https://pip.pypa.io/warnings/backtracking for guidance. If you want to abort this run, press Ctrl + C.
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.1386126Z   Downloading aiobotocore-3.1.1-py3-none-any.whl.metadata (26 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.1664574Z   Downloading aiobotocore-3.1.0-py3-none-any.whl.metadata (26 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.1934982Z   Downloading aiobotocore-3.0.0-py3-none-any.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.2251858Z   Downloading aiobotocore-2.26.0-py3-none-any.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.2757124Z   Downloading aiobotocore-2.25.2-py3-none-any.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.3027182Z   Downloading aiobotocore-2.25.1-py3-none-any.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.3302922Z   Downloading aiobotocore-2.25.0-py3-none-any.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.3796092Z   Downloading aiobotocore-2.24.3-py3-none-any.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.5141395Z   Downloading aiobotocore-2.24.2-py3-none-any.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.5645110Z   Downloading aiobotocore-2.24.1-py3-none-any.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.6151473Z   Downloading aiobotocore-2.24.0-py3-none-any.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.6474633Z   Downloading aiobotocore-2.23.2-py3-none-any.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:04.6767333Z   Downloading aiobotocore-2.23.1-py3-none-any.whl.metadata (25 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.0131254Z Collecting wrapt<2.0.0,>=1.10.10 (from aiobotocore<4.0.0,>=2.19.0->s3fs>=2021.06.1->cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.0169973Z   Downloading wrapt-1.17.3-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.4 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.0526467Z Collecting narwhals>=2.0.1 (from scikit-learn>=1.1.3->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.0566153Z   Downloading narwhals-2.26.0-py3-none-any.whl.metadata (15 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.0709516Z Collecting threadpoolctl>=3.5.0 (from scikit-learn>=1.1.3->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.0748170Z   Downloading threadpoolctl-3.7.0-py3-none-any.whl.metadata (24 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.1006970Z Collecting formulaic>=1.1.0 (from statsmodels>=0.14.4->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.1041305Z   Downloading formulaic-1.2.2-py3-none-any.whl.metadata (7.0 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.1177947Z Collecting interface-meta>=1.2.0 (from formulaic>=1.1.0->statsmodels>=0.14.4->scanpy==1.11.2->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.1222527Z   Downloading interface_meta-2.0.1-py3-none-any.whl.metadata (6.4 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.1492059Z Collecting more-itertools (from tiledbsoma>=1.15.3->cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.1527942Z   Downloading more_itertools-11.1.0-py3-none-any.whl.metadata (41 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.2330109Z Collecting pyarrow (from tiledbsoma>=1.15.3->cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.2371066Z   Downloading pyarrow-25.0.1-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (3.0 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.2532173Z Collecting somacore==1.0.29 (from tiledbsoma>=1.15.3->cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.2592326Z   Downloading somacore-1.0.29-py3-none-any.whl.metadata (1.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.2757749Z Collecting pyarrow-hotfix (from somacore==1.0.29->tiledbsoma>=1.15.3->cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.2806860Z   Downloading pyarrow_hotfix-0.7-py3-none-any.whl.metadata (3.6 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.3620521Z Collecting shapely (from somacore==1.0.29->tiledbsoma>=1.15.3->cellxgene-census==1.17->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.3661623Z   Downloading shapely-2.2.0-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (6.7 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.4378256Z Collecting MarkupSafe>=2.0 (from jinja2->torch==2.5.1->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.4418133Z   Downloading markupsafe-3.0.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.4586460Z Collecting cfgv>=2.0.0 (from pre-commit->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.4622163Z   Downloading cfgv-3.5.0-py2.py3-none-any.whl.metadata (8.9 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.4972219Z Collecting identify>=1.0.0 (from pre-commit->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.5011404Z   Downloading identify-2.6.20-py2.py3-none-any.whl.metadata (4.4 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.5163516Z Collecting nodeenv>=0.11.1 (from pre-commit->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.5201958Z   Downloading nodeenv-1.11.0-py2.py3-none-any.whl.metadata (40 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.6632530Z Collecting virtualenv>=20.10.0 (from pre-commit->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.6671566Z   Downloading virtualenv-21.14.5-py3-none-any.whl.metadata (4.1 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.6842198Z Collecting distlib<1,>=0.3.7 (from virtualenv>=20.10.0->pre-commit->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.6879847Z   Downloading distlib-0.4.3-py2.py3-none-any.whl.metadata (5.3 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.7111537Z Collecting platformdirs<5,>=3.9.1 (from virtualenv>=20.10.0->pre-commit->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.7148150Z   Downloading platformdirs-4.12.4-py3-none-any.whl.metadata (5.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.7264061Z Collecting python-discovery>=1.6 (from virtualenv>=20.10.0->pre-commit->transcriptformer==0.6.1)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.7300435Z   Downloading python_discovery-1.6.1-py3-none-any.whl.metadata (5.1 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.7508631Z Downloading anndata-0.11.4-py3-none-any.whl (144 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.8067303Z Downloading boto3-1.38.27-py3-none-any.whl (139 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.8161426Z Downloading cellxgene_census-1.17.0-py3-none-any.whl (55 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.8245188Z Downloading h5py-3.14.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.5 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.8512099Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 179.8 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.8554560Z Downloading hydra_core-1.3.2-py3-none-any.whl (154 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.8616549Z Downloading numpy-2.2.6-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.8 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.9602486Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.8/16.8 MB 173.0 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:05.9676179Z Downloading pandas-2.2.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.0 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:06.0351548Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.0/13.0 MB 197.7 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:06.0405529Z Downloading pynvml-12.0.0-py3-none-any.whl (26 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:06.0460188Z Downloading pytest-8.4.0-py3-none-any.whl (363 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:06.0549037Z Downloading pytorch_lightning-2.5.1-py3-none-any.whl (822 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:06.0605195Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 823.0/823.0 kB 177.4 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:06.0641492Z Downloading requests-2.32.3-py3-none-any.whl (64 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:06.0707279Z Downloading scanpy-1.11.2-py3-none-any.whl (2.1 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:06.0879132Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 127.8 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:06.0939493Z Downloading scipy-1.15.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (37.7 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:06.2696162Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 37.7/37.7 MB 215.9 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:06.2747616Z Downloading torch-2.5.1-cp311-cp311-manylinux1_x86_64.whl (906.5 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:13.2227033Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 906.5/906.5 MB 56.5 MB/s  0:00:06
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:13.2309296Z Downloading nvidia_cublas_cu12-12.4.5.8-py3-none-manylinux2014_x86_64.whl (363.4 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:16.1853545Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 363.4/363.4 MB 102.3 MB/s  0:00:02
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:16.1907570Z Downloading nvidia_cuda_cupti_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl (13.8 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:16.2553621Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.8/13.8 MB 217.6 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:16.2733413Z Downloading nvidia_cuda_nvrtc_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl (24.6 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:16.3961751Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 24.6/24.6 MB 202.7 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:16.3998826Z Downloading nvidia_cuda_runtime_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl (883 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:16.4060937Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 883.7/883.7 kB 155.3 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:16.4285157Z Downloading nvidia_cudnn_cu12-9.1.0.70-py3-none-manylinux2014_x86_64.whl (664.8 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:22.7989047Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 664.8/664.8 MB 53.2 MB/s  0:00:06
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:22.8063971Z Downloading nvidia_cufft_cu12-11.2.1.3-py3-none-manylinux2014_x86_64.whl (211.5 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:24.0837648Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 211.5/211.5 MB 165.7 MB/s  0:00:01
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:24.0912774Z Downloading nvidia_curand_cu12-10.3.5.147-py3-none-manylinux2014_x86_64.whl (56.3 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:24.3455737Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.3/56.3 MB 222.6 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:24.3522599Z Downloading nvidia_cusolver_cu12-11.6.1.9-py3-none-manylinux2014_x86_64.whl (127.9 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:24.9299312Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 127.9/127.9 MB 222.2 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:24.9354505Z Downloading nvidia_cusparse_cu12-12.3.1.170-py3-none-manylinux2014_x86_64.whl (207.5 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:26.0814357Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 207.5/207.5 MB 181.3 MB/s  0:00:01
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:26.0890672Z Downloading nvidia_nccl_cu12-2.21.5-py3-none-manylinux2014_x86_64.whl (188.7 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:27.1261367Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 188.7/188.7 MB 182.2 MB/s  0:00:01
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:27.1329752Z Downloading nvidia_nvjitlink_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl (21.1 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:27.5279450Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 21.1/21.1 MB 53.0 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:27.5317013Z Downloading nvidia_nvtx_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl (99 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:27.5375578Z Downloading sympy-1.13.1-py3-none-any.whl (6.2 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:27.5691613Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.2/6.2 MB 202.8 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:27.5755765Z Downloading triton-3.1.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (209.5 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.8387022Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 209.5/209.5 MB 92.6 MB/s  0:00:02
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.8457177Z Downloading botocore-1.38.46-py3-none-any.whl (13.7 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9116087Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.7/13.7 MB 212.4 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9154414Z Downloading charset_normalizer-3.5.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (269 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9215226Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9269371Z Downloading jmespath-1.1.0-py3-none-any.whl (20 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9322258Z Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9391908Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 109.3 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9674811Z Downloading nvidia_ml_py-12.575.51-py3-none-any.whl (47 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9730994Z Downloading omegaconf-2.3.1-py3-none-any.whl (79 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9768490Z Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9804527Z Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9863196Z Downloading s3transfer-0.13.1-py3-none-any.whl (85 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9918842Z Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:29.9997764Z Downloading array_api_compat-1.15.0-py3-none-any.whl (79 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0052285Z Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0107836Z Downloading fsspec-2026.9.0-py3-none-any.whl (221 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0174039Z Downloading aiohttp-3.14.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.9 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0258040Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 274.8 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0296187Z Downloading multidict-6.9.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (320 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0365365Z Downloading yarl-1.25.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (117 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0421784Z Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0474052Z Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0530860Z Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0589488Z Downloading frozenlist-1.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (231 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0653962Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0713040Z Downloading legacy_api_wrap-1.5-py3-none-any.whl (10 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0769912Z Downloading lightning_utilities-0.15.3-py3-none-any.whl (31 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.0826923Z Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.1184188Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 289.0 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.1224940Z Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (355 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.1289442Z Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.1345993Z Downloading fonttools-4.66.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.4 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.1515061Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 360.6 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.1588918Z Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.4 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.1661544Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 233.4 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.1699446Z Downloading networkx-3.6.1-py3-none-any.whl (2.1 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.1789271Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 280.5 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.1828855Z Downloading numba-0.68.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (3.8 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.1979674Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 280.1 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.2018265Z Downloading llvmlite-0.50.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (59.7 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4052303Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 59.7/59.7 MB 295.8 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4069337Z Using cached packaging-26.3-py3-none-any.whl (129 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4109815Z Downloading patsy-1.0.3-py2.py3-none-any.whl (233 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4171973Z Downloading pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.9 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4391966Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.9/6.9 MB 345.4 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4429710Z Downloading propcache-0.5.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (235 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4489436Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4556455Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 229.3 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4593472Z Downloading pynndescent-0.6.0-py3-none-any.whl (73 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4654696Z Downloading joblib-1.6.0-py3-none-any.whl (306 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4715849Z Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4768338Z Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4827929Z Downloading pytz-2026.5-py2.py3-none-any.whl (506 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4900809Z Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4953059Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.6/806.6 kB 177.6 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.4987180Z Downloading s3fs-2026.9.0-py3-none-any.whl (33 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.5037823Z Downloading aiobotocore-2.23.1-py3-none-any.whl (84 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.5088653Z Downloading aioitertools-0.13.0-py3-none-any.whl (24 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.5137709Z Downloading wrapt-1.17.3-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (82 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.5190920Z Downloading scikit_learn-1.9.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (9.3 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.5479780Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.3/9.3 MB 341.4 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.5515567Z Downloading narwhals-2.26.0-py3-none-any.whl (474 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.5580366Z Downloading seaborn-0.13.2-py3-none-any.whl (294 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.5641275Z Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.5735813Z Downloading statsmodels-0.15.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (12.1 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.6255240Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.1/12.1 MB 242.5 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.6290711Z Downloading formulaic-1.2.2-py3-none-any.whl (118 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.6346968Z Downloading interface_meta-2.0.1-py3-none-any.whl (15 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.6396425Z Downloading threadpoolctl-3.7.0-py3-none-any.whl (26 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.6455721Z Downloading tiledbsoma-2.3.0-cp311-cp311-manylinux_2_28_x86_64.whl (22.2 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.8473489Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 22.2/22.2 MB 110.6 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.8517123Z Downloading somacore-1.0.29-py3-none-any.whl (38 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.8569188Z Downloading torchmetrics-1.9.0-py3-none-any.whl (983 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.8625933Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 983.4/983.4 kB 203.1 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.8661373Z Downloading tqdm-4.70.1-py3-none-any.whl (80 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.8714939Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.8766411Z Downloading tzdata-2026.5-py2.py3-none-any.whl (347 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.8828522Z Downloading umap_learn-0.5.12-py3-none-any.whl (91 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.8885088Z Downloading filelock-4.0.12-py3-none-any.whl (111 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.8940748Z Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.8996338Z Downloading markupsafe-3.0.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9049304Z Downloading more_itertools-11.1.0-py3-none-any.whl (72 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9100265Z Downloading natsort-8.4.0-py3-none-any.whl (38 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9152215Z Downloading pre_commit-4.6.2-py2.py3-none-any.whl (226 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9206971Z Downloading cfgv-3.5.0-py2.py3-none-any.whl (7.4 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9258242Z Downloading identify-2.6.20-py2.py3-none-any.whl (99 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9316002Z Downloading nodeenv-1.11.0-py2.py3-none-any.whl (34 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9370549Z Downloading virtualenv-21.14.5-py3-none-any.whl (5.5 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9541384Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 357.8 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9579264Z Downloading distlib-0.4.3-py2.py3-none-any.whl (470 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9647274Z Downloading platformdirs-4.12.4-py3-none-any.whl (32 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9701581Z Downloading python_discovery-1.6.1-py3-none-any.whl (38 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:30.9757852Z Downloading pyarrow-25.0.1-cp311-cp311-manylinux_2_28_x86_64.whl (50.1 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:31.1114274Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 50.1/50.1 MB 374.1 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:31.1152910Z Downloading pyarrow_hotfix-0.7-py3-none-any.whl (7.9 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:31.1204666Z Downloading session_info2-0.4.1-py3-none-any.whl (17 kB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:31.1276820Z Downloading shapely-2.2.0-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (2.3 MB)
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:31.1377446Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 271.2 MB/s  0:00:00
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:33.8229871Z Building wheels for collected packages: transcriptformer, psutil, timeout-decorator, antlr4-python3-runtime
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:33.8237505Z   Building editable for transcriptformer (pyproject.toml): started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:33.8568271Z   Building editable for transcriptformer (pyproject.toml): finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:33.8574719Z   Created wheel for transcriptformer: filename=transcriptformer-0.6.1-py3-none-any.whl size=9510 sha256=3f3edb69b6b56b12e27a89af11c1cd886f05e15f6fb6f315276e9ee352f34e8a
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:33.8577082Z   Stored in directory: /tmp/pip-ephem-wheel-cache-ilet2owg/wheels/c6/4e/22/11c43e84b245067e55f943fb4be1be3d9b4429233198a1a493
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:33.8607610Z   Building wheel for psutil (pyproject.toml): started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:36.6837315Z   Building wheel for psutil (pyproject.toml): finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:36.6846363Z   Created wheel for psutil: filename=psutil-5.9.0-cp311-cp311-linux_x86_64.whl size=284337 sha256=55a7f4cde5a73af0a30ec1fda7dcb3c7371177758b8db1d70b2b1a6fe11ae75e
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:36.6849078Z   Stored in directory: /home/runner/.cache/pip/wheels/b7/3f/a5/6da60cf045cc7d875f3f6746c27e9afa159642fc5acaa5ae08
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:36.6880909Z   Building wheel for timeout-decorator (pyproject.toml): started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:36.8893133Z   Building wheel for timeout-decorator (pyproject.toml): finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:36.8899490Z   Created wheel for timeout-decorator: filename=timeout_decorator-0.5.0-py3-none-any.whl size=5042 sha256=a3c0746d3955f3fbcd4f88a6f395d99407af0e633b7375e41f8bd64fd4745659
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:36.8901677Z   Stored in directory: /home/runner/.cache/pip/wheels/aa/cd/d1/51736c6b95846b2613a520ce146a8f305c4016a987bc9faec7
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:36.8922587Z   Building wheel for antlr4-python3-runtime (pyproject.toml): started
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:37.1446222Z   Building wheel for antlr4-python3-runtime (pyproject.toml): finished with status 'done'
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:37.1454244Z   Created wheel for antlr4-python3-runtime: filename=antlr4_python3_runtime-4.9.3-py3-none-any.whl size=144590 sha256=d20b39e78ec3af8a6c6e6a869602995895f614e9d636332e2236668144ac0af7
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:37.1456438Z   Stored in directory: /home/runner/.cache/pip/wheels/1a/97/32/461f837398029ad76911109f07047fde1d7b661a147c7c56d1
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:37.1472102Z Successfully built transcriptformer psutil timeout-decorator antlr4-python3-runtime
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:30:37.4542670Z Installing collected packages: timeout-decorator, pytz, nvidia-ml-py, mpmath, distlib, antlr4-python3-runtime, wrapt, urllib3, tzdata, typing_extensions, tqdm, threadpoolctl, sympy, six, session-info2, PyYAML, pyparsing, pynvml, pygments, pyarrow-hotfix, pyarrow, psutil, propcache, pluggy, platformdirs, pillow, packaging, nvidia-nvtx-cu12, nvidia-nvjitlink-cu12, nvidia-nccl-cu12, nvidia-curand-cu12, nvidia-cufft-cu12, nvidia-cuda-runtime-cu12, nvidia-cuda-nvrtc-cu12, nvidia-cuda-cupti-cu12, nvidia-cublas-cu12, numpy, nodeenv, networkx, natsort, narwhals, multidict, more-itertools, MarkupSafe, llvmlite, legacy-api-wrap, kiwisolver, jmespath, interface-meta, iniconfig, idna, identify, fsspec, frozenlist, fonttools, filelock, cycler, cloudpickle, charset-normalizer, cfgv, certifi, attrs, array-api-compat, aioitertools, aiohappyeyeballs, yarl, triton, shapely, scipy, requests, python-discovery, python-dateutil, pytest, patsy, omegaconf, nvidia-cusparse-cu12, nvidia-cudnn-cu12, numba, lightning-utilities, joblib, jinja2, h5py, contourpy, aiosignal, virtualenv, scikit-learn, pandas, nvidia-cusolver-cu12, matplotlib, hydra-core, botocore, aiohttp, torch, seaborn, s3transfer, pynndescent, pre-commit, formulaic, anndata, aiobotocore, umap-learn, torchmetrics, statsmodels, somacore, s3fs, boto3, scanpy, pytorch-lightning, tiledbsoma, cellxgene-census, transcriptformer
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:31:44.2804993Z 
+bounded-stored-arithmetic-and-planning	Install dependencies	2026-10-08T03:31:44.2852318Z Successfully installed MarkupSafe-3.0.4 PyYAML-6.0.3 aiobotocore-2.23.1 aiohappyeyeballs-2.7.1 aiohttp-3.14.4 aioitertools-0.13.0 aiosignal-1.4.0 anndata-0.11.4 antlr4-python3-runtime-4.9.3 array-api-compat-1.15.0 attrs-26.1.0 boto3-1.38.27 botocore-1.38.46 cellxgene-census-1.17.0 certifi-2026.7.22 cfgv-3.5.0 charset-normalizer-3.5.2 cloudpickle-3.1.2 contourpy-1.3.3 cycler-0.12.1 distlib-0.4.3 filelock-4.0.12 fonttools-4.66.1 formulaic-1.2.2 frozenlist-1.8.0 fsspec-2026.9.0 h5py-3.14.0 hydra-core-1.3.2 identify-2.6.20 idna-3.20 iniconfig-2.3.1 interface-meta-2.0.1 jinja2-3.1.6 jmespath-1.1.0 joblib-1.6.0 kiwisolver-1.5.1 legacy-api-wrap-1.5 lightning-utilities-0.15.3 llvmlite-0.50.0 matplotlib-3.11.2 more-itertools-11.1.0 mpmath-1.3.0 multidict-6.9.1 narwhals-2.26.0 natsort-8.4.0 networkx-3.6.1 nodeenv-1.11.0 numba-0.68.0 numpy-2.2.6 nvidia-cublas-cu12-12.4.5.8 nvidia-cuda-cupti-cu12-12.4.127 nvidia-cuda-nvrtc-cu12-12.4.127 nvidia-cuda-runtime-cu12-12.4.127 nvidia-cudnn-cu12-9.1.0.70 nvidia-cufft-cu12-11.2.1.3 nvidia-curand-cu12-10.3.5.147 nvidia-cusolver-cu12-11.6.1.9 nvidia-cusparse-cu12-12.3.1.170 nvidia-ml-py-12.575.51 nvidia-nccl-cu12-2.21.5 nvidia-nvjitlink-cu12-12.4.127 nvidia-nvtx-cu12-12.4.127 omegaconf-2.3.1 packaging-26.3 pandas-2.2.2 patsy-1.0.3 pillow-12.3.0 platformdirs-4.12.4 pluggy-1.6.0 pre-commit-4.6.2 propcache-0.5.4 psutil-5.9.0 pyarrow-25.0.1 pyarrow-hotfix-0.7 pygments-2.21.0 pynndescent-0.6.0 pynvml-12.0.0 pyparsing-3.3.3 pytest-8.4.0 python-dateutil-2.9.0.post0 python-discovery-1.6.1 pytorch-lightning-2.5.1 pytz-2026.5 requests-2.32.3 s3fs-2026.9.0 s3transfer-0.13.1 scanpy-1.11.2 scikit-learn-1.9.1 scipy-1.15.3 seaborn-0.13.2 session-info2-0.4.1 shapely-2.2.0 six-1.17.0 somacore-1.0.29 statsmodels-0.15.0 sympy-1.13.1 threadpoolctl-3.7.0 tiledbsoma-2.3.0 timeout-decorator-0.5.0 torch-2.5.1 torchmetrics-1.9.0 tqdm-4.70.1 transcriptformer-0.6.1 triton-3.1.0 typing_extensions-4.16.0 tzdata-2026.5 umap-learn-0.5.12 urllib3-2.8.0 virtualenv-21.14.5 wrapt-1.17.3 yarl-1.25.1
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	﻿2026-10-08T03:31:45.1365102Z ##[group]Run python -m pytest test/test_b3_full_context_observed.py test/test_b3_full_context_synthetic_fixture.py test/test_b3_paged_native_common_source_controller.py -q --junitxml=b3-full-context-and-planning-tests.xml
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1366675Z ^[[36;1mpython -m pytest test/test_b3_full_context_observed.py test/test_b3_full_context_synthetic_fixture.py test/test_b3_paged_native_common_source_controller.py -q --junitxml=b3-full-context-and-planning-tests.xml^[[0m
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1498151Z shell: /usr/bin/bash -e {0}
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1498696Z env:
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1498907Z   OMP_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1499128Z   OPENBLAS_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1517087Z   MKL_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1517445Z   NUMEXPR_NUM_THREADS: 1
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1517802Z   CUDA_VISIBLE_DEVICES: 
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1518032Z   TF_RUN_REAL_MODEL_TESTS: 0
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1518925Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.16/x64
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1519362Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib/pkgconfig
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1519835Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1520217Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1520595Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1520973Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:31:45.1521295Z ##[endgroup]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:35:53.9527095Z ........................................................................ [ 34%]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:38.9168625Z ........................................................................ [ 68%]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8116045Z ..................................................................       [100%]
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8117017Z =============================== warnings summary ===============================
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8118290Z ../../../../../opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8120653Z   /opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8122096Z   
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8122634Z     self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8123126Z 
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8123721Z ../../../../../opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8125352Z   /opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8126521Z   
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8126990Z     self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8127474Z 
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8127757Z test/test_b3_full_context_synthetic_fixture.py: 22 warnings
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8129343Z   /opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/anndata/_core/aligned_df.py:68: ImplicitModificationWarning: Transforming to str index.
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8130871Z     warnings.warn("Transforming to str index.", ImplicitModificationWarning)
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8131454Z 
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8131842Z -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8133194Z - generated xml file: /home/runner/work/transcriptformer-dev/transcriptformer-dev/b3-full-context-and-planning-tests.xml -
+bounded-stored-arithmetic-and-planning	Run stored arithmetic, preparation and metadata planning tests	2026-10-08T03:37:52.8134352Z 210 passed, 24 warnings in 366.16s (0:06:06)
+bounded-stored-arithmetic-and-planning	Post Run actions/setup-python@v5	﻿2026-10-08T03:37:53.7391874Z Post job cleanup.
+bounded-stored-arithmetic-and-planning	Post Run actions/setup-python@v5	2026-10-08T03:37:53.8636142Z (node:2681) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+bounded-stored-arithmetic-and-planning	Post Run actions/setup-python@v5	2026-10-08T03:37:53.8637037Z (Use `node --trace-deprecation ...` to show where the warning was created)
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	﻿2026-10-08T03:37:53.8881195Z Post job cleanup.
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:53.9977578Z [command]/usr/bin/git version
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.0039348Z git version 2.55.0
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.0076395Z Temporarily overriding HOME='/home/runner/work/_temp/fc73ca03-39c8-4ecd-b5c7-d0f0028e0808' before making global git config changes
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.0082565Z Adding repository directory to the temporary git global config as a safe directory
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.0084260Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/transcriptformer-dev/transcriptformer-dev
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.0133979Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.0181424Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.0584593Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.0643760Z http.https://github.com/.extraheader
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.0682174Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.0780619Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.1110489Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+bounded-stored-arithmetic-and-planning	Post Run actions/checkout@v4	2026-10-08T03:37:54.1200197Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+bounded-stored-arithmetic-and-planning	Complete job	﻿2026-10-08T03:37:54.1617581Z Cleaning up orphan processes
+bounded-stored-arithmetic-and-planning	Complete job	2026-10-08T03:37:54.1976980Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

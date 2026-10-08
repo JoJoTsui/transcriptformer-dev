@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="11" time="0.974" timestamp="2026-10-08T11:13:32.054060+08:00" hostname="Conundrum"><testcase classname="test.test_b3_full_context_registration" name="test_duplicate_request_keys_refuse_without_creating_completion" time="0.030" /><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[schema-old_registration-schema]" time="0.028" /><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[phase-compare-phase]" time="0.029" /><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[registration_profile-zebrafish-profile]" time="0.029" /><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[trusted_authority-True-closed request]" time="0.028" /><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[boolean_size]" time="0.036"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'strict.*size'&#10; Input: 'Registration inspection requires an actual family Ref'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require0')
+fault = 'boolean_size'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+            os.mkfifo(family_path)
+            message = "regular"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+&gt;           public().run(request, output)
+
+test/test_b3_full_context_registration.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require0/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require0/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+&gt;           raise ValueError("Registration inspection requires an actual family Ref")
+E           ValueError: Registration inspection requires an actual family Ref
+
+scripts/bridge_b3_full_context_observed.py:169: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require0')
+fault = 'boolean_size'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+            os.mkfifo(family_path)
+            message = "regular"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+&gt;       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'strict.*size'
+E        Input: 'Registration inspection requires an actual family Ref'
+
+test/test_b3_full_context_registration.py:137: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[wrong_hash]" time="0.041"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'hash'&#10; Input: 'Registration inspection requires an actual family Ref'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require1')
+fault = 'wrong_hash'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+            os.mkfifo(family_path)
+            message = "regular"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+&gt;           public().run(request, output)
+
+test/test_b3_full_context_registration.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require1/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require1/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+&gt;           raise ValueError("Registration inspection requires an actual family Ref")
+E           ValueError: Registration inspection requires an actual family Ref
+
+scripts/bridge_b3_full_context_observed.py:169: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require1')
+fault = 'wrong_hash'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+            os.mkfifo(family_path)
+            message = "regular"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+&gt;       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'hash'
+E        Input: 'Registration inspection requires an actual family Ref'
+
+test/test_b3_full_context_registration.py:137: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[wrong_size]" time="0.036"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'size|bytes'&#10; Input: 'Registration inspection requires an actual family Ref'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require2')
+fault = 'wrong_size'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+            os.mkfifo(family_path)
+            message = "regular"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+&gt;           public().run(request, output)
+
+test/test_b3_full_context_registration.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require2/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require2/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+&gt;           raise ValueError("Registration inspection requires an actual family Ref")
+E           ValueError: Registration inspection requires an actual family Ref
+
+scripts/bridge_b3_full_context_observed.py:169: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require2')
+fault = 'wrong_size'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+            os.mkfifo(family_path)
+            message = "regular"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+&gt;       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'size|bytes'
+E        Input: 'Registration inspection requires an actual family Ref'
+
+test/test_b3_full_context_registration.py:137: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[unknown_ref_field]" time="0.037"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'closed.*Ref'&#10; Input: 'Registration inspection requires an actual family Ref'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require3')
+fault = 'unknown_ref_field'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+            os.mkfifo(family_path)
+            message = "regular"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+&gt;           public().run(request, output)
+
+test/test_b3_full_context_registration.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require3/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require3/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+&gt;           raise ValueError("Registration inspection requires an actual family Ref")
+E           ValueError: Registration inspection requires an actual family Ref
+
+scripts/bridge_b3_full_context_observed.py:169: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require3')
+fault = 'unknown_ref_field'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+            os.mkfifo(family_path)
+            message = "regular"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+&gt;       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'closed.*Ref'
+E        Input: 'Registration inspection requires an actual family Ref'
+
+test/test_b3_full_context_registration.py:137: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[symlink]" time="0.037"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'alias'&#10; Input: 'Registration inspection requires an actual family Ref'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require4')
+fault = 'symlink'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+            os.mkfifo(family_path)
+            message = "regular"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+&gt;           public().run(request, output)
+
+test/test_b3_full_context_registration.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require4/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require4/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+&gt;           raise ValueError("Registration inspection requires an actual family Ref")
+E           ValueError: Registration inspection requires an actual family Ref
+
+scripts/bridge_b3_full_context_observed.py:169: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require4')
+fault = 'symlink'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+            os.mkfifo(family_path)
+            message = "regular"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+&gt;       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'alias'
+E        Input: 'Registration inspection requires an actual family Ref'
+
+test/test_b3_full_context_registration.py:137: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[fifo]" time="0.019"><failure message="OSError: [Errno 95] Operation not supported">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04_basetemp/test_family_references_require5')
+fault = 'fifo'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+&gt;           os.mkfifo(family_path)
+E           OSError: [Errno 95] Operation not supported
+
+test/test_b3_full_context_registration.py:132: OSError</failure></testcase></testsuite></testsuites>

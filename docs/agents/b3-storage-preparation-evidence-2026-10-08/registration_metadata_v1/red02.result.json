@@ -1,0 +1,43 @@
+{
+  "scope": "metadata_pytest_command_through_raw_stdio_close",
+  "return_code": 1,
+  "timed_out": false,
+  "elapsed_seconds": 1.7783666489999632,
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py": null,
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py",
+      "bytes": 965,
+      "sha256": "c5bb4fa6040df2fe6d7a448a6434b4f3602b3d5584846de7ee063856f4d6a48f"
+    }
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py": null,
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py",
+      "bytes": 965,
+      "sha256": "c5bb4fa6040df2fe6d7a448a6434b4f3602b3d5584846de7ee063856f4d6a48f"
+    }
+  },
+  "source_bytes_stable": true,
+  "raw": {
+    "stdout": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red02.stdout.txt",
+      "bytes": 2683,
+      "sha256": "e2fd6254d871fc8fa0409b4fa6b1a6d4fa76e31651e3fefb7f9a6aff710a6023"
+    },
+    "stderr": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red02.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "junit": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red02.junit.xml",
+      "bytes": 2000,
+      "sha256": "2c2d1a21353a0c8e43ad5df95df1f01c1540c343e626e6eaa8a6105ed404c9e3"
+    }
+  },
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "numerical_validation_performed": false
+}

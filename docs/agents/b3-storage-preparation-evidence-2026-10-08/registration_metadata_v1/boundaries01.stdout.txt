@@ -1,0 +1,15 @@
+....................................
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/boundaries01.junit.xml -
+36 passed, 2 warnings in 13.19s

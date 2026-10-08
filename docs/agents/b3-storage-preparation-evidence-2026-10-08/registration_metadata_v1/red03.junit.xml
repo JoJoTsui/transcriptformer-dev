@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="5" time="0.996" timestamp="2026-10-08T11:10:41.796363+08:00" hostname="Conundrum"><testcase classname="test.test_b3_full_context_registration" name="test_duplicate_request_keys_refuse_without_creating_completion" time="0.031" /><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[schema-old_registration-schema]" time="0.023"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'schema'&#10; Input: 'Registration metadata requires its closed predecessor contract'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p0')
+field = 'schema', value = 'old_registration', message = 'schema'
+
+    @pytest.mark.parametrize(
+        ("field", "value", "message"),
+        [
+            ("schema", "old_registration", "schema"),
+            ("phase", "compare", "phase"),
+            ("registration_profile", "zebrafish", "profile"),
+            ("trusted_authority", True, "closed request"),
+        ],
+    )
+    def test_closed_request_refusals_preserve_foreign_completion(tmp_path, field, value, message):
+        body = request_document()
+        body[field] = value
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "foreign_registration"
+        output.mkdir()
+        marker = output / "complete.json"
+        marker.write_bytes(b"foreign completion; caller owned\n")
+        before = marker.stat()
+        with pytest.raises(ValueError, match=message):
+&gt;           public().run(request, output)
+
+test/test_b3_full_context_registration.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p0/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p0/foreign_registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+&gt;           raise ValueError("Registration metadata requires its closed predecessor contract")
+E           ValueError: Registration metadata requires its closed predecessor contract
+
+scripts/bridge_b3_full_context_observed.py:148: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p0')
+field = 'schema', value = 'old_registration', message = 'schema'
+
+    @pytest.mark.parametrize(
+        ("field", "value", "message"),
+        [
+            ("schema", "old_registration", "schema"),
+            ("phase", "compare", "phase"),
+            ("registration_profile", "zebrafish", "profile"),
+            ("trusted_authority", True, "closed request"),
+        ],
+    )
+    def test_closed_request_refusals_preserve_foreign_completion(tmp_path, field, value, message):
+        body = request_document()
+        body[field] = value
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "foreign_registration"
+        output.mkdir()
+        marker = output / "complete.json"
+        marker.write_bytes(b"foreign completion; caller owned\n")
+        before = marker.stat()
+&gt;       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'schema'
+E        Input: 'Registration metadata requires its closed predecessor contract'
+
+test/test_b3_full_context_registration.py:69: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[phase-compare-phase]" time="0.034"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'phase'&#10; Input: 'Registration metadata requires its closed predecessor contract'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p1')
+field = 'phase', value = 'compare', message = 'phase'
+
+    @pytest.mark.parametrize(
+        ("field", "value", "message"),
+        [
+            ("schema", "old_registration", "schema"),
+            ("phase", "compare", "phase"),
+            ("registration_profile", "zebrafish", "profile"),
+            ("trusted_authority", True, "closed request"),
+        ],
+    )
+    def test_closed_request_refusals_preserve_foreign_completion(tmp_path, field, value, message):
+        body = request_document()
+        body[field] = value
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "foreign_registration"
+        output.mkdir()
+        marker = output / "complete.json"
+        marker.write_bytes(b"foreign completion; caller owned\n")
+        before = marker.stat()
+        with pytest.raises(ValueError, match=message):
+&gt;           public().run(request, output)
+
+test/test_b3_full_context_registration.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p1/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p1/foreign_registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+&gt;           raise ValueError("Registration metadata requires its closed predecessor contract")
+E           ValueError: Registration metadata requires its closed predecessor contract
+
+scripts/bridge_b3_full_context_observed.py:148: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p1')
+field = 'phase', value = 'compare', message = 'phase'
+
+    @pytest.mark.parametrize(
+        ("field", "value", "message"),
+        [
+            ("schema", "old_registration", "schema"),
+            ("phase", "compare", "phase"),
+            ("registration_profile", "zebrafish", "profile"),
+            ("trusted_authority", True, "closed request"),
+        ],
+    )
+    def test_closed_request_refusals_preserve_foreign_completion(tmp_path, field, value, message):
+        body = request_document()
+        body[field] = value
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "foreign_registration"
+        output.mkdir()
+        marker = output / "complete.json"
+        marker.write_bytes(b"foreign completion; caller owned\n")
+        before = marker.stat()
+&gt;       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'phase'
+E        Input: 'Registration metadata requires its closed predecessor contract'
+
+test/test_b3_full_context_registration.py:69: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[registration_profile-zebrafish-profile]" time="0.024"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'profile'&#10; Input: 'Registration metadata requires its closed predecessor contract'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p2')
+field = 'registration_profile', value = 'zebrafish', message = 'profile'
+
+    @pytest.mark.parametrize(
+        ("field", "value", "message"),
+        [
+            ("schema", "old_registration", "schema"),
+            ("phase", "compare", "phase"),
+            ("registration_profile", "zebrafish", "profile"),
+            ("trusted_authority", True, "closed request"),
+        ],
+    )
+    def test_closed_request_refusals_preserve_foreign_completion(tmp_path, field, value, message):
+        body = request_document()
+        body[field] = value
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "foreign_registration"
+        output.mkdir()
+        marker = output / "complete.json"
+        marker.write_bytes(b"foreign completion; caller owned\n")
+        before = marker.stat()
+        with pytest.raises(ValueError, match=message):
+&gt;           public().run(request, output)
+
+test/test_b3_full_context_registration.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p2/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p2/foreign_registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+&gt;           raise ValueError("Registration metadata requires its closed predecessor contract")
+E           ValueError: Registration metadata requires its closed predecessor contract
+
+scripts/bridge_b3_full_context_observed.py:148: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p2')
+field = 'registration_profile', value = 'zebrafish', message = 'profile'
+
+    @pytest.mark.parametrize(
+        ("field", "value", "message"),
+        [
+            ("schema", "old_registration", "schema"),
+            ("phase", "compare", "phase"),
+            ("registration_profile", "zebrafish", "profile"),
+            ("trusted_authority", True, "closed request"),
+        ],
+    )
+    def test_closed_request_refusals_preserve_foreign_completion(tmp_path, field, value, message):
+        body = request_document()
+        body[field] = value
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "foreign_registration"
+        output.mkdir()
+        marker = output / "complete.json"
+        marker.write_bytes(b"foreign completion; caller owned\n")
+        before = marker.stat()
+&gt;       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'profile'
+E        Input: 'Registration metadata requires its closed predecessor contract'
+
+test/test_b3_full_context_registration.py:69: AssertionError</failure></testcase><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[trusted_authority-True-closed request]" time="0.024"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'closed request'&#10; Input: 'Registration metadata requires its closed predecessor contract'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p3')
+field = 'trusted_authority', value = True, message = 'closed request'
+
+    @pytest.mark.parametrize(
+        ("field", "value", "message"),
+        [
+            ("schema", "old_registration", "schema"),
+            ("phase", "compare", "phase"),
+            ("registration_profile", "zebrafish", "profile"),
+            ("trusted_authority", True, "closed request"),
+        ],
+    )
+    def test_closed_request_refusals_preserve_foreign_completion(tmp_path, field, value, message):
+        body = request_document()
+        body[field] = value
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "foreign_registration"
+        output.mkdir()
+        marker = output / "complete.json"
+        marker.write_bytes(b"foreign completion; caller owned\n")
+        before = marker.stat()
+        with pytest.raises(ValueError, match=message):
+&gt;           public().run(request, output)
+
+test/test_b3_full_context_registration.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p3/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p3/foreign_registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+&gt;           raise ValueError("Registration metadata requires its closed predecessor contract")
+E           ValueError: Registration metadata requires its closed predecessor contract
+
+scripts/bridge_b3_full_context_observed.py:148: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03_basetemp/test_closed_request_refusals_p3')
+field = 'trusted_authority', value = True, message = 'closed request'
+
+    @pytest.mark.parametrize(
+        ("field", "value", "message"),
+        [
+            ("schema", "old_registration", "schema"),
+            ("phase", "compare", "phase"),
+            ("registration_profile", "zebrafish", "profile"),
+            ("trusted_authority", True, "closed request"),
+        ],
+    )
+    def test_closed_request_refusals_preserve_foreign_completion(tmp_path, field, value, message):
+        body = request_document()
+        body[field] = value
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "foreign_registration"
+        output.mkdir()
+        marker = output / "complete.json"
+        marker.write_bytes(b"foreign completion; caller owned\n")
+        before = marker.stat()
+&gt;       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'closed request'
+E        Input: 'Registration metadata requires its closed predecessor contract'
+
+test/test_b3_full_context_registration.py:69: AssertionError</failure></testcase></testsuite></testsuites>

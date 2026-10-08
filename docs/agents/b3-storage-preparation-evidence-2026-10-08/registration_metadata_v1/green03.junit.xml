@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="11" time="1.222" timestamp="2026-10-08T11:14:43.108939+08:00" hostname="Conundrum"><testcase classname="test.test_b3_full_context_registration" name="test_duplicate_request_keys_refuse_without_creating_completion" time="0.033" /><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[schema-old_registration-schema]" time="0.026" /><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[phase-compare-phase]" time="0.024" /><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[registration_profile-zebrafish-profile]" time="0.028" /><testcase classname="test.test_b3_full_context_registration" name="test_closed_request_refusals_preserve_foreign_completion[trusted_authority-True-closed request]" time="0.026" /><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[boolean_size]" time="0.033" /><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[wrong_hash]" time="0.037" /><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[wrong_size]" time="0.038" /><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[unknown_ref_field]" time="0.036" /><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[symlink]" time="0.035" /><testcase classname="test.test_b3_full_context_registration" name="test_family_references_require_original_regular_bytes[fifo]" time="0.018"><failure message="OSError: [Errno 95] Operation not supported">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green03_basetemp/test_family_references_require5')
+fault = 'fifo'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+&gt;           os.mkfifo(family_path)
+E           OSError: [Errno 95] Operation not supported
+
+test/test_b3_full_context_registration.py:132: OSError</failure></testcase></testsuite></testsuites>

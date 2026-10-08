@@ -1,0 +1,31 @@
+{
+  "scope": "first_static_checks_only",
+  "checks": [
+    {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 TMPDIR='/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/tmp' XDG_CACHE_HOME='/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/cache' /home/joey/micromamba/bin/ruff check --no-cache scripts/bridge_b3_full_context_observed.py test/test_b3_full_context_registration.py",
+      "chunk_id": "934f32",
+      "wall_time_seconds": 0.00001092,
+      "exit_code": 0,
+      "original_token_count": 5,
+      "output": "All checks passed!\n"
+    },
+    {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 TMPDIR='/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/tmp' XDG_CACHE_HOME='/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/cache' .venv/bin/python -B -m mypy --cache-dir runs/b3_feasibility/20261008/registration_metadata_v1/mypy-cache --follow-imports=silent --ignore-missing-imports --explicit-package-bases scripts/bridge_b3_full_context_observed.py test/test_b3_full_context_registration.py",
+      "chunk_id": "b33349",
+      "wall_time_seconds": 0.000009781,
+      "exit_code": 1,
+      "original_token_count": 21,
+      "output": "/mnt/d/sc/transcriptformer/transcriptformer/.venv/bin/python: No module named mypy\n"
+    }
+  ],
+  "format": {
+    "chunk_id": "842e48",
+    "wall_time_seconds": 0.000010096,
+    "exit_code": 1,
+    "original_token_count": 37,
+    "output": "Would reformat: scripts/bridge_b3_full_context_observed.py\nWould reformat: test/test_b3_full_context_registration.py\n2 files would be reformatted\n"
+  },
+  "source_admission_granted": false,
+  "runtime_admission_granted": false
+}
+

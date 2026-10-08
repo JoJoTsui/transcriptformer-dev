@@ -1,0 +1,51 @@
+{
+  "scope": "metadata_pytest_command_through_raw_stdio_close",
+  "return_code": 1,
+  "timed_out": false,
+  "elapsed_seconds": 8.477948761000334,
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py",
+      "bytes": 19366,
+      "sha256": "7560ddc4eb861835e21a4f9ae4601cc38373aa643dfb7ff3a8d304d05600255b"
+    },
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py",
+      "bytes": 9517,
+      "sha256": "3fe9fa6a5f4d04b1907221abb3c477612bd944a96744f4432f146fa3b36e5763"
+    }
+  },
+  "source_after": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py",
+      "bytes": 19366,
+      "sha256": "7560ddc4eb861835e21a4f9ae4601cc38373aa643dfb7ff3a8d304d05600255b"
+    },
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py",
+      "bytes": 9517,
+      "sha256": "3fe9fa6a5f4d04b1907221abb3c477612bd944a96744f4432f146fa3b36e5763"
+    }
+  },
+  "source_bytes_stable": true,
+  "raw": {
+    "stdout": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.stdout.txt",
+      "bytes": 44193,
+      "sha256": "258f1925b10d0c3e4684b7f8f8e81878dcbdf93a1cce805d3e14fcc285140dbf"
+    },
+    "stderr": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "junit": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.junit.xml",
+      "bytes": 47696,
+      "sha256": "6f734d35f5a0608be5d6e6f0bc14045123e1e67f2aa3a619a0d0fa15aadcca8b"
+    }
+  },
+  "source_admission_granted": false,
+  "runtime_admission_granted": false,
+  "numerical_validation_performed": false
+}

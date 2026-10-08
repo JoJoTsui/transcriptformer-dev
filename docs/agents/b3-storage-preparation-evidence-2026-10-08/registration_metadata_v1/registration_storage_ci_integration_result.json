@@ -1,0 +1,41 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-B",
+    "-c",
+    "import json,sys,pytest;status=pytest.main(sys.argv[1:]);print('IMPORT_SCOPE '+json.dumps({'numpy_present':'numpy' in sys.modules,'torch_present':'torch' in sys.modules,'h5py_present':'h5py' in sys.modules}));raise SystemExit(status)",
+    "--noconftest",
+    "--capture=no",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "test/test_b3_full_context_registration.py",
+    "test/test_b3_supervisor_host_storage.py",
+    "test/test_finetune_test_selection.py",
+    "--basetemp=/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_storage_ci_integration_tmp",
+    "--junitxml=/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_storage_ci_integration.xml"
+  ],
+  "command_raw_stdio_close_seconds": 16.02451191199998,
+  "numerical_validation_performed": false,
+  "return_code": 0,
+  "runtime_admission_granted": false,
+  "schema": "b3_registration_storage_ci_metadata_integration_v1",
+  "source_admission_granted": false,
+  "source_after": {
+    ".github/workflows/finetune-tests.yml": "aa4a51c94f4790e7e421d53949d9aa18d3bf1c409601d6fc452d194b40577e6f",
+    "scripts/bridge_b3_full_context_observed.py": "571c34b65b2f0e5c5a156e2f808f6db8c35fb83267d1b0dce04dda8029b1371f",
+    "scripts/supervise_b3_pilot.py": "053ca04ca334b3f3b9aa70d8c7804b15b9df59af7fc12adbe68e1968f1347f98",
+    "test/test_b3_full_context_registration.py": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346",
+    "test/test_b3_supervisor_host_storage.py": "47012ebd9eeea61aae76322a6ebf27f87c5bf2accbb59149f4cb5e28b0bb9dd0",
+    "test/test_finetune_test_selection.py": "57d9751316b85efd6a23b0982c307715a821487b4ed89be7b5c194603f91764c"
+  },
+  "source_before": {
+    ".github/workflows/finetune-tests.yml": "aa4a51c94f4790e7e421d53949d9aa18d3bf1c409601d6fc452d194b40577e6f",
+    "scripts/bridge_b3_full_context_observed.py": "571c34b65b2f0e5c5a156e2f808f6db8c35fb83267d1b0dce04dda8029b1371f",
+    "scripts/supervise_b3_pilot.py": "053ca04ca334b3f3b9aa70d8c7804b15b9df59af7fc12adbe68e1968f1347f98",
+    "test/test_b3_full_context_registration.py": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346",
+    "test/test_b3_supervisor_host_storage.py": "47012ebd9eeea61aae76322a6ebf27f87c5bf2accbb59149f4cb5e28b0bb9dd0",
+    "test/test_finetune_test_selection.py": "57d9751316b85efd6a23b0982c307715a821487b4ed89be7b5c194603f91764c"
+  },
+  "source_bytes_stable": true
+}

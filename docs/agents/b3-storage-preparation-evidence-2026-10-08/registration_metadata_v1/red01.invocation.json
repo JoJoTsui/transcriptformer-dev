@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "/mnt/d/sc/transcriptformer/transcriptformer/.venv/bin/python",
+    "-B",
+    "-m",
+    "pytest",
+    "--noconftest",
+    "-p",
+    "no:cacheprovider",
+    "-q",
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py",
+    "--basetemp=/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red01_basetemp",
+    "--junitxml=/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red01.junit.xml"
+  ],
+  "cwd": "/mnt/d/sc/transcriptformer/transcriptformer",
+  "source_before": {
+    "/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py": null,
+    "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py": {
+      "path": "/mnt/d/sc/transcriptformer/transcriptformer/test/test_b3_full_context_registration.py",
+      "bytes": 965,
+      "sha256": "c5bb4fa6040df2fe6d7a448a6434b4f3602b3d5584846de7ee063856f4d6a48f"
+    }
+  },
+  "capture_source": {
+    "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/capture_metadata_checks.py",
+    "bytes": 3687,
+    "sha256": "e83baff64b201525e88d6df9334d163b32fa56b0dd71b8ce57d8ac2dba743eef"
+  },
+  "scope": "single_metadata_test_file_no_conftest_or_external_plugins",
+  "max_seconds": 120,
+  "max_address_space_bytes": 4294967296,
+  "all_capture_paths_on_D": true
+}

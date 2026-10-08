@@ -1,0 +1,79 @@
+{
+  "artifacts": {
+    "registration_named_record_green.xml": {
+      "bytes": 10473,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/registration_named_record_green.xml",
+      "sha256": "59dcabbfeeb86faea45e7001dea6efa80a3e92a10683a0071c483b061a98a274"
+    },
+    "registration_named_record_static.json": {
+      "bytes": 1575,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/registration_named_record_static.json",
+      "sha256": "3a649060ea4e2b7820c799ac7fbbb4881cc10ab7ff823e838ce4b214cab861cd"
+    },
+    "registration_spec_review_v1.md": {
+      "bytes": 3807,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/registration_spec_review_v1.md",
+      "sha256": "9df4179f0562151a3bbd2b8ad7e18843de510747b8f437b71fc8e5debc0384a4"
+    },
+    "registration_spec_review_v2.md": {
+      "bytes": 3852,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/registration_spec_review_v2.md",
+      "sha256": "2a66372f2b0f47035ba4e8f8eaf8c1c57146e8bddd68f8e56ced735aeb6360b3"
+    },
+    "registration_standards_review_v1.md": {
+      "bytes": 2943,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/registration_standards_review_v1.md",
+      "sha256": "912a41e9131e9690951accfc2c7dc728631d29ebf0c37ab0b0baed2208fb4a83"
+    },
+    "registration_standards_review_v2.md": {
+      "bytes": 2890,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/registration_standards_review_v2.md",
+      "sha256": "b491160bf03291d838afa49ea23924d77ed234a750dabafd69d93127c0c24167"
+    }
+  },
+  "baseline_commit": "71e0d57ebcbbc871f2e1eecb6d8a8ef8d87164e3",
+  "candidate_commit": "080f20b598c18c92fc5db9b860c3034ab1cbcc8e",
+  "complete_execution_inventory_verified": false,
+  "complete_predecessor_validation": false,
+  "current_metadata_integration": {
+    "errors": 0,
+    "failed": 0,
+    "passed": 63,
+    "pytest_reported_seconds": 17.33,
+    "skipped": 0
+  },
+  "final_static_reviews": {
+    "spec_hard": 0,
+    "spec_optional": 0,
+    "standards_hard": 0,
+    "standards_optional": 0
+  },
+  "genuine_preparation_values_reconciled": false,
+  "original_optional_resolution": "Immutable named input record replaces positional ownership fields.",
+  "original_standards_optional": 1,
+  "registration_published": false,
+  "remote_new_parser_validation": "pending",
+  "runtime_admission_granted": false,
+  "schema": "b3_registration_metadata_final_review_v2",
+  "source_admission_granted": false,
+  "source_files": {
+    ".github/workflows/finetune-tests.yml": {
+      "bytes": 5421,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final_sources/.github/workflows/finetune-tests.yml.source.txt",
+      "sha256": "aa4a51c94f4790e7e421d53949d9aa18d3bf1c409601d6fc452d194b40577e6f"
+    },
+    "scripts/bridge_b3_full_context_observed.py": {
+      "bytes": 30828,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final_sources/scripts/bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "7089ba75427ef092d69bdf4796bda93784ae38bc7fab0078c7ed386bb02fddfe"
+    },
+    "test/test_b3_full_context_registration.py": {
+      "bytes": 16572,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final_sources/test/test_b3_full_context_registration.py.source.txt",
+      "sha256": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346"
+    }
+  },
+  "static_checks_python_files": 3,
+  "ticket_05": "open",
+  "ticket_11": "excluded"
+}

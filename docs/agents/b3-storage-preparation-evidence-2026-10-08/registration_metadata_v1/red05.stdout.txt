@@ -1,0 +1,342 @@
+..........FFFFF
+=================================== FAILURES ===================================
+_________ test_family_references_require_original_regular_bytes[fifo] __________
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_family_references_require5')
+fault = 'fifo'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+>           os.mkfifo(family_path)
+E           OSError: [Errno 95] Operation not supported
+
+test/test_b3_full_context_registration.py:152: OSError
+_ test_real_family_and_consumer_sources_report_missing_predecessors_without_admission _
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_real_family_and_consumer_0')
+
+    def test_real_family_and_consumer_sources_report_missing_predecessors_without_admission(tmp_path):
+        body, _, _ = source_request(tmp_path)
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        module = public()
+        before = set(sys.modules)
+>       with pytest.raises(module.RegistrationUnavailable) as caught:
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'b3_registration_public' has no attribute 'RegistrationUnavailable'
+
+test/test_b3_full_context_registration.py:169: AttributeError
+_ test_consumer_inventory_requires_exact_sorted_original_source_bytes[same_count_substitution] _
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir0')
+fault = 'same_count_substitution'
+
+    @pytest.mark.parametrize("fault", ["same_count_substitution", "wrong_source_hash", "unordered"])
+    def test_consumer_inventory_requires_exact_sorted_original_source_bytes(tmp_path, fault):
+        body, _, _ = source_request(tmp_path)
+        mapping = body["consumer_file_sha256"]
+        if fault == "same_count_substitution":
+            del mapping[str(ROOT / "src/transcriptformer/__init__.py")]
+            foreign = tmp_path / "foreign.py"
+            foreign.write_bytes(b"raise AssertionError('unreviewed source must never execute')\n")
+            mapping[str(foreign)] = ref(foreign)["sha256"]
+            body["consumer_file_sha256"] = dict(sorted(mapping.items()))
+            assert len(mapping) == 80
+            message = "exact.*80.*source paths"
+        elif fault == "wrong_source_hash":
+            mapping[str(PUBLIC_SOURCE)] = "0" * 64
+            message = "consumer.*hash"
+        else:
+            body["consumer_file_sha256"] = dict(reversed(list(mapping.items())))
+            message = "sorted"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+>           public().run(request, output)
+
+test/test_b3_full_context_registration.py:205: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir0/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir0/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+            _read_ref(inputs, request["family"], "family")
+>           raise ValueError("Registration inspection requires its exact consumer FileMap")
+E           ValueError: Registration inspection requires its exact consumer FileMap
+
+scripts/bridge_b3_full_context_observed.py:209: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir0')
+fault = 'same_count_substitution'
+
+    @pytest.mark.parametrize("fault", ["same_count_substitution", "wrong_source_hash", "unordered"])
+    def test_consumer_inventory_requires_exact_sorted_original_source_bytes(tmp_path, fault):
+        body, _, _ = source_request(tmp_path)
+        mapping = body["consumer_file_sha256"]
+        if fault == "same_count_substitution":
+            del mapping[str(ROOT / "src/transcriptformer/__init__.py")]
+            foreign = tmp_path / "foreign.py"
+            foreign.write_bytes(b"raise AssertionError('unreviewed source must never execute')\n")
+            mapping[str(foreign)] = ref(foreign)["sha256"]
+            body["consumer_file_sha256"] = dict(sorted(mapping.items()))
+            assert len(mapping) == 80
+            message = "exact.*80.*source paths"
+        elif fault == "wrong_source_hash":
+            mapping[str(PUBLIC_SOURCE)] = "0" * 64
+            message = "consumer.*hash"
+        else:
+            body["consumer_file_sha256"] = dict(reversed(list(mapping.items())))
+            message = "sorted"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+>       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'exact.*80.*source paths'
+E        Input: 'Registration inspection requires its exact consumer FileMap'
+
+test/test_b3_full_context_registration.py:204: AssertionError
+_ test_consumer_inventory_requires_exact_sorted_original_source_bytes[wrong_source_hash] _
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir1')
+fault = 'wrong_source_hash'
+
+    @pytest.mark.parametrize("fault", ["same_count_substitution", "wrong_source_hash", "unordered"])
+    def test_consumer_inventory_requires_exact_sorted_original_source_bytes(tmp_path, fault):
+        body, _, _ = source_request(tmp_path)
+        mapping = body["consumer_file_sha256"]
+        if fault == "same_count_substitution":
+            del mapping[str(ROOT / "src/transcriptformer/__init__.py")]
+            foreign = tmp_path / "foreign.py"
+            foreign.write_bytes(b"raise AssertionError('unreviewed source must never execute')\n")
+            mapping[str(foreign)] = ref(foreign)["sha256"]
+            body["consumer_file_sha256"] = dict(sorted(mapping.items()))
+            assert len(mapping) == 80
+            message = "exact.*80.*source paths"
+        elif fault == "wrong_source_hash":
+            mapping[str(PUBLIC_SOURCE)] = "0" * 64
+            message = "consumer.*hash"
+        else:
+            body["consumer_file_sha256"] = dict(reversed(list(mapping.items())))
+            message = "sorted"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+>           public().run(request, output)
+
+test/test_b3_full_context_registration.py:205: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir1/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir1/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+            _read_ref(inputs, request["family"], "family")
+>           raise ValueError("Registration inspection requires its exact consumer FileMap")
+E           ValueError: Registration inspection requires its exact consumer FileMap
+
+scripts/bridge_b3_full_context_observed.py:209: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir1')
+fault = 'wrong_source_hash'
+
+    @pytest.mark.parametrize("fault", ["same_count_substitution", "wrong_source_hash", "unordered"])
+    def test_consumer_inventory_requires_exact_sorted_original_source_bytes(tmp_path, fault):
+        body, _, _ = source_request(tmp_path)
+        mapping = body["consumer_file_sha256"]
+        if fault == "same_count_substitution":
+            del mapping[str(ROOT / "src/transcriptformer/__init__.py")]
+            foreign = tmp_path / "foreign.py"
+            foreign.write_bytes(b"raise AssertionError('unreviewed source must never execute')\n")
+            mapping[str(foreign)] = ref(foreign)["sha256"]
+            body["consumer_file_sha256"] = dict(sorted(mapping.items()))
+            assert len(mapping) == 80
+            message = "exact.*80.*source paths"
+        elif fault == "wrong_source_hash":
+            mapping[str(PUBLIC_SOURCE)] = "0" * 64
+            message = "consumer.*hash"
+        else:
+            body["consumer_file_sha256"] = dict(reversed(list(mapping.items())))
+            message = "sorted"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+>       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'consumer.*hash'
+E        Input: 'Registration inspection requires its exact consumer FileMap'
+
+test/test_b3_full_context_registration.py:204: AssertionError
+_ test_consumer_inventory_requires_exact_sorted_original_source_bytes[unordered] _
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir2')
+fault = 'unordered'
+
+    @pytest.mark.parametrize("fault", ["same_count_substitution", "wrong_source_hash", "unordered"])
+    def test_consumer_inventory_requires_exact_sorted_original_source_bytes(tmp_path, fault):
+        body, _, _ = source_request(tmp_path)
+        mapping = body["consumer_file_sha256"]
+        if fault == "same_count_substitution":
+            del mapping[str(ROOT / "src/transcriptformer/__init__.py")]
+            foreign = tmp_path / "foreign.py"
+            foreign.write_bytes(b"raise AssertionError('unreviewed source must never execute')\n")
+            mapping[str(foreign)] = ref(foreign)["sha256"]
+            body["consumer_file_sha256"] = dict(sorted(mapping.items()))
+            assert len(mapping) == 80
+            message = "exact.*80.*source paths"
+        elif fault == "wrong_source_hash":
+            mapping[str(PUBLIC_SOURCE)] = "0" * 64
+            message = "consumer.*hash"
+        else:
+            body["consumer_file_sha256"] = dict(reversed(list(mapping.items())))
+            message = "sorted"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+>           public().run(request, output)
+
+test/test_b3_full_context_registration.py:205: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir2/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir2/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+            _read_ref(inputs, request["family"], "family")
+>           raise ValueError("Registration inspection requires its exact consumer FileMap")
+E           ValueError: Registration inspection requires its exact consumer FileMap
+
+scripts/bridge_b3_full_context_observed.py:209: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05_basetemp/test_consumer_inventory_requir2')
+fault = 'unordered'
+
+    @pytest.mark.parametrize("fault", ["same_count_substitution", "wrong_source_hash", "unordered"])
+    def test_consumer_inventory_requires_exact_sorted_original_source_bytes(tmp_path, fault):
+        body, _, _ = source_request(tmp_path)
+        mapping = body["consumer_file_sha256"]
+        if fault == "same_count_substitution":
+            del mapping[str(ROOT / "src/transcriptformer/__init__.py")]
+            foreign = tmp_path / "foreign.py"
+            foreign.write_bytes(b"raise AssertionError('unreviewed source must never execute')\n")
+            mapping[str(foreign)] = ref(foreign)["sha256"]
+            body["consumer_file_sha256"] = dict(sorted(mapping.items()))
+            assert len(mapping) == 80
+            message = "exact.*80.*source paths"
+        elif fault == "wrong_source_hash":
+            mapping[str(PUBLIC_SOURCE)] = "0" * 64
+            message = "consumer.*hash"
+        else:
+            body["consumer_file_sha256"] = dict(reversed(list(mapping.items())))
+            message = "sorted"
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+>       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'sorted'
+E        Input: 'Registration inspection requires its exact consumer FileMap'
+
+test/test_b3_full_context_registration.py:204: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05.junit.xml -
+=========================== short test summary info ============================
+FAILED test/test_b3_full_context_registration.py::test_family_references_require_original_regular_bytes[fifo]
+FAILED test/test_b3_full_context_registration.py::test_real_family_and_consumer_sources_report_missing_predecessors_without_admission
+FAILED test/test_b3_full_context_registration.py::test_consumer_inventory_requires_exact_sorted_original_source_bytes[same_count_substitution]
+FAILED test/test_b3_full_context_registration.py::test_consumer_inventory_requires_exact_sorted_original_source_bytes[wrong_source_hash]
+FAILED test/test_b3_full_context_registration.py::test_consumer_inventory_requires_exact_sorted_original_source_bytes[unordered]
+5 failed, 10 passed, 2 warnings in 1.99s

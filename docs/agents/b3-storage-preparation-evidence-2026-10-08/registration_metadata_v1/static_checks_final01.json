@@ -1,0 +1,51 @@
+{
+  "checks": [
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "--no-cache",
+        "scripts/bridge_b3_full_context_observed.py",
+        "test/test_b3_full_context_registration.py"
+      ],
+      "return_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--no-cache",
+        "--check",
+        "scripts/bridge_b3_full_context_observed.py",
+        "test/test_b3_full_context_registration.py"
+      ],
+      "return_code": 0,
+      "stdout": "2 files already formatted\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/mnt/d/sc/transcriptformer/transcriptformer/.venv/bin/python",
+        "-B",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "scripts/bridge_b3_full_context_observed.py",
+        "test/test_b3_full_context_registration.py"
+      ],
+      "return_code": 1,
+      "stdout": "scripts/bridge_b3_full_context_observed.py:540: error: Need type annotation for \"files\" (hint: \"files: dict[<type>, <type>] = ...\")  [var-annotated]\nFound 1 error in 1 file (checked 2 source files)\n",
+      "stderr": ""
+    }
+  ],
+  "mypy_environment": {
+    "PYTHONPATH": "/home/joey/.cache/uv/archive-v0/xRyg4HEqkxLwm2OA:/home/joey/.cache/uv/archive-v0/0P1lZuvxYyZrbYlh16qWy:/home/joey/.cache/uv/archive-v0/erB5vv3vCnGbzwlL:/home/joey/.cache/uv/archive-v0/LH6ffABWhmcwoA1Tz2iL9:/home/joey/.cache/uv/archive-v0/WrO-Eo3zoRZ6ZiPi",
+    "MYPY_CACHE_DIR": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/mypy-cache-final"
+  },
+  "source_admission_granted": false,
+  "runtime_admission_granted": false
+}

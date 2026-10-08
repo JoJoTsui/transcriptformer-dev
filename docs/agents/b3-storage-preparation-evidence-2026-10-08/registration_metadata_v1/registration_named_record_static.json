@@ -1,0 +1,51 @@
+{
+  "checks": [
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "scripts/bridge_b3_full_context_observed.py",
+        "test/test_b3_full_context_registration.py",
+        "test/test_finetune_test_selection.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "All checks passed!\n"
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--check",
+        "scripts/bridge_b3_full_context_observed.py",
+        "test/test_b3_full_context_registration.py",
+        "test/test_finetune_test_selection.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "3 files already formatted\n"
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-B",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "scripts/bridge_b3_full_context_observed.py",
+        "test/test_b3_full_context_registration.py",
+        "test/test_finetune_test_selection.py"
+      ],
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "Success: no issues found in 3 source files\n"
+    }
+  ],
+  "source_sha256": {
+    "scripts/bridge_b3_full_context_observed.py": "7089ba75427ef092d69bdf4796bda93784ae38bc7fab0078c7ed386bb02fddfe",
+    "test/test_b3_full_context_registration.py": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346",
+    "test/test_finetune_test_selection.py": "57d9751316b85efd6a23b0982c307715a821487b4ed89be7b5c194603f91764c"
+  }
+}

@@ -1,0 +1,73 @@
+"""Public registration refusals use real files; no preparation/origin is forged."""
+
+from importlib import util
+import json
+from pathlib import Path
+import sys
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+PUBLIC_SOURCE = ROOT / "scripts/bridge_b3_full_context_observed.py"
+
+
+def public():
+    spec = util.spec_from_file_location("b3_registration_public", PUBLIC_SOURCE)
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def request_document():
+    return {
+        "schema": "b3_full_context_family_registration_request_v2",
+        "phase": "register",
+        "registration_profile": "synthetic_stored_arithmetic_v1",
+        "family": None,
+        "family_sha256": None,
+        "decision_evidence": None,
+        "preparation": None,
+        "source_bindings": None,
+        "producer_intent": None,
+        "issuer_source_admission": None,
+        "rng_contract": None,
+        "execution_catalog": None,
+        "consumer_file_sha256": None,
+    }
+
+
+def test_duplicate_request_keys_refuse_without_creating_completion(tmp_path):
+    request = tmp_path / "request.json"
+    request.write_bytes(b'{"schema":"first","schema":"second"}\n')
+    output = tmp_path / "registration"
+    before = set(sys.modules)
+    with pytest.raises(ValueError, match="Duplicate"):
+        public().run(request, output)
+    assert not output.exists()
+    assert not any(name.split(".")[0] in {"numpy", "torch", "h5py", "anndata"} for name in set(sys.modules) - before)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("schema", "old_registration", "schema"),
+        ("phase", "compare", "phase"),
+        ("registration_profile", "zebrafish", "profile"),
+        ("trusted_authority", True, "closed request"),
+    ],
+)
+def test_closed_request_refusals_preserve_foreign_completion(tmp_path, field, value, message):
+    body = request_document()
+    body[field] = value
+    request = tmp_path / "request.json"
+    request.write_text(json.dumps(body))
+    output = tmp_path / "foreign_registration"
+    output.mkdir()
+    marker = output / "complete.json"
+    marker.write_bytes(b"foreign completion; caller owned\n")
+    before = marker.stat()
+    with pytest.raises(ValueError, match=message):
+        public().run(request, output)
+    after = marker.stat()
+    assert marker.read_bytes() == b"foreign completion; caller owned\n"
+    assert (after.st_dev, after.st_ino) == (before.st_dev, before.st_ino)

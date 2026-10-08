@@ -1,0 +1,111 @@
+.......................FF
+=================================== FAILURES ===================================
+_______ test_nonfinite_json_refuses_before_predecessor_inspection[1e400] _______
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07_basetemp/test_nonfinite_json_refuses_be2')
+token = '1e400'
+
+    @pytest.mark.parametrize("token", ["NaN", "Infinity", "1e400"])
+    def test_nonfinite_json_refuses_before_predecessor_inspection(tmp_path, token):
+        body = request_document()
+        body["family_sha256"] = "nonfinite_placeholder"
+        request = tmp_path / "request.json"
+        request.write_bytes(json.dumps(body).encode().replace(b'"nonfinite_placeholder"', token.encode()))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match="Nonfinite"):
+>           public().run(request, output)
+
+test/test_b3_full_context_registration.py:237: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/bridge_b3_full_context_observed.py:484: in run
+    family = _json(_read_ref(inputs, request["family"], "family"))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/bridge_b3_full_context_observed.py:210: in _read_ref
+    reference = _ref(value, role)
+                ^^^^^^^^^^^^^^^^^
+scripts/bridge_b3_full_context_observed.py:193: in _ref
+    _closed(value, {"path", "sha256", "bytes"}, role + " Ref")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = None, fields = {'bytes', 'path', 'sha256'}, role = 'family Ref'
+
+    def _closed(value, fields, role):
+        if type(value) is not dict or set(value) != fields:
+>           raise ValueError("Require the exact closed " + role + " fields")
+E           ValueError: Require the exact closed family Ref fields
+
+scripts/bridge_b3_full_context_observed.py:182: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07_basetemp/test_nonfinite_json_refuses_be2')
+token = '1e400'
+
+    @pytest.mark.parametrize("token", ["NaN", "Infinity", "1e400"])
+    def test_nonfinite_json_refuses_before_predecessor_inspection(tmp_path, token):
+        body = request_document()
+        body["family_sha256"] = "nonfinite_placeholder"
+        request = tmp_path / "request.json"
+        request.write_bytes(json.dumps(body).encode().replace(b'"nonfinite_placeholder"', token.encode()))
+        output = tmp_path / "registration"
+>       with pytest.raises(ValueError, match="Nonfinite"):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'Nonfinite'
+E        Input: 'Require the exact closed family Ref fields'
+
+test/test_b3_full_context_registration.py:236: AssertionError
+____ test_profile_type_is_refused_as_metadata_not_a_python_container_error _____
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07_basetemp/test_profile_type_is_refused_a0')
+
+    def test_profile_type_is_refused_as_metadata_not_a_python_container_error(tmp_path):
+        body = request_document()
+        body["registration_profile"] = ["synthetic_stored_arithmetic_v1"]
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match="profile"):
+>           public().run(request, output)
+
+test/test_b3_full_context_registration.py:248: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07_basetemp/test_profile_type_is_refused_a0/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07_basetemp/test_profile_type_is_refused_a0/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+>           if request["registration_profile"] not in PROFILES:
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: unhashable type: 'list'
+
+scripts/bridge_b3_full_context_observed.py:480: TypeError
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07.junit.xml -
+=========================== short test summary info ============================
+FAILED test/test_b3_full_context_registration.py::test_nonfinite_json_refuses_before_predecessor_inspection[1e400]
+FAILED test/test_b3_full_context_registration.py::test_profile_type_is_refused_as_metadata_not_a_python_container_error
+2 failed, 23 passed, 2 warnings in 7.96s

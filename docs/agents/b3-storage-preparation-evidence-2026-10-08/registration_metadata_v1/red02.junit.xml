@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.940" timestamp="2026-10-08T11:08:37.581418+08:00" hostname="Conundrum"><testcase classname="test.test_b3_full_context_registration" name="test_duplicate_request_keys_refuse_without_creating_completion" time="0.014"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red02_basetemp/test_duplicate_request_keys_re0')
+
+    def test_duplicate_request_keys_refuse_without_creating_completion(tmp_path):
+        request = tmp_path / "request.json"
+        request.write_bytes(b'{"schema":"first","schema":"second"}\n')
+        output = tmp_path / "registration"
+        before = set(sys.modules)
+        with pytest.raises(ValueError, match="Duplicate"):
+&gt;           public().run(request, output)
+            ^^^^^^^^
+
+test/test_b3_full_context_registration.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test/test_b3_full_context_registration.py:16: in public
+    spec.loader.exec_module(module)
+&lt;frozen importlib._bootstrap_external&gt;:936: in exec_module
+    ???
+&lt;frozen importlib._bootstrap_external&gt;:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_frozen_importlib_external.SourceFileLoader object at 0x72f0415eed50&gt;
+path = '/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py'
+
+&gt;   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/mnt/d/sc/transcriptformer/transcriptformer/scripts/bridge_b3_full_context_observed.py'
+
+&lt;frozen importlib._bootstrap_external&gt;:1130: FileNotFoundError</failure></testcase></testsuite></testsuites>

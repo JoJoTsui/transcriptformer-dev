@@ -1,0 +1,28 @@
+"""Public registration refusals use real files; no preparation/origin is forged."""
+
+from importlib import util
+from pathlib import Path
+import sys
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+PUBLIC_SOURCE = ROOT / "scripts/bridge_b3_full_context_observed.py"
+
+
+def public():
+    spec = util.spec_from_file_location("b3_registration_public", PUBLIC_SOURCE)
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_duplicate_request_keys_refuse_without_creating_completion(tmp_path):
+    request = tmp_path / "request.json"
+    request.write_bytes(b'{"schema":"first","schema":"second"}\n')
+    output = tmp_path / "registration"
+    before = set(sys.modules)
+    with pytest.raises(ValueError, match="Duplicate"):
+        public().run(request, output)
+    assert not output.exists()
+    assert not any(name.split(".")[0] in {"numpy", "torch", "h5py", "anndata"} for name in set(sys.modules) - before)

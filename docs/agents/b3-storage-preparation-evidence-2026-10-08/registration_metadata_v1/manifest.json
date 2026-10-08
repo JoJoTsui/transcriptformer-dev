@@ -1,0 +1,2285 @@
+{
+  "artifacts": {
+    "boundaries01.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 27946,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "4dff4aa82651b38beae999536b58ae3e93e762c7c3e0b6b028ff06e53226cab5"
+    },
+    "boundaries01.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "boundaries01.invocation.json": {
+      "bytes": 1704,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.invocation.json",
+      "sha256": "a03340060a0c7409f860e2a0437851d0da1112525363052637472e96d998a770"
+    },
+    "boundaries01.junit.xml": {
+      "bytes": 6239,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.junit.xml",
+      "sha256": "b5f573e75b2227838fd6cc0d9aece9b471422772969d47f45fe2f73fc282b1a8"
+    },
+    "boundaries01.result.json": {
+      "bytes": 2396,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.result.json",
+      "sha256": "6e505ec1a3dc794a33ce52eedddfaed4ec551b5dc6128a17acfd81a932793000"
+    },
+    "boundaries01.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "boundaries01.stdout.txt": {
+      "bytes": 973,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.stdout.txt",
+      "sha256": "4911cdb9c963ad4d085891dcae864d7ec8c030cf1e4ede3ae0c4b5118c9bad81"
+    },
+    "boundaries01.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 16177,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.test_b3_full_context_registration.py.source.txt",
+      "sha256": "5abb6c7049896c1054acac2e915caa76bfb8fae98d3e90db658a606982b619b3"
+    },
+    "capture_metadata_checks.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/capture_metadata_checks.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "evidence_policy_with_registration_green.xml": {
+      "bytes": 1347,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/evidence_policy_with_registration_green.xml",
+      "sha256": "50cc15ce8587273f2e2eb5b47634fbc85a626dc2128a9c2eebd28b00c1da5684"
+    },
+    "final01.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 30321,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "078b8c7cc0ec780e3f8b560683d7e60bb2abe33b9a91b11a95e2445f34a068d5"
+    },
+    "final01.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "final01.invocation.json": {
+      "bytes": 1694,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.invocation.json",
+      "sha256": "eabb6f250d07beb4d34178d40ac6ef28ebb07e9f562798893deee7ec895ea56d"
+    },
+    "final01.junit.xml": {
+      "bytes": 6239,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.junit.xml",
+      "sha256": "5dde90696a9deb509b126d067386bcbce463276fc23a3e465296d61b3d97d1f3"
+    },
+    "final01.result.json": {
+      "bytes": 2382,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.result.json",
+      "sha256": "9c243ce5a6b90a4225064eae316fa18f6b0c89ae3b889f4178c1a2fd26509d04"
+    },
+    "final01.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final01.stdout.txt": {
+      "bytes": 968,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.stdout.txt",
+      "sha256": "baca2ba24789cb0de288a2741c86b049a47921706b4f286ec8b3d41e65a1773b"
+    },
+    "final01.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 16572,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.test_b3_full_context_registration.py.source.txt",
+      "sha256": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346"
+    },
+    "final02.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 30534,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "571c34b65b2f0e5c5a156e2f808f6db8c35fb83267d1b0dce04dda8029b1371f"
+    },
+    "final02.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "final02.invocation.json": {
+      "bytes": 1694,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.invocation.json",
+      "sha256": "5241d2e07f767aa7f5364082c544c5ad05c65974c9715030e83b2b7081a34955"
+    },
+    "final02.junit.xml": {
+      "bytes": 6239,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.junit.xml",
+      "sha256": "e7fca922fd284488a1f192fb26c9c005ba0a87983fc55abe0eddecac71d22e1d"
+    },
+    "final02.result.json": {
+      "bytes": 2382,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.result.json",
+      "sha256": "110a2e36dab90822a50d75fd780a887983a98a191df539c1e9e6f13679f3bb36"
+    },
+    "final02.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02.stdout.txt": {
+      "bytes": 968,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.stdout.txt",
+      "sha256": "2b0f6965bafa9a4bc98a2788b766b64d6d07881da4dbabc967f35f40ed7cf63f"
+    },
+    "final02.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 16572,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.test_b3_full_context_registration.py.source.txt",
+      "sha256": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346"
+    },
+    "green01.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 6337,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "9931ff410c50af13dc84616360f73eab54b40f4ad6c3491e4b56e2d7e0fd0359"
+    },
+    "green01.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "green01.invocation.json": {
+      "bytes": 1691,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.invocation.json",
+      "sha256": "e4e46a287a263167b31b7f0ce0e094a73dbbd1020cef078f74953d452faacebe"
+    },
+    "green01.junit.xml": {
+      "bytes": 391,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.junit.xml",
+      "sha256": "6fc9a97b32b67d24515a940fbb7e4dc071b7ad94e1974266f90a55528defce20"
+    },
+    "green01.result.json": {
+      "bytes": 2375,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.result.json",
+      "sha256": "361a21895c5725492895863710fe0d9c895dc25ea512da662fe6f3e78fcaa44b"
+    },
+    "green01.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "green01.stdout.txt": {
+      "bytes": 931,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.stdout.txt",
+      "sha256": "1cb89f96cfc4856ba06256051e88d2833369ef07e4dfbb14e1549d125b731247"
+    },
+    "green01.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 965,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.test_b3_full_context_registration.py.source.txt",
+      "sha256": "c5bb4fa6040df2fe6d7a448a6434b4f3602b3d5584846de7ee063856f4d6a48f"
+    },
+    "green02.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 7525,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "df1837cfb08928168687bba8bc0fd196d8bf8b1733ad68d5c6b88e61679d1d54"
+    },
+    "green02.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "green02.invocation.json": {
+      "bytes": 1692,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.invocation.json",
+      "sha256": "9c94dbf8467901db0f0fbad033ab66b0b0deaa3f8e285c36061b8ed366f08aa2"
+    },
+    "green02.junit.xml": {
+      "bytes": 1083,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.junit.xml",
+      "sha256": "346b7ee2a88856de4f704c780977108c3b49588524b8079239b0a178b925b755"
+    },
+    "green02.result.json": {
+      "bytes": 2378,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.result.json",
+      "sha256": "62744f85019f142db17ad3f1534c5673e102fc1c4cef749e3818353695a6dc42"
+    },
+    "green02.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "green02.stdout.txt": {
+      "bytes": 935,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.stdout.txt",
+      "sha256": "9f49e5dedd9c22e490c639056afe3d732b9f69d09cd264b2fdee5c518f4bb91e"
+    },
+    "green02.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 2478,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.test_b3_full_context_registration.py.source.txt",
+      "sha256": "5199b13393547cc6b7046ff702711438c1540d7d3bfa0ab8d786e4a5c96f3c39"
+    },
+    "green03.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 9309,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "82e17ebb50c65d1c357a00320b33d9e26a57be17cae7a96dda4e698d64a3b510"
+    },
+    "green03.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "green03.invocation.json": {
+      "bytes": 1692,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.invocation.json",
+      "sha256": "2bf6b01dd2ec6944ec288a6e599b2b5bdd22cd351576be87e9c390e99c77773d"
+    },
+    "green03.junit.xml": {
+      "bytes": 3373,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.junit.xml",
+      "sha256": "db7fa7c3f422c1fce73bcdf5c925448bc6e0802de3ed43746a018921823b8a35"
+    },
+    "green03.result.json": {
+      "bytes": 2378,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.result.json",
+      "sha256": "4ef57c9ffa51a3c4ec3dd8ed59e9985e45c5f251d05dc6dbb1788a36abceb15f"
+    },
+    "green03.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "green03.stdout.txt": {
+      "bytes": 2617,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.stdout.txt",
+      "sha256": "86b4b84050ae48935dfe302ebed8a538c48aaa22983037f405a5329e263444f3"
+    },
+    "green03.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 4926,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.test_b3_full_context_registration.py.source.txt",
+      "sha256": "21783b9e545c353bed6517140849ea0e20b907ab0733fa92d909f912daac921a"
+    },
+    "green04.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 19366,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "7560ddc4eb861835e21a4f9ae4601cc38373aa643dfb7ff3a8d304d05600255b"
+    },
+    "green04.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "green04.invocation.json": {
+      "bytes": 1693,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.invocation.json",
+      "sha256": "b97b8a109b6e4d4c3878490665f18fb085611c66e704a8388b138fad41aa41aa"
+    },
+    "green04.junit.xml": {
+      "bytes": 2658,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.junit.xml",
+      "sha256": "02ecd883fc2cee000efda2e0a5072000ac773c345638c2c737d27ad01eade616"
+    },
+    "green04.result.json": {
+      "bytes": 2379,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.result.json",
+      "sha256": "20975f05be351cd0b9cd19808b558991098a7673962463c27f68d317cd8ec8cb"
+    },
+    "green04.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "green04.stdout.txt": {
+      "bytes": 946,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.stdout.txt",
+      "sha256": "002489061f7fddc7d6e0db2a29cce5f40294f12cf65ccd79e348655d98b6a1e3"
+    },
+    "green04.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 8643,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.test_b3_full_context_registration.py.source.txt",
+      "sha256": "2e9eb2a7d8871baf442776f8e49391385641c45ae731ffc7ffdafed0bf99e157"
+    },
+    "green05.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 27583,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "9b905e40b94b38b26e70b69ed150cd6cf41cf4225139a66f3319c264f64a45bd"
+    },
+    "green05.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "green05.invocation.json": {
+      "bytes": 1693,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.invocation.json",
+      "sha256": "b3775d2286ae7fc6cf327914ab52f220ab5eb115611ca737b7c3942a4a0050f1"
+    },
+    "green05.junit.xml": {
+      "bytes": 3748,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.junit.xml",
+      "sha256": "3645407f957c2a81522d78b748bef40fffd0e8af2fc439c3e1cf9271ed52847b"
+    },
+    "green05.result.json": {
+      "bytes": 2379,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.result.json",
+      "sha256": "92964ea5ba1eb94c99f92a2895645f9486cd5e3237bbad12056c5776346e54f9"
+    },
+    "green05.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "green05.stdout.txt": {
+      "bytes": 952,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.stdout.txt",
+      "sha256": "a07a154c467acb5aa46afe0b20cfea2f3d4f91fe723b3a40d6254f7683334779"
+    },
+    "green05.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 9517,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.test_b3_full_context_registration.py.source.txt",
+      "sha256": "3fe9fa6a5f4d04b1907221abb3c477612bd944a96744f4432f146fa3b36e5763"
+    },
+    "green06.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 27946,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "4dff4aa82651b38beae999536b58ae3e93e762c7c3e0b6b028ff06e53226cab5"
+    },
+    "green06.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "green06.invocation.json": {
+      "bytes": 1694,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.invocation.json",
+      "sha256": "16116574ba1f288410aef96cfd6cf8efdb8e030c42b4c4e3d40142a7b90662de"
+    },
+    "green06.junit.xml": {
+      "bytes": 4346,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.junit.xml",
+      "sha256": "ad9cc089a1af7c5c1a0cec091d6385c51afd43805f2aec8a2211a970778808af"
+    },
+    "green06.result.json": {
+      "bytes": 2381,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.result.json",
+      "sha256": "a5f58548fb523406c5a717c9108b88ead5cbad19fe3b58eba87897c9cda3d1c7"
+    },
+    "green06.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "green06.stdout.txt": {
+      "bytes": 956,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.stdout.txt",
+      "sha256": "a082911ec2d8d47b3c09cfbbb0c41611afdf426460fa45bbbce1e2000aa48a77"
+    },
+    "green06.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 10490,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.test_b3_full_context_registration.py.source.txt",
+      "sha256": "ef07c44f90a42b062ddc929588996a43761f284c1217a496088a43684f1f76c2"
+    },
+    "implementation_scope_v1.md": {
+      "bytes": 2990,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/implementation_scope_v1.md",
+      "sha256": "7e04ddd898d99f841082190bb06574e3c714a849f7864fda9571a440d4505d65"
+    },
+    "receipt_index_v1.json": {
+      "bytes": 49331,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/receipt_index_v1.json",
+      "sha256": "ecf354c145ce230ee1ddb2738c9c997f7900d192c09058afafe258e885bd1ae6"
+    },
+    "red01.capture.py.source.txt": {
+      "bytes": 3687,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.capture.py.source.txt",
+      "sha256": "e83baff64b201525e88d6df9334d163b32fa56b0dd71b8ce57d8ac2dba743eef"
+    },
+    "red01.invocation.json": {
+      "bytes": 1466,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.invocation.json",
+      "sha256": "d47eafacd1f7317e9c628268abdb563f587bda4df5e1a45a4d2990e778863827"
+    },
+    "red01.junit.xml": {
+      "bytes": 235,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.junit.xml",
+      "sha256": "1e53fc5a7f9de3c069435708c2e9fad60af4be23ce3f718f948d0b06da6967b6"
+    },
+    "red01.result.json": {
+      "bytes": 1949,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.result.json",
+      "sha256": "73812b542d0fbaf1c01d03947e752be4089d3678db3dd885eaa38c3bad95385d"
+    },
+    "red01.stderr.txt": {
+      "bytes": 3762,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.stderr.txt",
+      "sha256": "eb0befad8b34052565755f2875b260f7e3e6482ffa041951e9f49f9fc57f2101"
+    },
+    "red01.stdout.txt": {
+      "bytes": 21,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.stdout.txt",
+      "sha256": "c803baf92153c41ad5584deb7e4d2290cda9fc470a17aad58f8f0c81675421d4"
+    },
+    "red02.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "red02.invocation.json": {
+      "bytes": 1476,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.invocation.json",
+      "sha256": "0fb88408b247e18fddc20758b59b493e9fdc7022f7ae411663d10fd658e0bf7f"
+    },
+    "red02.junit.xml": {
+      "bytes": 2000,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.junit.xml",
+      "sha256": "2c2d1a21353a0c8e43ad5df95df1f01c1540c343e626e6eaa8a6105ed404c9e3"
+    },
+    "red02.result.json": {
+      "bytes": 1949,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.result.json",
+      "sha256": "4db79059a8e3beda6cf1f7302fbc46fbab15901b889bf2d404e9d2099b975e49"
+    },
+    "red02.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "red02.stdout.txt": {
+      "bytes": 2683,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.stdout.txt",
+      "sha256": "e2fd6254d871fc8fa0409b4fa6b1a6d4fa76e31651e3fefb7f9a6aff710a6023"
+    },
+    "red02.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 965,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.test_b3_full_context_registration.py.source.txt",
+      "sha256": "c5bb4fa6040df2fe6d7a448a6434b4f3602b3d5584846de7ee063856f4d6a48f"
+    },
+    "red03.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 6337,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "9931ff410c50af13dc84616360f73eab54b40f4ad6c3491e4b56e2d7e0fd0359"
+    },
+    "red03.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "red03.invocation.json": {
+      "bytes": 1688,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.invocation.json",
+      "sha256": "bbd0b56e52c74bfe3adad3a30ca9c5c9d3780869678efb33ab74fddd42236963"
+    },
+    "red03.junit.xml": {
+      "bytes": 16695,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.junit.xml",
+      "sha256": "4cbc2f177aa9b930e6cbaf59c8a07a44881353bf28c87a6414dae5693f8e8819"
+    },
+    "red03.result.json": {
+      "bytes": 2375,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.result.json",
+      "sha256": "7a00418c1dc491c5cf1c5838431b739e8bdbd96b13eae87276f3e022f5cccb7e"
+    },
+    "red03.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "red03.stdout.txt": {
+      "bytes": 16893,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.stdout.txt",
+      "sha256": "2d0c388a37d14fa16646485e48846a73a2e5ea36299f3e64a126178154e32dbb"
+    },
+    "red03.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 2478,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.test_b3_full_context_registration.py.source.txt",
+      "sha256": "5199b13393547cc6b7046ff702711438c1540d7d3bfa0ab8d786e4a5c96f3c39"
+    },
+    "red04.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 7525,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "df1837cfb08928168687bba8bc0fd196d8bf8b1733ad68d5c6b88e61679d1d54"
+    },
+    "red04.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "red04.invocation.json": {
+      "bytes": 1688,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.invocation.json",
+      "sha256": "704db08e0d3adbbca537aab28326e776163d9019d7a88f259b389104ae140b94"
+    },
+    "red04.junit.xml": {
+      "bytes": 29797,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.junit.xml",
+      "sha256": "3a8d7786deb33a3d4bd540020e2f1b87abeeafdee5485d13f22e8e90b88981c4"
+    },
+    "red04.result.json": {
+      "bytes": 2374,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.result.json",
+      "sha256": "6a1e3ca393a5f79ad6ae26b8410d238d077e11ead647a5158c6aca38630c7aac"
+    },
+    "red04.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "red04.stdout.txt": {
+      "bytes": 29122,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.stdout.txt",
+      "sha256": "59ed1844d2ebcbf2ac38db17b07b05af0ddf2c0585d2d41d86782168261d9e9c"
+    },
+    "red04.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 4926,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.test_b3_full_context_registration.py.source.txt",
+      "sha256": "21783b9e545c353bed6517140849ea0e20b907ab0733fa92d909f912daac921a"
+    },
+    "red05.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 9309,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "82e17ebb50c65d1c357a00320b33d9e26a57be17cae7a96dda4e698d64a3b510"
+    },
+    "red05.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "red05.invocation.json": {
+      "bytes": 1688,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.invocation.json",
+      "sha256": "d1005e9bf152ed2fe6fd11b6b5c0c1a5423d488a62ea59f8345f6d8a067b2497"
+    },
+    "red05.junit.xml": {
+      "bytes": 21059,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.junit.xml",
+      "sha256": "d16ca5f4f080f8c5124b309a1632f6e82009db45cde7b4798379109510b607ef"
+    },
+    "red05.result.json": {
+      "bytes": 2375,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.result.json",
+      "sha256": "bd2d4cfc840884bb0c69a8b522df4c309d1b5498ec49afb9781ac0ec7213423b"
+    },
+    "red05.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "red05.stdout.txt": {
+      "bytes": 19822,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.stdout.txt",
+      "sha256": "b3289db64df663e9e146f723f13ac66d499d6dfb43a481aa971620654cad7e9e"
+    },
+    "red05.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 8641,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.test_b3_full_context_registration.py.source.txt",
+      "sha256": "e77f661f0ad5b0e95037aaef42689732da6eeefca7d9d5508008e660715e45a7"
+    },
+    "red06.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 19366,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "7560ddc4eb861835e21a4f9ae4601cc38373aa643dfb7ff3a8d304d05600255b"
+    },
+    "red06.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "red06.invocation.json": {
+      "bytes": 1689,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.invocation.json",
+      "sha256": "6c8309091cdb30bd238cafcf3cf55c21a3df9c92cd8209e536b894321fe01c6b"
+    },
+    "red06.junit.xml": {
+      "bytes": 47696,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.junit.xml",
+      "sha256": "6f734d35f5a0608be5d6e6f0bc14045123e1e67f2aa3a619a0d0fa15aadcca8b"
+    },
+    "red06.result.json": {
+      "bytes": 2376,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.result.json",
+      "sha256": "3fc680eaed787d7b32eeab2d1637d6a9c67ec371e48029d8e177d6d11bd0d9aa"
+    },
+    "red06.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "red06.stdout.txt": {
+      "bytes": 44193,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.stdout.txt",
+      "sha256": "258f1925b10d0c3e4684b7f8f8e81878dcbdf93a1cce805d3e14fcc285140dbf"
+    },
+    "red06.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 9517,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.test_b3_full_context_registration.py.source.txt",
+      "sha256": "3fe9fa6a5f4d04b1907221abb3c477612bd944a96744f4432f146fa3b36e5763"
+    },
+    "red07.bridge_b3_full_context_observed.py.source.txt": {
+      "bytes": 27583,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "9b905e40b94b38b26e70b69ed150cd6cf41cf4225139a66f3319c264f64a45bd"
+    },
+    "red07.capture.py.source.txt": {
+      "bytes": 3902,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.capture.py.source.txt",
+      "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+    },
+    "red07.invocation.json": {
+      "bytes": 1690,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.invocation.json",
+      "sha256": "b6f0691f4b75acc298d338d52793f2ad0592e6b8e8aa2258b2b40d25f3cf0192"
+    },
+    "red07.junit.xml": {
+      "bytes": 9529,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.junit.xml",
+      "sha256": "703cf178212e5a40a597a05bb610fa714f4405bcc08489a20eb21bd681cde58b"
+    },
+    "red07.result.json": {
+      "bytes": 2376,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.result.json",
+      "sha256": "d96f7ead461caed819ae039a135b3bed8f23773975724d9be9e31f6def6b7dc3"
+    },
+    "red07.stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "red07.stdout.txt": {
+      "bytes": 6458,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.stdout.txt",
+      "sha256": "7589ecaebe6fbecbf38ea0bc435d771473592af75998fc7c85d15a2e0f47df41"
+    },
+    "red07.test_b3_full_context_registration.py.source.txt": {
+      "bytes": 10490,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.test_b3_full_context_registration.py.source.txt",
+      "sha256": "ef07c44f90a42b062ddc929588996a43761f284c1217a496088a43684f1f76c2"
+    },
+    "registration_storage_ci_integration.xml": {
+      "bytes": 10473,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/registration_storage_ci_integration.xml",
+      "sha256": "f20a0183ec788122d95af24bb7d7cb3fa799705715b4434f9c18460fe913f6d2"
+    },
+    "registration_storage_ci_integration_result.json": {
+      "bytes": 2490,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/registration_storage_ci_integration_result.json",
+      "sha256": "88757181e03c31a88ccdc264d52b6752af77a1a93fb2e2f1495db39ad5d192b7"
+    },
+    "registration_storage_ci_integration_stderr.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/registration_storage_ci_integration_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "registration_storage_ci_integration_stdout.txt": {
+      "bytes": 1077,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/registration_storage_ci_integration_stdout.txt",
+      "sha256": "a2d2897c2571b315c5c210324eca4f51fe1866b6e77465d8e9d1b0bbeb69886c"
+    },
+    "static_checks_final01.json": {
+      "bytes": 1826,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/static_checks_final01.json",
+      "sha256": "24f6bf9f2a14ea6e20d4c4023c09f0fbe60b00bf8cb62789a429d0eebe592bda"
+    },
+    "static_checks_final02.json": {
+      "bytes": 2995,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/static_checks_final02.json",
+      "sha256": "73919ebb60478d9e9081812dffc6205feb5dfeb78cccd8ee08ec0a78eac993ea"
+    },
+    "static_checks_v1.json": {
+      "bytes": 1812,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/static_checks_v1.json",
+      "sha256": "7c1d9363ec48787a7774ab67273b6758e9d128a37c9fca36d3790c7b339f6de6"
+    }
+  },
+  "candidate_commit": "b4f7133b6724f98c867137d4e8cf201a3b6b3b22",
+  "complete_predecessor_validation": false,
+  "genuine_preparation_value_reconciliation": false,
+  "independent_reviews": "pending",
+  "inspection_scope": "metadata_request_declaration_shapes_bytes_and_refusal_only",
+  "joint_breakdown": {
+    "ci": 7,
+    "registration": 36,
+    "storage": 20
+  },
+  "joint_command_raw_stdio_close_seconds": 16.02451191199998,
+  "joint_metadata_passed": 63,
+  "numeric_allocation_census": null,
+  "original_to_archived_receipts": {
+    "boundaries01.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 27946,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "4dff4aa82651b38beae999536b58ae3e93e762c7c3e0b6b028ff06e53226cab5"
+      },
+      "original": {
+        "bytes": 27946,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/boundaries01.bridge_b3_full_context_observed.py",
+        "sha256": "4dff4aa82651b38beae999536b58ae3e93e762c7c3e0b6b028ff06e53226cab5"
+      }
+    },
+    "boundaries01.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/boundaries01.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "boundaries01.invocation.json": {
+      "archived": {
+        "bytes": 1704,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.invocation.json",
+        "sha256": "a03340060a0c7409f860e2a0437851d0da1112525363052637472e96d998a770"
+      },
+      "original": {
+        "bytes": 1704,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/boundaries01.invocation.json",
+        "sha256": "a03340060a0c7409f860e2a0437851d0da1112525363052637472e96d998a770"
+      }
+    },
+    "boundaries01.junit.xml": {
+      "archived": {
+        "bytes": 6239,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.junit.xml",
+        "sha256": "b5f573e75b2227838fd6cc0d9aece9b471422772969d47f45fe2f73fc282b1a8"
+      },
+      "original": {
+        "bytes": 6239,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/boundaries01.junit.xml",
+        "sha256": "b5f573e75b2227838fd6cc0d9aece9b471422772969d47f45fe2f73fc282b1a8"
+      }
+    },
+    "boundaries01.result.json": {
+      "archived": {
+        "bytes": 2396,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.result.json",
+        "sha256": "6e505ec1a3dc794a33ce52eedddfaed4ec551b5dc6128a17acfd81a932793000"
+      },
+      "original": {
+        "bytes": 2396,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/boundaries01.result.json",
+        "sha256": "6e505ec1a3dc794a33ce52eedddfaed4ec551b5dc6128a17acfd81a932793000"
+      }
+    },
+    "boundaries01.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/boundaries01.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "boundaries01.stdout.txt": {
+      "archived": {
+        "bytes": 973,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.stdout.txt",
+        "sha256": "4911cdb9c963ad4d085891dcae864d7ec8c030cf1e4ede3ae0c4b5118c9bad81"
+      },
+      "original": {
+        "bytes": 973,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/boundaries01.stdout.txt",
+        "sha256": "4911cdb9c963ad4d085891dcae864d7ec8c030cf1e4ede3ae0c4b5118c9bad81"
+      }
+    },
+    "boundaries01.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 16177,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/boundaries01.test_b3_full_context_registration.py.source.txt",
+        "sha256": "5abb6c7049896c1054acac2e915caa76bfb8fae98d3e90db658a606982b619b3"
+      },
+      "original": {
+        "bytes": 16177,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/boundaries01.test_b3_full_context_registration.py",
+        "sha256": "5abb6c7049896c1054acac2e915caa76bfb8fae98d3e90db658a606982b619b3"
+      }
+    },
+    "capture_metadata_checks.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/capture_metadata_checks.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/capture_metadata_checks.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "final01.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 30321,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "078b8c7cc0ec780e3f8b560683d7e60bb2abe33b9a91b11a95e2445f34a068d5"
+      },
+      "original": {
+        "bytes": 30321,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final01.bridge_b3_full_context_observed.py",
+        "sha256": "078b8c7cc0ec780e3f8b560683d7e60bb2abe33b9a91b11a95e2445f34a068d5"
+      }
+    },
+    "final01.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final01.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "final01.invocation.json": {
+      "archived": {
+        "bytes": 1694,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.invocation.json",
+        "sha256": "eabb6f250d07beb4d34178d40ac6ef28ebb07e9f562798893deee7ec895ea56d"
+      },
+      "original": {
+        "bytes": 1694,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final01.invocation.json",
+        "sha256": "eabb6f250d07beb4d34178d40ac6ef28ebb07e9f562798893deee7ec895ea56d"
+      }
+    },
+    "final01.junit.xml": {
+      "archived": {
+        "bytes": 6239,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.junit.xml",
+        "sha256": "5dde90696a9deb509b126d067386bcbce463276fc23a3e465296d61b3d97d1f3"
+      },
+      "original": {
+        "bytes": 6239,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final01.junit.xml",
+        "sha256": "5dde90696a9deb509b126d067386bcbce463276fc23a3e465296d61b3d97d1f3"
+      }
+    },
+    "final01.result.json": {
+      "archived": {
+        "bytes": 2382,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.result.json",
+        "sha256": "9c243ce5a6b90a4225064eae316fa18f6b0c89ae3b889f4178c1a2fd26509d04"
+      },
+      "original": {
+        "bytes": 2382,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final01.result.json",
+        "sha256": "9c243ce5a6b90a4225064eae316fa18f6b0c89ae3b889f4178c1a2fd26509d04"
+      }
+    },
+    "final01.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final01.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "final01.stdout.txt": {
+      "archived": {
+        "bytes": 968,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.stdout.txt",
+        "sha256": "baca2ba24789cb0de288a2741c86b049a47921706b4f286ec8b3d41e65a1773b"
+      },
+      "original": {
+        "bytes": 968,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final01.stdout.txt",
+        "sha256": "baca2ba24789cb0de288a2741c86b049a47921706b4f286ec8b3d41e65a1773b"
+      }
+    },
+    "final01.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 16572,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final01.test_b3_full_context_registration.py.source.txt",
+        "sha256": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346"
+      },
+      "original": {
+        "bytes": 16572,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final01.test_b3_full_context_registration.py",
+        "sha256": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346"
+      }
+    },
+    "final02.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 30534,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "571c34b65b2f0e5c5a156e2f808f6db8c35fb83267d1b0dce04dda8029b1371f"
+      },
+      "original": {
+        "bytes": 30534,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final02.bridge_b3_full_context_observed.py",
+        "sha256": "571c34b65b2f0e5c5a156e2f808f6db8c35fb83267d1b0dce04dda8029b1371f"
+      }
+    },
+    "final02.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final02.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "final02.invocation.json": {
+      "archived": {
+        "bytes": 1694,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.invocation.json",
+        "sha256": "5241d2e07f767aa7f5364082c544c5ad05c65974c9715030e83b2b7081a34955"
+      },
+      "original": {
+        "bytes": 1694,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final02.invocation.json",
+        "sha256": "5241d2e07f767aa7f5364082c544c5ad05c65974c9715030e83b2b7081a34955"
+      }
+    },
+    "final02.junit.xml": {
+      "archived": {
+        "bytes": 6239,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.junit.xml",
+        "sha256": "e7fca922fd284488a1f192fb26c9c005ba0a87983fc55abe0eddecac71d22e1d"
+      },
+      "original": {
+        "bytes": 6239,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final02.junit.xml",
+        "sha256": "e7fca922fd284488a1f192fb26c9c005ba0a87983fc55abe0eddecac71d22e1d"
+      }
+    },
+    "final02.result.json": {
+      "archived": {
+        "bytes": 2382,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.result.json",
+        "sha256": "110a2e36dab90822a50d75fd780a887983a98a191df539c1e9e6f13679f3bb36"
+      },
+      "original": {
+        "bytes": 2382,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final02.result.json",
+        "sha256": "110a2e36dab90822a50d75fd780a887983a98a191df539c1e9e6f13679f3bb36"
+      }
+    },
+    "final02.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final02.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "final02.stdout.txt": {
+      "archived": {
+        "bytes": 968,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.stdout.txt",
+        "sha256": "2b0f6965bafa9a4bc98a2788b766b64d6d07881da4dbabc967f35f40ed7cf63f"
+      },
+      "original": {
+        "bytes": 968,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final02.stdout.txt",
+        "sha256": "2b0f6965bafa9a4bc98a2788b766b64d6d07881da4dbabc967f35f40ed7cf63f"
+      }
+    },
+    "final02.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 16572,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/final02.test_b3_full_context_registration.py.source.txt",
+        "sha256": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346"
+      },
+      "original": {
+        "bytes": 16572,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/final02.test_b3_full_context_registration.py",
+        "sha256": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346"
+      }
+    },
+    "green01.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 6337,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "9931ff410c50af13dc84616360f73eab54b40f4ad6c3491e4b56e2d7e0fd0359"
+      },
+      "original": {
+        "bytes": 6337,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green01.bridge_b3_full_context_observed.py",
+        "sha256": "9931ff410c50af13dc84616360f73eab54b40f4ad6c3491e4b56e2d7e0fd0359"
+      }
+    },
+    "green01.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green01.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "green01.invocation.json": {
+      "archived": {
+        "bytes": 1691,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.invocation.json",
+        "sha256": "e4e46a287a263167b31b7f0ce0e094a73dbbd1020cef078f74953d452faacebe"
+      },
+      "original": {
+        "bytes": 1691,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green01.invocation.json",
+        "sha256": "e4e46a287a263167b31b7f0ce0e094a73dbbd1020cef078f74953d452faacebe"
+      }
+    },
+    "green01.junit.xml": {
+      "archived": {
+        "bytes": 391,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.junit.xml",
+        "sha256": "6fc9a97b32b67d24515a940fbb7e4dc071b7ad94e1974266f90a55528defce20"
+      },
+      "original": {
+        "bytes": 391,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green01.junit.xml",
+        "sha256": "6fc9a97b32b67d24515a940fbb7e4dc071b7ad94e1974266f90a55528defce20"
+      }
+    },
+    "green01.result.json": {
+      "archived": {
+        "bytes": 2375,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.result.json",
+        "sha256": "361a21895c5725492895863710fe0d9c895dc25ea512da662fe6f3e78fcaa44b"
+      },
+      "original": {
+        "bytes": 2375,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green01.result.json",
+        "sha256": "361a21895c5725492895863710fe0d9c895dc25ea512da662fe6f3e78fcaa44b"
+      }
+    },
+    "green01.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green01.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "green01.stdout.txt": {
+      "archived": {
+        "bytes": 931,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.stdout.txt",
+        "sha256": "1cb89f96cfc4856ba06256051e88d2833369ef07e4dfbb14e1549d125b731247"
+      },
+      "original": {
+        "bytes": 931,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green01.stdout.txt",
+        "sha256": "1cb89f96cfc4856ba06256051e88d2833369ef07e4dfbb14e1549d125b731247"
+      }
+    },
+    "green01.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 965,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green01.test_b3_full_context_registration.py.source.txt",
+        "sha256": "c5bb4fa6040df2fe6d7a448a6434b4f3602b3d5584846de7ee063856f4d6a48f"
+      },
+      "original": {
+        "bytes": 965,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green01.test_b3_full_context_registration.py",
+        "sha256": "c5bb4fa6040df2fe6d7a448a6434b4f3602b3d5584846de7ee063856f4d6a48f"
+      }
+    },
+    "green02.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 7525,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "df1837cfb08928168687bba8bc0fd196d8bf8b1733ad68d5c6b88e61679d1d54"
+      },
+      "original": {
+        "bytes": 7525,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green02.bridge_b3_full_context_observed.py",
+        "sha256": "df1837cfb08928168687bba8bc0fd196d8bf8b1733ad68d5c6b88e61679d1d54"
+      }
+    },
+    "green02.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green02.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "green02.invocation.json": {
+      "archived": {
+        "bytes": 1692,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.invocation.json",
+        "sha256": "9c94dbf8467901db0f0fbad033ab66b0b0deaa3f8e285c36061b8ed366f08aa2"
+      },
+      "original": {
+        "bytes": 1692,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green02.invocation.json",
+        "sha256": "9c94dbf8467901db0f0fbad033ab66b0b0deaa3f8e285c36061b8ed366f08aa2"
+      }
+    },
+    "green02.junit.xml": {
+      "archived": {
+        "bytes": 1083,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.junit.xml",
+        "sha256": "346b7ee2a88856de4f704c780977108c3b49588524b8079239b0a178b925b755"
+      },
+      "original": {
+        "bytes": 1083,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green02.junit.xml",
+        "sha256": "346b7ee2a88856de4f704c780977108c3b49588524b8079239b0a178b925b755"
+      }
+    },
+    "green02.result.json": {
+      "archived": {
+        "bytes": 2378,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.result.json",
+        "sha256": "62744f85019f142db17ad3f1534c5673e102fc1c4cef749e3818353695a6dc42"
+      },
+      "original": {
+        "bytes": 2378,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green02.result.json",
+        "sha256": "62744f85019f142db17ad3f1534c5673e102fc1c4cef749e3818353695a6dc42"
+      }
+    },
+    "green02.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green02.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "green02.stdout.txt": {
+      "archived": {
+        "bytes": 935,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.stdout.txt",
+        "sha256": "9f49e5dedd9c22e490c639056afe3d732b9f69d09cd264b2fdee5c518f4bb91e"
+      },
+      "original": {
+        "bytes": 935,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green02.stdout.txt",
+        "sha256": "9f49e5dedd9c22e490c639056afe3d732b9f69d09cd264b2fdee5c518f4bb91e"
+      }
+    },
+    "green02.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 2478,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green02.test_b3_full_context_registration.py.source.txt",
+        "sha256": "5199b13393547cc6b7046ff702711438c1540d7d3bfa0ab8d786e4a5c96f3c39"
+      },
+      "original": {
+        "bytes": 2478,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green02.test_b3_full_context_registration.py",
+        "sha256": "5199b13393547cc6b7046ff702711438c1540d7d3bfa0ab8d786e4a5c96f3c39"
+      }
+    },
+    "green03.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 9309,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "82e17ebb50c65d1c357a00320b33d9e26a57be17cae7a96dda4e698d64a3b510"
+      },
+      "original": {
+        "bytes": 9309,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green03.bridge_b3_full_context_observed.py",
+        "sha256": "82e17ebb50c65d1c357a00320b33d9e26a57be17cae7a96dda4e698d64a3b510"
+      }
+    },
+    "green03.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green03.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "green03.invocation.json": {
+      "archived": {
+        "bytes": 1692,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.invocation.json",
+        "sha256": "2bf6b01dd2ec6944ec288a6e599b2b5bdd22cd351576be87e9c390e99c77773d"
+      },
+      "original": {
+        "bytes": 1692,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green03.invocation.json",
+        "sha256": "2bf6b01dd2ec6944ec288a6e599b2b5bdd22cd351576be87e9c390e99c77773d"
+      }
+    },
+    "green03.junit.xml": {
+      "archived": {
+        "bytes": 3373,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.junit.xml",
+        "sha256": "db7fa7c3f422c1fce73bcdf5c925448bc6e0802de3ed43746a018921823b8a35"
+      },
+      "original": {
+        "bytes": 3373,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green03.junit.xml",
+        "sha256": "db7fa7c3f422c1fce73bcdf5c925448bc6e0802de3ed43746a018921823b8a35"
+      }
+    },
+    "green03.result.json": {
+      "archived": {
+        "bytes": 2378,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.result.json",
+        "sha256": "4ef57c9ffa51a3c4ec3dd8ed59e9985e45c5f251d05dc6dbb1788a36abceb15f"
+      },
+      "original": {
+        "bytes": 2378,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green03.result.json",
+        "sha256": "4ef57c9ffa51a3c4ec3dd8ed59e9985e45c5f251d05dc6dbb1788a36abceb15f"
+      }
+    },
+    "green03.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green03.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "green03.stdout.txt": {
+      "archived": {
+        "bytes": 2617,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.stdout.txt",
+        "sha256": "86b4b84050ae48935dfe302ebed8a538c48aaa22983037f405a5329e263444f3"
+      },
+      "original": {
+        "bytes": 2617,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green03.stdout.txt",
+        "sha256": "86b4b84050ae48935dfe302ebed8a538c48aaa22983037f405a5329e263444f3"
+      }
+    },
+    "green03.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 4926,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green03.test_b3_full_context_registration.py.source.txt",
+        "sha256": "21783b9e545c353bed6517140849ea0e20b907ab0733fa92d909f912daac921a"
+      },
+      "original": {
+        "bytes": 4926,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green03.test_b3_full_context_registration.py",
+        "sha256": "21783b9e545c353bed6517140849ea0e20b907ab0733fa92d909f912daac921a"
+      }
+    },
+    "green04.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 19366,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "7560ddc4eb861835e21a4f9ae4601cc38373aa643dfb7ff3a8d304d05600255b"
+      },
+      "original": {
+        "bytes": 19366,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green04.bridge_b3_full_context_observed.py",
+        "sha256": "7560ddc4eb861835e21a4f9ae4601cc38373aa643dfb7ff3a8d304d05600255b"
+      }
+    },
+    "green04.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green04.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "green04.invocation.json": {
+      "archived": {
+        "bytes": 1693,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.invocation.json",
+        "sha256": "b97b8a109b6e4d4c3878490665f18fb085611c66e704a8388b138fad41aa41aa"
+      },
+      "original": {
+        "bytes": 1693,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green04.invocation.json",
+        "sha256": "b97b8a109b6e4d4c3878490665f18fb085611c66e704a8388b138fad41aa41aa"
+      }
+    },
+    "green04.junit.xml": {
+      "archived": {
+        "bytes": 2658,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.junit.xml",
+        "sha256": "02ecd883fc2cee000efda2e0a5072000ac773c345638c2c737d27ad01eade616"
+      },
+      "original": {
+        "bytes": 2658,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green04.junit.xml",
+        "sha256": "02ecd883fc2cee000efda2e0a5072000ac773c345638c2c737d27ad01eade616"
+      }
+    },
+    "green04.result.json": {
+      "archived": {
+        "bytes": 2379,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.result.json",
+        "sha256": "20975f05be351cd0b9cd19808b558991098a7673962463c27f68d317cd8ec8cb"
+      },
+      "original": {
+        "bytes": 2379,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green04.result.json",
+        "sha256": "20975f05be351cd0b9cd19808b558991098a7673962463c27f68d317cd8ec8cb"
+      }
+    },
+    "green04.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green04.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "green04.stdout.txt": {
+      "archived": {
+        "bytes": 946,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.stdout.txt",
+        "sha256": "002489061f7fddc7d6e0db2a29cce5f40294f12cf65ccd79e348655d98b6a1e3"
+      },
+      "original": {
+        "bytes": 946,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green04.stdout.txt",
+        "sha256": "002489061f7fddc7d6e0db2a29cce5f40294f12cf65ccd79e348655d98b6a1e3"
+      }
+    },
+    "green04.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 8643,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green04.test_b3_full_context_registration.py.source.txt",
+        "sha256": "2e9eb2a7d8871baf442776f8e49391385641c45ae731ffc7ffdafed0bf99e157"
+      },
+      "original": {
+        "bytes": 8643,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green04.test_b3_full_context_registration.py",
+        "sha256": "2e9eb2a7d8871baf442776f8e49391385641c45ae731ffc7ffdafed0bf99e157"
+      }
+    },
+    "green05.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 27583,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "9b905e40b94b38b26e70b69ed150cd6cf41cf4225139a66f3319c264f64a45bd"
+      },
+      "original": {
+        "bytes": 27583,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green05.bridge_b3_full_context_observed.py",
+        "sha256": "9b905e40b94b38b26e70b69ed150cd6cf41cf4225139a66f3319c264f64a45bd"
+      }
+    },
+    "green05.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green05.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "green05.invocation.json": {
+      "archived": {
+        "bytes": 1693,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.invocation.json",
+        "sha256": "b3775d2286ae7fc6cf327914ab52f220ab5eb115611ca737b7c3942a4a0050f1"
+      },
+      "original": {
+        "bytes": 1693,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green05.invocation.json",
+        "sha256": "b3775d2286ae7fc6cf327914ab52f220ab5eb115611ca737b7c3942a4a0050f1"
+      }
+    },
+    "green05.junit.xml": {
+      "archived": {
+        "bytes": 3748,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.junit.xml",
+        "sha256": "3645407f957c2a81522d78b748bef40fffd0e8af2fc439c3e1cf9271ed52847b"
+      },
+      "original": {
+        "bytes": 3748,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green05.junit.xml",
+        "sha256": "3645407f957c2a81522d78b748bef40fffd0e8af2fc439c3e1cf9271ed52847b"
+      }
+    },
+    "green05.result.json": {
+      "archived": {
+        "bytes": 2379,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.result.json",
+        "sha256": "92964ea5ba1eb94c99f92a2895645f9486cd5e3237bbad12056c5776346e54f9"
+      },
+      "original": {
+        "bytes": 2379,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green05.result.json",
+        "sha256": "92964ea5ba1eb94c99f92a2895645f9486cd5e3237bbad12056c5776346e54f9"
+      }
+    },
+    "green05.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green05.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "green05.stdout.txt": {
+      "archived": {
+        "bytes": 952,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.stdout.txt",
+        "sha256": "a07a154c467acb5aa46afe0b20cfea2f3d4f91fe723b3a40d6254f7683334779"
+      },
+      "original": {
+        "bytes": 952,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green05.stdout.txt",
+        "sha256": "a07a154c467acb5aa46afe0b20cfea2f3d4f91fe723b3a40d6254f7683334779"
+      }
+    },
+    "green05.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 9517,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green05.test_b3_full_context_registration.py.source.txt",
+        "sha256": "3fe9fa6a5f4d04b1907221abb3c477612bd944a96744f4432f146fa3b36e5763"
+      },
+      "original": {
+        "bytes": 9517,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green05.test_b3_full_context_registration.py",
+        "sha256": "3fe9fa6a5f4d04b1907221abb3c477612bd944a96744f4432f146fa3b36e5763"
+      }
+    },
+    "green06.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 27946,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "4dff4aa82651b38beae999536b58ae3e93e762c7c3e0b6b028ff06e53226cab5"
+      },
+      "original": {
+        "bytes": 27946,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green06.bridge_b3_full_context_observed.py",
+        "sha256": "4dff4aa82651b38beae999536b58ae3e93e762c7c3e0b6b028ff06e53226cab5"
+      }
+    },
+    "green06.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green06.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "green06.invocation.json": {
+      "archived": {
+        "bytes": 1694,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.invocation.json",
+        "sha256": "16116574ba1f288410aef96cfd6cf8efdb8e030c42b4c4e3d40142a7b90662de"
+      },
+      "original": {
+        "bytes": 1694,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green06.invocation.json",
+        "sha256": "16116574ba1f288410aef96cfd6cf8efdb8e030c42b4c4e3d40142a7b90662de"
+      }
+    },
+    "green06.junit.xml": {
+      "archived": {
+        "bytes": 4346,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.junit.xml",
+        "sha256": "ad9cc089a1af7c5c1a0cec091d6385c51afd43805f2aec8a2211a970778808af"
+      },
+      "original": {
+        "bytes": 4346,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green06.junit.xml",
+        "sha256": "ad9cc089a1af7c5c1a0cec091d6385c51afd43805f2aec8a2211a970778808af"
+      }
+    },
+    "green06.result.json": {
+      "archived": {
+        "bytes": 2381,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.result.json",
+        "sha256": "a5f58548fb523406c5a717c9108b88ead5cbad19fe3b58eba87897c9cda3d1c7"
+      },
+      "original": {
+        "bytes": 2381,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green06.result.json",
+        "sha256": "a5f58548fb523406c5a717c9108b88ead5cbad19fe3b58eba87897c9cda3d1c7"
+      }
+    },
+    "green06.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green06.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "green06.stdout.txt": {
+      "archived": {
+        "bytes": 956,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.stdout.txt",
+        "sha256": "a082911ec2d8d47b3c09cfbbb0c41611afdf426460fa45bbbce1e2000aa48a77"
+      },
+      "original": {
+        "bytes": 956,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green06.stdout.txt",
+        "sha256": "a082911ec2d8d47b3c09cfbbb0c41611afdf426460fa45bbbce1e2000aa48a77"
+      }
+    },
+    "green06.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 10490,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/green06.test_b3_full_context_registration.py.source.txt",
+        "sha256": "ef07c44f90a42b062ddc929588996a43761f284c1217a496088a43684f1f76c2"
+      },
+      "original": {
+        "bytes": 10490,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green06.test_b3_full_context_registration.py",
+        "sha256": "ef07c44f90a42b062ddc929588996a43761f284c1217a496088a43684f1f76c2"
+      }
+    },
+    "implementation_scope_v1.md": {
+      "archived": {
+        "bytes": 2990,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/implementation_scope_v1.md",
+        "sha256": "7e04ddd898d99f841082190bb06574e3c714a849f7864fda9571a440d4505d65"
+      },
+      "original": {
+        "bytes": 2990,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/implementation_scope_v1.md",
+        "sha256": "7e04ddd898d99f841082190bb06574e3c714a849f7864fda9571a440d4505d65"
+      }
+    },
+    "red01.capture.py": {
+      "archived": {
+        "bytes": 3687,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.capture.py.source.txt",
+        "sha256": "e83baff64b201525e88d6df9334d163b32fa56b0dd71b8ce57d8ac2dba743eef"
+      },
+      "original": {
+        "bytes": 3687,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red01.capture.py",
+        "sha256": "e83baff64b201525e88d6df9334d163b32fa56b0dd71b8ce57d8ac2dba743eef"
+      }
+    },
+    "red01.invocation.json": {
+      "archived": {
+        "bytes": 1466,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.invocation.json",
+        "sha256": "d47eafacd1f7317e9c628268abdb563f587bda4df5e1a45a4d2990e778863827"
+      },
+      "original": {
+        "bytes": 1466,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red01.invocation.json",
+        "sha256": "d47eafacd1f7317e9c628268abdb563f587bda4df5e1a45a4d2990e778863827"
+      }
+    },
+    "red01.junit.xml": {
+      "archived": {
+        "bytes": 235,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.junit.xml",
+        "sha256": "1e53fc5a7f9de3c069435708c2e9fad60af4be23ce3f718f948d0b06da6967b6"
+      },
+      "original": {
+        "bytes": 235,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red01.junit.xml",
+        "sha256": "1e53fc5a7f9de3c069435708c2e9fad60af4be23ce3f718f948d0b06da6967b6"
+      }
+    },
+    "red01.result.json": {
+      "archived": {
+        "bytes": 1949,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.result.json",
+        "sha256": "73812b542d0fbaf1c01d03947e752be4089d3678db3dd885eaa38c3bad95385d"
+      },
+      "original": {
+        "bytes": 1949,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red01.result.json",
+        "sha256": "73812b542d0fbaf1c01d03947e752be4089d3678db3dd885eaa38c3bad95385d"
+      }
+    },
+    "red01.stderr.txt": {
+      "archived": {
+        "bytes": 3762,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.stderr.txt",
+        "sha256": "eb0befad8b34052565755f2875b260f7e3e6482ffa041951e9f49f9fc57f2101"
+      },
+      "original": {
+        "bytes": 3762,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red01.stderr.txt",
+        "sha256": "eb0befad8b34052565755f2875b260f7e3e6482ffa041951e9f49f9fc57f2101"
+      }
+    },
+    "red01.stdout.txt": {
+      "archived": {
+        "bytes": 21,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red01.stdout.txt",
+        "sha256": "c803baf92153c41ad5584deb7e4d2290cda9fc470a17aad58f8f0c81675421d4"
+      },
+      "original": {
+        "bytes": 21,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red01.stdout.txt",
+        "sha256": "c803baf92153c41ad5584deb7e4d2290cda9fc470a17aad58f8f0c81675421d4"
+      }
+    },
+    "red02.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red02.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "red02.invocation.json": {
+      "archived": {
+        "bytes": 1476,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.invocation.json",
+        "sha256": "0fb88408b247e18fddc20758b59b493e9fdc7022f7ae411663d10fd658e0bf7f"
+      },
+      "original": {
+        "bytes": 1476,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red02.invocation.json",
+        "sha256": "0fb88408b247e18fddc20758b59b493e9fdc7022f7ae411663d10fd658e0bf7f"
+      }
+    },
+    "red02.junit.xml": {
+      "archived": {
+        "bytes": 2000,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.junit.xml",
+        "sha256": "2c2d1a21353a0c8e43ad5df95df1f01c1540c343e626e6eaa8a6105ed404c9e3"
+      },
+      "original": {
+        "bytes": 2000,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red02.junit.xml",
+        "sha256": "2c2d1a21353a0c8e43ad5df95df1f01c1540c343e626e6eaa8a6105ed404c9e3"
+      }
+    },
+    "red02.result.json": {
+      "archived": {
+        "bytes": 1949,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.result.json",
+        "sha256": "4db79059a8e3beda6cf1f7302fbc46fbab15901b889bf2d404e9d2099b975e49"
+      },
+      "original": {
+        "bytes": 1949,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red02.result.json",
+        "sha256": "4db79059a8e3beda6cf1f7302fbc46fbab15901b889bf2d404e9d2099b975e49"
+      }
+    },
+    "red02.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red02.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "red02.stdout.txt": {
+      "archived": {
+        "bytes": 2683,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.stdout.txt",
+        "sha256": "e2fd6254d871fc8fa0409b4fa6b1a6d4fa76e31651e3fefb7f9a6aff710a6023"
+      },
+      "original": {
+        "bytes": 2683,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red02.stdout.txt",
+        "sha256": "e2fd6254d871fc8fa0409b4fa6b1a6d4fa76e31651e3fefb7f9a6aff710a6023"
+      }
+    },
+    "red02.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 965,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red02.test_b3_full_context_registration.py.source.txt",
+        "sha256": "c5bb4fa6040df2fe6d7a448a6434b4f3602b3d5584846de7ee063856f4d6a48f"
+      },
+      "original": {
+        "bytes": 965,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red02.test_b3_full_context_registration.py",
+        "sha256": "c5bb4fa6040df2fe6d7a448a6434b4f3602b3d5584846de7ee063856f4d6a48f"
+      }
+    },
+    "red03.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 6337,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "9931ff410c50af13dc84616360f73eab54b40f4ad6c3491e4b56e2d7e0fd0359"
+      },
+      "original": {
+        "bytes": 6337,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03.bridge_b3_full_context_observed.py",
+        "sha256": "9931ff410c50af13dc84616360f73eab54b40f4ad6c3491e4b56e2d7e0fd0359"
+      }
+    },
+    "red03.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "red03.invocation.json": {
+      "archived": {
+        "bytes": 1688,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.invocation.json",
+        "sha256": "bbd0b56e52c74bfe3adad3a30ca9c5c9d3780869678efb33ab74fddd42236963"
+      },
+      "original": {
+        "bytes": 1688,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03.invocation.json",
+        "sha256": "bbd0b56e52c74bfe3adad3a30ca9c5c9d3780869678efb33ab74fddd42236963"
+      }
+    },
+    "red03.junit.xml": {
+      "archived": {
+        "bytes": 16695,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.junit.xml",
+        "sha256": "4cbc2f177aa9b930e6cbaf59c8a07a44881353bf28c87a6414dae5693f8e8819"
+      },
+      "original": {
+        "bytes": 16695,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03.junit.xml",
+        "sha256": "4cbc2f177aa9b930e6cbaf59c8a07a44881353bf28c87a6414dae5693f8e8819"
+      }
+    },
+    "red03.result.json": {
+      "archived": {
+        "bytes": 2375,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.result.json",
+        "sha256": "7a00418c1dc491c5cf1c5838431b739e8bdbd96b13eae87276f3e022f5cccb7e"
+      },
+      "original": {
+        "bytes": 2375,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03.result.json",
+        "sha256": "7a00418c1dc491c5cf1c5838431b739e8bdbd96b13eae87276f3e022f5cccb7e"
+      }
+    },
+    "red03.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "red03.stdout.txt": {
+      "archived": {
+        "bytes": 16893,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.stdout.txt",
+        "sha256": "2d0c388a37d14fa16646485e48846a73a2e5ea36299f3e64a126178154e32dbb"
+      },
+      "original": {
+        "bytes": 16893,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03.stdout.txt",
+        "sha256": "2d0c388a37d14fa16646485e48846a73a2e5ea36299f3e64a126178154e32dbb"
+      }
+    },
+    "red03.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 2478,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red03.test_b3_full_context_registration.py.source.txt",
+        "sha256": "5199b13393547cc6b7046ff702711438c1540d7d3bfa0ab8d786e4a5c96f3c39"
+      },
+      "original": {
+        "bytes": 2478,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red03.test_b3_full_context_registration.py",
+        "sha256": "5199b13393547cc6b7046ff702711438c1540d7d3bfa0ab8d786e4a5c96f3c39"
+      }
+    },
+    "red04.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 7525,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "df1837cfb08928168687bba8bc0fd196d8bf8b1733ad68d5c6b88e61679d1d54"
+      },
+      "original": {
+        "bytes": 7525,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04.bridge_b3_full_context_observed.py",
+        "sha256": "df1837cfb08928168687bba8bc0fd196d8bf8b1733ad68d5c6b88e61679d1d54"
+      }
+    },
+    "red04.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "red04.invocation.json": {
+      "archived": {
+        "bytes": 1688,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.invocation.json",
+        "sha256": "704db08e0d3adbbca537aab28326e776163d9019d7a88f259b389104ae140b94"
+      },
+      "original": {
+        "bytes": 1688,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04.invocation.json",
+        "sha256": "704db08e0d3adbbca537aab28326e776163d9019d7a88f259b389104ae140b94"
+      }
+    },
+    "red04.junit.xml": {
+      "archived": {
+        "bytes": 29797,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.junit.xml",
+        "sha256": "3a8d7786deb33a3d4bd540020e2f1b87abeeafdee5485d13f22e8e90b88981c4"
+      },
+      "original": {
+        "bytes": 29797,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04.junit.xml",
+        "sha256": "3a8d7786deb33a3d4bd540020e2f1b87abeeafdee5485d13f22e8e90b88981c4"
+      }
+    },
+    "red04.result.json": {
+      "archived": {
+        "bytes": 2374,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.result.json",
+        "sha256": "6a1e3ca393a5f79ad6ae26b8410d238d077e11ead647a5158c6aca38630c7aac"
+      },
+      "original": {
+        "bytes": 2374,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04.result.json",
+        "sha256": "6a1e3ca393a5f79ad6ae26b8410d238d077e11ead647a5158c6aca38630c7aac"
+      }
+    },
+    "red04.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "red04.stdout.txt": {
+      "archived": {
+        "bytes": 29122,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.stdout.txt",
+        "sha256": "59ed1844d2ebcbf2ac38db17b07b05af0ddf2c0585d2d41d86782168261d9e9c"
+      },
+      "original": {
+        "bytes": 29122,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04.stdout.txt",
+        "sha256": "59ed1844d2ebcbf2ac38db17b07b05af0ddf2c0585d2d41d86782168261d9e9c"
+      }
+    },
+    "red04.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 4926,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red04.test_b3_full_context_registration.py.source.txt",
+        "sha256": "21783b9e545c353bed6517140849ea0e20b907ab0733fa92d909f912daac921a"
+      },
+      "original": {
+        "bytes": 4926,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red04.test_b3_full_context_registration.py",
+        "sha256": "21783b9e545c353bed6517140849ea0e20b907ab0733fa92d909f912daac921a"
+      }
+    },
+    "red05.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 9309,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "82e17ebb50c65d1c357a00320b33d9e26a57be17cae7a96dda4e698d64a3b510"
+      },
+      "original": {
+        "bytes": 9309,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05.bridge_b3_full_context_observed.py",
+        "sha256": "82e17ebb50c65d1c357a00320b33d9e26a57be17cae7a96dda4e698d64a3b510"
+      }
+    },
+    "red05.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "red05.invocation.json": {
+      "archived": {
+        "bytes": 1688,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.invocation.json",
+        "sha256": "d1005e9bf152ed2fe6fd11b6b5c0c1a5423d488a62ea59f8345f6d8a067b2497"
+      },
+      "original": {
+        "bytes": 1688,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05.invocation.json",
+        "sha256": "d1005e9bf152ed2fe6fd11b6b5c0c1a5423d488a62ea59f8345f6d8a067b2497"
+      }
+    },
+    "red05.junit.xml": {
+      "archived": {
+        "bytes": 21059,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.junit.xml",
+        "sha256": "d16ca5f4f080f8c5124b309a1632f6e82009db45cde7b4798379109510b607ef"
+      },
+      "original": {
+        "bytes": 21059,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05.junit.xml",
+        "sha256": "d16ca5f4f080f8c5124b309a1632f6e82009db45cde7b4798379109510b607ef"
+      }
+    },
+    "red05.result.json": {
+      "archived": {
+        "bytes": 2375,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.result.json",
+        "sha256": "bd2d4cfc840884bb0c69a8b522df4c309d1b5498ec49afb9781ac0ec7213423b"
+      },
+      "original": {
+        "bytes": 2375,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05.result.json",
+        "sha256": "bd2d4cfc840884bb0c69a8b522df4c309d1b5498ec49afb9781ac0ec7213423b"
+      }
+    },
+    "red05.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "red05.stdout.txt": {
+      "archived": {
+        "bytes": 19822,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.stdout.txt",
+        "sha256": "b3289db64df663e9e146f723f13ac66d499d6dfb43a481aa971620654cad7e9e"
+      },
+      "original": {
+        "bytes": 19822,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05.stdout.txt",
+        "sha256": "b3289db64df663e9e146f723f13ac66d499d6dfb43a481aa971620654cad7e9e"
+      }
+    },
+    "red05.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 8641,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red05.test_b3_full_context_registration.py.source.txt",
+        "sha256": "e77f661f0ad5b0e95037aaef42689732da6eeefca7d9d5508008e660715e45a7"
+      },
+      "original": {
+        "bytes": 8641,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red05.test_b3_full_context_registration.py",
+        "sha256": "e77f661f0ad5b0e95037aaef42689732da6eeefca7d9d5508008e660715e45a7"
+      }
+    },
+    "red06.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 19366,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "7560ddc4eb861835e21a4f9ae4601cc38373aa643dfb7ff3a8d304d05600255b"
+      },
+      "original": {
+        "bytes": 19366,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.bridge_b3_full_context_observed.py",
+        "sha256": "7560ddc4eb861835e21a4f9ae4601cc38373aa643dfb7ff3a8d304d05600255b"
+      }
+    },
+    "red06.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "red06.invocation.json": {
+      "archived": {
+        "bytes": 1689,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.invocation.json",
+        "sha256": "6c8309091cdb30bd238cafcf3cf55c21a3df9c92cd8209e536b894321fe01c6b"
+      },
+      "original": {
+        "bytes": 1689,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.invocation.json",
+        "sha256": "6c8309091cdb30bd238cafcf3cf55c21a3df9c92cd8209e536b894321fe01c6b"
+      }
+    },
+    "red06.junit.xml": {
+      "archived": {
+        "bytes": 47696,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.junit.xml",
+        "sha256": "6f734d35f5a0608be5d6e6f0bc14045123e1e67f2aa3a619a0d0fa15aadcca8b"
+      },
+      "original": {
+        "bytes": 47696,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.junit.xml",
+        "sha256": "6f734d35f5a0608be5d6e6f0bc14045123e1e67f2aa3a619a0d0fa15aadcca8b"
+      }
+    },
+    "red06.result.json": {
+      "archived": {
+        "bytes": 2376,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.result.json",
+        "sha256": "3fc680eaed787d7b32eeab2d1637d6a9c67ec371e48029d8e177d6d11bd0d9aa"
+      },
+      "original": {
+        "bytes": 2376,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.result.json",
+        "sha256": "3fc680eaed787d7b32eeab2d1637d6a9c67ec371e48029d8e177d6d11bd0d9aa"
+      }
+    },
+    "red06.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "red06.stdout.txt": {
+      "archived": {
+        "bytes": 44193,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.stdout.txt",
+        "sha256": "258f1925b10d0c3e4684b7f8f8e81878dcbdf93a1cce805d3e14fcc285140dbf"
+      },
+      "original": {
+        "bytes": 44193,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.stdout.txt",
+        "sha256": "258f1925b10d0c3e4684b7f8f8e81878dcbdf93a1cce805d3e14fcc285140dbf"
+      }
+    },
+    "red06.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 9517,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red06.test_b3_full_context_registration.py.source.txt",
+        "sha256": "3fe9fa6a5f4d04b1907221abb3c477612bd944a96744f4432f146fa3b36e5763"
+      },
+      "original": {
+        "bytes": 9517,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.test_b3_full_context_registration.py",
+        "sha256": "3fe9fa6a5f4d04b1907221abb3c477612bd944a96744f4432f146fa3b36e5763"
+      }
+    },
+    "red07.bridge_b3_full_context_observed.py": {
+      "archived": {
+        "bytes": 27583,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.bridge_b3_full_context_observed.py.source.txt",
+        "sha256": "9b905e40b94b38b26e70b69ed150cd6cf41cf4225139a66f3319c264f64a45bd"
+      },
+      "original": {
+        "bytes": 27583,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07.bridge_b3_full_context_observed.py",
+        "sha256": "9b905e40b94b38b26e70b69ed150cd6cf41cf4225139a66f3319c264f64a45bd"
+      }
+    },
+    "red07.capture.py": {
+      "archived": {
+        "bytes": 3902,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.capture.py.source.txt",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      },
+      "original": {
+        "bytes": 3902,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07.capture.py",
+        "sha256": "ef087e28a8b694133c4b6e3b213a19f9fc64da792f52fe0c4003209d0f6fdfbf"
+      }
+    },
+    "red07.invocation.json": {
+      "archived": {
+        "bytes": 1690,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.invocation.json",
+        "sha256": "b6f0691f4b75acc298d338d52793f2ad0592e6b8e8aa2258b2b40d25f3cf0192"
+      },
+      "original": {
+        "bytes": 1690,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07.invocation.json",
+        "sha256": "b6f0691f4b75acc298d338d52793f2ad0592e6b8e8aa2258b2b40d25f3cf0192"
+      }
+    },
+    "red07.junit.xml": {
+      "archived": {
+        "bytes": 9529,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.junit.xml",
+        "sha256": "703cf178212e5a40a597a05bb610fa714f4405bcc08489a20eb21bd681cde58b"
+      },
+      "original": {
+        "bytes": 9529,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07.junit.xml",
+        "sha256": "703cf178212e5a40a597a05bb610fa714f4405bcc08489a20eb21bd681cde58b"
+      }
+    },
+    "red07.result.json": {
+      "archived": {
+        "bytes": 2376,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.result.json",
+        "sha256": "d96f7ead461caed819ae039a135b3bed8f23773975724d9be9e31f6def6b7dc3"
+      },
+      "original": {
+        "bytes": 2376,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07.result.json",
+        "sha256": "d96f7ead461caed819ae039a135b3bed8f23773975724d9be9e31f6def6b7dc3"
+      }
+    },
+    "red07.stderr.txt": {
+      "archived": {
+        "bytes": 0,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original": {
+        "bytes": 0,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "red07.stdout.txt": {
+      "archived": {
+        "bytes": 6458,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.stdout.txt",
+        "sha256": "7589ecaebe6fbecbf38ea0bc435d771473592af75998fc7c85d15a2e0f47df41"
+      },
+      "original": {
+        "bytes": 6458,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07.stdout.txt",
+        "sha256": "7589ecaebe6fbecbf38ea0bc435d771473592af75998fc7c85d15a2e0f47df41"
+      }
+    },
+    "red07.test_b3_full_context_registration.py": {
+      "archived": {
+        "bytes": 10490,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/red07.test_b3_full_context_registration.py.source.txt",
+        "sha256": "ef07c44f90a42b062ddc929588996a43761f284c1217a496088a43684f1f76c2"
+      },
+      "original": {
+        "bytes": 10490,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red07.test_b3_full_context_registration.py",
+        "sha256": "ef07c44f90a42b062ddc929588996a43761f284c1217a496088a43684f1f76c2"
+      }
+    },
+    "static_checks_final01.json": {
+      "archived": {
+        "bytes": 1826,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/static_checks_final01.json",
+        "sha256": "24f6bf9f2a14ea6e20d4c4023c09f0fbe60b00bf8cb62789a429d0eebe592bda"
+      },
+      "original": {
+        "bytes": 1826,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/static_checks_final01.json",
+        "sha256": "24f6bf9f2a14ea6e20d4c4023c09f0fbe60b00bf8cb62789a429d0eebe592bda"
+      }
+    },
+    "static_checks_final02.json": {
+      "archived": {
+        "bytes": 2995,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/static_checks_final02.json",
+        "sha256": "73919ebb60478d9e9081812dffc6205feb5dfeb78cccd8ee08ec0a78eac993ea"
+      },
+      "original": {
+        "bytes": 2995,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/static_checks_final02.json",
+        "sha256": "73919ebb60478d9e9081812dffc6205feb5dfeb78cccd8ee08ec0a78eac993ea"
+      }
+    },
+    "static_checks_v1.json": {
+      "archived": {
+        "bytes": 1812,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/static_checks_v1.json",
+        "sha256": "7c1d9363ec48787a7774ab67273b6758e9d128a37c9fca36d3790c7b339f6de6"
+      },
+      "original": {
+        "bytes": 1812,
+        "path": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/static_checks_v1.json",
+        "sha256": "7c1d9363ec48787a7774ab67273b6758e9d128a37c9fca36d3790c7b339f6de6"
+      }
+    }
+  },
+  "registration_published": false,
+  "remote_new_registration_suite": "pending",
+  "runtime_admission_granted": false,
+  "schema": "b3_registration_metadata_evidence_v1",
+  "source_admission_granted": false,
+  "source_files": {
+    ".github/workflows/finetune-tests.yml": {
+      "bytes": 5421,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/candidate_sources/.github/workflows/finetune-tests.yml.source.txt",
+      "sha256": "aa4a51c94f4790e7e421d53949d9aa18d3bf1c409601d6fc452d194b40577e6f"
+    },
+    "scripts/bridge_b3_full_context_observed.py": {
+      "bytes": 30534,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/candidate_sources/scripts/bridge_b3_full_context_observed.py.source.txt",
+      "sha256": "571c34b65b2f0e5c5a156e2f808f6db8c35fb83267d1b0dce04dda8029b1371f"
+    },
+    "test/test_b3_full_context_registration.py": {
+      "bytes": 16572,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/registration_metadata_v1/candidate_sources/test/test_b3_full_context_registration.py.source.txt",
+      "sha256": "a4ea76541577d0fbde2e37610734edf5354f99b140e9c96a27992518e8730346"
+    }
+  },
+  "standalone_command_raw_stdio_close_seconds": 14.863631182000063,
+  "standalone_metadata_passed": 36,
+  "ticket_05": "open",
+  "ticket_11": "excluded"
+}

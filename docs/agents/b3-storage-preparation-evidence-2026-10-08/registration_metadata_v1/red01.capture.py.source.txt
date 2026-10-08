@@ -1,0 +1,65 @@
+"""Capture one stdlib-only registration pytest file, with every write on D:."""
+
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import resource
+import signal
+import subprocess
+import sys
+import time
+
+ROOT = Path(__file__).resolve().parents[4]
+CAPTURE = Path(__file__).resolve().parent
+SOURCES = [ROOT / "scripts/bridge_b3_full_context_observed.py", ROOT / "test/test_b3_full_context_registration.py"]
+
+
+def reference(path):
+    data = path.read_bytes()
+    return {"path": str(path), "bytes": len(data), "sha256": sha256(data).hexdigest()}
+
+
+def snapshot():
+    return {str(path): reference(path) if path.is_file() else None for path in SOURCES}
+
+
+def main():
+    label = sys.argv[1]
+    if not label.isalnum():
+        raise ValueError("Require a fresh alphanumeric capture label")
+    prefix = CAPTURE / label
+    outputs = {name: Path(str(prefix) + suffix) for name, suffix in {"stdout": ".stdout.txt", "stderr": ".stderr.txt", "junit": ".junit.xml", "result": ".result.json", "invocation": ".invocation.json"}.items()}
+    if any(path.exists() for path in outputs.values()):
+        raise FileExistsError("Capture receipts are immutable")
+    before = snapshot()
+    command = [sys.executable, "-B", "-m", "pytest", "--noconftest", "-p", "no:cacheprovider", "-q", str(SOURCES[1]), "--basetemp=" + str(prefix) + "_basetemp", "--junitxml=" + str(outputs["junit"])]
+    command.extend(sys.argv[2:])
+    environment = dict(os.environ)
+    environment.update({"PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1", "PYTEST_ADDOPTS": "", "PYTEST_PLUGINS": "", "PYTHONDONTWRITEBYTECODE": "1", "PYTHONNOUSERSITE": "1", "TMPDIR": str(CAPTURE / "tmp"), "TMP": str(CAPTURE / "tmp"), "TEMP": str(CAPTURE / "tmp"), "XDG_CACHE_HOME": str(CAPTURE / "cache"), "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "NUMEXPR_NUM_THREADS": "1", "CUDA_VISIBLE_DEVICES": ""})
+    outputs["invocation"].write_text(json.dumps({"argv": command, "cwd": str(ROOT), "source_before": before, "capture_source": reference(Path(__file__)), "scope": "single_metadata_test_file_no_conftest_or_external_plugins", "max_seconds": 120, "max_address_space_bytes": 4 * 1024**3, "all_capture_paths_on_D": True}, indent=2) + "\n")
+    started = time.monotonic()
+
+    def limits():
+        resource.setrlimit(resource.RLIMIT_AS, (4 * 1024**3, 4 * 1024**3))
+        resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+
+    timed_out = False
+    with outputs["stdout"].open("xb") as out, outputs["stderr"].open("xb") as err:
+        child = subprocess.Popen(command, cwd=ROOT, env=environment, stdout=out, stderr=err, preexec_fn=limits, start_new_session=True)
+        try:
+            code = child.wait(timeout=120)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            os.killpg(child.pid, signal.SIGKILL)
+            code = child.wait()
+    elapsed = time.monotonic() - started
+    after = snapshot()
+    result = {"scope": "metadata_pytest_command_through_raw_stdio_close", "return_code": code, "timed_out": timed_out, "elapsed_seconds": elapsed, "source_before": before, "source_after": after, "source_bytes_stable": before == after, "raw": {name: reference(path) for name, path in outputs.items() if name in {"stdout", "stderr", "junit"} and path.exists()}, "source_admission_granted": False, "runtime_admission_granted": False, "numerical_validation_performed": False}
+    outputs["result"].write_text(json.dumps(result, indent=2) + "\n")
+    print(json.dumps({"result": str(outputs["result"]), "return_code": code, "elapsed_seconds": elapsed, "source_bytes_stable": before == after}))
+    return code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

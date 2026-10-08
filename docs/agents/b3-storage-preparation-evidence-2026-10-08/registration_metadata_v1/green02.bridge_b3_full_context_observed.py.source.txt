@@ -1,0 +1,175 @@
+"""Inspect prospective registration metadata and refuse unavailable predecessors.
+
+This addressable bridge slice publishes no completed registration. Source/run
+admission, genuine preparation reconciliation and authority are separate gates.
+Only stdlib metadata functions may execute here; assets are admitted as bytes.
+"""
+
+from __future__ import annotations
+
+from hashlib import sha256
+import json
+import math
+import os
+from pathlib import Path
+import resource
+import shutil
+import stat
+import time
+
+ROOT = Path(__file__).resolve().parents[1]
+PUBLIC_SOURCE = ROOT / "scripts/bridge_b3_full_context_observed.py"
+MIB = 1024**2
+METADATA_LIMIT = MIB
+REQUEST_FIELDS = {
+    "schema", "phase", "registration_profile", "family", "family_sha256", "decision_evidence", "preparation",
+    "source_bindings", "producer_intent", "issuer_source_admission", "rng_contract", "execution_catalog",
+    "consumer_file_sha256",
+}
+PROFILES = {"project_organogenesis_v1", "synthetic_stored_arithmetic_v1"}
+
+
+class _Budget:
+    def __init__(self, parent: Path, max_seconds: float):
+        if type(max_seconds) not in (int, float) or not math.isfinite(max_seconds) or not 0 < max_seconds <= 900:
+            raise ValueError("Registration seconds must be positive and at most 900")
+        self.deadline = time.monotonic() + max_seconds
+        self.parent = parent
+        self.check()
+
+    def check(self):
+        if time.monotonic() >= self.deadline:
+            raise TimeoutError("Registration inspection reached its original deadline")
+        if resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 >= 4 * 1024**3:
+            raise MemoryError("Registration inspection exceeds 4 GiB RSS")
+        available = next(
+            (int(line.split()[1]) * 1024 for line in Path("/proc/meminfo").read_text().splitlines() if line.startswith("MemAvailable:")),
+            0,
+        )
+        if available < 4 * 1024**3:
+            raise MemoryError("Registration inspection requires 4 GiB available host RAM")
+        if shutil.disk_usage(self.parent).free - 2 * MIB < 20 * 1024**3:
+            raise OSError("Registration inspection requires 20 GiB free disk after reservation")
+
+
+def _path(value: str) -> Path:
+    if type(value) is not str or not value or value.strip() != value or len(value.encode()) > 4096:
+        raise ValueError("Require a bounded canonical absolute path")
+    path = Path(value)
+    if not path.is_absolute() or str(path) != value or ".." in path.parts or value.startswith("//"):
+        raise ValueError("Require a canonical absolute path without aliases")
+    if path.resolve() != path:
+        raise ValueError("Canonical paths cannot use symlink aliases")
+    return path
+
+
+def _json(raw: bytes) -> dict:
+    def unique(pairs):
+        record = {}
+        for key, value in pairs:
+            if key in record:
+                raise ValueError("Duplicate registration JSON key")
+            record[key] = value
+        return record
+
+    def invalid(value):
+        raise ValueError("Nonfinite registration JSON number: " + value)
+
+    value = json.loads(raw, object_pairs_hook=unique, parse_constant=invalid)
+    if type(value) is not dict:
+        raise ValueError("Require a closed registration JSON object")
+    return value
+
+
+def _closed(value, fields, role):
+    if type(value) is not dict or set(value) != fields:
+        raise ValueError("Require the exact closed " + role + " fields")
+    return value
+
+
+class _Inputs:
+    def __init__(self, budget: _Budget):
+        self.budget = budget
+        self.files = {}
+
+    def read(self, path: Path, limit: int = METADATA_LIMIT) -> bytes:
+        self.budget.check()
+        path = _path(str(path))
+        before = path.lstat()
+        if not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+            raise ValueError("Require a bounded original regular metadata file")
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        identity = (before.st_dev, before.st_ino)
+        self.files[path] = (fd, identity, None)
+        opened = os.fstat(fd)
+        if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino, opened.st_size) != (*identity, before.st_size):
+            raise ValueError("Original metadata storage changed during admission")
+        raw = bytearray()
+        while block := os.read(fd, min(65536, limit + 1 - len(raw))):
+            self.budget.check()
+            if len(raw) + len(block) > limit:
+                raise ValueError("Original metadata exceeds its bounded size")
+            raw.extend(block)
+        if len(raw) != before.st_size:
+            raise ValueError("Original metadata bytes changed during admission")
+        data = bytes(raw)
+        self.files[path] = (fd, identity, sha256(data).hexdigest())
+        return data
+
+    def seal(self):
+        for path, (fd, identity, digest) in self.files.items():
+            self.budget.check()
+            opened, current = os.fstat(fd), path.lstat()
+            if (opened.st_dev, opened.st_ino) != identity or (current.st_dev, current.st_ino) != identity:
+                raise ValueError("Original metadata pathname or descriptor changed")
+            if _path(str(path)) != path:
+                raise ValueError("Original metadata alias changed")
+            if digest is not None:
+                os.lseek(fd, 0, os.SEEK_SET)
+                actual = sha256()
+                while block := os.read(fd, 65536):
+                    self.budget.check()
+                    actual.update(block)
+                if actual.hexdigest() != digest:
+                    raise ValueError("Original metadata bytes changed before refusal")
+
+    def close(self):
+        failure = None
+        for fd, identity, _ in self.files.values():
+            try:
+                current = os.fstat(fd)
+                if not stat.S_ISREG(current.st_mode) or (current.st_dev, current.st_ino) != identity:
+                    raise RuntimeError("Preserved foreign input descriptor during cleanup")
+                os.close(fd)
+            except BaseException as error:
+                if failure is None:
+                    failure = error
+        if failure is not None:
+            raise failure
+
+
+def run(request_path: Path, output: Path, *, max_seconds=900):
+    """Inspect one persistent request; never manufacture registration evidence."""
+    output = _path(str(Path(output).absolute()))
+    if not output.parent.is_dir():
+        raise ValueError("Registration output parent must already exist")
+    budget = _Budget(output.parent, max_seconds)
+    inputs = _Inputs(budget)
+    try:
+        request = _json(inputs.read(Path(request_path).absolute()))
+        _closed(request, REQUEST_FIELDS, "request")
+        if request["schema"] != "b3_full_context_family_registration_request_v2":
+            raise ValueError("Unsupported registration request schema")
+        if request["phase"] not in ("register", "replay_registration"):
+            raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+        if request["registration_profile"] not in PROFILES:
+            raise ValueError("Unsupported registration profile")
+        if request["phase"] == "register" and request["execution_catalog"] is not None:
+            raise ValueError("Register cannot supply an execution catalog")
+        raise ValueError("Registration inspection requires an actual family Ref")
+    finally:
+        try:
+            inputs.seal()
+        finally:
+            inputs.close()
+        budget.check()

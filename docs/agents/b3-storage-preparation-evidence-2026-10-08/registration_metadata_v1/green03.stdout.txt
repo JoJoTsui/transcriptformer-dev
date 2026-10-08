@@ -1,0 +1,49 @@
+..........F
+=================================== FAILURES ===================================
+_________ test_family_references_require_original_regular_bytes[fifo] __________
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green03_basetemp/test_family_references_require5')
+fault = 'fifo'
+
+    @pytest.mark.parametrize("fault", ["boolean_size", "wrong_hash", "wrong_size", "unknown_ref_field", "symlink", "fifo"])
+    def test_family_references_require_original_regular_bytes(tmp_path, fault):
+        body, _, family_path = family_request(tmp_path)
+        if fault == "boolean_size":
+            body["family"]["bytes"] = True
+            message = "strict.*size"
+        elif fault == "wrong_hash":
+            body["family"]["sha256"] = "0" * 64
+            message = "hash"
+        elif fault == "wrong_size":
+            body["family"]["bytes"] += 1
+            message = "size|bytes"
+        elif fault == "unknown_ref_field":
+            body["family"]["approved"] = True
+            message = "closed.*Ref"
+        elif fault == "symlink":
+            alias = tmp_path / "family_alias.json"
+            alias.symlink_to(family_path)
+            body["family"]["path"] = str(alias)
+            message = "alias"
+        else:
+            family_path.unlink()
+>           os.mkfifo(family_path)
+E           OSError: [Errno 95] Operation not supported
+
+test/test_b3_full_context_registration.py:132: OSError
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/green03.junit.xml -
+=========================== short test summary info ============================
+FAILED test/test_b3_full_context_registration.py::test_family_references_require_original_regular_bytes[fifo]
+1 failed, 10 passed, 2 warnings in 1.24s

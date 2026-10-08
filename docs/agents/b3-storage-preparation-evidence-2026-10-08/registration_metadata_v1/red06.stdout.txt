@@ -1,0 +1,665 @@
+...............FFFFFF
+=================================== FAILURES ===================================
+_ test_unadmitted_predecessors_still_require_closed_declarations[preparation-closed Preparation] _
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s0')
+field = 'preparation', message = 'closed Preparation'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+>           public().run(request, output)
+
+test/test_b3_full_context_registration.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s0/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s0/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+            family = _json(_read_ref(inputs, request["family"], "family"))
+            consumers = _filemap(request["consumer_file_sha256"], SOFTWARE)
+            for name, expected in consumers.items():
+                raw = inputs.read(Path(name))
+                if sha256(raw).hexdigest() != expected:
+                    raise ValueError("Original consumer source hash differs")
+            helpers = _family_helpers(inputs.read(FAMILY_SOURCE))
+            keys = _family(family, request["family_sha256"], helpers, inputs, output, request["registration_profile"])
+            bindings = _source_keys(request["source_bindings"], keys, "source_bindings")
+            intents = _source_keys(request["producer_intent"], keys, "producer_intent")
+            missing = {"genuine_preparation_reconciliation", "independent_source_admission", "registration_publication_and_replay"}
+            for field, gate in (("preparation", "genuine_preparation"), ("issuer_source_admission", "accepted_issuer_source_admission"), ("decision_evidence", "decision_evidence"), ("rng_contract", "rng_contract")):
+                if request[field] is None:
+                    missing.add(gate)
+            if any(value is None for value in bindings.values()):
+                missing.add("complete_source_bindings")
+            if any(value is None for value in intents.values()):
+                missing.add("complete_producer_intent")
+            inspection = {
+                "scope": "request_and_frozen_family_metadata_only",
+                "registration_profile": request["registration_profile"],
+                "family_sha256": request["family_sha256"],
+                "comparison_ids": [item["comparison_id"] for item in family["comparisons"]],
+                "source_keys": keys,
+                "consumer_file_count": len(consumers),
+                "source_admission_granted": False,
+                "runtime_admission_granted": False,
+                "complete_execution_inventory_verified": False,
+            }
+>           raise RegistrationUnavailable(missing, inspection)
+E           b3_registration_public.RegistrationUnavailable: Registration remains unavailable: accepted_issuer_source_admission, complete_producer_intent, complete_source_bindings, decision_evidence, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay, rng_contract
+
+scripts/bridge_b3_full_context_observed.py:402: RegistrationUnavailable
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s0')
+field = 'preparation', message = 'closed Preparation'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+>       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'closed Preparation'
+E        Input: 'Registration remains unavailable: accepted_issuer_source_admission, complete_producer_intent, complete_source_bindings, decision_evidence, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay, rng_contract'
+
+test/test_b3_full_context_registration.py:223: AssertionError
+_ test_unadmitted_predecessors_still_require_closed_declarations[decision_evidence-closed DecisionEvidence] _
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s1')
+field = 'decision_evidence', message = 'closed DecisionEvidence'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+>           public().run(request, output)
+
+test/test_b3_full_context_registration.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s1/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s1/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+            family = _json(_read_ref(inputs, request["family"], "family"))
+            consumers = _filemap(request["consumer_file_sha256"], SOFTWARE)
+            for name, expected in consumers.items():
+                raw = inputs.read(Path(name))
+                if sha256(raw).hexdigest() != expected:
+                    raise ValueError("Original consumer source hash differs")
+            helpers = _family_helpers(inputs.read(FAMILY_SOURCE))
+            keys = _family(family, request["family_sha256"], helpers, inputs, output, request["registration_profile"])
+            bindings = _source_keys(request["source_bindings"], keys, "source_bindings")
+            intents = _source_keys(request["producer_intent"], keys, "producer_intent")
+            missing = {"genuine_preparation_reconciliation", "independent_source_admission", "registration_publication_and_replay"}
+            for field, gate in (("preparation", "genuine_preparation"), ("issuer_source_admission", "accepted_issuer_source_admission"), ("decision_evidence", "decision_evidence"), ("rng_contract", "rng_contract")):
+                if request[field] is None:
+                    missing.add(gate)
+            if any(value is None for value in bindings.values()):
+                missing.add("complete_source_bindings")
+            if any(value is None for value in intents.values()):
+                missing.add("complete_producer_intent")
+            inspection = {
+                "scope": "request_and_frozen_family_metadata_only",
+                "registration_profile": request["registration_profile"],
+                "family_sha256": request["family_sha256"],
+                "comparison_ids": [item["comparison_id"] for item in family["comparisons"]],
+                "source_keys": keys,
+                "consumer_file_count": len(consumers),
+                "source_admission_granted": False,
+                "runtime_admission_granted": False,
+                "complete_execution_inventory_verified": False,
+            }
+>           raise RegistrationUnavailable(missing, inspection)
+E           b3_registration_public.RegistrationUnavailable: Registration remains unavailable: accepted_issuer_source_admission, complete_producer_intent, complete_source_bindings, genuine_preparation, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay, rng_contract
+
+scripts/bridge_b3_full_context_observed.py:402: RegistrationUnavailable
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s1')
+field = 'decision_evidence', message = 'closed DecisionEvidence'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+>       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'closed DecisionEvidence'
+E        Input: 'Registration remains unavailable: accepted_issuer_source_admission, complete_producer_intent, complete_source_bindings, genuine_preparation, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay, rng_contract'
+
+test/test_b3_full_context_registration.py:223: AssertionError
+_ test_unadmitted_predecessors_still_require_closed_declarations[rng_contract-closed RNG] _
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s2')
+field = 'rng_contract', message = 'closed RNG'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+>           public().run(request, output)
+
+test/test_b3_full_context_registration.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s2/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s2/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+            family = _json(_read_ref(inputs, request["family"], "family"))
+            consumers = _filemap(request["consumer_file_sha256"], SOFTWARE)
+            for name, expected in consumers.items():
+                raw = inputs.read(Path(name))
+                if sha256(raw).hexdigest() != expected:
+                    raise ValueError("Original consumer source hash differs")
+            helpers = _family_helpers(inputs.read(FAMILY_SOURCE))
+            keys = _family(family, request["family_sha256"], helpers, inputs, output, request["registration_profile"])
+            bindings = _source_keys(request["source_bindings"], keys, "source_bindings")
+            intents = _source_keys(request["producer_intent"], keys, "producer_intent")
+            missing = {"genuine_preparation_reconciliation", "independent_source_admission", "registration_publication_and_replay"}
+            for field, gate in (("preparation", "genuine_preparation"), ("issuer_source_admission", "accepted_issuer_source_admission"), ("decision_evidence", "decision_evidence"), ("rng_contract", "rng_contract")):
+                if request[field] is None:
+                    missing.add(gate)
+            if any(value is None for value in bindings.values()):
+                missing.add("complete_source_bindings")
+            if any(value is None for value in intents.values()):
+                missing.add("complete_producer_intent")
+            inspection = {
+                "scope": "request_and_frozen_family_metadata_only",
+                "registration_profile": request["registration_profile"],
+                "family_sha256": request["family_sha256"],
+                "comparison_ids": [item["comparison_id"] for item in family["comparisons"]],
+                "source_keys": keys,
+                "consumer_file_count": len(consumers),
+                "source_admission_granted": False,
+                "runtime_admission_granted": False,
+                "complete_execution_inventory_verified": False,
+            }
+>           raise RegistrationUnavailable(missing, inspection)
+E           b3_registration_public.RegistrationUnavailable: Registration remains unavailable: accepted_issuer_source_admission, complete_producer_intent, complete_source_bindings, decision_evidence, genuine_preparation, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay
+
+scripts/bridge_b3_full_context_observed.py:402: RegistrationUnavailable
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s2')
+field = 'rng_contract', message = 'closed RNG'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+>       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'closed RNG'
+E        Input: 'Registration remains unavailable: accepted_issuer_source_admission, complete_producer_intent, complete_source_bindings, decision_evidence, genuine_preparation, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay'
+
+test/test_b3_full_context_registration.py:223: AssertionError
+_ test_unadmitted_predecessors_still_require_closed_declarations[source_bindings-closed SourceBinding] _
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s3')
+field = 'source_bindings', message = 'closed SourceBinding'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+>           public().run(request, output)
+
+test/test_b3_full_context_registration.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s3/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s3/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+            family = _json(_read_ref(inputs, request["family"], "family"))
+            consumers = _filemap(request["consumer_file_sha256"], SOFTWARE)
+            for name, expected in consumers.items():
+                raw = inputs.read(Path(name))
+                if sha256(raw).hexdigest() != expected:
+                    raise ValueError("Original consumer source hash differs")
+            helpers = _family_helpers(inputs.read(FAMILY_SOURCE))
+            keys = _family(family, request["family_sha256"], helpers, inputs, output, request["registration_profile"])
+            bindings = _source_keys(request["source_bindings"], keys, "source_bindings")
+            intents = _source_keys(request["producer_intent"], keys, "producer_intent")
+            missing = {"genuine_preparation_reconciliation", "independent_source_admission", "registration_publication_and_replay"}
+            for field, gate in (("preparation", "genuine_preparation"), ("issuer_source_admission", "accepted_issuer_source_admission"), ("decision_evidence", "decision_evidence"), ("rng_contract", "rng_contract")):
+                if request[field] is None:
+                    missing.add(gate)
+            if any(value is None for value in bindings.values()):
+                missing.add("complete_source_bindings")
+            if any(value is None for value in intents.values()):
+                missing.add("complete_producer_intent")
+            inspection = {
+                "scope": "request_and_frozen_family_metadata_only",
+                "registration_profile": request["registration_profile"],
+                "family_sha256": request["family_sha256"],
+                "comparison_ids": [item["comparison_id"] for item in family["comparisons"]],
+                "source_keys": keys,
+                "consumer_file_count": len(consumers),
+                "source_admission_granted": False,
+                "runtime_admission_granted": False,
+                "complete_execution_inventory_verified": False,
+            }
+>           raise RegistrationUnavailable(missing, inspection)
+E           b3_registration_public.RegistrationUnavailable: Registration remains unavailable: accepted_issuer_source_admission, complete_producer_intent, complete_source_bindings, decision_evidence, genuine_preparation, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay, rng_contract
+
+scripts/bridge_b3_full_context_observed.py:402: RegistrationUnavailable
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s3')
+field = 'source_bindings', message = 'closed SourceBinding'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+>       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'closed SourceBinding'
+E        Input: 'Registration remains unavailable: accepted_issuer_source_admission, complete_producer_intent, complete_source_bindings, decision_evidence, genuine_preparation, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay, rng_contract'
+
+test/test_b3_full_context_registration.py:223: AssertionError
+_ test_unadmitted_predecessors_still_require_closed_declarations[producer_intent-closed ProducerIntent] _
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s4')
+field = 'producer_intent', message = 'closed ProducerIntent'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+>           public().run(request, output)
+
+test/test_b3_full_context_registration.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s4/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s4/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+            family = _json(_read_ref(inputs, request["family"], "family"))
+            consumers = _filemap(request["consumer_file_sha256"], SOFTWARE)
+            for name, expected in consumers.items():
+                raw = inputs.read(Path(name))
+                if sha256(raw).hexdigest() != expected:
+                    raise ValueError("Original consumer source hash differs")
+            helpers = _family_helpers(inputs.read(FAMILY_SOURCE))
+            keys = _family(family, request["family_sha256"], helpers, inputs, output, request["registration_profile"])
+            bindings = _source_keys(request["source_bindings"], keys, "source_bindings")
+            intents = _source_keys(request["producer_intent"], keys, "producer_intent")
+            missing = {"genuine_preparation_reconciliation", "independent_source_admission", "registration_publication_and_replay"}
+            for field, gate in (("preparation", "genuine_preparation"), ("issuer_source_admission", "accepted_issuer_source_admission"), ("decision_evidence", "decision_evidence"), ("rng_contract", "rng_contract")):
+                if request[field] is None:
+                    missing.add(gate)
+            if any(value is None for value in bindings.values()):
+                missing.add("complete_source_bindings")
+            if any(value is None for value in intents.values()):
+                missing.add("complete_producer_intent")
+            inspection = {
+                "scope": "request_and_frozen_family_metadata_only",
+                "registration_profile": request["registration_profile"],
+                "family_sha256": request["family_sha256"],
+                "comparison_ids": [item["comparison_id"] for item in family["comparisons"]],
+                "source_keys": keys,
+                "consumer_file_count": len(consumers),
+                "source_admission_granted": False,
+                "runtime_admission_granted": False,
+                "complete_execution_inventory_verified": False,
+            }
+>           raise RegistrationUnavailable(missing, inspection)
+E           b3_registration_public.RegistrationUnavailable: Registration remains unavailable: accepted_issuer_source_admission, complete_producer_intent, complete_source_bindings, decision_evidence, genuine_preparation, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay, rng_contract
+
+scripts/bridge_b3_full_context_observed.py:402: RegistrationUnavailable
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s4')
+field = 'producer_intent', message = 'closed ProducerIntent'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+>       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'closed ProducerIntent'
+E        Input: 'Registration remains unavailable: accepted_issuer_source_admission, complete_producer_intent, complete_source_bindings, decision_evidence, genuine_preparation, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay, rng_contract'
+
+test/test_b3_full_context_registration.py:223: AssertionError
+_ test_unadmitted_predecessors_still_require_closed_declarations[issuer_source_admission-closed.*Ref] _
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s5')
+field = 'issuer_source_admission', message = 'closed.*Ref'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+        with pytest.raises(ValueError, match=message):
+>           public().run(request, output)
+
+test/test_b3_full_context_registration.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s5/request.json')
+output = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s5/registration')
+
+    def run(request_path: Path, output: Path, *, max_seconds=900):
+        """Inspect one persistent request; never manufacture registration evidence."""
+        output = _path(str(Path(output).absolute()))
+        if not output.parent.is_dir():
+            raise ValueError("Registration output parent must already exist")
+        budget = _Budget(output.parent, max_seconds)
+        inputs = _Inputs(budget)
+        try:
+            request = _json(inputs.read(Path(request_path).absolute()))
+            _closed(request, REQUEST_FIELDS, "request")
+            if request["schema"] != "b3_full_context_family_registration_request_v2":
+                raise ValueError("Unsupported registration request schema")
+            if request["phase"] not in ("register", "replay_registration"):
+                raise ValueError("Unsupported registration phase; comparison requires admitted owner authority")
+            if request["registration_profile"] not in PROFILES:
+                raise ValueError("Unsupported registration profile")
+            if request["phase"] == "register" and request["execution_catalog"] is not None:
+                raise ValueError("Register cannot supply an execution catalog")
+            family = _json(_read_ref(inputs, request["family"], "family"))
+            consumers = _filemap(request["consumer_file_sha256"], SOFTWARE)
+            for name, expected in consumers.items():
+                raw = inputs.read(Path(name))
+                if sha256(raw).hexdigest() != expected:
+                    raise ValueError("Original consumer source hash differs")
+            helpers = _family_helpers(inputs.read(FAMILY_SOURCE))
+            keys = _family(family, request["family_sha256"], helpers, inputs, output, request["registration_profile"])
+            bindings = _source_keys(request["source_bindings"], keys, "source_bindings")
+            intents = _source_keys(request["producer_intent"], keys, "producer_intent")
+            missing = {"genuine_preparation_reconciliation", "independent_source_admission", "registration_publication_and_replay"}
+            for field, gate in (("preparation", "genuine_preparation"), ("issuer_source_admission", "accepted_issuer_source_admission"), ("decision_evidence", "decision_evidence"), ("rng_contract", "rng_contract")):
+                if request[field] is None:
+                    missing.add(gate)
+            if any(value is None for value in bindings.values()):
+                missing.add("complete_source_bindings")
+            if any(value is None for value in intents.values()):
+                missing.add("complete_producer_intent")
+            inspection = {
+                "scope": "request_and_frozen_family_metadata_only",
+                "registration_profile": request["registration_profile"],
+                "family_sha256": request["family_sha256"],
+                "comparison_ids": [item["comparison_id"] for item in family["comparisons"]],
+                "source_keys": keys,
+                "consumer_file_count": len(consumers),
+                "source_admission_granted": False,
+                "runtime_admission_granted": False,
+                "complete_execution_inventory_verified": False,
+            }
+>           raise RegistrationUnavailable(missing, inspection)
+E           b3_registration_public.RegistrationUnavailable: Registration remains unavailable: complete_producer_intent, complete_source_bindings, decision_evidence, genuine_preparation, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay, rng_contract
+
+scripts/bridge_b3_full_context_observed.py:402: RegistrationUnavailable
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06_basetemp/test_unadmitted_predecessors_s5')
+field = 'issuer_source_admission', message = 'closed.*Ref'
+
+    @pytest.mark.parametrize(
+        ("field", "message"),
+        [("preparation", "closed Preparation"), ("decision_evidence", "closed DecisionEvidence"),
+         ("rng_contract", "closed RNG"), ("source_bindings", "closed SourceBinding"),
+         ("producer_intent", "closed ProducerIntent"), ("issuer_source_admission", "closed.*Ref")],
+    )
+    def test_unadmitted_predecessors_still_require_closed_declarations(tmp_path, field, message):
+        body, _, _ = source_request(tmp_path)
+        if field in {"source_bindings", "producer_intent"}:
+            body[field][str(tmp_path / "future_human")] = {"approved": True}
+        else:
+            body[field] = {"approved": True}
+        request = tmp_path / "request.json"
+        request.write_text(json.dumps(body))
+        output = tmp_path / "registration"
+>       with pytest.raises(ValueError, match=message):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'closed.*Ref'
+E        Input: 'Registration remains unavailable: complete_producer_intent, complete_source_bindings, decision_evidence, genuine_preparation, genuine_preparation_reconciliation, independent_source_admission, registration_publication_and_replay, rng_contract'
+
+test/test_b3_full_context_registration.py:223: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: format
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474
+  /mnt/d/sc/transcriptformer/transcriptformer/.venv/lib/python3.11/site-packages/_pytest/config/__init__.py:1474: PytestConfigWarning: Unknown config option: lint
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/registration_metadata_v1/red06.junit.xml -
+=========================== short test summary info ============================
+FAILED test/test_b3_full_context_registration.py::test_unadmitted_predecessors_still_require_closed_declarations[preparation-closed Preparation]
+FAILED test/test_b3_full_context_registration.py::test_unadmitted_predecessors_still_require_closed_declarations[decision_evidence-closed DecisionEvidence]
+FAILED test/test_b3_full_context_registration.py::test_unadmitted_predecessors_still_require_closed_declarations[rng_contract-closed RNG]
+FAILED test/test_b3_full_context_registration.py::test_unadmitted_predecessors_still_require_closed_declarations[source_bindings-closed SourceBinding]
+FAILED test/test_b3_full_context_registration.py::test_unadmitted_predecessors_still_require_closed_declarations[producer_intent-closed ProducerIntent]
+FAILED test/test_b3_full_context_registration.py::test_unadmitted_predecessors_still_require_closed_declarations[issuer_source_admission-closed.*Ref]
+6 failed, 15 passed, 2 warnings in 7.64s
