@@ -91,6 +91,7 @@ jobs:
             test/test_b3_sparse_bootstrap_draws.py \
             test/test_b3_prepared_sparse_session.py \
             test/test_b3_full_context_observed.py \
+            test/test_b3_full_context_registration.py \
             test/test_b3_full_context_synthetic_fixture.py \
             test/test_b3_full_context_runtime_authority.py \
             test/test_b3_paged_native_common_source_controller.py \
