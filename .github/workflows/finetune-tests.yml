@@ -102,6 +102,7 @@ jobs:
             test/test_b3_issuer_control_start.py \
             test/test_b3_producer_control_source_key.py \
             test/test_b3_producer_control_transport.py \
+            test/test_b3_supervisor_host_storage.py \
             test/test_b3_native_catalog_pages.py \
             test/test_b3_paged_native_bootstrap.py \
             test/test_b3_paged_native_cache.py \
