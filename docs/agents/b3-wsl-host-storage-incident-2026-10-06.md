@@ -4,7 +4,23 @@ The reviewed source at `997519f` has no accepted complete CPU rerun. Its v7
 attempt stopped with a real filesystem failure. Numerical work is stopped
 until the Windows backing storage and Ubuntu filesystem are healthy.
 
-## Direct observations
+## Subsequent host observation — 2026-10-08
+
+A fresh bounded read-only query finds root ext4 `rw` without `emergency_ro`.
+The active Ubuntu VHD still resides on C:, with **11,879,407,616 free bytes**
+(about 11.1 GiB), below the unchanged **20 GiB** floor. D: has
+**411,043,880,960 free bytes** (about 383 GiB); all continuation writes use D:.
+These observations do not establish what repaired the host or caused any
+previous Windows restart.
+
+Physical backing-volume/mount-health admission and the prospective plan are
+now implemented in source. The final 23 metadata checks and independent source
+reviews pass, but the current guarded full-suite attempt refuses before pytest
+launch. Numerical preparation/current-source full regression remain pending;
+original v7 failure receipts below are unchanged. See the
+[October 8 checkpoint and exact raw host metadata](b3-storage-preparation-implementation-2026-10-08.md).
+
+## Original direct observations — 2026-10-06
 
 - Windows PowerShell reports C: **0 free bytes**; D: **411,085,393,920 free
   bytes** (about 383 GiB). The Ubuntu registry records its VHD directory under

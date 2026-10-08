@@ -197,3 +197,16 @@ GNU signal11). All failed receipts and source maps are preserved. No full
 current pass or scientific readiness is inferred. The bounded closure remains
 limited to engineering/record keeping; ticket05 is open and11 excluded.
 See [host incident and next admission requirement](../../../docs/agents/b3-wsl-host-storage-incident-2026-10-06.md).
+
+
+2026-10-08 continuation: the explicit CPU CI selection includes the new
+host-storage module; its original selection guard still requires every
+canonical B3 test module. All 23 local metadata checks pass (20 storage,
+three selection), with D: scratch/caches/artifacts. Source reviews have zero
+remaining findings. Numerical preparation/full-suite validation remains
+unverified locally: actual C: backing storage is about 11.1 GiB free and the
+new guard refuses below 20 GiB before launching pytest. The prospective plan
+is implemented in source and still awaits genuine numerical validation.
+[Current implementation and exact preserved receipts](../../../docs/agents/b3-storage-preparation-implementation-2026-10-08.md)
+synchronize ticket 05 and the readiness index; this ticket retains bounded
+engineering closure without scientific or runtime admission.

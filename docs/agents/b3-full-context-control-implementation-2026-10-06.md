@@ -4,6 +4,16 @@ Ticket 05 remains open; zebrafish ticket 11 is excluded. This implements the
 next stdlib control dependency at the pre-agreed real Start/Permit seam.
 No native/model job, registration or authority admission is created.
 
+## Subsequent storage/preparation checkpoint — 2026-10-08
+
+Physical backing-volume and mount-health admission is now implemented; the
+prospective split plan is written and pinned before genuine preparation in
+source. Its numerical validation remains pending. Actual ext4 is writable,
+but C: backing storage is about 11.1 GiB free and refuses the unchanged 20 GiB
+floor. D: writes, 23 metadata cases and zero-finding final source reviews are
+recorded in the [current checkpoint](b3-storage-preparation-implementation-2026-10-08.md).
+The remaining-gates list below describes the original October 6 checkpoint.
+
 ## Implemented sources
 
 The two planned paths are now canonical software rather than archived drafts:

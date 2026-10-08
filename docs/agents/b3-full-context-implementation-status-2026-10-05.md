@@ -1,6 +1,37 @@
 # Full-context B3 implementation status — 2026-10-05
 
-## Current implementation and host gate — 2026-10-06
+## Current storage and preparation checkpoint — 2026-10-08
+
+At reviewed source `edb7a22`, physical WSL backing-volume admission is
+implemented before producer launch and at heartbeats. Bounded mount checks
+reject `ro`/`emergency_ro`; Windows stdout/stderr collection and its deadline
+are bounded. All temporary/cache/artifact/output writes use D: as authorized.
+
+Actual host metadata finds root ext4 writable without the emergency flag and
+about **383 GiB free on D:**. Ubuntu's VHD remains on **C: with about 11.1 GiB
+free**, below the unchanged **20 GiB** floor. The latest guarded full-suite
+attempt refuses before pytest launches, creates no supervisor namespace/JUnit,
+and leaves source hashes stable. Numerical preparation and complete
+current-source CPU validation remain pending this physical storage gate.
+
+The genuine prospective split plan is now written, fsynced and pinned before
+preparation; returned splits must agree. Its three added numerical regressions
+remain locally unexecuted. **23 metadata/CI-selection cases pass** (20 storage,
+three selection); Ruff check/format/mypy pass. Exact independent final Spec and
+Standards source reviews each have **zero hard/zero optional findings**.
+Original failed reviews and full CPU v7 receipts remain failed and retained.
+Historical v5 `32f9426` 1,310/5 coverage does not validate these new sources.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.**
+Registration/owner/Start/native/allocator/authority/Origin/bridge/v4, project
+effects, complete method cost and reportable comparison remain open. Real
+pilot coverage is **32.54%**, necessary jointly supported draws **0/2,000**;
+reporting veto, null intervals and frozen scientific/resource limits remain.
+
+Evidence: [storage/preparation implementation](b3-storage-preparation-implementation-2026-10-08.md),
+[exact current and failed receipts](b3-storage-preparation-evidence-2026-10-08/manifest.json).
+
+## Previous implementation and host incident — 2026-10-06
 
 Canonical issuer/producer control prerequisites are committed at `997519f`:
 **78 control cases plus 95 unchanged planner cases pass**. Exact independent
