@@ -1,0 +1,264 @@
+{
+  "artifacts": {
+    "actual_host_metadata_observation_v1.json": {
+      "bytes": 1358,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/actual_host_metadata_observation_v1.json",
+      "sha256": "14e6cd271544ba3dbe2671aa608f4883c33b96ed9437ceb97c4b60ace3fedcf3"
+    },
+    "actual_host_storage_probe_v1.json": {
+      "bytes": 175,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/actual_host_storage_probe_v1.json",
+      "sha256": "dcad563488c84ba7006ab32ac6c18cc7ba536a13371feb079610655675487de1"
+    },
+    "actual_host_storage_probe_v2.json": {
+      "bytes": 144,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/actual_host_storage_probe_v2.json",
+      "sha256": "35cb67b65e7fd20f39d7100ae1b0d74ee4a5578e4f95add6de1b13c8d9ef5c42"
+    },
+    "actual_host_storage_probe_v3.json": {
+      "bytes": 144,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/actual_host_storage_probe_v3.json",
+      "sha256": "35cb67b65e7fd20f39d7100ae1b0d74ee4a5578e4f95add6de1b13c8d9ef5c42"
+    },
+    "actual_windows_backing_output_v1.txt": {
+      "bytes": 254,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/actual_windows_backing_output_v1.txt",
+      "sha256": "d87f09069a81e76e30175475d7278a367967e6ad7109e3a6f3d177dfd3415d01"
+    },
+    "full_suite_guarded_invocation_v1.json": {
+      "bytes": 30970,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/full_suite_guarded_invocation_v1.json",
+      "sha256": "edb71d0904c011ec0180efe87499ad4c4d9c6849d550bb16d6878875c69edf76"
+    },
+    "full_suite_guarded_invocation_v2.json": {
+      "bytes": 30970,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/full_suite_guarded_invocation_v2.json",
+      "sha256": "7b700a262804127e4eba45ca389f568cdafdfedcef52e5332cd6001b78e481ba"
+    },
+    "full_suite_guarded_result_v1.json": {
+      "bytes": 239,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/full_suite_guarded_result_v1.json",
+      "sha256": "dfc916e040bc4dd5fa0d1448b780c11992bc17a2ba38e5c2138bd1b9688dac9d"
+    },
+    "full_suite_guarded_result_v2.json": {
+      "bytes": 239,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/full_suite_guarded_result_v2.json",
+      "sha256": "65509648ffcd4f753b3f30f952460c8e4cf06d75ae2e32d166f38e2a36ab18b0"
+    },
+    "full_suite_guarded_stderr_v1.txt": {
+      "bytes": 620,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/full_suite_guarded_stderr_v1.txt",
+      "sha256": "e15f83deea12c523b8816690383b4b59f8aa2706b4f9ddfb5afa5fb964f27d63"
+    },
+    "full_suite_guarded_stderr_v2.txt": {
+      "bytes": 620,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/full_suite_guarded_stderr_v2.txt",
+      "sha256": "e15f83deea12c523b8816690383b4b59f8aa2706b4f9ddfb5afa5fb964f27d63"
+    },
+    "full_suite_guarded_stdout_v1.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/full_suite_guarded_stdout_v1.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "full_suite_guarded_stdout_v2.txt": {
+      "bytes": 0,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/full_suite_guarded_stdout_v2.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "metadata_child_stop_state.json": {
+      "bytes": 2034,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/metadata_child_stop_state.json",
+      "sha256": "57c987c89e3cffaf5c777b5f757a6b0132e49c637389ace7600e67a6bd16bd7e"
+    },
+    "metadata_test_result.json": {
+      "bytes": 1825,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/metadata_test_result.json",
+      "sha256": "6eab51b40f9b938b83790db4d609831d38e4568967e689f9ad8b83c085cff26b"
+    },
+    "spec_review_v1.md": {
+      "bytes": 3575,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/spec_review_v1.md",
+      "sha256": "7c7bcfedb0743297b2ab0f4cbe4b5e98b863428842d1c5958db52d637cee37cb"
+    },
+    "spec_review_v2.md": {
+      "bytes": 3768,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/spec_review_v2.md",
+      "sha256": "757c8a67b97fa4bc581c415aa4173e54bcbf02f0892ef4f6abc13325e3ff8c21"
+    },
+    "spec_review_v3.md": {
+      "bytes": 3655,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/spec_review_v3.md",
+      "sha256": "b3837aa440f3189244fbf85709dc93dd4ef067f87e8a8b0f406b7436645b1fdf"
+    },
+    "standards_review_v1.md": {
+      "bytes": 2937,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/standards_review_v1.md",
+      "sha256": "3cd7b820293826e1c221684955d45844d145d16bd56b5ffadaf0aecbc01dd287"
+    },
+    "standards_review_v2.md": {
+      "bytes": 3077,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/standards_review_v2.md",
+      "sha256": "526117241b7a6f6bad044e9d7dcce142b16aa8904e9294aebcc03d5fbdb9c2e1"
+    },
+    "standards_review_v3.md": {
+      "bytes": 2882,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/standards_review_v3.md",
+      "sha256": "f75ae39a86ce4c88168b8b5e285a9a0070a0174b52066569090f8b88e5d254d7"
+    },
+    "storage_backing_green.xml": {
+      "bytes": 385,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_backing_green.xml",
+      "sha256": "6997698cba5aac0ad39267206bfd617c4cdc480301cd2d6f30b1efea954c1e3e"
+    },
+    "storage_backing_red.xml": {
+      "bytes": 3155,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_backing_red.xml",
+      "sha256": "5fe1af08950a441852e75f3be62d98759768dff45649e6542a633179938e2b8e"
+    },
+    "storage_ci_green.xml": {
+      "bytes": 2739,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_ci_green.xml",
+      "sha256": "79bda67d07c38bb244b4264477c1858657ff251fdd25fdbf6a1c9c572fe43c74"
+    },
+    "storage_final_source.xml": {
+      "bytes": 3166,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_final_source.xml",
+      "sha256": "7b8162ad4c819126933e7e9e67ebb6e8d36c65f1df75ab78f76493f9c44f550f"
+    },
+    "storage_monitor_green.xml": {
+      "bytes": 3166,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_monitor_green.xml",
+      "sha256": "de70f2a486ff1ade09608d7b72fa408610ae61d26c3682ebeac706e4069e4e2a"
+    },
+    "storage_output_ro_green.xml": {
+      "bytes": 2334,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_output_ro_green.xml",
+      "sha256": "1a23fae9212b3fb4af6acb8c224ed3e6c48dc7509cea788e39ddd29356b2fbc0"
+    },
+    "storage_output_ro_red.xml": {
+      "bytes": 3163,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_output_ro_red.xml",
+      "sha256": "3da228f3c9146e1b3e6d30b8f3623db9d2bd6dc43f0c7f96d6a422a714825f49"
+    },
+    "storage_portable_green_v3.xml": {
+      "bytes": 3783,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_portable_green_v3.xml",
+      "sha256": "18a05e6fc332eef66043cbccb5a9c717405291eade8c5892d423e9cfb73518be"
+    },
+    "storage_preparation_static_v2.json": {
+      "bytes": 2295,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_preparation_static_v2.json",
+      "sha256": "f43a53f6280b77f8ee849c255d14c365d0bdda0a216442629be253bdba58fff9"
+    },
+    "storage_preparation_static_v3.json": {
+      "bytes": 2604,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_preparation_static_v3.json",
+      "sha256": "b912cc909a7be55407dc54c8ce01cd3cb67b9262bdf9e37ee0707586e96e00ea"
+    },
+    "storage_review_green.xml": {
+      "bytes": 49124,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_review_green.xml",
+      "sha256": "b63f305d22900210fa597ecf51680edf7cc05c484c1c50b1e26aeaf9928fd13e"
+    },
+    "storage_review_green_v2.xml": {
+      "bytes": 3610,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_review_green_v2.xml",
+      "sha256": "2a639526e3aa4ee1a974075dbabb784ae0bec75588e4668f175418970bfb0c57"
+    },
+    "storage_review_red.xml": {
+      "bytes": 2452,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_review_red.xml",
+      "sha256": "f0140d28e29769a9ea4b7f6db51aeebcf143d12b2ef8fd6df7d4b81a5837ffbe"
+    },
+    "storage_static_v1.json": {
+      "bytes": 838,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_static_v1.json",
+      "sha256": "f813c62e4af51c6d042657b6ab2880184e80858833762e33ae79c33f97c5b49f"
+    },
+    "windows_storage_query_diagnostic_v1.json": {
+      "bytes": 468,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/windows_storage_query_diagnostic_v1.json",
+      "sha256": "a952ec90911bdd00ac279f006b46b941f58579581b35fd4c70518abcfdd5267e"
+    }
+  },
+  "baseline_commit": "b528199707084ce857341017d9ebbed65f915283",
+  "candidate_commit": "edb7a22bf43ac3fa2c18b2fefe0ac358b0cf292e",
+  "final_static_reviews": {
+    "spec": {
+      "hard": 0,
+      "optional": 0,
+      "report": {
+        "bytes": 3655,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/spec_review_v3.md",
+        "sha256": "b3837aa440f3189244fbf85709dc93dd4ef067f87e8a8b0f406b7436645b1fdf"
+      }
+    },
+    "standards": {
+      "hard": 0,
+      "optional": 0,
+      "report": {
+        "bytes": 2882,
+        "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/standards_review_v3.md",
+        "sha256": "f75ae39a86ce4c88168b8b5e285a9a0070a0174b52066569090f8b88e5d254d7"
+      }
+    }
+  },
+  "full_suite_current_candidate": "refused_before_child_launch_physical_backing_below_20_GiB",
+  "historical_v7_full_suite": "failed_889_passes_one_call_failure_one_teardown_error",
+  "metadata_validation": {
+    "errors": 0,
+    "failures": 0,
+    "passed": 23,
+    "runtime_scope": "metadata_only",
+    "skips": 0
+  },
+  "native_allocation_census": null,
+  "preparation_numerical_cases": "13_not_run_current_source",
+  "prior_review_findings": {
+    "v1": {
+      "spec_hard": 1,
+      "standards_hard": 1,
+      "standards_optional": 1
+    },
+    "v2": {
+      "spec_hard": 1,
+      "standards_hard": 2,
+      "standards_optional": 0
+    }
+  },
+  "runtime_admission_granted": false,
+  "schema": "b3_storage_preparation_evidence_v1",
+  "scientific_admission_granted": false,
+  "source_admission_granted": false,
+  "source_files": {
+    ".github/workflows/finetune-tests.yml": {
+      "bytes": 5331,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/candidate_sources/.github/workflows/finetune-tests.yml.source.txt",
+      "sha256": "b66aef670ab1c48cdc30f9a36d703d659bb5c224d0310a5a6123b63c7480fb0a"
+    },
+    "scripts/prepare_b3_full_context_synthetic_fixture.py": {
+      "bytes": 61291,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/candidate_sources/scripts/prepare_b3_full_context_synthetic_fixture.py.source.txt",
+      "sha256": "3275b248e9836aa7e3b3ef28bdd6dd1ce812fe151421bdcaa8227146ee827259"
+    },
+    "scripts/supervise_b3_pilot.py": {
+      "bytes": 18819,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/candidate_sources/scripts/supervise_b3_pilot.py.source.txt",
+      "sha256": "053ca04ca334b3f3b9aa70d8c7804b15b9df59af7fc12adbe68e1968f1347f98"
+    },
+    "test/test_b3_full_context_synthetic_fixture.py": {
+      "bytes": 23537,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/candidate_sources/test/test_b3_full_context_synthetic_fixture.py.source.txt",
+      "sha256": "3f89d2e916aa8f8263fd523cc1b103cc6bd6e9fd702579c18f69128bf959a17c"
+    },
+    "test/test_b3_supervisor_host_storage.py": {
+      "bytes": 10052,
+      "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/candidate_sources/test/test_b3_supervisor_host_storage.py.source.txt",
+      "sha256": "47012ebd9eeea61aae76322a6ebf27f87c5bf2accbb59149f4cb5e28b0bb9dd0"
+    }
+  },
+  "split_mismatch_branch_coverage": "not_claimed",
+  "temporary_artifact_cache_writes": "D_only",
+  "ticket_05": "open",
+  "ticket_11": "excluded"
+}

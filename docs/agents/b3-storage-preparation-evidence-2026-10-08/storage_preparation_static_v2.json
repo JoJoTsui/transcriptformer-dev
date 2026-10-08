@@ -1,0 +1,69 @@
+{
+  "checks": [
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "check",
+        "scripts/supervise_b3_pilot.py",
+        "test/test_b3_supervisor_host_storage.py",
+        "scripts/prepare_b3_full_context_synthetic_fixture.py",
+        "test/test_b3_full_context_synthetic_fixture.py"
+      ],
+      "return_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/joey/micromamba/bin/ruff",
+        "format",
+        "--check",
+        "scripts/supervise_b3_pilot.py",
+        "test/test_b3_supervisor_host_storage.py",
+        "scripts/prepare_b3_full_context_synthetic_fixture.py",
+        "test/test_b3_full_context_synthetic_fixture.py"
+      ],
+      "return_code": 0,
+      "stdout": "4 files already formatted\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-B",
+        "-m",
+        "mypy",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--explicit-package-bases",
+        "scripts/supervise_b3_pilot.py",
+        "test/test_b3_supervisor_host_storage.py",
+        "scripts/prepare_b3_full_context_synthetic_fixture.py",
+        "test/test_b3_full_context_synthetic_fixture.py"
+      ],
+      "return_code": 0,
+      "stdout": "Success: no issues found in 4 source files\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "return_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "source_sha256": {
+    "scripts/supervise_b3_pilot.py": "82d9172c11cd3779a16013f33af5bb9ba0f11acb13e77626ac600320a6d797f3",
+    "test/test_b3_supervisor_host_storage.py": "64dd75674eb57d1356a01fd31ca24a221717c9b7d0385e3a8699e3521095b394",
+    "scripts/prepare_b3_full_context_synthetic_fixture.py": "3275b248e9836aa7e3b3ef28bdd6dd1ce812fe151421bdcaa8227146ee827259",
+    "test/test_b3_full_context_synthetic_fixture.py": "e1aa26ed209fd2fdda1fdcb01fa2df76d5383e2fc53bd10699dc5f9fc9aacaa7"
+  },
+  "cache_root_on_D": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/mypy-cache",
+  "numerical_runtime_validation": "not_run_host_backing_volume_below_20_GiB_floor",
+  "source_admission_granted": false,
+  "runtime_admission_granted": false
+}

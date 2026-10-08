@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.860" timestamp="2026-10-08T10:13:04.524511+08:00" hostname="Conundrum"><testcase classname="test.test_b3_supervisor_host_storage" name="test_low_windows_backing_space_refuses_before_child_launch" time="0.022"><failure message="AssertionError: child must not launch with exhausted WSL backing storage">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-red/test_low_windows_backing_space0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7c89b57c4490&gt;
+
+    def test_low_windows_backing_space_refuses_before_child_launch(tmp_path, monkeypatch):
+        public = supervisor()
+        real_read = Path.read_text
+    
+        def read_text(path, *args, **kwargs):
+            if str(path) == "/proc/sys/kernel/osrelease":
+                return "6.18.33.2-microsoft-standard-WSL2"
+            return real_read(path, *args, **kwargs)
+    
+        monkeypatch.setattr(Path, "read_text", read_text)
+        monkeypatch.setenv("WSL_DISTRO_NAME", "Ubuntu")
+        monkeypatch.setattr(public.os, "statvfs", lambda path: SimpleNamespace(f_bavail=100 * 1024**3, f_frsize=1, f_flag=0))
+        monkeypatch.setattr(public, "memory_available_gib", lambda: 28)
+        monkeypatch.setattr(public.subprocess, "run", lambda *a, **kw: SimpleNamespace(
+            returncode=0, stdout='{"distribution_name":"Ubuntu","vhd_path":"C:\\\\Ubuntu\\\\ext4.vhdx","volume_path":"volume-C","free_bytes":0,"health_status":"Healthy"}', stderr="",
+        ))
+        launched = []
+    
+        def launch(*args, **kwargs):
+            launched.append(args)
+            raise AssertionError("child must not launch with exhausted WSL backing storage")
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        args = argparse.Namespace(run_dir=tmp_path, min_host_ram_gib=4, min_disk_gib=20, max_gpu_temperature_c=None,
+                                  gpu_index=0, max_wall_seconds=900, max_rss_gib=4)
+        with pytest.raises(RuntimeError, match="backing.*floor"):
+&gt;           public.supervise(args, ["never-launched"])
+
+test/test_b3_supervisor_host_storage.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:145: in supervise
+    child = subprocess.Popen(command, stdout=output, stderr=subprocess.STDOUT, start_new_session=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (['never-launched'],)
+kwargs = {'start_new_session': True, 'stderr': -2, 'stdout': &lt;_io.FileIO [closed]&gt;}
+
+    def launch(*args, **kwargs):
+        launched.append(args)
+&gt;       raise AssertionError("child must not launch with exhausted WSL backing storage")
+E       AssertionError: child must not launch with exhausted WSL backing storage
+
+test/test_b3_supervisor_host_storage.py:41: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,1 @@
+{"distribution_name":"Ubuntu","vhd_path":"C:\\Users\\Joey\\AppData\\Local\\wsl\\{0499fcab-5841-4c56-88dc-c27b7040d571}\\ext4.vhdx","volume_path":"\\\\?\\Volume{bcec6f33-2852-490c-828d-81f58ff09429}\\","free_bytes":11879407616,"health_status":"Healthy"}

@@ -1,0 +1,5 @@
+{
+  "return_code": 1,
+  "stdout": "",
+  "stderr": "Active WSL distribution binding is unavailable\nAt line:7 char:23\n+ ... unt -ne 1) { throw 'Active WSL distribution binding is unavailable' }\n+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : OperationStopped: (Active WSL dist... is unavailable:String) [], RuntimeException\n    + FullyQualifiedErrorId : Active WSL distribution binding is unavailable\n \n"
+}

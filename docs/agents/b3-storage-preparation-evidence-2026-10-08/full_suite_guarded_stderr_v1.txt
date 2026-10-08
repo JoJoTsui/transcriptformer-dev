@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/mnt/d/sc/transcriptformer/transcriptformer/scripts/supervise_b3_pilot.py", line 415, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/mnt/d/sc/transcriptformer/transcriptformer/scripts/supervise_b3_pilot.py", line 304, in main
+    host_storage_observations(args.run_dir, args.min_disk_gib)
+  File "/mnt/d/sc/transcriptformer/transcriptformer/scripts/supervise_b3_pilot.py", line 211, in host_storage_observations
+    raise RuntimeError("WSL physical backing volume below launch floor")
+RuntimeError: WSL physical backing volume below launch floor

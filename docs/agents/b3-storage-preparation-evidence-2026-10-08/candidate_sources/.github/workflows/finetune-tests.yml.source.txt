@@ -1,0 +1,137 @@
+name: Finetune Tests
+
+on:
+  push:
+    branches: [main]
+    paths: &finetune-paths
+      - "src/transcriptformer/finetune/**"
+      - "src/transcriptformer/cli/finetune.py"
+      - "src/transcriptformer/cli/evaluate.py"
+      - "src/transcriptformer/data/**"
+      - "src/transcriptformer/model/**"
+      - "src/transcriptformer/tokenizer/**"
+      - "test/**"
+      - "scripts/**"
+      - "conf/**"
+      - "preprocess/**"
+      - ".github/workflows/finetune-tests.yml"
+      - "pyproject.toml"
+      - "uv.lock"
+  pull_request:
+    paths: *finetune-paths
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  finetune-unit-tests:
+    runs-on: ubuntu-latest
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      CUDA_VISIBLE_DEVICES: ""
+      TF_RUN_REAL_MODEL_TESTS: "0"
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Add uv to PATH
+        run: echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          uv pip install --system -e '.[dev]'
+
+      - name: Run finetune pipeline tests
+        # Keep the CPU suite explicit: other test modules download real models/data.
+        # Add new finetune suites here and to test_finetune_test_selection.py.
+        run: |
+          python -m pytest \
+            test/test_finetune_cli.py \
+            test/test_cli_process.py \
+            test/test_dataprep.py \
+            test/test_train.py \
+            test/test_gpu.py \
+            test/test_early_stopping.py \
+            test/test_evaluate.py \
+            test/test_small_group_evaluation.py \
+            test/test_representation.py \
+            test/test_orthologs.py \
+            test/test_ortholog_eligibility.py \
+            test/test_ortholog_full_universe_coverage.py \
+            test/test_b3_gene_id.py \
+            test/test_b3_cell_stream.py \
+            test/test_b3_aggregation.py \
+            test/test_b3_raw_artifact.py \
+            test/test_b3_bins.py \
+            test/test_b3_matched_null.py \
+            test/test_b3_score_contract.py \
+            test/test_b3_pipeline.py \
+            test/test_b3_bootstrap.py \
+            test/test_b3_feasibility.py \
+            test/test_b3_pilot_shard_handoff.py \
+            test/test_b3_scientific_handoff.py \
+            test/test_b3_observed_bootstrap_feasibility.py \
+            test/test_b3_complete_method_cost.py \
+            test/test_b3_scalar_cache.py \
+            test/test_b3_full_native_embryo_support.py \
+            test/test_b3_sparse_null.py \
+            test/test_b3_sparse_bootstrap_draws.py \
+            test/test_b3_prepared_sparse_session.py \
+            test/test_b3_full_context_observed.py \
+            test/test_b3_full_context_synthetic_fixture.py \
+            test/test_b3_full_context_runtime_authority.py \
+            test/test_b3_paged_native_common_source_controller.py \
+            test/test_b3_issuer_control_bound_exchange.py \
+            test/test_b3_issuer_control_deadline.py \
+            test/test_b3_issuer_control_exchange.py \
+            test/test_b3_issuer_control_process.py \
+            test/test_b3_issuer_control_reservation.py \
+            test/test_b3_issuer_control_source_key.py \
+            test/test_b3_issuer_control_start.py \
+            test/test_b3_producer_control_source_key.py \
+            test/test_b3_producer_control_transport.py \
+            test/test_b3_supervisor_host_storage.py \
+            test/test_b3_native_catalog_pages.py \
+            test/test_b3_paged_native_bootstrap.py \
+            test/test_b3_paged_native_cache.py \
+            test/test_b3_paged_native_common_bootstrap.py \
+            test/test_b3_paged_native_common_source.py \
+            test/test_b3_paged_native_context.py \
+            test/test_b3_streamed_sparse_blocks.py \
+            test/test_b3_streamed_draw_schedule.py \
+            test/test_b3_streamed_fixed_pairs.py \
+            test/test_b3_streamed_bootstrap.py \
+            test/test_b3_windowed_native.py \
+            test/test_b3_h5_axis_limits.py \
+            test/test_b3_h5_attribute_limits.py \
+            test/test_end_to_end.py \
+            test/test_finetune_metadata.py \
+            test/test_spatial.py \
+            test/test_split_safeguards.py \
+            test/test_coordinates.py \
+            test/test_holdout_coverage.py \
+            test/test_sampling_audit.py \
+            test/test_probes.py \
+            test/test_checkpoint_compatibility.py \
+            test/test_resume_contract.py \
+            test/test_worker_epochs.py \
+            test/test_missing_stage_evaluation.py \
+            test/test_prepared_artifacts.py \
+            test/test_preparation_rehearsal.py \
+            test/test_selection_cli.py \
+            test/test_selection_boundaries.py \
+            test/test_selection_training.py \
+            test/test_species_readiness.py \
+            test/test_finetune_test_selection.py -v

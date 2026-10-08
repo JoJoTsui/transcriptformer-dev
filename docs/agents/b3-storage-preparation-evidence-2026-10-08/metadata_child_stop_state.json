@@ -1,0 +1,66 @@
+{
+  "status": "stopped",
+  "boot_id": "0eccf527-7d17-4531-a71b-7cbfb1d20e3b",
+  "supervisor_pid": 2,
+  "producer_pid": 17,
+  "command": [
+    "/mnt/d/sc/transcriptformer/transcriptformer/.venv/bin/python",
+    "-B",
+    "-c",
+    "import sys,time;from pathlib import Path;Path(sys.argv[1]).write_text('metadata only');time.sleep(30)",
+    "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage_portable_pytest/test_backing_space_loss_stops_0/metadata-child-running"
+  ],
+  "started_unix": 1791427862.697073,
+  "limits": {
+    "min_host_ram_gib": 4,
+    "min_disk_gib": 20,
+    "max_gpu_temperature_c": null,
+    "gpu_index": 0,
+    "max_wall_seconds": 900,
+    "max_rss_gib": 4
+  },
+  "host_storage_observations": {
+    "linux_root_writable": true,
+    "linux_root_available_bytes": 107374182400,
+    "output_available_bytes": 107374182400,
+    "min_free_bytes": 21474836480,
+    "wsl_backing_volume": {
+      "distribution_name": "Ubuntu",
+      "vhd_path": "C:\\Ubuntu\\ext4.vhdx",
+      "volume_path": "volume-C",
+      "free_bytes": 21474836480,
+      "health_status": "Healthy"
+    },
+    "linux_root_mount": {
+      "mount_point": "/",
+      "filesystem": "ext4",
+      "mount_options": [
+        "rw",
+        "relatime"
+      ],
+      "super_options": [
+        "rw",
+        "errors=remount-ro"
+      ]
+    },
+    "output_mount": {
+      "mount_point": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage_portable_pytest/test_backing_space_loss_stops_0",
+      "filesystem": "9p",
+      "mount_options": [
+        "rw"
+      ],
+      "super_options": [
+        "rw"
+      ]
+    }
+  },
+  "producer_start_ticks": 292872,
+  "heartbeat_unix": 1791427862.6973543,
+  "elapsed_seconds": 0.002435985000374785,
+  "producer_rss_gib": 0.00110626220703125,
+  "host_available_ram_gib": 28,
+  "disk_available_gib": 100.0,
+  "stop_reason": "supervisor_error: RuntimeError: WSL physical backing volume below launch floor",
+  "return_code": -15,
+  "finished_unix": 1791427862.751323
+}

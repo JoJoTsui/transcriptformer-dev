@@ -1,0 +1,6 @@
+{
+  "status": "refused",
+  "reason": "WSL physical backing volume below launch floor",
+  "type": "RuntimeError",
+  "producer_launched": false
+}

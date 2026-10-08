@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-B",
+    "-m",
+    "mypy",
+    "--follow-imports=silent",
+    "--ignore-missing-imports",
+    "--explicit-package-bases",
+    "scripts/supervise_b3_pilot.py",
+    "test/test_b3_supervisor_host_storage.py"
+  ],
+  "return_code": 1,
+  "stdout": "scripts/supervise_b3_pilot.py:65: error: Unsupported operand types for > (\"float\" and \"None\")  [operator]\nscripts/supervise_b3_pilot.py:65: note: Left operand is of type \"float | int | None\"\nscripts/supervise_b3_pilot.py:132: error: Incompatible types in assignment (expression has type \"dict[Any, Any]\", target has type \"float | int | None\")  [assignment]\nFound 2 errors in 1 file (checked 2 source files)\n",
+  "stderr": "",
+  "cache_directory": "/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/mypy-cache"
+}

@@ -1,0 +1,44 @@
+{
+  "actual_exit_code": 0,
+  "candidate_commit": "edb7a22bf43ac3fa2c18b2fefe0ac358b0cf292e",
+  "ci_selection_cases": 3,
+  "command": [
+    ".venv/bin/python",
+    "-B",
+    "-m",
+    "pytest",
+    "--noconftest",
+    "--capture=no",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "test/test_b3_supervisor_host_storage.py",
+    "test/test_finetune_test_selection.py",
+    "--basetemp=/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage_portable_pytest",
+    "--junitxml=runs/b3_feasibility/20261008/storage_portable_green_v3.xml"
+  ],
+  "cuda_enabled": false,
+  "junit": {
+    "bytes": 3783,
+    "path": "docs/agents/b3-storage-preparation-evidence-2026-10-08/storage_portable_green_v3.xml",
+    "sha256": "18a05e6fc332eef66043cbccb5a9c717405291eade8c5892d423e9cfb73518be"
+  },
+  "junit_suite_seconds": 1.388,
+  "math_threads": 1,
+  "passed": 23,
+  "pytest_reported_seconds": 1.49,
+  "runtime_admission_granted": false,
+  "schema": "b3_storage_metadata_validation_v1",
+  "scientific_admission_granted": false,
+  "scope": "two_metadata_files_no_numerical_preparation_or_complete_repository_run",
+  "source_admission_granted": false,
+  "source_sha256": {
+    ".github/workflows/finetune-tests.yml": "b66aef670ab1c48cdc30f9a36d703d659bb5c224d0310a5a6123b63c7480fb0a",
+    "scripts/prepare_b3_full_context_synthetic_fixture.py": "3275b248e9836aa7e3b3ef28bdd6dd1ce812fe151421bdcaa8227146ee827259",
+    "scripts/supervise_b3_pilot.py": "053ca04ca334b3f3b9aa70d8c7804b15b9df59af7fc12adbe68e1968f1347f98",
+    "test/test_b3_full_context_synthetic_fixture.py": "3f89d2e916aa8f8263fd523cc1b103cc6bd6e9fd702579c18f69128bf959a17c",
+    "test/test_b3_supervisor_host_storage.py": "47012ebd9eeea61aae76322a6ebf27f87c5bf2accbb59149f4cb5e28b0bb9dd0"
+  },
+  "storage_cases": 20,
+  "temporary_writes_on_D": true
+}

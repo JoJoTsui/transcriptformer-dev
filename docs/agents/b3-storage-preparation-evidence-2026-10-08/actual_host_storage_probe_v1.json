@@ -1,0 +1,6 @@
+{
+  "status": "refused",
+  "error_type": "RuntimeError",
+  "reason": "WSL backing-volume observation failed or exceeded its metadata bound",
+  "model_job_authorized": false
+}

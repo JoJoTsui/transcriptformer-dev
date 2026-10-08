@@ -1,0 +1,908 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="14" skipped="0" tests="22" time="1.251" timestamp="2026-10-08T10:39:31.793052+08:00" hostname="Conundrum"><testcase classname="test.test_b3_supervisor_host_storage" name="test_low_windows_backing_space_refuses_before_child_launch" time="0.022"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_low_windows_backing_space0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140ed7250&gt;
+
+    def test_low_windows_backing_space_refuses_before_child_launch(tmp_path, monkeypatch):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        document["free_bytes"] = 0
+        monkeypatch.setattr(public, "memory_available_gib", lambda: 28)
+        with pytest.raises(RuntimeError, match="backing.*floor"):
+&gt;           public.supervise(args_for(tmp_path), ["never-launched"])
+
+test/test_b3_supervisor_host_storage.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:315: in supervise
+    storage = host_storage_observations(args.run_dir, args.min_disk_gib)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}
+
+    def launch(command, **kwargs):
+        if command[0].endswith("powershell.exe"):
+&gt;           return query_child(command, json.dumps(document), **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:86: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_backing_space_at_floor_is_observed_separately_from_virtual_space" time="0.014"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_backing_space_at_floor_is0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140ee5c50&gt;
+
+    def test_backing_space_at_floor_is_observed_separately_from_virtual_space(tmp_path, monkeypatch):
+        public = supervisor()
+        expected = windows_probe(public, monkeypatch)
+&gt;       observed = public.host_storage_observations(tmp_path, 20)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_b3_supervisor_host_storage.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}
+
+    def launch(command, **kwargs):
+        if command[0].endswith("powershell.exe"):
+&gt;           return query_child(command, json.dumps(document), **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:86: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_missing_or_unreconciled_windows_observation_cannot_admit_storage[wrong_distribution]" time="0.025"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_missing_or_unreconciled_w0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140c38310&gt;
+fault = 'wrong_distribution'
+
+    @pytest.mark.parametrize(
+        "fault",
+        [
+            "wrong_distribution",
+            "boolean_free",
+            "negative_free",
+            "unhealthy",
+            "extra_field",
+            "duplicate_field",
+            "nonfinite",
+            "missing_probe",
+            "timeout",
+            "large_reply",
+            "nonzero",
+        ],
+    )
+    def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_path, monkeypatch, fault):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        if fault == "wrong_distribution":
+            document["distribution_name"] = "Other"
+        elif fault == "boolean_free":
+            document["free_bytes"] = True
+        elif fault == "negative_free":
+            document["free_bytes"] = -1
+        elif fault == "unhealthy":
+            document["health_status"] = "Warning"
+        elif fault == "extra_field":
+            document["approved"] = True
+        reply = json.dumps(document)
+        if fault == "duplicate_field":
+            reply = '{"free_bytes":21474836480,' + reply[1:]
+        elif fault == "nonfinite":
+            reply = reply.replace("21474836480", "NaN")
+        elif fault == "large_reply":
+            reply = " " * (32 * 1024 + 1)
+    
+        def launch(command, **kwargs):
+            if fault == "missing_probe":
+                raise FileNotFoundError("PowerShell unavailable")
+            program = "import time;time.sleep(30)" if fault == "timeout" else None
+            if fault == "nonzero":
+                program = "raise SystemExit(7)"
+            return query_child(command, reply, program=program, **kwargs)
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        with pytest.raises(RuntimeError, match="backing.volume"):
+&gt;           public.host_storage_observations(tmp_path, 20, max_seconds=0.2 if fault == "timeout" else 10)
+
+test/test_b3_supervisor_host_storage.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}, program = None
+
+    def launch(command, **kwargs):
+        if fault == "missing_probe":
+            raise FileNotFoundError("PowerShell unavailable")
+        program = "import time;time.sleep(30)" if fault == "timeout" else None
+        if fault == "nonzero":
+            program = "raise SystemExit(7)"
+&gt;       return query_child(command, reply, program=program, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:158: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_missing_or_unreconciled_windows_observation_cannot_admit_storage[boolean_free]" time="0.019"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_missing_or_unreconciled_w1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140d26c50&gt;
+fault = 'boolean_free'
+
+    @pytest.mark.parametrize(
+        "fault",
+        [
+            "wrong_distribution",
+            "boolean_free",
+            "negative_free",
+            "unhealthy",
+            "extra_field",
+            "duplicate_field",
+            "nonfinite",
+            "missing_probe",
+            "timeout",
+            "large_reply",
+            "nonzero",
+        ],
+    )
+    def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_path, monkeypatch, fault):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        if fault == "wrong_distribution":
+            document["distribution_name"] = "Other"
+        elif fault == "boolean_free":
+            document["free_bytes"] = True
+        elif fault == "negative_free":
+            document["free_bytes"] = -1
+        elif fault == "unhealthy":
+            document["health_status"] = "Warning"
+        elif fault == "extra_field":
+            document["approved"] = True
+        reply = json.dumps(document)
+        if fault == "duplicate_field":
+            reply = '{"free_bytes":21474836480,' + reply[1:]
+        elif fault == "nonfinite":
+            reply = reply.replace("21474836480", "NaN")
+        elif fault == "large_reply":
+            reply = " " * (32 * 1024 + 1)
+    
+        def launch(command, **kwargs):
+            if fault == "missing_probe":
+                raise FileNotFoundError("PowerShell unavailable")
+            program = "import time;time.sleep(30)" if fault == "timeout" else None
+            if fault == "nonzero":
+                program = "raise SystemExit(7)"
+            return query_child(command, reply, program=program, **kwargs)
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        with pytest.raises(RuntimeError, match="backing.volume"):
+&gt;           public.host_storage_observations(tmp_path, 20, max_seconds=0.2 if fault == "timeout" else 10)
+
+test/test_b3_supervisor_host_storage.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}, program = None
+
+    def launch(command, **kwargs):
+        if fault == "missing_probe":
+            raise FileNotFoundError("PowerShell unavailable")
+        program = "import time;time.sleep(30)" if fault == "timeout" else None
+        if fault == "nonzero":
+            program = "raise SystemExit(7)"
+&gt;       return query_child(command, reply, program=program, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:158: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_missing_or_unreconciled_windows_observation_cannot_admit_storage[negative_free]" time="0.015"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_missing_or_unreconciled_w2')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140fb17d0&gt;
+fault = 'negative_free'
+
+    @pytest.mark.parametrize(
+        "fault",
+        [
+            "wrong_distribution",
+            "boolean_free",
+            "negative_free",
+            "unhealthy",
+            "extra_field",
+            "duplicate_field",
+            "nonfinite",
+            "missing_probe",
+            "timeout",
+            "large_reply",
+            "nonzero",
+        ],
+    )
+    def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_path, monkeypatch, fault):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        if fault == "wrong_distribution":
+            document["distribution_name"] = "Other"
+        elif fault == "boolean_free":
+            document["free_bytes"] = True
+        elif fault == "negative_free":
+            document["free_bytes"] = -1
+        elif fault == "unhealthy":
+            document["health_status"] = "Warning"
+        elif fault == "extra_field":
+            document["approved"] = True
+        reply = json.dumps(document)
+        if fault == "duplicate_field":
+            reply = '{"free_bytes":21474836480,' + reply[1:]
+        elif fault == "nonfinite":
+            reply = reply.replace("21474836480", "NaN")
+        elif fault == "large_reply":
+            reply = " " * (32 * 1024 + 1)
+    
+        def launch(command, **kwargs):
+            if fault == "missing_probe":
+                raise FileNotFoundError("PowerShell unavailable")
+            program = "import time;time.sleep(30)" if fault == "timeout" else None
+            if fault == "nonzero":
+                program = "raise SystemExit(7)"
+            return query_child(command, reply, program=program, **kwargs)
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        with pytest.raises(RuntimeError, match="backing.volume"):
+&gt;           public.host_storage_observations(tmp_path, 20, max_seconds=0.2 if fault == "timeout" else 10)
+
+test/test_b3_supervisor_host_storage.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}, program = None
+
+    def launch(command, **kwargs):
+        if fault == "missing_probe":
+            raise FileNotFoundError("PowerShell unavailable")
+        program = "import time;time.sleep(30)" if fault == "timeout" else None
+        if fault == "nonzero":
+            program = "raise SystemExit(7)"
+&gt;       return query_child(command, reply, program=program, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:158: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_missing_or_unreconciled_windows_observation_cannot_admit_storage[unhealthy]" time="0.015"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_missing_or_unreconciled_w3')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140c1fed0&gt;
+fault = 'unhealthy'
+
+    @pytest.mark.parametrize(
+        "fault",
+        [
+            "wrong_distribution",
+            "boolean_free",
+            "negative_free",
+            "unhealthy",
+            "extra_field",
+            "duplicate_field",
+            "nonfinite",
+            "missing_probe",
+            "timeout",
+            "large_reply",
+            "nonzero",
+        ],
+    )
+    def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_path, monkeypatch, fault):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        if fault == "wrong_distribution":
+            document["distribution_name"] = "Other"
+        elif fault == "boolean_free":
+            document["free_bytes"] = True
+        elif fault == "negative_free":
+            document["free_bytes"] = -1
+        elif fault == "unhealthy":
+            document["health_status"] = "Warning"
+        elif fault == "extra_field":
+            document["approved"] = True
+        reply = json.dumps(document)
+        if fault == "duplicate_field":
+            reply = '{"free_bytes":21474836480,' + reply[1:]
+        elif fault == "nonfinite":
+            reply = reply.replace("21474836480", "NaN")
+        elif fault == "large_reply":
+            reply = " " * (32 * 1024 + 1)
+    
+        def launch(command, **kwargs):
+            if fault == "missing_probe":
+                raise FileNotFoundError("PowerShell unavailable")
+            program = "import time;time.sleep(30)" if fault == "timeout" else None
+            if fault == "nonzero":
+                program = "raise SystemExit(7)"
+            return query_child(command, reply, program=program, **kwargs)
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        with pytest.raises(RuntimeError, match="backing.volume"):
+&gt;           public.host_storage_observations(tmp_path, 20, max_seconds=0.2 if fault == "timeout" else 10)
+
+test/test_b3_supervisor_host_storage.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}, program = None
+
+    def launch(command, **kwargs):
+        if fault == "missing_probe":
+            raise FileNotFoundError("PowerShell unavailable")
+        program = "import time;time.sleep(30)" if fault == "timeout" else None
+        if fault == "nonzero":
+            program = "raise SystemExit(7)"
+&gt;       return query_child(command, reply, program=program, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:158: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_missing_or_unreconciled_windows_observation_cannot_admit_storage[extra_field]" time="0.014"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_missing_or_unreconciled_w4')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140eae590&gt;
+fault = 'extra_field'
+
+    @pytest.mark.parametrize(
+        "fault",
+        [
+            "wrong_distribution",
+            "boolean_free",
+            "negative_free",
+            "unhealthy",
+            "extra_field",
+            "duplicate_field",
+            "nonfinite",
+            "missing_probe",
+            "timeout",
+            "large_reply",
+            "nonzero",
+        ],
+    )
+    def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_path, monkeypatch, fault):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        if fault == "wrong_distribution":
+            document["distribution_name"] = "Other"
+        elif fault == "boolean_free":
+            document["free_bytes"] = True
+        elif fault == "negative_free":
+            document["free_bytes"] = -1
+        elif fault == "unhealthy":
+            document["health_status"] = "Warning"
+        elif fault == "extra_field":
+            document["approved"] = True
+        reply = json.dumps(document)
+        if fault == "duplicate_field":
+            reply = '{"free_bytes":21474836480,' + reply[1:]
+        elif fault == "nonfinite":
+            reply = reply.replace("21474836480", "NaN")
+        elif fault == "large_reply":
+            reply = " " * (32 * 1024 + 1)
+    
+        def launch(command, **kwargs):
+            if fault == "missing_probe":
+                raise FileNotFoundError("PowerShell unavailable")
+            program = "import time;time.sleep(30)" if fault == "timeout" else None
+            if fault == "nonzero":
+                program = "raise SystemExit(7)"
+            return query_child(command, reply, program=program, **kwargs)
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        with pytest.raises(RuntimeError, match="backing.volume"):
+&gt;           public.host_storage_observations(tmp_path, 20, max_seconds=0.2 if fault == "timeout" else 10)
+
+test/test_b3_supervisor_host_storage.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}, program = None
+
+    def launch(command, **kwargs):
+        if fault == "missing_probe":
+            raise FileNotFoundError("PowerShell unavailable")
+        program = "import time;time.sleep(30)" if fault == "timeout" else None
+        if fault == "nonzero":
+            program = "raise SystemExit(7)"
+&gt;       return query_child(command, reply, program=program, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:158: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_missing_or_unreconciled_windows_observation_cannot_admit_storage[duplicate_field]" time="0.014"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_missing_or_unreconciled_w5')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140c31a50&gt;
+fault = 'duplicate_field'
+
+    @pytest.mark.parametrize(
+        "fault",
+        [
+            "wrong_distribution",
+            "boolean_free",
+            "negative_free",
+            "unhealthy",
+            "extra_field",
+            "duplicate_field",
+            "nonfinite",
+            "missing_probe",
+            "timeout",
+            "large_reply",
+            "nonzero",
+        ],
+    )
+    def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_path, monkeypatch, fault):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        if fault == "wrong_distribution":
+            document["distribution_name"] = "Other"
+        elif fault == "boolean_free":
+            document["free_bytes"] = True
+        elif fault == "negative_free":
+            document["free_bytes"] = -1
+        elif fault == "unhealthy":
+            document["health_status"] = "Warning"
+        elif fault == "extra_field":
+            document["approved"] = True
+        reply = json.dumps(document)
+        if fault == "duplicate_field":
+            reply = '{"free_bytes":21474836480,' + reply[1:]
+        elif fault == "nonfinite":
+            reply = reply.replace("21474836480", "NaN")
+        elif fault == "large_reply":
+            reply = " " * (32 * 1024 + 1)
+    
+        def launch(command, **kwargs):
+            if fault == "missing_probe":
+                raise FileNotFoundError("PowerShell unavailable")
+            program = "import time;time.sleep(30)" if fault == "timeout" else None
+            if fault == "nonzero":
+                program = "raise SystemExit(7)"
+            return query_child(command, reply, program=program, **kwargs)
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        with pytest.raises(RuntimeError, match="backing.volume"):
+&gt;           public.host_storage_observations(tmp_path, 20, max_seconds=0.2 if fault == "timeout" else 10)
+
+test/test_b3_supervisor_host_storage.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}, program = None
+
+    def launch(command, **kwargs):
+        if fault == "missing_probe":
+            raise FileNotFoundError("PowerShell unavailable")
+        program = "import time;time.sleep(30)" if fault == "timeout" else None
+        if fault == "nonzero":
+            program = "raise SystemExit(7)"
+&gt;       return query_child(command, reply, program=program, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:158: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_missing_or_unreconciled_windows_observation_cannot_admit_storage[nonfinite]" time="0.014"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_missing_or_unreconciled_w6')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140e4b950&gt;
+fault = 'nonfinite'
+
+    @pytest.mark.parametrize(
+        "fault",
+        [
+            "wrong_distribution",
+            "boolean_free",
+            "negative_free",
+            "unhealthy",
+            "extra_field",
+            "duplicate_field",
+            "nonfinite",
+            "missing_probe",
+            "timeout",
+            "large_reply",
+            "nonzero",
+        ],
+    )
+    def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_path, monkeypatch, fault):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        if fault == "wrong_distribution":
+            document["distribution_name"] = "Other"
+        elif fault == "boolean_free":
+            document["free_bytes"] = True
+        elif fault == "negative_free":
+            document["free_bytes"] = -1
+        elif fault == "unhealthy":
+            document["health_status"] = "Warning"
+        elif fault == "extra_field":
+            document["approved"] = True
+        reply = json.dumps(document)
+        if fault == "duplicate_field":
+            reply = '{"free_bytes":21474836480,' + reply[1:]
+        elif fault == "nonfinite":
+            reply = reply.replace("21474836480", "NaN")
+        elif fault == "large_reply":
+            reply = " " * (32 * 1024 + 1)
+    
+        def launch(command, **kwargs):
+            if fault == "missing_probe":
+                raise FileNotFoundError("PowerShell unavailable")
+            program = "import time;time.sleep(30)" if fault == "timeout" else None
+            if fault == "nonzero":
+                program = "raise SystemExit(7)"
+            return query_child(command, reply, program=program, **kwargs)
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        with pytest.raises(RuntimeError, match="backing.volume"):
+&gt;           public.host_storage_observations(tmp_path, 20, max_seconds=0.2 if fault == "timeout" else 10)
+
+test/test_b3_supervisor_host_storage.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}, program = None
+
+    def launch(command, **kwargs):
+        if fault == "missing_probe":
+            raise FileNotFoundError("PowerShell unavailable")
+        program = "import time;time.sleep(30)" if fault == "timeout" else None
+        if fault == "nonzero":
+            program = "raise SystemExit(7)"
+&gt;       return query_child(command, reply, program=program, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:158: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_missing_or_unreconciled_windows_observation_cannot_admit_storage[missing_probe]" time="0.014" /><testcase classname="test.test_b3_supervisor_host_storage" name="test_missing_or_unreconciled_windows_observation_cannot_admit_storage[timeout]" time="0.014"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_missing_or_unreconciled_w8')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140da7350&gt;
+fault = 'timeout'
+
+    @pytest.mark.parametrize(
+        "fault",
+        [
+            "wrong_distribution",
+            "boolean_free",
+            "negative_free",
+            "unhealthy",
+            "extra_field",
+            "duplicate_field",
+            "nonfinite",
+            "missing_probe",
+            "timeout",
+            "large_reply",
+            "nonzero",
+        ],
+    )
+    def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_path, monkeypatch, fault):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        if fault == "wrong_distribution":
+            document["distribution_name"] = "Other"
+        elif fault == "boolean_free":
+            document["free_bytes"] = True
+        elif fault == "negative_free":
+            document["free_bytes"] = -1
+        elif fault == "unhealthy":
+            document["health_status"] = "Warning"
+        elif fault == "extra_field":
+            document["approved"] = True
+        reply = json.dumps(document)
+        if fault == "duplicate_field":
+            reply = '{"free_bytes":21474836480,' + reply[1:]
+        elif fault == "nonfinite":
+            reply = reply.replace("21474836480", "NaN")
+        elif fault == "large_reply":
+            reply = " " * (32 * 1024 + 1)
+    
+        def launch(command, **kwargs):
+            if fault == "missing_probe":
+                raise FileNotFoundError("PowerShell unavailable")
+            program = "import time;time.sleep(30)" if fault == "timeout" else None
+            if fault == "nonzero":
+                program = "raise SystemExit(7)"
+            return query_child(command, reply, program=program, **kwargs)
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        with pytest.raises(RuntimeError, match="backing.volume"):
+&gt;           public.host_storage_observations(tmp_path, 20, max_seconds=0.2 if fault == "timeout" else 10)
+
+test/test_b3_supervisor_host_storage.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}, program = 'import time;time.sleep(30)'
+
+    def launch(command, **kwargs):
+        if fault == "missing_probe":
+            raise FileNotFoundError("PowerShell unavailable")
+        program = "import time;time.sleep(30)" if fault == "timeout" else None
+        if fault == "nonzero":
+            program = "raise SystemExit(7)"
+&gt;       return query_child(command, reply, program=program, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:158: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_missing_or_unreconciled_windows_observation_cannot_admit_storage[large_reply]" time="0.014"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_missing_or_unreconciled_w9')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140c33310&gt;
+fault = 'large_reply'
+
+    @pytest.mark.parametrize(
+        "fault",
+        [
+            "wrong_distribution",
+            "boolean_free",
+            "negative_free",
+            "unhealthy",
+            "extra_field",
+            "duplicate_field",
+            "nonfinite",
+            "missing_probe",
+            "timeout",
+            "large_reply",
+            "nonzero",
+        ],
+    )
+    def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_path, monkeypatch, fault):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        if fault == "wrong_distribution":
+            document["distribution_name"] = "Other"
+        elif fault == "boolean_free":
+            document["free_bytes"] = True
+        elif fault == "negative_free":
+            document["free_bytes"] = -1
+        elif fault == "unhealthy":
+            document["health_status"] = "Warning"
+        elif fault == "extra_field":
+            document["approved"] = True
+        reply = json.dumps(document)
+        if fault == "duplicate_field":
+            reply = '{"free_bytes":21474836480,' + reply[1:]
+        elif fault == "nonfinite":
+            reply = reply.replace("21474836480", "NaN")
+        elif fault == "large_reply":
+            reply = " " * (32 * 1024 + 1)
+    
+        def launch(command, **kwargs):
+            if fault == "missing_probe":
+                raise FileNotFoundError("PowerShell unavailable")
+            program = "import time;time.sleep(30)" if fault == "timeout" else None
+            if fault == "nonzero":
+                program = "raise SystemExit(7)"
+            return query_child(command, reply, program=program, **kwargs)
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        with pytest.raises(RuntimeError, match="backing.volume"):
+&gt;           public.host_storage_observations(tmp_path, 20, max_seconds=0.2 if fault == "timeout" else 10)
+
+test/test_b3_supervisor_host_storage.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}, program = None
+
+    def launch(command, **kwargs):
+        if fault == "missing_probe":
+            raise FileNotFoundError("PowerShell unavailable")
+        program = "import time;time.sleep(30)" if fault == "timeout" else None
+        if fault == "nonzero":
+            program = "raise SystemExit(7)"
+&gt;       return query_child(command, reply, program=program, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:158: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_missing_or_unreconciled_windows_observation_cannot_admit_storage[nonzero]" time="0.014"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_missing_or_unreconciled_w10')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140c30310&gt;
+fault = 'nonzero'
+
+    @pytest.mark.parametrize(
+        "fault",
+        [
+            "wrong_distribution",
+            "boolean_free",
+            "negative_free",
+            "unhealthy",
+            "extra_field",
+            "duplicate_field",
+            "nonfinite",
+            "missing_probe",
+            "timeout",
+            "large_reply",
+            "nonzero",
+        ],
+    )
+    def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_path, monkeypatch, fault):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        if fault == "wrong_distribution":
+            document["distribution_name"] = "Other"
+        elif fault == "boolean_free":
+            document["free_bytes"] = True
+        elif fault == "negative_free":
+            document["free_bytes"] = -1
+        elif fault == "unhealthy":
+            document["health_status"] = "Warning"
+        elif fault == "extra_field":
+            document["approved"] = True
+        reply = json.dumps(document)
+        if fault == "duplicate_field":
+            reply = '{"free_bytes":21474836480,' + reply[1:]
+        elif fault == "nonfinite":
+            reply = reply.replace("21474836480", "NaN")
+        elif fault == "large_reply":
+            reply = " " * (32 * 1024 + 1)
+    
+        def launch(command, **kwargs):
+            if fault == "missing_probe":
+                raise FileNotFoundError("PowerShell unavailable")
+            program = "import time;time.sleep(30)" if fault == "timeout" else None
+            if fault == "nonzero":
+                program = "raise SystemExit(7)"
+            return query_child(command, reply, program=program, **kwargs)
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        with pytest.raises(RuntimeError, match="backing.volume"):
+&gt;           public.host_storage_observations(tmp_path, 20, max_seconds=0.2 if fault == "timeout" else 10)
+
+test/test_b3_supervisor_host_storage.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}, program = 'raise SystemExit(7)'
+
+    def launch(command, **kwargs):
+        if fault == "missing_probe":
+            raise FileNotFoundError("PowerShell unavailable")
+        program = "import time;time.sleep(30)" if fault == "timeout" else None
+        if fault == "nonzero":
+            program = "raise SystemExit(7)"
+&gt;       return query_child(command, reply, program=program, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:158: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_read_only_linux_volume_refuses_before_query[root]" time="0.011" /><testcase classname="test.test_b3_supervisor_host_storage" name="test_read_only_linux_volume_refuses_before_query[output]" time="0.013" /><testcase classname="test.test_b3_supervisor_host_storage" name="test_non_wsl_linux_does_not_require_windows_interop" time="0.015" /><testcase classname="test.test_b3_supervisor_host_storage" name="test_backing_space_loss_stops_a_real_metadata_child_and_keeps_failed_receipt" time="0.015"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_backing_space_loss_stops_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140e56550&gt;
+
+    def test_backing_space_loss_stops_a_real_metadata_child_and_keeps_failed_receipt(tmp_path, monkeypatch):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        monkeypatch.setattr(public, "memory_available_gib", lambda: 28)
+        marker = tmp_path / "metadata-child-running"
+        queries = 0
+    
+        def launch(command, **kwargs):
+            nonlocal queries
+            if not command[0].endswith("powershell.exe"):
+                return _REAL_POPEN(command, **kwargs)
+            queries += 1
+            observed = dict(document)
+            if queries &gt; 1:
+                deadline = time.monotonic() + 2
+                while not marker.exists() and time.monotonic() &lt; deadline:
+                    time.sleep(0.01)
+                assert marker.exists()
+                observed["free_bytes"] = 0
+            return query_child(command, json.dumps(observed), **kwargs)
+    
+        monkeypatch.setattr(public.subprocess, "Popen", launch)
+        command = [
+            sys.executable,
+            "-B",
+            "-c",
+            "import sys,time;from pathlib import Path;Path(sys.argv[1]).write_text('metadata only');time.sleep(30)",
+            str(marker),
+        ]
+        with pytest.raises(RuntimeError, match="backing.*floor"):
+&gt;           public.supervise(args_for(tmp_path), command)
+
+test/test_b3_supervisor_host_storage.py:228: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:315: in supervise
+    storage = host_storage_observations(args.run_dir, args.min_disk_gib)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kwargs = {'stderr': -1, 'stdout': -1}
+observed = {'distribution_name': 'Ubuntu', 'free_bytes': 21474836480, 'health_status': 'Healthy', 'vhd_path': 'C:\\Ubuntu\\ext4.vhdx', ...}
+
+    def launch(command, **kwargs):
+        nonlocal queries
+        if not command[0].endswith("powershell.exe"):
+            return _REAL_POPEN(command, **kwargs)
+        queries += 1
+        observed = dict(document)
+        if queries &gt; 1:
+            deadline = time.monotonic() + 2
+            while not marker.exists() and time.monotonic() &lt; deadline:
+                time.sleep(0.01)
+            assert marker.exists()
+            observed["free_bytes"] = 0
+&gt;       return query_child(command, json.dumps(observed), **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:217: TypeError</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_rw_ext4_emergency_flag_refuses_even_after_physical_space_recovers" time="0.011" /><testcase classname="test.test_b3_supervisor_host_storage" name="test_windows_error_stream_is_bounded_before_storage_admission" time="0.014"><failure message="TypeError: query_child() got multiple values for argument 'stdout'">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-green/test_windows_error_stream_is_b0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x797140baa910&gt;
+
+    def test_windows_error_stream_is_bounded_before_storage_admission(tmp_path, monkeypatch):
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        monkeypatch.setattr(
+            public.subprocess,
+            "Popen",
+            lambda command, **kw: query_child(command, json.dumps(document), "x" * (8 * 1024 + 1), **kw),
+        )
+        with pytest.raises(RuntimeError, match="backing.volume"):
+&gt;           public.host_storage_observations(tmp_path, 20)
+
+test/test_b3_supervisor_host_storage.py:266: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/supervise_b3_pilot.py:177: in host_storage_observations
+    raw = _windows_storage_output(query, deadline)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/supervise_b3_pilot.py:74: in _windows_storage_output
+    child = subprocess.Popen(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$distr..._bytes = [long]$v[0].SizeRemaining\n    health_status = $v[0].HealthStatus.ToString()\n} | ConvertTo-Json -Compress\n"]
+kw = {'stderr': -1, 'stdout': -1}
+
+&gt;       lambda command, **kw: query_child(command, json.dumps(document), "x" * (8 * 1024 + 1), **kw),
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+E   TypeError: query_child() got multiple values for argument 'stdout'
+
+test/test_b3_supervisor_host_storage.py:263: TypeError</failure></testcase><testcase classname="test.test_finetune_test_selection" name="test_ci_runs_all_cpu_finetune_suites" time="0.032" /><testcase classname="test.test_finetune_test_selection" name="test_ci_triggers_on_finetune_dependencies_and_every_test[push]" time="0.001" /><testcase classname="test.test_finetune_test_selection" name="test_ci_triggers_on_finetune_dependencies_and_every_test[pull_request]" time="0.000" /></testsuite></testsuites>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="0.888" timestamp="2026-10-08T10:36:14.926949+08:00" hostname="Conundrum"><testcase classname="test.test_b3_supervisor_host_storage" name="test_rw_ext4_emergency_flag_refuses_even_after_physical_space_recovers" time="0.021"><failure message="Failed: DID NOT RAISE &lt;class 'RuntimeError'&gt;">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-red/test_rw_ext4_emergency_flag_re0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7ebdad49eed0&gt;
+
+    def test_rw_ext4_emergency_flag_refuses_even_after_physical_space_recovers(tmp_path, monkeypatch):
+        import io
+    
+        public = supervisor()
+        windows_probe(public, monkeypatch)
+        real_open = Path.open
+    
+        def open_mounts(path, *args, **kwargs):
+            if str(path) == "/proc/self/mountinfo":
+                return io.BytesIO(b"1 0 0:1 / / rw,relatime - ext4 /dev/sdd rw,errors=remount-ro,emergency_ro\n")
+            return real_open(path, *args, **kwargs)
+    
+        monkeypatch.setattr(Path, "open", open_mounts)
+&gt;       with pytest.raises(RuntimeError, match="emergency"):
+E       Failed: DID NOT RAISE &lt;class 'RuntimeError'&gt;
+
+test/test_b3_supervisor_host_storage.py:271: Failed</failure></testcase><testcase classname="test.test_b3_supervisor_host_storage" name="test_windows_error_stream_is_bounded_before_storage_admission" time="0.013"><failure message="Failed: DID NOT RAISE &lt;class 'RuntimeError'&gt;">tmp_path = PosixPath('/mnt/d/sc/transcriptformer/transcriptformer/runs/b3_feasibility/20261008/storage-review-red/test_windows_error_stream_is_b0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7ebdad4ff190&gt;
+
+    def test_windows_error_stream_is_bounded_before_storage_admission(tmp_path, monkeypatch):
+        import json
+    
+        public = supervisor()
+        document = windows_probe(public, monkeypatch)
+        monkeypatch.setattr(public.subprocess, "run", lambda *a, **kw: SimpleNamespace(returncode=0, stdout=json.dumps(document), stderr="x" * (8 * 1024 + 1)))
+&gt;       with pytest.raises(RuntimeError, match="backing.volume"):
+E       Failed: DID NOT RAISE &lt;class 'RuntimeError'&gt;
+
+test/test_b3_supervisor_host_storage.py:281: Failed</failure></testcase></testsuite></testsuites>

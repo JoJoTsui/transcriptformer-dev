@@ -1,0 +1,51 @@
+{
+  "launch_gate": "refused",
+  "linux_root_free_bytes": 928250941440,
+  "linux_root_mount": {
+    "filesystem": "ext4",
+    "mount_options": [
+      "rw",
+      "relatime"
+    ],
+    "mount_point": "/",
+    "super_options": [
+      "rw",
+      "discard",
+      "errors=remount-ro",
+      "data=ordered"
+    ]
+  },
+  "min_free_bytes": 21474836480,
+  "observation_utc": "2026-10-08T02:52:44Z",
+  "output_free_bytes": 411043880960,
+  "output_mount": {
+    "filesystem": "9p",
+    "mount_options": [
+      "rw",
+      "noatime"
+    ],
+    "mount_point": "/mnt/d",
+    "super_options": [
+      "rw",
+      "aname=drvfs;path=D:\\;uid=1000;gid=1000;symlinkroot=/mnt/",
+      "cache=0x5",
+      "access=client",
+      "msize=65536",
+      "trans=fd",
+      "rfd=6",
+      "wfd=6"
+    ]
+  },
+  "producer_launched": false,
+  "reason": "WSL physical backing volume below launch floor",
+  "schema": "b3_actual_host_metadata_observation_v1",
+  "source_sha256": "053ca04ca334b3f3b9aa70d8c7804b15b9df59af7fc12adbe68e1968f1347f98",
+  "windows_backing": {
+    "distribution_name": "Ubuntu",
+    "free_bytes": 11879407616,
+    "health_status": "Healthy",
+    "vhd_path": "C:\\Users\\Joey\\AppData\\Local\\wsl\\{0499fcab-5841-4c56-88dc-c27b7040d571}\\ext4.vhdx",
+    "volume_path": "\\\\?\\Volume{bcec6f33-2852-490c-828d-81f58ff09429}\\"
+  },
+  "wsl_distribution": "Ubuntu"
+}
