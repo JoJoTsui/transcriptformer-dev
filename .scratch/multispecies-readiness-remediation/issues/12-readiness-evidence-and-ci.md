@@ -219,3 +219,13 @@ formatting/separator hooks, with seven passing metadata checks and zero-finding
 source reviews. Original failures remain preserved and repaired remote
 acceptance is pending; no complete current-source runtime/scientific acceptance
 is claimed.
+
+
+The repaired `b301d67` remote checks subsequently pass: 1,394 explicit CPU cases,
+210 B3 preparation/stored-arithmetic/planning cases and formatting. Original
+failures are preserved. The new registration metadata suite is explicitly
+selected, and local 63-case integration passes; its exact source review and
+remote acceptance are recorded separately. Ticket 05 remains open on
+completed registration/runtime/scientific gates and local physical backing
+storage; ticket 11 stays excluded. See the
+[current registration checkpoint](../../../docs/agents/b3-registration-metadata-implementation-2026-10-08.md).

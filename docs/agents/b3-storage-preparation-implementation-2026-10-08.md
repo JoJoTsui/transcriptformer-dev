@@ -68,7 +68,18 @@ refer to their reviewed candidate document snapshots; later dated tracking
 insertions can shift those lines. The original full CPU v7 remains failed; the
 1,310-pass/five-skip v5 at `32f9426` remains historical.
 
-## Subsequent GitHub CI failures and repairs
+## Subsequent accepted CI repair — b301d67
+
+The repaired source passes all three actual GitHub checks: **1,394 selected CPU
+cases (505.48 seconds)**, **210 B3 preparation/stored-arithmetic/planning cases
+(366.16 seconds)**, and formatting. This validates the prospective-plan test
+repair and receipt policy within those scopes, without complete repository
+accounting or authority admission. The newer registration parser is a separate
+source checkpoint.
+[Exact successful remote receipts](b3-storage-preparation-evidence-2026-10-08/remote_accepted_b301d67/manifest.json),
+[current registration metadata checkpoint](b3-registration-metadata-implementation-2026-10-08.md).
+
+## Earlier GitHub CI failures and repairs
 
 The first pushed GitHub B3 run at `5dde876` executes genuine preparation,
 stored arithmetic and planning: **209 passed, one failed in 353.31 seconds**.

@@ -1,14 +1,48 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
 Category: correctness and readiness
-Status: Open — storage admission and prospective plan implemented in source; 23 metadata checks and exact static reviews pass. Numerical preparation/full CPU regression refused by C: backing space below 20 GiB; registration/native/authority/census, bridge/v4 and scientific comparison remain open; zebrafish 11 excluded.
+Status: Open — storage/prospective-plan repairs pass remote selected CPU CI; bounded registration metadata/refusal implemented with 63 metadata checks. Completed registration, source/runtime/allocator/bridge/scientific gates remain open; local numerical launch refuses C: below 20 GiB; zebrafish 11 excluded.
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
 Traceability: R3; stale post-filter counts; register 4.3; tracker N
 Spec: [Multispecies readiness remediation](../spec.md)
 
-## Current storage and preparation checkpoint — 2026-10-08
+## Current reviewed progress — 2026-10-08
+
+D: is used for temporary files, caches, outputs and evidence. Physical WSL
+backing-volume/mount-health admission is implemented. Actual root ext4 is
+writable without the emergency flag; D: has about 383 GiB free, but Ubuntu's
+VHD remains on C: with about 11.1 GiB, below the existing 20 GiB floor. Local
+numerical/full-suite launches refuse before producer creation.
+
+The prospective split plan is durably pinned before genuine preparation.
+After fixing the observed first-directory-call test instrumentation and
+byte-bound receipt formatting policy, remote `b301d67` passes **1,394 selected
+CPU tests**, **210 B3 preparation/stored-arithmetic/planning tests** and
+formatting checks. These validate their explicit CI scope; complete
+whole-repository source accounting and source/runtime admission are unclaimed.
+Original failed local/remote runs remain preserved.
+
+The next registration metadata/refusal slice is implemented at `080f20b`:
+closed request/declaration shapes, bridge80 byte inspection, frozen genuine
+family metadata and original key closure, retained file mutation/ownership
+checks, and explicit missing-gate refusal without output. **63 joint metadata
+checks pass** (36 registration/20 storage/seven CI), with lint/typechecks.
+Full predecessor value/preparation reconciliation, producer/source acceptance,
+owned publication/replay and controlled runtime/authority/compare remain open.
+Exact final Spec and Standards source reviews each report zero findings;
+remote acceptance of the new parser suite remains pending.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Real
+pilot coverage is **32.54%**, necessary jointly supported draws **0/2,000**;
+reporting veto, null intervals and frozen rules remain unchanged. Actual project
+effects, whole-method cost and reportable scientific comparison remain open.
+
+Evidence: [registration metadata checkpoint](../../../docs/agents/b3-registration-metadata-implementation-2026-10-08.md),
+[storage/preparation and preserved failures](../../../docs/agents/b3-storage-preparation-implementation-2026-10-08.md).
+
+## Earlier storage and preparation checkpoint — 2026-10-08
 
 At reviewed source `edb7a22`, physical WSL backing-volume admission is
 implemented before producer launch and at heartbeats. Bounded mount checks
