@@ -9,6 +9,8 @@ import fcntl
 import json
 import math
 import os
+import re
+import selectors
 import signal
 import subprocess
 import time
@@ -36,7 +38,93 @@ if ($v.Count -ne 1) { throw 'Physical WSL volume binding is unavailable' }
 """
 
 
-def host_storage_observations(run_dir: Path, min_disk_gib: float) -> dict:
+def _mount_health(path: Path) -> dict:
+    with Path("/proc/self/mountinfo").open("rb") as handle:
+        raw = handle.read(256 * 1024 + 1)
+    if len(raw) > 256 * 1024:
+        raise RuntimeError("Host mount-health metadata exceeds its bound")
+    selected: dict[str, Any] | None = None
+    target = path.resolve(strict=True)
+    for line in raw.decode("utf-8", "surrogateescape").splitlines():
+        before, separator, after = line.partition(" - ")
+        fields, extra = before.split(), after.split()
+        if not separator or len(fields) < 6 or len(extra) != 3:
+            raise RuntimeError("Host mount-health observation is malformed")
+        point = Path(re.sub(r"\\([0-7]{3})", lambda match: chr(int(match[1], 8)), fields[4]))
+        if not point.is_absolute():
+            raise RuntimeError("Host mount-health binding is not absolute")
+        if target == point or point in target.parents:
+            if selected is None or len(point.parts) > len(Path(selected["mount_point"]).parts):
+                selected = {
+                    "mount_point": str(point),
+                    "filesystem": extra[0],
+                    "mount_options": fields[5].split(","),
+                    "super_options": extra[2].split(","),
+                }
+    if selected is None:
+        raise RuntimeError("Host filesystem mount-health binding is unavailable")
+    options = set(selected["mount_options"]) | set(selected["super_options"])
+    if "emergency_ro" in options or "ro" in options:
+        raise RuntimeError("Host filesystem is read only or in emergency read-only state")
+    return selected
+
+
+def _windows_storage_output(query: str, deadline: float) -> str:
+    """Retain at most 32 KiB stdout and 8 KiB stderr while observing the child."""
+    child = subprocess.Popen(
+        [
+            "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+            "-NoProfile",
+            "-NonInteractive",
+            "-Command",
+            query,
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    output, errors = bytearray(), bytearray()
+    try:
+        if child.stdout is None or child.stderr is None:
+            raise RuntimeError("Windows storage query requires its owned output streams")
+        with selectors.DefaultSelector() as selector:
+            selector.register(child.stdout, selectors.EVENT_READ, "stdout")
+            selector.register(child.stderr, selectors.EVENT_READ, "stderr")
+            while selector.get_map():
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise TimeoutError("Windows storage query reached its original deadline")
+                for key, _ in selector.select(remaining):
+                    chunk = os.read(key.fd, 8192)
+                    if not chunk:
+                        selector.unregister(key.fileobj)
+                        continue
+                    destination, bound = (output, 32 * 1024) if key.data == "stdout" else (errors, 8 * 1024)
+                    if len(destination) + len(chunk) > bound:
+                        raise RuntimeError("Windows backing-volume stream exceeded its metadata bound")
+                    destination.extend(chunk)
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError("Windows storage query reached its original deadline before exit")
+        child.wait(timeout=remaining)
+        if child.returncode != 0:
+            raise RuntimeError("WSL backing-volume observation failed; refusing launch")
+        return output.decode("utf-8")
+    except BaseException:
+        if child.poll() is None:
+            child.kill()
+        try:
+            child.wait(timeout=1)
+        except subprocess.TimeoutExpired:
+            pass
+        raise
+    finally:
+        if child.stdout is not None:
+            child.stdout.close()
+        if child.stderr is not None:
+            child.stderr.close()
+
+
+def host_storage_observations(run_dir: Path, min_disk_gib: float, *, max_seconds: float = 10) -> dict:
     """Check Linux and actual Windows VHD storage before admitting a child.
 
     Virtual ext4/output free space cannot substitute for physical backing space.
@@ -44,8 +132,10 @@ def host_storage_observations(run_dir: Path, min_disk_gib: float) -> dict:
     """
     if type(min_disk_gib) not in (int, float) or not math.isfinite(min_disk_gib) or min_disk_gib <= 0:
         raise ValueError("Storage floor must be a strict finite positive number")
+    if type(max_seconds) not in (int, float) or not math.isfinite(max_seconds) or not 0 < max_seconds <= 10:
+        raise ValueError("Storage observation seconds must be positive and at most ten")
     started = time.monotonic()
-    deadline = started + 10
+    deadline = started + max_seconds
     root = os.statvfs("/")
     if root.f_flag & os.ST_RDONLY:
         raise RuntimeError("Linux filesystem is read only; refusing producer launch")
@@ -55,6 +145,7 @@ def host_storage_observations(run_dir: Path, min_disk_gib: float) -> dict:
     disk = os.statvfs(existing)
     if disk.f_flag & os.ST_RDONLY:
         raise RuntimeError("Output filesystem is read only; refusing producer launch")
+    root_health, output_health = _mount_health(Path("/")), _mount_health(existing)
     floor = min_disk_gib * 2**30
     result: dict[str, Any] = {
         "linux_root_writable": True,
@@ -62,6 +153,8 @@ def host_storage_observations(run_dir: Path, min_disk_gib: float) -> dict:
         "output_available_bytes": disk.f_bavail * disk.f_frsize,
         "min_free_bytes": floor,
         "wsl_backing_volume": None,
+        "linux_root_mount": root_health,
+        "output_mount": output_health,
     }
     if result["linux_root_available_bytes"] < floor or result["output_available_bytes"] < floor:
         raise RuntimeError("Linux/output disk below launch floor")
@@ -81,23 +174,9 @@ def host_storage_observations(run_dir: Path, min_disk_gib: float) -> dict:
                 + "'))\n"
                 + _WINDOWS_STORAGE_QUERY
             )
-            actual = subprocess.run(
-                [
-                    "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
-                    "-NoProfile",
-                    "-NonInteractive",
-                    "-Command",
-                    query,
-                ],
-                capture_output=True,
-                text=True,
-                timeout=remaining,
-                check=False,
-            )
-        except (OSError, subprocess.TimeoutExpired) as error:
+            raw = _windows_storage_output(query, deadline)
+        except (OSError, subprocess.TimeoutExpired, TimeoutError, UnicodeError) as error:
             raise RuntimeError("WSL backing-volume observation failed; refusing launch") from error
-        if actual.returncode != 0 or len(actual.stdout.encode()) > 32 * 1024:
-            raise RuntimeError("WSL backing-volume observation failed or exceeded its metadata bound")
 
         def unique(pairs):
             record = {}
@@ -111,7 +190,7 @@ def host_storage_observations(run_dir: Path, min_disk_gib: float) -> dict:
             raise ValueError("Nonfinite backing-volume observation: " + value)
 
         try:
-            observed = json.loads(actual.stdout.lstrip("\ufeff"), object_pairs_hook=unique, parse_constant=invalid)
+            observed = json.loads(raw.lstrip("\ufeff"), object_pairs_hook=unique, parse_constant=invalid)
         except (ValueError, TypeError) as error:
             raise RuntimeError("WSL backing-volume observation is malformed; refusing launch") from error
         fields = {"distribution_name", "vhd_path", "volume_path", "free_bytes", "health_status"}

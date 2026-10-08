@@ -402,3 +402,49 @@ def test_public_preparation_verifies_complete_native_input_tokenization_without_
         assert proof["aux_tokens_i64le_sha256"] == sha256(b"").hexdigest()
         assert len(proof["cell_identities"]) == 60
         assert [row["cell_id"] for row in proof["cell_identities"]] == [str(i) for i in range(60)]
+
+
+def test_prospective_plan_is_persistent_before_genuine_preparation_starts(tmp_path, monkeypatch):
+    public, request_path, _ = _request(tmp_path)
+    output = tmp_path / "attempt"
+    original_mkdir = Path.mkdir
+    observed = []
+
+    def mkdir(path, *args, **kwargs):
+        if path == output / "prepared_run" / "prepared":
+            plan = output / "prospective_split_plan.json"
+            observed.append(_ref(plan))
+            assignments = _read(observed[-1])["assignments"]
+            assert len(assignments) == 10
+            assert all(item["split"] == "train" and item["reason"] == "train_only" for item in assignments)
+        return original_mkdir(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "mkdir", mkdir)
+    result = public.run(request_path, output)
+    assert observed == [result["preparation"]["prospective_split_plan"]]
+    assert _read(result["preparation"]["prospective_split_plan"]) == _read(result["preparation"]["report"])["splits"]
+
+
+def test_changed_unit_membership_after_prospective_freeze_withholds_completion(tmp_path, monkeypatch):
+    public, request_path, _ = _request(tmp_path)
+    output = tmp_path / "attempt"
+    original_mkdir = Path.mkdir
+    changed = False
+
+    def mkdir(path, *args, **kwargs):
+        nonlocal changed
+        if path == output / "prepared_run" / "prepared":
+            assert (output / "prospective_split_plan.json").is_file()
+            identity = output / "identity" / "homo_sapiens_preparation.csv"
+            original = identity.read_bytes()
+            replacement = original.replace(b"homo_sapiens_simulated_unit_0", b"homo_sapiens_simulated_unit_1")
+            assert replacement != original
+            identity.write_bytes(replacement)
+            changed = True
+        return original_mkdir(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "mkdir", mkdir)
+    with pytest.raises(ValueError, match="prospective split plan"):
+        public.run(request_path, output)
+    assert changed is True
+    assert not (output / "complete.json").exists()
