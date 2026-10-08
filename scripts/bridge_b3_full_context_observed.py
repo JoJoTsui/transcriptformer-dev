@@ -18,6 +18,7 @@ import resource
 import shutil
 import stat
 import time
+from typing import NamedTuple
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_SOURCE = ROOT / "scripts/bridge_b3_full_context_observed.py"
@@ -534,10 +535,18 @@ def _predecessors(request, keys):
         _ref(request["execution_catalog"], "original registration replay catalog")
 
 
+class _InputFile(NamedTuple):
+    fd: int
+    identity: tuple[int, int]
+    size: int
+    digest: str | None = None
+    body: bytes | None = None
+
+
 class _Inputs:
     def __init__(self, budget: _Budget):
         self.budget = budget
-        self.files: dict[Path, tuple[int, tuple[int, int], int, str | None, bytes | None]] = {}
+        self.files: dict[Path, _InputFile] = {}
         self.retained_bytes = 0
 
     def read(self, path: Path, limit: int = METADATA_LIMIT) -> bytes:
@@ -545,7 +554,7 @@ class _Inputs:
         path = _path(str(path))
         if path in self.files:
             self.seal()
-            retained = self.files[path][4]
+            retained = self.files[path].body
             if retained is None:
                 raise ValueError("Original metadata read did not complete")
             return retained
@@ -558,7 +567,7 @@ class _Inputs:
             raise MemoryError("Registration retained input bytes exceed their bound")
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
         identity = (before.st_dev, before.st_ino)
-        self.files[path] = (fd, identity, before.st_size, None, None)
+        self.files[path] = _InputFile(fd=fd, identity=identity, size=before.st_size)
         opened = os.fstat(fd)
         if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino, opened.st_size) != (
             *identity,
@@ -574,12 +583,15 @@ class _Inputs:
         if len(raw) != before.st_size:
             raise ValueError("Original metadata bytes changed during admission")
         data = bytes(raw)
-        self.files[path] = (fd, identity, before.st_size, sha256(data).hexdigest(), data)
+        self.files[path] = _InputFile(
+            fd=fd, identity=identity, size=before.st_size, digest=sha256(data).hexdigest(), body=data
+        )
         self.retained_bytes += len(data)
         return data
 
     def seal(self):
-        for path, (fd, identity, size, digest, _) in self.files.items():
+        for path, binding in self.files.items():
+            fd, identity, size, digest = binding.fd, binding.identity, binding.size, binding.digest
             self.budget.check()
             opened, current = os.fstat(fd), path.lstat()
             if (opened.st_dev, opened.st_ino, opened.st_size) != (*identity, size) or (
@@ -605,12 +617,12 @@ class _Inputs:
 
     def close(self):
         failure = None
-        for fd, identity, _, _, _ in self.files.values():
+        for binding in self.files.values():
             try:
-                current = os.fstat(fd)
-                if not stat.S_ISREG(current.st_mode) or (current.st_dev, current.st_ino) != identity:
+                current = os.fstat(binding.fd)
+                if not stat.S_ISREG(current.st_mode) or (current.st_dev, current.st_ino) != binding.identity:
                     raise RuntimeError("Preserved foreign input descriptor during cleanup")
-                os.close(fd)
+                os.close(binding.fd)
             except BaseException as error:
                 if failure is None:
                     failure = error
