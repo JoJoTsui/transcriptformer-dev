@@ -425,7 +425,7 @@ def test_prospective_plan_is_persistent_before_genuine_preparation_starts(tmp_pa
     assert _read(result["preparation"]["prospective_split_plan"]) == _read(result["preparation"]["report"])["splits"]
 
 
-def test_changed_unit_membership_after_prospective_freeze_withholds_completion(tmp_path, monkeypatch):
+def test_changed_unit_membership_after_prospective_freeze_fails_original_sidecar_hash(tmp_path, monkeypatch):
     public, request_path, _ = _request(tmp_path)
     output = tmp_path / "attempt"
     original_mkdir = Path.mkdir
@@ -444,7 +444,31 @@ def test_changed_unit_membership_after_prospective_freeze_withholds_completion(t
         return original_mkdir(path, *args, **kwargs)
 
     monkeypatch.setattr(Path, "mkdir", mkdir)
-    with pytest.raises(ValueError, match="prospective split plan"):
+    with pytest.raises(ValueError, match="Embryo identity sidecar hash differs"):
+        public.run(request_path, output)
+    assert changed is True
+    assert not (output / "complete.json").exists()
+
+
+def test_changed_persistent_prospective_plan_withholds_completion(tmp_path, monkeypatch):
+    public, request_path, _ = _request(tmp_path)
+    output = tmp_path / "attempt"
+    original_mkdir = Path.mkdir
+    changed = False
+
+    def mkdir(path, *args, **kwargs):
+        nonlocal changed
+        if path == output / "prepared_run" / "prepared":
+            plan = output / "prospective_split_plan.json"
+            original = plan.read_bytes()
+            replacement = original.replace(b'"split":"train"', b'"split":"valid"', 1)
+            assert len(replacement) == len(original) and replacement != original
+            plan.write_bytes(replacement)
+            changed = True
+        return original_mkdir(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "mkdir", mkdir)
+    with pytest.raises(ValueError, match="Original source bytes changed"):
         public.run(request_path, output)
     assert changed is True
     assert not (output / "complete.json").exists()

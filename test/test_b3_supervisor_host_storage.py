@@ -51,7 +51,7 @@ def query_child(command, reply, error_reply="", program=None, **kwargs):
     return _REAL_POPEN([sys.executable, "-B", "-c", body, reply, error_reply], **kwargs)
 
 
-def windows_probe(public, monkeypatch):
+def windows_probe(public, monkeypatch, tmp_path):
     document = {
         "distribution_name": "Ubuntu",
         "vhd_path": "C:\\Ubuntu\\ext4.vhdx",
@@ -68,10 +68,15 @@ def windows_probe(public, monkeypatch):
         ),
     )
 
+    mountpoint = os.fsencode(tmp_path).replace(b"\\", b"\\134").replace(b" ", b"\\040")
+    mountpoint = mountpoint.replace(b"\t", b"\\011").replace(b"\n", b"\\012")
+
     def open_metadata(path, *a, **kw):
         if str(path) == "/proc/self/mountinfo":
             return io.BytesIO(
-                b"1 0 0:1 / / rw,relatime - ext4 /dev/sdd rw,errors=remount-ro\n2 1 0:2 / /mnt/d rw - 9p D: rw\n"
+                b"1 0 0:1 / / rw,relatime - ext4 /dev/sdd rw,errors=remount-ro\n2 1 0:2 / "
+                + mountpoint
+                + b" rw - 9p D: rw\n"
             )
         return real_open(path, *a, **kw)
 
@@ -92,7 +97,7 @@ def windows_probe(public, monkeypatch):
 
 def test_low_windows_backing_space_refuses_before_child_launch(tmp_path, monkeypatch):
     public = supervisor()
-    document = windows_probe(public, monkeypatch)
+    document = windows_probe(public, monkeypatch, tmp_path)
     document["free_bytes"] = 0
     monkeypatch.setattr(public, "memory_available_gib", lambda: 28)
     with pytest.raises(RuntimeError, match="backing.*floor"):
@@ -101,10 +106,12 @@ def test_low_windows_backing_space_refuses_before_child_launch(tmp_path, monkeyp
     assert not (tmp_path / "state.json").exists()
 
 
-def test_backing_space_at_floor_is_observed_separately_from_virtual_space(tmp_path, monkeypatch):
+@pytest.mark.parametrize("output_location", ["temporary", "linux_tmp"])
+def test_backing_space_at_floor_is_observed_separately_from_virtual_space(tmp_path, monkeypatch, output_location):
     public = supervisor()
-    expected = windows_probe(public, monkeypatch)
-    observed = public.host_storage_observations(tmp_path, 20)
+    output = tmp_path if output_location == "temporary" else Path("/tmp")
+    expected = windows_probe(public, monkeypatch, output)
+    observed = public.host_storage_observations(output, 20)
     assert observed["wsl_backing_volume"] == expected
     assert observed["linux_root_available_bytes"] == observed["output_available_bytes"] == 100 * 1024**3
     assert observed["min_free_bytes"] == 20 * 1024**3
@@ -130,7 +137,7 @@ def test_backing_space_at_floor_is_observed_separately_from_virtual_space(tmp_pa
 )
 def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_path, monkeypatch, fault):
     public = supervisor()
-    document = windows_probe(public, monkeypatch)
+    document = windows_probe(public, monkeypatch, tmp_path)
     if fault == "wrong_distribution":
         document["distribution_name"] = "Other"
     elif fault == "boolean_free":
@@ -165,7 +172,7 @@ def test_missing_or_unreconciled_windows_observation_cannot_admit_storage(tmp_pa
 @pytest.mark.parametrize("scope", ["root", "output"])
 def test_read_only_linux_volume_refuses_before_query(tmp_path, monkeypatch, scope):
     public = supervisor()
-    windows_probe(public, monkeypatch)
+    windows_probe(public, monkeypatch, tmp_path)
     monkeypatch.setattr(
         public.os,
         "statvfs",
@@ -182,7 +189,7 @@ def test_read_only_linux_volume_refuses_before_query(tmp_path, monkeypatch, scop
 
 def test_non_wsl_linux_does_not_require_windows_interop(tmp_path, monkeypatch):
     public = supervisor()
-    windows_probe(public, monkeypatch)
+    windows_probe(public, monkeypatch, tmp_path)
     real_read = Path.read_text
     monkeypatch.setattr(
         Path,
@@ -197,7 +204,7 @@ def test_non_wsl_linux_does_not_require_windows_interop(tmp_path, monkeypatch):
 
 def test_backing_space_loss_stops_a_real_metadata_child_and_keeps_failed_receipt(tmp_path, monkeypatch):
     public = supervisor()
-    document = windows_probe(public, monkeypatch)
+    document = windows_probe(public, monkeypatch, tmp_path)
     monkeypatch.setattr(public, "memory_available_gib", lambda: 28)
     marker = tmp_path / "metadata-child-running"
     queries = 0
@@ -236,7 +243,7 @@ def test_backing_space_loss_stops_a_real_metadata_child_and_keeps_failed_receipt
 
 def test_rw_ext4_emergency_flag_refuses_even_after_physical_space_recovers(tmp_path, monkeypatch):
     public = supervisor()
-    windows_probe(public, monkeypatch)
+    windows_probe(public, monkeypatch, tmp_path)
     real_open = Path.open
     monkeypatch.setattr(
         Path,
@@ -256,7 +263,7 @@ def test_rw_ext4_emergency_flag_refuses_even_after_physical_space_recovers(tmp_p
 
 def test_windows_error_stream_is_bounded_before_storage_admission(tmp_path, monkeypatch):
     public = supervisor()
-    document = windows_probe(public, monkeypatch)
+    document = windows_probe(public, monkeypatch, tmp_path)
     monkeypatch.setattr(
         public.subprocess,
         "Popen",
