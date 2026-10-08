@@ -411,7 +411,7 @@ def test_prospective_plan_is_persistent_before_genuine_preparation_starts(tmp_pa
     observed = []
 
     def mkdir(path, *args, **kwargs):
-        if path == output / "prepared_run" / "prepared":
+        if path == output / "prepared_run" / "prepared" and not observed:
             plan = output / "prospective_split_plan.json"
             observed.append(_ref(plan))
             assignments = _read(observed[-1])["assignments"]
@@ -433,7 +433,7 @@ def test_changed_unit_membership_after_prospective_freeze_fails_original_sidecar
 
     def mkdir(path, *args, **kwargs):
         nonlocal changed
-        if path == output / "prepared_run" / "prepared":
+        if path == output / "prepared_run" / "prepared" and not changed:
             assert (output / "prospective_split_plan.json").is_file()
             identity = output / "identity" / "homo_sapiens_preparation.csv"
             original = identity.read_bytes()
@@ -458,7 +458,7 @@ def test_changed_persistent_prospective_plan_withholds_completion(tmp_path, monk
 
     def mkdir(path, *args, **kwargs):
         nonlocal changed
-        if path == output / "prepared_run" / "prepared":
+        if path == output / "prepared_run" / "prepared" and not changed:
             plan = output / "prospective_split_plan.json"
             original = plan.read_bytes()
             replacement = original.replace(b'"split":"train"', b'"split":"valid"', 1)
