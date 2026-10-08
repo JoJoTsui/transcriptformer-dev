@@ -1,5 +1,13 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
+## Paused by owner — 2026-10-08
+
+The owner selected preparation of a WSL move to D: and explicitly paused all
+steps for later resume. The move has not run; implementation, tests and scoring
+remain paused. The owner subsequently authorized checking and committing this
+handoff; no push is part of that request. [Prepared plan and resume checkpoint](../../../docs/agents/b3-wsl-d-drive-move-paused-2026-10-08.md)
+record the open storage gate and the last observed, still-running remote CI.
+
 Category: correctness and readiness
 Status: Open — storage/prospective-plan repairs pass remote selected CPU CI; bounded registration metadata/refusal implemented with 63 metadata checks. Completed registration, source/runtime/allocator/bridge/scientific gates remain open; local numerical launch refuses C: below 20 GiB; zebrafish 11 excluded.
 Priority: P1

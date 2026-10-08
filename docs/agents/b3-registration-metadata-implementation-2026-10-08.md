@@ -1,5 +1,13 @@
 # B3 registration metadata parser — 2026-10-08
 
+## Paused by owner — 2026-10-08
+
+The owner selected preparation of a WSL move to D: and explicitly paused all
+steps for later resume. The move has not run; implementation, tests and scoring
+remain paused. The owner subsequently authorized checking and committing this
+handoff; no push is part of that request. [Prepared plan and resume checkpoint](b3-wsl-d-drive-move-paused-2026-10-08.md)
+record the open storage gate and the last observed, still-running remote CI.
+
 Ticket 05 remains open; zebrafish 11 is excluded. Source commits `b4f7133`
 and `080f20b` implement the next bounded registration dependency. The public
 `run(request_path, output, *, max_seconds=900)` inspects metadata and raises an

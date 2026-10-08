@@ -1,5 +1,13 @@
 # Full-context B3 implementation status — 2026-10-05
 
+## Paused by owner — 2026-10-08
+
+The owner selected preparation of a WSL move to D: and explicitly paused all
+steps for later resume. The move has not run; implementation, tests and scoring
+remain paused. The owner subsequently authorized checking and committing this
+handoff; no push is part of that request. [Prepared plan and resume checkpoint](b3-wsl-d-drive-move-paused-2026-10-08.md)
+record the open storage gate and the last observed, still-running remote CI.
+
 ## Current reviewed progress — 2026-10-08
 
 D: is used for temporary files, caches, outputs and evidence. Physical WSL
