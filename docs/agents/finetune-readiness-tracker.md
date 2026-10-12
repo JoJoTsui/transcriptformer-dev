@@ -1,5 +1,27 @@
 # Finetune readiness tracker
 
+## Resume step 3a: local full CPU suite green — 2026-10-12
+
+The full test suite passed locally for the first time at this source state:
+**1,451 passed, 5 skipped, 0 failed in 412.08 s** under the unchanged
+supervisor guards. Execution ran from an ext4 worktree at `60c7d50`
+(docs/gitignore-only relative to remote-green `84838a6`) with a fresh locked
+venv built via the TUNA mirror (identical 160 package versions to the tracked
+`uv.lock`, verified). Two same-day attempts from the 9p-mounted checkout were
+stopped at the owner's direction (v1: 138 tests/3 h 53 m/6 failures; v2: 115
+tests/42 min; both producers blocked in `p9_client_rpc`). The v1 failures did
+not reproduce on ext4 and are attributed to 9p I/O faults. The
+"complete current-source CPU validation" gap from 2026-10-08 is closed.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Real
+pilot coverage stays **32.54%**, necessary jointly supported draws **0/2,000**;
+reporting veto, null intervals and frozen rules remain unchanged. Numerical
+preparation and producer/scoring launches remain gated on explicit owner
+authorization.
+
+Evidence: [resume receipts](b3-resume-receipts-2026-10-12.md) (updated),
+local run receipts under `runs/b3_feasibility/20261012/`.
+
 ## Resume steps 1–2 complete — 2026-10-12
 
 On 2026-10-12 the owner confirmed the pause superseded for the first two

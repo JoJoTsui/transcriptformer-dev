@@ -49,6 +49,38 @@ move alone is not a passing storage or scientific result; this rerun is the
 required admission check, and it passes. The 2026-10-08 storage gate is
 observationally resolved.
 
+## Local guarded full CPU suite — green (2026-10-12 update)
+
+Resume step 3a completed on 2026-10-12: the full test suite passed locally
+for the first time at this source state — **1,451 passed, 5 skipped, 0 failed
+in 412.08 s** under the unchanged supervisor guards (14,400 s wall cap,
+4 GiB RSS cap, 20 GiB storage floor, heartbeat admission).
+
+- Source: worktree `/home/joey/tf_suite` detached at `60c7d50`, identical
+  source bytes to `main`; `60c7d50` is docs/gitignore-only relative to the
+  remote-green `84838a6`.
+- Environment: fresh `uv sync --locked --extra dev` venv on ext4 via the TUNA
+  mirror (global `~/.config/uv/uv.toml`); the re-lock resolved to identical
+  160 name+version pairs as the tracked `uv.lock` (verified before sync);
+  torch 2.5.1+cu124, pytest 8.4.0.
+- Two same-day attempts from the 9p-mounted checkout were stopped at the
+  owner's direction: v1 after 138 tests/3 h 53 m with 6 failures, v2 after
+  115 tests/42 min, both with the producer blocked in `p9_client_rpc`. The
+  six v1 failures did **not** reproduce on ext4 and are attributed to 9p I/O
+  faults, consistent with the 2026-10-06 EROFS/EIO incident pattern.
+- The five skips are the standing intentional skips (real-model/GPU-gated
+  integrations).
+- Receipts (local; `runs/` is not committed), sha256:
+  `full_suite_v3.xml` c0550566…, `attempt_v3/producer.log` 0d88e91f…,
+  `attempt_v3/state.json` 0b807555…, `full_suite_guarded_invocation_v3.json`
+  c8acb60f…, `full_suite_guarded_result_v3.json` d8161e74… (return_code 0);
+  supervisor stdout/stderr receipts are the empty-file hash e3b0c442….
+  Full values and paths under `runs/b3_feasibility/20261012/`.
+
+This closes the "complete current-source CPU validation" gap recorded on
+2026-10-08. Numerical preparation and producer/scoring launches remain gated
+on explicit owner authorization.
+
 ## Unchanged open state
 
 - **05 open; 11 excluded; ten bounded engineering closures unchanged.**

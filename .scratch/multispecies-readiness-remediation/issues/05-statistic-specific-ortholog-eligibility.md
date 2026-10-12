@@ -25,7 +25,7 @@ handoff; no push is part of that request. [Prepared plan and resume checkpoint](
 record the open storage gate and the last observed, still-running remote CI.
 
 Category: correctness and readiness
-Status: Open — storage/prospective-plan repairs pass remote selected CPU CI; bounded registration metadata/refusal implemented with 63 metadata checks. CI receipts verified green and storage admission rerun passes (VHD on D:, 2026-10-12). Completed registration, source/runtime/allocator/bridge/scientific gates remain open; numerical launch awaits explicit owner authorization; zebrafish 11 excluded.
+Status: Open — storage/prospective-plan repairs pass remote selected CPU CI; bounded registration metadata/refusal implemented with 63 metadata checks. CI receipts verified green and storage admission rerun passes (VHD on D:, 2026-10-12); local full CPU suite green at `60c7d50` (1,451 passed/5 skipped, ext4 worktree, 2026-10-12). Completed registration, source/runtime/allocator/bridge/scientific gates remain open; numerical launch awaits explicit owner authorization; zebrafish 11 excluded.
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04
