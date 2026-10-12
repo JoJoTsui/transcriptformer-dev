@@ -5,9 +5,14 @@
 The owner directed three track decisions on 2026-10-12:
 
 1. **B1 finetune track opened.** Next steps: full 27-source preparation →
-   post-QC cohort freeze → training-run decision. First step is a bounded GPU
-   feasibility probe for TF-Metazoa finetuning on the local RTX 3090 24 GB
-   (local vs remote training decided by measurement, not assumption).
+   post-QC cohort freeze → training-run decision. First step was a bounded GPU
+   feasibility probe for TF-Metazoa finetuning on the local RTX 3090 24 GB —
+   **completed same-day: local training is viable** at the planned
+   configuration (fp16 AMP, batch 1: 16.28 GiB peak, 1.20 s/step, ~6.5 GiB
+   headroom; batch 2 not viable). Evidence:
+   [B1 GPU feasibility probe](b1-gpu-feasibility-probe-2026-10-12.md).
+   Full preparation is running against the derived coordinate manifest
+   (27 PASS / 1 WARN / 0 FAIL at re-validation).
 2. **Ticket 05's remaining gates stay parked.** Reconciliation,
    producer/source acceptance, publication/replay and
    runtime/authority/compare remain closed until explicitly reopened.
