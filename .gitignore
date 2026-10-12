@@ -205,3 +205,6 @@ cache/
 
 # Full native support diagnostic; retain its compact provenance summary in Git
 /docs/agents/b3-full-native-embryo-support-2026-10-03-evidence.json
+
+# Local codegraph indexer database (editor tooling)
+.codegraph-wsl/
