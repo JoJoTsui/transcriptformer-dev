@@ -1,5 +1,25 @@
 # Finetune readiness tracker
 
+## Track decisions — B1 opened, 05 parked, B3 veto to design review — 2026-10-12
+
+The owner directed three track decisions on 2026-10-12:
+
+1. **B1 finetune track opened.** Next steps: full 27-source preparation →
+   post-QC cohort freeze → training-run decision. First step is a bounded GPU
+   feasibility probe for TF-Metazoa finetuning on the local RTX 3090 24 GB
+   (local vs remote training decided by measurement, not assumption).
+2. **Ticket 05's remaining gates stay parked.** Reconciliation,
+   producer/source acceptance, publication/replay and
+   runtime/authority/compare remain closed until explicitly reopened.
+3. **The B3 coverage veto is a design problem.** A design review framing the
+   owner decision (confirmatory gate vs descriptive evidence; options A–E) is
+   at [B3 coverage veto design review](b3-coverage-veto-design-review-2026-10-12.md).
+   No registered threshold, estimand or code changes.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Real
+pilot coverage stays **32.54%**, necessary jointly supported draws **0/2,000**;
+reporting veto, null intervals and frozen rules remain unchanged.
+
 ## Resume step 3a: local full CPU suite green — 2026-10-12
 
 The full test suite passed locally for the first time at this source state:
