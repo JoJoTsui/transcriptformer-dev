@@ -1,5 +1,21 @@
 # 05 — Enforce registered ortholog floors on actual statistic inputs
 
+## Resume steps 1–2 complete — 2026-10-12
+
+On 2026-10-12 the owner confirmed the pause superseded for the first two
+resume-order steps; numerical launch remains gated on explicit owner
+authorization. The checkpoint's unverified CI runs are collected and green:
+Finetune Tests **1,430 passed**, B3 Full Context **210 passed** at `84838a6`
+(docs-only distance to HEAD `e699d96`), pre-commit success at HEAD. Storage
+admission rerun through the existing guarded observation code path **passes**:
+the Ubuntu VHD is now at `D:\WSL\Ubuntu\ext4.vhdx` (Healthy, ~278.3 GiB free ≥
+the unchanged 20 GiB floor); the C: refusal below is historical. Scientific
+state is unchanged: real pilot coverage **32.54%**, jointly supported draws
+**0/2,000**, reporting veto and frozen rules stand.
+
+Evidence: [resume receipts](../../../docs/agents/b3-resume-receipts-2026-10-12.md),
+[hash-bound manifest](../../../docs/agents/b3-resume-receipts-evidence-2026-10-12/manifest.json).
+
 ## Paused by owner — 2026-10-08
 
 The owner selected preparation of a WSL move to D: and explicitly paused all
@@ -9,7 +25,7 @@ handoff; no push is part of that request. [Prepared plan and resume checkpoint](
 record the open storage gate and the last observed, still-running remote CI.
 
 Category: correctness and readiness
-Status: Open — storage/prospective-plan repairs pass remote selected CPU CI; bounded registration metadata/refusal implemented with 63 metadata checks. Completed registration, source/runtime/allocator/bridge/scientific gates remain open; local numerical launch refuses C: below 20 GiB; zebrafish 11 excluded.
+Status: Open — storage/prospective-plan repairs pass remote selected CPU CI; bounded registration metadata/refusal implemented with 63 metadata checks. CI receipts verified green and storage admission rerun passes (VHD on D:, 2026-10-12). Completed registration, source/runtime/allocator/bridge/scientific gates remain open; numerical launch awaits explicit owner authorization; zebrafish 11 excluded.
 Priority: P1
 Execution: authorized by owner for implementation on 2026-09-28; retain external scientific and data gates.
 Depends on: 04

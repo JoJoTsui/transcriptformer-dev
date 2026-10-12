@@ -1,5 +1,32 @@
 # Finetune readiness tracker
 
+## Resume steps 1–2 complete — 2026-10-12
+
+On 2026-10-12 the owner confirmed the pause superseded for the first two
+resume-order steps; ticket 05 numerical launch remains gated on explicit owner
+authorization. The CI runs left unverified at the checkpoint are collected and
+**green**: Finetune Tests run 37726256356 **1,430 passed** and B3 Full Context
+run 37726256303 **210 passed**, both `success` at `84838a6`; pre-commit run
+37727320739 `success` at HEAD `e699d96`. `84838a6..e699d96` is docs/evidence
+only, so the receipts cover HEAD's source bytes. The 1,430 count supersedes
+1,394 at `b301d67` by the 36 registration cases accepted at `080f20b`; remote
+acceptance of the registration parser suite is no longer pending.
+
+Storage admission rerun through the existing guarded observation code path
+**passes**: the Ubuntu VHD now resides at `D:\WSL\Ubuntu\ext4.vhdx` (Healthy,
+~278.3 GiB free ≥ the unchanged 20 GiB floor), Linux root ~870 GiB free and
+writable. The 2026-10-08 storage gate is observationally resolved; the D: move
+was executed outside this repo's recorded steps.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Real
+pilot coverage stays **32.54%**, necessary jointly supported draws **0/2,000**;
+reporting veto, null intervals and frozen rules remain unchanged. Actual
+project effects, whole-method cost and reportable scientific comparison remain
+open.
+
+Evidence: [resume receipts](b3-resume-receipts-2026-10-12.md),
+[hash-bound manifest](b3-resume-receipts-evidence-2026-10-12/manifest.json).
+
 ## Paused by owner — 2026-10-08
 
 The owner selected preparation of a WSL move to D: and explicitly paused all

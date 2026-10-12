@@ -1,0 +1,4 @@
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G   86G  871G   9% /
+C:\134          244G  136G  108G  56% /mnt/c
+D:\134          710G  432G  279G  61% /mnt/d

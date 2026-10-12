@@ -1,0 +1,83 @@
+{
+  "artifacts": {
+    "b3_full_context_run_37726256303.log": {
+      "bytes": 104751,
+      "path": "docs/agents/b3-resume-receipts-evidence-2026-10-12/b3_full_context_run_37726256303.log",
+      "sha256": "58364f9c5af639f2795a0982d1693c7d8859b6a8ed1523ab447836563b1b6c38"
+    },
+    "df_observation_20261012.txt": {
+      "bytes": 179,
+      "path": "docs/agents/b3-resume-receipts-evidence-2026-10-12/df_observation_20261012.txt",
+      "sha256": "e8e8d9a33f1e192df5aca9f6184486d891d47afca0b329705a83e083d580b4b6"
+    },
+    "finetune_run_37726256356.log": {
+      "bytes": 332529,
+      "path": "docs/agents/b3-resume-receipts-evidence-2026-10-12/finetune_run_37726256356.log",
+      "sha256": "d832aa785fa3e98dba1e8e9bf04d5b2c620566dee708eff7c988811ddd0d620e"
+    },
+    "observation_timestamp_utc.txt": {
+      "bytes": 21,
+      "path": "docs/agents/b3-resume-receipts-evidence-2026-10-12/observation_timestamp_utc.txt",
+      "sha256": "9f019f0f2cfe9efb5aa186788eb22a1690554374181b6cda6151e3ac3055e829"
+    },
+    "precommit_run_37727320739.log": {
+      "bytes": 70077,
+      "path": "docs/agents/b3-resume-receipts-evidence-2026-10-12/precommit_run_37727320739.log",
+      "sha256": "b267e627fadc8252aecd12d8d09d6dc2211f6d059f56a89ff8b25b1182d63adb"
+    },
+    "run_37726256303_metadata.json": {
+      "bytes": 382,
+      "path": "docs/agents/b3-resume-receipts-evidence-2026-10-12/run_37726256303_metadata.json",
+      "sha256": "7fffe29d570690fd3315a6b2450baa882bc924b1487fea014efb40a4068419fe"
+    },
+    "run_37726256356_metadata.json": {
+      "bytes": 342,
+      "path": "docs/agents/b3-resume-receipts-evidence-2026-10-12/run_37726256356_metadata.json",
+      "sha256": "695ff7253276545af65016fad4df387dbd49d0a737ef0cf2f6a8099c70677c52"
+    },
+    "run_37727320739_metadata.json": {
+      "bytes": 334,
+      "path": "docs/agents/b3-resume-receipts-evidence-2026-10-12/run_37727320739_metadata.json",
+      "sha256": "a8ae8378e174e343aba293e6d95d4947e23fe3188ccaf626bf8eaab5956715ea"
+    },
+    "storage_admission_observation_20261012_v1.json": {
+      "bytes": 1004,
+      "path": "docs/agents/b3-resume-receipts-evidence-2026-10-12/storage_admission_observation_20261012_v1.json",
+      "sha256": "d244e7c5099d4940df785859f84186d00f85da1cbf6b959718db2a19816062ca"
+    }
+  },
+  "head": "e699d9658f359e77f4acdf2d9cd9f5901257d285",
+  "observed_at_utc": "2026-10-12T06:50:58Z",
+  "owner_authorization": "2026-10-12 resume steps 1-2 only (collect CI receipts, rerun storage admission); ticket 05 numerical launch remains gated on explicit owner authorization",
+  "remote_results": {
+    "b3_full_context": {
+      "conclusion": "success",
+      "head_sha": "84838a6b4e952b4edf04b5bdec47e5a0b1f6042f",
+      "run": 37726256303,
+      "tests": "210 passed"
+    },
+    "finetune": {
+      "conclusion": "success",
+      "head_sha": "84838a6b4e952b4edf04b5bdec47e5a0b1f6042f",
+      "run": 37726256356,
+      "tests": "1430 passed"
+    },
+    "pre_commit": {
+      "conclusion": "success",
+      "head_sha": "e699d9658f359e77f4acdf2d9cd9f5901257d285",
+      "run": 37727320739
+    }
+  },
+  "schema": "b3_resume_receipts_v1",
+  "storage_admission": {
+    "backing_free_bytes": 298824843264,
+    "backing_health": "Healthy",
+    "code_path": "scripts/supervise_b3_pilot.py::host_storage_observations (observation only, no suite launch)",
+    "floor_bytes": 21474836480,
+    "granted": true,
+    "linux_root_available_bytes": 934265552896,
+    "output_available_bytes": 298824843264,
+    "vhd_path": "D:\\WSL\\Ubuntu\\ext4.vhdx"
+  },
+  "ticket_05_numerical_launched": false
+}

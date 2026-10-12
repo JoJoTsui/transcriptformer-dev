@@ -1,0 +1,45 @@
+{
+  "linux_root_writable": true,
+  "linux_root_available_bytes": 934265552896,
+  "output_available_bytes": 298824843264,
+  "min_free_bytes": 21474836480,
+  "wsl_backing_volume": {
+    "distribution_name": "Ubuntu",
+    "vhd_path": "D:\\WSL\\Ubuntu\\ext4.vhdx",
+    "volume_path": "\\\\?\\Volume{00f807a4-e0a2-4c8a-b84f-a6186c3be59b}\\",
+    "free_bytes": 298824843264,
+    "health_status": "Healthy"
+  },
+  "linux_root_mount": {
+    "mount_point": "/",
+    "filesystem": "ext4",
+    "mount_options": [
+      "rw",
+      "relatime"
+    ],
+    "super_options": [
+      "rw",
+      "discard",
+      "errors=remount-ro",
+      "data=ordered"
+    ]
+  },
+  "output_mount": {
+    "mount_point": "/mnt/d",
+    "filesystem": "9p",
+    "mount_options": [
+      "rw",
+      "noatime"
+    ],
+    "super_options": [
+      "rw",
+      "aname=drvfs;path=D:\\;uid=1000;gid=1000;symlinkroot=/mnt/",
+      "cache=0x5",
+      "access=client",
+      "msize=65536",
+      "trans=fd",
+      "rfd=6",
+      "wfd=6"
+    ]
+  }
+}
