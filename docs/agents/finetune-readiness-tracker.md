@@ -12,7 +12,11 @@ The owner directed three track decisions on 2026-10-12:
    headroom; batch 2 not viable). Evidence:
    [B1 GPU feasibility probe](b1-gpu-feasibility-probe-2026-10-12.md).
    Full preparation is running against the derived coordinate manifest
-   (27 PASS / 1 WARN / 0 FAIL at re-validation).
+   (27 PASS / 1 WARN / 0 FAIL at re-validation). The first attempt exposed a
+   degenerate-`.raw.var` defect in two sources (CS9 spatial, CS6 fig2);
+   repaired losslessly as fixed versions with originals untouched and the
+   manifest repointed — see
+   [raw-var repair](b1-degenerate-raw-var-repair-2026-10-12.md).
 2. **Ticket 05's remaining gates stay parked.** Reconciliation,
    producer/source acceptance, publication/replay and
    runtime/authority/compare remain closed until explicitly reopened.
