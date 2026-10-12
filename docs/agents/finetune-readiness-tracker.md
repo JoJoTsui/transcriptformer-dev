@@ -1,5 +1,42 @@
 # Finetune readiness tracker
 
+## Full 27-source preparation complete; validation cohort frozen — 2026-10-12
+
+The full preparation launched in the track-decisions entry completed the same
+day (console 22:22–22:36). All artifacts are local under the gitignored
+`runs/multispecies_v1/`:
+
+- **Preparation passed**: 27 sources → 33 prepared outputs, 3,137,652
+  post-QC observations (QC `min_genes` 200 applied during preparation;
+  130,054 rows QC-excluded), preparation fingerprint
+  `89496ceae4533d74063eed33abd2c40e94f2e15aa8f25a5addeed01a38a5b59f`.
+  Embryo-level splits at seed 42: train 3,003,303 / validation 78,485 /
+  final_holdout 55,864 (`preparation_report.json`, `split_assignments.json`).
+- **Sampling audit clean**: one complete post-QC epoch, 2,000,000 draws over
+  1,066,903 unique rows, no limitations (`sampling_audit.json`).
+- **Holdout coverage passed artifact validation but B1 is not measurable**:
+  status `blocked_insufficient_holdout_species` — the final holdout covers
+  only homo_sapiens and mus_musculus; the other six registered training
+  species (c. elegans, d. rerio, drosophila, gallus, l. variegatus,
+  o. cuniculus) have empty validation and final_holdout splits
+  (`holdout_coverage.json`).
+- **Validation cohort frozen**: scope `prepared_validation`, seed 42, 200
+  observations (70 homo_sapiens from emb4 / 130 mus_musculus across 45
+  embryos) drawn from the 78,485-row validation pool; observation weights sum
+  to 1.0. Digest
+  `0baee3319e56cbcc750b7df49d974edd6dde0dc7b73177d4dfc24c3f2c591559`,
+  reverified byte-identical against `cohort_digest()` in
+  `src/transcriptformer/finetune/selection.py`. The freeze trusted
+  preparation membership and file hashes; expression QC was not replayed at
+  freeze time (`validation_cohort_freeze.json`).
+
+B1's remaining gates before a training-run decision: holdout measurability
+(the six-species gap above) and the owner's explicit launch authorization.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Real
+pilot coverage stays **32.54%**, necessary jointly supported draws **0/2,000**;
+reporting veto, null intervals and frozen rules remain unchanged.
+
 ## Track decisions — B1 opened, 05 parked, B3 veto to design review — 2026-10-12
 
 The owner directed three track decisions on 2026-10-12:
