@@ -1,5 +1,40 @@
 # Finetune readiness tracker
 
+## Decision evidence pack for collaborator #1–#5 — 2026-10-13
+
+Evidence gathered on the completed post-QC preparation to close or inform the
+five collaborator decisions; adopted defaults stand, nothing was re-frozen.
+Full pack: [corpus decision evidence](corpus-decision-evidence-2026-10-13.md).
+
+- **#1 (atlas excluded)**: normalized obs-name sweep of all 13 active mouse
+  files — 78/78 pairs clean raw and normalized; residual validator gap flagged
+  (`validate_manifest.py` dedup samples first-50k raw names only, no namespace
+  normalization).
+- **#2 (Nature2019 conditional)**: author metadata re-download verified
+  SHA-256-identical; GEO row-for-row comparison passed — 1,986/1,986 candidate
+  cells exact count-vector matches vs GSE133725. Remaining: embryo-independence
+  ruling, non-UMI QC decision, lineage-label choice, then split review.
+- **#3 (BalancedDataset kept)**: post-QC epoch exposure measured — human
+  38.09%, mouse 35.90%, fly 11.30%, rabbit 5.91%, zebrafish 3.48%, worm 3.05%,
+  chicken 1.24%, urchin 1.04%; 70/30 modality split exact; 46.7% repeated
+  draws. Open biological question (are ~1% chicken/urchin shares adequate) now
+  has measured numbers.
+- **#4 (computational screen)**: screen design fixed on `scanpy.pp.scrublet`
+  (scikit-image added to the venv for automatic thresholds); two-source pilot
+  — mouse timecourse 0.09% and chicken 0.01% predicted doublets; full-corpus
+  cost ~6–7 CPU-hours.
+- **#5 (assay normalization)**: full 27-dataset conformance audit — **two
+  mislabel classes found**: all 11 TOME files labeled `10x 3' v3` are actually
+  sci-RNA-seq3 (E8.5b/E9.5–E13.5, per the TOME paper and the project's own
+  dedup proof) or plate-based (E3.5–E6.25); worm labeled `10x 3' v3` is
+  Packer-2019 sci-RNA-seq3; two human spatial copies labeled `Visium` are
+  Stereo-seq per their READMEs. Vocab lacks `sci-RNA-seq3`/`Stereo-seq`, so
+  normalization needs a nearest-token ruling before training.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Real
+pilot coverage stays **32.54%**, necessary jointly supported draws **0/2,000**;
+reporting veto, null intervals and frozen rules remain unchanged.
+
 ## B1-A eligible strata frozen on post-QC corpus — 2026-10-13
 
 The pre-registered freeze required by the
