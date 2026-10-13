@@ -83,14 +83,14 @@
       "embryo_id": "human_cs7_spatial",
       "stage": "CS7",
       "cell_type": "mixed",
-      "assay": "Visium Spatial Gene Expression",
+      "assay": "unknown",
       "section_id": "human_cs7_spatial",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/homo_sapiens_gene.h5",
       "obs_columns": {
         "stage": "=CS7",
         "embryo_id": "=human_cs7_spatial",
         "section_id": "=human_cs7_spatial",
-        "assay": "=Visium Spatial Gene Expression"
+        "assay": "=unknown"
       },
       "stage_mapping": {
         "CS7": "gastrula"
@@ -104,14 +104,14 @@
       "embryo_id": "human_cs8_spatial",
       "stage": "CS8",
       "cell_type": "mixed",
-      "assay": "Visium Spatial Gene Expression",
+      "assay": "unknown",
       "section_id": "human_cs8_spatial",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/homo_sapiens_gene.h5",
       "obs_columns": {
         "stage": "=CS8",
         "embryo_id": "=human_cs8_spatial",
         "cell_type": "celltype",
-        "assay": "=Visium Spatial Gene Expression"
+        "assay": "=unknown"
       },
       "stage_mapping": {
         "CS8": "neurula"
@@ -189,12 +189,12 @@
       "embryo_id": "tome_e10_5",
       "stage": "E10.5",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "sci-RNA-seq",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "=E10.5",
         "embryo_id": "=tome_e10_5",
-        "assay": "=10x 3' v3"
+        "assay": "=sci-RNA-seq"
       },
       "stage_mapping": {
         "E10.5": "organogenesis"
@@ -207,12 +207,12 @@
       "embryo_id": "tome_e11_5",
       "stage": "E11.5",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "sci-RNA-seq",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "=E11.5",
         "embryo_id": "=tome_e11_5",
-        "assay": "=10x 3' v3"
+        "assay": "=sci-RNA-seq"
       },
       "stage_mapping": {
         "E11.5": "organogenesis"
@@ -225,12 +225,12 @@
       "embryo_id": "tome_e12_5",
       "stage": "E12.5",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "sci-RNA-seq",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "=E12.5",
         "embryo_id": "=tome_e12_5",
-        "assay": "=10x 3' v3"
+        "assay": "=sci-RNA-seq"
       },
       "stage_mapping": {
         "E12.5": "organogenesis"
@@ -243,12 +243,12 @@
       "embryo_id": "tome_e13_5",
       "stage": "E13.5",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "sci-RNA-seq",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "=E13.5",
         "embryo_id": "=tome_e13_5",
-        "assay": "=10x 3' v3"
+        "assay": "=sci-RNA-seq"
       },
       "stage_mapping": {
         "E13.5": "organogenesis"
@@ -261,12 +261,12 @@
       "embryo_id": "tome_e3_5",
       "stage": "E3.5",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "Smart-seq2",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "=E3.5",
         "embryo_id": "=tome_e3_5",
-        "assay": "=10x 3' v3"
+        "assay": "=Smart-seq2"
       },
       "stage_mapping": {
         "E3.5": "blastula"
@@ -279,12 +279,12 @@
       "embryo_id": "tome_e4_5",
       "stage": "E4.5",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "Smart-seq2",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "=E4.5",
         "embryo_id": "=tome_e4_5",
-        "assay": "=10x 3' v3"
+        "assay": "=Smart-seq2"
       },
       "stage_mapping": {
         "E4.5": "blastula"
@@ -297,12 +297,12 @@
       "embryo_id": "tome_e5_25",
       "stage": "E5.25",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "Smart-seq2",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "=E5.25",
         "embryo_id": "=tome_e5_25",
-        "assay": "=10x 3' v3"
+        "assay": "=Smart-seq2"
       },
       "stage_mapping": {
         "E5.25": "blastula"
@@ -315,12 +315,12 @@
       "embryo_id": "tome_e5_5",
       "stage": "E5.5",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "Smart-seq2",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "=E5.5",
         "embryo_id": "=tome_e5_5",
-        "assay": "=10x 3' v3"
+        "assay": "=Smart-seq2"
       },
       "stage_mapping": {
         "E5.5": "blastula"
@@ -333,12 +333,12 @@
       "embryo_id": "tome_e6_25",
       "stage": "E6.25",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "Smart-seq2",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "=E6.25",
         "embryo_id": "=tome_e6_25",
-        "assay": "=10x 3' v3"
+        "assay": "=Smart-seq2"
       },
       "stage_mapping": {
         "E6.25": "gastrula"
@@ -351,12 +351,12 @@
       "embryo_id": "tome_e8_5b",
       "stage": "E8.5b",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "sci-RNA-seq",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "=E8.5b",
         "embryo_id": "=tome_e8_5b",
-        "assay": "=10x 3' v3"
+        "assay": "=sci-RNA-seq"
       },
       "stage_mapping": {
         "E8.5b": "neurula"
@@ -369,12 +369,12 @@
       "embryo_id": "tome_e9_5",
       "stage": "E9.5",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "sci-RNA-seq",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "=E9.5",
         "embryo_id": "=tome_e9_5",
-        "assay": "=10x 3' v3"
+        "assay": "=sci-RNA-seq"
       },
       "stage_mapping": {
         "E9.5": "organogenesis"
@@ -414,12 +414,12 @@
       "embryo_id": "mouse_single_embryo_timecourse",
       "stage": "E6.42-E8.13",
       "cell_type": "unknown",
-      "assay": "unknown",
+      "assay": "MARS-seq",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/mus_musculus_gene.h5",
       "obs_columns": {
         "stage": "developmental_time",
         "cell_type": "=unknown",
-        "assay": "=unknown"
+        "assay": "=MARS-seq"
       },
       "stage_mapping": {
         "6.42": "gastrula",
@@ -636,12 +636,12 @@
       "embryo_id": "drosophila_continuum",
       "stage": "0-20h",
       "cell_type": "mixed",
-      "assay": "sci-RNA-seq3",
+      "assay": "sci-RNA-seq",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/drosophila_melanogaster_gene.h5",
       "obs_columns": {
         "stage": "time",
         "embryo_id": "=drosophila_continuum",
-        "assay": "=sci-RNA-seq3"
+        "assay": "=sci-RNA-seq"
       },
       "stage_mapping": {
         "hrs_00_02": "blastula",
@@ -665,13 +665,13 @@
       "embryo_id": "celegans_packer2019",
       "stage": "<100->650min",
       "cell_type": "mixed",
-      "assay": "10x 3' v3",
+      "assay": "sci-RNA-seq",
       "vocab_path": "checkpoints/tf_metazoa_finetuned/vocabs/caenorhabditis_elegans_gene.h5",
       "obs_columns": {
         "stage": "embryo.time.bin",
         "cell_type": "cell.type",
         "embryo_id": "=celegans_packer2019",
-        "assay": "=10x 3' v3"
+        "assay": "=sci-RNA-seq"
       },
       "stage_mapping": {
         "< 100": "blastula",

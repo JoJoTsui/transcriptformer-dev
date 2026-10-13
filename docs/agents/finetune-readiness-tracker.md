@@ -1,5 +1,54 @@
 # Finetune readiness tracker
 
+## Assay normalization applied; preparation re-run and re-frozen — 2026-10-13
+
+Decision #5 is closed on the evidence in the
+[decision pack](corpus-decision-evidence-2026-10-13.md) plus new primary-source
+confirmations gathered today. 16 datasets were relabeled in lockstep in
+`conf/finetune_run_multispecies.json` and the derived preparation manifest
+(`runs/spatial_coordinate_manifest.json`, both fields `assay` and
+`obs_columns.assay`; git diff shows exactly 32 changed lines, all assay).
+
+- **Platform confirmations (primary sources)**: TOME E3.5–E6.25 integrate
+  Cheng 2019 (GSE109071; SRA library note "Smart-seq2 protocol") and
+  Mohammed 2017 (GSE100597; "G&T-seq protocol which incorporates SMARTSEQ2") →
+  `Smart-seq2` (token 20). TOME E8.5b + E9.5–E13.5 and Packer 2019 worm are
+  sci-RNA-seq3 → `sci-RNA-seq` (token 26; the vocab has no sci-RNA-seq3 key and
+  cannot grow without changing model input dimensions). Fly normalized
+  `sci-RNA-seq3`→`sci-RNA-seq`, regaining token 26 (previously fell silently to
+  unknown). Mouse single-embryo timecourse confirmed MARS-seq (Mittnenzweig
+  2021, GSE169210; SRA library note "MARS-seq library preparation") →
+  `MARS-seq` (token 27). Human CS7/CS8 spatial are Stereo-seq (not Visium) and
+  CS6 fig1/fig2 are confirmed Stereo-seq (Xiao 2026, Nature: "8 stereo-seq
+  sequencing chips") → all keep `unknown` (token 0). From now on the `unknown`
+  assay token denotes only Stereo-seq in this corpus; the previous
+  three-platform conflation is eliminated.
+- **Re-preparation**: `transcriptformer finetune --prepare-only` against the
+  derived manifest completed; new preparation fingerprint
+  `766332eb77e79c81bf9e07e28786b8c8b3d7c8d7c8f3759b193daab0424c1124`
+  (supersedes `89496cea…`). All 27 sources' survivor counts and survivor
+  digests are identical to the previous run, and `split_assignments.json` is
+  unchanged — the edits touch only the obs assay column, as expected. All 33
+  prepared outputs verified to carry exactly the intended labels.
+- **Re-freezes**: the B1-A roster is byte-identical in every field except the
+  bound preparation fingerprint; new roster digest
+  `197e673bc9796144c0111a1a4efb5928a8e9cc1b52d340ec274389c1fbbafcaa`
+  (supersedes `e0f9ad49…`), status stays `measurable`. The validation cohort
+  freeze is fully identical — digest
+  `0baee3319e56cbcc750b7df49d974edd6dde0dc7b73177d4dfc24c3f2c591559`
+  unchanged. `holdout_coverage.json` regenerated: counts identical; only the
+  18 relabeled outputs' `prepared_sha256` and the two fingerprint bindings
+  differ. The 2026-10-12 sampling audit remains valid (assay-independent; row
+  counts unchanged).
+- Issue 1.14 marked resolved in `docs/finetune-major-issues.md` (both
+  languages, §5 updated with the executed mapping). Still open for
+  collaborators: exact 10x v2/v3 chemistry versions on the
+  "consistent (unverified)" rows; does not affect this normalization.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Real
+pilot coverage stays **32.54%**, necessary jointly supported draws **0/2,000**;
+reporting veto, null intervals and frozen rules remain unchanged.
+
 ## Decision evidence pack for collaborator #1–#5 — 2026-10-13
 
 Evidence gathered on the completed post-QC preparation to close or inform the
