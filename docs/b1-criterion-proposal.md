@@ -1,6 +1,6 @@
 # B1 判据修订(预注册决定) / B1 Criterion Revision (Pre-registered Decision)
 
-**状态(Status):** 项目负责人于 2026-09-30 在对明确选项的回复中答复“all yes”,批准 B1-A、本文 §3 的 bits/cell 相对改善口径及 5% / 2% 阈值。见[决定记录](agents/b1-owner-decision-2026-09-30.md)。合格阶段/胚胎名单仍须以完整准备后的 QC 存活者冻结;尚无 B1 模型结果。**判据必须在观察到任何微调模型留出集结果之前定稿;训练开始后本判据冻结,事后任何修改使预注册失效。** 原 "≥6/8 物种" 判据保留为历史记录(登记项 7.3/7.7),本文不追溯修改它,也不把它静默替换为两物种闸门。
+**状态(Status):** 项目负责人于 2026-09-30 在对明确选项的回复中答复“all yes”,批准 B1-A、本文 §3 的 bits/cell 相对改善口径及 5% / 2% 阈值。见[决定记录](agents/b1-owner-decision-2026-09-30.md)。合格阶段/胚胎名单已于 2026-10-13 按完整准备后的 QC 存活者冻结,见 `runs/multispecies_v1/b1_strata_freeze.json`(由 `scripts/freeze_b1_strata.py` 生成,名单 digest 见文件内 `digest` 字段);QC 后 gastrula 11 胚胎、neurula 4 胚胎均保持主要层级,人 organogenesis 1 胚胎为描述性。尚无 B1 模型结果。**判据必须在观察到任何微调模型留出集结果之前定稿;训练开始后本判据冻结,事后任何修改使预注册失效。** 原 "≥6/8 物种" 判据保留为历史记录(登记项 7.3/7.7),本文不追溯修改它,也不把它静默替换为两物种闸门。
 
 **证据基础(Evidence):** [`logs/dataset_audit/holdout_coverage.json`](../logs/dataset_audit/holdout_coverage.json)(pre-QC 投影,seed 42);登记项 3.3、3.4、3.7、7.3、7.7;[续审 S3](agents/continuation-review-2026-09-22.md);[基线设计 §3](perturbation-and-baseline-design.md)。
 
@@ -51,7 +51,7 @@
 | 度量口径 | ☒ bits/cell 相对改善(本文 §3)☐ 其他 |
 | 阈值 | ☒ 沿用 5% / 2%(冻结设计原值)☐ 其他 |
 
-批准人/角色:项目负责人(本对话明确回复“all yes”);日期:2026-09-30。QC 后合格名单和结果仍待完成。
+批准人/角色:项目负责人(本对话明确回复“all yes”);日期:2026-09-30。QC 后合格名单已于 2026-10-13 冻结(`runs/multispecies_v1/b1_strata_freeze.json`);结果仍待完成。
 
 ---
 
@@ -100,4 +100,4 @@ Metric convention: per-cell sequence log-likelihood on the holdout (bits/cell, h
 | Metric convention | ☒ bits/cell relative improvement (§3) ☐ other |
 | Thresholds | ☒ carry over 5% / 2% (frozen design values) ☐ other |
 
-Approver / role: project owner (explicit "all yes" reply in this conversation); date: 2026-09-30. The post-QC eligible list and results remain pending.
+Approver / role: project owner (explicit "all yes" reply in this conversation); date: 2026-09-30. The post-QC eligible list was frozen on 2026-10-13 (`runs/multispecies_v1/b1_strata_freeze.json`); results remain pending.

@@ -1,5 +1,43 @@
 # Finetune readiness tracker
 
+## B1-A eligible strata frozen on post-QC corpus — 2026-10-13
+
+The pre-registered freeze required by the
+[approved B1-A criterion](../b1-criterion-proposal.md) and the
+[owner decision](b1-owner-decision-2026-09-30.md) ("record the surviving embryo
+IDs and eligible phase strata before inspecting any finetuned-model
+final-holdout result") is now executed on the completed preparation:
+
+- **Frozen roster** (`runs/multispecies_v1/b1_strata_freeze.json`, local —
+  `runs/` is gitignored), produced by the new `scripts/freeze_b1_strata.py`:
+  mouse gastrula **11 embryos / 7,768 obs — primary**; mouse neurula
+  **4 / 12,651 — primary**; mouse unmapped 7 / 3,379 — overall-summary-only
+  (never phase-resolved); human organogenesis 1 / 32,066 — descriptive.
+  23 embryos total. No stratum demoted; both primary strata kept ≥ 3 embryos.
+  Thresholds frozen at 5% relative improvement / 2% max degradation,
+  bits/cell convention `(S_ft − S_base) / |S_base|`, embryo-level aggregation.
+- **Digest** `e0f9ad497c1e38dade64293aa68ffc887968bcbe03a41537e9200e583fc2d600`,
+  reverified against `b1a_strata_digest()` in
+  `src/transcriptformer/finetune/coverage.py`; bound to preparation
+  fingerprint `89496cea…`. Any corpus/QC change requires a recorded re-freeze
+  before viewing results.
+- **Report reconciled**: `prepared_holdout_coverage` gains a `b1a` block
+  (status `measurable`); the historical six-of-eight `b1` block is unchanged
+  (`blocked_insufficient_holdout_species`, registry 7.3/7.7) — no silent
+  replacement. Regenerated `runs/multispecies_v1/holdout_coverage.json`
+  matches the frozen strata.
+- Tests: 9/9 in `test/test_holdout_coverage.py` (tier rule, embryo-ID
+  fidelity, digest stability/tamper sensitivity); 55 passed across the three
+  coverage/selection/artifact suites. Ruff check and format clean.
+
+Remaining B1 gates before a training-run decision: collaborator corpus/QC
+decisions #1–#5 (a change re-triggers preparation and this freeze) and the
+owner's explicit launch authorization.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Real
+pilot coverage stays **32.54%**, necessary jointly supported draws **0/2,000**;
+reporting veto, null intervals and frozen rules remain unchanged.
+
 ## Full 27-source preparation complete; validation cohort frozen — 2026-10-12
 
 The full preparation launched in the track-decisions entry completed the same

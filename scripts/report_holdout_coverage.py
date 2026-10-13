@@ -22,11 +22,25 @@ def main() -> None:
     manifest = load_run_manifest(args.manifest)
     report = (
         prepared_holdout_coverage(manifest, json.loads(args.prepared_report.read_text()))
-        if args.prepared_report else holdout_coverage(manifest)
+        if args.prepared_report
+        else holdout_coverage(manifest)
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n")
     print(json.dumps(report["b1"], indent=2))
+    if "b1a" in report:
+        print(
+            json.dumps(
+                {
+                    "b1a_status": report["b1a"]["status"],
+                    "b1a_strata": [
+                        {key: row[key] for key in ("species", "phase", "tier", "n_embryos", "n_observations")}
+                        for row in report["b1a"]["strata"]
+                    ],
+                },
+                indent=2,
+            )
+        )
 
 
 if __name__ == "__main__":

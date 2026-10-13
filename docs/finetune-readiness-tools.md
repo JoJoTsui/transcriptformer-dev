@@ -79,10 +79,27 @@ This report checks preparation provenance and output integrity, then reads
 prepared observation metadata. Empty splits and unmapped native stages remain
 visible. The pre-QC projection cannot be used to freeze post-QC eligibility.
 
+Freeze the approved B1-A eligible roster (surviving final-holdout embryo IDs,
+phase strata, tiers and thresholds, with a digest) before any finetuned-model
+holdout evaluation:
+
+```bash
+.venv/bin/python scripts/freeze_b1_strata.py runs/spatial_coordinate_manifest.json \
+  runs/multispecies_v1/preparation_report.json \
+  --output runs/multispecies_v1/b1_strata_freeze.json
+```
+
+The roster is frozen on post-QC numbers; a phase stratum with fewer than three
+surviving embryos demotes to descriptive, and unmapped-phase rows are
+summary-only. Any corpus or QC change requires a recorded re-freeze before
+viewing results.
+
 Only human and mouse currently have final holdout; six species have none.
-B1's six-of-eight criterion is reported as blocked. This is a coverage check,
-not a likelihood comparison or a new acceptance criterion. Embryo counts in
-different phase rows may overlap and must not be summed as independent donors.
+B1's six-of-eight criterion is reported as blocked (historical, registry
+7.3/7.7); the approved B1-A measurability is reported separately in the
+report's `b1a` block. This is a coverage check, not a likelihood comparison or
+a new acceptance criterion. Embryo counts in different phase rows may overlap
+and must not be summed as independent donors.
 
 ## 4. Actual sampler exposure
 
