@@ -14,12 +14,17 @@ Checks, per dataset, without writing any prepared output:
   8. Cross-file duplicate-cell check: within each species, sampled obs_names
      (first 50k per file, backed mode) are compared pairwise; overlap > 1,000
      barcodes hard-fails (same cells in two files), smaller overlaps warn.
+     The comparison runs on raw names and on namespace-normalized names
+     (``run_N_`` prefix and trailing ``-<i>`` suffix stripped) so republished
+     slices with re-namespaced barcodes (the TOME E8.5b / prenatal-atlas
+     duplication class) are also caught.
 
 Usage: .venv/bin/python scripts/validate_manifest.py [manifest_path]
 """
 
 from __future__ import annotations
 
+import re
 import resource
 
 resource.setrlimit(resource.RLIMIT_AS, (26 * 1024**3, 26 * 1024**3))
@@ -48,6 +53,13 @@ GENE_RESOLVE_WARN = 0.1
 # (first N, backed mode) and compare pairs of same-species datasets.
 DEDUP_SAMPLE_SIZE = 50_000
 DEDUP_FAIL_THRESHOLD = 1_000
+
+# Namespace normalization for the duplicate check: republished slices of the
+# same underlying cells often re-namespace barcodes — e.g. TOME E8.5b cells
+# reappear in the prenatal atlas as ``run_2_<barcode>-<i>``. Stripping the
+# ``run_N_`` prefix and the trailing ``-<i>`` suffix recovers the raw barcode.
+_RUN_PREFIX_RE = re.compile(r"^run_\d+_")
+_SUFFIX_RE = re.compile(r"-\d+$")
 
 PASS, WARN, FAIL = "PASS", "WARN", "FAIL"
 
@@ -196,16 +208,23 @@ def _sample_obs_names(dataset: dict) -> set[str] | None:
         adata.file.close()
 
 
+def _normalize_obs_name(name: str) -> str:
+    """Strip republication namespacing (``run_N_`` prefix, ``-<i>`` suffix)."""
+    return _SUFFIX_RE.sub("", _RUN_PREFIX_RE.sub("", name))
+
+
 def check_cross_file_duplicates(manifest: dict) -> DatasetReport:
     """Detect the same cells appearing in two files of the same species.
 
     Compares sampled obs_names (first DEDUP_SAMPLE_SIZE per file) across every
     pair of same-species datasets. Overlap above DEDUP_FAIL_THRESHOLD barcodes
     means the same cells were published in two files -> FAIL; smaller overlaps
-    are reported as WARN.
+    are reported as WARN. The comparison runs twice: on raw names, and on
+    namespace-normalized names (run_N_ prefix / -<i> suffix stripped) to catch
+    republished slices with re-namespaced barcodes.
     """
     rep = DatasetReport("cross-file duplicate-cell check")
-    by_species: dict[str, list[tuple[str, set[str]]]] = {}
+    by_species: dict[str, list[tuple[str, set[str], set[str]]]] = {}
     for dataset in manifest["datasets"]:
         names = _sample_obs_names(dataset)
         if names is None:
@@ -213,7 +232,9 @@ def check_cross_file_duplicates(manifest: dict) -> DatasetReport:
             continue
         species = dataset.get("species") or "unknown"
         label = f"{dataset.get('embryo_id', '?')} ({Path(dataset['path']).name})"
-        by_species.setdefault(species, []).append((label, names))
+        by_species.setdefault(species, []).append(
+            (label, names, {_normalize_obs_name(n) for n in names})
+        )
 
     n_pairs = 0
     for species, group in sorted(by_species.items()):
@@ -233,6 +254,16 @@ def check_cross_file_duplicates(manifest: dict) -> DatasetReport:
                         f"{species}: {overlap:,} shared barcodes between "
                         f"{group[i][0]} and {group[j][0]}",
                     )
+                norm_overlap = len(group[i][2] & group[j][2])
+                if norm_overlap > overlap:
+                    note = (
+                        f"{species}: {norm_overlap:,} shared barcodes after namespace normalization "
+                        f"({overlap:,} raw) between {group[i][0]} and {group[j][0]}"
+                    )
+                    if norm_overlap > DEDUP_FAIL_THRESHOLD:
+                        rep.add(FAIL, note + " — same cells republished with re-namespaced barcodes")
+                    else:
+                        rep.add(WARN, note)
     if rep.status == PASS:
         rep.add(PASS, f"no barcode overlap across {n_pairs} same-species file pairs "
                       f"(sampled <= {DEDUP_SAMPLE_SIZE:,} obs_names per file)")
