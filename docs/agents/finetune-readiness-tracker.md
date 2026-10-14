@@ -1,5 +1,44 @@
 # Finetune readiness tracker
 
+## Full-corpus doublet screen complete; validator catches re-namespaced duplicates — 2026-10-14
+
+Decision #4 is closed on full-corpus evidence. The doublet screen from the
+[decision pack](corpus-decision-evidence-2026-10-13.md) (#4) was extended from
+the 2-source pilot to all 22 single-cell sources
+(`runs/qc_screen_full_2026-10-13.json`): `scanpy.pp.scrublet`,
+`random_state=42`, automatic per-source threshold, advisory-only — no corpus
+rows removed. The 5 spatial (Stereo-seq) sources are skipped by design
+(spots are multi-cell).
+
+- **Result**: 20/22 sources show 0.004%–0.28% predicted doublets — no
+  doublet problem anywhere in the corpus. The two exceptions are the tiny
+  Smart-seq2 plate sources tome_e3_5 (90 cells, 21.1%) and tome_e4_5 (67
+  cells, 38.8%): Scrublet's count-simulation model is calibrated for UMI
+  data, plate sources were flagged advisory in the pilot design, and at
+  n < 100 the simulation has almost no statistical support. Both flags are
+  model artifacts, not corpus signals; no action taken.
+- **Memory-bounded method** (motivated by three WSL VM OOM kills on
+  2026-10-14, caught by a flight-recorder watchdog: the screen process went
+  17.3→31.7 GB RSS in 5 s on the 186k-cell human source, exhausting the
+  32 GB VM): sources >25,000 cells are uniformly subsampled
+  (`np.random.default_rng(42)`) after backed row-slicing — 10 sources store
+  X dense, and in-memory `read_h5ad` would materialize up to ~24 GB — with
+  each source screened in a fresh spawned subprocess under a 24 GB
+  RLIMIT_AS. This bounds scanpy's `sparse_zscore`, which densifies
+  (E − μ) into an n_sims × n_genes float64 matrix (~16 GB transient at 50k
+  cells). All 22 sources completed with zero failures.
+- **Validator**: the cross-file duplicate-cell check in
+  `scripts/validate_manifest.py` now also compares namespace-normalized
+  barcodes (`run_N_` prefix and `-<i>` suffix stripped), catching republished
+  slices with re-namespaced cell IDs (the TOME E8.5b / prenatal-atlas
+  duplication class) at the same 50k-sample / 1,000-barcode thresholds.
+  Full-corpus run: 27 PASS / 1 WARN / 0 FAIL, no raw or normalized overlap
+  across 106 same-species pairs. Covered by `test/test_validate_manifest_dedup.py`.
+
+**05 open; 11 excluded; ten bounded engineering closures unchanged.** Real
+pilot coverage stays **32.54%**, necessary jointly supported draws **0/2,000**;
+reporting veto, null intervals and frozen rules remain unchanged.
+
 ## Assay normalization applied; preparation re-run and re-frozen — 2026-10-13
 
 Decision #5 is closed on the evidence in the
